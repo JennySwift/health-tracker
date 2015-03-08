@@ -1,0 +1,48 @@
+/*==============================global==============================*/
+
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+    background: $lightgrey;
+}
+
+body {
+	padding-top: 63px;
+}
+
+p {
+	width: 238px;
+	padding: 0 20px;
+	text-align: center;
+}
+
+select {
+	// font-size: 22px;
+	padding-top: 4px;
+}
+
+input {
+	padding: 0;
+	margin: 0;
+	border: 0;
+	overflow: scroll;
+	background: transparent;
+	text-align: center;
+}
+
+
+
+th, table {
+	text-align: center;
+}
+
+
+caption {
+	padding: 8px;
+	font-weight: bold;
+}
+
+li {
+	list-style-type: none;
+}
+

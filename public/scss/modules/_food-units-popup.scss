@@ -1,0 +1,35 @@
+.popup {
+	background: white;
+	border: 1px solid black;
+	// border-radius: 5px;
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	max-height: 80%;
+	overflow: scroll;
+	// width: -moz-fit-content;
+	// min-width: 300px;
+	// max-height: 500px;
+	margin: auto;
+	// visibility: hidden;
+	z-index: 9;
+	.close-popup {
+		position: absolute;
+		bottom: 0;
+		right: 0;
+	}
+	.make-default, .default {
+		position: absolute;
+		right: 0;
+		// display: none;
+	}
+	.default-unit {
+		background: lightgreen;
+	}
+	.calories-input {
+		// border: 1px solid black;
+	}
+}
+
