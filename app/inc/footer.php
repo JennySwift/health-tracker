@@ -18,5 +18,4 @@
 <script type="text/javascript" src="js/insert.js"></script>
 <script type="text/javascript" src="js/update.js"></script>
 <script type="text/javascript" src="js/delete.js"></script>
-<script type="text/javascript" src="js/logout.js"></script>
 <script type="text/javascript" src="js/autocomplete.js"></script>

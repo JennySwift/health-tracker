@@ -36,7 +36,10 @@ var app = angular.module('foodApp', []);
 		$scope.food_entries = {};//all foods/recipes entered on a given day
 		$scope.calories = {};//calorie info for a given day
 
-		$scope.units = {};//all food units, unit_name, unit_id
+		$scope.units = {
+			food: {},
+			exercise: {}
+		};
 		$scope.unit_id = ""; //for the select element in the recipe popup
 
 		//associated food units
@@ -71,15 +74,13 @@ var app = angular.module('foodApp', []);
 		// ===========================watches===========================
 		// =============================================================
 
-		$scope.$watch('date.typed', function (newValue) {
-			// if (newValue) {
-				$scope.date.sql = Date.parse($scope.date.typed).toString('yyyy-MM-dd');
-				$scope.displayFoodEntries();
-				$scope.displayExerciseEntries();
-				$scope.date.long = Date.parse($scope.date.typed).toString('ddd dd MMM yyyy');
-				$("#date").val(newValue);
-				$scope.displayWeight();
-			// }
+		$scope.$watch('date.typed', function (newValue, oldValue) {
+			$scope.date.sql = Date.parse($scope.date.typed).toString('yyyy-MM-dd');
+			$scope.date.long = Date.parse($scope.date.typed).toString('ddd dd MMM yyyy');
+			$("#date").val(newValue);
+			if (newValue === oldValue) {
+				$scope.pageLoad();
+			}
 		});
 
 		$scope.$watch('food.id', function (newValue) {
@@ -94,16 +95,26 @@ var app = angular.module('foodApp', []);
 			$scope.tab = $tab;
 		};
 
-		// ===========================units===========================
+		// ===========================page load===========================
 
-		$scope.displayUnitList = function () {
-			$scope.loading = true;
-			select.displayUnitList().then(function (response) {
-				$scope.units = response.data;
-				$scope.loading = false;
+		$scope.pageLoad = function () {
+			select.pageLoad($scope.date.sql).then(function (response) {
+				$scope.foods = response.data.foods;
+				$scope.recipes = response.data.recipes;
+				$scope.units.food = response.data.food_units;
+				$scope.all_foods_with_units = response.data.foods_with_units;
+				$scope.weight = response.data.weight;
+				$scope.units.exercise = response.data.exercise_units;
+				$scope.exercises = response.data.exercises;
+				$scope.getMenu($scope.foods, $scope.recipes);
 			});
 		};
-		$scope.displayUnitList();
+
+		//exercises, entries on date,
+
+		// ===========================units===========================
+
+		
 
 		// ===========================exercises===========================
 
@@ -122,21 +133,19 @@ var app = angular.module('foodApp', []);
 				$scope.loading = false;
 			});
 		};
-		$scope.displayExercises();
 
 		// ===========================weight===========================
 
-		$scope.displayWeight = function () {
-			$scope.loading = true;
-			select.displayWeight($scope.date.sql).then(function (response) {
-				// console.log('something');
-				$scope.weight = response.data;
-				if ($scope.weight === false) {
-					$scope.weight = "N/A";
-				}
-				$scope.loading = false;
-			});
-		};
+		// $scope.displayWeight = function () {
+		// 	$scope.loading = true;
+		// 	select.displayWeight($scope.date.sql).then(function (response) {
+		// 		$scope.weight = response.data;
+		// 		if ($scope.weight === false) {
+		// 			$scope.weight = "N/A";
+		// 		}
+		// 		$scope.loading = false;
+		// 	});
+		// };
 
 		// ===========================foods===========================
 
@@ -158,29 +167,27 @@ var app = angular.module('foodApp', []);
 		// 		$scope.loading = false;
 		// 	});
 		// };
-		// $scope.displayFoods();
 
 		// ===========================recipes===========================
 
-		$scope.displayRecipeList = function () {
-			$scope.loading = true;
-			select.displayRecipeList().then(function (response) {
-				$scope.recipes = response.data;
-				$scope.getMenu();
-				$scope.loading = false;
-			});
-		};
-		$scope.displayRecipeList();
+		// $scope.displayRecipeList = function () {
+		// 	$scope.loading = true;
+		// 	select.displayRecipeList().then(function (response) {
+		// 		$scope.recipes = response.data;
+		// 		$scope.getMenu();
+		// 		$scope.loading = false;
+		// 	});
+		// };
 
-		$scope.displayRecipeContents = function ($recipe_id, $recipe_name) {
-			$scope.loading = true;
-			select.displayRecipeContents($recipe_id, $recipe_name).then(function (response) {
-				$scope.recipe.contents = response.data.contents;
-				$scope.recipe.id = $recipe_id;
-				$scope.recipe.name = $recipe_name;
-				$scope.loading = false;
-			});
-		};
+		// $scope.displayRecipeContents = function ($recipe_id, $recipe_name) {
+		// 	$scope.loading = true;
+		// 	select.displayRecipeContents($recipe_id, $recipe_name).then(function (response) {
+		// 		$scope.recipe.contents = response.data.contents;
+		// 		$scope.recipe.id = $recipe_id;
+		// 		$scope.recipe.name = $recipe_name;
+		// 		$scope.loading = false;
+		// 	});
+		// };
 
 		// ===========================menu===========================
 
@@ -192,15 +199,13 @@ var app = angular.module('foodApp', []);
 
 		// ===========================assoc food units===========================
 
-		$scope.getAllFoodsWithUnits = function () {
-			$scope.loading = true;
-			select.getAllFoodsWithUnits().then(function (response) {
-				$scope.all_foods_with_units = response.data;
-				$scope.loading = false;
-			});
-		};
-
-		$scope.getAllFoodsWithUnits();
+		// $scope.getAllFoodsWithUnits = function () {
+		// 	$scope.loading = true;
+		// 	select.getAllFoodsWithUnits().then(function (response) {
+		// 		$scope.all_foods_with_units = response.data;
+		// 		$scope.loading = false;
+		// 	});
+		// };
 
 		$scope.getAssocUnits = function () {
 			//for just one food
@@ -217,9 +222,9 @@ var app = angular.module('foodApp', []);
 		$scope.displayAssocUnitOptions = function () {
 			for (var i = 0; i < $scope.all_foods_with_units.length; i++) {
 				var $iteration = $scope.all_foods_with_units[i];
-				var $iteration_food_id = $iteration.food.food_id;
+				var $iteration_food_id = $iteration.food.id;
 
-				if ($iteration_food_id === $scope.food.id) {
+				if ($iteration_food_id == $scope.food.id) {
 					// $scope.food_with_assoc_units = $iteration;
 					$scope.assoc_units = $iteration.units;
 					$scope.unit_id = $iteration.food.default_unit_id;
@@ -268,10 +273,26 @@ var app = angular.module('foodApp', []);
 			if ($keycode === 13) {
 				var $param = $table;
 				insert.insert($table).then(function (response) {
-					$func($param);
-					if ($table === 'foods') {
-						$scope.getAllFoodsWithUnits();
-					}
+					// $func($param);
+					// if ($table === 'foods') {
+					// 	$scope.getAllFoodsWithUnits();
+					// }
+				});
+			}
+		};
+
+		$scope.insertFood = function ($keycode) {
+			if ($keycode === 13) {
+				insert.food().then(function (response) {
+					$scope.all_foods_with_units = response.data;
+				});
+			}
+		};
+
+		$scope.insertExercise = function ($keycode) {
+			if ($keycode === 13) {
+				insert.exercise().then(function (response) {
+					$scope.exercises = response.data;
 				});
 			}
 		};
@@ -469,6 +490,26 @@ var app = angular.module('foodApp', []);
 		};
 
 		// ===========================delete===========================
+
+		$scope.deleteFood = function ($id) {
+			deleteItem.food($id).then(function (response) {
+				$scope.all_foods_with_units = response.data;
+			});
+		};
+
+		$scope.deleteExercise = function ($id) {
+			deleteItem.exercise($id).then(function (response) {
+				$scope.exercises = response.data;
+			});
+		};
+
+		$scope.deleteFoodEntry = function ($id) {
+			deleteItem.foodEntry($id, $scope.date.sql).then(function (response) {
+				$scope.food_entries = response.data.food_entries;
+				$scope.calories.day = response.data.calories_for_the_day;
+				$scope.calories.week_avg = response.data.calories_for_the_week;
+			});
+		};
 
 		$scope.deleteFromTemporaryRecipe = function ($item) {
 			$scope.recipe.temporary_contents = _.without($scope.recipe.temporary_contents, $item);

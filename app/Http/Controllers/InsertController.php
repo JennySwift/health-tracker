@@ -2,94 +2,103 @@
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use DB;
+use Auth;
 
 use Illuminate\Http\Request;
 
 class InsertController extends Controller {
 
 	//
-	public function something () {
+	public function menuEntry () {
+		$data = json_decode(file_get_contents('php://input'), true);
+		$type = $data['type'];
+		// $date = json_decode(file_get_contents('php://input'), true)["date"];
+		// $type = json_decode(file_get_contents('php://input'), true)["type"];
+
+		if ($type === 'food') {
+			DB::table('food_entries')->insert([
+				'date' => $data['date'],
+				'food_id' => $data['id'],
+				'quantity' => $data['quantity'],
+				'unit_id' => $data['unit_id'],
+				'user_id' => Auth::user()->id
+			]);
+		}
+		elseif ($type === 'recipe') {
+			$recipe_contents = json_decode(file_get_contents('php://input'), true)["recipe_contents"];
+
+			insertRecipeEntry($date, $id, $recipe_contents);
+		}
+	}
+
+	public function food () {
 		include(app_path() . '/inc/functions.php');
-
-		// $table = $_GET['table'];
-		$table = json_decode(file_get_contents('php://input'), true)["table"];
-		// $date = $_GET['date'];
-		$date = json_decode(file_get_contents('php://input'), true)["date"];
-		// $id = $_GET['id'];
-		$id = json_decode(file_get_contents('php://input'), true)["id"];
-		// $name = $_GET['name'];
 		$name = json_decode(file_get_contents('php://input'), true)["name"];
-		// $quantity = $_GET['quantity'];
-		$quantity = json_decode(file_get_contents('php://input'), true)["quantity"];
-		// $unit_id = $_GET['unit_id'];
-		$unit_id = json_decode(file_get_contents('php://input'), true)["unit_id"];
+		DB::table('foods')->insert([
+			'name' => $name,
+			'user_id' => Auth::user()->id
+		]);
+		return getAllFoodsWithUnits();
+	}
 
-		if ($table === "exercise_entries") {
-			$sql = "INSERT INTO exercise_entries (date, exercise, quantity) VALUES ('$date', '$id', $quantity);";
-		}
+	public function recipe () {
 
-		elseif ($table === "food_entries") {
-			$type = json_decode(file_get_contents('php://input'), true)["type"];
+	}
 
-			if ($type === 'food') {
-				$sql = "INSERT INTO food_entries (date, food, quantity, unit) VALUES ('$date', '$id', $quantity, $unit_id);";
-			}
-			elseif ($type === 'recipe') {
-				// $recipe_contents = getRecipeContents($db, $id);
-				$recipe_contents = json_decode(file_get_contents('php://input'), true)["recipe_contents"];
+	public function exercise () {
+		include(app_path() . '/inc/functions.php');
+		$name = json_decode(file_get_contents('php://input'), true)["name"];
+		DB::table('exercises')->insert([
+			'name' => $name,
+			'user_id' => Auth::user()->id
+		]);
+		return getExercises();
+	}
 
-				insertRecipeEntry($db, $date, $id, $recipe_contents);
-			}
-		}
-		elseif ($table === "recipe_entries") {
-			$food_id = json_decode(file_get_contents('php://input'), true)["food_id"];
-			$recipe_id = json_decode(file_get_contents('php://input'), true)["recipe_id"];
+	public function foodUnit () {
 
-			$sql = "INSERT INTO recipe_entries (recipe_id, food_id, quantity, unit) VALUES ($recipe_id, $food_id, $quantity, $unit_id);";
-		}
-		elseif ($table === "calories") {
-			// $food_id = $_GET['food_id'];
-			$food_id = json_decode(file_get_contents('php://input'), true)["food_id"];
-			// $action = $_GET['action'];
-			$checked_previously = json_decode(file_get_contents('php://input'), true)["checked_previously"];
+	}
 
-			if ($checked_previously === false) {
-				$sql = "INSERT INTO calories (unit_id, food_id) VALUES ($unit_id, $food_id);";
-			}
-			elseif ($checked_previously === true) {
-				$sql = "DELETE FROM calories WHERE unit_id = $unit_id AND food_id = $food_id";
-			}
-			
-		}
-		elseif ($table === "weight") {
-			$weight = json_decode(file_get_contents('php://input'), true)["weight"];
+	public function exerciseEntries () {
+		$date = json_decode(file_get_contents('php://input'), true)["date"];
+		$sql = "INSERT INTO exercise_entries (date, exercise, quantity) VALUES ('$date', '$id', $quantity);";
+	}
 
-			$sql = "INSERT into weight (date, weight) VALUES ('$date', $weight) ON DUPLICATE KEY UPDATE weight = $weight;";
-		}
-		else {
-			$sql = "INSERT INTO $table (name) VALUES ('$name');";
-		}
+	public function recipeItem () {
 
-		try {
-		
-		    $sql_result = $db->query($sql);
-		
-		    //=========================response=========================
-		
-		    $variables = get_defined_vars();
-		
-		    $response = array(
-		        "variables" => $variables
-		    );
-		
-		    $json = json_encode($response);
-		    echo $json;
+	}
+
+	public function recipeEntries () {
+		$food_id = json_decode(file_get_contents('php://input'), true)["food_id"];
+		$recipe_id = json_decode(file_get_contents('php://input'), true)["recipe_id"];
+
+		$sql = "INSERT INTO recipe_entries (recipe_id, food_id, quantity, unit) VALUES ($recipe_id, $food_id, $quantity, $unit_id);";
+	}
+
+	public function calories () {
+		$food_id = json_decode(file_get_contents('php://input'), true)["food_id"];
+		$checked_previously = json_decode(file_get_contents('php://input'), true)["checked_previously"];
+
+		if ($checked_previously === false) {
+			$sql = "INSERT INTO calories (unit_id, food_id) VALUES ($unit_id, $food_id);";
 		}
-		catch (Exception $e) {
-		    $variables = get_defined_vars(); 
-		    $json = json_encode($variables);
-		    echo $json;
-		    exit;
+		elseif ($checked_previously === true) {
+			$sql = "DELETE FROM calories WHERE unit_id = $unit_id AND food_id = $food_id";
 		}
+	}
+
+	public function weight () {
+		$date = json_decode(file_get_contents('php://input'), true)["date"];
+		$weight = json_decode(file_get_contents('php://input'), true)["weight"];
+
+		$sql = "INSERT into weight (date, weight) VALUES ('$date', $weight) ON DUPLICATE KEY UPDATE weight = $weight;";
+	}
+
+	public function item () {
+		include(app_path() . '/inc/functions.php');
+		$table = json_decode(file_get_contents('php://input'), true)["table"];
+		$name = json_decode(file_get_contents('php://input'), true)["name"];
+		$sql = "INSERT INTO $table (name) VALUES ('$name');";
 	}
 }

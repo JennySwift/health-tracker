@@ -1,23 +1,45 @@
 app.factory('insert', function ($http) {
 	return {
+		food: function () {
+			var $url = 'insert/food';
+			var $name = $("#create-new-food").val();
+			
+			var $data = {
+				name: $name
+			};
+
+			$("#create-new-food").val("");		
+			return $http.post($url, $data);
+		},
+		exercise: function () {
+			var $url = 'insert/exercise';
+			var $name = $("#create-new-exercise").val();
+			
+			var $data = {
+				name: $name
+			};
+
+			$("#create-new-exercise").val("");		
+			return $http.post($url, $data);
+		},
 		insert: function ($table) {
 			var $input;
+			var $url;
 
-			if ($table === "foods") {
-				$input = $("#create-new-food");
-			}
-			else if ($table === "recipes") {
+			if ($table === "recipes") {
 				$input = $("#create-new-recipe");
+				$url = 'insert/recipe';
 			}
 			else if ($table === "exercises") {
 				$input = $("#create-new-exercise");
+				$url = 'insert/exercise';
 			}
 			else if ($table === "food_units") {
 				$input = $("#create-new-food-unit");
+				$url = 'insert/foodUnit';
 			}
 
 			var $name = $($input).val();
-			var $url = 'ajax/insert.php';
 
 			var $data = {
 				table: $table,
@@ -29,7 +51,7 @@ app.factory('insert', function ($http) {
 			return $http.post($url, $data);
 		},
 		addItemToRecipe: function ($recipe, $food, $unit_id) {
-			var $url = 'ajax/insert.php';
+			var $url = 'insert/recipeItem';
 			var $table = "recipe_entries";
 			var $input_to_focus = $("#food");
 
@@ -44,7 +66,7 @@ app.factory('insert', function ($http) {
 			return $http.post($url, $data);
 		},
 		addMenuEntry: function ($sql_date, $menu_item, $quantity, $recipe_contents) {
-			var $url = 'ajax/insert.php';
+			var $url = 'insert/menuEntry';
 			var $table = "food_entries";
 			var $input_to_focus = $("#food");
 			var $unit_id = $("#food-unit option:selected").attr('data-unit-id');
@@ -73,7 +95,7 @@ app.factory('insert', function ($http) {
 			return $http.post($url, $data);
 		},
 		enterWeight: function ($sql_date) {
-			var $url = 'ajax/insert.php';
+			var $url = 'insert/weight';
 			var $table = 'weight';
 			var $weight = $("#weight").val();
 

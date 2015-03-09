@@ -1,5 +1,13 @@
 app.factory('select', function ($http) {
 	return {
+		pageLoad: function ($sql_date) {
+			var $url = 'select/pageLoad';
+			var $data = {
+				date: $sql_date
+			};
+			
+			return $http.post($url, $data);
+		},
 		displayFoodEntries: function ($sql_date) {
 			var $url = 'select/foodEntries';
 			var $table = "food_entries";
@@ -22,16 +30,16 @@ app.factory('select', function ($http) {
 
 			return $http.post($url, $data);
 		},
-		// displayFoodList: function () {
-		// 	var $url = 'select/foodList';
-		// 	var $table = "foods";
+		displayFoodList: function () {
+			var $url = 'select/foodList';
+			var $table = "foods";
 
-		// 	var $data = {
-		// 		table: $table
-		// 	};
+			var $data = {
+				table: $table
+			};
 
-		// 	return $http.post($url, $data);
-		// },
+			return $http.post($url, $data);
+		},
 		displayExerciseList: function () {
 			var $url = 'select/exerciseList';
 			var $table = "exercises";
@@ -100,12 +108,12 @@ app.factory('select', function ($http) {
 			
 			for (var i = 0; i < $menu.length; i++) {
 				var $iteration = $menu[i];
-				if ($iteration.food_id) {
+				if ($iteration.id) {
 					$scope_menu.push(
 						{
 							type: 'food',
-							id: $iteration.food_id,
-							name: $iteration.food_name
+							id: $iteration.id,
+							name: $iteration.name
 						}
 					);
 				}

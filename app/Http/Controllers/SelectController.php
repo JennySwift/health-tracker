@@ -8,28 +8,40 @@ use Illuminate\Http\Request;
 class SelectController extends Controller {
 
 	//
+	public function pageLoad () {
+		include(app_path() . '/inc/functions.php');
+		$date = json_decode(file_get_contents('php://input'), true)["date"];
+		$response = array(
+			"foods" => getFoods(),
+			"recipes" => getRecipes(),
+			"food_units" => getFoodUnits(),
+			"foods_with_units" => getAllFoodsWithUnits(),
+			"weight" => getWeight($date),
+			"exercise_units" => getExerciseUnits(),
+			"exercises" => getExercises()
+
+		);
+		return $response;
+	}
+
 	public function foodEntries () {
 		include(app_path() . '/inc/functions.php');
 		$date = json_decode(file_get_contents('php://input'), true)["date"];
 		return getFoodEntries($date);
 	}
 
-	public function exercises () {
-		// $array = getExercises($db);
-	}
-
-	// public function foodList () {
-	// 	include(app_path() . '/inc/functions.php');
-	// 	return getFoods();
+	// public function exercises () {
+	// 	// $array = getExercises($db);
 	// }
 
-	public function exerciseList () {
-
+	public function foodList () {
+		include(app_path() . '/inc/functions.php');
+		return getFoods();
 	}
 
 	public function recipeList () {
 		include(app_path() . '/inc/functions.php');
-		return getRecipeList();
+		return getRecipes();
 	}
 
 	public function unitList () {

@@ -2,43 +2,42 @@
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use DB;
 
 use Illuminate\Http\Request;
 
 class DeleteController extends Controller {
 
 	//
-	public function something () {
+	public function food () {
+		include(app_path() . '/inc/functions.php');
+		$id = json_decode(file_get_contents('php://input'), true)["id"];
+		DB::table('foods')->where('id', $id)->delete();
+		return getAllFoodsWithUnits();
+	}
+
+	public function exercise () {
+		include(app_path() . '/inc/functions.php');
+		$id = json_decode(file_get_contents('php://input'), true)["id"];
+		DB::table('exercises')->where('id', $id)->delete();
+		return getExercises();
+	}
+
+	public function foodEntry () {
+		include(app_path() . '/inc/functions.php');
+		$id = json_decode(file_get_contents('php://input'), true)["id"];
+		$date = json_decode(file_get_contents('php://input'), true)["date"];
+		DB::table('food_entries')->where('id', $id)->delete();
+		return getFoodEntries($date);
+	}
+
+	public function item () {
 		include(app_path() . '/inc/functions.php');
 		
-		// $table = $_GET['table'];
 		$table = json_decode(file_get_contents('php://input'), true)["table"];
-		// $id = $_GET['id'];
 		$id = json_decode(file_get_contents('php://input'), true)["id"];
 		
-		try {
-		
-		    $sql = "DELETE FROM $table WHERE id = $id;";
-		
-		    $sql_result = $db->query($sql);
-		
-		    //=========================response=========================
-		
-		    $variables = get_defined_vars();
-		
-		    $response = array(
-		        "variables" => $variables
-		    );
-		
-		    $json = json_encode($response);
-		    echo $json;
-		}
-		catch (Exception $e) {
-		    $variables = get_defined_vars(); 
-		    $json = json_encode($variables);
-		    echo $json;
-		    exit;
-		}
+		DB::table($table)->where('id', $id)->delete();    
 	}
 
 }

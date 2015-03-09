@@ -9,13 +9,11 @@
 // ========================================================================
 
 function getWeight($date) {
-	// Debugbar::info('hello');
 	$weight = DB::table('weight')
 		->where('date', $date)
 		->where('user_id', Auth::user()->id)
 		->pluck('weight');
 	return $weight;
-	// return 'hello from getWeight';
 }
 
 // =================================food=================================
@@ -123,6 +121,9 @@ function getAllFoodsWithUnits () {
 			}
 			else {
 				$default_unit = false;
+				// $default_unit_id = '';
+				// $default_unit_name = '';
+				// $default_unit_calories = '';
 			}
 
 			$units[] = array(
@@ -134,12 +135,22 @@ function getAllFoodsWithUnits () {
 		}
 	    
 	    $food = array(
-			"food_id" => $food_id,
-			"food_name" => $food_name,
-			"default_unit_id" => $default_unit_id,
-			"default_unit_name" => $default_unit_name,
-			"default_unit_calories" => $default_unit_calories
+			"id" => $food_id,
+			"name" => $food_name
+			// "default_unit_id" => $default_unit_id,
+			// "default_unit_name" => $default_unit_name,
+			// "default_unit_calories" => $default_unit_calories
 	    );
+
+	    if (isset($default_unit_id)) {
+	    	$food['default_unit_id'] = $default_unit_id;
+	    }
+	    if (isset($default_unit_id)) {
+	    	$food['default_unit_name'] = $default_unit_name;
+	    }
+	    if (isset($default_unit_id)) {
+	    	$food['default_unit_calories'] = $default_unit_calories;
+	    }
 
 	    $all_foods_with_units[] = array(
 	    	"food" => $food,
@@ -152,21 +163,22 @@ function getAllFoodsWithUnits () {
 	return $all_foods_with_units;
 }
 
-function getFoodUnits ($db) {
-    $sql = "SELECT * FROM food_units;";
-    $sql_result = $db->query($sql);
+function getFoodUnits () {
+    $food_units = DB::table('food_units')
+    	->where('user_id', Auth::user()->id)
+    	->select('id', 'name')
+    	->get();
 
-	$array = array();
-    while($row = $sql_result->fetch(PDO::FETCH_ASSOC)) {
-    	$unit_id = $row['id'];
-        $unit_name = $row['name'];
+    return $food_units;
+}
 
-        $array[] = array(
-        	"unit_name" => $unit_name,
-        	"unit_id" => $unit_id
-        );
-    }
-    return $array;
+function getExerciseUnits () {
+    $exercise_units = DB::table('exercise_units')
+    	->where('user_id', Auth::user()->id)
+    	->select('id', 'name')
+    	->get();
+
+    return $exercise_units;
 }
 
 function getDefaultUnit ($db, $food_id) {
@@ -322,7 +334,7 @@ function getCaloriesForTheDay ($date, $period) {
 
 // =================================recipe=================================
 
-function getRecipeList () {
+function getRecipes () {
 	$rows = DB::table('recipes')->get();
 	
 
@@ -407,21 +419,13 @@ function getExerciseEntries () {
     }
 }
 
-function getExercises ($db) {
-    $sql = "SELECT * FROM exercises;";
-    $sql_result = $db->query($sql);
+function getExercises () {
+    $exercises = DB::table('exercises')
+    	->where('user_id', Auth::user()->id)
+    	->select('id', 'name')
+    	->get();
 
-	$array = array();
-    while($row = $sql_result->fetch(PDO::FETCH_ASSOC)) {
-        $exercise_name = $row['name'];
-        $exercise_id = $row['id'];
-
-        $array[] = array(
-        	"exercise_name" => $exercise_name,
-        	"exercise_id" => $exercise_id
-        );
-    }
-    return $array;
+    return $exercises;
 }
 
 // ========================================================================
@@ -430,19 +434,19 @@ function getExercises ($db) {
 // ========================================================================
 // ========================================================================
 
-function insertRecipeEntry ($db, $date, $recipe_id, $recipe_contents) {
+function insertRecipeEntry ($date, $recipe_id, $recipe_contents) {
 	foreach ($recipe_contents as $item) {
 		$food_id = $item['food_id'];
 		$quantity = $item['quantity'];
 		$unit_id = $item['unit_id'];
 
-		$sql = "INSERT INTO food_entries (date, food, quantity, unit, recipe_id) VALUES ('$date', $food_id, $quantity, $unit_id, $recipe_id);";
-		$sql_result = $db->query($sql);
-
-		require_once("../tools/FirePHPCore/FirePHP.class.php");
-		ob_start();
-		$firephp = FirePHP::getInstance(true);		
-		$firephp->log($sql, 'sql');
+		DB::table('food_entries')->insert([
+			'date' => $date,
+			'food' => $food,
+			'quantity' => $quantity,
+			'unit_id' => $unit_id,
+			'recipe_id' => $recipe_id
+		]);
 	}
 }
 
