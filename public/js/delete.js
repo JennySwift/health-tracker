@@ -20,6 +20,15 @@ app.factory('deleteItem', function ($http) {
 				return $http.post($url, $data);
 			}
 		},
+		unitFromCalories: function ($food_id, $unit_id) {
+			var $url = 'delete/unitFromCalories';
+			var $data = {
+				food_id: $food_id,
+				unit_id: $unit_id
+			};
+			
+			return $http.post($url, $data);
+		},
 		foodEntry: function ($id, $sql_date) {
 			if (confirm("Are you sure you want to delete this entry?")) {
 				var $url = 'delete/foodEntry';

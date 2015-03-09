@@ -28,7 +28,21 @@ class DeleteController extends Controller {
 		$id = json_decode(file_get_contents('php://input'), true)["id"];
 		$date = json_decode(file_get_contents('php://input'), true)["date"];
 		DB::table('food_entries')->where('id', $id)->delete();
-		return getFoodEntries($date);
+
+		$response = array(
+			"food_entries" => getFoodEntries($date),
+			"calories_for_the_day" => number_format(getCaloriesForTimePeriod($date, "day"), 2),
+			"calories_for_the_week" => number_format(getCaloriesForTimePeriod($date, "week"), 2)
+		);
+		return $response;
+	}
+
+	public function unitFromCalories () {
+		include(app_path() . '/inc/functions.php');
+		$food_id = json_decode(file_get_contents('php://input'), true)["food_id"];
+		$unit_id = json_decode(file_get_contents('php://input'), true)["unit_id"];
+		deleteUnitFromCalories($food_id, $unit_id);
+		return getFoodInfo($food_id);
 	}
 
 	public function item () {

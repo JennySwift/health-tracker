@@ -25,9 +25,11 @@ Route::controllers([
 // ========================================select========================================
 
 Route::post('select/pageLoad', 'SelectController@pageLoad');
-Route::post('select/foodEntries', 'SelectController@foodEntries');
+Route::post('select/entries', 'SelectController@entries');
+Route::post('select/foodInfo', 'SelectController@foodInfo');
+// Route::post('select/foodEntries', 'SelectController@foodEntries');
 // Route::post('select/exercises', 'SelectController@exercises');
-Route::post('select/foodList', 'SelectController@foodList');
+// Route::post('select/foodList', 'SelectController@foodList');
 // Route::post('select/exerciseList', 'SelectController@exerciseList');
 Route::post('select/recipeList', 'SelectController@recipeList');
 Route::post('select/unitList', 'SelectController@unitList');
@@ -41,6 +43,7 @@ Route::post('insert/item', 'InsertController@item');
 Route::post('insert/food', 'InsertController@food');
 Route::post('insert/recipe', 'InsertController@recipe');
 Route::post('insert/exercise', 'InsertController@exercise');
+Route::post('insert/unitInCalories', 'InsertController@unitInCalories');
 Route::post('insert/foodUnit', 'InsertController@foodUnit');
 Route::post('insert/menuEntry', 'InsertController@menuEntry');
 Route::post('insert/weight', 'InsertController@weight');
@@ -55,5 +58,6 @@ Route::post('update/calories', 'UpdateController@calories');
 
 Route::post('delete/item', 'DeleteController@item');
 Route::post('delete/food', 'DeleteController@food');
+Route::post('delete/unitFromCalories', 'DeleteController@unitFromCalories');
 Route::post('delete/exercise', 'DeleteController@exercise');
 Route::post('delete/foodEntry', 'DeleteController@foodEntry');

@@ -18,8 +18,23 @@ class SelectController extends Controller {
 			"foods_with_units" => getAllFoodsWithUnits(),
 			"weight" => getWeight($date),
 			"exercise_units" => getExerciseUnits(),
-			"exercises" => getExercises()
+			"exercises" => getExercises(),
+			"food_entries" => getFoodEntries($date),
+			"exercise_entries" => getExerciseEntries($date)
+		);
+		return $response;
+	}
 
+	public function entries () {
+		include(app_path() . '/inc/functions.php');
+		$date = json_decode(file_get_contents('php://input'), true)["date"];
+		$response = array(
+			"weight" => getWeight($date),
+			"exercise_entries" => getExerciseEntries($date),
+
+			"food_entries" => getFoodEntries($date),
+			"calories_for_the_day" => number_format(getCaloriesForTimePeriod($date, "day"), 2),
+			"calories_for_the_week" => number_format(getCaloriesForTimePeriod($date, "week"), 2)
 		);
 		return $response;
 	}
@@ -28,6 +43,12 @@ class SelectController extends Controller {
 		include(app_path() . '/inc/functions.php');
 		$date = json_decode(file_get_contents('php://input'), true)["date"];
 		return getFoodEntries($date);
+	}
+
+	public function foodInfo () {
+		include(app_path() . '/inc/functions.php');
+		$food_id = json_decode(file_get_contents('php://input'), true)["id"];
+		return getFoodInfo($food_id);
 	}
 
 	// public function exercises () {

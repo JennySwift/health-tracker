@@ -2,12 +2,18 @@ var $page = window.location.pathname;
 var app = angular.module('foodApp', []);
 
 (function () {
-
-	// ===========================display controller===========================
-
 	app.controller('display', function ($scope, $http, date, select, autocomplete, insert, deleteItem, update) {
 
-		// ===========================$scope properties===========================
+		// ========================================================================
+		// ========================================================================
+		// ============================$scope properties===========================
+		// ========================================================================
+		// ========================================================================
+
+		//show
+		$scope.show = {
+			food_info: false
+		};
 
 		// exercise
 		$scope.exercises = {};
@@ -22,6 +28,7 @@ var app = angular.module('foodApp', []);
 		$scope.loading = false;
 
 		//=============food=============
+		$scope.food_popup = {};
 		$scope.menu_item = {}; //id, name, type. for displaying the chosen autocompleted option (food or recipe)
 		$scope.food = {};//id, name. for displaying the chosen autocompleted option. Taken from $scope.menu_item.
 		$scope.recipe = {
@@ -69,17 +76,22 @@ var app = angular.module('foodApp', []);
 			$scope.date.typed = date.goToDate($scope.date.typed, $number);
 		};
 		
-
-		// =============================================================
-		// ===========================watches===========================
-		// =============================================================
+		// ========================================================================
+		// ========================================================================
+		// ===============================watches==================================
+		// ========================================================================
+		// ========================================================================
 
 		$scope.$watch('date.typed', function (newValue, oldValue) {
 			$scope.date.sql = Date.parse($scope.date.typed).toString('yyyy-MM-dd');
 			$scope.date.long = Date.parse($scope.date.typed).toString('ddd dd MMM yyyy');
 			$("#date").val(newValue);
+
 			if (newValue === oldValue) {
 				$scope.pageLoad();
+			}
+			else {
+				$scope.getEntries();
 			}
 		});
 
@@ -87,9 +99,20 @@ var app = angular.module('foodApp', []);
 			$scope.getAssocUnits();
 		});
 
-		// ===========================display===========================
-		// =============================================================
-		// =============================================================
+		$scope.$watch('recipe.portion', function (newValue) {
+			$($scope.recipe.temporary_contents).each(function () {
+				if (this.original_quantity) {
+					//making sure we don't alter the quantity of a food that has been added to the temporary recipe (by doing the if check)
+					this.quantity = this.original_quantity * newValue;
+				}
+			});
+		});
+
+		// ========================================================================
+		// ========================================================================
+		// =================================select=================================
+		// ========================================================================
+		// ========================================================================
 
 		$scope.changeTab = function ($tab) {
 			$scope.tab = $tab;
@@ -100,6 +123,8 @@ var app = angular.module('foodApp', []);
 		$scope.pageLoad = function () {
 			select.pageLoad($scope.date.sql).then(function (response) {
 				$scope.foods = response.data.foods;
+				$scope.food_entries = response.data.food_entries;
+				$scope.exercise_entries = response.data.exercise_entries;
 				$scope.recipes = response.data.recipes;
 				$scope.units.food = response.data.food_units;
 				$scope.all_foods_with_units = response.data.foods_with_units;
@@ -112,72 +137,20 @@ var app = angular.module('foodApp', []);
 
 		//exercises, entries on date,
 
-		// ===========================units===========================
+		// ===========================entries===========================
 
-		
+		$scope.getEntries = function () {
+			select.entries($scope.date.sql).then(function (response) {
+				$scope.weight = response.data.weight;
+				$scope.exercise_entries = response.data.exercise_entries;
 
-		// ===========================exercises===========================
-
-		$scope.displayExerciseEntries = function () {
-			$scope.loading = true;
-			select.displayExercises($scope.date.sql).then(function (response) {
-				$scope.exercise_entries = response.data;
-				$scope.loading = false;
-			});
-		};
-
-		$scope.displayExercises = function () {
-			$scope.loading = true;
-			select.displayExerciseList().then(function (response) {
-				$scope.exercises = response.data;
-				$scope.loading = false;
-			});
-		};
-
-		// ===========================weight===========================
-
-		// $scope.displayWeight = function () {
-		// 	$scope.loading = true;
-		// 	select.displayWeight($scope.date.sql).then(function (response) {
-		// 		$scope.weight = response.data;
-		// 		if ($scope.weight === false) {
-		// 			$scope.weight = "N/A";
-		// 		}
-		// 		$scope.loading = false;
-		// 	});
-		// };
-
-		// ===========================foods===========================
-
-		$scope.displayFoodEntries = function () {
-			$scope.loading = true;
-			select.displayFoodEntries($scope.date.sql).then(function (response) {
 				$scope.food_entries = response.data.food_entries;
 				$scope.calories.day = response.data.calories_for_the_day;
-				$scope.calories.week_avg = response.data.calories_for_the_week;
-				$scope.loading = false;
+				$scope.calories.week_avg = response.data.calories_for_the_week;		
 			});
 		};
-		
-		// $scope.displayFoods = function () {
-		// 	$scope.loading = true;
-		// 	select.displayFoodList().then(function (response) {
-		// 		$scope.foods = response.data;
-		// 		$scope.getMenu();
-		// 		$scope.loading = false;
-		// 	});
-		// };
 
 		// ===========================recipes===========================
-
-		// $scope.displayRecipeList = function () {
-		// 	$scope.loading = true;
-		// 	select.displayRecipeList().then(function (response) {
-		// 		$scope.recipes = response.data;
-		// 		$scope.getMenu();
-		// 		$scope.loading = false;
-		// 	});
-		// };
 
 		// $scope.displayRecipeContents = function ($recipe_id, $recipe_name) {
 		// 	$scope.loading = true;
@@ -234,39 +207,38 @@ var app = angular.module('foodApp', []);
 			
 		};
 
-		$scope.displayFoodAndAssocUnits = function ($food_id, $food_name) {
+		$scope.getFoodInfo = function ($food_id, $food_name) {
+			//for popup where user selects units for food and enters calories
 			$scope.loading = true;
-			var $url = 'ajax/display.php';
-			var $table = "food_and_assoc_units";
-			$scope.food_id = $food_id;
-			$scope.food_name = $food_name;
-			
-			var $data = {
-				table: $table,
-				food_id: $food_id
-			};
-
-			$http.post($url, $data).success(function (response) {
-				$scope.food_and_assoc_units_array = response.array;
-				$scope.loading = false;
+			$scope.food_popup.id = $food_id;
+			$scope.food_popup.name = $food_name;
+			$scope.show.food_info = true;
+			select.foodInfo($food_id, $food_name).then(function (response) {
+				$scope.food_popup.info = response.data;
 			});
+			
 		};
 
-		// ===========================insert===========================
+		// ========================================================================
+		// ========================================================================
+		// =================================insert=================================
+		// ========================================================================
+		// ========================================================================
 
-		$scope.insertUnitInCalories = function ($table, $checked_previously, $unit_id) {
-			var $url = 'ajax/insert.php';
-
-			var $data = {
-				table: $table,
-				food_id: $scope.food_id,
-				unit_id: $unit_id,
-				checked_previously: $checked_previously
-			};
-
-			$http.post($url, $data).success(function (response) {
-				$scope.displayFoodAndAssocUnits($scope.food_id, $scope.food_name);
-			});
+		$scope.insertOrDeleteUnitInCalories = function ($unit_id, $checked_previously) {
+			if (!$checked_previously) {
+				//we are inserting the unit
+				insert.unitInCalories($scope.food_popup.id, $unit_id, $checked_previously).then(function (response) {
+					$scope.food_popup.info = response.data;
+				});
+			}
+			else {
+				//we are deleting the unit
+				deleteItem.unitFromCalories($scope.food_popup.id, $unit_id).then(function (response) {
+					$scope.food_popup.info = response.data;
+				});
+			}
+			
 		};
 
 		$scope.insert = function ($keycode, $table, $func) {
@@ -274,9 +246,6 @@ var app = angular.module('foodApp', []);
 				var $param = $table;
 				insert.insert($table).then(function (response) {
 					// $func($param);
-					// if ($table === 'foods') {
-					// 	$scope.getAllFoodsWithUnits();
-					// }
 				});
 			}
 		};
@@ -297,10 +266,10 @@ var app = angular.module('foodApp', []);
 			}
 		};
 
-		$scope.addMenuEntry = function () {
+		$scope.insertMenuEntry = function () {
 			$scope.loading = true;
-			insert.addMenuEntry($scope.date.sql, $scope.menu_item, $scope.food.quantity, $scope.recipe.temporary_contents).then(function (response) {
-				$scope.displayFoodEntries($scope.date.sql);
+			insert.menuEntry($scope.date.sql, $scope.menu_item, $scope.food.quantity, $scope.recipe.temporary_contents).then(function (response) {
+				$scope.food_entries = response.data;
 				if ($scope.recipe.temporary_contents) {
 					$scope.recipe.temporary_contents.length = 0;
 				}
@@ -324,16 +293,11 @@ var app = angular.module('foodApp', []);
 			}
 		};
 
-		// ===========================update===========================
-
-		$scope.$watch('recipe.portion', function (newValue) {
-			$($scope.recipe.temporary_contents).each(function () {
-				if (this.original_quantity) {
-					//making sure we don't alter the quantity of a food that has been added to the temporary recipe (by doing the if check)
-					this.quantity = this.original_quantity * newValue;
-				}
-			});
-		});
+		// ========================================================================
+		// ========================================================================
+		// =================================update=================================
+		// ========================================================================
+		// ========================================================================
 
 		$scope.editWeight = function () {
 			$scope.edit_weight = true;
@@ -344,19 +308,23 @@ var app = angular.module('foodApp', []);
 
 		$scope.updateCalories = function ($keycode, $unit_id, $calories) {
 			if ($keycode === 13) {
-				update.updateCalories($scope.food_id, $scope.food_name, $unit_id, $calories).then(function () {
-					$scope.displayFoodAndAssocUnits($scope.food_id, $scope.food_name);
+				update.calories($scope.food_popup.id, $unit_id, $calories).then(function (response) {
+					$scope.food_popup.info = response.data;
 				});
 			}
 		};
 
-		$scope.updateDefaultUnit = function ($unit_id, $calories) {
-			update.updateDefaultUnit($unit_id, $scope.food_id, $scope.food_name).then(function (response) {
-				$scope.displayFoodAndAssocUnits($scope.food_id, $scope.food_name);
+		$scope.updateDefaultUnit = function ($unit_id) {
+			update.defaultUnit($scope.food_popup.id, $unit_id).then(function (response) {
+				$scope.food_popup.info = response.data;
 			});
 		};
 
-		// ===========================autocomplete===========================
+		// ========================================================================
+		// ========================================================================
+		// ==============================autocomplete==============================
+		// ========================================================================
+		// ========================================================================
 
 		$scope.autocomplete = function ($type, $keycode) {
 			if ($keycode !== 13 && $keycode !== 38 && $keycode !== 40) {
@@ -407,7 +375,7 @@ var app = angular.module('foodApp', []);
 					// if enter is to add the entry
 					if ($type === 'menu') {
 						if ($scope.menu_item.type === 'food') {
-							$scope.addMenuEntry();
+							$scope.insertMenuEntry();
 						}
 						// else if ($scope.menu_item.type === 'recipe') {
 						// 	//we want to edit the recipe before entering it
@@ -489,7 +457,11 @@ var app = angular.module('foodApp', []);
 			}
 		};
 
-		// ===========================delete===========================
+		// ========================================================================
+		// ========================================================================
+		// =================================delete=================================
+		// ========================================================================
+		// ========================================================================
 
 		$scope.deleteFood = function ($id) {
 			deleteItem.food($id).then(function (response) {

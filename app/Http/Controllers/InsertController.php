@@ -11,14 +11,14 @@ class InsertController extends Controller {
 
 	//
 	public function menuEntry () {
+		include(app_path() . '/inc/functions.php');
 		$data = json_decode(file_get_contents('php://input'), true);
+		$date = $data['date'];
 		$type = $data['type'];
-		// $date = json_decode(file_get_contents('php://input'), true)["date"];
-		// $type = json_decode(file_get_contents('php://input'), true)["type"];
 
 		if ($type === 'food') {
 			DB::table('food_entries')->insert([
-				'date' => $data['date'],
+				'date' => $date,
 				'food_id' => $data['id'],
 				'quantity' => $data['quantity'],
 				'unit_id' => $data['unit_id'],
@@ -30,6 +30,8 @@ class InsertController extends Controller {
 
 			insertRecipeEntry($date, $id, $recipe_contents);
 		}
+
+		return getFoodEntries($date);
 	}
 
 	public function food () {
@@ -76,16 +78,12 @@ class InsertController extends Controller {
 		$sql = "INSERT INTO recipe_entries (recipe_id, food_id, quantity, unit) VALUES ($recipe_id, $food_id, $quantity, $unit_id);";
 	}
 
-	public function calories () {
+	public function unitInCalories () {
+		include(app_path() . '/inc/functions.php');
 		$food_id = json_decode(file_get_contents('php://input'), true)["food_id"];
-		$checked_previously = json_decode(file_get_contents('php://input'), true)["checked_previously"];
-
-		if ($checked_previously === false) {
-			$sql = "INSERT INTO calories (unit_id, food_id) VALUES ($unit_id, $food_id);";
-		}
-		elseif ($checked_previously === true) {
-			$sql = "DELETE FROM calories WHERE unit_id = $unit_id AND food_id = $food_id";
-		}
+		$unit_id = json_decode(file_get_contents('php://input'), true)["unit_id"];
+		insertUnitInCalories($food_id, $unit_id);
+		return getFoodInfo($food_id);
 	}
 
 	public function weight () {

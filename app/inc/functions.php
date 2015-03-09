@@ -52,9 +52,6 @@ function getFoodEntries ($date) {
 
 	$food_entries = array();
 
-	$calories_for_the_day = getCaloriesForTheDay($date, "day");
-	$calories_for_the_week = getCaloriesForTheDay($date, "week");
-
     foreach ($rows as $row) {
     	$food_id = $row->food_id;
     	$food_name = $row->food_name;
@@ -79,15 +76,8 @@ function getFoodEntries ($date) {
     		"recipe_name" => $recipe_name
     	);
     }
-    $calories_for_the_day = number_format($calories_for_the_day, 2);
-    $calories_for_the_week = number_format($calories_for_the_week, 2);
 
-    $array = array(
-    	"food_entries" => $food_entries,
-    	"calories_for_the_day" => $calories_for_the_day,
-    	"calories_for_the_week" => $calories_for_the_week
-    );
-    return $array;
+    return $food_entries;
 }
 
 function getAllFoodsWithUnits () {
@@ -127,8 +117,8 @@ function getAllFoodsWithUnits () {
 			}
 
 			$units[] = array(
-				"unit_name" => $unit_name,
-				"unit_id" => $unit_id,
+				"id" => $unit_id,
+				"name" => $unit_name,
 				"calories" => $calories,
 				"default_unit" => $default_unit
 			);
@@ -181,10 +171,13 @@ function getExerciseUnits () {
     return $exercise_units;
 }
 
-function getDefaultUnit ($db, $food_id) {
-	$sql = "SELECT unit_id FROM calories WHERE default_unit = 'yes' AND food_id = $food_id;";
-    $sql_result = $db->query($sql);
-	$unit_id = $sql_result->fetchColumn();
+function getDefaultUnit ($food_id) {
+	$unit_id = DB::table('calories')
+		->where('default_unit', 1)
+		->where('food_id', $food_id)
+		->where('user_id', Auth::user()->id)
+		->pluck('unit_id');
+	
 	return $unit_id;
 }
 
@@ -202,7 +195,7 @@ function getCaloriesForQuantity ($calories_for_item, $quantity) {
 	return $calories_for_quantity;
 }
 
-function getCaloriesForTheDay ($date, $period) {
+function getCaloriesForTimePeriod ($date, $period) {
 	$calories_for_period = 0;
 
 	if ($period === "day") {
@@ -240,97 +233,95 @@ function getCaloriesForTheDay ($date, $period) {
 	return $calories_for_period;
 }
 
-// function getAssocUnits () {
-// 	$food_id = json_decode(file_get_contents('php://input'), true)["food_id"];
+function getAssocUnits ($food_id) {
+	$rows = DB::table('calories')
+		->where('food_id', $food_id)
+		->join('foods', 'food_id', '=', 'foods.id')
+		->join('food_units', 'calories.unit_id', '=', 'food_units.id')
+		->select('food_units.name', 'food_units.id', 'calories', 'default_unit')
+		->get();
+   
 
-// 	$array = getAssocUnits($db, $food_id);
-// }
+	$assoc_units = array();
+	foreach ($rows as $row) {
+		$unit_name = $row->name;
+		$unit_id = $row->id;
+		$calories = $row->calories;
+		$default_unit = $row->default_unit;
 
-// function getAssocUnits ($db, $food_id) {
-//     $sql = "SELECT food_units.name, food_units.id, calories, default_unit FROM calories JOIN foods ON food_id = foods.id JOIN food_units ON calories.unit_id = food_units.id WHERE food_id = $food_id";
+		if ($default_unit === 1) {
+			$default_unit = true;
+		}
+		else {
+			$default_unit = false;
+		}
 
-//     $sql_result = $db->query($sql);
+		$assoc_units[] = array(
+			"unit_name" => $unit_name,
+			"unit_id" => $unit_id,
+			"calories" => $calories,
+			"default_unit" => $default_unit
+		);
+	}
+    
+	return $assoc_units;
+}
 
-// 	$array = array();
-//     while($row = $sql_result->fetch(PDO::FETCH_ASSOC)) {
-//         $unit_name = $row['name'];
-//         $unit_id = $row['id'];
-//         $calories = $row['calories'];
-//         $default_unit = $row['default_unit'];
+function getFoodInfo ($food_id) {
+	$default_unit = getDefaultUnit($food_id);
 
-//         if ($default_unit === "yes") {
-//         	$default_unit = true;
-//         }
-//         elseif ($default_unit === null) {
-//         	$default_unit = false;
-//         }
+	$food_units = getFoodUnits();
+	$assoc_units = getAssocUnits($food_id);
+	$units = array();
 
-//         $array[] = array(
-//         	"unit_name" => $unit_name,
-//         	"unit_id" => $unit_id,
-//         	"calories" => $calories,
-//         	"default_unit" => $default_unit
-//         );
-//     }
-// 	return $array;
-// }
+	//checking to see if the unit has already been given to a food, so that it appears checked.
+	foreach ($food_units as $food_unit) {
+		$unit_id = $food_unit->id;
+		$unit_name = $food_unit->name;
+		$match = 0;
 
-// function getFoodAndAssocUnits () {
-// 	$food_id = json_decode(file_get_contents('php://input'), true)["food_id"];
-// 	$default_unit = getDefaultUnit($db, $food_id);
+		foreach ($assoc_units as $assoc_unit) {
+			$assoc_unit_id = $assoc_unit['unit_id'];
+			$calories = $assoc_unit['calories'];
 
-// 	$food_units = getFoodUnits($db);
-// 	$assoc_units = getAssocUnits($db, $food_id);
+			if ($unit_id == $assoc_unit_id) {
+				$match++;
+			}
+		}
+		if ($match === 1) {
+			$calories = getCalories($food_id, $unit_id);
 
+			if ($unit_id === $default_unit) {
+				$units[] = array(
+					"id" => $unit_id,
+					"name" => $unit_name,
+					"checked" => true,
+					"default_unit" => true,
+					"calories" => $calories
+				);
+			}
+			else {
+				$units[] = array(
+					"id" => $unit_id,
+					"name" => $unit_name,
+					"checked" => true,
+					"default_unit" => false,
+					"calories" => $calories
+				);
+			}
+		}
+		else {
+			$units[] = array(
+				"id" => $unit_id,
+				"name" => $unit_name,
+				"checked" => false,
+				"default_unit" => false
+			);
+		}
+	}
 
-
-// 	//checking to see if the unit has already been given to a food, so that it appears checked.
-// 	foreach ($food_units as $food_unit) {
-// 		$unit_id = $food_unit['unit_id'];
-// 		$unit_name = $food_unit['unit_name'];
-// 		$match = 0;
-
-// 		foreach ($assoc_units as $assoc_unit) {
-// 			$assoc_unit_id = $assoc_unit['unit_id'];
-// 			$calories = $assoc_unit['calories'];
-
-// 			if ($unit_id == $assoc_unit_id) {
-// 				$match++;
-// 			}
-// 		}
-// 		if ($match === 1) {
-// 			$calories = getCalories($db, $food_id, $unit_id);
-
-// 			if ($unit_id === $default_unit) {
-// 				$array[] = array(
-// 					"unit_id" => $unit_id,
-// 					"unit_name" => $unit_name,
-// 					"checked" => true,
-// 					"default_unit" => true,
-// 					"calories" => $calories
-// 				);
-// 			}
-// 			else {
-// 				$array[] = array(
-// 					"unit_id" => $unit_id,
-// 					"unit_name" => $unit_name,
-// 					"checked" => true,
-// 					"default_unit" => false,
-// 					"calories" => $calories
-// 				);
-// 			}
-// 		}
-// 		else {
-// 			$array[] = array(
-// 				"unit_id" => $unit_id,
-// 				"unit_name" => $unit_name,
-// 				"checked" => false,
-// 				"default_unit" => false
-// 			);
-// 		}
-// 	}
-
-// }
+	return $units;
+}
 
 // =================================recipe=================================
 
@@ -397,26 +388,15 @@ function getRecipeContents ($db, $recipe_id) {
 
 // =================================exercise=================================
 
-function getExerciseEntries () {
-	$date = json_decode(file_get_contents('php://input'), true)["date"];
+function getExerciseEntries ($date) {
+	$exercise_entries = DB::table('exercise_entries')
+		->where('date', $date)
+		->where('exercise_entries.user_id', Auth::user()->id)
+		->join('exercises', 'exercise_entries.exercise_id', '=', 'exercises.id')
+		->select('exercise_id', 'quantity', 'name', 'exercise_entries.id AS entry_id')
+		->get();
 
-    $sql = "SELECT exercise, quantity, name, exercise_entries.id AS entry_id FROM exercise_entries JOIN exercises ON exercise_entries.exercise = exercises.id WHERE date = '$date';";
-    $sql_result = $db->query($sql);
-
-	$array = array();
-    while($row = $sql_result->fetch(PDO::FETCH_ASSOC)) {
-        $exercise_id = $row['exercise'];
-        $exercise_name = $row['name'];
-        $quantity = $row['quantity'];
-        $entry_id = $row['entry_id'];
-
-        $array[] = array(
-        	"exercise_id" => $exercise_id,
-        	"exercise_name" => $exercise_name,
-        	"quantity" => $quantity,
-        	"entry_id" => $entry_id
-        );
-    }
+	return $exercise_entries;
 }
 
 function getExercises () {
@@ -450,17 +430,58 @@ function insertRecipeEntry ($date, $recipe_id, $recipe_contents) {
 	}
 }
 
+function insertUnitInCalories ($food_id, $unit_id) {
+	DB::table('calories')
+		->insert([
+			'food_id' => $food_id,
+			'unit_id' => $unit_id,
+			'user_id' => Auth::user()->id
+		]);
+}
+
 // ========================================================================
 // ========================================================================
 // =================================update=================================
 // ========================================================================
 // ========================================================================
 
+function updateCalories ($food_id, $unit_id, $calories) {
+	DB::table('calories')
+		->where('food_id', $food_id)
+		->where('unit_id', $unit_id)
+		->update([
+			'calories' => $calories
+		]);
+}
+
+function updateDefaultUnit ($food_id, $unit_id) {
+	DB::table('calories')
+		->where('food_id', $food_id)
+		->where('default_unit', 1)
+		->update([
+			'default_unit' => 0
+		]);
+
+	DB::table('calories')
+		->where('food_id', $food_id)
+		->where('unit_id', $unit_id)
+		->update([
+			'default_unit' => 1
+		]);	
+}
+
 // ========================================================================
 // ========================================================================
 // =================================delete=================================
 // ========================================================================
 // ========================================================================
+
+function deleteUnitFromCalories ($food_id, $unit_id) {
+	DB::table('calories')
+		->where('food_id', $food_id)
+		->where('unit_id', $unit_id)
+		->delete();
+}
 
 // ========================================================================
 // ========================================================================

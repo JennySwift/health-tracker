@@ -8,6 +8,23 @@ app.factory('select', function ($http) {
 			
 			return $http.post($url, $data);
 		},
+		entries: function ($sql_date) {
+			var $url = 'select/entries';
+			var $data = {
+				date: $sql_date
+			};
+			
+			return $http.post($url, $data);
+		},
+		foodInfo: function ($id, $name) {
+			var $url = 'select/foodInfo';
+			
+			var $data = {
+				id: $id
+			};
+
+			return $http.post($url, $data);
+		},
 		displayFoodEntries: function ($sql_date) {
 			var $url = 'select/foodEntries';
 			var $table = "food_entries";

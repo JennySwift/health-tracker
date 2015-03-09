@@ -13,7 +13,7 @@
 						<th>calories</th>
 					</tr>
 					<tr ng-repeat="item in all_foods_with_units" data-food-id="{{item.food.id}}">
-						<td ng-click="displayFoodAndAssocUnits(item.food.id, item.food.name)" class="pointer">{{item.food.name}}</td>
+						<td ng-click="getFoodInfo(item.food.id, item.food.name)" class="pointer">{{item.food.name}}</td>
 						<td>{{item.food.default_unit_name}}</td>
 						<td>{{item.food.default_unit_calories}}</td>
 						<td><i ng-click="deleteFood(item.food.id)" class="delete-item fa fa-times"></i></td>
@@ -58,20 +58,20 @@
 
 	<div class="row">
 
-		<div ng-show="food_and_assoc_units_array.length > 0" class="popup col-sm-8">
-			<div data-food-id="{{food_id}}" class="bold center">{{food_name}}</div>
+		<div ng-show="show.food_info" class="popup col-sm-8">
+			<h3 class="center">{{food_popup.name}}</h3>
 			
 			<ul class="list-group">
-				<div ng-repeat="unit in food_and_assoc_units_array" ng-class="{'default-unit': unit.default_unit === true}" class="list-group-item">
-					<input ng-model="checked_unit" ng-click="insertUnitInCalories('calories', unit.checked, unit.unit_id)" data-unit-id="{{unit.unit_id}}" type="checkbox" ng-checked="unit.checked === true">
-					{{unit.unit_name}}
+				<div ng-repeat="unit in food_popup.info" ng-class="{'default-unit': unit.default_unit === true}" class="list-group-item">
+					<input ng-model="checked_unit" ng-click="insertOrDeleteUnitInCalories(unit.id, unit.checked)" type="checkbox" ng-checked="unit.checked === true">
+					{{unit.name}}
 					<button ng-if="unit.default_unit === true" class="btn btn-sm default" disabled>default</button>
-					<button ng-if="unit.default_unit === false && unit.checked === true" ng-click="updateDefaultUnit(unit.unit_id)" class="btn btn-sm make-default show-hover-item">make default</button>
-					<input ng-model="unit.calories" ng-keyup="updateCalories($event.keyCode, unit.unit_id, unit.calories)" type="text" data-unit-id="{{unit.unit_id}}" value="{{unit.calories}}" placeholder="calories" class="calories-input">
+					<button ng-if="unit.default_unit === false && unit.checked === true" ng-click="updateDefaultUnit(unit.id)" class="btn btn-sm make-default show-hover-item">make default</button>
+					<input ng-model="unit.calories" ng-keyup="updateCalories($event.keyCode, unit.id, unit.calories)" type="text" value="{{unit.calories}}" placeholder="calories" class="calories-input">
 				</div>
 			</ul>
 			
-			<button ng-click="food_and_assoc_units_array.length = 0" class="close-popup btn btn-sm">close</button>
+			<button ng-click="show.food_info = false" class="close-popup btn btn-sm">close</button>
 		</div>
 
 	</div> <!-- .row -->

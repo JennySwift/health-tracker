@@ -22,6 +22,17 @@ app.factory('insert', function ($http) {
 			$("#create-new-exercise").val("");		
 			return $http.post($url, $data);
 		},
+		unitInCalories: function ($food_id, $unit_id, $checked_previously) {
+			var $url = 'insert/unitInCalories';
+
+			var $data = {
+				food_id: $food_id,
+				unit_id: $unit_id,
+				checked_previously: $checked_previously
+			};
+
+			return $http.post($url, $data);
+		},
 		insert: function ($table) {
 			var $input;
 			var $url;
@@ -65,7 +76,7 @@ app.factory('insert', function ($http) {
 
 			return $http.post($url, $data);
 		},
-		addMenuEntry: function ($sql_date, $menu_item, $quantity, $recipe_contents) {
+		menuEntry: function ($sql_date, $menu_item, $quantity, $recipe_contents) {
 			var $url = 'insert/menuEntry';
 			var $table = "food_entries";
 			var $input_to_focus = $("#food");
