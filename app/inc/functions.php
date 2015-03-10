@@ -13,6 +13,10 @@ function getWeight($date) {
 		->where('date', $date)
 		->where('user_id', Auth::user()->id)
 		->pluck('weight');
+
+	if (!$weight) {
+		$weight = 0;
+	}
 	return $weight;
 }
 

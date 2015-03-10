@@ -100,7 +100,6 @@ class InsertController extends Controller {
 			//we are inserting
 			insertWeight($date, $weight);
 		}
-		
 		return getWeight($date);
 	}
 
