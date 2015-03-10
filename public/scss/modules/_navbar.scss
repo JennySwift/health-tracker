@@ -1,6 +1,7 @@
 #navbar {
 	display:flex;
-	justify-content: space-around;
+	display: -webkit-flex;
+	-webkit-justify-content: space-around;
 	background: white;
 	position: fixed;
 	top: 0;
