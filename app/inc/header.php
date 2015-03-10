@@ -8,9 +8,13 @@
     </li>
     
     <li><a ng-click="changeTab('entries')" href="">home</a></li>
-    <li><a ng-click="changeTab('foods')" href="">foods</a></li>
-    <li><a ng-click="changeTab('exercises')" href="">exercises</a></li>
-    <li><a ng-click="changeTab('units')" href="">units</a></li>
+    <li>
+        <a ng-click="changeTab('foods')" href="">
+            <img src="img/apple.svg" alt="" width="14">
+        </a>
+    </li>
+    <li><a ng-click="changeTab('exercises')" href="" class="fa fa-heart"></a></li>
+    <li><a ng-click="changeTab('units')" href="">my units</a></li>
     
     <li class="dropdown">
     

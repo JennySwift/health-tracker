@@ -30,6 +30,10 @@
     cursor: pointer;
 }
 
+.fa-heart {
+	color: $expense_color !important;
+}
+
 .delete_category, .delete_account {
 	visibility: hidden;
 	cursor: pointer;
