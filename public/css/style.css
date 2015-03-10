@@ -21,6 +21,9 @@ html, body {
 
 body {
   padding-top: 63px; }
+  @media (max-width: 600px) {
+    body {
+      padding-top: 42px; } }
 
 p {
   width: 238px;
@@ -47,6 +50,11 @@ caption {
 
 li {
   list-style-type: none; }
+
+@media (max-width: 600px) {
+  h1 {
+    font-size: 20px;
+    margin: 2px 2px; } }
 
 @media (max-width: 480px) {
   .my-input-group input {
@@ -248,6 +256,19 @@ li {
 
 .max-width-lg {
   max-width: 80px; }
+
+#navbar {
+  display: flex;
+  justify-content: space-around;
+  background: white;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  padding: 0; }
+  #navbar li {
+    padding: 10px 0; }
+    #navbar li a {
+      color: #777; }
 
 body.browser-height {
   box-sizing: border-box; }

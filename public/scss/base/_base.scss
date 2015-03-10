@@ -8,6 +8,9 @@ html, body {
 
 body {
 	padding-top: 63px;
+	@media (max-width: 600px) {
+		padding-top: 42px;
+	}
 }
 
 p {
@@ -44,5 +47,12 @@ caption {
 
 li {
 	list-style-type: none;
+}
+
+h1 {
+	@media (max-width: 600px) {
+		font-size: 20px;
+		margin: 2px 2px;
+	}
 }
 
