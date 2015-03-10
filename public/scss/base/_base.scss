@@ -37,6 +37,9 @@ input {
 
 th, table {
 	text-align: center;
+	@media (max-width: 600px) {
+		font-size: 7px;
+	}
 }
 
 
