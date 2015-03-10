@@ -439,11 +439,29 @@ function insertUnitInCalories ($food_id, $unit_id) {
 		]);
 }
 
+function insertWeight ($date, $weight) {
+	DB::table('weight')
+		->insert([
+			'date' => $date,
+			'weight' => $weight,
+			'user_id' => Auth::user()->id
+		]);
+}
+
 // ========================================================================
 // ========================================================================
 // =================================update=================================
 // ========================================================================
 // ========================================================================
+
+function updateWeight ($date, $weight) {
+	DB::table('weight')
+		->where('date', $date)
+		->where('user_id', Auth::user()->id)
+		->update([
+			'weight' => $weight
+		]);
+}
 
 function updateCalories ($food_id, $unit_id, $calories) {
 	DB::table('calories')

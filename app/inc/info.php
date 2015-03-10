@@ -16,7 +16,7 @@
 		</li>
 
 		<li ng-show="edit_weight === true" class="list-group-item">
-			<input ng-keyup="enterWeight($event.keyCode)" type="text" placeholder="enter your weight" id="weight">
+			<input ng-keyup="insertOrUpdateWeight($event.keyCode)" type="text" placeholder="enter your weight" id="weight">
 		</li>
 	</ul>
 </div>

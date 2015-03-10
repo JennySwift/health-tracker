@@ -4,6 +4,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use DB;
 use Auth;
+use Debugbar;
 
 use Illuminate\Http\Request;
 
@@ -87,10 +88,20 @@ class InsertController extends Controller {
 	}
 
 	public function weight () {
+		include(app_path() . '/inc/functions.php');
 		$date = json_decode(file_get_contents('php://input'), true)["date"];
 		$weight = json_decode(file_get_contents('php://input'), true)["weight"];
 
-		$sql = "INSERT into weight (date, weight) VALUES ('$date', $weight) ON DUPLICATE KEY UPDATE weight = $weight;";
+		if (getWeight($date)) {
+			//This date already has a weight entry. We are updating, not inserting.
+			updateWeight($date, $weight);
+		}
+		else {
+			//we are inserting
+			insertWeight($date, $weight);
+		}
+		
+		return getWeight($date);
 	}
 
 	public function item () {

@@ -105,13 +105,11 @@ app.factory('insert', function ($http) {
 
 			return $http.post($url, $data);
 		},
-		enterWeight: function ($sql_date) {
+		weight: function ($sql_date) {
 			var $url = 'insert/weight';
-			var $table = 'weight';
 			var $weight = $("#weight").val();
 
 			var $data = {
-				table: $table,
 				date: $sql_date,
 				weight: $weight
 			};

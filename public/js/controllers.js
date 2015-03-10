@@ -283,10 +283,10 @@ var app = angular.module('foodApp', []);
 			});
 		};
 
-		$scope.enterWeight = function ($keycode) {
+		$scope.insertOrUpdateWeight = function ($keycode) {
 			if ($keycode === 13) {
-				insert.enterWeight($scope.date.sql).then(function (response) {
-					$scope.displayWeight();
+				insert.weight($scope.date.sql).then(function (response) {
+					$scope.weight = response.data;
 					$scope.edit_weight = false;
 					$("#weight").val("");
 				});
