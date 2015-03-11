@@ -44,6 +44,15 @@ class DeleteController extends Controller {
 		return $response;
 	}
 
+	public function exerciseEntry () {
+		include(app_path() . '/inc/functions.php');
+		$id = json_decode(file_get_contents('php://input'), true)["id"];
+		$date = json_decode(file_get_contents('php://input'), true)["date"];
+		DB::table('exercise_entries')->where('id', $id)->delete();
+
+		return getExerciseEntries($date);
+	}
+
 	public function unitFromCalories () {
 		include(app_path() . '/inc/functions.php');
 		$food_id = json_decode(file_get_contents('php://input'), true)["food_id"];

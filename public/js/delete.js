@@ -50,6 +50,17 @@ app.factory('deleteItem', function ($http) {
 				return $http.post($url, $data);
 			}
 		},
+		exerciseEntry: function ($id, $sql_date) {
+			if (confirm("Are you sure you want to delete this entry?")) {
+				var $url = 'delete/exerciseEntry';
+				var $data = {
+					id: $id,
+					date: $sql_date
+				};
+				
+				return $http.post($url, $data);
+			}
+		},
 		deleteItem: function ($table, $item, $id, $func) {
 			if(confirm("Are you sure you want to delete this " + $item + "?")) {
 				var $url = 'delete/item';

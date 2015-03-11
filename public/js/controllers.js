@@ -631,6 +631,12 @@ var app = angular.module('foodApp', []);
 			});
 		};
 
+		$scope.deleteExerciseEntry = function ($id) {
+			deleteItem.exerciseEntry($id, $scope.date.sql).then(function (response) {
+				$scope.exercise_entries = response.data;
+			});
+		};
+
 		$scope.deleteFromTemporaryRecipe = function ($item) {
 			$scope.recipe.temporary_contents = _.without($scope.recipe.temporary_contents, $item);
 		};

@@ -66,3 +66,4 @@ Route::post('delete/unitFromCalories', 'DeleteController@unitFromCalories');
 Route::post('delete/exercise', 'DeleteController@exercise');
 Route::post('delete/exerciseUnit', 'DeleteController@exerciseUnit');
 Route::post('delete/foodEntry', 'DeleteController@foodEntry');
+Route::post('delete/exerciseEntry', 'DeleteController@exerciseEntry');
