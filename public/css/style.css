@@ -149,6 +149,14 @@ li {
   .container {
     padding: 0 5px; } }
 
+@media (max-width: 320px) {
+  body {
+    max-width: 280px; } }
+
+@media (max-width: 320px) {
+  html {
+    max-width: 280px; } }
+
 .delete-item {
   font-size: 20px;
   color: red;

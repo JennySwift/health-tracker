@@ -9,3 +9,15 @@
 		padding: 0 5px;
 	}
 }
+
+body {
+	@media (max-width: 320px) {
+		max-width: 280px;
+	}
+}
+
+html {
+	@media (max-width: 320px) {
+		max-width: 280px;
+	}
+}
