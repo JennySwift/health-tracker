@@ -28,8 +28,6 @@
 	<?php include($inc . '/units.php'); ?>
 	<?php include($inc . '/popups/index.php'); ?>
 
-	<p>selected: {{selected.dropdown_item}}</p>
-
 	<div ng-if="tab === 'entries'">
 
 		<h1 class="row center">{{date.long}}</h1>
