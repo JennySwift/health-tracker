@@ -15,6 +15,7 @@ class SelectController extends Controller {
 			"foods" => getFoods(),
 			"recipes" => getRecipes(),
 			"food_units" => getFoodUnits(),
+			"exercise_units" => getExerciseUnits(),
 			"foods_with_units" => getAllFoodsWithUnits(),
 			"weight" => getWeight($date),
 			"exercise_units" => getExerciseUnits(),

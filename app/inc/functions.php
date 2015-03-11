@@ -443,6 +443,20 @@ function insertUnitInCalories ($food_id, $unit_id) {
 		]);
 }
 
+function insertExercise ($name) {
+	DB::table('exercises')->insert([
+		'name' => $name,
+		'user_id' => Auth::user()->id
+	]);
+}
+
+function insertExerciseUnit ($name) {
+	DB::table('exercise_units')->insert([
+		'name' => $name,
+		'user_id' => Auth::user()->id
+	]);
+}
+
 function insertWeight ($date, $weight) {
 	DB::table('weight')
 		->insert([

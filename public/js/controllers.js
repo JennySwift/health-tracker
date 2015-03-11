@@ -127,6 +127,7 @@ var app = angular.module('foodApp', []);
 				$scope.exercise_entries = response.data.exercise_entries;
 				$scope.recipes = response.data.recipes;
 				$scope.units.food = response.data.food_units;
+				$scope.units.exercise = response.data.exercise_units;
 				$scope.all_foods_with_units = response.data.foods_with_units;
 				$scope.weight = response.data.weight;
 				$scope.units.exercise = response.data.exercise_units;
@@ -262,6 +263,14 @@ var app = angular.module('foodApp', []);
 			if ($keycode === 13) {
 				insert.exercise().then(function (response) {
 					$scope.exercises = response.data;
+				});
+			}
+		};
+
+		$scope.insertExerciseUnit = function ($keycode) {
+			if ($keycode === 13) {
+				insert.exerciseUnit().then(function (response) {
+					$scope.units.exercise = response.data;
 				});
 			}
 		};
@@ -472,6 +481,12 @@ var app = angular.module('foodApp', []);
 		$scope.deleteExercise = function ($id) {
 			deleteItem.exercise($id).then(function (response) {
 				$scope.exercises = response.data;
+			});
+		};
+
+		$scope.deleteExerciseUnit = function ($id) {
+			deleteItem.exerciseUnit($id).then(function (response) {
+				$scope.units.exercise = response.data;
 			});
 		};
 

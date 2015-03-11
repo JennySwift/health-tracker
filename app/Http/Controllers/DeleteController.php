@@ -23,6 +23,13 @@ class DeleteController extends Controller {
 		return getExercises();
 	}
 
+	public function exerciseUnit () {
+		include(app_path() . '/inc/functions.php');
+		$id = json_decode(file_get_contents('php://input'), true)["id"];
+		DB::table('exercise_units')->where('id', $id)->delete();
+		return getExerciseUnits();
+	}
+
 	public function foodEntry () {
 		include(app_path() . '/inc/functions.php');
 		$id = json_decode(file_get_contents('php://input'), true)["id"];

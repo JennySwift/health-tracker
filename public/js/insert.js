@@ -22,6 +22,17 @@ app.factory('insert', function ($http) {
 			$("#create-new-exercise").val("");		
 			return $http.post($url, $data);
 		},
+		exerciseUnit: function () {
+			var $url = 'insert/exerciseUnit';
+			var $name = $("#create-new-exercise-unit").val();
+			
+			var $data = {
+				name: $name
+			};
+
+			$("#create-new-exercise-unit").val("");		
+			return $http.post($url, $data);
+		},
 		unitInCalories: function ($food_id, $unit_id, $checked_previously) {
 			var $url = 'insert/unitInCalories';
 

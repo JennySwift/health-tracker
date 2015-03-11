@@ -20,6 +20,16 @@ app.factory('deleteItem', function ($http) {
 				return $http.post($url, $data);
 			}
 		},
+		exerciseUnit: function ($id) {
+			if (confirm("Are you sure you want to delete this unit?")) {
+				var $url = 'delete/exerciseUnit';
+				var $data = {
+					id: $id
+				};
+				
+				return $http.post($url, $data);
+			}
+		},
 		unitFromCalories: function ($food_id, $unit_id) {
 			var $url = 'delete/unitFromCalories';
 			var $data = {
