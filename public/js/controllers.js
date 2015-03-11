@@ -12,7 +12,27 @@ var app = angular.module('foodApp', []);
 
 		//show
 		$scope.show = {
-			food_info: false
+			food_info: false,
+			default_exercise_unit_popup: false,
+			autocomplete: {
+				new_exercise_entry: false,
+				new_menu_entry: false,
+				new_food_entry: false
+			}
+		};
+
+		//selected
+		$scope.selected = {
+			exercise: {},
+			dropdown_item: {},
+			food: {}
+		};
+
+		//new entry
+		$scope.new_entry = {
+			exercise: {},
+			menu: {},
+			food: {}
 		};
 
 		// exercise
@@ -23,7 +43,11 @@ var app = angular.module('foodApp', []);
 		$scope.edit_weight = false;
 		//other
 		$scope.date = {};
-		$scope.autocomplete = {};
+		$scope.autocomplete = {
+			exercise: {},
+			menu: {},
+			food: {}
+		};
 		$scope.tab = 'entries';
 		$scope.loading = false;
 
@@ -95,9 +119,9 @@ var app = angular.module('foodApp', []);
 			}
 		});
 
-		$scope.$watch('food.id', function (newValue) {
-			$scope.getAssocUnits();
-		});
+		// $scope.$watch('food.id', function (newValue) {
+		// 	$scope.getAssocUnits();
+		// });
 
 		$scope.$watch('recipe.portion', function (newValue) {
 			$($scope.recipe.temporary_contents).each(function () {
@@ -107,6 +131,31 @@ var app = angular.module('foodApp', []);
 				}
 			});
 		});
+
+		// ========================================================================
+		// ========================================================================
+		// =================================popups=================================
+		// ========================================================================
+		// ========================================================================
+
+		$scope.showDefaultExerciseUnitPopup = function ($exercise) {
+			$scope.selected.exercise.name = $exercise.name;
+			$scope.selected.exercise.id = $exercise.id;
+			$scope.show.default_exercise_unit_popup = true;
+		};
+
+		$scope.showTemporaryRecipePopup = function () {
+			if (!$scope.recipe.temporary_contents || $scope.recipe.temporary_contents.length === 0)
+			//Bring up the temporary recipe popup. No need to press enter again because quantity is irrelevant.
+			select.displayRecipeContents($scope.recipe.id, $scope.recipe.name).then(function (response) {
+				$scope.recipe.temporary_contents = response.data.contents;
+
+				$($scope.recipe.temporary_contents).each(function () {
+					this.original_quantity = this.quantity;
+				});
+				// $scope.recipe.temporary_contents_clone = response.data.contents;
+			});
+		};
 
 		// ========================================================================
 		// ========================================================================
@@ -188,7 +237,7 @@ var app = angular.module('foodApp', []);
 				var $iteration_food_id = $iteration.food.food_id;
 
 				if ($iteration_food_id === $scope.food.id) {
-					$scope.food.assoc_units = $iteration.units;
+					$scope.selected.food.assoc_units = $iteration.units;
 				}
 			}
 		};
@@ -198,9 +247,9 @@ var app = angular.module('foodApp', []);
 				var $iteration = $scope.all_foods_with_units[i];
 				var $iteration_food_id = $iteration.food.id;
 
-				if ($iteration_food_id == $scope.food.id) {
+				if ($iteration_food_id == $scope.selected.food.id) {
 					// $scope.food_with_assoc_units = $iteration;
-					$scope.assoc_units = $iteration.units;
+					$scope.selected.food.assoc_units = $iteration.units;
 					$scope.unit_id = $iteration.food.default_unit_id;
 					
 				}
@@ -267,23 +316,37 @@ var app = angular.module('foodApp', []);
 			}
 		};
 
-		$scope.insertExerciseUnit = function ($keycode) {
-			if ($keycode === 13) {
-				insert.exerciseUnit().then(function (response) {
-					$scope.units.exercise = response.data;
-				});
-			}
-		};
-
 		$scope.insertMenuEntry = function () {
 			$scope.loading = true;
-			insert.menuEntry($scope.date.sql, $scope.menu_item, $scope.food.quantity, $scope.recipe.temporary_contents).then(function (response) {
+			$scope.new_entry.food.id = $scope.selected.food.id;
+			$scope.new_entry.food.name = $scope.selected.food.name;
+			$scope.new_entry.food.unit_id = $("#food-unit").val();
+
+			insert.menuEntry($scope.date.sql, $scope.new_entry.food, $scope.recipe.temporary_contents).then(function (response) {
 				$scope.food_entries = response.data;
 				if ($scope.recipe.temporary_contents) {
 					$scope.recipe.temporary_contents.length = 0;
 				}
 				$scope.loading = false;
 			});
+		};
+
+		$scope.insertExerciseEntry = function () {
+			$scope.new_entry.exercise.id = $scope.selected.exercise.id;
+			$scope.new_entry.exercise.name = $scope.selected.exercise.name;
+			$scope.new_entry.exercise.unit_id = $("#exercise-unit").val();
+
+			insert.exerciseEntry($scope.date.sql, $scope.new_entry.exercise).then(function (response) {
+				$scope.exercise_entries = response.data;
+			});
+		};
+
+		$scope.insertExerciseUnit = function ($keycode) {
+			if ($keycode === 13) {
+				insert.exerciseUnit().then(function (response) {
+					$scope.units.exercise = response.data;
+				});
+			}
 		};
 
 		$scope.addItemToRecipe = function () {
@@ -315,6 +378,13 @@ var app = angular.module('foodApp', []);
 			}, 500);
 		};
 
+		$scope.updateDefaultExerciseUnit = function ($unit_id) {
+			update.defaultExerciseUnit($scope.selected.exercise.id, $unit_id).then(function (response) {
+				$scope.exercises = response.data;
+				$scope.show.default_exercise_unit_popup = false;
+			});
+		};
+
 		$scope.updateCalories = function ($keycode, $unit_id, $calories) {
 			if ($keycode === 13) {
 				update.calories($scope.food_popup.id, $unit_id, $calories).then(function (response) {
@@ -335,136 +405,199 @@ var app = angular.module('foodApp', []);
 		// ========================================================================
 		// ========================================================================
 
-		$scope.autocomplete = function ($type, $keycode) {
+		$scope.autocompleteExercise = function ($keycode) {
 			if ($keycode !== 13 && $keycode !== 38 && $keycode !== 40) {
-				//if keypress is not enter, up arrow, or down arrow
-				if ($type === "menu") {
-					$scope.autocomplete.menu = autocomplete.autocompleteMenu($scope.menu, $scope.menu_item.name);
-				}
-				else if ($type === "food") {
-					$scope.autocomplete.food = autocomplete.autocompleteFood($scope.foods, $scope.food.name);
-				}
-				else if ($type === "exercise") {
-					$scope.exercise_autocomplete = autocomplete.autocompleteExercise();
-				}
+				//not enter, up arrow or down arrow
+				select.autocompleteExercise().then(function (response) {
+					//fill the dropdown
+					$scope.autocomplete.exercise = response.data;
+					//show the dropdown
+					$scope.show.autocomplete.new_exercise_entry = true;
+					//select the first item
+					$scope.autocomplete.exercise[0].selected = true;
+				});
 			}
 			else if ($keycode === 38) {
 				//up arrow pressed
-				autocomplete.autocompleteUpArrow();
+				autocomplete.autocompleteUpArrow($scope.autocomplete.exercise);
+				
 			}
 			else if ($keycode === 40) {
 				//down arrow pressed
-				autocomplete.autocompleteDownArrow();
+				autocomplete.autocompleteDownArrow($scope.autocomplete.exercise);
 			}
 		};
 
-		$scope.enter = function ($keycode, $type, $purpose) {
-			if ($keycode === 13) {
-				//if enter is pressed
-				if ($(".selected").length > 0) {
-					//if enter is for the autocomplete
-					$scope.finishAutocomplete($type);
-
-					if ($scope.menu_item.type === 'recipe') {
-						if (!$scope.recipe.temporary_contents || $scope.recipe.temporary_contents.length === 0)
-						//Bring up the temporary recipe popup. No need to press enter again because quantity is irrelevant.
-						select.displayRecipeContents($scope.recipe.id, $scope.recipe.name).then(function (response) {
-							$scope.recipe.temporary_contents = response.data.contents;
-
-							$($scope.recipe.temporary_contents).each(function () {
-								this.original_quantity = this.quantity;
-							});
-							// $scope.recipe.temporary_contents_clone = response.data.contents;
-						});
-					}
-
-					
-				}
-				else {
-					// if enter is to add the entry
-					if ($type === 'menu') {
-						if ($scope.menu_item.type === 'food') {
-							$scope.insertMenuEntry();
-						}
-						// else if ($scope.menu_item.type === 'recipe') {
-						// 	//we want to edit the recipe before entering it
-						// 	select.displayRecipeContents($scope.recipe.id, $scope.recipe.name).then(function (response) {
-						// 		$scope.recipe.temporary_contents = response.data.contents;
-						// 	});
-						// }
-					}
-					else if ($type === 'food') {
-						if ($purpose === 'temporary_recipe') {
-							//we are adding a food to a temporary recipe
-							var $unit_name = $("#temporary-recipe-popup-unit-select option:selected").text();
-							$scope.recipe.temporary_contents.push({
-								"food_id": $scope.food.id,
-								"food_name": $scope.food.name,
-								"quantity": $scope.food.quantity,
-								"unit_id": $scope.unit_id,
-								"unit_name": $unit_name,
-								"assoc_units": $scope.food.assoc_units
-							});
-							
-							$("#temporary-recipe-popup-food-input").val("").focus();
-						}
-						else {
-							//we are adding a food to a permanent recipe
-							$scope.addItemToRecipe();
-							$("#recipe-popup-food-input").val("").focus();
-						}
-					}
-					else if ($type === 'exercise') {
-						addEntry("exercise_entries", display, "exercise_entries");
-					}
-				}
+		$scope.autocompleteMenu = function ($keycode) {
+			if ($keycode !== 13 && $keycode !== 38 && $keycode !== 40) {
+				//not enter, up arrow or down arrow
+				//fill the dropdown
+				$scope.autocomplete.menu = select.autocompleteMenu($scope.menu);
+				//show the dropdown
+				$scope.show.autocomplete.new_menu_entry = true;
+				//select the first item
+				$scope.autocomplete.menu[0].selected = true;
 			}
-		};
-
-		$scope.finishAutocomplete = function ($type) {
-			if ($type === 'menu') {
-				$scope.menu_item.id = $(".selected").attr('data-id');
-				$scope.menu_item.name = $(".selected").text();
-				$scope.menu_item.type = $(".selected").attr('data-type');
-
-				if ($scope.menu_item.type === 'food') {
-					$scope.food.id = $(".selected").attr('data-id');
-					$scope.food.name = $(".selected").text();
-					$("#food-quantity").val("").focus();
-					//populating the units select element
-					$scope.displayAssocUnitOptions();
-				}
-				else if ($scope.menu_item.type === 'recipe') {
-					$scope.recipe.id = $(".selected").attr('data-id');
-					$scope.recipe.name = $(".selected").text();
-					// $("#food-quantity").val("").focus();
-				}
-
-				$scope.autocomplete.menu = "";
-			}
-			else if ($type === 'food') {
-				$scope.food.id = $(".selected").attr('data-id');
-				$scope.food.name = $(".selected").text();
-				$scope.autocomplete.food = "";
-
-				if ($scope.recipe.temporary_contents.length > 0) {
-					//the autocomplete is for the temporary recipe editing
-					$("#temporary-recipe-popup-food-quantity").val("").focus();
-				}
-				else {
-					//the autocomplete is for the permanent recipe editing
-					$("#recipe-popup-food-quantity").val("").focus();
-				}
+			else if ($keycode === 38) {
+				//up arrow pressed
+				autocomplete.autocompleteUpArrow($scope.autocomplete.menu);
 				
-				//populating the units select element (if recipe is not selected)
-				if ($scope.menu_item.type === "food" || $type === 'food') {
-					$scope.displayAssocUnitOptions();
-				}
 			}
-			else if ($type === 'exercise') {
-
+			else if ($keycode === 40) {
+				//down arrow pressed
+				autocomplete.autocompleteDownArrow($scope.autocomplete.menu);
+				console.log('something');
 			}
 		};
+
+		$scope.autocompleteFood = function ($keycode) {
+			if ($keycode !== 13 && $keycode !== 38 && $keycode !== 40) {
+				//not enter, up arrow or down arrow
+				//fill the dropdown
+				$scope.autocomplete.food = select.autocompleteFood($scope.foods);
+				//show the dropdown
+				$scope.show.autocomplete.new_food_entry = true;
+				//select the first item
+				$scope.autocomplete.food[0].selected = true;
+			}
+			else if ($keycode === 38) {
+				//up arrow pressed
+				autocomplete.autocompleteUpArrow($scope.autocomplete.food);
+				
+			}
+			else if ($keycode === 40) {
+				//down arrow pressed
+				autocomplete.autocompleteDownArrow($scope.autocomplete.food);
+				console.log('something');
+			}
+		};
+
+		$scope.finishExerciseAutocomplete = function ($array, $set_focus) {
+			//array, input_to_focus, autocomplete_to_hide, input_to_fill, selected_property_to_define
+			var $selected = _.findWhere($array, {selected: true});
+			$scope.selected.exercise = $selected;
+			$scope.new_entry.exercise = $selected;
+			$scope.selected.exercise = $selected;
+			$scope.show.autocomplete.new_exercise_entry = false;
+			$($set_focus).val("").focus();
+		};
+
+		$scope.finishMenuAutocomplete = function ($array, $set_focus) {
+			//array, input_to_focus, autocomplete_to_hide, input_to_fill, selected_property_to_define
+			var $selected = _.findWhere($array, {selected: true});
+			$scope.selected.food = $selected;
+			$scope.new_entry.menu = $selected;
+			$scope.selected.menu = $selected;
+			$scope.show.autocomplete.new_menu_entry = false;
+			$($set_focus).val("").focus();
+		};
+
+		$scope.finishFoodAutocomplete = function ($array, $set_focus) {
+			//array, input_to_focus, autocomplete_to_hide, input_to_fill, selected_property_to_define
+			var $selected = _.findWhere($array, {selected: true});
+			$scope.new_entry.food = $selected;
+			$scope.selected.food = $selected;
+			$scope.show.autocomplete.new_food_entry = false;
+			$($set_focus).val("").focus();
+		};
+
+		$scope.insertOrAutocompleteExerciseEntry = function ($keycode) {
+			if ($keycode !== 13) {
+				return;
+			}
+			//enter is pressed
+			if ($scope.show.autocomplete.new_exercise_entry) {
+				//if enter is for the autocomplete
+				$scope.finishExerciseAutocomplete($scope.autocomplete.exercise, $("#exercise-quantity"));
+			}
+			else {
+				// if enter is to add the entry
+				$scope.insertExerciseEntry();
+				console.log('something');
+			}
+		};
+
+		$scope.insertOrAutocompleteMenuEntry = function ($keycode) {
+			if ($keycode !== 13) {
+				return;
+			}
+			//enter is pressed
+			if ($(".selected").length > 0) {
+				//if enter is for the autocomplete
+				$scope.finishMenuAutocomplete($scope.autocomplete.menu, $("#food-quantity"));
+				$scope.displayAssocUnitOptions();
+
+				if ($scope.menu_item.type === 'recipe') {
+					$scope.showTemporaryRecipePopup();
+				}
+			}
+			else {
+				// if enter is to add the entry
+				$scope.insertMenuEntry();
+			}
+		};
+
+		$scope.insertFoodEntry = function ($keycode) {
+			if ($keycode !== 13) {
+				return;
+			}
+			//enter is pressed
+			if ($(".selected").length > 0) {
+				//if enter is for the autocomplete
+				$scope.finishFoodAutocomplete($scope.autocomplete.food);
+			}
+			else {
+				// if enter is to add the entry
+				if ($purpose === 'temporary_recipe') {
+					//we are adding a food to a temporary recipe
+					var $unit_name = $("#temporary-recipe-popup-unit-select option:selected").text();
+					$scope.recipe.temporary_contents.push({
+						"food_id": $scope.food.id,
+						"food_name": $scope.food.name,
+						"quantity": $scope.food.quantity,
+						"unit_id": $scope.unit_id,
+						"unit_name": $unit_name,
+						"assoc_units": $scope.food.assoc_units
+					});
+					
+					$("#temporary-recipe-popup-food-input").val("").focus();
+				}
+				else {
+					//we are adding a food to a permanent recipe
+					$scope.addItemToRecipe();
+					$("#recipe-popup-food-input").val("").focus();
+				}
+			}
+		};
+
+		// $scope.autocomplete = function ($object) {
+		// 	var $keycode = $object.keycode;
+		// 	var $property = $object.autocomplete_property;
+		// 	var $show_property = $object.show_property;
+		// 	var $function_property = $object.function_property;
+		// 	var $params = $object.function_params;
+
+		// 	if ($keycode !== 13 && $keycode !== 38 && $keycode !== 40) {
+		// 		//not enter, up arrow or down arrow
+		// 		select[$function_property]($params).then(function (response) {
+		// 			//fill the dropdown
+		// 			$scope.autocomplete[$property] = response.data;
+		// 			//show the dropdown
+		// 			$scope.show.autocomplete[$show_property] = true;
+		// 			//select the first item
+		// 			$scope.autocomplete[$property][0].selected = true;
+		// 		});
+		// 	}
+		// 	else if ($keycode === 38) {
+		// 		//up arrow pressed
+		// 		autocomplete.autocompleteUpArrow($scope.autocomplete[$property]);
+				
+		// 	}
+		// 	else if ($keycode === 40) {
+		// 		//down arrow pressed
+		// 		autocomplete.autocompleteDownArrow($scope.autocomplete[$property]);
+		// 	}
+		// };
 
 		// ========================================================================
 		// ========================================================================

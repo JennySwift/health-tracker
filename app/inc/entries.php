@@ -26,7 +26,7 @@
 			<tr><th>exercise</th><th>quantity</th></tr>
 
 			<tr ng-repeat="entry in exercise_entries" data-entry-id="{{entry.entry_id}}">
-				<td>{{entry.exercise_name}}</td>
+				<td>{{entry.name}}</td>
 				<td>{{entry.quantity}}</td>
 				<td><i class="delete-item fa fa-times"></i></td>
 			</tr>

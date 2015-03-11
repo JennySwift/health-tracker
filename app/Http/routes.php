@@ -36,6 +36,7 @@ Route::post('select/unitList', 'SelectController@unitList');
 Route::post('select/allFoodsWithUnits', 'SelectController@allFoodsWithUnits');
 Route::post('select/weight', 'SelectController@weight');
 Route::post('select/recipeContents', 'SelectController@recipeContents');
+Route::post('select/autocompleteExercise', 'SelectController@autocompleteExercise');
 
 // ========================================insert========================================
 
@@ -47,12 +48,14 @@ Route::post('insert/exerciseUnit', 'InsertController@exerciseUnit');
 Route::post('insert/unitInCalories', 'InsertController@unitInCalories');
 Route::post('insert/foodUnit', 'InsertController@foodUnit');
 Route::post('insert/menuEntry', 'InsertController@menuEntry');
+Route::post('insert/exerciseEntry', 'InsertController@exerciseEntry');
 Route::post('insert/weight', 'InsertController@weight');
 Route::post('insert/recipeItem', 'InsertController@recipeItem');
 
 // ========================================update========================================
 
 Route::post('update/defaultUnit', 'UpdateController@defaultUnit');
+Route::post('update/defaultExerciseUnit', 'UpdateController@defaultExerciseUnit');
 Route::post('update/calories', 'UpdateController@calories');
 
 // ========================================delete========================================

@@ -26,6 +26,9 @@
 	<?php include($inc . '/foods.php'); ?>
 	<?php include($inc . '/exercises.php'); ?>
 	<?php include($inc . '/units.php'); ?>
+	<?php include($inc . '/popups/index.php'); ?>
+
+	<p>selected: {{selected.dropdown_item}}</p>
 
 	<div ng-if="tab === 'entries'">
 

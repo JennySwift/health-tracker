@@ -1,42 +1,42 @@
 app.factory('autocomplete', function ($http) {
 	var $object = {};
-	$object.autocompleteUpArrow = function () {
-		if ($(".selected").prev(".autocomplete-dropdown-item").length > 0) {
+	$object.autocompleteUpArrow = function ($array) {
+		// if ($(".selected").prev(".autocomplete-dropdown-item").length > 0) {
+		// 	//there is an item before the selected one
+		// 	$(".selected").prev(".autocomplete-dropdown-item").addClass('selected');
+		// 	$(".selected").last().removeClass('selected');
+		// }
+
+		//find the selected object in the array
+		var $selected = _.findWhere($array, {selected: true});
+		//get its index
+		var $index = $array.indexOf($selected);
+		var $prev_index = $index - 1;
+		if ($array[$prev_index]) {
 			//there is an item before the selected one
-			$(".selected").prev(".autocomplete-dropdown-item").addClass('selected');
-			$(".selected").last().removeClass('selected');
+			var $prev = $array[$prev_index];
+			$prev.selected = true;
+			$selected.selected = false;
 		}
 	};
-	$object.autocompleteDownArrow = function () {
-		if ($(".selected").next(".autocomplete-dropdown-item").length > 0) {
+	$object.autocompleteDownArrow = function ($array) {
+		// if ($(".selected").next(".autocomplete-dropdown-item").length > 0) {
+		// 	//there is an item after the selected one
+		// 	$(".selected").next(".autocomplete-dropdown-item").addClass('selected');
+		// 	$(".selected").first().removeClass('selected');
+		// }
+
+		//find the selected object in the array
+		var $selected = _.findWhere($array, {selected: true});
+		//get its index
+		var $index = $array.indexOf($selected);
+		var $next_index = $index + 1;
+		if ($array[$next_index]) {
 			//there is an item after the selected one
-			$(".selected").next(".autocomplete-dropdown-item").addClass('selected');
-			$(".selected").first().removeClass('selected');
+			var $next = $array[$next_index];
+			$next.selected = true;
+			$selected.selected = false;
 		}
-	};
-	$object.autocompleteFood = function ($foods, $typing) {
-		$food_autocomplete = [];
-
-		for (var i = 0; i < $foods.length; i++) {
-			var $iteration = $foods[i];
-			var $iteration_name = $iteration.food_name.toLowerCase();
-			if ($iteration_name.indexOf($typing.toLowerCase()) !== -1) {
-				$food_autocomplete.push($iteration);
-			}
-		}
-		return $food_autocomplete;
-	};
-	$object.autocompleteMenu = function ($menu, $typing) {
-		$menu_autocomplete = [];
-
-		for (var i = 0; i < $menu.length; i++) {
-			var $iteration = $menu[i];
-			var $iteration_name = $iteration.name.toLowerCase();
-			if ($iteration_name.indexOf($typing.toLowerCase()) !== -1) {
-				$menu_autocomplete.push($iteration);
-			}
-		}
-		return $menu_autocomplete;
 	};
 
 	return $object;

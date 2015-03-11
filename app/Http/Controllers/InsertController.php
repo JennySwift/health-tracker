@@ -15,24 +15,18 @@ class InsertController extends Controller {
 		include(app_path() . '/inc/functions.php');
 		$data = json_decode(file_get_contents('php://input'), true);
 		$date = $data['date'];
-		$type = $data['type'];
-
-		if ($type === 'food') {
-			DB::table('food_entries')->insert([
-				'date' => $date,
-				'food_id' => $data['id'],
-				'quantity' => $data['quantity'],
-				'unit_id' => $data['unit_id'],
-				'user_id' => Auth::user()->id
-			]);
-		}
-		elseif ($type === 'recipe') {
-			$recipe_contents = json_decode(file_get_contents('php://input'), true)["recipe_contents"];
-
-			insertRecipeEntry($date, $id, $recipe_contents);
-		}
+		insertMenuEntry($data);
 
 		return getFoodEntries($date);
+	}
+
+	public function exerciseEntry () {
+		include(app_path() . '/inc/functions.php');
+		$data = json_decode(file_get_contents('php://input'), true);
+		$date = $data['date'];
+		insertExerciseEntry($data);
+
+		return getExerciseEntries($date);
 	}
 
 	public function food () {

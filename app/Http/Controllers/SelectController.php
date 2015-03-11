@@ -26,6 +26,12 @@ class SelectController extends Controller {
 		return $response;
 	}
 
+	public function autocompleteExercise () {
+		include(app_path() . '/inc/functions.php');
+		$exercise = json_decode(file_get_contents('php://input'), true)["exercise"];
+		return autocompleteExercise($exercise);
+	}
+
 	public function entries () {
 		include(app_path() . '/inc/functions.php');
 		$date = json_decode(file_get_contents('php://input'), true)["date"];

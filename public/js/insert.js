@@ -87,32 +87,29 @@ app.factory('insert', function ($http) {
 
 			return $http.post($url, $data);
 		},
-		menuEntry: function ($sql_date, $menu_item, $quantity, $recipe_contents) {
+		menuEntry: function ($sql_date, $new_entry, $recipe_contents) {
 			var $url = 'insert/menuEntry';
-			var $table = "food_entries";
-			var $input_to_focus = $("#food");
-			var $unit_id = $("#food-unit option:selected").attr('data-unit-id');
-			var $type = $menu_item.type;
-
+			var $type = 'food';
+	
 			var $data = {
-				table: $table,
 				date: $sql_date,
-				id: $menu_item.id,
-				name: $menu_item.name,
-				type: $type
-
+				type: $type,
+				new_entry: $new_entry,
 			};
 
-			if ($type === 'food') {
-				$data.quantity = $quantity;
-				$data.unit_id = $unit_id;
-			}
-
-			if ($type === 'recipe') {
-				$data.recipe_contents = $recipe_contents;
-			}
-
 			$("#food").val("").focus();
+
+			return $http.post($url, $data);
+		},
+		exerciseEntry: function ($sql_date, $new_entry) {
+			var $url = 'insert/exerciseEntry';
+		
+			var $data = {
+				date: $sql_date,
+				new_entry: $new_entry,
+			};
+
+			$("#exercise").val("").focus();
 
 			return $http.post($url, $data);
 		},

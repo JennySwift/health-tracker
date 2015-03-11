@@ -405,8 +405,9 @@ function getExerciseEntries ($date) {
 
 function getExercises () {
     $exercises = DB::table('exercises')
-    	->where('user_id', Auth::user()->id)
-    	->select('id', 'name')
+    	->where('exercises.user_id', Auth::user()->id)
+    	->leftJoin('exercise_units', 'default_exercise_unit_id', '=', 'exercise_units.id')
+    	->select('exercises.id', 'exercises.name', 'default_exercise_unit_id', 'exercise_units.name AS default_exercise_unit_name')
     	->get();
 
     return $exercises;
@@ -432,6 +433,40 @@ function insertRecipeEntry ($date, $recipe_id, $recipe_contents) {
 			'recipe_id' => $recipe_id
 		]);
 	}
+}
+
+function insertMenuEntry ($data) {
+	$date = $data['date'];
+	$type = $data['type'];
+	$new_entry = $data['new_entry'];
+
+	if ($type === 'food') {
+		DB::table('food_entries')->insert([
+			'date' => $date,
+			'food_id' => $new_entry['id'],
+			'quantity' => $new_entry['quantity'],
+			'unit_id' => $new_entry['unit_id'],
+			'user_id' => Auth::user()->id
+		]);
+	}
+	elseif ($type === 'recipe') {
+		$recipe_contents = json_decode(file_get_contents('php://input'), true)["recipe_contents"];
+
+		insertRecipeEntry($date, $id, $recipe_contents);
+	}
+}
+
+function insertExerciseEntry ($data) {
+	$date = $data['date'];
+	$new_entry = $data['new_entry'];
+
+	DB::table('exercise_entries')->insert([
+		'date' => $date,
+		'exercise_id' => $new_entry['id'],
+		'quantity' => $new_entry['quantity'],
+		'exercise_unit_id' => $new_entry['unit_id'],
+		'user_id' => Auth::user()->id
+	]);
 }
 
 function insertUnitInCalories ($food_id, $unit_id) {
@@ -481,6 +516,14 @@ function updateWeight ($date, $weight) {
 		]);
 }
 
+function updateDefaultExerciseUnit ($exercise_id, $default_exercise_unit_id) {
+	DB::table('exercises')
+		->where('id', $exercise_id)
+		->update([
+			'default_exercise_unit_id' => $default_exercise_unit_id
+		]);
+}
+
 function updateCalories ($food_id, $unit_id, $calories) {
 	DB::table('calories')
 		->where('food_id', $food_id)
@@ -525,42 +568,15 @@ function deleteUnitFromCalories ($food_id, $unit_id) {
 // ========================================================================
 // ========================================================================
 
-function autocompleteFood () {
-	$food = json_decode(file_get_contents('php://input'), true)["food"];
-	
-    $sql = "SELECT * FROM foods WHERE name LIKE '%$food%';";
-
-    $sql_result = $db->query($sql);
-
-	$foods = array();
-    while($row = $sql_result->fetch(PDO::FETCH_ASSOC)) {
-        $id = $row['id'];
-        $name = $row['name'];
-
-        $foods[] = array(
-        	"food_id" => $id,
-        	"food_name" => $name
-        );
-    }   
-}
-
-function autocompleteExercise () {
-	$exercise = $_GET['exercise'];
-	
-    $sql = "SELECT * FROM exercises WHERE name LIKE '%$exercise%';";
-
-    $sql_result = $db->query($sql);
-
-	$exercises = array();
-    while($row = $sql_result->fetch(PDO::FETCH_ASSOC)) {
-        $id = $row['id'];
-        $name = $row['name'];
-
-        $exercises[] = array(
-        	"id" => $id,
-        	"name" => $name
-        );
-    }
+function autocompleteExercise ($exercise) {
+	$exercise = '%' . $exercise . '%';
+	$exercises = DB::table('exercises')
+		->where('name', 'LIKE', $exercise)
+		->where('user_id', Auth::user()->id)
+		->select('id', 'name', 'default_exercise_unit_id')
+		->get();
+    
+	return $exercises;
 }
 
 // ========================================================================

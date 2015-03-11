@@ -12,12 +12,18 @@
 
 		<div class="col-sm-6 col-sm-offset-3">
 			<div>
-				<ul class="list-group">
-					<li ng-repeat="exercise in exercises" class="list-group-item">
-						{{exercise.name}}
-						<i ng-click="deleteExercise(exercise.id)" class="delete-item fa fa-times"></i>
-					</li>
-				</ul>
+				<table class="table table-bordered">
+					<tr>
+						<th>name</th>
+						<th>default unit</th>
+						<th>x</th>
+					</tr>
+					<tr ng-repeat="exercise in exercises" class="hover">
+						<td>{{exercise.name}}</td>
+						<td ng-click="showDefaultExerciseUnitPopup(exercise)" class="pointer">{{exercise.default_exercise_unit_name}}</td>
+						<td><i ng-click="deleteExercise(exercise.id)" class="delete-item fa fa-times"></i></td>
+					</tr>
+				</table>
 			</div>
 		</div>
 

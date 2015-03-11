@@ -18,6 +18,16 @@ class UpdateController extends Controller {
 		return getFoodInfo($food_id);
 	}
 
+	public function defaultExerciseUnit () {
+		include(app_path() . '/inc/functions.php');
+		$exercise_id = json_decode(file_get_contents('php://input'), true)["exercise_id"];
+		$default_exercise_unit_id = json_decode(file_get_contents('php://input'), true)["default_exercise_unit_id"];
+
+		updateDefaultExerciseUnit($exercise_id, $default_exercise_unit_id);
+
+		return getExercises();
+	}
+
 	public function calories () {
 		include(app_path() . '/inc/functions.php');
 		$food_id = json_decode(file_get_contents('php://input'), true)["food_id"];

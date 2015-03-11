@@ -8,6 +8,40 @@ app.factory('select', function ($http) {
 			
 			return $http.post($url, $data);
 		},
+		autocompleteExercise: function () {
+			var $typing = $("#exercise").val();
+			var $url = 'select/autocompleteExercise';
+			var $data = {
+				exercise: $typing
+			};
+			
+			return $http.post($url, $data);
+		},
+		autocompleteFood: function ($foods, $typing) {
+			$food_autocomplete = [];
+
+			for (var i = 0; i < $foods.length; i++) {
+				var $iteration = $foods[i];
+				var $iteration_name = $iteration.food_name.toLowerCase();
+				if ($iteration_name.indexOf($typing.toLowerCase()) !== -1) {
+					$food_autocomplete.push($iteration);
+				}
+			}
+			return $food_autocomplete;
+		},
+		autocompleteMenu: function ($menu) {
+			var $typing = $("#food").val();
+			var $menu_autocomplete = [];
+
+			for (var i = 0; i < $menu.length; i++) {
+				var $iteration = $menu[i];
+				var $iteration_name = $iteration.name.toLowerCase();
+				if ($iteration_name.indexOf($typing.toLowerCase()) !== -1) {
+					$menu_autocomplete.push($iteration);
+				}
+			}
+			return $menu_autocomplete;
+		},
 		entries: function ($sql_date) {
 			var $url = 'select/entries';
 			var $data = {

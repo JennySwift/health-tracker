@@ -12,6 +12,8 @@ class CreateUsersTable extends Migration {
 	 */
 	public function up()
 	{
+		DB::statement('SET FOREIGN_KEY_CHECKS=0');
+
 		Schema::create('users', function(Blueprint $table)
 		{
 			$table->increments('id');
@@ -134,7 +136,9 @@ class CreateUsersTable extends Migration {
 			$table->foreign('food_id')->references('id')->on('foods');
 			$table->foreign('unit_id')->references('id')->on('food_units');
 			$table->foreign('user_id')->references('id')->on('users');
-		});		
+		});
+
+		DB::statement('SET FOREIGN_KEY_CHECKS=1');
 	}
 
 	/**

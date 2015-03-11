@@ -20,6 +20,15 @@ app.factory('update', function ($http) {
 			};
 
 			return $http.post($url, $data);
+		},
+		defaultExerciseUnit: function ($exercise_id, $default_exercise_unit_id) {
+			var $url = 'update/defaultExerciseUnit';
+			var $data = {
+				exercise_id: $exercise_id,
+				default_exercise_unit_id: $default_exercise_unit_id
+			};
+			
+			return $http.post($url, $data);
 		}
 	};
 });
