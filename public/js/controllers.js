@@ -522,7 +522,7 @@ var app = angular.module('foodApp', []);
 				return;
 			}
 			//enter is pressed
-			if ($(".selected").length > 0) {
+			if ($scope.show.autocomplete.new_menu_entry) {
 				//if enter is for the autocomplete
 				$scope.finishMenuAutocomplete($scope.autocomplete.menu, $("#food-quantity"));
 				$scope.displayAssocUnitOptions();
@@ -537,38 +537,38 @@ var app = angular.module('foodApp', []);
 			}
 		};
 
-		$scope.insertFoodEntry = function ($keycode) {
-			if ($keycode !== 13) {
-				return;
-			}
-			//enter is pressed
-			if ($(".selected").length > 0) {
-				//if enter is for the autocomplete
-				$scope.finishFoodAutocomplete($scope.autocomplete.food);
-			}
-			else {
-				// if enter is to add the entry
-				if ($purpose === 'temporary_recipe') {
-					//we are adding a food to a temporary recipe
-					var $unit_name = $("#temporary-recipe-popup-unit-select option:selected").text();
-					$scope.recipe.temporary_contents.push({
-						"food_id": $scope.food.id,
-						"food_name": $scope.food.name,
-						"quantity": $scope.food.quantity,
-						"unit_id": $scope.unit_id,
-						"unit_name": $unit_name,
-						"assoc_units": $scope.food.assoc_units
-					});
+		// $scope.insertFoodEntry = function ($keycode) {
+		// 	if ($keycode !== 13) {
+		// 		return;
+		// 	}
+		// 	//enter is pressed
+		// 	if ($scope.show.autocomplete.new_food_entry) {
+		// 		//if enter is for the autocomplete
+		// 		$scope.finishFoodAutocomplete($scope.autocomplete.food);
+		// 	}
+		// 	else {
+		// 		// if enter is to add the entry
+		// 		if ($purpose === 'temporary_recipe') {
+		// 			//we are adding a food to a temporary recipe
+		// 			var $unit_name = $("#temporary-recipe-popup-unit-select option:selected").text();
+		// 			$scope.recipe.temporary_contents.push({
+		// 				"food_id": $scope.food.id,
+		// 				"food_name": $scope.food.name,
+		// 				"quantity": $scope.food.quantity,
+		// 				"unit_id": $scope.unit_id,
+		// 				"unit_name": $unit_name,
+		// 				"assoc_units": $scope.food.assoc_units
+		// 			});
 					
-					$("#temporary-recipe-popup-food-input").val("").focus();
-				}
-				else {
-					//we are adding a food to a permanent recipe
-					$scope.addItemToRecipe();
-					$("#recipe-popup-food-input").val("").focus();
-				}
-			}
-		};
+		// 			$("#temporary-recipe-popup-food-input").val("").focus();
+		// 		}
+		// 		else {
+		// 			//we are adding a food to a permanent recipe
+		// 			$scope.addItemToRecipe();
+		// 			$("#recipe-popup-food-input").val("").focus();
+		// 		}
+		// 	}
+		// };
 
 		// $scope.autocomplete = function ($object) {
 		// 	var $keycode = $object.keycode;
