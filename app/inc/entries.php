@@ -23,10 +23,15 @@
 	<div class="col-xs-12 col-sm-6">
 		<table class="table table-bordered">
 			<caption class="bg-blue">entries for the day</caption>
-			<tr><th>exercise</th><th>quantity</th></tr>
+			<tr>
+				<th>exercise</th>
+				<th>unit</th>
+				<th>quantity</th>
+				</tr>
 
 			<tr ng-repeat="entry in exercise_entries" data-entry-id="{{entry.entry_id}}">
 				<td>{{entry.name}}</td>
+				<td>{{entry.unit_name}}</td>
 				<td>{{entry.quantity}}</td>
 				<td><i ng-click="deleteExerciseEntry(entry.entry_id)" class="delete-item fa fa-times"></i></td>
 			</tr>

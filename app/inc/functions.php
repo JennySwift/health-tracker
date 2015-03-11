@@ -397,7 +397,8 @@ function getExerciseEntries ($date) {
 		->where('date', $date)
 		->where('exercise_entries.user_id', Auth::user()->id)
 		->join('exercises', 'exercise_entries.exercise_id', '=', 'exercises.id')
-		->select('exercise_id', 'quantity', 'name', 'exercise_entries.id AS entry_id')
+		->join('exercise_units', 'exercise_entries.exercise_unit_id', '=', 'exercise_units.id')
+		->select('exercise_id', 'quantity', 'exercises.name', 'exercise_units.name AS unit_name', 'exercise_entries.id AS entry_id')
 		->get();
 
 	return $exercise_entries;
