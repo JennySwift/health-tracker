@@ -29,7 +29,7 @@
 		<input ng-model="new_entry.exercise.quantity" ng-keyup="insertOrAutocompleteExerciseEntry($event.keyCode, 'exercise')" type="text" id="exercise-quantity" placeholder="quantity" class="form-control">
 
 		<select ng-keyup="insertOrAutocompleteExerciseEntry($event.keyCode, 'exercise')" class="form-control">
-			<option ng-repeat="unit in units.exercise" ng-selected="unit.id === selected.exercise.default_unit_id" value="{{unit.id}}" id="exercise-unit">{{unit.name}}</option>
+			<option ng-repeat="unit in units.exercise" ng-selected="unit.id === selected.exercise.default_exercise_unit_id" value="{{unit.id}}" id="exercise-unit">{{unit.name}}</option>
 		</select>
 	</div>
 </div>
