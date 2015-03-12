@@ -12,6 +12,8 @@ class AddExerciseUnitIdColumn extends Migration {
 	 */
 	public function up()
 	{
+		DB::statement('SET FOREIGN_KEY_CHECKS=0');
+
 		Schema::table('exercise_entries', function(Blueprint $table)
 		{
 			//
@@ -19,6 +21,8 @@ class AddExerciseUnitIdColumn extends Migration {
 
 			$table->foreign('exercise_unit_id')->references('id')->on('exercise_units');
 		});
+
+		DB::statement('SET FOREIGN_KEY_CHECKS=1');
 	}
 
 	/**
@@ -28,10 +32,14 @@ class AddExerciseUnitIdColumn extends Migration {
 	 */
 	public function down()
 	{
+		DB::statement('SET FOREIGN_KEY_CHECKS=0');
+
 		Schema::table('exercise_entries', function(Blueprint $table)
 		{
 			//
 		});
+
+		DB::statement('SET FOREIGN_KEY_CHECKS=1');
 	}
 
 }
