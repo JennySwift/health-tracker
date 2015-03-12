@@ -20,7 +20,8 @@ html, body {
   background: lightgray; }
 
 body {
-  padding-top: 63px; }
+  padding-top: 63px;
+  background: black; }
   @media (max-width: 600px) {
     body {
       padding-top: 42px; } }
