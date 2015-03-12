@@ -13,46 +13,6 @@ $expense_background: $light_blue; */
 	border-radius: 5px;
 	text-align: center;
 } */
-/*==============================global==============================*/
-html, body {
-  max-width: 100%;
-  overflow-x: hidden;
-  background: lightgray; }
-
-p {
-  width: 238px;
-  padding: 0 20px;
-  text-align: center; }
-
-select {
-  padding-top: 4px; }
-
-input {
-  padding: 0;
-  margin: 0;
-  border: 0;
-  overflow: scroll;
-  background: transparent;
-  text-align: center; }
-
-th, table {
-  text-align: center; }
-  @media (max-width: 600px) {
-    th, table {
-      font-size: 7px; } }
-
-caption {
-  padding: 8px;
-  font-weight: bold; }
-
-li {
-  list-style-type: none; }
-
-@media (max-width: 600px) {
-  h1 {
-    font-size: 20px;
-    margin: 2px 2px; } }
-
 @media (max-width: 480px) {
   .my-input-group input {
     padding-left: 0;
