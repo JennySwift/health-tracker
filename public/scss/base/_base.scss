@@ -6,12 +6,7 @@ html, body {
     background: $lightgrey;
 }
 
-body {
-	padding-top: 63px;
-	@media (max-width: 600px) {
-		padding-top: 42px;
-	}
-}
+
 
 p {
 	width: 238px;
