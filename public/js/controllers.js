@@ -32,7 +32,12 @@ var app = angular.module('foodApp', []);
 		$scope.new_entry = {
 			exercise: {},
 			menu: {},
-			food: {}
+			food: {},
+		};
+
+		//new item-eg new food, as opposed to to food entry
+		$scope.new_item = {
+			recipe: {}
 		};
 
 		// exercise
@@ -275,6 +280,15 @@ var app = angular.module('foodApp', []);
 		// ========================================================================
 		// ========================================================================
 
+		$scope.insertRecipe = function ($keycode) {
+			if ($keycode !== 13) {
+				return;
+			}
+			insert.recipe($scope.new_item.recipe.name).then(function (response) {
+				$scope.recipes = response.data;
+			});
+		};
+
 		$scope.insertOrDeleteUnitInCalories = function ($unit_id, $checked_previously) {
 			if (!$checked_previously) {
 				//we are inserting the unit
@@ -291,14 +305,14 @@ var app = angular.module('foodApp', []);
 			
 		};
 
-		$scope.insert = function ($keycode, $table, $func) {
-			if ($keycode === 13) {
-				var $param = $table;
-				insert.insert($table).then(function (response) {
-					// $func($param);
-				});
-			}
-		};
+		// $scope.insert = function ($keycode, $table, $func) {
+		// 	if ($keycode === 13) {
+		// 		var $param = $table;
+		// 		insert.insert($table).then(function (response) {
+		// 			// $func($param);
+		// 		});
+		// 	}
+		// };
 
 		$scope.insertFood = function ($keycode) {
 			if ($keycode === 13) {

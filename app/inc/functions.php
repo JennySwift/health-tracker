@@ -420,6 +420,14 @@ function getExercises () {
 // ========================================================================
 // ========================================================================
 
+function insertRecipe ($name) {
+	DB::table('recipes')
+		->insert([
+			'name' => $name,
+			'user_id' => Auth::user()->id
+		]);
+}
+
 function insertRecipeEntry ($date, $recipe_id, $recipe_contents) {
 	foreach ($recipe_contents as $item) {
 		$food_id = $item['food_id'];

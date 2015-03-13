@@ -1,5 +1,13 @@
 app.factory('insert', function ($http) {
 	return {
+		recipe: function ($name) {
+			var $url = 'insert/recipe';
+			var $data = {
+				name: $name
+			};
+			
+			return $http.post($url, $data);
+		},
 		food: function () {
 			var $url = 'insert/food';
 			var $name = $("#create-new-food").val();
@@ -44,34 +52,34 @@ app.factory('insert', function ($http) {
 
 			return $http.post($url, $data);
 		},
-		insert: function ($table) {
-			var $input;
-			var $url;
+		// insert: function ($table) {
+		// 	var $input;
+		// 	var $url;
 
-			if ($table === "recipes") {
-				$input = $("#create-new-recipe");
-				$url = 'insert/recipe';
-			}
-			else if ($table === "exercises") {
-				$input = $("#create-new-exercise");
-				$url = 'insert/exercise';
-			}
-			else if ($table === "food_units") {
-				$input = $("#create-new-food-unit");
-				$url = 'insert/foodUnit';
-			}
+		// 	if ($table === "recipes") {
+		// 		$input = $("#create-new-recipe");
+		// 		$url = 'insert/recipe';
+		// 	}
+		// 	else if ($table === "exercises") {
+		// 		$input = $("#create-new-exercise");
+		// 		$url = 'insert/exercise';
+		// 	}
+		// 	else if ($table === "food_units") {
+		// 		$input = $("#create-new-food-unit");
+		// 		$url = 'insert/foodUnit';
+		// 	}
 
-			var $name = $($input).val();
+		// 	var $name = $($input).val();
 
-			var $data = {
-				table: $table,
-				name: $name
-			};
+		// 	var $data = {
+		// 		table: $table,
+		// 		name: $name
+		// 	};
 
-			$($input).val("");
+		// 	$($input).val("");
 
-			return $http.post($url, $data);
-		},
+		// 	return $http.post($url, $data);
+		// },
 		addItemToRecipe: function ($recipe, $food, $unit_id) {
 			var $url = 'insert/recipeItem';
 			var $table = "food_recipe";

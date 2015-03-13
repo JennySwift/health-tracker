@@ -25,7 +25,7 @@
 		<!-- ==========================recipes========================== -->
 		
 		<div class="col col-sm-6">
-			<input ng-keyup="insert($event.keyCode, 'recipes', displayRecipeList)" type="text" placeholder="add a new recipe" id="create-new-recipe" class="form-control">
+			<input ng-model="new_item.recipe.name" ng-keyup="insertRecipe($event.keyCode)" type="text" placeholder="add a new recipe" id="create-new-recipe" class="form-control">
 			<hr>
 		
 			<div>
