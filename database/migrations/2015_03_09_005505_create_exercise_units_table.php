@@ -21,7 +21,7 @@ class CreateExerciseUnitsTable extends Migration {
 			$table->string('name');
 			$table->integer('user_id')->unsigned(); //foreign key
 
-			$table->foreign('user_id')->references('id')->on('users');
+			$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 		});
 
 		DB::statement('SET FOREIGN_KEY_CHECKS=1');

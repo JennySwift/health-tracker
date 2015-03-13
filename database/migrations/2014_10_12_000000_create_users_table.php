@@ -32,7 +32,7 @@ class CreateUsersTable extends Migration {
 			$table->decimal('weight', 10, 2);
 			$table->integer('user_id')->unsigned(); //foreign key
 
-			$table->foreign('user_id')->references('id')->on('users');
+			$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 		});
 
 		Schema::create('exercises', function(Blueprint $table)
@@ -42,7 +42,7 @@ class CreateUsersTable extends Migration {
 			$table->string('name');
 			$table->integer('user_id')->unsigned(); //foreign key
 
-			$table->foreign('user_id')->references('id')->on('users');
+			$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 		});
 
 		Schema::create('exercise_entries', function(Blueprint $table)
@@ -54,8 +54,8 @@ class CreateUsersTable extends Migration {
 			$table->integer('quantity');
 			$table->integer('user_id')->unsigned(); //foreign key
 
-			$table->foreign('exercise_id')->references('id')->on('exercises');
-			$table->foreign('user_id')->references('id')->on('users');
+			$table->foreign('exercise_id')->references('id')->on('exercises')->onDelete('cascade');
+			$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 		});
 
 		Schema::create('foods', function(Blueprint $table)
@@ -65,7 +65,7 @@ class CreateUsersTable extends Migration {
 			$table->integer('user_id')->unsigned(); //foreign key
 			$table->string('name');
 
-			$table->foreign('user_id')->references('id')->on('users');
+			$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 		});
 
 		Schema::create('food_units', function(Blueprint $table)
@@ -75,7 +75,7 @@ class CreateUsersTable extends Migration {
 			$table->string('name');
 			$table->integer('user_id')->unsigned(); //foreign key
 
-			$table->foreign('user_id')->references('id')->on('users');
+			$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 		});
 
 		Schema::create('recipes', function(Blueprint $table)
@@ -85,7 +85,7 @@ class CreateUsersTable extends Migration {
 			$table->string('name');
 			$table->integer('user_id')->unsigned(); //foreign key
 
-			$table->foreign('user_id')->references('id')->on('users');
+			$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 		});
 
 		//These are the more tables with more foreign keys
@@ -100,9 +100,9 @@ class CreateUsersTable extends Migration {
 			$table->boolean('default_unit')->nullable();
 			$table->integer('user_id')->unsigned(); //foreign key
 
-			$table->foreign('food_id')->references('id')->on('foods');
-			$table->foreign('unit_id')->references('id')->on('food_units');	
-			$table->foreign('user_id')->references('id')->on('users');
+			$table->foreign('food_id')->references('id')->on('foods')->onDelete('cascade');
+			$table->foreign('unit_id')->references('id')->on('food_units')->onDelete('cascade');	
+			$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 		});
 
 		Schema::create('food_entries', function(Blueprint $table)
@@ -116,10 +116,10 @@ class CreateUsersTable extends Migration {
 			$table->integer('recipe_id')->unsigned()->nullable(); //foreign key
 			$table->integer('user_id')->unsigned(); //foreign key
 
-			$table->foreign('food_id')->references('id')->on('foods');
-			$table->foreign('unit_id')->references('id')->on('food_units');
-			$table->foreign('recipe_id')->references('id')->on('recipes');
-			$table->foreign('user_id')->references('id')->on('users');
+			$table->foreign('food_id')->references('id')->on('foods')->onDelete('cascade');
+			$table->foreign('unit_id')->references('id')->on('food_units')->onDelete('cascade');
+			$table->foreign('recipe_id')->references('id')->on('recipes')->onDelete('cascade');
+			$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 		});
 
 		Schema::create('food_recipe', function(Blueprint $table)
@@ -132,10 +132,10 @@ class CreateUsersTable extends Migration {
 			$table->integer('user_id')->unsigned(); //foreign key
 			$table->decimal('quantity', 10, 2);
 
-			$table->foreign('recipe_id')->references('id')->on('recipes');
-			$table->foreign('food_id')->references('id')->on('foods');
-			$table->foreign('unit_id')->references('id')->on('food_units');
-			$table->foreign('user_id')->references('id')->on('users');
+			$table->foreign('recipe_id')->references('id')->on('recipes')->onDelete('cascade');
+			$table->foreign('food_id')->references('id')->on('foods')->onDelete('cascade');
+			$table->foreign('unit_id')->references('id')->on('food_units')->onDelete('cascade');
+			$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 		});
 
 		DB::statement('SET FOREIGN_KEY_CHECKS=1');

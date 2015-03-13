@@ -19,7 +19,7 @@ class AddExerciseUnitIdColumn extends Migration {
 			//
 			$table->integer('exercise_unit_id')->unsigned(); //foreign key
 
-			$table->foreign('exercise_unit_id')->references('id')->on('exercise_units');
+			$table->foreign('exercise_unit_id')->references('id')->on('exercise_units')->onDelete('cascade');
 		});
 
 		DB::statement('SET FOREIGN_KEY_CHECKS=1');
