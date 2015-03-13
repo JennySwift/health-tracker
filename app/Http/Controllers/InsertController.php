@@ -74,7 +74,7 @@ class InsertController extends Controller {
 		$food_id = json_decode(file_get_contents('php://input'), true)["food_id"];
 		$recipe_id = json_decode(file_get_contents('php://input'), true)["recipe_id"];
 
-		$sql = "INSERT INTO recipe_entries (recipe_id, food_id, quantity, unit) VALUES ($recipe_id, $food_id, $quantity, $unit_id);";
+		$sql = "INSERT INTO food_recipe (recipe_id, food_id, quantity, unit) VALUES ($recipe_id, $food_id, $quantity, $unit_id);";
 	}
 
 	public function unitInCalories () {

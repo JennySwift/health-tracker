@@ -122,7 +122,7 @@ class CreateUsersTable extends Migration {
 			$table->foreign('user_id')->references('id')->on('users');
 		});
 
-		Schema::create('recipe_entries', function(Blueprint $table)
+		Schema::create('food_recipe', function(Blueprint $table)
 		{
 			$table->increments('id');
 			$table->timestamps();
@@ -155,7 +155,7 @@ class CreateUsersTable extends Migration {
 		Schema::drop('exercises');
 		Schema::drop('calories');
 		Schema::drop('food_entries');
-		Schema::drop('recipe_entries');
+		Schema::drop('food_recipe');
 		Schema::drop('foods');
 		Schema::drop('food_units');
 		Schema::drop('recipes');	

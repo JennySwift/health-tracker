@@ -643,7 +643,7 @@ var app = angular.module('foodApp', []);
 
 		$scope.deleteItem = function ($table, $item, $id, $func) {
 			deleteItem.deleteItem($table, $item, $id).then(function (response) {
-				if ($table === 'recipe_entries') {
+				if ($table === 'food_recipe') {
 					$scope.displayRecipeContents($scope.recipe.id, $scope.recipe.name);
 				}
 				else if ($table === 'food_entries') {

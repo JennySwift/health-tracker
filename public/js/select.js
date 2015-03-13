@@ -144,7 +144,7 @@ app.factory('select', function ($http) {
 		},
 		displayRecipeContents: function ($recipe_id, $recipe_name) {
 			var $url = 'select/recipeContents';
-			var $table = "recipe_entries";
+			var $table = "food_recipe";
 
 			var $data = {
 				table: $table,

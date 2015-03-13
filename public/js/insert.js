@@ -74,7 +74,7 @@ app.factory('insert', function ($http) {
 		},
 		addItemToRecipe: function ($recipe, $food, $unit_id) {
 			var $url = 'insert/recipeItem';
-			var $table = "recipe_entries";
+			var $table = "food_recipe";
 			var $input_to_focus = $("#food");
 
 			var $data = {

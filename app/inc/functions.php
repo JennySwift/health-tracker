@@ -361,7 +361,7 @@ function getRecipeEntries () {
 }
 
 function getRecipeContents ($db, $recipe_id) {
-	$sql = "SELECT recipe_entries.id, foods.name AS food_name, food_units.name AS unit_name, recipe_id, food_id, quantity, unit AS unit_id FROM recipe_entries JOIN foods ON recipe_entries.food_id = foods.id JOIN food_units ON recipe_entries.unit = food_units.id WHERE recipe_id = $recipe_id";
+	$sql = "SELECT food_recipe.id, foods.name AS food_name, food_units.name AS unit_name, recipe_id, food_id, quantity, unit AS unit_id FROM food_recipe JOIN foods ON food_recipe.food_id = foods.id JOIN food_units ON food_recipe.unit = food_units.id WHERE recipe_id = $recipe_id";
 	$sql_result = $db->query($sql);
 
 	$recipe_contents = array();
