@@ -142,12 +142,10 @@ app.factory('select', function ($http) {
 
 			return $http.post($url, $data);
 		},
-		displayRecipeContents: function ($recipe_id, $recipe_name) {
+		recipeContents: function ($recipe_id) {
 			var $url = 'select/recipeContents';
-			var $table = "food_recipe";
 
 			var $data = {
-				table: $table,
 				recipe_id: $recipe_id
 			};
 

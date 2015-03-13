@@ -18,6 +18,9 @@ var app = angular.module('foodApp', []);
 				new_exercise_entry: false,
 				new_menu_entry: false,
 				new_food_entry: false
+			},
+			popups: {
+				recipe: false
 			}
 		};
 
@@ -149,6 +152,15 @@ var app = angular.module('foodApp', []);
 			$scope.show.default_exercise_unit_popup = true;
 		};
 
+		$scope.showRecipePopup = function ($recipe_id, $recipe_name) {
+			select.recipeContents($recipe_id).then(function (response) {
+				$scope.show.popups.recipe = true;
+				$scope.recipe.contents = response.data;
+				$scope.recipe.id = $recipe_id;
+				$scope.recipe.name = $recipe_name;
+			});
+		};
+
 		$scope.showTemporaryRecipePopup = function () {
 			if (!$scope.recipe.temporary_contents || $scope.recipe.temporary_contents.length === 0)
 			//Bring up the temporary recipe popup. No need to press enter again because quantity is irrelevant.
@@ -207,15 +219,6 @@ var app = angular.module('foodApp', []);
 
 		// ===========================recipes===========================
 
-		// $scope.displayRecipeContents = function ($recipe_id, $recipe_name) {
-		// 	$scope.loading = true;
-		// 	select.displayRecipeContents($recipe_id, $recipe_name).then(function (response) {
-		// 		$scope.recipe.contents = response.data.contents;
-		// 		$scope.recipe.id = $recipe_id;
-		// 		$scope.recipe.name = $recipe_name;
-		// 		$scope.loading = false;
-		// 	});
-		// };
 
 		// ===========================menu===========================
 

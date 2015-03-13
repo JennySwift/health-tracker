@@ -1,3 +1,4 @@
+<!-- for when logging a recipe -->
 <div class="row">
 
 	<div ng-show="recipe.temporary_contents.length > 0" class="popup col-sm-8">

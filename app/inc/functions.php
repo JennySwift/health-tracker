@@ -352,7 +352,7 @@ function getRecipeEntries () {
 	$recipe_info = array(
 		"id" => $recipe_id
 	);
-	$contents = getRecipeContents($db, $recipe_id);
+	$contents = getRecipeContents($recipe_id);
 	
 	$array = array(
 		"recipe_info" => $recipe_info,
@@ -360,33 +360,20 @@ function getRecipeEntries () {
 	);
 }
 
-function getRecipeContents ($db, $recipe_id) {
-	$sql = "SELECT food_recipe.id, foods.name AS food_name, food_units.name AS unit_name, recipe_id, food_id, quantity, unit AS unit_id FROM food_recipe JOIN foods ON food_recipe.food_id = foods.id JOIN food_units ON food_recipe.unit = food_units.id WHERE recipe_id = $recipe_id";
-	$sql_result = $db->query($sql);
+function getRecipeContents ($recipe_id) {
+	$recipe_contents = DB::table('food_recipe')
+		->where('recipe_id', $recipe_id)
+		->join('foods', 'food_recipe.food_id', '=', 'foods.id')
+		->join('food_units', 'food_recipe.unit_id', '=', 'food_units.id')
+		->select('food_recipe.id', 'foods.name AS food_name', 'food_units.name AS unit_name', 'recipe_id', 'food_id', 'quantity', 'unit_id')
+		->get();
 
-	$recipe_contents = array();
-	while ($row = $sql_result->fetch(PDO::FETCH_ASSOC)) {
-		$id = $row['id'];
-		$food_id = $row['food_id'];
-		$food_name = $row['food_name'];
-		$unit_id = $row['unit_id'];
-		$unit_name = $row['unit_name'];
-		$quantity = $row['quantity'];
-
-		$assoc_units = getAssocUnits($db, $food_id);
-
-		$food = array(
-			"id" => $id,
-			"food_id" => $food_id,
-			"food_name" => $food_name,
-			"unit_id" => $unit_id,
-			"unit_name" => $unit_name,
-			"quantity" => $quantity,
-			"assoc_units" => $assoc_units
-		);
-
-		$recipe_contents[] = $food;
+	foreach ($recipe_contents as $item) {
+		$food_id = $item->food_id;
+		$assoc_units = getAssocUnits($food_id);
+		$item->assoc_units = $assoc_units;
 	}
+	
 	return $recipe_contents;
 }
 

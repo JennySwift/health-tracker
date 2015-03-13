@@ -89,7 +89,9 @@ class SelectController extends Controller {
 	}
 
 	public function recipeContents () {
-
+		include(app_path() . '/inc/functions.php');
+		$recipe_id = json_decode(file_get_contents('php://input'), true)["recipe_id"];
+		return getRecipeContents($recipe_id);
 	}
 
 }

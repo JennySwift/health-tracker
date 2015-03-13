@@ -45,9 +45,6 @@
 			<?php include($inc . '/entry-inputs.php'); ?> 
 
 		</div> <!-- .row -->
-		
-		<!-- for when logging a recipe -->
-		<?php include($inc . '/recipe-popup.php'); ?> 
 
 		<?php include($inc . '/entries.php'); ?>
 		
