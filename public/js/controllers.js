@@ -467,15 +467,17 @@ var app = angular.module('foodApp', []);
 			}
 		};
 
-		$scope.autocompleteFood = function ($keycode) {
+		$scope.autocompleteFood = function ($keycode, $typing) {
 			if ($keycode !== 13 && $keycode !== 38 && $keycode !== 40) {
 				//not enter, up arrow or down arrow
 				//fill the dropdown
-				$scope.autocomplete.food = select.autocompleteFood($scope.foods);
-				//show the dropdown
-				$scope.show.autocomplete.new_food_entry = true;
-				//select the first item
-				$scope.autocomplete.food[0].selected = true;
+				select.autocompleteFood($typing).then(function (response) {
+					$scope.autocomplete.food = response.data;
+					//show the dropdown
+					$scope.show.autocomplete.food = true;
+					//select the first item
+					$scope.autocomplete.food[0].selected = true;
+				});
 			}
 			else if ($keycode === 38) {
 				//up arrow pressed
@@ -512,9 +514,9 @@ var app = angular.module('foodApp', []);
 		$scope.finishFoodAutocomplete = function ($array, $set_focus) {
 			//array, input_to_focus, autocomplete_to_hide, input_to_fill, selected_property_to_define
 			var $selected = _.findWhere($array, {selected: true});
-			$scope.new_entry.food = $selected;
+			$scope.recipe_popup.food = $selected;
 			$scope.selected.food = $selected;
-			$scope.show.autocomplete.new_food_entry = false;
+			$scope.show.autocomplete.food = false;
 			$($set_focus).val("").focus();
 		};
 
@@ -551,6 +553,22 @@ var app = angular.module('foodApp', []);
 			else {
 				// if enter is to add the entry
 				$scope.insertMenuEntry();
+			}
+		};
+
+		$scope.insertOrAutocompleteFoodEntry = function ($keycode) {
+			if ($keycode !== 13) {
+				return;
+			}
+			//enter is pressed
+			if ($scope.show.autocomplete.food) {
+				//enter is for the autocomplete
+				$scope.finishFoodAutocomplete($scope.autocomplete.food, $("#recipe-popup-food-quantity"));
+				$scope.displayAssocUnitOptions();
+			}
+			else {
+				// if enter is to add the entry
+				// $scope.insertMenuEntry();
 			}
 		};
 

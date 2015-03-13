@@ -37,6 +37,7 @@ Route::post('select/allFoodsWithUnits', 'SelectController@allFoodsWithUnits');
 Route::post('select/weight', 'SelectController@weight');
 Route::post('select/recipeContents', 'SelectController@recipeContents');
 Route::post('select/autocompleteExercise', 'SelectController@autocompleteExercise');
+Route::post('select/autocompleteFood', 'SelectController@autocompleteFood');
 
 // ========================================insert========================================
 

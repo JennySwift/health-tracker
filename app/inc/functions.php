@@ -581,6 +581,17 @@ function autocompleteExercise ($exercise) {
 	return $exercises;
 }
 
+function autocompleteFood ($typing) {
+	$typing = '%' . $typing . '%';
+	$foods = DB::table('foods')
+		->where('name', 'LIKE', $typing)
+		->where('user_id', Auth::user()->id)
+		->select('id', 'name')
+		->get();
+    
+	return $foods;
+}
+
 // ========================================================================
 // ========================================================================
 // ==============================other==============================

@@ -32,6 +32,12 @@ class SelectController extends Controller {
 		return autocompleteExercise($exercise);
 	}
 
+	public function autocompleteFood () {
+		include(app_path() . '/inc/functions.php');
+		$typing = json_decode(file_get_contents('php://input'), true)["typing"];
+		return autocompleteFood($typing);
+	}
+
 	public function entries () {
 		include(app_path() . '/inc/functions.php');
 		$date = json_decode(file_get_contents('php://input'), true)["date"];

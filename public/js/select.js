@@ -17,17 +17,13 @@ app.factory('select', function ($http) {
 			
 			return $http.post($url, $data);
 		},
-		autocompleteFood: function ($foods, $typing) {
-			$food_autocomplete = [];
-
-			for (var i = 0; i < $foods.length; i++) {
-				var $iteration = $foods[i];
-				var $iteration_name = $iteration.food_name.toLowerCase();
-				if ($iteration_name.indexOf($typing.toLowerCase()) !== -1) {
-					$food_autocomplete.push($iteration);
-				}
-			}
-			return $food_autocomplete;
+		autocompleteFood: function ($typing) {
+			var $url = 'select/autocompleteFood';
+			var $data = {
+				typing: $typing
+			};
+			
+			return $http.post($url, $data);
 		},
 		autocompleteMenu: function ($menu) {
 			var $typing = $("#food").val();
