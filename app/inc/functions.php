@@ -564,6 +564,12 @@ function updateDefaultUnit ($food_id, $unit_id) {
 // ========================================================================
 // ========================================================================
 
+function deleteRecipe ($id) {
+	DB::table('recipes')
+		->where('id', $id)
+		->delete();
+}
+
 function deleteUnitFromCalories ($food_id, $unit_id) {
 	DB::table('calories')
 		->where('food_id', $food_id)

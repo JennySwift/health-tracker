@@ -619,6 +619,12 @@ var app = angular.module('foodApp', []);
 		// ========================================================================
 		// ========================================================================
 
+		$scope.deleteRecipe = function ($id) {
+			deleteItem.recipe($id).then(function (response) {
+				$scope.recipes = response.data;
+			});
+		};
+
 		$scope.deleteFood = function ($id) {
 			deleteItem.food($id).then(function (response) {
 				$scope.all_foods_with_units = response.data;
@@ -655,22 +661,22 @@ var app = angular.module('foodApp', []);
 			$scope.recipe.temporary_contents = _.without($scope.recipe.temporary_contents, $item);
 		};
 
-		$scope.deleteItem = function ($table, $item, $id, $func) {
-			deleteItem.deleteItem($table, $item, $id).then(function (response) {
-				if ($table === 'food_recipe') {
-					$scope.displayRecipeContents($scope.recipe.id, $scope.recipe.name);
-				}
-				else if ($table === 'food_entries') {
-					$scope.displayFoodEntries($scope.date.sql);
-				}
-				else {
-					$func();
-					if ($table === 'foods') {
-						$scope.getAllFoodsWithUnits();
-					}
-				}
-			});
-		};
+		// $scope.deleteItem = function ($table, $item, $id, $func) {
+		// 	deleteItem.deleteItem($table, $item, $id).then(function (response) {
+		// 		if ($table === 'food_recipe') {
+		// 			$scope.displayRecipeContents($scope.recipe.id, $scope.recipe.name);
+		// 		}
+		// 		else if ($table === 'food_entries') {
+		// 			$scope.displayFoodEntries($scope.date.sql);
+		// 		}
+		// 		else {
+		// 			$func();
+		// 			if ($table === 'foods') {
+		// 				$scope.getAllFoodsWithUnits();
+		// 			}
+		// 		}
+		// 	});
+		// };
 
 		
 	}); //end display controller

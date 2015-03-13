@@ -9,6 +9,13 @@ use Illuminate\Http\Request;
 class DeleteController extends Controller {
 
 	//
+	public function recipe () {
+		include(app_path() . '/inc/functions.php');
+		$id = json_decode(file_get_contents('php://input'), true)["id"];
+		deleteRecipe($id);
+		return getRecipes();
+	}
+
 	public function food () {
 		include(app_path() . '/inc/functions.php');
 		$id = json_decode(file_get_contents('php://input'), true)["id"];

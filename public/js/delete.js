@@ -1,5 +1,15 @@
 app.factory('deleteItem', function ($http) {
 	return {
+		recipe: function ($id) {
+			if (confirm("Are you sure you want to delete this recipe?")) {
+				var $url = 'delete/recipe';
+				var $data = {
+					id: $id
+				};
+				
+				return $http.post($url, $data);
+			}
+		},
 		food: function ($id) {
 			if (confirm("Are you sure you want to delete this food?")) {
 				var $url = 'delete/food';

@@ -39,7 +39,7 @@
 					<tr ng-repeat="recipe in recipes" class="pointer">
 						<td ng-click="displayRecipeContents(recipe.id, recipe.name)" data-recipe-id="{{recipe.id}}">{{recipe.name}}</td>
 						<td>calories</td>
-						<td><i ng-click="deleteItem('recipes', 'recipe', recipe.id, displayRecipes)" class="delete-item fa fa-times"></i></td>
+						<td><i ng-click="deleteRecipe(recipe.id)" class="delete-item fa fa-times"></i></td>
 					</tr>
 				</table>
 				
