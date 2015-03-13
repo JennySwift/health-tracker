@@ -631,6 +631,12 @@ var app = angular.module('foodApp', []);
 		// ========================================================================
 		// ========================================================================
 
+		$scope.deleteFoodFromRecipe = function ($id) {
+			deleteItem.foodFromRecipe($id, $scope.selected.recipe.id).then(function (response) {
+				$scope.recipe.contents = response.data;
+			});
+		};
+
 		$scope.deleteRecipe = function ($id) {
 			deleteItem.recipe($id).then(function (response) {
 				$scope.recipes = response.data;
