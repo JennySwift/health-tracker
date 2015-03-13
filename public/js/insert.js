@@ -80,18 +80,15 @@ app.factory('insert', function ($http) {
 
 		// 	return $http.post($url, $data);
 		// },
-		addItemToRecipe: function ($recipe, $food, $unit_id) {
-			var $url = 'insert/recipeItem';
-			var $table = "food_recipe";
-			var $input_to_focus = $("#food");
+		foodIntoRecipe: function ($data) {
+			var $url = 'insert/foodIntoRecipe';
 
-			var $data = {
-				table: $table,
-				recipe_id: $recipe.id,
-				food_id: $food.id,
-				quantity: $food.quantity,
-				unit_id: $unit_id,
-			};
+			// var $data = {
+			// 	recipe_id: $recipe.id,
+			// 	food_id: $food.id,
+			// 	quantity: $food.quantity,
+			// 	unit_id: $unit_id,
+			// };
 
 			return $http.post($url, $data);
 		},

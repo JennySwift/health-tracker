@@ -39,7 +39,7 @@
 						<th></th>
 					</tr>
 					<tr ng-repeat="recipe in recipes">
-						<td ng-click="showRecipePopup(recipe.id, recipe.name)" class="pointer">{{recipe.name}}</td>
+						<td ng-click="showRecipePopup(recipe)" class="pointer">{{recipe.name}}</td>
 						<td>calories</td>
 						<td><i ng-click="deleteRecipe(recipe.id)" class="delete-item fa fa-times"></i></td>
 					</tr>

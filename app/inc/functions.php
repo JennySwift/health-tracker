@@ -407,6 +407,17 @@ function getExercises () {
 // ========================================================================
 // ========================================================================
 
+function insertFoodIntoRecipe ($data) {
+	DB::table('food_recipe')
+		->insert([
+			'recipe_id' => $data['recipe_id'],
+			'food_id' => $data['food_id'],
+			'unit_id' => $data['unit_id'],
+			'quantity' => $data['quantity'],
+			'user_id' => Auth::user()->id
+		]);
+}
+
 function insertRecipe ($name) {
 	DB::table('recipes')
 		->insert([

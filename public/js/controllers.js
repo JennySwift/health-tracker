@@ -28,7 +28,8 @@ var app = angular.module('foodApp', []);
 		$scope.selected = {
 			exercise: {},
 			dropdown_item: {},
-			food: {}
+			food: {},
+			unit: {}
 		};
 
 		//new entry
@@ -152,12 +153,11 @@ var app = angular.module('foodApp', []);
 			$scope.show.default_exercise_unit_popup = true;
 		};
 
-		$scope.showRecipePopup = function ($recipe_id, $recipe_name) {
-			select.recipeContents($recipe_id).then(function (response) {
+		$scope.showRecipePopup = function ($recipe) {
+			$scope.selected.recipe = $recipe;
+			select.recipeContents($recipe.id).then(function (response) {
 				$scope.show.popups.recipe = true;
 				$scope.recipe.contents = response.data;
-				$scope.recipe.id = $recipe_id;
-				$scope.recipe.name = $recipe_name;
 			});
 		};
 
@@ -258,7 +258,7 @@ var app = angular.module('foodApp', []);
 				if ($iteration_food_id == $scope.selected.food.id) {
 					// $scope.food_with_assoc_units = $iteration;
 					$scope.selected.food.assoc_units = $iteration.units;
-					$scope.unit_id = $iteration.food.default_unit_id;
+					$scope.selected.unit.id = $iteration.food.default_unit_id;
 					
 				}
 			}
@@ -364,12 +364,6 @@ var app = angular.module('foodApp', []);
 					$scope.units.exercise = response.data;
 				});
 			}
-		};
-
-		$scope.addItemToRecipe = function () {
-			insert.addItemToRecipe($scope.recipe, $scope.food, $scope.unit_id).then(function (response) {
-				$scope.displayRecipeContents($scope.recipe.id, $scope.recipe.name);
-			});
 		};
 
 		$scope.insertOrUpdateWeight = function ($keycode) {
@@ -568,42 +562,39 @@ var app = angular.module('foodApp', []);
 			}
 			else {
 				// if enter is to add the entry
-				// $scope.insertMenuEntry();
+				$scope.insertFoodIntoRecipe();
 			}
 		};
 
-		// $scope.insertFoodEntry = function ($keycode) {
-		// 	if ($keycode !== 13) {
-		// 		return;
-		// 	}
-		// 	//enter is pressed
-		// 	if ($scope.show.autocomplete.new_food_entry) {
-		// 		//if enter is for the autocomplete
-		// 		$scope.finishFoodAutocomplete($scope.autocomplete.food);
-		// 	}
-		// 	else {
-		// 		// if enter is to add the entry
-		// 		if ($purpose === 'temporary_recipe') {
-		// 			//we are adding a food to a temporary recipe
-		// 			var $unit_name = $("#temporary-recipe-popup-unit-select option:selected").text();
-		// 			$scope.recipe.temporary_contents.push({
-		// 				"food_id": $scope.food.id,
-		// 				"food_name": $scope.food.name,
-		// 				"quantity": $scope.food.quantity,
-		// 				"unit_id": $scope.unit_id,
-		// 				"unit_name": $unit_name,
-		// 				"assoc_units": $scope.food.assoc_units
-		// 			});
-					
-		// 			$("#temporary-recipe-popup-food-input").val("").focus();
-		// 		}
-		// 		else {
-		// 			//we are adding a food to a permanent recipe
-		// 			$scope.addItemToRecipe();
-		// 			$("#recipe-popup-food-input").val("").focus();
-		// 		}
-		// 	}
-		// };
+		$scope.insertFoodIntoRecipe = function () {
+			//we are adding a food to a permanent recipe
+			var $data = {
+				recipe_id: $scope.selected.recipe.id,
+				food_id: $scope.selected.food.id,
+				unit_id: $scope.selected.unit.id,
+				quantity: $scope.recipe_popup.food.quantity
+			};
+
+			insert.foodIntoRecipe($data).then(function (response) {
+				$scope.recipe.contents = response.data;
+			});
+			$("#recipe-popup-food-input").val("").focus();
+		};
+
+		$scope.insertFoodIntoTemporaryRecipe = function () {
+			//we are adding a food to a temporary recipe
+			var $unit_name = $("#temporary-recipe-popup-unit-select option:selected").text();
+			$scope.recipe.temporary_contents.push({
+				"food_id": $scope.food.id,
+				"food_name": $scope.food.name,
+				"quantity": $scope.food.quantity,
+				"unit_id": $scope.unit_id,
+				"unit_name": $unit_name,
+				"assoc_units": $scope.food.assoc_units
+			});
+			
+			$("#temporary-recipe-popup-food-input").val("").focus();
+		};
 
 		// $scope.autocomplete = function ($object) {
 		// 	var $keycode = $object.keycode;

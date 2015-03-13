@@ -6,14 +6,14 @@
 		<h4 class="center">{{recipe.name}}</h4>
 		<div class="row margin-bottom">
 			<div class="col-sm-10 col-sm-offset-1">
-				<input ng-model="recipe_popup.food.name" ng-keyup="autocompleteFood($event.keyCode, recipe_popup.food.name); insertOrAutocompleteFoodEntry($event.keyCode, 'menu')" ng-blur="show.autocomplete.food = false" type="text" placeholder="add food to {{recipe.name}}" id="recipe-popup-food-input" class="form-control">
+				<input ng-model="recipe_popup.food.name" ng-keyup="autocompleteFood($event.keyCode, recipe_popup.food.name); insertOrAutocompleteFoodEntry($event.keyCode)" ng-blur="show.autocomplete.food = false" type="text" placeholder="add food to {{recipe.name}}" id="recipe-popup-food-input" class="form-control">
 				
 				<div ng-show="show.autocomplete.food" class="autocomplete-dropdown">
 					<div ng-repeat="food in autocomplete.food" ng-class="{'selected': food.selected}" class="autocomplete-dropdown-item">{{food.name}}</div>
 				</div>
 				
-				<input ng-model="food.quantity" ng-keyup="enter($event.keyCode, 'food')" type="text" placeholder="quantity" id="recipe-popup-food-quantity" class="form-control">
-				<select ng-model="unit_id" ng-keyup="enter($event.keyCode, 'food')" name="" id="" class="form-control">
+				<input ng-model="recipe_popup.food.quantity" ng-keyup="insertOrAutocompleteFoodEntry($event.keyCode)" type="text" placeholder="quantity" id="recipe-popup-food-quantity" class="form-control">
+				<select ng-model="unit_id" ng-keyup="insertOrAutocompleteFoodEntry($event.keyCode)" name="" id="" class="form-control">
 					<option ng-repeat="unit in selected.food.assoc_units" ng-selected="unit.default_unit === true">{{unit.name}}</option>
 				</select>
 			</div>

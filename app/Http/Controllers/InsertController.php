@@ -69,8 +69,13 @@ class InsertController extends Controller {
 		$sql = "INSERT INTO exercise_entries (date, exercise, quantity) VALUES ('$date', '$id', $quantity);";
 	}
 
-	public function recipeItem () {
-
+	public function foodIntoRecipe () {
+		include(app_path() . '/inc/functions.php');
+		$data = json_decode(file_get_contents('php://input'), true);
+		$recipe_id = $data['recipe_id'];
+		
+		insertFoodIntoRecipe($data);
+		return getRecipeContents($recipe_id);
 	}
 
 	public function recipeEntries () {
