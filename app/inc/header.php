@@ -16,6 +16,8 @@
     <li><a ng-click="changeTab('exercises')" href="" class="fa fa-heart"></a></li>
     <li><a ng-click="changeTab('units')" href="">units</a></li>
     
+    <li>branch:master</li>
+    
     <li class="dropdown">
     
         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo Auth::user()->name; ?><span class="caret"></span></a>
