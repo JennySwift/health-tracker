@@ -28,8 +28,7 @@
 	<?php include($inc . '/units.php'); ?>
 	<?php include($inc . '/popups/index.php'); ?>
 
-	<div ng-if="tab === 'entries'">
-
+	<div ng-if="tab === 'entries' || tab === 'journal'">
 		<h1 class="row center">{{date.long}}</h1>
 		
 		<div class="row margin-bottom">
@@ -37,6 +36,9 @@
 			<?php include($inc . '/date-navigation.php'); ?> 
 
 		</div>	<!-- .row -->
+	</div>
+
+	<div ng-if="tab === 'entries'">
 
 		<div class="row">
 
@@ -49,6 +51,11 @@
 		<?php include($inc . '/entries.php'); ?>
 		
 	</div> <!-- end entries tab -->
+
+	<div ng-if="tab === 'journal'">
+		<h1>journal!</h1>
+		<div>{{journal_entry}}</div>
+	</div>
       
 </div> <!-- .container -->  
 

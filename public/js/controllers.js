@@ -199,6 +199,7 @@ var app = angular.module('foodApp', []);
 				$scope.units.exercise = response.data.exercise_units;
 				$scope.exercises = response.data.exercises;
 				$scope.getMenu($scope.foods, $scope.recipes);
+				$scope.journal_entry = response.data.journal_entry;
 			});
 		};
 

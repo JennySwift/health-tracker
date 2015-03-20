@@ -15,6 +15,7 @@
     </li>
     <li><a ng-click="changeTab('exercises')" href="" class="fa fa-heart"></a></li>
     <li><a ng-click="changeTab('units')" href="">units</a></li>
+    <li><a ng-click="changeTab('journal')" href="" class="fa fa-pencil"></a></li>
     
     <li>branch:master</li>
     

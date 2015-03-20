@@ -21,9 +21,16 @@ class SelectController extends Controller {
 			"exercise_units" => getExerciseUnits(),
 			"exercises" => getExercises(),
 			"food_entries" => getFoodEntries($date),
-			"exercise_entries" => getExerciseEntries($date)
+			"exercise_entries" => getExerciseEntries($date),
+			"journal_entry" => getJournalEntry($date)
 		);
 		return $response;
+	}
+
+	public function journalEntry () {
+		include(app_path() . '/inc/functions.php');
+		$date = json_decode(file_get_contents('php://input'), true)["date"];
+		return getJournalEntry($date);
 	}
 
 	public function autocompleteExercise () {

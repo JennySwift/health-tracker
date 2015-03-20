@@ -20,6 +20,15 @@ function getWeight($date) {
 	return $weight;
 }
 
+function getJournalEntry ($date) {
+	$entry = DB::table('journal_entries')
+		->where('date', $date)
+		->where('user_id', Auth::user()->id)
+		->pluck('text');
+		
+	return $entry;
+}
+
 // =================================food=================================
 
 function getFoods () {
