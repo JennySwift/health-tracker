@@ -11,6 +11,16 @@ use Illuminate\Http\Request;
 class InsertController extends Controller {
 
 	//
+	public function journalEntry () {
+		include(app_path() . '/inc/functions.php');
+		$date = json_decode(file_get_contents('php://input'), true)["date"];
+		$text = json_decode(file_get_contents('php://input'), true)["text"];
+		insertOrUpdateJournalEntry($date, $text);
+		// Debugbar::info('text: ' . $text);
+
+		// return getJournalEntry($date);
+	}
+
 	public function menuEntry () {
 		include(app_path() . '/inc/functions.php');
 		$data = json_decode(file_get_contents('php://input'), true);

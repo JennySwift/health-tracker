@@ -4,6 +4,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
+use Debugbar;
 
 class UpdateController extends Controller {
 
@@ -17,6 +18,19 @@ class UpdateController extends Controller {
 
 		return getFoodInfo($food_id);
 	}
+
+	// public function journalEntry () {
+	// 	include(app_path() . '/inc/functions.php');
+	// 	$date = json_decode(file_get_contents('php://input'), true)["date"];
+	// 	$id = json_decode(file_get_contents('php://input'), true)["id"];
+	// 	$text = json_decode(file_get_contents('php://input'), true)["text"];
+	// 	updateJournalEntry($id, $text);
+
+	// 	// $journal_entry = getJournalEntry($date);
+	// 	// Debugbar::info('journal_entry: ', $journal_entry);
+		
+	// 	// return getJournalEntry($date);
+	// }
 
 	public function defaultExerciseUnit () {
 		include(app_path() . '/inc/functions.php');

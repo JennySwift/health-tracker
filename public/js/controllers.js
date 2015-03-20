@@ -43,7 +43,8 @@ var app = angular.module('foodApp', []);
 		$scope.new_item = {
 			recipe: {}
 		};
-
+		//journal
+		$scope.journal_entry = {};
 		// exercise
 		$scope.exercises = {};
 		$scope.exercise_entries = {};
@@ -57,7 +58,7 @@ var app = angular.module('foodApp', []);
 			menu: {},
 			food: {}
 		};
-		$scope.tab = 'entries';
+		$scope.tab = 'journal';
 		$scope.loading = false;
 
 		//=============food=============
@@ -211,10 +212,11 @@ var app = angular.module('foodApp', []);
 			select.entries($scope.date.sql).then(function (response) {
 				$scope.weight = response.data.weight;
 				$scope.exercise_entries = response.data.exercise_entries;
+				$scope.journal_entry = response.data.journal_entry;	
 
 				$scope.food_entries = response.data.food_entries;
 				$scope.calories.day = response.data.calories_for_the_day;
-				$scope.calories.week_avg = response.data.calories_for_the_week;		
+				$scope.calories.week_avg = response.data.calories_for_the_week;
 			});
 		};
 
@@ -283,6 +285,12 @@ var app = angular.module('foodApp', []);
 		// =================================insert=================================
 		// ========================================================================
 		// ========================================================================
+
+		$scope.insertOrUpdateJournalEntry = function () {
+			insert.journalEntry($scope.date.sql, $scope.journal_entry.text).then(function (response) {
+				$scope.journal_entry = response.data;
+			});
+		};
 
 		$scope.insertRecipe = function ($keycode) {
 			if ($keycode !== 13) {
@@ -389,6 +397,12 @@ var app = angular.module('foodApp', []);
 				$("#weight").focus();
 			}, 500);
 		};
+
+		// $scope.updateJournalEntry = function () {
+		// 	update.journalEntry($scope.date.sql, $scope.journal_entry.id, $scope.journal_entry.text).then(function (response) {
+		// 		$scope.journal_entry = response.data;
+		// 	});
+		// };
 
 		$scope.updateDefaultExerciseUnit = function ($unit_id) {
 			update.defaultExerciseUnit($scope.selected.exercise.id, $unit_id).then(function (response) {

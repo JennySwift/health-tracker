@@ -43,6 +43,7 @@ Route::post('select/autocompleteFood', 'SelectController@autocompleteFood');
 // ========================================insert========================================
 
 Route::post('insert/item', 'InsertController@item');
+Route::post('insert/journalEntry', 'InsertController@journalEntry');
 Route::post('insert/food', 'InsertController@food');
 Route::post('insert/recipe', 'InsertController@recipe');
 Route::post('insert/exercise', 'InsertController@exercise');
@@ -57,6 +58,7 @@ Route::post('insert/foodIntoRecipe', 'InsertController@foodIntoRecipe');
 // ========================================update========================================
 
 Route::post('update/defaultUnit', 'UpdateController@defaultUnit');
+Route::post('update/journalEntry', 'UpdateController@journalEntry');
 Route::post('update/defaultExerciseUnit', 'UpdateController@defaultExerciseUnit');
 Route::post('update/calories', 'UpdateController@calories');
 

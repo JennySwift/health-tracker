@@ -1,5 +1,14 @@
 app.factory('insert', function ($http) {
 	return {
+		journalEntry: function ($sql_date, $text) {
+			var $url = 'insert/journalEntry';
+			var $data = {
+				date: $sql_date,
+				text: $text
+			};
+			
+			return $http.post($url, $data);
+		},
 		recipe: function ($name) {
 			var $url = 'insert/recipe';
 			var $data = {

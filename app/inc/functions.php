@@ -24,8 +24,18 @@ function getJournalEntry ($date) {
 	$entry = DB::table('journal_entries')
 		->where('date', $date)
 		->where('user_id', Auth::user()->id)
-		->pluck('text');
-		
+		->select('id', 'text')
+		->first();
+
+	if (!isset($entry)) {
+		//so that $scope.journal_entry isn't null in js
+		$entry = array(
+			'id' => '',
+			'text' => ''
+		);
+	}
+	Debugbar::info('journal entry: ', $entry);
+	// $entry = nl2br($entry);
 	return $entry;
 }
 
@@ -415,6 +425,36 @@ function getExercises () {
 // =================================insert=================================
 // ========================================================================
 // ========================================================================
+
+function insertOrUpdateJournalEntry ($date, $text) {
+	//check if an entry already exists
+	$count = DB::table('journal_entries')
+		->where('date', $date)
+		->where('user_id', Auth::user()->id)
+		->count();
+
+	Debugbar::info('count: ' . $count);
+
+	if ($count === 0) {
+		//create a new entry
+		DB::table('journal_entries')
+			->insert([
+				'date' => $date,
+				'text' => $text,
+				'user_id' => Auth::user()->id
+			]);
+	}
+	else {
+		//update existing entry
+		DB::table('journal_entries')
+			->where('date', $date)
+			->where('user_id', Auth::user()->id)
+			->update([
+				'text' => $text
+			]);
+	}
+	
+}
 
 function insertFoodIntoRecipe ($data) {
 	DB::table('food_recipe')

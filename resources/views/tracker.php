@@ -54,7 +54,10 @@
 
 	<div ng-if="tab === 'journal'">
 		<h1>journal!</h1>
-		<div>{{journal_entry}}</div>
+		<div ng-show="!journal_entry.edit">{{journal_entry.text}}</div>
+		<textarea name="" id="" cols="30" rows="10" ng-model="journal_entry.text">write today's entry</textarea>
+		<button ng-click="journal_entry.edit = true">edit</button>
+		<button ng-click="insertOrUpdateJournalEntry()">save entry</button>
 	</div>
       
 </div> <!-- .container -->  

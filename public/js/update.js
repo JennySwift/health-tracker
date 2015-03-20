@@ -10,6 +10,16 @@ app.factory('update', function ($http) {
 
 			return $http.post($url, $data);
 		},
+		// journalEntry: function ($sql_date, $id, $text) {
+		// 	var $url = 'update/journalEntry';
+		// 	var $data = {
+		// 		date: $sql_date,
+		// 		id: $id,
+		// 		text: $text
+		// 	};
+			
+		// 	return $http.post($url, $data);
+		// },
 		calories: function ($food_id, $unit_id, $calories) {
 			var $url = 'update/calories';
 
