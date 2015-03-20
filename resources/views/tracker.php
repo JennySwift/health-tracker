@@ -28,8 +28,6 @@
 	<?php include($inc . '/units.php'); ?>
 	<?php include($inc . '/popups/index.php'); ?>
 
-	<p>some text written from master branch.</p>
-
 	<div ng-if="tab === 'entries'">
 
 		<h1 class="row center">{{date.long}}</h1>
