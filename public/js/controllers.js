@@ -58,7 +58,7 @@ var app = angular.module('foodApp', ['ngSanitize']);
 			menu: {},
 			food: {}
 		};
-		$scope.tab = 'journal';
+		$scope.tab = 'foods';
 		$scope.loading = false;
 
 		//=============food=============
@@ -719,6 +719,35 @@ var app = angular.module('foodApp', ['ngSanitize']);
 		// 	});
 		// };
 
+		// ========================================================================
+		// ========================================================================
+		// ==============================other==============================
+		// ========================================================================
+		// ========================================================================
+
+		$scope.quickRecipe = function () {
+			// var $string = $("#quick-recipe").html();
+			var $string = 'my<b>apple </b>and my note<br>another<b>orange</b>';
+			var $foods = [];
+			var $substring;
+			var $start_index;
+			var $end_index;
+			var $food;
+
+			for (var i = 0; i < $string.length; i++) {
+				$substring = $string.substr(i, 3);
+				if ($substring === '<b>') {
+					$start_index = i + 3;
+				}
+				else if ($substring === '</b') {
+					$end_index = i;
+					$food = $string.substring($start_index, $end_index);
+					$foods.push($food);
+				}
+			}
+			
+			return $foods;
+		};
 		
 	}); //end display controller
 

@@ -1,4 +1,17 @@
-<div ng-if="tab === 'foods'">
+<div ng-show="tab === 'foods'">
+
+	<!-- ==========================recipe quick entry========================== -->
+
+	<div class="margin-bottom">
+
+		<div class="btn-toolbar" data-role="editor-toolbar" data-target="#wysiwyg">
+			<a data-edit="bold" class="fa fa-bold"></a>
+		</div>
+
+		<div id="quick-recipe" class="wysiwyg"></div>
+
+		<button ng-click="quickRecipe()"class="btn">go</button>
+	</div>
 	
 	<!-- ==========================foods========================== -->
 
