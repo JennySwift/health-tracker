@@ -28,10 +28,16 @@ function getJournalEntry ($date) {
 		->first();
 
 	//for some reason I would get an error if I didn't do this:
-	$response = array(
-		'id' => $entry->id,
-		'text' => $entry->text
-	);
+	if (isset($entry)) {
+		$response = array(
+			'id' => $entry->id,
+			'text' => $entry->text
+		);
+	}
+	else {
+		$response = array();
+	}
+	
 
 	// if (!isset($entry)) {
 	// 	//so that $scope.journal_entry isn't null in js
