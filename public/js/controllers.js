@@ -727,27 +727,55 @@ var app = angular.module('foodApp', ['ngSanitize']);
 
 		$scope.quickRecipe = function () {
 			var $string = $("#quick-recipe").html();
-			var $foods = [];
+			var $contents = [];
 			var $substring;
 			var $start_index;
 			var $end_index;
-			var $food;
+			var $item = {};
 
 			for (var i = 0; i < $string.length; i++) {
 				$substring = $string.substr(i, 3);
+
+				//check for bold tag
 				if ($substring === '<b>') {
 					$start_index = i + 3;
 				}
 				else if ($substring === '</b') {
 					$end_index = i;
-					$food = $string.substring($start_index, $end_index);
-					$foods.push($food);
+					$item.food_name = $string.substring($start_index, $end_index);
 				}
+				//check for underline tag
+				else if ($substring === '<u>') {
+					$start_index = i + 3;
+				}
+				else if ($substring === '</u') {
+					$end_index = i;
+					$item.unit_name = $string.substring($start_index, $end_index);
+				}
+				//check for italics tag
+				else if ($substring === '<i>') {
+					$start_index = i + 3;
+				}
+				else if ($substring === '</i') {
+					$end_index = i;
+					$item.quantity = $string.substring($start_index, $end_index);
+				}
+				//check for br tag
+				else if ($substring === '<br') {
+					//it's a new item. reset $item.
+					$item = {};
+				}
+
+				if ($item.food_name && $item.unit_name && $item.quantity) {
+					$contents.push($item);
+					//reset $item so it doesn't keep getting added to $contents
+					$item = {};
+				}
+				
 			}
+			$scope.quick_recipe_contents = $contents;
 
-			$scope.quick_recipe_foods = $foods;
-
-			insert.quickRecipeFoods($foods).then(function (response) {
+			insert.quickRecipe($contents).then(function (response) {
 				
 			});
 			

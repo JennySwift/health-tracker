@@ -11,10 +11,11 @@ use Illuminate\Http\Request;
 class InsertController extends Controller {
 
 	//
-	public function quickRecipeFoods () {
+	public function quickRecipe () {
 		include(app_path() . '/inc/functions.php');
-		$foods = json_decode(file_get_contents('php://input'), true)["foods"];
-		insertQuickRecipeFoods($foods);
+		$recipe_name = json_decode(file_get_contents('php://input'), true)["recipe_name"];
+		$contents = json_decode(file_get_contents('php://input'), true)["contents"];
+		insertQuickRecipe($recipe_name, $contents);
 	}
 
 	public function journalEntry () {

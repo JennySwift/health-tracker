@@ -3,7 +3,12 @@
 	<!-- ==========================recipe quick entry========================== -->
 
 	<div class="margin-bottom">
-
+		<ul>
+			<li>mark your foods as bold</li>
+			<li>mark your units as underlined</li>
+			<li>mark your quantity as italic</li>
+			<li>start a new line for each ingredient</li>
+		</ul>
 		<div class="btn-toolbar" data-role="editor-toolbar" data-target="#wysiwyg">
 			<a data-edit="bold" class="fa fa-bold"></a>
 			<a data-edit="italic" class="fa fa-italic"></a>
@@ -14,7 +19,7 @@
 
 		<button ng-click="quickRecipe()"class="btn">go</button>
 
-		<div>{{quick_recipe_foods}}</div>
+		<div>{{quick_recipe_contents}}</div>
 	</div>
 	
 	<!-- ==========================foods========================== -->

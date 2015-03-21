@@ -1,9 +1,11 @@
 app.factory('insert', function ($http) {
 	return {
-		quickRecipeFoods: function ($foods) {
-			var $url = 'insert/quickRecipeFoods';
+		quickRecipe: function ($contents) {
+			var $url = 'insert/quickRecipe';
+			var $recipe_name = prompt('name your recipe');
 			var $data = {
-				foods: $foods
+				recipe_name: $recipe_name,
+				contents: $contents
 			};
 			
 			return $http.post($url, $data);
