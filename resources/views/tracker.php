@@ -55,13 +55,13 @@
 	<div ng-show="tab === 'journal'">
 		<h1>journal!</h1>
 
-		<div ng-show="!journal_entry.edit" ng-bind-html="journal_entry.text"></div>
+		<!-- <div ng-show="!journal_entry.edit" ng-bind-html="journal_entry.text"></div> -->
 		<div class="btn-toolbar" data-role="editor-toolbar" data-target="#wysiwyg">
 			<a data-edit="bold" class="fa fa-bold"></a>
 		</div>
 		<div ng-bind-html="journal_entry.text" id="wysiwyg" class="wysiwyg"></div>
 
-		<button ng-click="journal_entry.edit = true">edit</button>
+		<!-- <button ng-click="journal_entry.edit = true">edit</button> -->
 		<button ng-click="insertOrUpdateJournalEntry()">save entry</button>
 	</div>
 
