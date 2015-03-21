@@ -1,5 +1,5 @@
 var $page = window.location.pathname;
-var app = angular.module('foodApp', []);
+var app = angular.module('foodApp', ['ngSanitize']);
 
 (function () {
 	app.controller('display', function ($scope, $http, date, select, autocomplete, insert, deleteItem, update) {
@@ -109,7 +109,15 @@ var app = angular.module('foodApp', []);
 		$scope.goToDate = function ($number) {
 			$scope.date.typed = date.goToDate($scope.date.typed, $number);
 		};
+
+		// ========================================================================
+		// ========================================================================
+		// ===============================plugins==================================
+		// ========================================================================
+		// ========================================================================
 		
+		$(".wysiwyg").wysiwyg();
+
 		// ========================================================================
 		// ========================================================================
 		// ===============================watches==================================

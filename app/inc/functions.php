@@ -27,16 +27,23 @@ function getJournalEntry ($date) {
 		->select('id', 'text')
 		->first();
 
-	if (!isset($entry)) {
-		//so that $scope.journal_entry isn't null in js
-		$entry = array(
-			'id' => '',
-			'text' => ''
-		);
-	}
-	Debugbar::info('journal entry: ', $entry);
+	//for some reason I would get an error if I didn't do this:
+	$response = array(
+		'id' => $entry->id,
+		'text' => $entry->text
+	);
+
+	// if (!isset($entry)) {
+	// 	//so that $scope.journal_entry isn't null in js
+	// 	$entry = array(
+	// 		'id' => '',
+	// 		'text' => ''
+	// 	);
+	// }
+	// Debugbar::info('journal entry: ', $entry);
 	// $entry = nl2br($entry);
-	return $entry;
+	Debugbar::info('response: ', $response);
+	return $response;
 }
 
 // =================================food=================================

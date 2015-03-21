@@ -1,11 +1,14 @@
 app.factory('insert', function ($http) {
 	return {
-		journalEntry: function ($sql_date, $text) {
+		journalEntry: function ($sql_date) {
 			var $url = 'insert/journalEntry';
+			var $text = $("#wysiwyg").html();
 			var $data = {
 				date: $sql_date,
 				text: $text
 			};
+
+			console.log('text from js: ' + $text);
 			
 			return $http.post($url, $data);
 		},

@@ -12,13 +12,16 @@ class InsertController extends Controller {
 
 	//
 	public function journalEntry () {
+		//inserts or updates journal entry
 		include(app_path() . '/inc/functions.php');
 		$date = json_decode(file_get_contents('php://input'), true)["date"];
 		$text = json_decode(file_get_contents('php://input'), true)["text"];
 		insertOrUpdateJournalEntry($date, $text);
-		// Debugbar::info('text: ' . $text);
+		Debugbar::info('text: ' . $text);
 
-		// return getJournalEntry($date);
+		$journal_entry = getJournalEntry($date);
+		Debugbar::info('journal_entry: ', $journal_entry);
+		return $journal_entry;
 	}
 
 	public function menuEntry () {
