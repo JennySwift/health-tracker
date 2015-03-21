@@ -726,8 +726,7 @@ var app = angular.module('foodApp', ['ngSanitize']);
 		// ========================================================================
 
 		$scope.quickRecipe = function () {
-			// var $string = $("#quick-recipe").html();
-			var $string = 'my<b>apple </b>and my note<br>another<b>orange</b>';
+			var $string = $("#quick-recipe").html();
 			var $foods = [];
 			var $substring;
 			var $start_index;
@@ -745,6 +744,12 @@ var app = angular.module('foodApp', ['ngSanitize']);
 					$foods.push($food);
 				}
 			}
+
+			$scope.quick_recipe_foods = $foods;
+
+			insert.quickRecipeFoods($foods).then(function (response) {
+				
+			});
 			
 			return $foods;
 		};

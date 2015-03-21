@@ -6,11 +6,15 @@
 
 		<div class="btn-toolbar" data-role="editor-toolbar" data-target="#wysiwyg">
 			<a data-edit="bold" class="fa fa-bold"></a>
+			<a data-edit="italic" class="fa fa-italic"></a>
+			<a data-edit="underline" class="fa fa-underline"></a>
 		</div>
 
 		<div id="quick-recipe" class="wysiwyg"></div>
 
 		<button ng-click="quickRecipe()"class="btn">go</button>
+
+		<div>{{quick_recipe_foods}}</div>
 	</div>
 	
 	<!-- ==========================foods========================== -->

@@ -1,5 +1,13 @@
 app.factory('insert', function ($http) {
 	return {
+		quickRecipeFoods: function ($foods) {
+			var $url = 'insert/quickRecipeFoods';
+			var $data = {
+				foods: $foods
+			};
+			
+			return $http.post($url, $data);
+		},
 		journalEntry: function ($sql_date) {
 			var $url = 'insert/journalEntry';
 			var $text = $("#journal-entry").html();

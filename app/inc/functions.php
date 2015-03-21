@@ -439,6 +439,24 @@ function getExercises () {
 // ========================================================================
 // ========================================================================
 
+function insertQuickRecipeFoods ($foods) {
+	foreach ($foods as $food) {
+		$count = DB::table('foods')
+			->where('name', $food)
+			->where('user_id', Auth::user()->id)
+			->count();
+
+		if ($count < 1) {
+			//the food does not yet exist so we need to create it
+			DB::table('foods')
+				->insert([
+					'name' => $food,
+					'user_id' => Auth::user()->id
+				]);
+		}
+	}
+}
+
 function insertOrUpdateJournalEntry ($date, $text) {
 	//check if an entry already exists
 	$count = DB::table('journal_entries')
