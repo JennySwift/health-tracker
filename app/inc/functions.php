@@ -397,7 +397,7 @@ function getRecipeContents ($recipe_id) {
 		->where('recipe_id', $recipe_id)
 		->join('foods', 'food_recipe.food_id', '=', 'foods.id')
 		->join('food_units', 'food_recipe.unit_id', '=', 'food_units.id')
-		->select('food_recipe.id', 'foods.name AS food_name', 'food_units.name AS unit_name', 'recipe_id', 'food_id', 'quantity', 'unit_id')
+		->select('food_recipe.id', 'food_recipe.description', 'foods.name AS food_name', 'food_units.name AS unit_name', 'recipe_id', 'food_id', 'quantity', 'unit_id')
 		->get();
 
 	foreach ($recipe_contents as $item) {
@@ -445,11 +445,19 @@ function insertQuickRecipe ($recipe_name, $contents) {
 	//insert recipe into recipes table
 	$recipe_id = insertQuickRecipeRecipe($recipe_name);
 
-	//$contents needs to have: food_name, unit_name, quantity
+	//$contents needs to have: food_name, unit_name, quantity, maybe description
 	foreach ($contents as $item) {
 		$food_name = $item['food_name'];
 		$unit_name = $item['unit_name'];
 		$quantity = $item['quantity'];
+
+		if (isset($item['description'])) {
+			$description = $item['description'];
+		}
+		else {
+			$description = null;
+		}
+		
 
 		//check if the food exists
 		$count = DB::table('foods')
@@ -502,6 +510,7 @@ function insertQuickRecipe ($recipe_name, $contents) {
 				'food_id' => $food_id,
 				'unit_id' => $unit_id,
 				'quantity' => $quantity,
+				'description' => $description,
 				'user_id' => Auth::user()->id	
 			]);	
 	}

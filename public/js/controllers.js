@@ -729,58 +729,186 @@ var app = angular.module('foodApp', ['ngSanitize']);
 			var $string = $("#quick-recipe").html();
 			var $contents = [];
 			var $substring;
+			var $previous_substring;
+			var $type;
+			var $new_line;
+			var $character;
 			var $start_index;
+			var $start_unit_index;
 			var $end_index;
+			var $end_quantity_index;
+			var $end_unit_index;
+			var $end_food_index;
+			var $description;
 			var $item = {};
+			var $errors = [];
 
 			for (var i = 0; i < $string.length; i++) {
 				$substring = $string.substr(i, 3);
+				$character = $string.substr(i, 1);
+				$previous_substring = $string.substr(i-3, 3);
 
-				//check for bold tag
-				if ($substring === '<b>') {
-					$start_index = i + 3;
+				//check if new line. new line is either after a <br>, after a <div>, or the very first line.
+				if ($string.substr(i-4, 4) === '<br>' || $string.substr(i-5, 5) === '<div>' || i === 0) {
+					if ($character !== '<') {
+						//this if check prevents '<' from being the first character if there is an opening tag on the first line
+						$item = {};
+						$new_line = true;
+					}
 				}
-				else if ($substring === '</b') {
-					$end_index = i;
-					$item.food_name = $string.substring($start_index, $end_index);
-				}
-				//check for underline tag
-				else if ($substring === '<u>') {
-					$start_index = i + 3;
-				}
-				else if ($substring === '</u') {
-					$end_index = i;
-					$item.unit_name = $string.substring($start_index, $end_index);
-				}
-				//check for italics tag
-				else if ($substring === '<i>') {
-					$start_index = i + 3;
-				}
-				else if ($substring === '</i') {
-					$end_index = i;
-					$item.quantity = $string.substring($start_index, $end_index);
-				}
-				//check for br tag
-				else if ($substring === '<br') {
-					//it's a new item. reset $item.
-					$item = {};
+				else {
+					$new_line = false;
 				}
 
-				if ($item.food_name && $item.unit_name && $item.quantity) {
+				//ingredients are under the heading 'ingredients'
+
+				//get the quantity
+				if ($new_line) {
+					if (isNaN($character)) {
+						$errors.push('the quantity is not a number');
+					}
+					else {
+						//the quantity is a valid number. Find out how many digits it contains.
+						var $next_character_index = i + 1;
+						var $next_character = $string.substr($next_character_index, 1);
+
+						//check if the following characters are numbers, or empty strings (isNan return false for empty string)
+						while (!isNaN($string.substr($next_character_index, 1)) && $string.substr($next_character_index, 1) !== ' ') {
+							//in other words, the next character is a number
+							$next_character_index++;
+						}
+						$end_quantity_index = $next_character_index;
+						$item.quantity = $string.substring(i, $end_quantity_index);
+					}
+				}
+				
+				//get the unit. unit is one word.
+				if (!$item.unit_name && $item.quantity) {
+					$start_unit_index = $end_quantity_index + 1;
+					var $next_unit_character_index = $start_unit_index + 1;
+					while ($string.substr($next_unit_character_index, 1) !== ' ') {
+						$next_unit_character_index++;
+					}
+					$end_unit_index = $next_unit_character_index;
+					$item.unit_name = $string.substring($start_unit_index, $end_unit_index);
+				}
+				
+				//get the food
+				if (!$item.food_name && $item.unit_name) {
+					var $start_food_index = $end_unit_index + 1;
+					var $next_food_character_index = $start_food_index + 1;
+					//the following check for "$string.substr($next_food_character_index, 5) !== '<div>'" in theory shouldn't be necessary but I needed it because when pasting the recipe into the wysywig it added an opening div tag instead of a closing one on the first line.
+					while ($string.substr($next_food_character_index, 1) !== ',' && $string.substr($next_food_character_index, 4) !== '<br>' && $string.substr($next_food_character_index, 6) !== '</div>' && $string.substr($next_food_character_index, 5) !== '<div>') {
+						//we haven't reached a comma or a new line yet
+						$next_food_character_index++;
+					}
+					$end_food_index = $next_food_character_index;
+					$item.food_name = $string.substring($start_food_index, $end_food_index);
+				}
+				
+				//get the description
+				//check there is a comma, or there is no description
+				if (!$item.description && $item.food_name && $string.substr($end_food_index, 1) === ',') {
+					var $start_description_index = $end_food_index + 1;
+					var $next_description_character_index = $start_description_index + 1;
+
+					while ($string.substr($next_description_character_index, 4) !== '<br>' && $string.substr($next_description_character_index, 6) !== '</div>') {
+						$next_description_character_index++;
+					}
+					var $end_description_index = $next_description_character_index;
+					$item.description = $string.substring($start_description_index + 1, $end_description_index);
+				}
+
+				//get the method. method is under the heading 'method'
+
+				if ($item.quantity && $item.unit_name && $item.food_name) {
 					$contents.push($item);
-					//reset $item so it doesn't keep getting added to $contents
 					$item = {};
 				}
 				
+				
 			}
+
 			$scope.quick_recipe_contents = $contents;
 
 			insert.quickRecipe($contents).then(function (response) {
-				
+				$scope.recipes = response.data;
 			});
-			
-			return $foods;
 		};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		// $scope.quickRecipe = function () {
+		// 	var $string = $("#quick-recipe").html();
+		// 	var $contents = [];
+		// 	var $substring;
+		// 	var $character;
+		// 	var $start_index;
+		// 	var $end_index;
+		// 	var $description;
+		// 	var $item = {};
+
+		// 	for (var i = 0; i < $string.length; i++) {
+		// 		$substring = $string.substr(i, 3);
+		// 		$character = $string.substr(i, 1);
+
+
+		// 		//check for bold tag
+		// 		if ($substring === '<b>') {
+		// 			$start_index = i + 3;
+		// 		}
+		// 		else if ($substring === '</b') {
+		// 			$end_index = i;
+		// 			$item.food_name = $string.substring($start_index, $end_index);
+		// 		}
+		// 		//check for underline tag
+		// 		else if ($substring === '<u>') {
+		// 			$start_index = i + 3;
+		// 		}
+		// 		else if ($substring === '</u') {
+		// 			$end_index = i;
+		// 			$item.unit_name = $string.substring($start_index, $end_index);
+		// 		}
+		// 		//check for italics tag
+		// 		else if ($substring === '<i>') {
+		// 			$start_index = i + 3;
+		// 		}
+		// 		else if ($substring === '</i') {
+		// 			$end_index = i;
+		// 			$item.quantity = $string.substring($start_index, $end_index);
+		// 		}
+		// 		//check for br tag
+		// 		else if ($substring === '<br') {
+		// 			//it's a new item. reset $item.
+		// 			$item = {};
+		// 		}
+
+		// 		if ($item.food_name && $item.unit_name && $item.quantity) {
+		// 			$contents.push($item);
+		// 			//reset $item so it doesn't keep getting added to $contents
+		// 			$item = {};
+		// 		}
+				
+		// 	}
+		// 	$scope.quick_recipe_contents = $contents;
+
+		// 	insert.quickRecipe($contents).then(function (response) {
+				
+		// 	});
+			
+		// 	return $foods;
+		// };
 		
 	}); //end display controller
 

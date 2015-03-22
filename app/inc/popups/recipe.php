@@ -26,11 +26,13 @@
 						<th>food</th>
 						<th>unit</th>
 						<th>quantity</th>
+						<th>description</th>
 					</tr>
 					<tr ng-repeat="item in recipe.contents">
 						<td>{{item.food_name}}</td>
 						<td>{{item.unit_name}}</td>
 						<td>{{item.quantity}}</td>
+						<td>{{item.description}}</td>
 						<td><i ng-click="deleteFoodFromRecipe(item.id)" class="delete-item fa fa-times"></i></td>
 					</tr>
 				</table>

@@ -8,6 +8,7 @@
 			<li>mark your units as underlined</li>
 			<li>mark your quantity as italic</li>
 			<li>start a new line for each ingredient</li>
+			<li>there must be a space after the comma</li>
 		</ul>
 		<div class="btn-toolbar" data-role="editor-toolbar" data-target="#wysiwyg">
 			<a data-edit="bold" class="fa fa-bold"></a>

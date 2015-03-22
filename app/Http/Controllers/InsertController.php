@@ -16,6 +16,7 @@ class InsertController extends Controller {
 		$recipe_name = json_decode(file_get_contents('php://input'), true)["recipe_name"];
 		$contents = json_decode(file_get_contents('php://input'), true)["contents"];
 		insertQuickRecipe($recipe_name, $contents);
+		return getRecipes();
 	}
 
 	public function journalEntry () {
