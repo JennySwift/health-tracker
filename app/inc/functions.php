@@ -8,6 +8,27 @@
 // ========================================================================
 // ========================================================================
 
+function getExerciseTags () {
+	//gets all exercise tags
+	$tags = DB::table('exercise_tags')
+		->where('user_id', Auth::user()->id)
+		->select('id', 'name')
+		->get();
+
+	return $tags;
+}
+
+function getTagsForExercise ($exercise_id) {
+	//gets tags associated with each exercise
+	$tags = DB::table('exercise_tag')
+		->where('exercise_id', $exercise_id)
+		->join('exercise_tags', 'exercise_tag.tag_id', '=', 'exercise_tags.id')
+		->select('exercise_tags.id', 'name')
+		->get();
+
+	return $tags;
+}
+
 function getWeight($date) {
 	$weight = DB::table('weight')
 		->where('date', $date)
@@ -428,7 +449,14 @@ function getExercises () {
     	->where('exercises.user_id', Auth::user()->id)
     	->leftJoin('exercise_units', 'default_exercise_unit_id', '=', 'exercise_units.id')
     	->select('exercises.id', 'exercises.name', 'default_exercise_unit_id', 'exercise_units.name AS default_exercise_unit_name')
+    	->orderBy('name', 'asc')
     	->get();
+
+    foreach ($exercises as $exercise) {
+    	$id = $exercise->id;
+    	$tags = getTagsForExercise($id);
+    	$exercise->tags = $tags;
+    }
 
     return $exercises;
 }
@@ -438,6 +466,31 @@ function getExercises () {
 // =================================insert=================================
 // ========================================================================
 // ========================================================================
+
+function insertNewExerciseTag ($name) {
+	DB::table('exercise_tags')
+		->insert([
+			'name' => $name,
+			'user_id' => Auth::user()->id
+		]);
+}
+
+function insertExerciseTag ($exercise_id, $tag_id) {
+	//inserts a tag into an exercise
+	DB::table('exercise_tag')
+		->insert([
+			'exercise_id' => $exercise_id,
+			'tag_id' => $tag_id,
+			'user_id' => Auth::user()->id
+		]);
+}
+
+function deleteTagFromExercise ($exercise_id, $tag_id) {
+	DB::table('exercise_tag')
+		->where('exercise_id', $exercise_id)
+		->where('tag_id', $tag_id)
+		->delete();
+}
 
 // ==============================quick recipe==============================
 
@@ -731,6 +784,12 @@ function updateDefaultUnit ($food_id, $unit_id) {
 // =================================delete=================================
 // ========================================================================
 // ========================================================================
+
+function deleteExerciseTag ($id) {
+	DB::table('exercise_tags')
+		->where('id', $id)
+		->delete();
+}
 
 function deleteFoodFromRecipe ($id) {
 	DB::table('food_recipe')

@@ -14,6 +14,7 @@
 <script type="text/javascript" src="tools/time.js"></script>
 <script type="text/javascript" src="tools/moment.js"></script>
 <script type="text/javascript" src="tools/mousetrap.min.js"></script>
+<script type="text/javascript" src="tools/checklist-model.js"></script>
 
 <script type="text/javascript" src="js/controllers.js"></script>
 <script type="text/javascript" src="js/my-date.js"></script>

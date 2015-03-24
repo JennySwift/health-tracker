@@ -11,6 +11,25 @@ app.factory('deleteItem', function ($http) {
 				return $http.post($url, $data);
 			}
 		},
+		tagFromExercise: function ($exercise_id, $tag_id) {
+			var $url = 'delete/tagFromExercise';
+			var $data = {
+				exercise_id: $exercise_id,
+				tag_id: $tag_id
+			};
+			
+			return $http.post($url, $data);
+		},
+		exerciseTag: function ($id) {
+			if (confirm("Are you sure you want to delete this tag?")) {
+				var $url = 'delete/exerciseTag';
+				var $data = {
+					id: $id
+				};
+				
+				return $http.post($url, $data);
+			}
+		},
 		recipe: function ($id) {
 			if (confirm("Are you sure you want to delete this recipe?")) {
 				var $url = 'delete/recipe';

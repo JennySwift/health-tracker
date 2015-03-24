@@ -1,5 +1,25 @@
 app.factory('insert', function ($http) {
 	return {
+		exerciseTag: function () {
+			var $name = $("#create-exercise-tag").val();
+			var $url = 'insert/exerciseTag';
+			var $data = {
+				name: $name
+			};
+
+			$("#create-exercise-tag").val("");
+			
+			return $http.post($url, $data);
+		},
+		tagInExercise: function ($exercise_id, $tag_id) {
+			var $url = 'insert/tagInExercise';
+			var $data = {
+				exercise_id: $exercise_id,
+				tag_id: $tag_id
+			};
+			
+			return $http.post($url, $data);
+		},
 		quickRecipe: function ($contents) {
 			var $url = 'insert/quickRecipe';
 			var $recipe_name = prompt('name your recipe');

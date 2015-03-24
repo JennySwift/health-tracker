@@ -1,5 +1,5 @@
 var $page = window.location.pathname;
-var app = angular.module('foodApp', ['ngSanitize']);
+var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 
 (function () {
 	app.controller('display', function ($scope, $http, date, select, autocomplete, insert, deleteItem, update) {
@@ -58,7 +58,7 @@ var app = angular.module('foodApp', ['ngSanitize']);
 			menu: {},
 			food: {}
 		};
-		$scope.tab = 'foods';
+		$scope.tab = 'exercises';
 		$scope.loading = false;
 
 		//=============food=============
@@ -157,8 +157,7 @@ var app = angular.module('foodApp', ['ngSanitize']);
 		// ========================================================================
 
 		$scope.showDefaultExerciseUnitPopup = function ($exercise) {
-			$scope.selected.exercise.name = $exercise.name;
-			$scope.selected.exercise.id = $exercise.id;
+			$scope.selected.exercise = $exercise;
 			$scope.show.default_exercise_unit_popup = true;
 		};
 
@@ -209,6 +208,7 @@ var app = angular.module('foodApp', ['ngSanitize']);
 				$scope.exercises = response.data.exercises;
 				$scope.getMenu($scope.foods, $scope.recipes);
 				$scope.journal_entry = response.data.journal_entry;
+				$scope.exercise_tags = response.data.exercise_tags;
 			});
 		};
 
@@ -293,6 +293,29 @@ var app = angular.module('foodApp', ['ngSanitize']);
 		// =================================insert=================================
 		// ========================================================================
 		// ========================================================================
+
+		$scope.insertExerciseTag = function ($keypress) {
+			if ($keypress !== 13) {
+				return;
+			}
+			insert.exerciseTag().then(function (response) {
+				$scope.exercise_tags = response.data;
+			});
+		};
+
+		$scope.insertOrDeleteTagFromExercise = function ($tag) {
+			var $is_checked = _.findWhere($scope.selected.exercise.tags, {id: $tag.id});
+			if ($is_checked) {
+				insert.insertTagInExercise($scope.selected.exercise.id, $tag.id).then(function (response) {
+					$scope.exercises = response.data;
+				});
+			}
+			else {
+				deleteItem.tagFromExercise($scope.selected.exercise.id, $tag.id).then(function (response) {
+					$scope.exercises = response.data;
+				});
+			}
+		};
 
 		$scope.insertOrUpdateJournalEntry = function () {
 			insert.journalEntry($scope.date.sql, $scope.journal_entry.text).then(function (response) {
@@ -653,6 +676,12 @@ var app = angular.module('foodApp', ['ngSanitize']);
 		// =================================delete=================================
 		// ========================================================================
 		// ========================================================================
+
+		$scope.deleteExerciseTag = function ($id) {
+			deleteItem.exerciseTag($id).then(function (response) {
+				$scope.exercise_tags = response.data;
+			});
+		};
 
 		$scope.deleteFoodFromRecipe = function ($id) {
 			deleteItem.foodFromRecipe($id, $scope.selected.recipe.id).then(function (response) {

@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 class SelectController extends Controller {
-
 	//
 	public function pageLoad () {
 		include(app_path() . '/inc/functions.php');
@@ -22,7 +21,8 @@ class SelectController extends Controller {
 			"exercises" => getExercises(),
 			"food_entries" => getFoodEntries($date),
 			"exercise_entries" => getExerciseEntries($date),
-			"journal_entry" => getJournalEntry($date)
+			"journal_entry" => getJournalEntry($date),
+			"exercise_tags" => getExerciseTags()
 		);
 		return $response;
 	}

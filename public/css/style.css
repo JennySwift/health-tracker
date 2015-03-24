@@ -330,6 +330,10 @@ li {
   width: 300px;
   background: white; }
 
+#exercises {
+  display: flex;
+  justify-content: center; }
+
 body.browser-height {
   box-sizing: border-box; }
 

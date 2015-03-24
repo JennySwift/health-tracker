@@ -11,6 +11,22 @@ use Illuminate\Http\Request;
 class InsertController extends Controller {
 
 	//
+	public function exerciseTag () {
+		//creates a new exercise tag
+		include(app_path() . '/inc/functions.php');
+		$name = json_decode(file_get_contents('php://input'), true)["name"];
+		insertNewExerciseTag($name);
+		return getExerciseTags();
+	}
+
+	public function tagInExercise () {
+		include(app_path() . '/inc/functions.php');
+		$exercise_id = json_decode(file_get_contents('php://input'), true)["exercise_id"];
+		$tag_id = json_decode(file_get_contents('php://input'), true)["tag_id"];
+		insertExerciseTag($exercise_id, $tag_id);
+		return getExercises();
+	}
+
 	public function quickRecipe () {
 		include(app_path() . '/inc/functions.php');
 		$recipe_name = json_decode(file_get_contents('php://input'), true)["recipe_name"];
