@@ -2,3 +2,11 @@
 	display: flex;
 	justify-content: center;
 }
+
+#default-exercise-unit-popup-checkboxes {
+	display: flex;
+	flex-wrap: wrap;
+	label {
+		padding: 2px 8px;
+	}
+}

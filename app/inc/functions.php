@@ -485,11 +485,11 @@ function insertExerciseTag ($exercise_id, $tag_id) {
 		]);
 }
 
-function deleteTagFromExercise ($exercise_id, $tag_id) {
-	DB::table('exercise_tag')
-		->where('exercise_id', $exercise_id)
-		->where('tag_id', $tag_id)
-		->delete();
+function insertTagsInExercise ($exercise_id, $tags) {
+	foreach ($tags as $tag) {
+		$tag_id = $tag['id'];
+		insertExerciseTag($exercise_id, $tag_id);
+	}
 }
 
 // ==============================quick recipe==============================
@@ -784,6 +784,19 @@ function updateDefaultUnit ($food_id, $unit_id) {
 // =================================delete=================================
 // ========================================================================
 // ========================================================================
+
+function deleteTagFromExercise ($exercise_id, $tag_id) {
+	DB::table('exercise_tag')
+		->where('exercise_id', $exercise_id)
+		->where('tag_id', $tag_id)
+		->delete();
+}
+
+function deleteTagsFromExercise ($exercise_id) {
+	DB::table('exercise_tag')
+		->where('exercise_id', $exercise_id)
+		->delete();
+}
 
 function deleteExerciseTag ($id) {
 	DB::table('exercise_tags')

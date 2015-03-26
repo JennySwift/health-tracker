@@ -45,6 +45,7 @@ Route::post('select/autocompleteFood', 'SelectController@autocompleteFood');
 Route::post('insert/item', 'InsertController@item');
 Route::post('insert/exerciseTag', 'InsertController@exerciseTag');
 Route::post('insert/tagInExercise', 'InsertController@tagInExercise');
+Route::post('insert/tagsInExercise', 'InsertController@tagsInExercise');
 Route::post('insert/quickRecipe', 'InsertController@quickRecipe');
 Route::post('insert/journalEntry', 'InsertController@journalEntry');
 Route::post('insert/food', 'InsertController@food');

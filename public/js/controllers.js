@@ -303,18 +303,12 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 			});
 		};
 
-		$scope.insertOrDeleteTagFromExercise = function ($tag) {
-			var $is_checked = _.findWhere($scope.selected.exercise.tags, {id: $tag.id});
-			if ($is_checked) {
-				insert.insertTagInExercise($scope.selected.exercise.id, $tag.id).then(function (response) {
-					$scope.exercises = response.data;
-				});
-			}
-			else {
-				deleteItem.tagFromExercise($scope.selected.exercise.id, $tag.id).then(function (response) {
-					$scope.exercises = response.data;
-				});
-			}
+		$scope.insertTagsInExercise = function () {
+			//deletes tags from the exercise then adds the correct ones
+			insert.tagsInExercise($scope.selected.exercise.id, $scope.selected.exercise.tags).then(function (response) {
+				$scope.exercises = response.data;
+				$scope.show.default_exercise_unit_popup = false;
+			});
 		};
 
 		$scope.insertOrUpdateJournalEntry = function () {

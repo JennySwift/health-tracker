@@ -20,6 +20,15 @@ app.factory('insert', function ($http) {
 			
 			return $http.post($url, $data);
 		},
+		tagsInExercise: function ($exercise_id, $tags) {
+			var $url = 'insert/tagsInExercise';
+			var $data = {
+				exercise_id: $exercise_id,
+				tags: $tags
+			};
+			
+			return $http.post($url, $data);
+		},
 		quickRecipe: function ($contents) {
 			var $url = 'insert/quickRecipe';
 			var $recipe_name = prompt('name your recipe');

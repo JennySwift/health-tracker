@@ -5,12 +5,14 @@
 			{{unit.name}}
 		</li>
 
-		<label ng-repeat="tag in exercise_tags">
-			{{tag.name}}
-			<input checklist-model="selected.exercise.tags" checklist-value="tag" ng-change="insertOrDeleteTagFromExercise(tag)" type="checkbox">
-		</label>
+		<div id="default-exercise-unit-popup-checkboxes">
+			<label ng-repeat="tag in exercise_tags">
+				{{tag.name}}
+				<input checklist-model="selected.exercise.tags" checklist-value="tag" type="checkbox">
+			</label>
+		</div>
 
-		<button ng-click="show.default_exercise_unit_popup = false">done</button>
+		<button ng-click="insertTagsInExercise()">done</button>
 		
 	</div>
 

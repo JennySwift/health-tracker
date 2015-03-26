@@ -27,6 +27,16 @@ class InsertController extends Controller {
 		return getExercises();
 	}
 
+	public function tagsInExercise () {
+		//deletes all tags then adds the correct tags
+		include(app_path() . '/inc/functions.php');
+		$exercise_id = json_decode(file_get_contents('php://input'), true)["exercise_id"];
+		$tags = json_decode(file_get_contents('php://input'), true)["tags"];
+		deleteTagsFromExercise($exercise_id);
+		insertTagsInExercise($exercise_id, $tags);
+		return getExercises();
+	}
+
 	public function quickRecipe () {
 		include(app_path() . '/inc/functions.php');
 		$recipe_name = json_decode(file_get_contents('php://input'), true)["recipe_name"];
