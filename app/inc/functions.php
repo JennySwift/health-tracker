@@ -220,10 +220,16 @@ function getFoodUnits () {
 }
 
 function getExerciseUnits () {
-    $exercise_units = DB::table('exercise_units')
+    $result = DB::table('exercise_units')
     	->where('user_id', Auth::user()->id)
     	->select('id', 'name')
     	->get();
+
+    //so that it is an array, not an object
+    $exercise_units = array();
+    foreach ($result as $unit) {
+    	$exercise_units[] = $unit;
+    }
 
     return $exercise_units;
 }

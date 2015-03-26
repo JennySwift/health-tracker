@@ -26,15 +26,21 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 
 		//selected
 		$scope.selected = {
-			exercise: {},
+			exercise: {
+				unit: {}
+			},
 			dropdown_item: {},
 			food: {},
-			unit: {}
+			unit: {},
+			exercise_unit: {}
 		};
 
 		//new entry
 		$scope.new_entry = {
-			exercise: {},
+			exercise: {
+				unit: {}
+			},
+			exercise_unit: {},
 			menu: {},
 			food: {},
 		};
@@ -58,7 +64,7 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 			menu: {},
 			food: {}
 		};
-		$scope.tab = 'exercises';
+		$scope.tab = 'entries';
 		$scope.loading = false;
 
 		//=============food=============
@@ -209,6 +215,8 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 				$scope.getMenu($scope.foods, $scope.recipes);
 				$scope.journal_entry = response.data.journal_entry;
 				$scope.exercise_tags = response.data.exercise_tags;
+
+				$scope.selected.exercise_unit_id = $scope.units.exercise[0].id;
 			});
 		};
 
@@ -383,10 +391,7 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 		};
 
 		$scope.insertExerciseEntry = function () {
-			$scope.new_entry.exercise.id = $scope.selected.exercise.id;
-			$scope.new_entry.exercise.name = $scope.selected.exercise.name;
-			$scope.new_entry.exercise.unit_id = $("#exercise-unit").val();
-
+			$scope.new_entry.exercise.unit_id = $scope.selected.exercise_unit_id;
 			insert.exerciseEntry($scope.date.sql, $scope.new_entry.exercise).then(function (response) {
 				$scope.exercise_entries = response.data;
 			});
@@ -529,6 +534,7 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 			//array, input_to_focus, autocomplete_to_hide, input_to_fill, selected_property_to_define
 			var $selected = _.findWhere($array, {selected: true});
 			$scope.selected.exercise = $selected;
+			$scope.selected.exercise_unit_id = $scope.selected.exercise.default_exercise_unit_id;
 			$scope.new_entry.exercise = $selected;
 			$scope.selected.exercise = $selected;
 			$scope.show.autocomplete.new_exercise_entry = false;

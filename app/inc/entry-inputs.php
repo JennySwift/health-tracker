@@ -20,7 +20,7 @@
 <div class="col-xs-6 col-sm-4 margin-bottom">
 	<div>
 		<!-- <input ng-model="new_entry.exercise.name" ng-keyup="autocomplete({keycode:$event.keyCode, autocomplete_property:'exercise', show_property:'new_exercise_entry', function_property:'autocompleteExercise', input_to_fill: new_entry.exercise.name}); enter($event.keyCode, 'exercise')" type="text" placeholder="exercise" id="exercise" class="form-control"> -->
-		<input ng-model="new_entry.exercise.name" ng-keyup="autocompleteExercise($event.keyCode); insertOrAutocompleteExerciseEntry($event.keyCode, 'exercise')" type="text" placeholder="exercise" id="exercise" class="form-control">
+		<input ng-model="new_entry.exercise.name" ng-keyup="autocompleteExercise($event.keyCode); insertOrAutocompleteExerciseEntry($event.keyCode, 'exercise')" ng-blur="show.autocomplete.new_exercise_entry = false" type="text" placeholder="exercise" id="exercise" class="form-control">
 
 		<div ng-show="show.autocomplete.new_exercise_entry">
 			<div ng-repeat="item in autocomplete.exercise" ng-class="{'selected': item.selected}" class="autocomplete-dropdown-item">{{item.name}}</div>
@@ -28,7 +28,7 @@
 
 		<input ng-model="new_entry.exercise.quantity" ng-keyup="insertOrAutocompleteExerciseEntry($event.keyCode, 'exercise')" type="text" id="exercise-quantity" placeholder="quantity" class="form-control">
 
-		<select ng-keyup="insertOrAutocompleteExerciseEntry($event.keyCode, 'exercise')" class="form-control">
+		<select ng-model="selected.exercise_unit.id" ng-keyup="insertOrAutocompleteExerciseEntry($event.keyCode, 'exercise')" class="form-control">
 			<option ng-repeat="unit in units.exercise" ng-selected="unit.id === selected.exercise.default_exercise_unit_id" value="{{unit.id}}" id="exercise-unit">{{unit.name}}</option>
 		</select>
 	</div>
