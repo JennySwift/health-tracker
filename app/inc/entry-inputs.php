@@ -1,5 +1,5 @@
 <!-- food entry -->
-<div class="col-xs-6 col-sm-4 margin-bottom">
+<div ng-show="tab.entries || tab.food_entries" class="col-xs-12 col-sm-4 margin-bottom">
 	<div>	
 		<input ng-model="new_entry.menu.name" ng-keyup="autocompleteMenu($event.keyCode); insertOrAutocompleteMenuEntry($event.keyCode)" ng-blur="autocomplete.menu = ''" type="text" placeholder="food" id="food" class="form-control">
 		
@@ -17,7 +17,7 @@
 </div>
 
 <!-- exercise entry -->
-<div class="col-xs-6 col-sm-4 margin-bottom">
+<div ng-show="tab.entries || tab.exercise_entries" class="col-xs-12 col-sm-4 margin-bottom">
 	<div>
 		<!-- <input ng-model="new_entry.exercise.name" ng-keyup="autocomplete({keycode:$event.keyCode, autocomplete_property:'exercise', show_property:'new_exercise_entry', function_property:'autocompleteExercise', input_to_fill: new_entry.exercise.name}); enter($event.keyCode, 'exercise')" type="text" placeholder="exercise" id="exercise" class="form-control"> -->
 		<input ng-model="new_entry.exercise.name" ng-keyup="autocompleteExercise($event.keyCode); insertOrAutocompleteExerciseEntry($event.keyCode, 'exercise')" ng-blur="show.autocomplete.new_exercise_entry = false" type="text" placeholder="exercise" id="exercise" class="form-control">

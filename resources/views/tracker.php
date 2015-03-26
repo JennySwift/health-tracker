@@ -28,7 +28,7 @@
 	<?php include($inc . '/units.php'); ?>
 	<?php include($inc . '/popups/index.php'); ?>
 
-	<div ng-if="tab === 'entries' || tab === 'journal'">
+	<div ng-if="tab.entries || tab.journal || tab.food_entries || tab.exercise_entries">
 		<h1 class="row center">{{date.long}}</h1>
 		
 		<div class="row margin-bottom">
@@ -38,7 +38,7 @@
 		</div>	<!-- .row -->
 	</div>
 
-	<div ng-if="tab === 'entries'">
+	<div ng-show="tab.entries || tab.food_entries || tab.exercise_entries">
 
 		<div class="row">
 
@@ -52,7 +52,7 @@
 		
 	</div> <!-- end entries tab -->
 
-	<div ng-show="tab === 'journal'">
+	<div ng-show="tab.journal">
 		<h1>journal!</h1>
 
 		<!-- <div ng-show="!journal_entry.edit" ng-bind-html="journal_entry.text"></div> -->

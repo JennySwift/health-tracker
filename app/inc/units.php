@@ -1,4 +1,4 @@
-<div ng-if="tab === 'units'">
+<div ng-if="tab.units">
 
 	<div class="row">
 

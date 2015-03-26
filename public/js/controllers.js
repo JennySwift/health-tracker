@@ -10,6 +10,11 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 		// ========================================================================
 		// ========================================================================
 
+		//=============tabs=============
+		$scope.tab = {
+			entries: true
+		};
+
 		//show
 		$scope.show = {
 			food_info: false,
@@ -64,7 +69,6 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 			menu: {},
 			food: {}
 		};
-		$scope.tab = 'entries';
 		$scope.loading = false;
 
 		//=============food=============
@@ -195,7 +199,8 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 		// ========================================================================
 
 		$scope.changeTab = function ($tab) {
-			$scope.tab = $tab;
+			$scope.tab = {};
+			$scope.tab[$tab] = true;
 		};
 
 		// ===========================page load===========================
@@ -757,6 +762,37 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 		// 		}
 		// 	});
 		// };
+
+		// ========================================================================
+		// ========================================================================
+		// ==============================media queries==============================
+		// ========================================================================
+		// ========================================================================
+
+		enquire.register("screen and (max-width: 600px", {
+			match: function () {
+				// $("body").css('background', blue);
+				if ($scope.tab.entries) {
+					$scope.changeTab('food_entries');
+					$scope.$apply();
+				}
+			},
+			unmatch: function () {
+				if ($scope.tab.food_entries) {
+					$scope.changeTab('entries');
+					$scope.$apply();
+				}
+			}
+		});
+
+		enquire.register("screen and (max-width: 890px", {
+			match: function () {
+				$("#avg-calories-for-the-week-text").text('Avg: ');
+			},
+			unmatch: function () {
+				$("#avg-calories-for-the-week-text").text('Avg calories (last 7 days): ');
+			}
+		});
 
 		// ========================================================================
 		// ========================================================================

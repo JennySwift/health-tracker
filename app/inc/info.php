@@ -1,4 +1,4 @@
-<div id="info" class="col-xs-12 col-sm-4">
+<div ng-if="tab.entries" id="info" class="col-xs-12 col-sm-4">
 	<ul class="list-group">
 		<li class="list-group-item">
 			<span>Today's total calories: </span>

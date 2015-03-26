@@ -61,17 +61,6 @@ $("#weight").val("");
 // 	}
 // }
 
-enquire.register("screen and (max-width: 890px", {
-	match: function () {
-		$("#avg-calories-for-the-week-text").text('Avg: ');
-	},
-	unmatch: function () {
-		$("#avg-calories-for-the-week-text").text('Avg calories (last 7 days): ');
-	}
-});
-
-
-
 function autocompleteExercise () {
 	var $exercise = $("#exercise").val();
 	$.ajax({

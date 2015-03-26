@@ -1,8 +1,8 @@
 <div class="row">
 	<!-- display food entries -->
-	<div class="col-xs-12 col-sm-6">
+	<div ng-if="tab.entries || tab.food_entries" class="col-xs-12 col-sm-6">
 		<table class="table table-bordered">
-			<caption class="bg-blue">entries for the day</caption>
+			<caption class="bg-blue">food entries</caption>
 			<tr><th>food</th><th>quantity</th><th>unit</th><th>calories</th><th>recipe</th></tr>
 			<tr ng-repeat="entry in food_entries" data-entry-id="{{entry.entry_id}}">
 				<td>{{entry.food_name}}</td>
@@ -20,9 +20,9 @@
 		</table>
 	</div>
 	<!-- display exercise entries -->
-	<div class="col-xs-12 col-sm-6">
+	<div ng-if="tab.entries || tab.exercise_entries" class="col-xs-12 col-sm-6">
 		<table class="table table-bordered">
-			<caption class="bg-blue">entries for the day</caption>
+			<caption class="bg-blue">exercise entries</caption>
 			<tr>
 				<th>exercise</th>
 				<th>unit</th>

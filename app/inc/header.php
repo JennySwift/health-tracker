@@ -7,7 +7,10 @@
         </ul>
     </li>
     
-    <li><a ng-click="changeTab('entries')" href="">home</a></li>
+    <li class="desktop"><a ng-click="changeTab('entries')" href="">home</a></li>
+    <li class="iphone"><a ng-click="changeTab('food_entries')" href="">food log</a></li>
+    <li class="iphone"><a ng-click="changeTab('exercise_entries')" href="">exercise log</a></li>
+
     <li>
         <a ng-click="changeTab('foods')" href="">
             <img src="img/apple.svg" alt="" width="14">
@@ -17,7 +20,7 @@
     <li><a ng-click="changeTab('units')" href="">units</a></li>
     <li><a ng-click="changeTab('journal')" href="" class="fa fa-pencil"></a></li>
     
-    <li>branch:master</li>
+    <li class="desktop">branch:master</li>
     
     <li class="dropdown">
     

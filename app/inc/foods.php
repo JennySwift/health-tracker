@@ -1,4 +1,4 @@
-<div ng-show="tab === 'foods'">
+<div ng-show="tab.foods">
 
 	<!-- ==========================recipe quick entry========================== -->
 
