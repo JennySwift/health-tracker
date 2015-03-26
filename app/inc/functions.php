@@ -454,7 +454,7 @@ function getExercises () {
     $exercises = DB::table('exercises')
     	->where('exercises.user_id', Auth::user()->id)
     	->leftJoin('exercise_units', 'default_exercise_unit_id', '=', 'exercise_units.id')
-    	->select('exercises.id', 'exercises.name', 'default_exercise_unit_id', 'exercise_units.name AS default_exercise_unit_name')
+    	->select('exercises.id', 'exercises.name', 'default_exercise_unit_id', 'default_quantity', 'exercise_units.name AS default_exercise_unit_name')
     	->orderBy('name', 'asc')
     	->get();
 
@@ -743,6 +743,14 @@ function insertWeight ($date, $weight) {
 // ========================================================================
 // ========================================================================
 
+function updateDefaultExerciseQuantity ($id, $quantity) {
+	DB::table('exercises')
+		->where('id', $id)
+		->update([
+			'default_quantity' => $quantity
+		]);
+}
+
 function updateWeight ($date, $weight) {
 	DB::table('weight')
 		->where('date', $date)
@@ -840,7 +848,7 @@ function autocompleteExercise ($exercise) {
 	$exercises = DB::table('exercises')
 		->where('name', 'LIKE', $exercise)
 		->where('user_id', Auth::user()->id)
-		->select('id', 'name', 'default_exercise_unit_id')
+		->select('id', 'name', 'default_exercise_unit_id', 'default_quantity')
 		->get();
     
 	return $exercises;

@@ -19,6 +19,14 @@ class UpdateController extends Controller {
 		return getFoodInfo($food_id);
 	}
 
+	public function defaultExerciseQuantity () {
+		include(app_path() . '/inc/functions.php');
+		$id = json_decode(file_get_contents('php://input'), true)["id"];
+		$quantity = json_decode(file_get_contents('php://input'), true)["quantity"];
+		updateDefaultExerciseQuantity($id, $quantity);
+		return getExercises();
+	}
+
 	// public function journalEntry () {
 	// 	include(app_path() . '/inc/functions.php');
 	// 	$date = json_decode(file_get_contents('php://input'), true)["date"];

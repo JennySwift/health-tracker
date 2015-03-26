@@ -11,12 +11,14 @@
 					<tr>
 						<th>name</th>
 						<th>default unit</th>
+						<th>default quantity</th>
 						<th>tags</th>
 						<th>x</th>
 					</tr>
 					<tr ng-repeat="exercise in exercises" class="hover">
 						<td>{{exercise.name}}</td>
 						<td ng-click="showDefaultExerciseUnitPopup(exercise)" class="pointer">{{exercise.default_exercise_unit_name}}</td>
+						<td>{{exercise.default_quantity}}</td>
 						<td>
 							<span ng-repeat="tag in exercise.tags" class="badge">{{tag.name}}</span>
 						</td>

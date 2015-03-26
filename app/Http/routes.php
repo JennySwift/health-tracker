@@ -62,6 +62,7 @@ Route::post('insert/foodIntoRecipe', 'InsertController@foodIntoRecipe');
 // ========================================update========================================
 
 Route::post('update/defaultUnit', 'UpdateController@defaultUnit');
+Route::post('update/defaultExerciseQuantity', 'UpdateController@defaultExerciseQuantity');
 Route::post('update/journalEntry', 'UpdateController@journalEntry');
 Route::post('update/defaultExerciseUnit', 'UpdateController@defaultExerciseUnit');
 Route::post('update/calories', 'UpdateController@calories');

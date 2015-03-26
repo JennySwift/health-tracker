@@ -10,6 +10,16 @@ app.factory('update', function ($http) {
 
 			return $http.post($url, $data);
 		},
+		defaultExerciseQuantity: function ($id) {
+			var $quantity = $("#default-unit-quantity").val();
+			var $url = 'update/defaultExerciseQuantity';
+			var $data = {
+				id: $id,
+				quantity: $quantity
+			};
+			
+			return $http.post($url, $data);
+		},
 		// journalEntry: function ($sql_date, $id, $text) {
 		// 	var $url = 'update/journalEntry';
 		// 	var $data = {

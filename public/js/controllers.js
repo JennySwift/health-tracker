@@ -421,6 +421,15 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 		// ========================================================================
 		// ========================================================================
 
+		$scope.updateDefaultExerciseQuantity = function ($keycode) {
+			if ($keycode !== 13) {
+				return;
+			}
+			update.defaultExerciseQuantity($scope.selected.exercise.id).then(function (response) {
+				$scope.exercises = response.data;
+			});
+		};
+
 		$scope.editWeight = function () {
 			$scope.edit_weight = true;
 			setTimeout(function () {
@@ -536,6 +545,7 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 			$scope.selected.exercise = $selected;
 			$scope.selected.exercise_unit_id = $scope.selected.exercise.default_exercise_unit_id;
 			$scope.new_entry.exercise = $selected;
+			$scope.new_entry.exercise.quantity = $scope.selected.exercise.default_quantity;
 			$scope.selected.exercise = $selected;
 			$scope.show.autocomplete.new_exercise_entry = false;
 			$($set_focus).val("").focus();
