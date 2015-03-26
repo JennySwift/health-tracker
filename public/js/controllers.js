@@ -548,7 +548,7 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 			$scope.new_entry.exercise.quantity = $scope.selected.exercise.default_quantity;
 			$scope.selected.exercise = $selected;
 			$scope.show.autocomplete.new_exercise_entry = false;
-			$($set_focus).val("").focus();
+			$($set_focus).focus();
 		};
 
 		$scope.finishMenuAutocomplete = function ($array, $set_focus) {
