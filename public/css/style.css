@@ -325,10 +325,20 @@ li {
 @media all and (min-width: 680px) {
   .popup-inner {
     padding: 22px; } }
+#journal {
+  display: flex;
+  flex-direction: column;
+  align-items: center; }
+  #journal button {
+    width: 100%;
+    max-width: 600px; }
+
 .wysiwyg {
-  height: 300px;
-  width: 300px;
-  background: white; }
+  height: 350px;
+  width: 100%;
+  max-width: 600px;
+  background: white;
+  overflow: scroll; }
 
 #exercises {
   display: flex;
