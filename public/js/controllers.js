@@ -12,7 +12,7 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 
 		//=============tabs=============
 		$scope.tab = {
-			exercise_entries: true
+			foods: true
 		};
 
 		//show
@@ -803,7 +803,15 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 		// ========================================================================
 
 		$scope.quickRecipe = function () {
-			var $string = $("#quick-recipe").html();
+			// var $string = $("#quick-recipe").html();
+			var $string = '1 cup coconut milk<br>1/4 cup cashews<br>1 teaspoon curry powder, mild<br>1 teaspoon tumeric<br>1 teaspoon cumin<br>1 tablespoon tamari<br>2 onions, chopped<br>2 cloves garlic, minced<br>2 cups mushrooms, sliced<br>1 large red bell (capsicum) pepper, diced<br>2 apples, diced<br>1/3 cup raisins<br>3 cups cooked brown rice<br>2 cups baby spinach<br>';
+
+
+			//heading
+			//Curried Risotto<br><br>Ingredients<br><br>
+			//method
+			// <br><br>Method<br><br>Combine the coconut milk, cashews, curry powder, turmeric, cumin and tamari in a blender and blend till smooth.<br>Water sauté the onion & garlic.<br>Add the mushrooms & capsicum & cook a further minute.<br>Add the apple and raisins and cook a further minute.<br>Add the rice and sauce, stir to combine and heat through.<br>Add the baby spinach and heat till wilted.Source: Anita<br>
+
 			var $contents = [];
 			var $substring;
 			var $previous_substring;
@@ -841,7 +849,8 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 
 				//get the quantity
 				if ($new_line) {
-					if (isNaN($character)) {
+					if (isNaN($character) && $character !== '.') {
+						//not a number or a decimal point
 						$errors.push('the quantity is not a number');
 					}
 					else {
@@ -849,13 +858,24 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 						var $next_character_index = i + 1;
 						var $next_character = $string.substr($next_character_index, 1);
 
-						//check if the following characters are numbers, or empty strings (isNan return false for empty string)
-						while (!isNaN($string.substr($next_character_index, 1)) && $string.substr($next_character_index, 1) !== ' ') {
-							//in other words, the next character is a number
+						//check if the following characters are numbers, or empty strings (isNan return false for empty string), a decimal point, or a / for a fractional number
+						while (!isNaN($string.substr($next_character_index, 1)) && $string.substr($next_character_index, 1) !== ' ' || $string.substr($next_character_index, 1) === '.' || $string.substr($next_character_index, 1) === '/') {
+							//in other words, the next character is a number, '.' or '/'.
 							$next_character_index++;
 						}
 						$end_quantity_index = $next_character_index;
-						$item.quantity = $string.substring(i, $end_quantity_index);
+
+						$quantity = $string.substring(i, $end_quantity_index);
+
+						//check if $quantity is a fraction, and if so, convert to decimal
+						if ($quantity.indexOf('/') !== -1) {
+							//it is a fraction
+							var $parts = $quantity.split('/');
+							var $decimal = parseInt($parts[0], 10) / parseInt($parts[1], 10);
+							$quantity = $decimal;
+						}
+
+						$item.quantity = $quantity;
 					}
 				}
 				

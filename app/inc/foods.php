@@ -20,7 +20,9 @@
 
 		<button ng-click="quickRecipe()"class="btn">go</button>
 
-		<div>{{quick_recipe_contents}}</div>
+		<div>
+			<div ng-repeat="item in quick_recipe_contents">{{item}}</div>
+		</div>
 	</div>
 	
 	<!-- ==========================foods========================== -->
