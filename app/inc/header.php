@@ -3,6 +3,9 @@
     <li id="menu-dropdown" class="dropdown">
         <a href="#" class="dropdown-toggle fa fa-bars" data-toggle="dropdown"><span class="caret"></span></a>
         <ul class="dropdown-menu" role="menu">
+            <li><a ng-click="changeTab('units')" href="">units</a></li>
+            <li><a href="/auth/logout">Logout <?php echo Auth::user()->name; ?></a></li>
+            <li><a href="#" style="cursor:default">branch:master</a></li>
             <li><a href="credits.php">credits</a></li>
         </ul>
     </li>
@@ -17,19 +20,7 @@
         </a>
     </li>
     <li><a ng-click="changeTab('exercises')" href="" class="fa fa-heart"></a></li>
-    <li><a ng-click="changeTab('units')" href="">units</a></li>
     <li><a ng-click="changeTab('journal')" href="" class="fa fa-pencil"></a></li>
-    
-    <li class="desktop">branch:master</li>
-    
-    <li class="dropdown">
-    
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo Auth::user()->name; ?><span class="caret"></span></a>
-        <ul class="dropdown-menu" role="menu">
-            <li><a href="/auth/logout">Logout</a></li>
-        </ul>
-    
-    </li>
     
     <li><a href="#" id="search_button" class="location_button fa fa-search"></a></li>
 </ul>
