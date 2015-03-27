@@ -389,7 +389,10 @@ function getFoodInfo ($food_id) {
 // =================================recipe=================================
 
 function getRecipes () {
-	$rows = DB::table('recipes')->get();
+	$rows = DB::table('recipes')
+		->where('user_id', Auth::user()->id)
+		->select('id', 'name')
+		->get();
 	
 
 	$recipes = array();
