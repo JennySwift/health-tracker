@@ -1,5 +1,5 @@
 
-<ul id="navbar">
+<ul id="navbar" style="z-index:1000">
     <li id="menu-dropdown" class="dropdown">
         <a href="#" class="dropdown-toggle fa fa-bars" data-toggle="dropdown"><span class="caret"></span></a>
         <ul class="dropdown-menu" role="menu">
