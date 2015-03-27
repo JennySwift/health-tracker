@@ -12,7 +12,7 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 
 		//=============tabs=============
 		$scope.tab = {
-			food_entries: true
+			exercise_entries: true
 		};
 
 		//show
@@ -544,16 +544,18 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 			}
 		};
 
-		$scope.finishExerciseAutocomplete = function ($array, $set_focus) {
+		$scope.finishExerciseAutocomplete = function ($array, $selected) {
 			//array, input_to_focus, autocomplete_to_hide, input_to_fill, selected_property_to_define
-			var $selected = _.findWhere($array, {selected: true});
+			$selected = $selected || _.findWhere($array, {selected: true});
 			$scope.selected.exercise = $selected;
 			$scope.selected.exercise_unit_id = $scope.selected.exercise.default_exercise_unit_id;
 			$scope.new_entry.exercise = $selected;
 			$scope.new_entry.exercise.quantity = $scope.selected.exercise.default_quantity;
 			$scope.selected.exercise = $selected;
 			$scope.show.autocomplete.new_exercise_entry = false;
-			$($set_focus).focus();
+			setTimeout(function () {
+				$("#exercise-quantity").focus().select();
+			}, 500);
 		};
 
 		$scope.finishMenuAutocomplete = function ($array, $set_focus) {
@@ -582,7 +584,7 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 			//enter is pressed
 			if ($scope.show.autocomplete.new_exercise_entry) {
 				//if enter is for the autocomplete
-				$scope.finishExerciseAutocomplete($scope.autocomplete.exercise, $("#exercise-quantity"));
+				$scope.finishExerciseAutocomplete($scope.autocomplete.exercise);
 			}
 			else {
 				// if enter is to add the entry

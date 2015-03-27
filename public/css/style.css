@@ -340,6 +340,10 @@ li {
   #default-exercise-unit-popup-checkboxes label {
     padding: 2px 8px; }
 
+@media (max-width: 600px) {
+  .autocomplete-dropdown-item {
+    padding: 8px 0; } }
+
 body.browser-height {
   box-sizing: border-box; }
 
