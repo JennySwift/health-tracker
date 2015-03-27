@@ -12,7 +12,7 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 
 		//=============tabs=============
 		$scope.tab = {
-			entries: true
+			food_entries: true
 		};
 
 		//show
@@ -769,17 +769,17 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 		// ========================================================================
 		// ========================================================================
 
-		enquire.register("screen and (max-width: 600px", {
+		enquire.register("screen and (min-width: 600px", {
 			match: function () {
 				// $("body").css('background', blue);
-				if ($scope.tab.entries) {
-					$scope.changeTab('food_entries');
+				if ($scope.tab.food_entries) {
+					$scope.changeTab('entries');
 					$scope.$apply();
 				}
 			},
 			unmatch: function () {
-				if ($scope.tab.food_entries) {
-					$scope.changeTab('entries');
+				if ($scope.tab.entries) {
+					$scope.changeTab('food_entries');
 					$scope.$apply();
 				}
 			}
