@@ -774,7 +774,7 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 		enquire.register("screen and (min-width: 600px", {
 			match: function () {
 				// $("body").css('background', blue);
-				if ($scope.tab.food_entries) {
+				if ($scope.tab.food_entries || $scope.tab.exercise_entries) {
 					$scope.changeTab('entries');
 					$scope.$apply();
 				}
