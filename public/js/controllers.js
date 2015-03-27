@@ -71,6 +71,10 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 		};
 		$scope.loading = false;
 
+		//=============errors=============
+
+		$scope.errors = {};
+
 		//=============food=============
 		$scope.food_popup = {};
 		$scope.menu_item = {}; //id, name, type. for displaying the chosen autocompleted option (food or recipe)
@@ -804,8 +808,7 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 
 		$scope.quickRecipe = function () {
 			// var $string = $("#quick-recipe").html();
-			var $string = '1 cup coconut milk<br>1/4 cup cashews<br>1 teaspoon curry powder, mild<br>1 teaspoon tumeric<br>1 teaspoon cumin<br>1 tablespoon tamari<br>2 onions, chopped<br>2 cloves garlic, minced<br>2 cups mushrooms, sliced<br>1 large red bell (capsicum) pepper, diced<br>2 apples, diced<br>1/3 cup raisins<br>3 cups cooked brown rice<br>2 cups baby spinach<br>';
-
+			var $string = '1 cup coconut milk<br>1/4 cup cashews<br>1 teaspoon curry powder, mild<br>1 teaspoon tumeric<br>1 teaspoon cumin<br>1 tablespoon tamari<br>2 medium onions, chopped<br>2 cloves garlic, minced<br>2 cups mushrooms, sliced<br>1 large red bell (capsicum) pepper, diced<br>2 small apples, diced<br>1/3 cup raisins<br>3 cups cooked brown rice<br>2 oranges<br>';
 
 			//heading
 			//Curried Risotto<br><br>Ingredients<br><br>
@@ -813,32 +816,34 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 			// <br><br>Method<br><br>Combine the coconut milk, cashews, curry powder, turmeric, cumin and tamari in a blender and blend till smooth.<br>Water sauté the onion & garlic.<br>Add the mushrooms & capsicum & cook a further minute.<br>Add the apple and raisins and cook a further minute.<br>Add the rice and sauce, stir to combine and heat through.<br>Add the baby spinach and heat till wilted.Source: Anita<br>
 
 			var $contents = [];
-			var $substring;
-			var $previous_substring;
-			var $type;
 			var $new_line;
 			var $character;
-			var $start_index;
-			var $start_unit_index;
-			var $end_index;
-			var $end_quantity_index;
-			var $end_unit_index;
-			var $end_food_index;
+			var $unit_name;
+			// var $start_index;
+			// var $start_unit_index;
+			// var $end_index;
+			// var $end_quantity_index;
+			// var $end_unit_index;
+			// var $end_food_index;
 			var $description;
+			var $food_name;
 			var $item = {};
 			var $errors = [];
+			var $line_number = 0;
 
-			for (var i = 0; i < $string.length; i++) {
-				$substring = $string.substr(i, 3);
-				$character = $string.substr(i, 1);
-				$previous_substring = $string.substr(i-3, 3);
+			for (var $index = 0; $index < $string.length; $index++) {
+				// $substring = $string.substr(i, 3);
+				$character = $string.substr($index, 1);
+				// $previous_substring = $string.substr(i-3, 3);
 
 				//check if new line. new line is either after a <br>, after a <div>, or the very first line.
-				if ($string.substr(i-4, 4) === '<br>' || $string.substr(i-5, 5) === '<div>' || i === 0) {
+				if ($string.substr($index - 4, 4) === '<br>' || $string.substr($index - 5, 5) === '<div>' || $index === 0) {
 					if ($character !== '<') {
 						//this if check prevents '<' from being the first character if there is an opening tag on the first line
-						$item = {};
+
+						//it is a new line
 						$new_line = true;
+						$line_number++;
 					}
 				}
 				else {
@@ -848,91 +853,153 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 				//ingredients are under the heading 'ingredients'
 
 				//get the quantity
+
 				if ($new_line) {
 					if (isNaN($character) && $character !== '.') {
 						//not a number or a decimal point
 						$errors.push('the quantity is not a number');
 					}
 					else {
-						//the quantity is a valid number. Find out how many digits it contains.
-						var $next_character_index = i + 1;
-						var $next_character = $string.substr($next_character_index, 1);
-
-						//check if the following characters are numbers, or empty strings (isNan return false for empty string), a decimal point, or a / for a fractional number
-						while (!isNaN($string.substr($next_character_index, 1)) && $string.substr($next_character_index, 1) !== ' ' || $string.substr($next_character_index, 1) === '.' || $string.substr($next_character_index, 1) === '/') {
-							//in other words, the next character is a number, '.' or '/'.
-							$next_character_index++;
-						}
-						$end_quantity_index = $next_character_index;
-
-						$quantity = $string.substring(i, $end_quantity_index);
-
-						//check if $quantity is a fraction, and if so, convert to decimal
-						if ($quantity.indexOf('/') !== -1) {
-							//it is a fraction
-							var $parts = $quantity.split('/');
-							var $decimal = parseInt($parts[0], 10) / parseInt($parts[1], 10);
-							$quantity = $decimal;
-						}
-
+						//the quantity is a valid number
+						$quantity_response = $scope.quickRecipeQuantity($string, $index);
+						$quantity = $quantity_response[0];
+						$end_quantity_index = $quantity_response[1];
 						$item.quantity = $quantity;
 					}
 				}
 				
 				//get the unit. unit is one word.
-				if (!$item.unit_name && $item.quantity) {
-					$start_unit_index = $end_quantity_index + 1;
-					var $next_unit_character_index = $start_unit_index + 1;
-					while ($string.substr($next_unit_character_index, 1) !== ' ') {
-						$next_unit_character_index++;
+				if (!$item.unit_name && $item.quantity && $index >= $end_quantity_index) {		
+					var $unit_response = $scope.quickRecipeUnitName($string, $end_quantity_index);
+					if ($unit_response) {
+						$unit_name = $unit_response[0];
+						$end_unit_index = $unit_response[1];
+						$item.unit_name = $unit_name;
 					}
-					$end_unit_index = $next_unit_character_index;
-					$item.unit_name = $string.substring($start_unit_index, $end_unit_index);
+					else {
+						//there was an error with the unit
+						$errors.push('Food, quantity and unit have not all been specified on line ' + $line_number);
+					}
+
+					//check there is no comma at the end of $unit_name, indicating quantity, unit and food have not all been specified
+					var $last_unit_character = $unit_name.indexOf($unit_name.length - 1);
+					if ($unit_name.substr($last_unit_character, 1) === ',') {
+						$errors.push('Food, quantity and unit have not all been specified on line ' + $line_number);
+					}
 				}
 				
 				//get the food
-				if (!$item.food_name && $item.unit_name) {
-					var $start_food_index = $end_unit_index + 1;
-					var $next_food_character_index = $start_food_index + 1;
-					//the following check for "$string.substr($next_food_character_index, 5) !== '<div>'" in theory shouldn't be necessary but I needed it because when pasting the recipe into the wysywig it added an opening div tag instead of a closing one on the first line.
-					while ($string.substr($next_food_character_index, 1) !== ',' && $string.substr($next_food_character_index, 4) !== '<br>' && $string.substr($next_food_character_index, 6) !== '</div>' && $string.substr($next_food_character_index, 5) !== '<div>') {
-						//we haven't reached a comma or a new line yet
-						$next_food_character_index++;
-					}
-					$end_food_index = $next_food_character_index;
-					$item.food_name = $string.substring($start_food_index, $end_food_index);
+				if (!$item.food_name && $item.unit_name && $index >= $end_unit_index) {
+					var $food_response = $scope.quickRecipeFoodName($string, $end_unit_index);
+					$food_name = $food_response[0];
+					$end_food_index = $food_response[1];
+					$item.food_name = $food_name;
 				}
 				
 				//get the description
-				//check there is a comma, or there is no description
-				if (!$item.description && $item.food_name && $string.substr($end_food_index, 1) === ',') {
-					var $start_description_index = $end_food_index + 1;
-					var $next_description_character_index = $start_description_index + 1;
+				if ($item.food_name && $item.quantity && $item.unit_name && $index >= $end_food_index) {
+					$description = $scope.quickRecipeDescription($string, $end_food_index);
+					$item.description = $description;
+				}			
+				
+				//get the method. method is under the heading 'method'	
 
-					while ($string.substr($next_description_character_index, 4) !== '<br>' && $string.substr($next_description_character_index, 6) !== '</div>') {
-						$next_description_character_index++;
+				//check if it's the end of a line, to check if all values were entered
+				if ($string.substr($index, 6) === '</div>' || $string.substr($index, 4) === '<br>') {
+					//it's the end of a line
+					if (!$item.food_name || !$item.quantity || !$item.unit_name) {
+						$errors.push('Food, quantity and unit have not all been specified on line ' + $line_number);
 					}
-					var $end_description_index = $next_description_character_index;
-					$item.description = $string.substring($start_description_index + 1, $end_description_index);
-				}
+					else {
+						$contents.push($item);
+						$item = {};
+					}
+				}	
+			}
 
-				//get the method. method is under the heading 'method'
-
-				if ($item.quantity && $item.unit_name && $item.food_name) {
-					$contents.push($item);
-					$item = {};
-				}
-				
-				
+			if ($errors.length > 0) {
+				$scope.errors.quick_recipe = $errors;
+				return;
 			}
 
 			$scope.quick_recipe_contents = $contents;
 
-			insert.quickRecipe($contents).then(function (response) {
-				$scope.recipes = response.data;
-			});
+			// insert.quickRecipe($contents).then(function (response) {
+			// 	$scope.recipes = response.data;
+			// });
 		};
 
+		$scope.quickRecipeQuantity = function ($string, $index) {
+			//Find out how many digits the quantity contains.
+			var $end_quantity_index = $index + 1;
+
+			//check if the following characters are numbers, or empty strings (isNan return false for empty string), a decimal point, or a / for a fractional number
+			while (!isNaN($string.substr($end_quantity_index, 1)) && $string.substr($end_quantity_index, 1) !== ' ' || $string.substr($end_quantity_index, 1) === '.' || $string.substr($end_quantity_index, 1) === '/') {
+				//in other words, the next character is a number, '.' or '/'.
+				$end_quantity_index++;
+			}
+
+			$quantity = $string.substring($index, $end_quantity_index);
+
+			//check if $quantity is a fraction, and if so, convert to decimal
+			if ($quantity.indexOf('/') !== -1) {
+				//it is a fraction
+				var $parts = $quantity.split('/');
+				var $decimal = parseInt($parts[0], 10) / parseInt($parts[1], 10);
+				$quantity = $decimal;
+			}
+
+			return [$quantity, $end_quantity_index];
+		};
+
+		$scope.quickRecipeUnitName = function ($string, $end_quantity_index) {
+			$start_unit_index = $end_quantity_index + 1;
+			var $end_unit_index = $start_unit_index + 1;
+
+			while ($string.substr($end_unit_index, 1) !== ' ') {
+				if ($string.substr($end_unit_index, 1) === '<') {
+					//unit or food not specified because tag should not be right after the unit
+					return false;
+				}
+				$end_unit_index++;
+			}
+
+			var $unit_name = $string.substring($start_unit_index, $end_unit_index);
+
+			return [$unit_name, $end_unit_index];
+		};
+
+		$scope.quickRecipeFoodName = function ($string, $end_unit_index) {
+			var $start_food_index = $end_unit_index + 1;
+			var $end_food_index = $start_food_index + 1;
+			//the following check for "$string.substr($end_food_index, 5) !== '<div>'" in theory shouldn't be necessary but I needed it because when pasting the recipe into the wysywig it added an opening div tag instead of a closing one on the first line.
+			while ($string.substr($end_food_index, 1) !== ',' && $string.substr($end_food_index, 4) !== '<br>' && $string.substr($end_food_index, 6) !== '</div>' && $string.substr($end_food_index, 5) !== '<div>') {
+				//we haven't reached a comma or a new line yet
+				$end_food_index++;
+			}
+			
+			var $food_name = $string.substring($start_food_index, $end_food_index);
+
+			return [$food_name, $end_food_index];
+		};
+
+		$scope.quickRecipeDescription = function ($string, $end_food_index) {
+			var $description;
+
+			//check there is a comma
+			if ($string.substr($end_food_index, 1) === ',') {
+				var $start_description_index = $end_food_index + 1;
+				var $end_description_index = $start_description_index + 1;
+
+				while ($string.substr($end_description_index, 4) !== '<br>' && $string.substr($end_description_index, 6) !== '</div>') {
+					$end_description_index++;
+				}
+				
+				$description = $string.substring($start_description_index + 1, $end_description_index);
+			}
+
+			return $description;
+		};
 
 
 
