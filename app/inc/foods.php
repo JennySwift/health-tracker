@@ -18,25 +18,6 @@
 
 		<div id="quick-recipe" class="wysiwyg"></div>
 
-		<!-- <br>
-		<br>
-		Method
-		<br>
-		<br>
-		Combine the coconut milk, cashews, curry powder, turmeric, cumin and tamari in a blender and blend till smooth.
-		<br>
-		Water sauté the onion & garlic.
-		<br>
-		Add the mushrooms & capsicum & cook a further minute.
-		<br>
-		Add the apple and raisins and cook a further minute.
-		<br>
-		Add the rice and sauce, stir to combine and heat through.
-		<br>
-		Add the baby spinach and heat till wilted.Source: Anita
-		<br>
-		<br type="_moz"> -->
-
 		<button ng-click="quickRecipe()"class="btn">go</button>
 
 		<div>
@@ -45,6 +26,10 @@
 
 		<div>
 			<div ng-repeat="item in quick_recipe_contents">{{item}}</div>
+		</div>
+
+		<div>
+			<div ng-repeat="step in quick_recipe_steps">{{step}}</div>
 		</div>
 	</div>
 	
