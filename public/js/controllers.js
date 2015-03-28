@@ -811,6 +811,10 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 			$("#quick-recipe > *").removeAttr("style");
 
 			var $string = $("#quick-recipe").html();
+
+			$string = $scope.formatStringForFirefox($string);
+
+
 			// var $string = '1 cup coconut milk<br>1/4 cup cashews<br>1 teaspoon curry powder, mild<br>1 teaspoon tumeric<br>1 teaspoon cumin<br>1 tablespoon tamari<br>2 medium onions, chopped<br>2 cloves garlic, minced<br>2 cups mushrooms, sliced<br>1 large red bell (capsicum) pepper, diced<br>2 apples, diced<br>1/3 cup raisins<br>3 cups cooked brown rice<br>2 large oranges<br>';
 
 			//heading
@@ -915,6 +919,26 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 			// insert.quickRecipe($contents).then(function (response) {
 			// 	$scope.recipes = response.data;
 			// });
+		};
+
+		$scope.formatStringForFirefox = function ($string) {
+			//change br tags to divs in firefox
+			if ($string.indexOf('<br>') !== -1) {
+				//first remove the final and pointless br tag/tags
+				while ($string.substr($string.length - 4, 4) === '<br>') {
+					//there is a br tag at the end. remove it.
+					$string = $string.substring(0, $string.length - 4);
+				}
+
+				var $split = $string.split('<br>');
+				var $formatted_string = "";
+				for (var i = 0; i < $split.length; i++) {
+					$formatted_string += '<div>' + $split[i] + '</div>';
+				}
+				$string = $formatted_string;
+				$("#quick-recipe").html($string);
+			}
+			return $string;
 		};
 
 		$scope.quickRecipeQuantity = function ($string, $index) {

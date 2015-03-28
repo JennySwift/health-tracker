@@ -6,7 +6,6 @@
 		<ul>
 			<li>start a new line for each item in your recipe</li>
 			<li>there must be a space after the comma</li>
-			<li>make sure there are no empty lines</li>
 		</ul>
 		<p>example format:</p>
 		<p>1 large apple, red</p>
