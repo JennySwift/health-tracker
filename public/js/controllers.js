@@ -812,15 +812,7 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 
 			var $string = $("#quick-recipe").html();
 
-			$string = quickRecipe.formatString($string);
-
-
-			// var $string = '1 cup coconut milk<br>1/4 cup cashews<br>1 teaspoon curry powder, mild<br>1 teaspoon tumeric<br>1 teaspoon cumin<br>1 tablespoon tamari<br>2 medium onions, chopped<br>2 cloves garlic, minced<br>2 cups mushrooms, sliced<br>1 large red bell (capsicum) pepper, diced<br>2 apples, diced<br>1/3 cup raisins<br>3 cups cooked brown rice<br>2 large oranges<br>';
-
-			//heading
-			//Curried Risotto<br><br>Ingredients<br><br>
-			//method
-			// <br><br>Method<br><br>Combine the coconut milk, cashews, curry powder, turmeric, cumin and tamari in a blender and blend till smooth.<br>Water sauté the onion & garlic.<br>Add the mushrooms & capsicum & cook a further minute.<br>Add the apple and raisins and cook a further minute.<br>Add the rice and sauce, stir to combine and heat through.<br>Add the baby spinach and heat till wilted.Source: Anita<br>
+			var $lines = quickRecipe.formatString($string);
 
 			var $contents = [];
 			var $new_line;
@@ -833,81 +825,69 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 			var $line_number = 0;
 			var $steps = [];
 
-			for (var $index = 0; $index < $string.length; $index++) {
-				$character = $string.substr($index, 1);
+			$($lines).each(function () {
+				var $line = this;
+				$line_number++;
 
-				//check if new line. new line is either after a <br>, after a <div>, or the very first line.
-				if ($string.substr($index - 4, 4) === '<br>' || $string.substr($index - 5, 5) === '<div>' || $index === 0) {
-					if ($character !== '<') {
-						//this if check prevents '<' from being the first character if there is an opening tag on the first line
+				for (var $index = 0; $index < $line.length; $index++) {
+					$character = $line.substr($index, 1);
 
-						//it is a new line
-						$new_line = true;
-						$line_number++;
+					//get the quantity
+					if (!$item.quantity) {
+						if (isNaN($character) && $character !== '.') {
+							//not a number or a decimal point
+							$errors.push('the quantity is not a number');
+						}
+						else {
+							//the quantity is a valid number
+							$quantity_response = quickRecipe.quantity($line, $index);
+							$quantity = $quantity_response[0];
+							$end_quantity_index = $quantity_response[1];
+							$item.quantity = $quantity;
+						}
 					}
+					
+					//get the unit. unit is one word.
+					if (!$item.unit_name && $item.quantity && $index >= $end_quantity_index) {	
+						var $unit_response = quickRecipe.unitName($line, $end_quantity_index);
+						if (!$unit_response.error) {
+							//no error
+							$unit_name = $unit_response.name;
+							$end_unit_index = $unit_response.end_index;
+							$item.unit_name = $unit_name;
+						}
+					}
+					
+					//get the food
+					if (!$item.food_name && $item.unit_name && $index >= $end_unit_index) {
+						var $food_response = quickRecipe.foodName($line, $end_unit_index);
+						$food_name = $food_response[0];
+						$end_food_index = $food_response[1];
+						$item.food_name = $food_name;
+					}
+					
+					//get the description
+					if (!$item.description && $item.food_name && $item.quantity && $item.unit_name && $index >= $end_food_index) {
+						$description = quickRecipe.description($line, $end_food_index);
+						$item.description = $description;
+					}			
+					
+					//get the method. method is under the heading 'method'	
+
+					//check if it's the end of a line, to check if all values were entered
+					if ($index === $line.length - 1) {
+						//it's the end of a line
+						if (!$item.food_name || !$item.quantity || !$item.unit_name) {
+							$errors.push('Food, quantity and unit have not all been specified on line ' + $line_number);
+							$("#quick-recipe > *:nth-child(" + $line_number + ")").css('background', 'red');
+						}
+						else {
+							$contents.push($item);
+							$item = {};
+						}
+					}			
 				}
-				else {
-					$new_line = false;
-				}
-
-				//ingredients are under the heading 'ingredients'
-
-				//get the quantity
-
-				if ($new_line) {
-					if (isNaN($character) && $character !== '.') {
-						//not a number or a decimal point
-						$errors.push('the quantity is not a number');
-					}
-					else {
-						//the quantity is a valid number
-						$quantity_response = quickRecipe.quantity($string, $index);
-						$quantity = $quantity_response[0];
-						$end_quantity_index = $quantity_response[1];
-						$item.quantity = $quantity;
-					}
-				}
-				
-				//get the unit. unit is one word.
-				if (!$item.unit_name && $item.quantity && $index >= $end_quantity_index) {	
-					var $unit_response = quickRecipe.unitName($string, $end_quantity_index);
-					if (!$unit_response.error) {
-						//no error
-						$unit_name = $unit_response.name;
-						$end_unit_index = $unit_response.end_index;
-						$item.unit_name = $unit_name;
-					}
-				}
-				
-				//get the food
-				if (!$item.food_name && $item.unit_name && $index >= $end_unit_index) {
-					var $food_response = quickRecipe.foodName($string, $end_unit_index);
-					$food_name = $food_response[0];
-					$end_food_index = $food_response[1];
-					$item.food_name = $food_name;
-				}
-				
-				//get the description
-				if ($item.food_name && $item.quantity && $item.unit_name && $index >= $end_food_index) {
-					$description = quickRecipe.description($string, $end_food_index);
-					$item.description = $description;
-				}			
-				
-				//get the method. method is under the heading 'method'	
-
-				//check if it's the end of a line, to check if all values were entered
-				if ($string.substr($index, 6) === '</div>' || $string.substr($index, 4) === '<br>') {
-					//it's the end of a line
-					if (!$item.food_name || !$item.quantity || !$item.unit_name) {
-						$errors.push('Food, quantity and unit have not all been specified on line ' + $line_number);
-						$("#quick-recipe > *:nth-child(" + $line_number + ")").css('background', 'red');
-					}
-					else {
-						$contents.push($item);
-						$item = {};
-					}
-				}	
-			}
+			});
 
 			$scope.errors.quick_recipe = $errors;
 
