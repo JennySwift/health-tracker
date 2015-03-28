@@ -392,6 +392,7 @@ function getRecipes () {
 	$rows = DB::table('recipes')
 		->where('user_id', Auth::user()->id)
 		->select('id', 'name')
+		->orderBy('name', 'asc')
 		->get();
 	
 
