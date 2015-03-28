@@ -439,6 +439,15 @@ function getRecipeContents ($recipe_id) {
 	return $recipe_contents;
 }
 
+function getRecipeSteps ($recipe_id) {
+	$steps = DB::table('recipe_methods')
+		->where('recipe_id', $recipe_id)
+		->select('step', 'text')
+		->get();
+
+	return $steps;
+}
+
 // =================================exercise=================================
 
 function getExerciseEntries ($date) {

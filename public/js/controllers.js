@@ -179,7 +179,8 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 			$scope.selected.recipe = $recipe;
 			select.recipeContents($recipe.id).then(function (response) {
 				$scope.show.popups.recipe = true;
-				$scope.recipe.contents = response.data;
+				$scope.recipe.contents = response.data.contents;
+				$scope.recipe.steps = response.data.steps;
 			});
 		};
 
@@ -894,11 +895,10 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 						}			
 					}
 				}
-				else {
+				else if ($line.toLowerCase() !== "Method".toLowerCase()) {
 					//it is the method, not the ingredients
 					$steps.push($line);
 				}
-
 				
 			});
 
@@ -911,9 +911,9 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 			$scope.quick_recipe_contents = $contents;
 			$scope.quick_recipe_steps = $steps;
 
-			// insert.quickRecipe($contents, $steps).then(function (response) {
-			// 	$scope.recipes = response.data;
-			// });
+			insert.quickRecipe($contents, $steps).then(function (response) {
+				$scope.recipes = response.data;
+			});
 		};
 		
 	}); //end display controller

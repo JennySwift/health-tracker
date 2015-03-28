@@ -38,6 +38,10 @@
 				</table>
 			</div>
 		</div>
+
+		<h5>Method</h5>
+		<div ng-repeat="step in recipe.steps">{{step.text}}</div>
+
 		<button ng-click="show.popups.recipe = false" class="close-popup btn btn-sm">close</button>
 	</div>
 
