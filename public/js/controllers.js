@@ -807,8 +807,11 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 		// ========================================================================
 
 		$scope.quickRecipe = function () {
-			// var $string = $("#quick-recipe").html();
-			var $string = '1 cup coconut milk<br>1/4 cup cashews<br>1 teaspoon curry powder, mild<br>1 teaspoon tumeric<br>1 teaspoon cumin<br>1 tablespoon tamari<br>2 medium onions, chopped<br>2 cloves garlic, minced<br>2 cups mushrooms, sliced<br>1 large red bell (capsicum) pepper, diced<br>2 apples, diced<br>1/3 cup raisins<br>3 cups cooked brown rice<br>2 large oranges<br>';
+			//remove any previous error styling so it doesn't wreck up the html
+			$("#quick-recipe > *").removeAttr("style");
+
+			var $string = $("#quick-recipe").html();
+			// var $string = '1 cup coconut milk<br>1/4 cup cashews<br>1 teaspoon curry powder, mild<br>1 teaspoon tumeric<br>1 teaspoon cumin<br>1 tablespoon tamari<br>2 medium onions, chopped<br>2 cloves garlic, minced<br>2 cups mushrooms, sliced<br>1 large red bell (capsicum) pepper, diced<br>2 apples, diced<br>1/3 cup raisins<br>3 cups cooked brown rice<br>2 large oranges<br>';
 
 			//heading
 			//Curried Risotto<br><br>Ingredients<br><br>
@@ -892,6 +895,7 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 					//it's the end of a line
 					if (!$item.food_name || !$item.quantity || !$item.unit_name) {
 						$errors.push('Food, quantity and unit have not all been specified on line ' + $line_number);
+						$("#quick-recipe > *:nth-child(" + $line_number + ")").css('background', 'red');
 					}
 					else {
 						$contents.push($item);
@@ -900,8 +904,9 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 				}	
 			}
 
+			$scope.errors.quick_recipe = $errors;
+
 			if ($errors.length > 0) {
-				$scope.errors.quick_recipe = $errors;
 				return;
 			}
 

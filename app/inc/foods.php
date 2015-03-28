@@ -4,12 +4,13 @@
 
 	<div class="margin-bottom">
 		<ul>
-			<li>mark your foods as bold</li>
-			<li>mark your units as underlined</li>
-			<li>mark your quantity as italic</li>
-			<li>start a new line for each ingredient</li>
+			<li>start a new line for each item in your recipe</li>
 			<li>there must be a space after the comma</li>
+			<li>make sure there are no empty lines</li>
 		</ul>
+		<p>example format:</p>
+		<p>1 large apple, red</p>
+		<p>1 cup tomatoes</p>
 		<div class="btn-toolbar" data-role="editor-toolbar" data-target="#wysiwyg">
 			<a data-edit="bold" class="fa fa-bold"></a>
 			<a data-edit="italic" class="fa fa-italic"></a>
