@@ -808,7 +808,7 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 
 		$scope.quickRecipe = function () {
 			// var $string = $("#quick-recipe").html();
-			var $string = '1 cup coconut milk<br>1/4 cup cashews<br>1 teaspoon curry powder, mild<br>1 teaspoon tumeric<br>1 teaspoon cumin<br>1 tablespoon tamari<br>2 medium onions, chopped<br>2 cloves garlic, minced<br>2 cups mushrooms, sliced<br>1 large red bell (capsicum) pepper, diced<br>2 small apples, diced<br>1/3 cup raisins<br>3 cups cooked brown rice<br>2 oranges<br>';
+			var $string = '1 cup coconut milk<br>1/4 cup cashews<br>1 teaspoon curry powder, mild<br>1 teaspoon tumeric<br>1 teaspoon cumin<br>1 tablespoon tamari<br>2 medium onions, chopped<br>2 cloves garlic, minced<br>2 cups mushrooms, sliced<br>1 large red bell (capsicum) pepper, diced<br>2 apples, diced<br>1/3 cup raisins<br>3 cups cooked brown rice<br>2 large oranges<br>';
 
 			//heading
 			//Curried Risotto<br><br>Ingredients<br><br>
@@ -819,12 +819,6 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 			var $new_line;
 			var $character;
 			var $unit_name;
-			// var $start_index;
-			// var $start_unit_index;
-			// var $end_index;
-			// var $end_quantity_index;
-			// var $end_unit_index;
-			// var $end_food_index;
 			var $description;
 			var $food_name;
 			var $item = {};
@@ -832,9 +826,7 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 			var $line_number = 0;
 
 			for (var $index = 0; $index < $string.length; $index++) {
-				// $substring = $string.substr(i, 3);
 				$character = $string.substr($index, 1);
-				// $previous_substring = $string.substr(i-3, 3);
 
 				//check if new line. new line is either after a <br>, after a <div>, or the very first line.
 				if ($string.substr($index - 4, 4) === '<br>' || $string.substr($index - 5, 5) === '<div>' || $index === 0) {
@@ -869,22 +861,13 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 				}
 				
 				//get the unit. unit is one word.
-				if (!$item.unit_name && $item.quantity && $index >= $end_quantity_index) {		
+				if (!$item.unit_name && $item.quantity && $index >= $end_quantity_index) {	
 					var $unit_response = $scope.quickRecipeUnitName($string, $end_quantity_index);
-					if ($unit_response) {
-						$unit_name = $unit_response[0];
-						$end_unit_index = $unit_response[1];
+					if (!$unit_response.error) {
+						//no error
+						$unit_name = $unit_response.name;
+						$end_unit_index = $unit_response.end_index;
 						$item.unit_name = $unit_name;
-					}
-					else {
-						//there was an error with the unit
-						$errors.push('Food, quantity and unit have not all been specified on line ' + $line_number);
-					}
-
-					//check there is no comma at the end of $unit_name, indicating quantity, unit and food have not all been specified
-					var $last_unit_character = $unit_name.indexOf($unit_name.length - 1);
-					if ($unit_name.substr($last_unit_character, 1) === ',') {
-						$errors.push('Food, quantity and unit have not all been specified on line ' + $line_number);
 					}
 				}
 				
@@ -955,18 +938,25 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 		$scope.quickRecipeUnitName = function ($string, $end_quantity_index) {
 			$start_unit_index = $end_quantity_index + 1;
 			var $end_unit_index = $start_unit_index + 1;
+			var $unit_name;
 
 			while ($string.substr($end_unit_index, 1) !== ' ') {
-				if ($string.substr($end_unit_index, 1) === '<') {
-					//unit or food not specified because tag should not be right after the unit
-					return false;
+				if ($string.substr($end_unit_index, 1) === '<' || $string.substr($end_unit_index, 1) === ',') {
+					//tag or comma should not be after unit. this means there was an error.
+					return {
+						error: true
+					};
 				}
 				$end_unit_index++;
 			}
 
-			var $unit_name = $string.substring($start_unit_index, $end_unit_index);
+			$unit_name = $string.substring($start_unit_index, $end_unit_index);
 
-			return [$unit_name, $end_unit_index];
+			return {
+				name: $unit_name,
+				end_index: $end_unit_index,
+				error: false
+			};
 		};
 
 		$scope.quickRecipeFoodName = function ($string, $end_unit_index) {
