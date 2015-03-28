@@ -39,8 +39,23 @@
 			</div>
 		</div>
 
-		<h5>Method</h5>
-		<div ng-repeat="step in recipe.steps">{{step.text}}</div>
+		<div class="row">
+			<div class="col-sm-10 col-sm-offset-1">
+
+				<table id="steps" class="table table-bordered">
+					<caption>Method <br><small>Use the checkboxes while you make your recipe.</small></caption>
+					<tr ng-repeat="step in recipe.steps">
+						<td>
+							<div class="vertical-center">
+								<input type="checkbox">
+							</div>
+						</td>
+						<td>{{step.text}}</td>
+					</tr>
+				</table>
+
+			</div>
+		</div>
 
 		<button ng-click="show.popups.recipe = false" class="close-popup btn btn-sm">close</button>
 	</div>

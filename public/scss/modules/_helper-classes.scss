@@ -10,6 +10,12 @@
 	text-align: center;
 }
 
+.vertical-center {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
 .margin-bottom {
 	margin-bottom: 15px;
 }

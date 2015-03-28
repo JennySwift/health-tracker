@@ -1,0 +1,23 @@
+#steps {
+	// display: flex;
+	// align-items: center;
+	td {
+		text-align: left;
+		&:nth-child(1) {
+			padding: 0px 20px;
+			position: relative;
+			div {
+				position: absolute;
+				top: 0;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				input {
+					margin: 0;
+					height: 30px;
+					width: 30px;
+				}
+			}
+		}
+	}
+}
