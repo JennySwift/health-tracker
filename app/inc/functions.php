@@ -503,9 +503,12 @@ function insertTagsInExercise ($exercise_id, $tags) {
 
 // ==============================quick recipe==============================
 
-function insertQuickRecipe ($recipe_name, $contents) {
+function insertQuickRecipe ($recipe_name, $contents, $steps) {
 	//insert recipe into recipes table
 	$recipe_id = insertQuickRecipeRecipe($recipe_name);
+
+	//insert the method for the recipe
+	insertQuickRecipeMethod($recipe_id, $steps);
 
 	//$contents needs to have: food_name, unit_name, quantity, maybe description
 	foreach ($contents as $item) {
@@ -575,6 +578,21 @@ function insertQuickRecipe ($recipe_name, $contents) {
 				'description' => $description,
 				'user_id' => Auth::user()->id	
 			]);	
+	}
+}
+
+function insertQuickRecipeMethod ($recipe_id, $steps) {
+	$step_number = 0;
+	foreach ($steps as $step_text) {
+		$step_number++;
+
+		DB::table('recipe_methods')
+			->insert([
+				'recipe_id' => $recipe_id,
+				'step' => $step_number,
+				'text' => $step_text,
+				'user_id' => Auth::user()->id
+			]);
 	}
 }
 

@@ -18,6 +18,7 @@
 
 <script type="text/javascript" src="js/controllers.js"></script>
 <script type="text/javascript" src="js/my-date.js"></script>
+<script type="text/javascript" src="js/quick-recipe.js"></script>
 <script type="text/javascript" src="js/select.js"></script>
 <script type="text/javascript" src="js/insert.js"></script>
 <script type="text/javascript" src="js/update.js"></script>

@@ -41,7 +41,8 @@ class InsertController extends Controller {
 		include(app_path() . '/inc/functions.php');
 		$recipe_name = json_decode(file_get_contents('php://input'), true)["recipe_name"];
 		$contents = json_decode(file_get_contents('php://input'), true)["contents"];
-		insertQuickRecipe($recipe_name, $contents);
+		$steps = json_decode(file_get_contents('php://input'), true)["steps"];
+		insertQuickRecipe($recipe_name, $contents, $steps);
 		return getRecipes();
 	}
 
