@@ -915,6 +915,20 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 				$scope.recipes = response.data;
 			});
 		};
+
+		$scope.closePopup = function ($event, $popup) {
+			var $target = $event.target;
+			if ($target.className === 'popup-outer') {
+				$scope.show.popups[$popup] = false;
+			}
+			console.log('something');
+		};
+
+		// $(".popup-outer").on('click', function (event) {
+		// 	if (event.target === this) {
+
+		// 	}
+		// });
 		
 	}); //end display controller
 

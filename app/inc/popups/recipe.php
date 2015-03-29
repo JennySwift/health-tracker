@@ -1,11 +1,12 @@
 <!-- ==========================recipe popup========================== -->
 
-<div class="row">
+<div ng-show="show.popups.recipe" ng-click="closePopup($event, 'recipe')" class="popup-outer">
 
-	<div ng-show="show.popups.recipe" class="popup col-sm-8">
+	<div class="popup-inner">
+
 		<h4 class="center">{{recipe.name}}</h4>
-		<div class="row margin-bottom">
-			<div class="col-sm-10 col-sm-offset-1">
+		<div class="margin-bottom">
+			<div>
 				<input ng-model="recipe_popup.food.name" ng-keyup="autocompleteFood($event.keyCode, recipe_popup.food.name); insertOrAutocompleteFoodEntry($event.keyCode)" ng-blur="show.autocomplete.food = false" type="text" placeholder="add food to {{recipe.name}}" id="recipe-popup-food-input" class="form-control">
 				
 				<div ng-show="show.autocomplete.food" class="autocomplete-dropdown">
@@ -18,9 +19,9 @@
 				</select>
 			</div>
 		</div>
-	
-		<div class="row">
-			<div class="col-sm-10 col-sm-offset-1">
+			
+		<div>
+			<div>
 				<table class="table table-bordered">
 					<tr>
 						<th>food</th>
@@ -38,10 +39,10 @@
 				</table>
 			</div>
 		</div>
-
-		<div class="row">
-			<div class="col-sm-10 col-sm-offset-1">
-
+		
+		<div>
+			<div>
+		
 				<table id="steps" class="table table-bordered">
 					<caption>Method <br><small>Use the checkboxes while you make your recipe.</small></caption>
 					<tr ng-repeat="step in recipe.steps">
@@ -53,11 +54,13 @@
 						<td>{{step.text}}</td>
 					</tr>
 				</table>
-
+		
 			</div>
 		</div>
-
-		<button ng-click="show.popups.recipe = false" class="close-popup btn btn-sm">close</button>
 	</div>
+	<!-- <div class="popup-footer">
+		<button ng-click="show.popups.recipe = false" class="close-popup btn btn-sm">close</button>
+	</div> -->
+	
 
-</div> <!-- .row -->
+</div>
