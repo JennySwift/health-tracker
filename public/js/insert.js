@@ -35,7 +35,8 @@ app.factory('insert', function ($http) {
 			var $data = {
 				recipe_name: $recipe_name,
 				contents: $contents,
-				steps: $steps
+				steps: $steps,
+				check_similar_names: true
 			};
 			
 			return $http.post($url, $data);

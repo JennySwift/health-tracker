@@ -42,12 +42,20 @@ class InsertController extends Controller {
 		$recipe_name = json_decode(file_get_contents('php://input'), true)["recipe_name"];
 		$contents = json_decode(file_get_contents('php://input'), true)["contents"];
 		$steps = json_decode(file_get_contents('php://input'), true)["steps"];
-		insertQuickRecipe($recipe_name, $contents, $steps);
-		return array(
-			'recipes' => getRecipes(),
-			'foods_with_units' => getAllFoodsWithUnits(),
-			'food_units' => getFoodUnits()
-		);
+		$check_similar_names = json_decode(file_get_contents('php://input'), true)["check_similar_names"];
+
+		$similar_names = insertQuickRecipe($recipe_name, $contents, $steps, $check_similar_names);
+
+		if ($similar_names) {
+			return $similar_names;
+		}
+		else {
+			return array(
+				'recipes' => getRecipes(),
+				'foods_with_units' => getAllFoodsWithUnits(),
+				'food_units' => getFoodUnits()
+			);
+		}	
 	}
 
 	public function journalEntry () {

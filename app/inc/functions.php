@@ -1,12 +1,30 @@
 <?php
 
-
+include('quick-recipe.php');
 
 // ========================================================================
 // ========================================================================
 // =================================select=================================
 // ========================================================================
 // ========================================================================
+
+function getId ($table, $name) {
+	$id = DB::table($table)
+		->where('name', $name)
+		->where('user_id', Auth::user()->id)
+		->pluck('id');
+
+	return $id;
+}
+
+function countItem ($table, $name) {
+	$count = DB::table($table)
+		->where('name', $name)
+		->where('user_id', Auth::user()->id)
+		->count();
+
+	return $count;
+}
 
 function getExerciseTags () {
 	//gets all exercise tags
@@ -479,6 +497,18 @@ function insertFood ($name) {
 	]);
 }
 
+function insertFoodIntoRecipe ($data) {
+	DB::table('food_recipe')
+		->insert([
+			'recipe_id' => $data['recipe_id'],
+			'food_id' => $data['food_id'],
+			'unit_id' => $data['unit_id'],
+			'quantity' => $data['quantity'],
+			'description' => $data['description'],
+			'user_id' => Auth::user()->id
+		]);
+}
+
 function insertNewExerciseTag ($name) {
 	DB::table('exercise_tags')
 		->insert([
@@ -503,132 +533,6 @@ function insertTagsInExercise ($exercise_id, $tags) {
 		insertExerciseTag($exercise_id, $tag_id);
 	}
 }
-
-// ==============================quick recipe==============================
-
-function insertQuickRecipe ($recipe_name, $contents, $steps) {
-	//insert recipe into recipes table
-	$recipe_id = insertQuickRecipeRecipe($recipe_name);
-
-	//insert the method for the recipe
-	insertQuickRecipeMethod($recipe_id, $steps);
-
-	//$contents needs to have: food_name, unit_name, quantity, maybe description
-	foreach ($contents as $item) {
-		$food_name = $item['food_name'];
-		$unit_name = $item['unit_name'];
-		$quantity = $item['quantity'];
-
-		if (isset($item['description'])) {
-			$description = $item['description'];
-		}
-		else {
-			$description = null;
-		}
-		
-
-		//check if the food exists
-		$count = DB::table('foods')
-			->where('name', $food_name)
-			->where('user_id', Auth::user()->id)
-			->count();
-
-		if ($count < 1) {
-			//the food does not yet exist so we need to create it
-			$food_id = DB::table('foods')
-				->insertGetId([
-					'name' => $food_name,
-					'user_id' => Auth::user()->id
-				]);
-		}
-		else {
-			//the food exists. retrieve the id of the food
-			$food_id = DB::table('foods')
-				->where('name', $food_name)
-				->where('user_id', Auth::user()->id)
-				->pluck('id');
-		}
-
-		//check if the unit exists
-		$count = DB::table('food_units')
-			->where('name', $unit_name)
-			->where('user_id', Auth::user()->id)
-			->count();
-
-		if ($count < 1) {
-			//the unit does not yet exist so we need to create it
-			$unit_id = DB::table('food_units')
-				->insertGetId([
-					'name' => $unit_name,
-					'user_id' => Auth::user()->id
-				]);
-		}
-		else {
-			//the unit exists. retrieve the id of the unit
-			$unit_id = DB::table('food_units')
-				->where('name', $unit_name)
-				->where('user_id', Auth::user()->id)
-				->pluck('id');
-		}
-
-		//insert the item into food_recipe table
-		DB::table('food_recipe')
-			->insert([
-				'recipe_id' => $recipe_id,
-				'food_id' => $food_id,
-				'unit_id' => $unit_id,
-				'quantity' => $quantity,
-				'description' => $description,
-				'user_id' => Auth::user()->id	
-			]);	
-	}
-}
-
-function insertQuickRecipeMethod ($recipe_id, $steps) {
-	$step_number = 0;
-	foreach ($steps as $step_text) {
-		$step_number++;
-
-		DB::table('recipe_methods')
-			->insert([
-				'recipe_id' => $recipe_id,
-				'step' => $step_number,
-				'text' => $step_text,
-				'user_id' => Auth::user()->id
-			]);
-	}
-}
-
-function insertQuickRecipeRecipe ($name) {
-	//insert recipe into recipes table and retrieve the id
-	$id = DB::table('recipes')
-		->insertGetId([
-			'name' => $name,
-			'user_id' => Auth::user()->id
-		]);
-
-	return $id;
-}
-
-// function insertQuickRecipeFoods ($foods) {
-// 	foreach ($foods as $food) {
-// 		$count = DB::table('foods')
-// 			->where('name', $food)
-// 			->where('user_id', Auth::user()->id)
-// 			->count();
-
-// 		if ($count < 1) {
-// 			//the food does not yet exist so we need to create it
-// 			DB::table('foods')
-// 				->insert([
-// 					'name' => $food,
-// 					'user_id' => Auth::user()->id
-// 				]);
-// 		}
-// 	}
-// }
-
-// ============================end quick recipe============================
 
 function insertOrUpdateJournalEntry ($date, $text) {
 	//check if an entry already exists
@@ -658,17 +562,6 @@ function insertOrUpdateJournalEntry ($date, $text) {
 			]);
 	}
 	
-}
-
-function insertFoodIntoRecipe ($data) {
-	DB::table('food_recipe')
-		->insert([
-			'recipe_id' => $data['recipe_id'],
-			'food_id' => $data['food_id'],
-			'unit_id' => $data['unit_id'],
-			'quantity' => $data['quantity'],
-			'user_id' => Auth::user()->id
-		]);
 }
 
 function insertRecipe ($name) {
