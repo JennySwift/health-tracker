@@ -912,7 +912,9 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 			$scope.quick_recipe_steps = $steps;
 
 			insert.quickRecipe($contents, $steps).then(function (response) {
-				$scope.recipes = response.data;
+				$scope.recipes = response.data.recipes;
+				$scope.all_foods_with_units = response.data.foods_with_units;
+				$scope.units.food = response.data.food_units;
 			});
 		};
 

@@ -24,13 +24,13 @@
 			<div ng-repeat="error in errors.quick_recipe">{{error}}</div>
 		</div>
 
-		<div>
+		<!-- <div>
 			<div ng-repeat="item in quick_recipe_contents">{{item}}</div>
 		</div>
 
 		<div>
 			<div ng-repeat="step in quick_recipe_steps">{{step}}</div>
-		</div>
+		</div> -->
 	</div>
 	
 	<!-- ==========================foods========================== -->

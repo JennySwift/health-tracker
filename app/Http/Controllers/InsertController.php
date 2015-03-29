@@ -43,7 +43,11 @@ class InsertController extends Controller {
 		$contents = json_decode(file_get_contents('php://input'), true)["contents"];
 		$steps = json_decode(file_get_contents('php://input'), true)["steps"];
 		insertQuickRecipe($recipe_name, $contents, $steps);
-		return getRecipes();
+		return array(
+			'recipes' => getRecipes(),
+			'foods_with_units' => getAllFoodsWithUnits(),
+			'food_units' => getFoodUnits()
+		);
 	}
 
 	public function journalEntry () {
