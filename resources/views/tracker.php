@@ -61,7 +61,7 @@
 		<div ng-bind-html="journal_entry.text" id="journal-entry" class="wysiwyg margin-bottom"></div>
 
 		<!-- <button ng-click="journal_entry.edit = true">edit</button> -->
-		<button ng-click="insertOrUpdateJournalEntry()" class="btn">save entry</button>
+		<button ng-click="insertOrUpdateJournalEntry()">save entry</button>
 
 	</div>
 

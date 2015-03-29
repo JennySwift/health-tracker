@@ -33,6 +33,25 @@ p {
 select {
   padding-top: 4px; }
 
+button {
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+  color: #555;
+  font-size: 14px;
+  padding: 6px 12px; }
+  button:active {
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.125) inset;
+    border: 1px solid black; }
+  button:focus {
+    outline: thin dotted;
+    outline-offset: -2px; }
+  button:hover, button:focus, button:active {
+    background-color: #e6e6e6;
+    border-color: #adadad;
+    color: #333; }
+
 input {
   padding: 0;
   margin: 0;
