@@ -59,8 +59,8 @@ app.factory('quickRecipe', function ($http) {
 			var $unit_name;
 
 			while ($string.substr($end_unit_index, 1) !== ' ') {
-				if ($string.substr($end_unit_index, 1) === '<' || $string.substr($end_unit_index, 1) === ',') {
-					//tag or comma should not be after unit. this means there was an error.
+				if ($string.substr($end_unit_index, 1) === '<' || $string.substr($end_unit_index, 1) === ',' || $string.substr($end_unit_index, 1) === '') {
+					//there was an error-after the unit there is a tag, comma, or it is the end of the line.
 					return {
 						error: true
 					};
