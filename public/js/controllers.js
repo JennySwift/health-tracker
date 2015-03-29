@@ -843,9 +843,9 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 						if (!$item.quantity) {
 							if (isNaN($character) && $character !== '.') {
 								//not a number or a decimal point
-								$errors.push('the quantity is not a number');
 							}
-							else {
+							//the following if check is so that quantity is not defined when it has not been specified
+							else if ($character !== " ") {
 								//the quantity is a valid number
 								$quantity_response = quickRecipe.quantity($line, $index);
 								$quantity = $quantity_response[0];
