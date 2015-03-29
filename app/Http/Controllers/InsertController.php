@@ -84,10 +84,8 @@ class InsertController extends Controller {
 	public function food () {
 		include(app_path() . '/inc/functions.php');
 		$name = json_decode(file_get_contents('php://input'), true)["name"];
-		DB::table('foods')->insert([
-			'name' => $name,
-			'user_id' => Auth::user()->id
-		]);
+		insertFood($name);
+
 		return getAllFoodsWithUnits();
 	}
 
