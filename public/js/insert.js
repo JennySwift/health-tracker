@@ -29,14 +29,14 @@ app.factory('insert', function ($http) {
 			
 			return $http.post($url, $data);
 		},
-		quickRecipe: function ($contents, $steps) {
+		quickRecipe: function ($contents, $steps, $check_similar_names) {
 			var $url = 'insert/quickRecipe';
 			var $recipe_name = prompt('name your recipe');
 			var $data = {
 				recipe_name: $recipe_name,
 				contents: $contents,
 				steps: $steps,
-				check_similar_names: true
+				check_similar_names: $check_similar_names
 			};
 			
 			return $http.post($url, $data);

@@ -10,6 +10,10 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 		// ========================================================================
 		// ========================================================================
 
+		//test
+		$scope.property = {
+			
+		};
 		//=============tabs=============
 		$scope.tab = {
 			foods: true
@@ -25,7 +29,8 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 				new_food_entry: false
 			},
 			popups: {
-				recipe: false
+				recipe: false,
+				similar_names: false
 			}
 		};
 
@@ -39,6 +44,9 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 			unit: {},
 			exercise_unit: {}
 		};
+
+		//quick recipe
+		$scope.quick_recipe = {};
 
 		//new entry
 		$scope.new_entry = {
@@ -735,6 +743,12 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 			});
 		};
 
+		$scope.deleteFoodUnit = function ($id) {
+			deleteItem.foodUnit($id).then(function (response) {
+				$scope.units.food = response.data;
+			});
+		};
+
 		$scope.deleteFoodEntry = function ($id) {
 			deleteItem.foodEntry($id, $scope.date.sql).then(function (response) {
 				$scope.food_entries = response.data.food_entries;
@@ -908,10 +922,52 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 				return;
 			}
 
-			$scope.quick_recipe_contents = $contents;
-			$scope.quick_recipe_steps = $steps;
+			$scope.quick_recipe.contents = $contents;
+			$scope.quick_recipe.steps = $steps;
 
-			insert.quickRecipe($contents, $steps).then(function (response) {
+			insert.quickRecipe($contents, $steps, true).then(function (response) {
+				if (response.data.similar_names) {
+					$scope.quick_recipe.similar_names = response.data.similar_names;
+					$scope.show.popups.similar_names = true;
+				}
+				else {
+					$scope.recipes = response.data.recipes;
+					$scope.all_foods_with_units = response.data.foods_with_units;
+					$scope.units.food = response.data.food_units;
+				}	
+			});
+		};
+
+		$scope.quickRecipeFinish = function () {
+			//this is for entering the recipe after the similar name check is done
+
+			//first do the foods
+			$($scope.quick_recipe.similar_names.foods).each(function () {
+				var $specified_food = this.specified_food.name;
+				var $existing_food = this.existing_food.name;
+				var $checked = this.checked;
+				var $index = this.index;
+
+				if ($checked === $existing_food) {
+					//we are using the existing food rather than creating a new food. therefore, change $scope.quick_recipe.contents to use the correct food name.
+					$scope.quick_recipe.contents[$index].food_name = $existing_food;
+				}
+			});
+
+			//do the same for the units
+			$($scope.quick_recipe.similar_names.units).each(function () {
+				var $specified_unit = this.specified_unit.name;
+				var $existing_unit = this.existing_unit.name;
+				var $checked = this.checked;
+				var $index = this.index;
+
+				if ($checked === $existing_unit) {
+					//we are using the existing unit rather than creating a new unit. therefore, change $scope.quick_recipe.contents to use the correct unit name.
+					$scope.quick_recipe.contents[$index].unit_name = $existing_unit;
+				}
+			});
+
+			insert.quickRecipe($scope.quick_recipe.contents, $scope.quick_recipe.steps, false).then(function (response) {
 				$scope.recipes = response.data.recipes;
 				$scope.all_foods_with_units = response.data.foods_with_units;
 				$scope.units.food = response.data.food_units;

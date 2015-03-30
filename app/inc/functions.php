@@ -218,6 +218,7 @@ function getFoodUnits () {
     $food_units = DB::table('food_units')
     	->where('user_id', Auth::user()->id)
     	->select('id', 'name')
+    	->orderBy('name', 'asc')
     	->get();
 
     return $food_units;
@@ -227,6 +228,7 @@ function getExerciseUnits () {
     $result = DB::table('exercise_units')
     	->where('user_id', Auth::user()->id)
     	->select('id', 'name')
+    	->orderBy('name', 'asc')
     	->get();
 
     //so that it is an array, not an object

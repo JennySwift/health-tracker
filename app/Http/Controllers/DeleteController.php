@@ -60,6 +60,13 @@ class DeleteController extends Controller {
 		return getExerciseUnits();
 	}
 
+	public function foodUnit () {
+		include(app_path() . '/inc/functions.php');
+		$id = json_decode(file_get_contents('php://input'), true)["id"];
+		DB::table('food_units')->where('id', $id)->delete();
+		return getFoodUnits();
+	}
+
 	public function foodEntry () {
 		include(app_path() . '/inc/functions.php');
 		$id = json_decode(file_get_contents('php://input'), true)["id"];

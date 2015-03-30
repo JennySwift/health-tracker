@@ -3,4 +3,5 @@
 	include 'recipe.php';
 	include 'food.php';
 	include 'temporary-recipe.php';
+	include 'similar-names.php';
 ?>

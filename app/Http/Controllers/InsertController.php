@@ -47,7 +47,9 @@ class InsertController extends Controller {
 		$similar_names = insertQuickRecipe($recipe_name, $contents, $steps, $check_similar_names);
 
 		if ($similar_names) {
-			return $similar_names;
+			return array(
+				'similar_names' => $similar_names
+			);
 		}
 		else {
 			return array(

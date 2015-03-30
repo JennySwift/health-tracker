@@ -2,12 +2,15 @@
 
 function insertQuickRecipe ($recipe_name, $contents, $steps, $check_similar_names) {
 	$similar_names = array();
+	//$index is so if a similar name is found, I know what index it is in the quick recipe array for the javascript.
+	$index = -1;
 
 	//$contents needs to have: food_name, unit_name, quantity, maybe description
 	foreach ($contents as $item) {
 		$food_name = $item['food_name'];
 		$unit_name = $item['unit_name'];
 		$quantity = $item['quantity'];
+		$index++;
 
 		if (isset($item['description'])) {
 			$description = $item['description'];
@@ -21,8 +24,10 @@ function insertQuickRecipe ($recipe_name, $contents, $steps, $check_similar_name
 
 			if ($found) {
 				$similar_names['foods'][] = array(
-					'specified_food' => $food_name,
-					'existing_food' => $found
+					'specified_food' => array('name' => $food_name),
+					'existing_food' => array('name' => $found),
+					'checked' => $found,
+					'index' => $index
 				);
 			}
 
@@ -30,8 +35,10 @@ function insertQuickRecipe ($recipe_name, $contents, $steps, $check_similar_name
 
 			if ($found) {
 				$similar_names['units'][] = array(
-					'specified_unit' => $unit_name,
-					'existing_unit' => $found
+					'specified_unit' => array('name' => $unit_name),
+					'existing_unit' => array('name' => $found),
+					'checked' => $found,
+					'index' => $index
 				);
 			}
 		}
@@ -40,20 +47,8 @@ function insertQuickRecipe ($recipe_name, $contents, $steps, $check_similar_name
 		
 			//retrieve the id if the food exists, insert and retrieve the id if the food does not exist
 			$food_id = insertFoodIfNotExists($food_name);
+			//same for the unit
 			$unit_id = insertUnitIfNotExists($unit_name);
-
-			//create the unit if it does not exist. get its id if it does exist.
-			quickRecipeCheckUnit($unit_name);
-
-
-
-
-
-			//insert recipe into recipes table
-			$recipe_id = insertQuickRecipeRecipe($recipe_name);
-
-			//insert the method for the recipe
-			insertQuickRecipeMethod($recipe_id, $steps);
 
 			//insert the item into food_recipe table
 			$data = array(
@@ -71,6 +66,12 @@ function insertQuickRecipe ($recipe_name, $contents, $steps, $check_similar_name
 	if (count($similar_names) > 0) {
 		return $similar_names;
 	}
+
+	//insert recipe into recipes table
+	$recipe_id = insertQuickRecipeRecipe($recipe_name);
+
+	//insert the method for the recipe
+	insertQuickRecipeMethod($recipe_id, $steps);
 }
 
 function insertFoodIfNotExists ($food_name) {
@@ -124,7 +125,7 @@ function checkSimilarFoods ($food_name) {
 			$found = DB::table('foods')
 				->where('name', $similar)
 				->where('user_id', Auth::user()->id)
-				->first();
+				->pluck('name');
 		}
 	}
 	if (isset($found)) {
@@ -145,7 +146,7 @@ function checkSimilarUnits ($unit_name) {
 			$found = DB::table('food_units')
 				->where('name', $similar)
 				->where('user_id', Auth::user()->id)
-				->first();
+				->pluck('name');
 		}
 	}
 	if (isset($found)) {

@@ -9,7 +9,7 @@
 			<div id="display-food-units">
 				<li ng-repeat="unit in units.food" class="list-group-item">
 					{{unit.name}}
-					<i ng-click="deleteItem('food_units', 'unit', unit.id, displayUnitList)" class="delete-item fa fa-times"></i>
+					<i ng-click="deleteFoodUnit(unit.id)" class="delete-item fa fa-times"></i>
 				</li>
 			</div>
 		</div>
