@@ -924,8 +924,9 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 
 			$scope.quick_recipe.contents = $contents;
 			$scope.quick_recipe.steps = $steps;
+			$scope.quick_recipe.name = prompt('name your recipe');
 
-			insert.quickRecipe($contents, $steps, true).then(function (response) {
+			insert.quickRecipe($scope.quick_recipe.name, $contents, $steps, true).then(function (response) {
 				if (response.data.similar_names) {
 					$scope.quick_recipe.similar_names = response.data.similar_names;
 					$scope.show.popups.similar_names = true;
@@ -968,7 +969,7 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 				}
 			});
 
-			insert.quickRecipe($scope.quick_recipe.contents, $scope.quick_recipe.steps, false).then(function (response) {
+			insert.quickRecipe($scope.quick_recipe.name, $scope.quick_recipe.contents, $scope.quick_recipe.steps, false).then(function (response) {
 				$scope.recipes = response.data.recipes;
 				$scope.all_foods_with_units = response.data.foods_with_units;
 				$scope.units.food = response.data.food_units;
