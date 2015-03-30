@@ -134,7 +134,7 @@ class InsertController extends Controller {
 		$data = json_decode(file_get_contents('php://input'), true);
 		$recipe_id = $data['recipe_id'];
 		
-		insertFoodIntoRecipe($data);
+		insertFoodIntoRecipe($recipe_id, $data);
 		return getRecipeContents($recipe_id);
 	}
 

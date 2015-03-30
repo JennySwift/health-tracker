@@ -940,6 +940,7 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 
 		$scope.quickRecipeFinish = function () {
 			//this is for entering the recipe after the similar name check is done
+			$scope.show.popups.similar_names = false;
 
 			//first do the foods
 			$($scope.quick_recipe.similar_names.foods).each(function () {

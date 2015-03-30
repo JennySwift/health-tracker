@@ -2,6 +2,7 @@
 
 function insertQuickRecipe ($recipe_name, $contents, $steps, $check_similar_names) {
 	$similar_names = array();
+	$data_to_insert = array();
 	//$index is so if a similar name is found, I know what index it is in the quick recipe array for the javascript.
 	$index = -1;
 
@@ -50,16 +51,13 @@ function insertQuickRecipe ($recipe_name, $contents, $steps, $check_similar_name
 			//same for the unit
 			$unit_id = insertUnitIfNotExists($unit_name);
 
-			//insert the item into food_recipe table
-			$data = array(
-				'recipe_id' => $recipe_id,
+			//add the item to the array for inserting when all items are in the array
+			$data_to_insert[] = array(
 				'food_id' => $food_id,
 				'unit_id' => $unit_id,
 				'quantity' => $quantity,
 				'description' => $description
 			);
-
-			insertFoodIntoRecipe($data);
 		}
 	}
 
@@ -72,6 +70,12 @@ function insertQuickRecipe ($recipe_name, $contents, $steps, $check_similar_name
 
 	//insert the method for the recipe
 	insertQuickRecipeMethod($recipe_id, $steps);
+
+	//insert the items into food_recipe table
+	foreach ($data_to_insert as $item) {
+		//insert a row into food_recipe table
+		insertFoodIntoRecipe($recipe_id, $item);
+	}
 }
 
 function insertFoodIfNotExists ($food_name) {
