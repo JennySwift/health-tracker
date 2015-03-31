@@ -796,7 +796,7 @@ function autocompleteMenu ($typing) {
 
 	// $menu = DB::select('select * FROM ' . $union . ' as table1 ORDER BY table1.name desc');
 
-	$menu = DB::select("select * from (select id, name, 'food' as type from foods where name LIKE '$typing' and user_id = " . Auth::user()->id . " UNION select id, name, 'recipe' as type from recipes where name LIKE '$typing' and user_id = 1) as table1 order by table1.name asc");
+	$menu = DB::select("select * from (select id, name, 'food' as type from foods where name LIKE '$typing' and user_id = " . Auth::user()->id . " UNION select id, name, 'recipe' as type from recipes where name LIKE '$typing' and user_id = " . Auth::user()->id . ") as table1 order by table1.name asc");
 
 	return $menu;
 }
