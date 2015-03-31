@@ -21,7 +21,7 @@ function insertQuickRecipe ($recipe_name, $contents, $steps, $check_similar_name
 		}
 
 		if ($check_similar_names) {
-			$found = checkSimilarFoods($food_name);
+			$found = checkSimilarNames($food_name, 'foods');
 
 			if ($found) {
 				$similar_names['foods'][] = array(
@@ -32,7 +32,7 @@ function insertQuickRecipe ($recipe_name, $contents, $steps, $check_similar_name
 				);
 			}
 
-			$found = checkSimilarUnits($unit_name);
+			$found = checkSimilarNames($unit_name, 'food_units');
 
 			if ($found) {
 				$similar_names['units'][] = array(
@@ -116,20 +116,39 @@ function insertUnitIfNotExists ($unit_name) {
 	return $unit_id;
 }
 
-function checkSimilarFoods ($food_name) {
-	$count = countItem('foods', $food_name);
+function checkSimilarNames ($name, $table) {
+	$count = countItem($table, $name);
 
 	if ($count < 1) {
-		//the food does not exist.check if a similar name exists.
+		//the name does not exist
 
-		//check if it's singular form exists
-		if (substr($food_name, -1) === 's') {
-			//the food ends in s. check if it's singular form is in the database
-			$similar = substr($food_name, 0, -1);
-			$found = DB::table('foods')
-				->where('name', $similar)
-				->where('user_id', Auth::user()->id)
-				->pluck('name');
+		if (substr($name, -3) === 'ies') {
+			//the name ends in 'ies'. check if it's singular form exists.
+			$similar_name = substr($name, 0, -3) . 'y';
+			$found = pluckName($similar_name, $table);
+		}
+		elseif (substr($name, -1) === 'y') {
+			//the name ends in 'y'. Check if it's plural form exists.
+			$similar_name = substr($name, 0, -1) . 'ies';
+			$found = pluckName($similar_name, $table);
+		}
+
+		elseif (substr($name, -1) === 's' && !isset($found)) {
+			//the name ends in s. check if its singular form is in the database
+			$similar_name = substr($name, 0, -1);
+			$found = pluckName($similar_name, $table);
+
+			//if nothing was found, check if its plural form is in the database
+			if (!isset($found)) {
+				$similar_name = $name . 'es';
+				$found = pluckName($similar_name, $table);
+			}
+		}
+
+		//check if it's plural form exists if no singular forms were found
+		if (!isset($found)) {
+			$similar_name = $name . 's';
+			$found = pluckName($similar_name, $table);
 		}
 	}
 	if (isset($found)) {
@@ -137,25 +156,13 @@ function checkSimilarFoods ($food_name) {
 	}
 }
 
-function checkSimilarUnits ($unit_name) {
-	$count = countItem('food_units', $unit_name);
+function pluckName ($name, $table) {
+	$name = DB::table($table)
+		->where('name', $name)
+		->where('user_id', Auth::user()->id)
+		->pluck('name');
 
-	if ($count < 1) {
-		//the unit does not exist.check if a similar name exists.
-
-		//check if it's singular form exists
-		if (substr($unit_name, -1) === 's') {
-			//the unit ends in s. check if it's singular form is in the database
-			$similar = substr($unit_name, 0, -1);
-			$found = DB::table('food_units')
-				->where('name', $similar)
-				->where('user_id', Auth::user()->id)
-				->pluck('name');
-		}
-	}
-	if (isset($found)) {
-		return $found;
-	}
+	return $name;
 }
 
 function insertQuickRecipeMethod ($recipe_id, $steps) {
