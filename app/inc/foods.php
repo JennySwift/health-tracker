@@ -18,10 +18,6 @@
 			<a data-edit="underline" class="fa fa-underline"></a>
 		</div>
 
-		<input ng-model="animal.name" value="fish" type="radio">
-		<input ng-model="animal.name" value="dog" type="radio">
-		<input ng-model="animal.name" value="cat" type="radio">
-
 		<div id="quick-recipe" class="wysiwyg"></div>
 
 		<button ng-click="quickRecipe()"class="btn">go</button>
@@ -45,6 +41,7 @@
 
 		<div class="col col-sm-6">
 			<input ng-keyup="insertFood($event.keyCode)" type="text" placeholder="add a new food" id="create-new-food" class="form-control">
+			<input ng-model="filter.foods" type="text" placeholder="filter foods" class="form-control">
 			<hr>
 			<div>
 				<table class="table table-bordered">
@@ -53,7 +50,7 @@
 						<th>default</th>
 						<th>calories</th>
 					</tr>
-					<tr ng-repeat="item in all_foods_with_units" data-food-id="{{item.food.id}}">
+					<tr ng-repeat="item in all_foods_with_units | filter:filter.foods" data-food-id="{{item.food.id}}">
 						<td ng-click="getFoodInfo(item.food.id, item.food.name)" class="pointer">{{item.food.name}}</td>
 						<td>{{item.food.default_unit_name}}</td>
 						<td>{{item.food.default_unit_calories}}</td>
@@ -67,6 +64,7 @@
 		
 		<div class="col col-sm-6">
 			<input ng-model="new_item.recipe.name" ng-keyup="insertRecipe($event.keyCode)" type="text" placeholder="add a new recipe" id="create-new-recipe" class="form-control">
+			<input ng-model="filter.recipes" type="text" placeholder="filter recipes" class="form-control">
 			<hr>
 		
 			<div>
@@ -77,7 +75,7 @@
 						<th>calories</th>
 						<th></th>
 					</tr>
-					<tr ng-repeat="recipe in recipes">
+					<tr ng-repeat="recipe in recipes | filter:filter.recipes">
 						<td ng-click="showRecipePopup(recipe)" class="pointer">{{recipe.name}}</td>
 						<td>calories</td>
 						<td><i ng-click="deleteRecipe(recipe.id)" class="delete-item fa fa-times"></i></td>
