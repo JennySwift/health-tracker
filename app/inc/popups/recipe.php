@@ -17,6 +17,8 @@
 				<select ng-model="unit_id" ng-keyup="insertOrAutocompleteFoodEntry($event.keyCode)" name="" id="" class="form-control">
 					<option ng-repeat="unit in selected.food.assoc_units" ng-selected="unit.default_unit === true">{{unit.name}}</option>
 				</select>
+
+				<input ng-model="recipe_popup.food.description" ng-keyup="insertOrAutocompleteFoodEntry($event.keyCode)" type="text" placeholder="description" class="form-control">
 			</div>
 		</div>
 			

@@ -648,7 +648,8 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 				recipe_id: $scope.selected.recipe.id,
 				food_id: $scope.selected.food.id,
 				unit_id: $scope.selected.unit.id,
-				quantity: $scope.recipe_popup.food.quantity
+				quantity: $scope.recipe_popup.food.quantity,
+				description: $scope.recipe_popup.food.description
 			};
 
 			insert.foodIntoRecipe($data).then(function (response) {
