@@ -618,7 +618,7 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 				$scope.finishMenuAutocomplete($scope.autocomplete.menu, $("#food-quantity"));
 				$scope.displayAssocUnitOptions();
 
-				if ($scope.menu_item.type === 'recipe') {
+				if ($scope.selected.menu.type === 'recipe') {
 					$scope.showTemporaryRecipePopup();
 				}
 			}
