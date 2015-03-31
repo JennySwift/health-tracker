@@ -16,7 +16,7 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 		};
 		//=============tabs=============
 		$scope.tab = {
-			foods: true
+			food_entries: true
 		};
 
 		//show
@@ -514,12 +514,14 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 		$scope.autocompleteMenu = function ($keycode) {
 			if ($keycode !== 13 && $keycode !== 38 && $keycode !== 40) {
 				//not enter, up arrow or down arrow
-				//fill the dropdown
-				$scope.autocomplete.menu = select.autocompleteMenu($scope.menu);
-				//show the dropdown
-				$scope.show.autocomplete.new_menu_entry = true;
-				//select the first item
-				$scope.autocomplete.menu[0].selected = true;
+				select.autocompleteMenu().then(function (response) {
+					//fill the dropdown
+					$scope.autocomplete.menu = response.data;
+					//show the dropdown
+					$scope.show.autocomplete.new_menu_entry = true;
+					//select the first item
+					$scope.autocomplete.menu[0].selected = true;
+				});
 			}
 			else if ($keycode === 38) {
 				//up arrow pressed
@@ -656,6 +658,7 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 				$scope.recipe.contents = response.data;
 			});
 			$("#recipe-popup-food-input").val("").focus();
+			$scope.recipe_popup.food.description = "";
 		};
 
 		$scope.insertFoodIntoTemporaryRecipe = function () {

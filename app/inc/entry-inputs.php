@@ -1,7 +1,7 @@
 <!-- food entry -->
 <div ng-show="tab.entries || tab.food_entries" class="col-xs-12 col-sm-4 margin-bottom">
 	<div>	
-		<input ng-model="new_entry.menu.name" ng-keyup="autocompleteMenu($event.keyCode); insertOrAutocompleteMenuEntry($event.keyCode)" ng-blur="autocomplete.menu = ''" type="text" placeholder="food" id="food" class="form-control">
+		<input ng-model="new_entry.menu.name" ng-keyup="autocompleteMenu($event.keyCode); insertOrAutocompleteMenuEntry($event.keyCode)" ng-blur="autocomplete.menu = ''" type="text" placeholder="food" id="menu" class="form-control">
 		
 		<div ng-show="show.autocomplete.new_menu_entry">
 			<div ng-repeat="item in autocomplete.menu" ng-class="{'selected': item.selected}" data-id="{{item.id}}" data-type="{{item.type}}" class="autocomplete-dropdown-item">{{item.name}}</div>

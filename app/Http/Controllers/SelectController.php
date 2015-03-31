@@ -4,6 +4,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
+use Debugbar;
 
 class SelectController extends Controller {
 	//
@@ -43,6 +44,12 @@ class SelectController extends Controller {
 		include(app_path() . '/inc/functions.php');
 		$typing = json_decode(file_get_contents('php://input'), true)["typing"];
 		return autocompleteFood($typing);
+	}
+
+	public function autocompleteMenu () {
+		include(app_path() . '/inc/functions.php');
+		$typing = json_decode(file_get_contents('php://input'), true)["typing"];		
+		return autocompleteMenu($typing);
 	}
 
 	public function entries () {

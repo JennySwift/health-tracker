@@ -174,7 +174,6 @@ function getAllFoodsWithUnits () {
 			->where('food_id', $food_id)
 			->select('food_units.name', 'food_units.id', 'calories', 'default_unit')
 			->get();
-	   Debugbar::info('rows for ' . $food_name . ' ', $rows);
 
 		$units = array();
 		foreach ($rows as $row) {
@@ -782,6 +781,28 @@ function autocompleteFood ($typing) {
 		->get();
     
 	return $foods;
+}
+
+function autocompleteMenu ($typing) {
+	$typing = '%' . $typing . '%';
+	Debugbar::info('functions.php typing: ' . $typing);
+	// $first = DB::table('foods')
+	// 	->where('name', 'LIKE', $typing)
+	// 	->where('user_id', Auth::user()->id)
+	// 	->select('id', 'name');
+
+	// $second = DB::table('recipes')
+	// 	->where('name', 'LIKE', $typing)
+	// 	->where('user_id', Auth::user()->id)
+	// 	->select('id', 'name');
+
+	// $union = $second->union($first);
+
+	// $menu = DB::select('select * FROM ' . $union . ' as table1 ORDER BY table1.name desc');
+
+	$menu = DB::select("select * from (select id, name from foods where name LIKE '$typing' and user_id = 1 UNION select id, name from recipes where name LIKE '$typing' and user_id = 1) as table1 order by table1.name asc");
+
+	return $menu;
 }
 
 // ========================================================================
