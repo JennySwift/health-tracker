@@ -56,6 +56,7 @@ Route::post('insert/exerciseUnit', 'InsertController@exerciseUnit');
 Route::post('insert/unitInCalories', 'InsertController@unitInCalories');
 Route::post('insert/foodUnit', 'InsertController@foodUnit');
 Route::post('insert/menuEntry', 'InsertController@menuEntry');
+Route::post('insert/recipeEntry', 'InsertController@recipeEntry');
 Route::post('insert/exerciseEntry', 'InsertController@exerciseEntry');
 Route::post('insert/weight', 'InsertController@weight');
 Route::post('insert/foodIntoRecipe', 'InsertController@foodIntoRecipe');

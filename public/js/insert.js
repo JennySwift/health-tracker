@@ -144,14 +144,26 @@ app.factory('insert', function ($http) {
 
 			return $http.post($url, $data);
 		},
-		menuEntry: function ($sql_date, $new_entry, $recipe_contents) {
+		menuEntry: function ($sql_date, $new_entry) {
+			//for logging a food. there is a separate function if we are logging a recipe.
 			var $url = 'insert/menuEntry';
-			var $type = 'food';
 	
 			var $data = {
 				date: $sql_date,
-				type: $type,
 				new_entry: $new_entry,
+			};
+
+			$("#food").val("").focus();
+
+			return $http.post($url, $data);
+		},
+		recipeEntry: function ($sql_date, $recipe_id, $recipe_contents) {
+			var $url = 'insert/recipeEntry';
+		
+			var $data = {
+				date: $sql_date,
+				recipe_id: $recipe_id,
+				recipe_contents: $recipe_contents
 			};
 
 			$("#food").val("").focus();

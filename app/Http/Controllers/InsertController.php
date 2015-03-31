@@ -82,6 +82,16 @@ class InsertController extends Controller {
 		return getFoodEntries($date);
 	}
 
+	public function recipeEntry () {
+		include(app_path() . '/inc/functions.php');
+		$date = json_decode(file_get_contents('php://input'), true)["date"];
+		$recipe_id = json_decode(file_get_contents('php://input'), true)["recipe_id"];
+		$recipe_contents = json_decode(file_get_contents('php://input'), true)["recipe_contents"];
+
+		insertRecipeEntry($date, $recipe_id, $recipe_contents);
+		return getFoodEntries($date);
+	}
+
 	public function exerciseEntry () {
 		include(app_path() . '/inc/functions.php');
 		$data = json_decode(file_get_contents('php://input'), true);

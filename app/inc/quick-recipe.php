@@ -75,6 +75,17 @@ function insertQuickRecipe ($recipe_name, $contents, $steps, $check_similar_name
 	foreach ($data_to_insert as $item) {
 		//insert a row into food_recipe table
 		insertFoodIntoRecipe($recipe_id, $item);
+
+		//insert food and unit ids into calories table (if the row doesn't exist already in the table) so that the unit is an associated unit of the food
+		$count = DB::table('calories')
+			->where('food_id', $item['food_id'])
+			->where('unit_id', $item['unit_id'])
+			->where('user_id', Auth::user()->id)
+			->count();
+
+		if ($count === 0) {
+			insertUnitInCalories($item['food_id'], $item['unit_id']);
+		}	
 	}
 }
 

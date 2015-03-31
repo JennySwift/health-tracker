@@ -111,7 +111,7 @@ class CreateUsersTable extends Migration {
 			$table->timestamps();
 			$table->date('date');
 			$table->integer('food_id')->unsigned(); //foreign key
-			$table->integer('quantity');
+			$table->decimal('quantity', 10, 2);
 			$table->integer('unit_id')->unsigned(); //foreign key
 			$table->integer('recipe_id')->unsigned()->nullable(); //foreign key
 			$table->integer('user_id')->unsigned(); //foreign key

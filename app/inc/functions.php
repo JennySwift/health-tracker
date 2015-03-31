@@ -325,10 +325,10 @@ function getAssocUnits ($food_id) {
 		}
 
 		$assoc_units[] = array(
-			"unit_name" => $unit_name,
-			"unit_id" => $unit_id,
+			"name" => $unit_name,
+			"id" => $unit_id,
 			"calories" => $calories,
-			"default_unit" => $default_unit
+			"default" => $default_unit
 		);
 	}
     
@@ -341,6 +341,8 @@ function getFoodInfo ($food_id) {
 	$food_units = getFoodUnits();
 	$assoc_units = getAssocUnits($food_id);
 	$units = array();
+	Debugbar::info('food_units', $food_units);
+	Debugbar::info('assoc_units', $assoc_units);
 
 	//checking to see if the unit has already been given to a food, so that it appears checked.
 	foreach ($food_units as $food_unit) {
@@ -349,7 +351,7 @@ function getFoodInfo ($food_id) {
 		$match = 0;
 
 		foreach ($assoc_units as $assoc_unit) {
-			$assoc_unit_id = $assoc_unit['unit_id'];
+			$assoc_unit_id = $assoc_unit['id'];
 			$calories = $assoc_unit['calories'];
 
 			if ($unit_id == $assoc_unit_id) {
@@ -575,39 +577,33 @@ function insertRecipe ($name) {
 
 function insertRecipeEntry ($date, $recipe_id, $recipe_contents) {
 	foreach ($recipe_contents as $item) {
+		Debugbar::info('item', $item);
 		$food_id = $item['food_id'];
 		$quantity = $item['quantity'];
 		$unit_id = $item['unit_id'];
 
 		DB::table('food_entries')->insert([
 			'date' => $date,
-			'food' => $food,
+			'food_id' => $food_id,
 			'quantity' => $quantity,
 			'unit_id' => $unit_id,
-			'recipe_id' => $recipe_id
+			'recipe_id' => $recipe_id,
+			'user_id' => Auth::user()->id
 		]);
 	}
 }
 
 function insertMenuEntry ($data) {
 	$date = $data['date'];
-	$type = $data['type'];
 	$new_entry = $data['new_entry'];
 
-	if ($type === 'food') {
-		DB::table('food_entries')->insert([
-			'date' => $date,
-			'food_id' => $new_entry['id'],
-			'quantity' => $new_entry['quantity'],
-			'unit_id' => $new_entry['unit_id'],
-			'user_id' => Auth::user()->id
-		]);
-	}
-	elseif ($type === 'recipe') {
-		$recipe_contents = json_decode(file_get_contents('php://input'), true)["recipe_contents"];
-
-		insertRecipeEntry($date, $id, $recipe_contents);
-	}
+	DB::table('food_entries')->insert([
+		'date' => $date,
+		'food_id' => $new_entry['id'],
+		'quantity' => $new_entry['quantity'],
+		'unit_id' => $new_entry['unit_id'],
+		'user_id' => Auth::user()->id
+	]);
 }
 
 function insertExerciseEntry ($data) {

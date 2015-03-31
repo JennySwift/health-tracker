@@ -21,7 +21,6 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 
 		//show
 		$scope.show = {
-			food_info: false,
 			default_exercise_unit_popup: false,
 			autocomplete: {
 				new_exercise_entry: false,
@@ -30,7 +29,9 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 			},
 			popups: {
 				recipe: false,
-				similar_names: false
+				similar_names: false,
+				temporary_recipe: false,
+				food_info: false
 			}
 		};
 
@@ -193,15 +194,13 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 		};
 
 		$scope.showTemporaryRecipePopup = function () {
-			if (!$scope.recipe.temporary_contents || $scope.recipe.temporary_contents.length === 0)
-			//Bring up the temporary recipe popup. No need to press enter again because quantity is irrelevant.
-			select.displayRecipeContents($scope.recipe.id, $scope.recipe.name).then(function (response) {
+			$scope.show.popups.temporary_recipe = true;
+			select.recipeContents($scope.selected.menu.id).then(function (response) {
 				$scope.recipe.temporary_contents = response.data.contents;
 
 				$($scope.recipe.temporary_contents).each(function () {
 					this.original_quantity = this.quantity;
 				});
-				// $scope.recipe.temporary_contents_clone = response.data.contents;
 			});
 		};
 
@@ -304,11 +303,10 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 
 		$scope.getFoodInfo = function ($food_id, $food_name) {
 			//for popup where user selects units for food and enters calories
-			$scope.loading = true;
 			$scope.food_popup.id = $food_id;
 			$scope.food_popup.name = $food_name;
-			$scope.show.food_info = true;
-			select.foodInfo($food_id, $food_name).then(function (response) {
+			$scope.show.popups.food_info = true;
+			select.foodInfo($food_id).then(function (response) {
 				$scope.food_popup.info = response.data;
 			});
 			
@@ -394,17 +392,27 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 		};
 
 		$scope.insertMenuEntry = function () {
-			$scope.loading = true;
 			$scope.new_entry.food.id = $scope.selected.food.id;
 			$scope.new_entry.food.name = $scope.selected.food.name;
 			$scope.new_entry.food.unit_id = $("#food-unit").val();
 
-			insert.menuEntry($scope.date.sql, $scope.new_entry.food, $scope.recipe.temporary_contents).then(function (response) {
+			insert.menuEntry($scope.date.sql, $scope.new_entry.food).then(function (response) {
 				$scope.food_entries = response.data;
+
 				if ($scope.recipe.temporary_contents) {
 					$scope.recipe.temporary_contents.length = 0;
 				}
 				$scope.loading = false;
+			});
+		};
+
+		$scope.insertRecipeEntry = function () {
+			$scope.new_entry.food.id = $scope.selected.food.id;
+			$scope.new_entry.food.name = $scope.selected.food.name;
+
+			insert.recipeEntry($scope.date.sql, $scope.selected.menu.id, $scope.recipe.temporary_contents).then(function (response) {
+				$scope.food_entries = response.data;
+				$scope.show.popups.temporary_recipe = false;
 			});
 		};
 

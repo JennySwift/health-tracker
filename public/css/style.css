@@ -64,6 +64,8 @@ input[type="checkbox"] {
 
 th, table {
   text-align: center; }
+  th td, table td {
+    vertical-align: middle !important; }
   @media (max-width: 600px) {
     th, table {
       font-size: 7px; } }
@@ -327,7 +329,8 @@ li {
     margin-right: auto;
     width: 80%;
     overflow: scroll;
-    height: 500px; }
+    height: 500px;
+    padding: 25px; }
 
 #default-exercise-unit-popup {
   max-width: 300px; }

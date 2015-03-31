@@ -66,6 +66,9 @@ input[type="checkbox"] {
 
 
 th, table {
+	td {
+		vertical-align: middle !important;
+	}
 	text-align: center;
 	@media (max-width: 600px) {
 		font-size: 7px;
