@@ -476,7 +476,7 @@ function getExercises () {
     $exercises = DB::table('exercises')
     	->where('exercises.user_id', Auth::user()->id)
     	->leftJoin('exercise_units', 'default_exercise_unit_id', '=', 'exercise_units.id')
-    	->select('exercises.id', 'exercises.name', 'exercises.description', 'default_exercise_unit_id', 'default_quantity', 'exercise_units.name AS default_exercise_unit_name')
+    	->select('exercises.id', 'exercises.name', 'exercises.description', 'exercises.step_number', 'exercises.series', 'default_exercise_unit_id', 'default_quantity', 'exercise_units.name AS default_exercise_unit_name')
     	->orderBy('name', 'asc')
     	->get();
 
