@@ -17,6 +17,20 @@ class DeleteController extends Controller {
 		return getRecipeContents($recipe_id);
 	}
 
+	public function recipeEntry () {
+		include(app_path() . '/inc/functions.php');
+		$date = json_decode(file_get_contents('php://input'), true)["date"];
+		$recipe_id = json_decode(file_get_contents('php://input'), true)["recipe_id"];
+		deleteRecipeEntry($date, $recipe_id);
+		
+		$response = array(
+			"food_entries" => getFoodEntries($date),
+			"calories_for_the_day" => number_format(getCaloriesForTimePeriod($date, "day"), 2),
+			"calories_for_the_week" => number_format(getCaloriesForTimePeriod($date, "week"), 2)
+		);
+		return $response;
+	}
+
 	public function tagFromExercise () {
 		include(app_path() . '/inc/functions.php');
 		$exercise_id = json_decode(file_get_contents('php://input'), true)["exercise_id"];

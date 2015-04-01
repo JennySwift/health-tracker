@@ -153,7 +153,7 @@ app.factory('insert', function ($http) {
 				new_entry: $new_entry,
 			};
 
-			$("#food").val("").focus();
+			$("#menu").val("").focus();
 
 			return $http.post($url, $data);
 		},
@@ -166,7 +166,7 @@ app.factory('insert', function ($http) {
 				recipe_contents: $recipe_contents
 			};
 
-			$("#food").val("").focus();
+			$("#menu").val("").focus();
 
 			return $http.post($url, $data);
 		},

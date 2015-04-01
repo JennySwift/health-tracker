@@ -761,11 +761,33 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 			});
 		};
 
-		$scope.deleteFoodEntry = function ($id) {
-			deleteItem.foodEntry($id, $scope.date.sql).then(function (response) {
+		$scope.deleteFoodEntry = function ($entry_id) {
+			$entry_id = $entry_id || $scope.selected.entry.id;
+
+			deleteItem.foodEntry($entry_id, $scope.date.sql).then(function (response) {
 				$scope.food_entries = response.data.food_entries;
 				$scope.calories.day = response.data.calories_for_the_day;
 				$scope.calories.week_avg = response.data.calories_for_the_week;
+				$scope.show.popups.delete_food_or_recipe_entry = false;
+			});
+		};
+
+		$scope.showDeleteFoodOrRecipeEntryPopup = function ($entry_id, $recipe_id) {
+			$scope.show.popups.delete_food_or_recipe_entry = true;
+			$scope.selected.entry = {
+				id: $entry_id
+			};
+			$scope.selected.recipe = {
+				id: $recipe_id
+			};
+		};
+
+		$scope.deleteRecipeEntry = function () {
+			deleteItem.recipeEntry($scope.date.sql, $scope.selected.recipe.id).then(function (response) {
+				$scope.food_entries = response.data.food_entries;
+				$scope.calories.day = response.data.calories_for_the_day;
+				$scope.calories.week_avg = response.data.calories_for_the_week;
+				$scope.show.popups.delete_food_or_recipe_entry = false;
 			});
 		};
 

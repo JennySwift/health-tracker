@@ -14,7 +14,8 @@
 					<span ng-if="!entry.recipe_name">N/A</span>
 				</td>
 				<td>
-					<i ng-click="deleteFoodEntry(entry.entry_id)" class="delete-item fa fa-times"></i>
+					<i ng-if="!entry.recipe_name" ng-click="deleteFoodEntry(entry.entry_id)" class="delete-item fa fa-times"></i>
+					<i ng-if="entry.recipe_name" ng-click="showDeleteFoodOrRecipeEntryPopup(entry.entry_id, entry.recipe_id)" class="delete-item fa fa-times"></i>
 				</td>
 			</tr>
 		</table>

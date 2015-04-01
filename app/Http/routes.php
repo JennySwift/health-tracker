@@ -82,4 +82,5 @@ Route::post('delete/exercise', 'DeleteController@exercise');
 Route::post('delete/exerciseUnit', 'DeleteController@exerciseUnit');
 Route::post('delete/foodUnit', 'DeleteController@foodUnit');
 Route::post('delete/foodEntry', 'DeleteController@foodEntry');
+Route::post('delete/recipeEntry', 'DeleteController@recipeEntry');
 Route::post('delete/exerciseEntry', 'DeleteController@exerciseEntry');

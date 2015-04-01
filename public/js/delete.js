@@ -100,6 +100,15 @@ app.factory('deleteItem', function ($http) {
 				return $http.post($url, $data);
 			}
 		},
+		recipeEntry: function ($sql_date, $recipe_id) {
+			var $url = 'delete/recipeEntry';
+			var $data = {
+				recipe_id: $recipe_id,
+				date: $sql_date
+			};
+			
+			return $http.post($url, $data);
+		},
 		exerciseEntry: function ($id, $sql_date) {
 			if (confirm("Are you sure you want to delete this entry?")) {
 				var $url = 'delete/exerciseEntry';

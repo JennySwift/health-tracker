@@ -121,7 +121,7 @@ function getFoodEntries ($date) {
 		->leftJoin('recipes', 'food_entries.recipe_id', '=', 'recipes.id')
 		->where('date', $date)
 		->where('food_entries.user_id', Auth::user()->id)
-		->select('food_id', 'foods.name AS food_name', 'food_entries.id AS entry_id', 'food_units.id AS unit_id', 'food_units.name AS unit_name', 'quantity', 'recipes.name AS recipe_name')
+		->select('food_id', 'foods.name AS food_name', 'food_entries.id AS entry_id', 'food_units.id AS unit_id', 'food_units.name AS unit_name', 'quantity', 'recipes.name AS recipe_name', 'recipes.id AS recipe_id')
 		->get();
     
 
@@ -135,6 +135,7 @@ function getFoodEntries ($date) {
     	$unit_id = $row->unit_id;
     	$unit_name = $row->unit_name;
     	$recipe_name = $row->recipe_name;
+    	$recipe_id = $row->recipe_id;
 
     	$calories_for_item = getCalories($food_id, $unit_id);
     	$calories_for_quantity = getCaloriesForQuantity($calories_for_item, $quantity);
@@ -148,7 +149,8 @@ function getFoodEntries ($date) {
     		"unit_id" => $unit_id,
     		"unit_name" => $unit_name,
     		"calories" => $calories_for_quantity,
-    		"recipe_name" => $recipe_name
+    		"recipe_name" => $recipe_name,
+    		"recipe_id" => $recipe_id
     	);
     }
 
@@ -712,6 +714,13 @@ function updateDefaultUnit ($food_id, $unit_id) {
 // =================================delete=================================
 // ========================================================================
 // ========================================================================
+
+function deleteRecipeEntry ($date, $recipe_id) {
+	DB::table('food_entries')
+		->where('date', $date)
+		->where('recipe_id', $recipe_id)
+		->delete();
+}
 
 function deleteTagFromExercise ($exercise_id, $tag_id) {
 	DB::table('exercise_tag')
