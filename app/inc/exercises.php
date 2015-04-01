@@ -10,6 +10,7 @@
 				<table class="table table-bordered">
 					<tr>
 						<th>name</th>
+						<th>description</th>
 						<th>default unit</th>
 						<th>default quantity</th>
 						<th>tags</th>
@@ -17,6 +18,7 @@
 					</tr>
 					<tr ng-repeat="exercise in exercises" class="hover">
 						<td>{{exercise.name}}</td>
+						<td>{{exercise.description}}</td>
 						<td ng-click="showDefaultExerciseUnitPopup(exercise)" class="pointer">{{exercise.default_exercise_unit_name}}</td>
 						<td>{{exercise.default_quantity}}</td>
 						<td>
