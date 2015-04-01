@@ -2,7 +2,8 @@
 
 	<div>
 		<div class="margin-bottom">
-			<input ng-keyup="insertExercise($event.keyCode)" type="text" placeholder="add a new exercise" id="create-new-exercise" class="form-control">
+			<input ng-keyup="insertExercise($event.keyCode)" type="text" placeholder="new exercise name" id="create-new-exercise" class="form-control">
+			<input ng-keyup="insertExercise($event.keyCode)" type="text" placeholder="description" id="exercise-description" class="form-control">
 		</div>
 		
 		<div>

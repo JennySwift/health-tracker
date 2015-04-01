@@ -74,12 +74,14 @@ app.factory('insert', function ($http) {
 		exercise: function () {
 			var $url = 'insert/exercise';
 			var $name = $("#create-new-exercise").val();
+			var $description = $("#exercise-description").val();
 			
 			var $data = {
-				name: $name
+				name: $name,
+				description: $description
 			};
 
-			$("#create-new-exercise").val("");		
+			$("#create-new-exercise, #exercise-description").val("");		
 			return $http.post($url, $data);
 		},
 		exerciseUnit: function () {
