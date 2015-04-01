@@ -503,13 +503,20 @@ function insertFood ($name) {
 }
 
 function insertFoodIntoRecipe ($recipe_id, $data) {
+	if (isset($data['description'])) {
+		$description = $data['description'];
+	}
+	else {
+		$description = null;
+	}
+
 	DB::table('food_recipe')
 		->insert([
 			'recipe_id' => $recipe_id,
 			'food_id' => $data['food_id'],
 			'unit_id' => $data['unit_id'],
 			'quantity' => $data['quantity'],
-			'description' => $data['description'],
+			'description' => $description,
 			'user_id' => Auth::user()->id
 		]);
 }

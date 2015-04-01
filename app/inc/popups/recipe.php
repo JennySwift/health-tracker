@@ -7,10 +7,10 @@
 		<h4 class="center">{{recipe.name}}</h4>
 		<div class="margin-bottom">
 			<div>
-				<input ng-model="recipe_popup.food.name" ng-keyup="autocompleteFood($event.keyCode, recipe_popup.food.name); insertOrAutocompleteFoodEntry($event.keyCode)" ng-blur="show.autocomplete.food = false" type="text" placeholder="add food to {{recipe.name}}" id="recipe-popup-food-input" class="form-control">
+				<input ng-model="recipe_popup.food.name" ng-keyup="autocompleteFood($event.keyCode); insertOrAutocompleteFoodEntry($event.keyCode)" ng-blur="show.autocomplete_options.foods = false" type="text" placeholder="add food to {{recipe.name}}" id="recipe-popup-food-input" class="form-control">
 				
-				<div ng-show="show.autocomplete.food" class="autocomplete-dropdown">
-					<div ng-repeat="food in autocomplete.food" ng-class="{'selected': food.selected}" class="autocomplete-dropdown-item">{{food.name}}</div>
+				<div ng-show="show.autocomplete_options.foods" class="autocomplete-dropdown">
+					<div ng-repeat="food in autocomplete_options.foods" ng-class="{'selected': food.selected}" class="autocomplete-dropdown-item">{{food.name}}</div>
 				</div>
 				
 				<input ng-model="recipe_popup.food.quantity" ng-keyup="insertOrAutocompleteFoodEntry($event.keyCode)" type="text" placeholder="quantity" id="recipe-popup-food-quantity" class="form-control">

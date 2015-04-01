@@ -10,11 +10,19 @@
 			<div class="row margin-bottom">
 				<div class="col-sm-10 col-sm-offset-1">
 					<input ng-model="recipe.portion" type="text" placeholder="how many portions? 1 for the full recipe, .5 for half, etc." class="form-control">
-					<input ng-model="food.name" ng-keyup="autocomplete('food', $event.keyCode); enter($event.keyCode, 'food', 'temporary_recipe')" ng-blur="autocomplete.food = ''" type="text" placeholder="add food to {{recipe.name}}" id="temporary-recipe-popup-food-input" class="form-control">
 					
-					<div id="" class="autocomplete-dropdown">
-						<div ng-repeat="food in autocomplete.food" ng-class="{'selected': $first}" data-id="{{food.food_id}}" class="autocomplete-dropdown-item">{{food.food_name}}</div>
+					<input ng-model="temporary_recipe_popup.food.name" ng-keyup="autocompleteTemporaryRecipeFood($event.keyCode); insertOrAutocompleteTemporaryRecipeFood($event.keyCode)" ng-blur="show.autocomplete_options.temporary_recipe_foods = false" type="text" placeholder="add food to recipe" id="temporary-recipe-food-input" class="form-control">
+					
+					<div ng-show="show.autocomplete_options.temporary_recipe_foods" class="autocomplete-dropdown">
+						<div ng-repeat="food in autocomplete_options.temporary_recipe_foods" ng-class="{'selected': food.selected}" class="autocomplete-dropdown-item">{{food.name}}</div>
 					</div>
+					
+					
+					
+
+
+
+
 					
 					<input ng-model="food.quantity" ng-keyup="enter($event.keyCode, 'food', 'temporary_recipe')" type="text" placeholder="quantity" id="temporary-recipe-popup-food-quantity" class="form-control">
 					<select ng-model="unit_id" ng-keyup="enter($event.keyCode, 'food', 'temporary_recipe')" name="" id="temporary-recipe-popup-unit-select" class="form-control">

@@ -19,13 +19,22 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 			food_entries: true
 		};
 
+		//autocomplete
+		$scope.autocomplete_options = {
+			exercises: {},
+			menu_items: {},
+			foods: {},
+			temporary_recipe_foods: {}
+		};
+
 		//show
 		$scope.show = {
 			default_exercise_unit_popup: false,
-			autocomplete: {
-				new_exercise_entry: false,
-				new_menu_entry: false,
-				new_food_entry: false
+			autocomplete_options: {
+				exercises: false,
+				menu_items: false,
+				foods: false,
+				temporary_recipe_foods: false
 			},
 			popups: {
 				recipe: false,
@@ -48,6 +57,13 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 
 		//quick recipe
 		$scope.quick_recipe = {};
+
+		//recipe_popup
+		$scope.recipe_popup = {
+
+		};
+
+		$scope.temporary_recipe_popup = {};
 
 		//new entry
 		$scope.new_entry = {
@@ -73,11 +89,6 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 		$scope.edit_weight = false;
 		//other
 		$scope.date = {};
-		$scope.autocomplete = {
-			exercise: {},
-			menu: {},
-			food: {}
-		};
 		$scope.loading = false;
 
 		//=============errors=============
@@ -501,21 +512,21 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 				//not enter, up arrow or down arrow
 				select.autocompleteExercise().then(function (response) {
 					//fill the dropdown
-					$scope.autocomplete.exercise = response.data;
+					$scope.autocomplete_options.exercises = response.data;
 					//show the dropdown
-					$scope.show.autocomplete.new_exercise_entry = true;
+					$scope.show.autocomplete_options.exercises = true;
 					//select the first item
-					$scope.autocomplete.exercise[0].selected = true;
+					$scope.autocomplete_options.exercises[0].selected = true;
 				});
 			}
 			else if ($keycode === 38) {
 				//up arrow pressed
-				autocomplete.autocompleteUpArrow($scope.autocomplete.exercise);
+				autocomplete.autocompleteUpArrow($scope.autocomplete_options.exercises);
 				
 			}
 			else if ($keycode === 40) {
 				//down arrow pressed
-				autocomplete.autocompleteDownArrow($scope.autocomplete.exercise);
+				autocomplete.autocompleteDownArrow($scope.autocomplete_options.exercises);
 			}
 		};
 
@@ -524,46 +535,70 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 				//not enter, up arrow or down arrow
 				select.autocompleteMenu().then(function (response) {
 					//fill the dropdown
-					$scope.autocomplete.menu = response.data;
+					$scope.autocomplete_options.menu_items = response.data;
 					//show the dropdown
-					$scope.show.autocomplete.new_menu_entry = true;
+					$scope.show.autocomplete_options.menu_items = true;
 					//select the first item
-					$scope.autocomplete.menu[0].selected = true;
+					$scope.autocomplete_options.menu_items[0].selected = true;
 				});
 			}
 			else if ($keycode === 38) {
 				//up arrow pressed
-				autocomplete.autocompleteUpArrow($scope.autocomplete.menu);
+				autocomplete.autocompleteUpArrow($scope.autocomplete_options.menu_items);
 				
 			}
 			else if ($keycode === 40) {
 				//down arrow pressed
-				autocomplete.autocompleteDownArrow($scope.autocomplete.menu);
-				console.log('something');
+				autocomplete.autocompleteDownArrow($scope.autocomplete_options.menu_items);
 			}
 		};
 
-		$scope.autocompleteFood = function ($keycode, $typing) {
+		$scope.autocompleteFood = function ($keycode) {
+			var $typing = $("#recipe-popup-food-input").val();
 			if ($keycode !== 13 && $keycode !== 38 && $keycode !== 40) {
 				//not enter, up arrow or down arrow
 				//fill the dropdown
 				select.autocompleteFood($typing).then(function (response) {
-					$scope.autocomplete.food = response.data;
+					$scope.autocomplete_options.foods = response.data;
 					//show the dropdown
-					$scope.show.autocomplete.food = true;
+					$scope.show.autocomplete_options.foods = true;
 					//select the first item
-					$scope.autocomplete.food[0].selected = true;
+					$scope.autocomplete_options.foods[0].selected = true;
 				});
 			}
 			else if ($keycode === 38) {
 				//up arrow pressed
-				autocomplete.autocompleteUpArrow($scope.autocomplete.food);
+				autocomplete.autocompleteUpArrow($scope.autocomplete_options.foods);
 				
 			}
 			else if ($keycode === 40) {
 				//down arrow pressed
-				autocomplete.autocompleteDownArrow($scope.autocomplete.food);
-				console.log('something');
+				autocomplete.autocompleteDownArrow($scope.autocomplete_options.foods);
+			}
+		};
+
+		$scope.autocompleteTemporaryRecipeFood = function ($keycode) {
+			var $typing = $("#temporary-recipe-food-input").val();
+
+			if ($keycode !== 13 && $keycode !== 38 && $keycode !== 40) {
+				//not enter, up arrow or down arrow
+				//fill the dropdown
+				select.autocompleteFood($typing).then(function (response) {
+					$scope.autocomplete_options.temporary_recipe_foods = response.data;
+					//show the dropdown
+					$scope.show.autocomplete_options.temporary_recipe_foods = true;
+					//select the first item
+					$scope.autocomplete_options.temporary_recipe_foods[0].selected = true;
+				});
+			}
+			else if ($keycode === 38) {
+				//up arrow pressed
+				autocomplete.autocompleteUpArrow($scope.autocomplete_options.temporary_recipe_foods);
+				
+			}
+			else if ($keycode === 40) {
+				//down arrow pressed
+				autocomplete.autocompleteDownArrow($scope.autocomplete_options.temporary_recipe_foods);
 			}
 		};
 
@@ -575,7 +610,7 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 			$scope.new_entry.exercise = $selected;
 			$scope.new_entry.exercise.quantity = $scope.selected.exercise.default_quantity;
 			$scope.selected.exercise = $selected;
-			$scope.show.autocomplete.new_exercise_entry = false;
+			$scope.show.autocomplete_options.exercises = false;
 			setTimeout(function () {
 				$("#exercise-quantity").focus().select();
 			}, 500);
@@ -587,7 +622,7 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 			$scope.selected.food = $selected;
 			$scope.new_entry.menu = $selected;
 			$scope.selected.menu = $selected;
-			$scope.show.autocomplete.new_menu_entry = false;
+			$scope.show.autocomplete_options.menu_items = false;
 			$($set_focus).val("").focus();
 		};
 
@@ -596,7 +631,16 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 			var $selected = _.findWhere($array, {selected: true});
 			$scope.recipe_popup.food = $selected;
 			$scope.selected.food = $selected;
-			$scope.show.autocomplete.food = false;
+			$scope.show.autocomplete_options.foods = false;
+			$($set_focus).val("").focus();
+		};
+
+		$scope.finishTemporaryRecipeFoodAutocomplete = function ($array, $set_focus) {
+			//array, input_to_focus, autocomplete_to_hide, input_to_fill, selected_property_to_define
+			var $selected = _.findWhere($array, {selected: true});
+			$scope.temporary_recipe_popup.food = $selected;
+			$scope.selected.food = $selected;
+			$scope.show.autocomplete_options.temporary_recipe_foods = false;
 			$($set_focus).val("").focus();
 		};
 
@@ -605,9 +649,9 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 				return;
 			}
 			//enter is pressed
-			if ($scope.show.autocomplete.new_exercise_entry) {
+			if ($scope.show.autocomplete_options.exercises) {
 				//if enter is for the autocomplete
-				$scope.finishExerciseAutocomplete($scope.autocomplete.exercise);
+				$scope.finishExerciseAutocomplete($scope.autocomplete_options.exercises);
 			}
 			else {
 				// if enter is to add the entry
@@ -621,9 +665,9 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 				return;
 			}
 			//enter is pressed
-			if ($scope.show.autocomplete.new_menu_entry) {
+			if ($scope.show.autocomplete_options.menu_items) {
 				//if enter is for the autocomplete
-				$scope.finishMenuAutocomplete($scope.autocomplete.menu, $("#food-quantity"));
+				$scope.finishMenuAutocomplete($scope.autocomplete_options.menu_items, $("#food-quantity"));
 				$scope.displayAssocUnitOptions();
 
 				if ($scope.selected.menu.type === 'recipe') {
@@ -641,14 +685,30 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 				return;
 			}
 			//enter is pressed
-			if ($scope.show.autocomplete.food) {
+			if ($scope.show.autocomplete_options.foods) {
 				//enter is for the autocomplete
-				$scope.finishFoodAutocomplete($scope.autocomplete.food, $("#recipe-popup-food-quantity"));
+				$scope.finishFoodAutocomplete($scope.autocomplete_options.foods, $("#recipe-popup-food-quantity"));
 				$scope.displayAssocUnitOptions();
 			}
 			else {
 				// if enter is to add the entry
 				$scope.insertFoodIntoRecipe();
+			}
+		};
+
+		$scope.insertOrAutocompleteTemporaryRecipeFood = function ($keycode) {
+			if ($keycode !== 13) {
+				return;
+			}
+			//enter is pressed
+			if ($scope.show.autocomplete_options.temporary_recipe_foods) {
+				//enter is for the autocomplete
+				$scope.finishTemporaryRecipeFoodAutocomplete($scope.autocomplete_options.temporary_recipe_foods, $("#temporary-recipe-popup-food-quantity"));
+				$scope.displayAssocUnitOptions();
+			}
+			else {
+				// if enter is to add the entry
+				$scope.insertFoodIntoTemporaryRecipe();
 			}
 		};
 
@@ -681,37 +741,8 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 				"assoc_units": $scope.food.assoc_units
 			});
 			
-			$("#temporary-recipe-popup-food-input").val("").focus();
+			$("#temporary-recipe-food-input").val("").focus();
 		};
-
-		// $scope.autocomplete = function ($object) {
-		// 	var $keycode = $object.keycode;
-		// 	var $property = $object.autocomplete_property;
-		// 	var $show_property = $object.show_property;
-		// 	var $function_property = $object.function_property;
-		// 	var $params = $object.function_params;
-
-		// 	if ($keycode !== 13 && $keycode !== 38 && $keycode !== 40) {
-		// 		//not enter, up arrow or down arrow
-		// 		select[$function_property]($params).then(function (response) {
-		// 			//fill the dropdown
-		// 			$scope.autocomplete[$property] = response.data;
-		// 			//show the dropdown
-		// 			$scope.show.autocomplete[$show_property] = true;
-		// 			//select the first item
-		// 			$scope.autocomplete[$property][0].selected = true;
-		// 		});
-		// 	}
-		// 	else if ($keycode === 38) {
-		// 		//up arrow pressed
-		// 		autocomplete.autocompleteUpArrow($scope.autocomplete[$property]);
-				
-		// 	}
-		// 	else if ($keycode === 40) {
-		// 		//down arrow pressed
-		// 		autocomplete.autocompleteDownArrow($scope.autocomplete[$property]);
-		// 	}
-		// };
 
 		// ========================================================================
 		// ========================================================================
