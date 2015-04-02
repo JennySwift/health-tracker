@@ -29,7 +29,6 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 
 		//show
 		$scope.show = {
-			default_exercise_unit_popup: false,
 			autocomplete_options: {
 				exercises: false,
 				menu_items: false,
@@ -40,7 +39,8 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 				recipe: false,
 				similar_names: false,
 				temporary_recipe: false,
-				food_info: false
+				food_info: false,
+				exercise: false
 			}
 		};
 
@@ -190,9 +190,9 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 		// ========================================================================
 		// ========================================================================
 
-		$scope.showDefaultExerciseUnitPopup = function ($exercise) {
+		$scope.showExercisePopup = function ($exercise) {
 			$scope.selected.exercise = $exercise;
-			$scope.show.default_exercise_unit_popup = true;
+			$scope.show.popups.exercise = true;
 		};
 
 		$scope.showRecipePopup = function ($recipe) {
@@ -352,7 +352,7 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 			//deletes tags from the exercise then adds the correct ones
 			insert.tagsInExercise($scope.selected.exercise.id, $scope.selected.exercise.tags).then(function (response) {
 				$scope.exercises = response.data;
-				$scope.show.default_exercise_unit_popup = false;
+				$scope.show.popups.exercise = false;
 			});
 		};
 
@@ -509,7 +509,7 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 		$scope.updateDefaultExerciseUnit = function ($unit_id) {
 			update.defaultExerciseUnit($scope.selected.exercise.id, $unit_id).then(function (response) {
 				$scope.exercises = response.data;
-				$scope.show.default_exercise_unit_popup = false;
+				$scope.show.popups.exercise = false;
 			});
 		};
 

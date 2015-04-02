@@ -35,7 +35,16 @@
 }
 
 #default-exercise-unit-popup {
-	max-width: 300px;
+	h3 {
+		&:first-child {
+			margin-top: 0;
+			margin-bottom: 25px;
+		}
+	}
+	.flex {
+		display: flex;
+		justify-content: space-around;
+	}	
 }
 
 @media all and (min-width: 680px) {
