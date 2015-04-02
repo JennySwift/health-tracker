@@ -9,18 +9,18 @@
 				<h5 class="center">step</h5>
 				<input ng-keyup="updateExerciseStepNumber($event.keyCode, selected.exercise.id)" type="text" placeholder="step number" id="exercise-step-number">
 			</div>
+
+			<div>
+				<h5 class="center">series</h5>
+				<li ng-repeat="series in exercise_series" class="list-group-item hover pointer" ng-click="updateExerciseSeries(selected.exercise.id, series.id)">
+					{{series.name}}
+				</li>
+			</div>
 			
 			<div>
 				<h5 class="center">default unit</h5>
 				<li ng-repeat="unit in units.exercise" class="list-group-item hover pointer" ng-click="updateDefaultExerciseUnit(unit.id)">
 					{{unit.name}}
-				</li>
-			</div>
-			
-			<div>
-				<h5 class="center">series</h5>
-				<li ng-repeat="series in exercise_series" class="list-group-item hover pointer" ng-click="updateExerciseSeries(selected.exercise.id, series.id)">
-					{{series.name}}
 				</li>
 			</div>
 			

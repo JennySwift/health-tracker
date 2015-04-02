@@ -13,22 +13,22 @@
 						<th>name</th>
 						<th>description</th>
 						<th>step</th>
+						<th>series</th>
 						<th>default unit</th>
 						<th>default quantity</th>
 						<th>tags</th>
-						<th>series</th>
 						<th>x</th>
 					</tr>
 					<tr ng-repeat="exercise in exercises" class="hover">
 						<td>{{exercise.name}}</td>
 						<td>{{exercise.description}}</td>
 						<td>{{exercise.step_number}}</td>
+						<td>{{exercise.series_name}}</td>
 						<td ng-click="showExercisePopup(exercise)" class="pointer">{{exercise.default_exercise_unit_name}}</td>
 						<td>{{exercise.default_quantity}}</td>
 						<td>
 							<span ng-repeat="tag in exercise.tags" class="badge">{{tag.name}}</span>
 						</td>
-						<td>{{exercise.series_name}}</td>
 						<td><i ng-click="deleteExercise(exercise.id)" class="delete-item fa fa-times"></i></td>
 					</tr>
 				</table>
