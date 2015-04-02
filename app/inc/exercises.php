@@ -28,7 +28,7 @@
 						<td>
 							<span ng-repeat="tag in exercise.tags" class="badge">{{tag.name}}</span>
 						</td>
-						<td>{{exercise.series}}</td>
+						<td>{{exercise.series_name}}</td>
 						<td><i ng-click="deleteExercise(exercise.id)" class="delete-item fa fa-times"></i></td>
 					</tr>
 				</table>
@@ -52,6 +52,27 @@
 				<tr ng-repeat="tag in exercise_tags">
 					<td>{{tag.name}}</td>
 					<td><i ng-click="deleteExerciseTag(tag.id)" class="delete-item fa fa-times"></i></td>
+				</tr>
+			</table>
+		</div>
+	</div>
+
+	<!-- exercise series -->
+	<div>
+
+		<div class="margin-bottom">
+			<input ng-keyup="insertExerciseSeries($event.keyCode)" type="text" placeholder="add a series"  id="exercise-series" class="form-control">
+		</div>
+
+		<div>
+			<table class="table table-bordered">
+				<tr>
+					<th>series</th>
+					<th>x</th>
+				</tr>
+				<tr ng-repeat="series in exercise_series">
+					<td>{{series.name}}</td>
+					<td><i ng-click="deleteExerciseSeries(series.id)" class="delete-item fa fa-times"></i></td>
 				</tr>
 			</table>
 		</div>

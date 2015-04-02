@@ -19,6 +19,24 @@ class UpdateController extends Controller {
 		return getFoodInfo($food_id);
 	}
 
+	public function exerciseStepNumber () {
+		include(app_path() . '/inc/functions.php');
+		$exercise_id = json_decode(file_get_contents('php://input'), true)["exercise_id"];
+		$step_number = json_decode(file_get_contents('php://input'), true)["step_number"];
+		updateExerciseStepNumber($exercise_id, $step_number);
+		return getExercises();
+	}
+
+	public function exerciseSeries () {
+		include(app_path() . '/inc/functions.php');
+		$exercise_id = json_decode(file_get_contents('php://input'), true)["exercise_id"];
+		$series_id = json_decode(file_get_contents('php://input'), true)["series_id"];
+
+		updateExerciseSeries($exercise_id, $series_id);
+
+		return getExercises();
+	}
+
 	public function defaultExerciseQuantity () {
 		include(app_path() . '/inc/functions.php');
 		$id = json_decode(file_get_contents('php://input'), true)["id"];

@@ -11,6 +11,16 @@ app.factory('deleteItem', function ($http) {
 				return $http.post($url, $data);
 			}
 		},
+		exerciseSeries: function ($id) {
+			if (confirm("Are you sure you want to delete this series?")) {
+				var $url = 'delete/exerciseSeries';
+				var $data = {
+					id: $id
+				};
+				
+				return $http.post($url, $data);
+			}
+		},
 		tagFromExercise: function ($exercise_id, $tag_id) {
 			var $url = 'delete/tagFromExercise';
 			var $data = {

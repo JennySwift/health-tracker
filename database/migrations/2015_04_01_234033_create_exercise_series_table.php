@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePasswordResetsTable extends Migration {
+class CreateExerciseSeriesTable extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -14,11 +14,14 @@ class CreatePasswordResetsTable extends Migration {
 	{
 		DB::statement('SET FOREIGN_KEY_CHECKS=0');
 
-		Schema::create('password_resets', function(Blueprint $table)
+		Schema::create('exercise_series', function(Blueprint $table)
 		{
-			$table->string('email')->index();
-			$table->string('token')->index();
-			$table->timestamp('created_at');
+			$table->increments('id');
+			$table->timestamps();
+			$table->string('name');
+			$table->integer('user_id')->unsigned(); //foreign key
+
+			$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 		});
 
 		DB::statement('SET FOREIGN_KEY_CHECKS=1');
@@ -33,7 +36,7 @@ class CreatePasswordResetsTable extends Migration {
 	{
 		DB::statement('SET FOREIGN_KEY_CHECKS=0');
 
-		Schema::drop('password_resets');
+		Schema::drop('exercise_series');
 
 		DB::statement('SET FOREIGN_KEY_CHECKS=1');
 	}

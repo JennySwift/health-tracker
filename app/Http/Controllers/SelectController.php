@@ -20,6 +20,7 @@ class SelectController extends Controller {
 			"weight" => getWeight($date),
 			"exercise_units" => getExerciseUnits(),
 			"exercises" => getExercises(),
+			"exercise_series" => getExerciseSeries(),
 			"food_entries" => getFoodEntries($date),
 			"exercise_entries" => getExerciseEntries($date),
 			"journal_entry" => getJournalEntry($date),

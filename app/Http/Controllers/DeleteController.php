@@ -17,6 +17,13 @@ class DeleteController extends Controller {
 		return getRecipeContents($recipe_id);
 	}
 
+	public function exerciseSeries () {
+		include(app_path() . '/inc/functions.php');
+		$id = json_decode(file_get_contents('php://input'), true)["id"];
+		deleteExerciseSeries($id);
+		return getExerciseSeries();
+	}
+
 	public function recipeEntry () {
 		include(app_path() . '/inc/functions.php');
 		$date = json_decode(file_get_contents('php://input'), true)["date"];

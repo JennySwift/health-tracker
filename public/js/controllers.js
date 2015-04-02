@@ -240,6 +240,7 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 				$scope.weight = response.data.weight;
 				$scope.units.exercise = response.data.exercise_units;
 				$scope.exercises = response.data.exercises;
+				$scope.exercise_series = response.data.exercise_series;
 				$scope.getMenu($scope.foods, $scope.recipes);
 				$scope.journal_entry = response.data.journal_entry;
 				$scope.exercise_tags = response.data.exercise_tags;
@@ -328,6 +329,15 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 		// =================================insert=================================
 		// ========================================================================
 		// ========================================================================
+
+		$scope.insertExerciseSeries = function ($keypress) {
+			if ($keypress !== 13) {
+				return;
+			}
+			insert.exerciseSeries().then(function (response) {
+				$scope.exercise_series = response.data;
+			});
+		};
 
 		$scope.insertExerciseTag = function ($keypress) {
 			if ($keypress !== 13) {
@@ -463,6 +473,22 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 				return;
 			}
 			update.defaultExerciseQuantity($scope.selected.exercise.id).then(function (response) {
+				$scope.exercises = response.data;
+			});
+		};
+
+		$scope.updateExerciseSeries = function ($exercise_id, $series_id) {
+			//to assign a series to an exercise
+			update.exerciseSeries($exercise_id, $series_id).then(function (response) {
+				$scope.exercises = response.data;
+			});
+		};
+
+		$scope.updateExerciseStepNumber = function ($keycode, $exercise_id) {
+			if ($keycode !== 13) {
+				return;
+			}
+			update.exerciseStepNumber($exercise_id).then(function (response) {
 				$scope.exercises = response.data;
 			});
 		};
@@ -753,6 +779,12 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 		$scope.deleteExerciseTag = function ($id) {
 			deleteItem.exerciseTag($id).then(function (response) {
 				$scope.exercise_tags = response.data;
+			});
+		};
+
+		$scope.deleteExerciseSeries = function ($id) {
+			deleteItem.exerciseSeries($id).then(function (response) {
+				$scope.exercise_series = response.data;
 			});
 		};
 

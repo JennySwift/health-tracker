@@ -10,6 +10,27 @@ app.factory('update', function ($http) {
 
 			return $http.post($url, $data);
 		},
+		exerciseSeries: function ($exercise_id, $series_id) {
+			var $url = 'update/exerciseSeries';
+			var $data = {
+				exercise_id: $exercise_id,
+				series_id: $series_id
+			};
+			
+			return $http.post($url, $data);
+		},
+		exerciseStepNumber: function ($exercise_id) {
+			var $url = 'update/exerciseStepNumber';
+			var $step_number = $("#exercise-step-number").val();
+			var $data = {
+				exercise_id: $exercise_id,
+				step_number: $step_number
+			};
+
+			$("#exercise-step-number").val("");
+			
+			return $http.post($url, $data);
+		},
 		defaultExerciseQuantity: function ($id) {
 			var $quantity = $("#default-unit-quantity").val();
 			var $url = 'update/defaultExerciseQuantity';

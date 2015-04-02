@@ -17,6 +17,15 @@ function getId ($table, $name) {
 	return $id;
 }
 
+function getExerciseSeries () {
+	$exercise_series = DB::table('exercise_series')
+		->where('user_id', Auth::user()->id)
+		->select('name', 'id')
+		->get();
+
+	return $exercise_series;
+}
+
 function countItem ($table, $name) {
 	$count = DB::table($table)
 		->where('name', $name)
@@ -476,7 +485,8 @@ function getExercises () {
     $exercises = DB::table('exercises')
     	->where('exercises.user_id', Auth::user()->id)
     	->leftJoin('exercise_units', 'default_exercise_unit_id', '=', 'exercise_units.id')
-    	->select('exercises.id', 'exercises.name', 'exercises.description', 'exercises.step_number', 'exercises.series', 'default_exercise_unit_id', 'default_quantity', 'exercise_units.name AS default_exercise_unit_name')
+    	->leftJoin('exercise_series', 'exercises.series_id', '=', 'exercise_series.id')
+    	->select('exercises.id', 'exercises.name', 'exercises.description', 'exercises.step_number', 'exercise_series.name as series_name', 'default_exercise_unit_id', 'default_quantity', 'exercise_units.name AS default_exercise_unit_name')
     	->orderBy('name', 'asc')
     	->get();
 
@@ -494,6 +504,14 @@ function getExercises () {
 // =================================insert=================================
 // ========================================================================
 // ========================================================================
+
+function insertExerciseSeries ($name) {
+	DB::table('exercise_series')
+		->insert([
+			'name' => $name,
+			'user_id' => Auth::user()->id
+		]);
+}
 
 function insertFood ($name) {
 	DB::table('foods')->insert([
@@ -675,6 +693,23 @@ function updateDefaultExerciseQuantity ($id, $quantity) {
 		]);
 }
 
+function updateExerciseStepNumber ($exercise_id, $step_number) {
+	DB::table('exercises')
+		->where('id', $exercise_id)
+		->update([
+			'step_number' => $step_number
+		]);
+}
+
+function updateExerciseSeries ($exercise_id, $series_id) {
+	//for assigning a series to an exercise
+	DB::table('exercises')
+		->where('id', $exercise_id)
+		->update([
+			'series_id' => $series_id
+		]);
+}
+
 function updateWeight ($date, $weight) {
 	DB::table('weight')
 		->where('date', $date)
@@ -740,6 +775,12 @@ function deleteTagFromExercise ($exercise_id, $tag_id) {
 function deleteTagsFromExercise ($exercise_id) {
 	DB::table('exercise_tag')
 		->where('exercise_id', $exercise_id)
+		->delete();
+}
+
+function deleteExerciseSeries ($id) {
+	DB::table('exercise_series')
+		->where('id', $id)
 		->delete();
 }
 

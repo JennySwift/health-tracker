@@ -11,6 +11,17 @@ app.factory('insert', function ($http) {
 			
 			return $http.post($url, $data);
 		},
+		exerciseSeries: function () {
+			var $name = $("#exercise-series").val();
+			var $url = 'insert/exerciseSeries';
+			var $data = {
+				name: $name
+			};
+
+			$("#exercise-series").val("");
+			
+			return $http.post($url, $data);
+		},
 		tagInExercise: function ($exercise_id, $tag_id) {
 			var $url = 'insert/tagInExercise';
 			var $data = {

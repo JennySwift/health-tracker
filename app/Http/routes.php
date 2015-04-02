@@ -28,6 +28,7 @@ Route::post('select/pageLoad', 'SelectController@pageLoad');
 Route::post('select/journalEntry', 'SelectController@journalEntry');
 Route::post('select/entries', 'SelectController@entries');
 Route::post('select/foodInfo', 'SelectController@foodInfo');
+Route::post('select/exerciseSeries', 'SelectController@exerciseSeries');
 // Route::post('select/foodEntries', 'SelectController@foodEntries');
 // Route::post('select/exercises', 'SelectController@exercises');
 // Route::post('select/foodList', 'SelectController@foodList');
@@ -45,6 +46,7 @@ Route::post('select/autocompleteMenu', 'SelectController@autocompleteMenu');
 
 Route::post('insert/item', 'InsertController@item');
 Route::post('insert/exerciseTag', 'InsertController@exerciseTag');
+Route::post('insert/exerciseSeries', 'InsertController@exerciseSeries');
 Route::post('insert/tagInExercise', 'InsertController@tagInExercise');
 Route::post('insert/tagsInExercise', 'InsertController@tagsInExercise');
 Route::post('insert/quickRecipe', 'InsertController@quickRecipe');
@@ -64,6 +66,8 @@ Route::post('insert/foodIntoRecipe', 'InsertController@foodIntoRecipe');
 // ========================================update========================================
 
 Route::post('update/defaultUnit', 'UpdateController@defaultUnit');
+Route::post('update/exerciseSeries', 'UpdateController@exerciseSeries');
+Route::post('update/exerciseStepNumber', 'UpdateController@exerciseStepNumber');
 Route::post('update/defaultExerciseQuantity', 'UpdateController@defaultExerciseQuantity');
 Route::post('update/journalEntry', 'UpdateController@journalEntry');
 Route::post('update/defaultExerciseUnit', 'UpdateController@defaultExerciseUnit');
@@ -73,6 +77,7 @@ Route::post('update/calories', 'UpdateController@calories');
 
 // Route::post('delete/item', 'DeleteController@item');
 Route::post('delete/recipe', 'DeleteController@recipe');
+Route::post('delete/exerciseSeries', 'DeleteController@exerciseSeries');
 Route::post('delete/tagFromExercise', 'DeleteController@tagFromExercise');
 Route::post('delete/exerciseTag', 'DeleteController@exerciseTag');
 Route::post('delete/foodFromRecipe', 'DeleteController@foodFromRecipe');
