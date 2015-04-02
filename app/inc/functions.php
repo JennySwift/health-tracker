@@ -469,16 +469,75 @@ function getRecipeSteps ($recipe_id) {
 
 // =================================exercise=================================
 
+// function getExerciseEntries ($date) {
+// 	$exercise_entries = DB::table('exercise_entries')
+// 		->where('date', $date)
+// 		->where('exercise_entries.user_id', Auth::user()->id)
+// 		->join('exercises', 'exercise_entries.exercise_id', '=', 'exercises.id')
+// 		->join('exercise_units', 'exercise_entries.exercise_unit_id', '=', 'exercise_units.id')
+// 		->select('exercise_id', 'quantity', 'exercises.name', 'exercise_units.name AS unit_name', 'exercise_entries.id AS entry_id')
+// 		->orderBy('exercises.name', 'asc')
+// 		->get();
+
+// 	// //get the total reps (or other unit) done of each exercise
+// 	// foreach ($exercise_entries as $entry) {
+// 	// 	$total = 0;
+// 	// 	$quantity = $entry->quantity;
+// 	// 	$unit = $entry->unit_name;
+// 	// }
+
+// 	return $exercise_entries;
+// }
+
 function getExerciseEntries ($date) {
-	$exercise_entries = DB::table('exercise_entries')
+	$entries = DB::table('exercise_entries')
 		->where('date', $date)
 		->where('exercise_entries.user_id', Auth::user()->id)
 		->join('exercises', 'exercise_entries.exercise_id', '=', 'exercises.id')
 		->join('exercise_units', 'exercise_entries.exercise_unit_id', '=', 'exercise_units.id')
-		->select('exercise_id', 'quantity', 'exercises.name', 'exercise_units.name AS unit_name', 'exercise_entries.id AS entry_id')
+		->select('exercise_id', 'quantity', 'exercise_unit_id', 'exercises.name', 'exercise_units.name AS unit_name', 'exercise_entries.id AS entry_id')
+		->orderBy('exercises.name', 'asc')
 		->get();
 
-	return $exercise_entries;
+	$array = array();
+	foreach ($entries as $entry) {
+		$exercise_id = $entry->exercise_id;
+		$exercise_unit_id = $entry->exercise_unit_id;
+		$counter = 0;
+
+		$total = DB::table('exercise_entries')
+			->where('date', $date)
+			->where('exercise_id', $exercise_id)
+			->where('exercise_unit_id', $exercise_unit_id)
+			->where('user_id', Auth::user()->id)
+			->sum('quantity');
+
+		$sets = DB::table('exercise_entries')
+			->where('date', $date)
+			->where('exercise_id', $exercise_id)
+			->where('exercise_unit_id', $exercise_unit_id)
+			->where('user_id', Auth::user()->id)
+			->count();
+			
+		//check to see if the array already has the exercise entry so it doesn't appear as a new entry for each set of exercises
+		foreach ($array as $item) {
+			if ($item['name'] === $entry->name && $item['unit_name'] === $entry->unit_name) {
+				//the exercise with unit already exists in the array so we don't want to add it again
+				$counter++;
+			}
+		}
+		if ($counter === 0) {
+			$array[] = array(
+				'name' => $entry->name,
+				'quantity' => $entry->quantity,
+				'unit_name' => $entry->unit_name,
+				'sets' => $sets,
+				'total' => $total
+			);
+		}	
+	}
+
+	return $array;
 }
 
 function getExercises () {
