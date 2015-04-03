@@ -25,7 +25,7 @@
 			</div>
 			
 			<div>
-				<h5 class="center">default quantity</h5>
+				<h5 class="center tooltipster" title="This figure will be used, along with the default unit, when using the feature to quickly log a set of your exercise">default quantity</h5>
 				<input ng-keyup="updateDefaultExerciseQuantity($event.keyCode)" type="number" placeholder="enter quantity" id="default-unit-quantity">
 			</div>
 			

@@ -1,4 +1,4 @@
-<div ng-if="tab.exercises" id="exercises">
+<div ng-show="tab.exercises" id="exercises">
 
 	<div>
 		<div class="margin-bottom">
