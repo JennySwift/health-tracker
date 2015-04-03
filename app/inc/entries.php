@@ -33,10 +33,9 @@
 
 			<tr ng-repeat="entry in exercise_entries" data-entry-id="{{entry.entry_id}}">
 				<td>{{entry.name}}</td>
-				<td>{{entry.sets}}</td>
+				<td ng-click="getSpecificExerciseEntries(entry.exercise_id, entry.unit_id)" class="pointer">{{entry.sets}}</td>
 				<td>{{entry.total}} {{entry.unit_name}}</td>
 				<td><button ng-if="entry.unit_id === entry.default_exercise_unit_id" ng-click="insertExerciseSet(entry.exercise_id)" class="btn-xs">add set</button></td>
-				<!-- <td><i ng-click="deleteExerciseEntry(entry.entry_id)" class="delete-item fa fa-times"></i></td> -->
 			</tr>
 		</table>
 	</div>

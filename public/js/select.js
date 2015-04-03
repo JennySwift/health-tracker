@@ -63,6 +63,16 @@ app.factory('select', function ($http) {
 			
 			return $http.post($url, $data);
 		},
+		specificExerciseEntries: function ($sql_date, $exercise_id, $exercise_unit_id) {
+			var $url = 'select/specificExerciseEntries';
+			var $data = {
+				date: $sql_date,
+				exercise_id: $exercise_id,
+				exercise_unit_id: $exercise_unit_id
+			};
+			
+			return $http.post($url, $data);
+		},
 		foodInfo: function ($id) {
 			var $url = 'select/foodInfo';
 			

@@ -505,6 +505,21 @@ function getRecipeSteps ($recipe_id) {
 // 	return $exercise_entries;
 // }
 
+function getSpecificExerciseEntries ($date, $exercise_id, $exercise_unit_id) {
+	//for when user clicks on the exercise entries table, to show the entries for just that exercise
+	$entries = DB::table('exercise_entries')
+		->where('date', $date)
+		->where('exercise_id', $exercise_id)
+		->where('exercise_unit_id', $exercise_unit_id)
+		->join('exercises', 'exercise_entries.exercise_id', '=', 'exercises.id')
+		->join('exercise_units', 'exercise_entries.exercise_unit_id', '=', 'exercise_units.id')
+		->select('exercise_id', 'quantity', 'exercises.name', 'exercise_units.name AS unit_name', 'exercise_entries.id AS entry_id')
+		->orderBy('exercises.name', 'asc')
+		->get();
+
+	return $entries;
+}
+
 function getExerciseEntries ($date) {
 	$entries = DB::table('exercise_entries')
 		->where('date', $date)

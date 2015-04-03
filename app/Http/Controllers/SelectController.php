@@ -29,6 +29,14 @@ class SelectController extends Controller {
 		return $response;
 	}
 
+	public function specificExerciseEntries () {
+		include(app_path() . '/inc/functions.php');
+		$date = json_decode(file_get_contents('php://input'), true)["date"];
+		$exercise_id = json_decode(file_get_contents('php://input'), true)["exercise_id"];
+		$exercise_unit_id = json_decode(file_get_contents('php://input'), true)["exercise_unit_id"];
+		return getSpecificExerciseEntries($date, $exercise_id, $exercise_unit_id);
+	}
+
 	public function journalEntry () {
 		include(app_path() . '/inc/functions.php');
 		$date = json_decode(file_get_contents('php://input'), true)["date"];

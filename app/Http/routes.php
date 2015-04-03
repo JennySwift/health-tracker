@@ -26,6 +26,7 @@ Route::controllers([
 
 Route::post('select/pageLoad', 'SelectController@pageLoad');
 Route::post('select/journalEntry', 'SelectController@journalEntry');
+Route::post('select/specificExerciseEntries', 'SelectController@specificExerciseEntries');
 Route::post('select/entries', 'SelectController@entries');
 Route::post('select/foodInfo', 'SelectController@foodInfo');
 Route::post('select/exerciseSeries', 'SelectController@exerciseSeries');

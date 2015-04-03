@@ -40,7 +40,8 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 				similar_names: false,
 				temporary_recipe: false,
 				food_info: false,
-				exercise: false
+				exercise: false,
+				exercise_entries: false
 			}
 		};
 
@@ -262,6 +263,13 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 				$scope.food_entries = response.data.food_entries;
 				$scope.calories.day = response.data.calories_for_the_day;
 				$scope.calories.week_avg = response.data.calories_for_the_week;
+			});
+		};
+
+		$scope.getSpecificExerciseEntries = function ($exercise_id, $exercise_unit_id) {
+			select.specificExerciseEntries($scope.date.sql, $exercise_id, $exercise_unit_id).then(function (response) {
+				$scope.show.popups.exercise_entries = true;
+				$scope.specific_exercise_entries = response.data;
 			});
 		};
 
