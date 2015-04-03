@@ -195,6 +195,15 @@ app.factory('insert', function ($http) {
 
 			return $http.post($url, $data);
 		},
+		exerciseSet: function ($sql_date, $exercise_id) {
+			var $url = 'insert/exerciseSet';
+			var $data = {
+				date: $sql_date,
+				exercise_id: $exercise_id
+			};
+			
+			return $http.post($url, $data);
+		},
 		weight: function ($sql_date) {
 			var $url = 'insert/weight';
 			var $weight = $("#weight").val();

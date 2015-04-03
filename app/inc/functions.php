@@ -17,6 +17,22 @@ function getId ($table, $name) {
 	return $id;
 }
 
+function getDefaultExerciseQuantity ($exercise_id) {
+	$quantity = DB::table('exercises')
+		->where('id', $exercise_id)
+		->pluck('default_quantity');
+
+	return $quantity;
+}
+
+function getDefaultExerciseUnitId ($exercise_id) {
+	$default = DB::table('exercises')
+		->where('id', $exercise_id)
+		->pluck('default_exercise_unit_id');
+
+	return $default;
+}
+
 function getExerciseSeries () {
 	$exercise_series = DB::table('exercise_series')
 		->where('user_id', Auth::user()->id)
@@ -495,8 +511,9 @@ function getExerciseEntries ($date) {
 		->where('exercise_entries.user_id', Auth::user()->id)
 		->join('exercises', 'exercise_entries.exercise_id', '=', 'exercises.id')
 		->join('exercise_units', 'exercise_entries.exercise_unit_id', '=', 'exercise_units.id')
-		->select('exercise_id', 'quantity', 'exercise_unit_id', 'exercises.name', 'exercise_units.name AS unit_name', 'exercise_entries.id AS entry_id')
+		->select('exercise_id', 'quantity', 'exercise_unit_id', 'exercises.name', 'exercise_units.name AS unit_name', 'exercise_units.id AS unit_id', 'exercise_entries.id AS entry_id')
 		->orderBy('exercises.name', 'asc')
+		->orderBy('unit_name', 'asc')
 		->get();
 
 	$array = array();
@@ -518,7 +535,7 @@ function getExerciseEntries ($date) {
 			->where('exercise_unit_id', $exercise_unit_id)
 			->where('user_id', Auth::user()->id)
 			->count();
-			
+
 		//check to see if the array already has the exercise entry so it doesn't appear as a new entry for each set of exercises
 		foreach ($array as $item) {
 			if ($item['name'] === $entry->name && $item['unit_name'] === $entry->unit_name) {
@@ -528,11 +545,15 @@ function getExerciseEntries ($date) {
 		}
 		if ($counter === 0) {
 			$array[] = array(
+				'exercise_id' => $entry->exercise_id,
 				'name' => $entry->name,
 				'quantity' => $entry->quantity,
 				'unit_name' => $entry->unit_name,
 				'sets' => $sets,
-				'total' => $total
+				'total' => $total,
+				'unit_id' => $entry->unit_id,
+				'default_exercise_unit_id' => getDefaultExerciseUnitId($exercise_id),
+				// 'default_quantity' => $default_quantity
 			);
 		}	
 	}
@@ -702,6 +723,19 @@ function insertExerciseEntry ($data) {
 		'exercise_id' => $new_entry['id'],
 		'quantity' => $new_entry['quantity'],
 		'exercise_unit_id' => $new_entry['unit_id'],
+		'user_id' => Auth::user()->id
+	]);
+}
+
+function insertExerciseSet ($date, $exercise_id) {
+	$quantity = getDefaultExerciseQuantity($exercise_id);
+	$unit_id = getDefaultExerciseUnitId($exercise_id);
+
+	DB::table('exercise_entries')->insert([
+		'date' => $date,
+		'exercise_id' => $exercise_id,
+		'quantity' => $quantity,
+		'exercise_unit_id' => $unit_id,
 		'user_id' => Auth::user()->id
 	]);
 }

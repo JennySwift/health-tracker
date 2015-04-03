@@ -245,7 +245,7 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 				$scope.journal_entry = response.data.journal_entry;
 				$scope.exercise_tags = response.data.exercise_tags;
 
-				$scope.selected.exercise_unit_id = $scope.units.exercise[0].id;
+				$scope.selected.exercise_unit.id = $scope.units.exercise[0].id;
 			});
 		};
 
@@ -438,8 +438,14 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 		};
 
 		$scope.insertExerciseEntry = function () {
-			$scope.new_entry.exercise.unit_id = $scope.selected.exercise_unit_id;
+			$scope.new_entry.exercise.unit_id = $scope.selected.exercise_unit.id;
 			insert.exerciseEntry($scope.date.sql, $scope.new_entry.exercise).then(function (response) {
+				$scope.exercise_entries = response.data;
+			});
+		};
+
+		$scope.insertExerciseSet = function ($exercise_id) {
+			insert.exerciseSet($scope.date.sql, $exercise_id).then(function (response) {
 				$scope.exercise_entries = response.data;
 			});
 		};
@@ -632,7 +638,7 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 			//array, input_to_focus, autocomplete_to_hide, input_to_fill, selected_property_to_define
 			$selected = $selected || _.findWhere($array, {selected: true});
 			$scope.selected.exercise = $selected;
-			$scope.selected.exercise_unit_id = $scope.selected.exercise.default_exercise_unit_id;
+			$scope.selected.exercise_unit.id = $scope.selected.exercise.default_exercise_unit_id;
 			$scope.new_entry.exercise = $selected;
 			$scope.new_entry.exercise.quantity = $scope.selected.exercise.default_quantity;
 			$scope.selected.exercise = $selected;
