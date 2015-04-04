@@ -31,7 +31,8 @@ function getWorkouts () {
 
 		$workout_contents = DB::table('series_workout')
 			->where('workout_id', $workout_id)
-			->select('series_id')
+			->join('exercise_series', 'series_id', '=', 'exercise_series.id')
+			->select('series_id', 'exercise_series.name')
 			->get();
 
 		// $workout_contents = getWorkouts($workout_id);

@@ -368,6 +368,10 @@ li {
   #default-exercise-unit-popup-checkboxes label {
     padding: 2px 8px; }
 
+#workouts .flex {
+  display: flex;
+  flex-wrap: wrap; }
+
 @media (max-width: 600px) {
   .autocomplete-dropdown-item {
     padding: 8px 0; } }

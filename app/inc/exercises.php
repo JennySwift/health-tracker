@@ -85,12 +85,15 @@
 	</div>
 
 	<!-- workouts -->
-	<div>
-
-		<div ng-repeat="workout in workouts">
-			{{workout.name}}
-			{{workout.contents}}
-			<!-- <li ng-repeat="series in workout.contents">{{series.id}}</li> -->
+	<div id="workouts">
+		<h4>workouts</h4>
+		<div class="flex">
+			<div ng-repeat="workout in workouts">
+				<h3 class="center">{{workout.name}}</h3>
+				<ul class="list-group">
+					<li ng-repeat="series in workout.contents" class="list-group-item">{{series.name}}</li>
+				</ul>
+			</div>
 		</div>
 	</div>
 

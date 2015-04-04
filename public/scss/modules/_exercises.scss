@@ -11,3 +11,10 @@
 		padding: 2px 8px;
 	}
 }
+
+#workouts {
+	.flex {
+		display:flex;
+		flex-wrap: wrap;
+	}
+}
