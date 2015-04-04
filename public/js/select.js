@@ -8,6 +8,14 @@ app.factory('select', function ($http) {
 			
 			return $http.post($url, $data);
 		},
+		exerciseSeriesHistory: function ($series_id) {
+			var $url = 'select/exerciseSeriesHistory';
+			var $data = {
+				series_id: $series_id
+			};
+			
+			return $http.post($url, $data);
+		},
 		journalEntry: function ($sql_date) {
 			var $url = 'select/journalEntry';
 			var $data = {

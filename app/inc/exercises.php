@@ -68,10 +68,12 @@
 			<table class="table table-bordered">
 				<tr>
 					<th>series</th>
+					<th>history</th>
 					<th>x</th>
 				</tr>
 				<tr ng-repeat="series in exercise_series">
 					<td>{{series.name}}</td>
+					<td><button ng-click="getExerciseSeriesHistory(series.id)">show</button></td>
 					<td><i ng-click="deleteExerciseSeries(series.id)" class="delete-item fa fa-times"></i></td>
 				</tr>
 			</table>

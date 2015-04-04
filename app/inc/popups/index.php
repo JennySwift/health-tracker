@@ -6,4 +6,5 @@
 	include 'similar-names.php';
 	include 'delete-food-or-recipe.php';
 	include 'exercise-entries.php';
+	include 'exercise-series-history.php';
 ?>

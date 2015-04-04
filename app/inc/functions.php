@@ -17,6 +17,32 @@ function getId ($table, $name) {
 	return $id;
 }
 
+function getExerciseSeriesHistory ($series_id) {
+	//first get all exercises in the series
+	$exercise_ids = DB::table('exercises')
+		->where('series_id', $series_id)
+		->lists('id');
+
+	// Debugbar::info('exercise_ids', $exercise_ids);
+
+	$history = DB::table('exercise_entries')
+		->whereIn('exercise_id', $exercise_ids)
+		->join('exercises', 'exercise_entries.exercise_id', '=', 'exercises.id')
+		->join('exercise_units', 'exercise_entries.exercise_unit_id', '=', 'exercise_units.id')
+		->select('date', 'exercises.name as exercise_name', 'quantity', 'exercise_units.name as unit_name')
+		->orderBy('date', 'desc')
+		->get();
+
+	//format the date
+	foreach ($history as $item) {
+		$date = $item->date;
+		// Debugbar::info('date', $date);
+		$item->date = convertDate($date, 'user');
+	}
+
+	return $history;
+}
+
 function getDefaultExerciseQuantity ($exercise_id) {
 	$quantity = DB::table('exercises')
 		->where('id', $exercise_id)
@@ -974,6 +1000,18 @@ function autocompleteMenu ($typing) {
 // ==============================other==============================
 // ========================================================================
 // ========================================================================
+
+function convertDate ($date, $for) {
+	$date = new DateTime($date);
+
+	if ($for === 'user') {
+		$date = $date->format('d/m/y');
+	}
+	elseif ($for === 'sql') {
+		$date = $date->format('Y-m-d');
+	}
+	return $date;
+}
 
 function getDaysAgo ($date) {
 	$date = new DateTime($date);

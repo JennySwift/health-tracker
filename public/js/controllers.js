@@ -16,7 +16,7 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 		};
 		//=============tabs=============
 		$scope.tab = {
-			exercise_entries: true
+			exercises: true
 		};
 
 		//autocomplete
@@ -41,7 +41,8 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 				temporary_recipe: false,
 				food_info: false,
 				exercise: false,
-				exercise_entries: false
+				exercise_entries: false,
+				exercise_series_history: false
 			}
 		};
 
@@ -225,6 +226,13 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 		$scope.changeTab = function ($tab) {
 			$scope.tab = {};
 			$scope.tab[$tab] = true;
+		};
+
+		$scope.getExerciseSeriesHistory = function ($series_id) {
+			select.exerciseSeriesHistory($series_id).then(function (response) {
+				$scope.show.popups.exercise_series_history = true;
+				$scope.exercise_series_history = response.data;
+			});
 		};
 
 		// ===========================page load===========================
