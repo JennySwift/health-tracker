@@ -84,4 +84,14 @@
 		</div>
 	</div>
 
+	<!-- workouts -->
+	<div>
+
+		<div ng-repeat="workout in workouts">
+			{{workout.name}}
+			{{workout.contents}}
+			<!-- <li ng-repeat="series in workout.contents">{{series.id}}</li> -->
+		</div>
+	</div>
+
 </div> <!-- exercises tab -->

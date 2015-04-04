@@ -23,7 +23,34 @@ function getWorkouts () {
 		->select('id', 'name')
 		->get();
 
+	Debugbar::info('workouts', $workouts);
+	//get all the series that are in the workout
+	foreach ($workouts as $workout) {
+		$workout_id = $workout->id;
+		// Debugbar::info('workout_id', $workout_id);
+
+		$workout_contents = DB::table('series_workout')
+			->where('workout_id', $workout_id)
+			->select('series_id')
+			->get();
+
+		// $workout_contents = getWorkouts($workout_id);
+		// Debugbar::info('workout_contents', $workout_contents);
+		$workout->contents = $workout_contents;
+	}
+
 	return $workouts;
+}
+
+function getWorkoutContents ($workout_id) {
+	$contents = DB::table('series_workout')
+		->where('workout_id', $workout_id)
+		->get();
+		// ->join('exercise_series', 'series_id', '=', 'exercise_series.id')
+		// ->select('exercise_series.id', 'exercise_series.name')
+		// ->get();
+
+	// return $contents;
 }
 
 function getExerciseSeriesHistory ($series_id) {

@@ -359,7 +359,8 @@ li {
 
 #exercises {
   display: flex;
-  justify-content: space-around; }
+  justify-content: space-around;
+  flex-wrap: wrap; }
 
 #default-exercise-unit-popup-checkboxes {
   display: flex;
