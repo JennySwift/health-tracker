@@ -86,7 +86,7 @@
 
 	<!-- workouts -->
 	<div id="workouts">
-		<h4>workouts</h4>
+		<h4 class="center">workouts</h4>
 		<div class="flex">
 			<div ng-repeat="workout in workouts">
 				<h3 class="center">{{workout.name}}</h3>

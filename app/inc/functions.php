@@ -27,32 +27,30 @@ function getWorkouts () {
 	//get all the series that are in the workout
 	foreach ($workouts as $workout) {
 		$workout_id = $workout->id;
-		// Debugbar::info('workout_id', $workout_id);
 
 		$workout_contents = DB::table('series_workout')
 			->where('workout_id', $workout_id)
 			->join('exercise_series', 'series_id', '=', 'exercise_series.id')
 			->select('series_id', 'exercise_series.name')
+			->orderBy('exercise_series.name', 'asc')
 			->get();
 
-		// $workout_contents = getWorkouts($workout_id);
-		// Debugbar::info('workout_contents', $workout_contents);
 		$workout->contents = $workout_contents;
 	}
 
 	return $workouts;
 }
 
-function getWorkoutContents ($workout_id) {
-	$contents = DB::table('series_workout')
-		->where('workout_id', $workout_id)
-		->get();
-		// ->join('exercise_series', 'series_id', '=', 'exercise_series.id')
-		// ->select('exercise_series.id', 'exercise_series.name')
-		// ->get();
+// function getWorkoutContents ($workout_id) {
+// 	$contents = DB::table('series_workout')
+// 		->where('workout_id', $workout_id)
+// 		->get();
+// 		// ->join('exercise_series', 'series_id', '=', 'exercise_series.id')
+// 		// ->select('exercise_series.id', 'exercise_series.name')
+// 		// ->get();
 
-	// return $contents;
-}
+// 	// return $contents;
+// }
 
 function getExerciseSeriesHistory ($series_id) {
 	//first get all exercises in the series
@@ -131,6 +129,7 @@ function getExerciseSeries () {
 	$exercise_series = DB::table('exercise_series')
 		->where('user_id', Auth::user()->id)
 		->select('name', 'id')
+		->orderBy('name', 'asc')
 		->get();
 
 	foreach ($exercise_series as $series) {
