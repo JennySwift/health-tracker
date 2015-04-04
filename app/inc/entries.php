@@ -26,6 +26,7 @@
 			<caption class="bg-blue">exercise entries</caption>
 			<tr>
 				<th>exercise</th>
+				<th>description</th>
 				<th>sets</th>
 				<th>total</th>
 				<th></th>
@@ -33,6 +34,7 @@
 
 			<tr ng-repeat="entry in exercise_entries" data-entry-id="{{entry.entry_id}}">
 				<td>{{entry.name}}</td>
+				<td>{{entry.description}}</td>
 				<td ng-click="getSpecificExerciseEntries(entry.exercise_id, entry.unit_id)" class="pointer">{{entry.sets}}</td>
 				<td>{{entry.total}} {{entry.unit_name}}</td>
 				<td><button ng-if="entry.unit_id === entry.default_exercise_unit_id" ng-click="insertExerciseSet(entry.exercise_id)" class="btn-xs">add set</button></td>

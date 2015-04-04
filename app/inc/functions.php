@@ -526,7 +526,7 @@ function getExerciseEntries ($date) {
 		->where('exercise_entries.user_id', Auth::user()->id)
 		->join('exercises', 'exercise_entries.exercise_id', '=', 'exercises.id')
 		->join('exercise_units', 'exercise_entries.exercise_unit_id', '=', 'exercise_units.id')
-		->select('exercise_id', 'quantity', 'exercise_unit_id', 'exercises.name', 'exercise_units.name AS unit_name', 'exercise_units.id AS unit_id', 'exercise_entries.id AS entry_id')
+		->select('exercise_id', 'quantity', 'exercises.description', 'exercise_unit_id', 'exercises.name', 'exercise_units.name AS unit_name', 'exercise_units.id AS unit_id', 'exercise_entries.id AS entry_id')
 		->orderBy('exercises.name', 'asc')
 		->orderBy('unit_name', 'asc')
 		->get();
@@ -562,6 +562,7 @@ function getExerciseEntries ($date) {
 			$array[] = array(
 				'exercise_id' => $entry->exercise_id,
 				'name' => $entry->name,
+				'description' => $entry->description,
 				'quantity' => $entry->quantity,
 				'unit_name' => $entry->unit_name,
 				'sets' => $sets,
@@ -929,7 +930,7 @@ function autocompleteExercise ($exercise) {
 	$exercises = DB::table('exercises')
 		->where('name', 'LIKE', $exercise)
 		->where('user_id', Auth::user()->id)
-		->select('id', 'name', 'default_exercise_unit_id', 'default_quantity')
+		->select('id', 'name', 'description', 'default_exercise_unit_id', 'default_quantity')
 		->get();
     
 	return $exercises;

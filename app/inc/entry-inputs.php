@@ -23,7 +23,7 @@
 		<input ng-model="new_entry.exercise.name" ng-keyup="autocompleteExercise($event.keyCode); insertOrAutocompleteExerciseEntry($event.keyCode, 'exercise')" ng-blur="show.autocomplete_options.exercises = false" type="text" placeholder="exercise" id="exercise" class="form-control">
 
 		<div ng-show="show.autocomplete_options.exercises">
-			<div ng-repeat="item in autocomplete_options.exercises" ng-class="{'selected': item.selected}" ng-mousedown="finishExerciseAutocomplete($scope.autocomplete_options.exercises, item)" class="autocomplete-dropdown-item pointer">{{item.name}}</div>
+			<div ng-repeat="item in autocomplete_options.exercises" ng-class="{'selected': item.selected}" ng-mousedown="finishExerciseAutocomplete($scope.autocomplete_options.exercises, item)" class="autocomplete-dropdown-item pointer">{{item.name}} ({{item.description}})</div>
 		</div>
 
 		<input ng-model="new_entry.exercise.quantity" ng-keyup="insertOrAutocompleteExerciseEntry($event.keyCode, 'exercise')" type="text" id="exercise-quantity" placeholder="quantity" class="form-control">
