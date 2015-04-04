@@ -8,6 +8,8 @@
 			{{workout.name}}
 			<input checklist-model="selected.exercise_series.workouts" checklist-value="workout" type="checkbox">
 		</div>
+
+		<button ng-click="deleteAndInsertSeriesIntoWorkouts()">save</button>
 		
 
 	</div>

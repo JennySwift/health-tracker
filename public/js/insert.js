@@ -11,6 +11,15 @@ app.factory('insert', function ($http) {
 			
 			return $http.post($url, $data);
 		},
+		deleteAndInsertSeriesIntoWorkouts: function ($series_id, $workouts) {
+			var $url = 'insert/deleteAndInsertSeriesIntoWorkouts';
+			var $data = {
+				series_id: $series_id,
+				workouts: $workouts
+			};
+			
+			return $http.post($url, $data);
+		},
 		seriesIntoWorkout: function ($workout_id, $series_id) {
 			var $url = 'insert/seriesIntoWorkout';
 			var $data = {

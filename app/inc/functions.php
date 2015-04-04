@@ -708,6 +708,18 @@ function insertExerciseSeries ($name) {
 		]);
 }
 
+function deleteAndInsertSeriesIntoWorkouts ($series_id, $workouts) {
+	//first delete all the rows with $series_id
+	DB::table('series_workout')
+		->where('series_id', $series_id)
+		->delete();
+	//then add all the rows for the series_id
+	foreach ($workouts as $workout) {
+		$workout_id = $workout['id'];
+		insertSeriesIntoWorkout($workout_id, $series_id);
+	}
+}
+
 function insertSeriesIntoWorkout ($workout_id, $series_id) {
 	DB::table('series_workout')
 		->insert([

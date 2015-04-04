@@ -361,6 +361,13 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 			});
 		};
 
+		$scope.deleteAndInsertSeriesIntoWorkouts = function () {
+			insert.deleteAndInsertSeriesIntoWorkouts($scope.selected.exercise_series.id, $scope.selected.exercise_series.workouts).then(function (response) {
+				$scope.exercise_series = response.data;
+				$scope.show.popups.exercise_series = false;
+			});
+		};
+
 		$scope.insertSeriesIntoWorkout = function () {
 			insert.seriesIntoWorkout($workout_id, $series_id).then(function (response) {
 				$scope.exercise_series = response.data;

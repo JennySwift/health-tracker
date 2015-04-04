@@ -48,6 +48,7 @@ Route::post('select/autocompleteMenu', 'SelectController@autocompleteMenu');
 
 Route::post('insert/item', 'InsertController@item');
 Route::post('insert/seriesIntoWorkout', 'InsertController@seriesIntoWorkout');
+Route::post('insert/deleteAndInsertSeriesIntoWorkouts', 'InsertController@deleteAndInsertSeriesIntoWorkouts');
 Route::post('insert/exerciseTag', 'InsertController@exerciseTag');
 Route::post('insert/exerciseSeries', 'InsertController@exerciseSeries');
 Route::post('insert/exerciseSet', 'InsertController@exerciseSet');
