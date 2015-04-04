@@ -11,6 +11,15 @@ app.factory('insert', function ($http) {
 			
 			return $http.post($url, $data);
 		},
+		seriesIntoWorkout: function ($workout_id, $series_id) {
+			var $url = 'insert/seriesIntoWorkout';
+			var $data = {
+				workout_id: $workout_id,
+				series_id: $series_id
+			};
+			
+			return $http.post($url, $data);
+		},
 		exerciseSeries: function () {
 			var $name = $("#exercise-series").val();
 			var $url = 'insert/exerciseSeries';

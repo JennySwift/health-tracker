@@ -19,6 +19,15 @@ class InsertController extends Controller {
 		return getExerciseTags();
 	}
 
+	public function seriesIntoWorkout () {
+		//creates a new exercise tag
+		include(app_path() . '/inc/functions.php');
+		$workout_id = json_decode(file_get_contents('php://input'), true)["workout_id"];
+		$series_id = json_decode(file_get_contents('php://input'), true)["series_id"];
+		insertSeriesIntoWorkout($workout_id, $series_id);
+		return getExerciseSeries();
+	}
+
 	public function exerciseSet () {
 		//creates a new exercise tag
 		include(app_path() . '/inc/functions.php');

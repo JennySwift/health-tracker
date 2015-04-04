@@ -197,6 +197,11 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 			$scope.show.popups.exercise = true;
 		};
 
+		$scope.showExerciseSeriesPopup = function ($series) {
+			$scope.selected.exercise_series = $series;
+			$scope.show.popups.exercise_series = true;
+		};
+
 		$scope.showRecipePopup = function ($recipe) {
 			$scope.selected.recipe = $recipe;
 			select.recipeContents($recipe.id).then(function (response) {
@@ -253,6 +258,7 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 				$scope.getMenu($scope.foods, $scope.recipes);
 				$scope.journal_entry = response.data.journal_entry;
 				$scope.exercise_tags = response.data.exercise_tags;
+				$scope.workouts = response.data.workouts;
 
 				$scope.selected.exercise_unit.id = $scope.units.exercise[0].id;
 			});
@@ -351,6 +357,12 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 				return;
 			}
 			insert.exerciseSeries().then(function (response) {
+				$scope.exercise_series = response.data;
+			});
+		};
+
+		$scope.insertSeriesIntoWorkout = function () {
+			insert.seriesIntoWorkout($workout_id, $series_id).then(function (response) {
 				$scope.exercise_series = response.data;
 			});
 		};

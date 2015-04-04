@@ -17,6 +17,15 @@ function getId ($table, $name) {
 	return $id;
 }
 
+function getWorkouts () {
+	$workouts = DB::table('workouts')
+		->where('user_id', Auth::user()->id)
+		->select('id', 'name')
+		->get();
+
+	return $workouts;
+}
+
 function getExerciseSeriesHistory ($series_id) {
 	//first get all exercises in the series
 	$exercise_ids = DB::table('exercises')
@@ -96,7 +105,24 @@ function getExerciseSeries () {
 		->select('name', 'id')
 		->get();
 
+	foreach ($exercise_series as $series) {
+		$series_id = $series->id;
+		$workouts = getSeriesWorkouts($series_id);
+		$series->workouts = $workouts;
+	}
+
 	return $exercise_series;
+}
+
+function getSeriesWorkouts ($series_id) {
+	//find which workouts the series is part of
+	$workouts = DB::table('series_workout')
+		->where('series_id', $series_id)
+		->join('workouts', 'workout_id', '=', 'workouts.id')
+		->select('workouts.name', 'workouts.id')
+		->get();
+
+	return $workouts;
 }
 
 function countItem ($table, $name) {
@@ -678,6 +704,15 @@ function insertExerciseSeries ($name) {
 	DB::table('exercise_series')
 		->insert([
 			'name' => $name,
+			'user_id' => Auth::user()->id
+		]);
+}
+
+function insertSeriesIntoWorkout ($workout_id, $series_id) {
+	DB::table('series_workout')
+		->insert([
+			'workout_id' => $workout_id,
+			'series_id' => $series_id,
 			'user_id' => Auth::user()->id
 		]);
 }
