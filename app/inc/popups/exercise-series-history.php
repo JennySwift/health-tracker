@@ -6,15 +6,22 @@
 
 			<tr>
 				<th>date</th>
+				<th>days ago</th>
 				<th>exercise</th>
+				<!-- <th>description</th> -->
+				<th>step</th>
+				<th>sets</th>
 				<th>total</th>
-				<th></th>
 			</tr>
 
 			<tr ng-repeat="exercise in exercise_series_history">
 				<td>{{exercise.date}}</td>
+				<td>{{exercise.days_ago}}</td>
 				<td>{{exercise.exercise_name}}</td>
-				<td>{{exercise.quantity}} {{exercise.unit_name}}</td>
+				<!-- <td>{{exercise.description}}</td> -->
+				<td>{{exercise.step_number}}</td>
+				<td>{{exercise.sets}}</td>
+				<td>{{exercise.total}} {{exercise.unit_name}}</td>
 			</tr>
 		</table>
 

@@ -23,24 +23,55 @@ function getExerciseSeriesHistory ($series_id) {
 		->where('series_id', $series_id)
 		->lists('id');
 
-	// Debugbar::info('exercise_ids', $exercise_ids);
-
-	$history = DB::table('exercise_entries')
+	//get all entries in the series
+	$entries = DB::table('exercise_entries')
 		->whereIn('exercise_id', $exercise_ids)
 		->join('exercises', 'exercise_entries.exercise_id', '=', 'exercises.id')
 		->join('exercise_units', 'exercise_entries.exercise_unit_id', '=', 'exercise_units.id')
-		->select('date', 'exercises.name as exercise_name', 'quantity', 'exercise_units.name as unit_name')
+		->select('date', 'exercises.id as exercise_id', 'exercises.name as exercise_name', 'exercises.description', 'exercises.step_number', 'quantity', 'exercise_unit_id', 'exercise_units.name as unit_name')
 		->orderBy('date', 'desc')
 		->get();
 
-	//format the date
-	foreach ($history as $item) {
-		$date = $item->date;
-		// Debugbar::info('date', $date);
-		$item->date = convertDate($date, 'user');
-	}
+	$array = array();
+	foreach ($entries as $entry) {
+		$sql_date = $entry->date;
+		$date = convertDate($sql_date, 'user');
+		$days_ago = getHowManyDaysAgo($sql_date);
+		$exercise_id = $entry->exercise_id;
+		$exercise_unit_id = $entry->exercise_unit_id;
+		$counter = 0;
 
-	return $history;
+		$total = getTotalExerciseReps($sql_date, $exercise_id, $exercise_unit_id);
+
+		$sets = getExerciseSets($sql_date, $exercise_id, $exercise_unit_id);
+
+		//check to see if the array already has the exercise entry so it doesn't appear as a new entry for each set of exercises
+		foreach ($array as $item) {
+			if ($item['date'] === $date && $item['exercise_name'] === $entry->exercise_name && $item['unit_name'] === $entry->unit_name) {
+				//the exercise with unit already exists in the array so we don't want to add it again
+				$counter++;
+			}
+		}
+		if ($counter === 0) {
+			$array[] = array(
+				'date' => $date,
+				'days_ago' => $days_ago,
+				'exercise_id' => $entry->exercise_id,
+				'exercise_name' => $entry->exercise_name,
+				'description' => $entry->description,
+				'step_number' => $entry->step_number,
+				'unit_name' => $entry->unit_name,
+				'sets' => $sets,
+				'total' => $total,
+			);
+		}	
+	}
+	
+	return $array;
+
+	// $compacted_entries = compactExerciseEntries($entries, $date);
+
+	// return $compacted_entries;
 }
 
 function getDefaultExerciseQuantity ($exercise_id) {
@@ -557,25 +588,41 @@ function getExerciseEntries ($date) {
 		->orderBy('unit_name', 'asc')
 		->get();
 
+	return compactExerciseEntries($entries, $date);
+}
+
+function getExerciseSets ($date, $exercise_id, $exercise_unit_id) {
+	$sets = DB::table('exercise_entries')
+		->where('date', $date)
+		->where('exercise_id', $exercise_id)
+		->where('exercise_unit_id', $exercise_unit_id)
+		->where('user_id', Auth::user()->id)
+		->count();
+
+	return $sets;
+}
+
+function getTotalExerciseReps ($date, $exercise_id, $exercise_unit_id) {
+	$total = DB::table('exercise_entries')
+		->where('date', $date)
+		->where('exercise_id', $exercise_id)
+		->where('exercise_unit_id', $exercise_unit_id)
+		->where('user_id', Auth::user()->id)
+		->sum('quantity');
+
+	return $total;
+}
+
+function compactExerciseEntries ($entries, $date) {
 	$array = array();
 	foreach ($entries as $entry) {
 		$exercise_id = $entry->exercise_id;
 		$exercise_unit_id = $entry->exercise_unit_id;
 		$counter = 0;
 
-		$total = DB::table('exercise_entries')
-			->where('date', $date)
-			->where('exercise_id', $exercise_id)
-			->where('exercise_unit_id', $exercise_unit_id)
-			->where('user_id', Auth::user()->id)
-			->sum('quantity');
+		$total = getTotalExerciseReps($date, $exercise_id, $exercise_unit_id);
 
-		$sets = DB::table('exercise_entries')
-			->where('date', $date)
-			->where('exercise_id', $exercise_id)
-			->where('exercise_unit_id', $exercise_unit_id)
-			->where('user_id', Auth::user()->id)
-			->count();
+		$sets = getExerciseSets($date, $exercise_id, $exercise_unit_id);
 
 		//check to see if the array already has the exercise entry so it doesn't appear as a new entry for each set of exercises
 		foreach ($array as $item) {
@@ -599,7 +646,6 @@ function getExerciseEntries ($date) {
 			);
 		}	
 	}
-
 	return $array;
 }
 
@@ -1014,9 +1060,22 @@ function convertDate ($date, $for) {
 }
 
 function getDaysAgo ($date) {
+	//I think this gets a date 7 days ago
 	$date = new DateTime($date);
 	$diff = new DateInterval('P7D');
 	$date = $date->sub($diff);
 	return $date;
+}
+
+function getHowManyDaysAgo ($date) {
+	//to find out how many days ago a date was
+	$now = new DateTime('now');
+	$date = new DateTime($date);
+	// Debugbar::info('now', $now);
+	// Debugbar::info('date', $date);
+	$diff = $now->diff($date);
+	$days_ago = $diff->days;
+	return $days_ago;
+	// return 7;
 }
 ?>
