@@ -6,6 +6,11 @@ function insertQuickRecipe ($recipe_name, $contents, $steps, $check_similar_name
 	//$index is so if a similar name is found, I know what index it is in the quick recipe array for the javascript.
 	$index = -1;
 
+	Debugbar::info('recipe_name: ' . $recipe_name);
+	Debugbar::info('check_similar_names: ' . $check_similar_names);
+	Debugbar::info('contents', $contents);
+	Debugbar::info('steps', $steps);
+
 	//$contents needs to have: food_name, unit_name, quantity, maybe description
 	foreach ($contents as $item) {
 		$food_name = $item['food_name'];
@@ -71,8 +76,12 @@ function insertQuickRecipe ($recipe_name, $contents, $steps, $check_similar_name
 	//insert the method for the recipe
 	insertQuickRecipeMethod($recipe_id, $steps);
 
+	Debugbar::info('data_to_insert', $data_to_insert);
+
 	//insert the items into food_recipe table
 	foreach ($data_to_insert as $item) {
+		Debugbar::info('item', $item);
+		Debugbar::info('recipe_id: ' . $recipe_id);
 		//insert a row into food_recipe table
 		insertFoodIntoRecipe($recipe_id, $item);
 
