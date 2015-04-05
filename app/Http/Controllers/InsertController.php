@@ -78,6 +78,11 @@ class InsertController extends Controller {
 		$steps = json_decode(file_get_contents('php://input'), true)["steps"];
 		$check_similar_names = json_decode(file_get_contents('php://input'), true)["check_similar_names"];
 
+		Debugbar::info('recipe_name: ' . $recipe_name);
+		Debugbar::info('check_similar_names: ' . $check_similar_names);
+		Debugbar::info('contents', $contents);
+		Debugbar::info('steps', $steps);
+		
 		$similar_names = insertQuickRecipe($recipe_name, $contents, $steps, $check_similar_names);
 
 		if ($similar_names) {
