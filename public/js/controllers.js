@@ -16,7 +16,7 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 		};
 		//=============tabs=============
 		$scope.tab = {
-			exercises: true
+			foods: true
 		};
 
 		//autocomplete

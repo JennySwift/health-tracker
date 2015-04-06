@@ -26,6 +26,7 @@ function insertQuickRecipe ($recipe_name, $contents, $steps, $check_similar_name
 		}
 
 		if ($check_similar_names) {
+			Debugbar::info('check_similar_names is true');
 			$found = checkSimilarNames($food_name, 'foods');
 
 			if ($found) {
@@ -48,7 +49,9 @@ function insertQuickRecipe ($recipe_name, $contents, $steps, $check_similar_name
 				);
 			}
 		}
-		elseif (!$check_similar_names || count($similar_names) === 0) {
+		if (!$check_similar_names || count($similar_names) === 0) {
+			Debugbar::info('check_similar_names is false or similar_names count is 0');
+			Debugbar::info('similar_names count: ' . count($similar_names));
 			//we can insert things now that no similar names were found, or we have already checked for similar names previously.
 		
 			//retrieve the id if the food exists, insert and retrieve the id if the food does not exist
