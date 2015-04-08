@@ -401,6 +401,13 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 			});
 		};
 
+		$scope.insertTagsIntoRecipe = function () {
+			//deletes tags from the recipe then adds the correct ones
+			insert.tagsIntoRecipe($scope.selected.recipe.id, $scope.selected.recipe.tags).then(function (response) {
+				$scope.recipes = response.data;
+			});
+		};
+
 		$scope.insertOrUpdateJournalEntry = function () {
 			insert.journalEntry($scope.date.sql, $scope.journal_entry.text).then(function (response) {
 				$scope.journal_entry = response.data;

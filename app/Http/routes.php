@@ -55,6 +55,7 @@ Route::post('insert/exerciseSeries', 'InsertController@exerciseSeries');
 Route::post('insert/exerciseSet', 'InsertController@exerciseSet');
 Route::post('insert/tagInExercise', 'InsertController@tagInExercise');
 Route::post('insert/tagsInExercise', 'InsertController@tagsInExercise');
+Route::post('insert/tagsIntoRecipe', 'InsertController@tagsIntoRecipe');
 Route::post('insert/quickRecipe', 'InsertController@quickRecipe');
 Route::post('insert/journalEntry', 'InsertController@journalEntry');
 Route::post('insert/food', 'InsertController@food');

@@ -767,6 +767,15 @@ function insertRecipeTag ($name) {
 		]);
 }
 
+function insertTagIntoRecipe ($recipe_id, $tag_id) {
+	DB::table('recipe_tag')
+		->insert([
+			'recipe_id' => $recipe_id,
+			'tag_id' => $tag_id,
+			'user_id' => Auth::user()->id
+		]);
+}
+
 function deleteAndInsertSeriesIntoWorkouts ($series_id, $workouts) {
 	//first delete all the rows with $series_id
 	DB::table('series_workout')
@@ -836,6 +845,13 @@ function insertTagsInExercise ($exercise_id, $tags) {
 	foreach ($tags as $tag) {
 		$tag_id = $tag['id'];
 		insertExerciseTag($exercise_id, $tag_id);
+	}
+}
+
+function insertTagsIntoRecipe ($recipe_id, $tags) {
+	foreach ($tags as $tag) {
+		$tag_id = $tag['id'];
+		insertTagIntoRecipe($recipe_id, $tag_id);
 	}
 }
 
@@ -1063,6 +1079,12 @@ function deleteTagFromExercise ($exercise_id, $tag_id) {
 function deleteTagsFromExercise ($exercise_id) {
 	DB::table('exercise_tag')
 		->where('exercise_id', $exercise_id)
+		->delete();
+}
+
+function deleteTagsFromRecipe ($recipe_id) {
+	DB::table('recipe_tag')
+		->where('recipe_id', $recipe_id)
 		->delete();
 }
 

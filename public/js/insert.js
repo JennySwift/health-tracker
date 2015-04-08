@@ -69,6 +69,15 @@ app.factory('insert', function ($http) {
 			
 			return $http.post($url, $data);
 		},
+		tagsIntoRecipe: function ($recipe_id, $tags) {
+			var $url = 'insert/tagsIntoRecipe';
+			var $data = {
+				recipe_id: $recipe_id,
+				tags: $tags
+			};
+			
+			return $http.post($url, $data);
+		},
 		quickRecipe: function ($recipe_name, $contents, $steps, $check_similar_names) {
 			var $url = 'insert/quickRecipe';
 			var $data = {

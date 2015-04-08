@@ -59,6 +59,21 @@
 		
 			</div>
 		</div>
+
+		<div>
+			<h3 class="center">tags</h3>
+
+			<ul>
+				<li ng-repeat="tag in recipe_tags">
+					<span>{{tag.name}}</span>
+					<input checklist-model="selected.recipe.tags" checklist-value="tag" type="checkbox">
+				</li>
+			</ul>
+
+			<button ng-click="insertTagsIntoRecipe()">save tags</button>
+
+		</div>
+
 	</div>
 	<!-- <div class="popup-footer">
 		<button ng-click="show.popups.recipe = false" class="close-popup btn btn-sm">close</button>

@@ -79,6 +79,16 @@ class InsertController extends Controller {
 		return getExercises();
 	}
 
+	public function tagsIntoRecipe () {
+		//deletes all tags then adds the correct tags
+		include(app_path() . '/inc/functions.php');
+		$recipe_id = json_decode(file_get_contents('php://input'), true)["recipe_id"];
+		$tags = json_decode(file_get_contents('php://input'), true)["tags"];
+		deleteTagsFromRecipe($recipe_id);
+		insertTagsIntoRecipe($recipe_id, $tags);
+		return getRecipes();
+	}
+
 	public function quickRecipe () {
 		include(app_path() . '/inc/functions.php');
 		$recipe_name = json_decode(file_get_contents('php://input'), true)["recipe_name"];
