@@ -35,7 +35,7 @@ Route::post('select/exerciseSeries', 'SelectController@exerciseSeries');
 // Route::post('select/exercises', 'SelectController@exercises');
 // Route::post('select/foodList', 'SelectController@foodList');
 // Route::post('select/exerciseList', 'SelectController@exerciseList');
-Route::post('select/recipeList', 'SelectController@recipeList');
+Route::post('select/filterRecipes', 'SelectController@filterRecipes');
 Route::post('select/unitList', 'SelectController@unitList');
 Route::post('select/allFoodsWithUnits', 'SelectController@allFoodsWithUnits');
 Route::post('select/weight', 'SelectController@weight');

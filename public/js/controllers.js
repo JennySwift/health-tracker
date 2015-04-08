@@ -108,7 +108,9 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 		$scope.food_name = "";//probably should change this to an object. likewise, for the food popup	
 		
 		$scope.foods = {}; //all foods
-		$scope.recipes = {};//all recipes
+		$scope.recipes = {
+			filtered: {}
+		};
 		$scope.menu = {};//all foods plus all recipes
 		$scope.food_entries = {};//all foods/recipes entered on a given day
 		$scope.calories = {};//calorie info for a given day
@@ -240,6 +242,12 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 			});
 		};
 
+		$scope.filterRecipes = function () {
+			select.filterRecipes().then(function (response) {
+				$scope.recipes.filtered = response.data;
+			});
+		};
+
 		// ===========================page load===========================
 
 		$scope.pageLoad = function () {
@@ -247,7 +255,7 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 				$scope.foods = response.data.foods;
 				$scope.food_entries = response.data.food_entries;
 				$scope.exercise_entries = response.data.exercise_entries;
-				$scope.recipes = response.data.recipes;
+				$scope.recipes.filtered = response.data.recipes;
 				$scope.units.food = response.data.food_units;
 				$scope.units.exercise = response.data.exercise_units;
 				$scope.all_foods_with_units = response.data.foods_with_units;
