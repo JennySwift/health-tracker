@@ -17,6 +17,16 @@ function getId ($table, $name) {
 	return $id;
 }
 
+function getTagsForRecipe ($recipe_id) {
+	$tags = DB::table('recipe_tag')
+		->where('recipe_id', $recipe_id)
+		->join('recipe_tags', 'tag_id', '=', 'recipe_tags.id')
+		->select('tag_id as id', 'recipe_tags.name as name')
+		->get();
+
+	return $tags;
+}
+
 function getRecipeTags () {
 	$recipe_tags = DB::table('recipe_tags')
 		->where('user_id', Auth::user()->id)
@@ -554,12 +564,14 @@ function getRecipes () {
 
 	$recipes = array();
 	foreach ($rows as $row) {
-		$recipe_name = $row->name;
 		$recipe_id = $row->id;
-
+		$recipe_name = $row->name;
+		$tags = getTagsForRecipe($recipe_id);
+		
 		$recipes[] = array(
+			"id" => $recipe_id,
 			"name" => $recipe_name,
-			"id" => $recipe_id
+			"tags" => $tags
 		);
 	}
 	return $recipes;

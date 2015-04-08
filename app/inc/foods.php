@@ -40,11 +40,15 @@
 					<tr>
 						<th>name</th>
 						<th>calories</th>
+						<th>tags</th>
 						<th></th>
 					</tr>
 					<tr ng-repeat="recipe in recipes | filter:filter.recipes">
 						<td ng-click="showRecipePopup(recipe)" class="pointer">{{recipe.name}}</td>
 						<td>calories</td>
+						<td>
+							<span ng-repeat="tag in recipe.tags" class="badge">{{tag.name}}</span>
+						</td>
 						<td><i ng-click="deleteRecipe(recipe.id)" class="delete-item fa fa-times"></i></td>
 					</tr>
 				</table>
