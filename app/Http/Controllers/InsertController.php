@@ -19,6 +19,14 @@ class InsertController extends Controller {
 		return getExerciseTags();
 	}
 
+	public function recipeTag () {
+		//creates a new recipe tag
+		include(app_path() . '/inc/functions.php');
+		$name = json_decode(file_get_contents('php://input'), true)["name"];
+		insertRecipeTag($name);
+		return getRecipeTags();
+	}
+
 	public function deleteAndInsertSeriesIntoWorkouts () {
 		include(app_path() . '/inc/functions.php');
 		$series_id = json_decode(file_get_contents('php://input'), true)["series_id"];

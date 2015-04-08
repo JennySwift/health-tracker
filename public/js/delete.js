@@ -40,6 +40,16 @@ app.factory('deleteItem', function ($http) {
 				return $http.post($url, $data);
 			}
 		},
+		recipeTag: function ($id) {
+			if (confirm("Are you sure you want to delete this tag?")) {
+				var $url = 'delete/recipeTag';
+				var $data = {
+					id: $id
+				};
+				
+				return $http.post($url, $data);
+			}
+		},
 		recipe: function ($id) {
 			if (confirm("Are you sure you want to delete this recipe?")) {
 				var $url = 'delete/recipe';

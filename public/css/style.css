@@ -185,6 +185,10 @@ li {
   color: red;
   cursor: pointer; }
 
+#foods-tab .flex {
+  display: flex;
+  justify-content: space-around; }
+
 .popup {
   margin: auto; }
   .popup .make-default, .popup .default {

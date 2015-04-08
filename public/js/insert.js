@@ -11,6 +11,17 @@ app.factory('insert', function ($http) {
 			
 			return $http.post($url, $data);
 		},
+		recipeTag: function () {
+			var $name = $("#create-new-recipe-tag").val();
+			var $url = 'insert/recipeTag';
+			var $data = {
+				name: $name
+			};
+
+			$("#create-new-recipe-tag").val("");
+			
+			return $http.post($url, $data);
+		},
 		deleteAndInsertSeriesIntoWorkouts: function ($series_id, $workouts) {
 			var $url = 'insert/deleteAndInsertSeriesIntoWorkouts';
 			var $data = {

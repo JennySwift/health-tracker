@@ -1,6 +1,6 @@
 <?php
 
-include('quick-recipe.php');
+include('quick-recipe-functions.php');
 
 // ========================================================================
 // ========================================================================
@@ -15,6 +15,16 @@ function getId ($table, $name) {
 		->pluck('id');
 
 	return $id;
+}
+
+function getRecipeTags () {
+	$recipe_tags = DB::table('recipe_tags')
+		->where('user_id', Auth::user()->id)
+		->orderBy('name', 'asc')
+		->select('id', 'name')
+		->get();
+
+	return $recipe_tags;
 }
 
 function getWorkouts () {
@@ -737,6 +747,14 @@ function insertExerciseSeries ($name) {
 		]);
 }
 
+function insertRecipeTag ($name) {
+	DB::table('recipe_tags')
+		->insert([
+			'name' => $name,
+			'user_id' => Auth::user()->id
+		]);
+}
+
 function deleteAndInsertSeriesIntoWorkouts ($series_id, $workouts) {
 	//first delete all the rows with $series_id
 	DB::table('series_workout')
@@ -1044,6 +1062,12 @@ function deleteExerciseSeries ($id) {
 
 function deleteExerciseTag ($id) {
 	DB::table('exercise_tags')
+		->where('id', $id)
+		->delete();
+}
+
+function deleteRecipeTag ($id) {
+	DB::table('recipe_tags')
 		->where('id', $id)
 		->delete();
 }

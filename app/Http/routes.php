@@ -47,6 +47,7 @@ Route::post('select/autocompleteMenu', 'SelectController@autocompleteMenu');
 // ========================================insert========================================
 
 Route::post('insert/item', 'InsertController@item');
+Route::post('insert/recipeTag', 'InsertController@recipeTag');
 Route::post('insert/seriesIntoWorkout', 'InsertController@seriesIntoWorkout');
 Route::post('insert/deleteAndInsertSeriesIntoWorkouts', 'InsertController@deleteAndInsertSeriesIntoWorkouts');
 Route::post('insert/exerciseTag', 'InsertController@exerciseTag');
@@ -82,6 +83,7 @@ Route::post('update/calories', 'UpdateController@calories');
 
 // Route::post('delete/item', 'DeleteController@item');
 Route::post('delete/recipe', 'DeleteController@recipe');
+Route::post('delete/recipeTag', 'DeleteController@recipeTag');
 Route::post('delete/exerciseSeries', 'DeleteController@exerciseSeries');
 Route::post('delete/tagFromExercise', 'DeleteController@tagFromExercise');
 Route::post('delete/exerciseTag', 'DeleteController@exerciseTag');

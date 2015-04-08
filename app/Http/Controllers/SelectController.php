@@ -25,7 +25,8 @@ class SelectController extends Controller {
 			"exercise_entries" => getExerciseEntries($date),
 			"journal_entry" => getJournalEntry($date),
 			"exercise_tags" => getExerciseTags(),
-			"workouts" => getWorkouts()
+			"workouts" => getWorkouts(),
+			"recipe_tags" => getRecipeTags()
 		);
 		return $response;
 	}

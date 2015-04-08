@@ -1,45 +1,12 @@
-<div ng-show="tab.foods">
+<div ng-show="tab.foods" id="foods-tab">
 
-	<!-- ==========================recipe quick entry========================== -->
-
-	<div class="margin-bottom">
-		<ul>
-			<li>start a new line for each item in your recipe</li>
-			<li>there must be a space after the comma</li>
-			<li>foods in your recipe that you have not entered in your foods will be added for you</li>
-			<li>if a similar food is found, you will be prompted before it is added, so you don't end up with, for example, both 'apple' and 'apples' in your foods</li>
-		</ul>
-		<p>example format:</p>
-		<p>1 large apple, red</p>
-		<p>1 cup tomatoes</p>
-		<div class="btn-toolbar" data-role="editor-toolbar" data-target="#wysiwyg">
-			<a data-edit="bold" class="fa fa-bold"></a>
-			<a data-edit="italic" class="fa fa-italic"></a>
-			<a data-edit="underline" class="fa fa-underline"></a>
-		</div>
-
-		<div id="quick-recipe" class="wysiwyg"></div>
-
-		<button ng-click="quickRecipe()"class="btn">go</button>
-
-		<div>
-			<div ng-repeat="error in errors.quick_recipe">{{error}}</div>
-		</div>
-
-		<!-- <div>
-			<div ng-repeat="item in quick_recipe.contents">{{item}}</div>
-		</div>
-
-		<div>
-			<div ng-repeat="step in quick_recipe.steps">{{step}}</div>
-		</div> -->
-	</div>
+	<?php include('quick-recipe.php'); ?>
 	
 	<!-- ==========================foods========================== -->
 
-	<div class="row">
+	<div class="flex">
 
-		<div class="col col-sm-6">
+		<div>
 			<input ng-keyup="insertFood($event.keyCode)" type="text" placeholder="add a new food" id="create-new-food" class="form-control">
 			<input ng-model="filter.foods" type="text" placeholder="filter foods" class="form-control">
 			<hr>
@@ -62,7 +29,7 @@
 		
 		<!-- ==========================recipes========================== -->
 		
-		<div class="col col-sm-6">
+		<div>
 			<input ng-model="new_item.recipe.name" ng-keyup="insertRecipe($event.keyCode)" type="text" placeholder="add a new recipe" id="create-new-recipe" class="form-control">
 			<input ng-model="filter.recipes" type="text" placeholder="filter recipes" class="form-control">
 			<hr>
@@ -85,6 +52,29 @@
 			</div>
 		</div>
 
-	</div> <!-- .row -->
+		<!-- ==========================recipe tags========================== -->
+
+		<div>
+			<input ng-model="new_item.recipe_tag" ng-keyup="insertRecipeTag($event.keyCode)" type="text" placeholder="add a new recipe tag" id="create-new-recipe-tag" class="form-control">
+			<input ng-model="filter.recipe_tags" type="text" placeholder="filter recipe tags" class="form-control">
+			<hr>
+		
+			<div>
+
+				<table class="table table-bordered">
+					<tr>
+						<th>name</th>
+						<th></th>
+					</tr>
+					<tr ng-repeat="tag in recipe_tags | filter:filter.recipe_tags">
+						<td>{{tag.name}}</td>
+						<td><i ng-click="deleteRecipeTag(tag.id)" class="delete-item fa fa-times"></i></td>
+					</tr>
+				</table>
+				
+			</div>
+		</div>
+
+	</div>
 
 </div> <!-- foods tab -->

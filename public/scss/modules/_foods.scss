@@ -5,3 +5,10 @@
 	color: red;
 	cursor: pointer;
 }
+
+#foods-tab {
+	.flex {
+		display: flex;
+		justify-content: space-around;
+	}
+}

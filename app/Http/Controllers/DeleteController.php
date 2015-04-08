@@ -53,6 +53,13 @@ class DeleteController extends Controller {
 		return getExerciseTags();
 	}
 
+	public function recipeTag () {
+		include(app_path() . '/inc/functions.php');
+		$id = json_decode(file_get_contents('php://input'), true)["id"];
+		deleteRecipeTag($id);
+		return getRecipeTags();
+	}
+
 	public function recipe () {
 		include(app_path() . '/inc/functions.php');
 		$id = json_decode(file_get_contents('php://input'), true)["id"];
