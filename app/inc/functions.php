@@ -408,6 +408,7 @@ function getCaloriesForTimePeriod ($date, $period) {
 			->join('foods', 'food_entries.food_id', '=', 'foods.id')
 			->join('food_units', 'food_entries.unit_id', '=', 'food_units.id')
 			->where('date', $date)
+			->where('food_entries.user_id', Auth::user()->id)
 			->select('food_id', 'food_units.id AS unit_id', 'quantity')
 			->get();
 	}
@@ -418,6 +419,7 @@ function getCaloriesForTimePeriod ($date, $period) {
 			->join('food_units', 'food_entries.unit_id', '=', 'food_units.id')
 			->where('date', '>=', $a_week_ago)
 			->where('date', '<=', $date)
+			->where('food_entries.user_id', Auth::user()->id)
 			->select('food_id', 'food_units.id AS unit_id', 'quantity')
 			->get();
 	}
