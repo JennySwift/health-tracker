@@ -86,7 +86,7 @@ class InsertController extends Controller {
 		$tags = json_decode(file_get_contents('php://input'), true)["tags"];
 		deleteTagsFromRecipe($recipe_id);
 		insertTagsIntoRecipe($recipe_id, $tags);
-		return getRecipes();
+		return filterRecipes('', []);
 	}
 
 	public function quickRecipe () {
@@ -110,7 +110,7 @@ class InsertController extends Controller {
 		}
 		else {
 			return array(
-				'recipes' => getRecipes(),
+				'recipes' => filterRecipes('', []),
 				'foods_with_units' => getAllFoodsWithUnits(),
 				'food_units' => getFoodUnits()
 			);
@@ -170,7 +170,7 @@ class InsertController extends Controller {
 		include(app_path() . '/inc/functions.php');
 		$name = json_decode(file_get_contents('php://input'), true)["name"];
 		insertRecipe($name);
-		return getRecipes();
+		return filterRecipes('', []);
 	}
 
 	public function exercise () {

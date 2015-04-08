@@ -14,7 +14,7 @@ class SelectController extends Controller {
 		$response = array(
 			"foods" => getFoods(),
 			// "recipes" => getRecipes(),
-			"recipes" => filterRecipesByTags([3,4]),
+			"recipes" => filterRecipes('', []),
 			"food_units" => getFoodUnits(),
 			"exercise_units" => getExerciseUnits(),
 			"foods_with_units" => getAllFoodsWithUnits(),
@@ -109,7 +109,8 @@ class SelectController extends Controller {
 	public function filterRecipes () {
 		include(app_path() . '/inc/functions.php');
 		$typing = json_decode(file_get_contents('php://input'), true)["typing"];
-		return filterRecipes($typing);
+		$tag_ids = json_decode(file_get_contents('php://input'), true)["tag_ids"];
+		return filterRecipes($typing, $tag_ids);
 	}
 
 	public function unitList () {

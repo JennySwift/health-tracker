@@ -2,49 +2,45 @@
 
 use App\Recipe;
 
-function filterRecipes ($typing) {
-	$typing = '%' . $typing . '%';
+function filterRecipes ($name, $tag_ids) {
+	$recipes = Recipe::where('recipes.user_id', Auth::user()->id);
+
+	//filter by name
+	if ($name !== '') {
+		$name = '%' . $name . '%';
+
+		$recipes = $recipes
+			->where('name', 'LIKE', $name);
+	}
 	
-	$rows = DB::table('recipes')
-		->where('name', 'LIKE', $typing)
-		->where('user_id', Auth::user()->id)
+	//filter by tags
+	if (count($tag_ids) > 0) {
+		foreach ($tag_ids as $tag_id) {
+		    $recipes = $recipes->whereHas('recipeTags', function ($q) use ($tag_id) {
+		        $q->where('recipe_tags.id', $tag_id); 
+		    });
+		}
+	}
+	
+	$recipes = $recipes
 		->select('id', 'name')
 		->orderBy('name', 'asc')
 		->get();
-	
 
-	$recipes = array();
-	foreach ($rows as $row) {
-		$recipe_id = $row->id;
-		$recipe_name = $row->name;
+	$array = array();
+	foreach ($recipes as $recipe) {
+		$recipe_id = $recipe->id;
+		$recipe_name = $recipe->name;
 		$tags = getTagsForRecipe($recipe_id);
 		
-		$recipes[] = array(
+		$array[] = array(
 			"id" => $recipe_id,
 			"name" => $recipe_name,
 			"tags" => $tags
 		);
 	}
-	return $recipes;
+
+	return $array;
 }
-
-function filterRecipesbyTags ($tag_ids) {
-	// $recipe_ids = Recipe::where('recipes.user_id', Auth::user()->id);
-
-	$recipe_ids = Recipe::has('recipeTags', '>=', 2)->get();
-
-	// foreach ($tag_ids as $tag_id) {
-	//     $recipe_ids = $recipe_ids->whereHas('recipe_tag', function ($q) use ($tag_id) {
-	//         $q->where('tags.id', $tag_id); 
-	//     });
-	// }
-
-	// $recipe_ids = $recipe_ids
-	// 	->get();
-
-	return $recipe_ids;
-}
-
-
 
 ?>

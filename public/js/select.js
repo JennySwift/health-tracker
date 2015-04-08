@@ -132,13 +132,14 @@ app.factory('select', function ($http) {
 
 			return $http.post($url, $data);
 		},
-		filterRecipes: function () {
+		filterRecipes: function ($tag_ids) {
 			var $typing = $("#filter-recipes").val();
 			var $url = 'select/filterRecipes';
 			var $table = "recipes";
 
 			var $data = {
-				typing: $typing
+				typing: $typing,
+				tag_ids: $tag_ids
 			};
 
 			return $http.post($url, $data);

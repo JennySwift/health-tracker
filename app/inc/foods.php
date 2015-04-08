@@ -31,7 +31,7 @@
 		
 		<div>
 			<input ng-model="new_item.recipe.name" ng-keyup="insertRecipe($event.keyCode)" type="text" placeholder="add a new recipe" id="create-new-recipe" class="form-control">
-			<input ng-model="filter.recipes" ng-keyup="filterRecipes()" type="text" placeholder="filter recipes" id="filter-recipes" class="form-control">
+			<input ng-model="filter.recipes.name" ng-keyup="filterRecipes()" type="text" placeholder="filter recipes by name" id="filter-recipes" class="form-control">
 			<hr>
 		
 			<div>
@@ -68,10 +68,14 @@
 				<table class="table table-bordered">
 					<tr>
 						<th>name</th>
+						<th class="tooltipster" title="check to filter recipes by the tag">filter</th>
 						<th></th>
 					</tr>
 					<tr ng-repeat="tag in recipe_tags | filter:filter.recipe_tags">
 						<td>{{tag.name}}</td>
+						<td>
+							<input checklist-model="filter.recipes.tag_ids" checklist-value="tag.id" type="checkbox">
+						</td>
 						<td><i ng-click="deleteRecipeTag(tag.id)" class="delete-item fa fa-times"></i></td>
 					</tr>
 				</table>

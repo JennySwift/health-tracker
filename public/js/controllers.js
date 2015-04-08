@@ -12,7 +12,9 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 
 		//filter
 		$scope.filter = {
-			
+			recipes: {
+				tag_ids: []
+			}
 		};
 		//=============tabs=============
 		$scope.tab = {
@@ -179,13 +181,19 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 		// 	$scope.getAssocUnits();
 		// });
 
-		$scope.$watch('recipe.portion', function (newValue) {
+		$scope.$watch('recipe.portion', function (newValue, oldValue) {
 			$($scope.recipe.temporary_contents).each(function () {
 				if (this.original_quantity) {
 					//making sure we don't alter the quantity of a food that has been added to the temporary recipe (by doing the if check)
 					this.quantity = this.original_quantity * newValue;
 				}
 			});
+		});
+
+		$scope.$watchCollection('filter.recipes.tag_ids', function (newValue, oldValue) {
+			if (newValue !== oldValue) {
+				$scope.filterRecipes();
+			}
 		});
 
 		// ========================================================================
@@ -243,7 +251,7 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 		};
 
 		$scope.filterRecipes = function () {
-			select.filterRecipes().then(function (response) {
+			select.filterRecipes($scope.filter.recipes.tag_ids).then(function (response) {
 				$scope.recipes.filtered = response.data;
 			});
 		};
@@ -412,7 +420,7 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 		$scope.insertTagsIntoRecipe = function () {
 			//deletes tags from the recipe then adds the correct ones
 			insert.tagsIntoRecipe($scope.selected.recipe.id, $scope.selected.recipe.tags).then(function (response) {
-				$scope.recipes = response.data;
+				$scope.recipes.filtered = response.data;
 			});
 		};
 
@@ -427,7 +435,7 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 				return;
 			}
 			insert.recipe($scope.new_item.recipe.name).then(function (response) {
-				$scope.recipes = response.data;
+				$scope.recipes.filtered = response.data;
 			});
 		};
 
@@ -868,7 +876,7 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 
 		$scope.deleteRecipe = function ($id) {
 			deleteItem.recipe($id).then(function (response) {
-				$scope.recipes = response.data;
+				$scope.recipes.filtered = response.data;
 			});
 		};
 
@@ -1101,7 +1109,7 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 					$scope.show.popups.similar_names = true;
 				}
 				else {
-					$scope.recipes = response.data.recipes;
+					$scope.recipes.filtered = response.data.recipes;
 					$scope.all_foods_with_units = response.data.foods_with_units;
 					$scope.units.food = response.data.food_units;
 				}	
@@ -1139,7 +1147,7 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 			});
 
 			insert.quickRecipe($scope.quick_recipe.name, $scope.quick_recipe.contents, $scope.quick_recipe.steps, false).then(function (response) {
-				$scope.recipes = response.data.recipes;
+				$scope.recipes.filtered = response.data.recipes;
 				$scope.all_foods_with_units = response.data.foods_with_units;
 				$scope.units.food = response.data.food_units;
 			});
