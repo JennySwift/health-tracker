@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "42238bdf66d853845e86b4c3b2a462df",
+    "hash": "788dd1ed259a533861ab28a5098c1e45",
     "packages": [
         {
             "name": "barryvdh/laravel-debugbar",
@@ -1042,6 +1042,63 @@
                 "shell"
             ],
             "time": "2015-02-25 20:35:54"
+        },
+        {
+            "name": "spatie/laravel-backup",
+            "version": "2.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/freekmurze/laravel-backup.git",
+                "reference": "8e47253f3562ab0abee0f65a6a327e7b7535ac77"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/freekmurze/laravel-backup/zipball/8e47253f3562ab0abee0f65a6a327e7b7535ac77",
+                "reference": "8e47253f3562ab0abee0f65a6a327e7b7535ac77",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/console": "5.*",
+                "illuminate/support": "5.*",
+                "php": ">=5.4.0",
+                "symfony/finder": "~2.6"
+            },
+            "require-dev": {
+                "laravel/framework": "5.*",
+                "mockery/mockery": "0.9.*",
+                "orchestra/testbench": "~3.0",
+                "phpunit/phpunit": "4.*",
+                "scrutinizer/ocular": "~1.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Spatie\\Backup\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Freek Van der Herten",
+                    "email": "freek@spatie.be",
+                    "homepage": "https://murze.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Backup command for Laravel 5 applications",
+            "homepage": "https://github.com/freekmurze/laravel-backup",
+            "keywords": [
+                "backup",
+                "database",
+                "laravel 5",
+                "laravel-backup",
+                "mysql",
+                "spatie"
+            ],
+            "time": "2015-03-19 15:03:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
