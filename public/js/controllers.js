@@ -88,6 +88,12 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 		// exercise
 		$scope.exercises = {};
 		$scope.exercise_entries = {};
+
+		//edit
+		$scope.edit = {
+			recipe_method: false
+		};
+
 		// weight
 		$scope.weight = "";
 		$scope.edit_weight = false;
@@ -553,6 +559,39 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 			update.defaultExerciseQuantity($scope.selected.exercise.id).then(function (response) {
 				$scope.exercises = response.data;
 			});
+		};
+
+		$scope.editRecipeMethod = function () {
+			$scope.edit.recipe_method = true;
+			var $text;
+			var $string = "";
+
+			//convert the array into a string so I can make the wysiwyg display the steps
+			$($scope.recipe.steps).each(function () {
+				$text = this.text;
+				$text = $text + '<br>';
+				// $text = '<div>' + $text + '</div>';
+				$string+= $text;
+			});
+			$("#edit-recipe-method").html($string);
+		};
+
+		$scope.updateRecipeMethod = function () {
+			//this is some duplication of insertRecipeMethod
+			var $string = $("#edit-recipe-method").html();
+			var $lines = quickRecipe.formatString($string, $("#edit-recipe-method"));
+			var $steps = [];
+
+			$($lines).each(function () {
+				var $line = this;
+				$steps.push($line);
+			});
+
+			update.recipeMethod($scope.selected.recipe.id, $steps).then(function (response) {
+				$scope.recipe.contents = response.data.contents;
+				$scope.recipe.steps = response.data.steps;
+				$scope.edit.recipe_method = false;
+			});	
 		};
 
 		$scope.updateExerciseSeries = function ($exercise_id, $series_id) {

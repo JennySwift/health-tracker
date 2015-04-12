@@ -10,6 +10,16 @@ app.factory('update', function ($http) {
 
 			return $http.post($url, $data);
 		},
+		recipeMethod: function ($recipe_id, $steps) {
+			//deletes the existing method then inserts the edited method
+			var $url = 'update/recipeMethod';
+			var $data = {
+				recipe_id: $recipe_id,
+				steps: $steps
+			};
+			
+			return $http.post($url, $data);
+		},
 		exerciseSeries: function ($exercise_id, $series_id) {
 			var $url = 'update/exerciseSeries';
 			var $data = {

@@ -1085,6 +1085,12 @@ function deleteRecipeEntry ($date, $recipe_id) {
 		->delete();
 }
 
+function deleteRecipeMethod ($recipe_id) {
+	DB::table('recipe_methods')
+		->where('recipe_id', $recipe_id)
+		->delete();
+}
+
 function deleteTagFromExercise ($exercise_id, $tag_id) {
 	DB::table('exercise_tag')
 		->where('exercise_id', $exercise_id)

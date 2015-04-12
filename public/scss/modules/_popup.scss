@@ -47,6 +47,10 @@
 	}	
 }
 
+#recipe-method, #edit-recipe-method {
+	background: lightgrey;
+}
+
 @media all and (min-width: 680px) {
 	.popup-inner {
 		padding: 22px;

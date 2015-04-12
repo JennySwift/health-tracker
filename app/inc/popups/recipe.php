@@ -43,9 +43,10 @@
 		</div>
 		
 		<div>
-			<div>
-		
-				<table ng-show="recipe.steps.length > 0" id="steps" class="table table-bordered">
+
+			<div ng-show="recipe.steps.length > 0">
+				<button ng-click="editRecipeMethod()">edit method</button>
+				<table id="steps" class="table table-bordered">
 					<caption>Method <br><small>Use the checkboxes while you make your recipe.</small></caption>
 					<tr ng-repeat="step in recipe.steps">
 						<td>
@@ -56,13 +57,20 @@
 						<td>{{step.text}}</td>
 					</tr>
 				</table>
-
-				<div ng-show="recipe.steps.length < 1">enter the method for this recipe
-					<div id="recipe-method" class="wysiwyg"></div>
-					<button ng-click="insertRecipeMethod()">add method</button>
-				</div>
-		
 			</div>
+
+			<!-- add method -->
+			<div ng-show="recipe.steps.length < 1">enter the method for this recipe
+				<div id="recipe-method" class="wysiwyg"></div>
+				<button ng-click="insertRecipeMethod()">add method</button>
+			</div>
+
+			<!-- edit method -->
+			<div ng-show="edit.recipe_method">enter the method for this recipe
+				<div id="edit-recipe-method" class="wysiwyg"></div>
+				<button ng-click="updateRecipeMethod()">save changes</button>
+			</div>
+
 		</div>
 
 		<div>

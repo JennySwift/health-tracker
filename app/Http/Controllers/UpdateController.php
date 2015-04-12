@@ -19,6 +19,21 @@ class UpdateController extends Controller {
 		return getFoodInfo($food_id);
 	}
 
+	public function recipeMethod () {
+		include(app_path() . '/inc/functions.php');
+		$recipe_id = json_decode(file_get_contents('php://input'), true)["recipe_id"];
+		$steps = json_decode(file_get_contents('php://input'), true)["steps"];
+
+		//delete the existing method before adding the updated method
+		deleteRecipeMethod($recipe_id);
+		insertRecipeMethod($recipe_id, $steps);
+		
+		return array(
+			'contents' => getRecipeContents($recipe_id),
+			'steps' => getRecipeSteps($recipe_id)
+		);
+	}
+
 	public function exerciseStepNumber () {
 		include(app_path() . '/inc/functions.php');
 		$exercise_id = json_decode(file_get_contents('php://input'), true)["exercise_id"];
