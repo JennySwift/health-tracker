@@ -23,6 +23,8 @@ class SelectController extends Controller {
 			"exercises" => getExercises(),
 			"exercise_series" => getExerciseSeries(),
 			"food_entries" => getFoodEntries($date),
+			"calories_for_the_day" => number_format(getCaloriesForTimePeriod($date, "day"), 2),
+			"calories_for_the_week" => number_format(getCaloriesForTimePeriod($date, "week"), 2),
 			"exercise_entries" => getExerciseEntries($date),
 			"journal_entry" => getJournalEntry($date),
 			"exercise_tags" => getExerciseTags(),

@@ -135,8 +135,14 @@ class InsertController extends Controller {
 		$data = json_decode(file_get_contents('php://input'), true);
 		$date = $data['date'];
 		insertMenuEntry($data);
+		
+		$response = array(
+			"food_entries" => getFoodEntries($date),
+			"calories_for_the_day" => number_format(getCaloriesForTimePeriod($date, "day"), 2),
+			"calories_for_the_week" => number_format(getCaloriesForTimePeriod($date, "week"), 2),
+		);
 
-		return getFoodEntries($date);
+		return $response;
 	}
 
 	public function recipeEntry () {

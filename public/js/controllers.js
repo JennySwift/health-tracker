@@ -18,7 +18,7 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 		};
 		//=============tabs=============
 		$scope.tab = {
-			foods: true
+			food_entries: true
 		};
 
 		//autocomplete
@@ -262,6 +262,8 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 			select.pageLoad($scope.date.sql).then(function (response) {
 				$scope.foods = response.data.foods;
 				$scope.food_entries = response.data.food_entries;
+				$scope.calories.day = response.data.calories_for_the_day;
+				$scope.calories.week_avg = response.data.calories_for_the_week;
 				$scope.exercise_entries = response.data.exercise_entries;
 				$scope.recipes.filtered = response.data.recipes;
 				$scope.units.food = response.data.food_units;
@@ -486,7 +488,9 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 			$scope.new_entry.food.unit_id = $("#food-unit").val();
 
 			insert.menuEntry($scope.date.sql, $scope.new_entry.food).then(function (response) {
-				$scope.food_entries = response.data;
+				$scope.food_entries = response.data.food_entries;
+				$scope.calories.day = response.data.calories_for_the_day;
+				$scope.calories.week_avg = response.data.calories_for_the_week;
 
 				if ($scope.recipe.temporary_contents) {
 					$scope.recipe.temporary_contents.length = 0;
