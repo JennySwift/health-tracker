@@ -1020,14 +1020,17 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 			var $errors = [];
 			var $line_number = 0;
 			var $steps = [];
+			var $method_trigger_line_number;
 			var $method = false;
 
 			$($lines).each(function () {
 				var $line = this;
 				$line_number++;
 
-				if ($line.toLowerCase() === "Method".toLowerCase()) {
+				//acceptable method triggers are: method, directions, or preparation, any case, with or without a colon.
+				if ($line.toLowerCase() === "Method".toLowerCase() || $line.toLowerCase() === "Method:".toLowerCase() || $line.toLowerCase() === "Preparation".toLowerCase() || $line.toLowerCase() === "Preparation:".toLowerCase() || $line.toLowerCase() === "Directions".toLowerCase() || $line.toLowerCase() === "Directions:".toLowerCase()) {
 					$method = true;
+					$method_trigger_line_number = $line_number;
 				}
 
 				if (!$method) {
@@ -1088,8 +1091,8 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 						}			
 					}
 				}
-				else if ($line.toLowerCase() !== "Method".toLowerCase()) {
-					//it is the method, not the ingredients
+				else if ($line_number !== $method_trigger_line_number) {
+					//it is the actual method, not the ingredients or the method trigger line
 					$steps.push($line);
 				}
 				

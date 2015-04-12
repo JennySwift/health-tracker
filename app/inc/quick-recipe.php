@@ -4,6 +4,7 @@
 	<ul>
 		<li>start a new line for each item in your recipe</li>
 		<li>there must be a space after the comma</li>
+		<li>indicate the steps for your recipe with either 'method,' 'preparation,' or 'directions.' Colons are acceptable after these words.</li>
 		<li>foods in your recipe that you have not entered in your foods will be added for you</li>
 		<li>if a similar food is found, you will be prompted before it is added, so you don't end up with, for example, both 'apple' and 'apples' in your foods</li>
 	</ul>
