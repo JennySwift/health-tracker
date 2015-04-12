@@ -135,7 +135,7 @@ class InsertController extends Controller {
 		$data = json_decode(file_get_contents('php://input'), true);
 		$date = $data['date'];
 		insertMenuEntry($data);
-		
+
 		$response = array(
 			"food_entries" => getFoodEntries($date),
 			"calories_for_the_day" => number_format(getCaloriesForTimePeriod($date, "day"), 2),
@@ -177,6 +177,18 @@ class InsertController extends Controller {
 		$name = json_decode(file_get_contents('php://input'), true)["name"];
 		insertRecipe($name);
 		return filterRecipes('', []);
+	}
+
+	public function recipeMethod () {
+		include(app_path() . '/inc/functions.php');
+		$recipe_id = json_decode(file_get_contents('php://input'), true)["recipe_id"];
+		$steps = json_decode(file_get_contents('php://input'), true)["steps"];
+		insertRecipeMethod($recipe_id, $steps);
+		
+		return array(
+			'contents' => getRecipeContents($recipe_id),
+			'steps' => getRecipeSteps($recipe_id)
+		);
 	}
 
 	public function exercise () {

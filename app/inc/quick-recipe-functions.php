@@ -69,7 +69,7 @@ function insertQuickRecipe ($recipe_name, $contents, $steps, $check_similar_name
 	$recipe_id = insertQuickRecipeRecipe($recipe_name);
 
 	//insert the method for the recipe
-	insertQuickRecipeMethod($recipe_id, $steps);
+	insertRecipeMethod($recipe_id, $steps);
 
 	//insert the items into food_recipe table
 	foreach ($data_to_insert as $item) {
@@ -174,21 +174,6 @@ function pluckName ($name, $table) {
 		->pluck('name');
 
 	return $name;
-}
-
-function insertQuickRecipeMethod ($recipe_id, $steps) {
-	$step_number = 0;
-	foreach ($steps as $step_text) {
-		$step_number++;
-
-		DB::table('recipe_methods')
-			->insert([
-				'recipe_id' => $recipe_id,
-				'step' => $step_number,
-				'text' => $step_text,
-				'user_id' => Auth::user()->id
-			]);
-	}
 }
 
 function insertQuickRecipeRecipe ($name) {

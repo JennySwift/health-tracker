@@ -18,7 +18,7 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 		};
 		//=============tabs=============
 		$scope.tab = {
-			food_entries: true
+			foods: true
 		};
 
 		//autocomplete
@@ -1008,7 +1008,7 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 
 			var $string = $("#quick-recipe").html();
 
-			var $lines = quickRecipe.formatString($string);
+			var $lines = quickRecipe.formatString($string, $("#quick-recipe"));
 
 			var $contents = [];
 			var $new_line;
@@ -1072,9 +1072,7 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 						if (!$item.description && $item.food_name && $item.quantity && $item.unit_name && $index >= $end_food_index) {
 							$description = quickRecipe.description($line, $end_food_index);
 							$item.description = $description;
-						}			
-						
-						//get the method. method is under the heading 'method'	
+						}				
 
 						//check if it's the end of a line, to check if all values were entered
 						if ($index === $line.length - 1) {
@@ -1117,6 +1115,22 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 					$scope.all_foods_with_units = response.data.foods_with_units;
 					$scope.units.food = response.data.food_units;
 				}	
+			});
+		};
+
+		$scope.insertRecipeMethod = function () {
+			var $string = $("#recipe-method").html();
+			var $lines = quickRecipe.formatString($string, $("#recipe-method"));
+			var $steps = [];
+
+			$($lines).each(function () {
+				var $line = this;
+				$steps.push($line);
+			});
+
+			insert.recipeMethod($scope.selected.recipe.id, $steps).then(function (response) {
+				$scope.recipe.contents = response.data.contents;
+				$scope.recipe.steps = response.data.steps;
 			});
 		};
 

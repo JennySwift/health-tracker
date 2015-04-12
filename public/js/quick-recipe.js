@@ -1,7 +1,8 @@
 app.factory('quickRecipe', function ($http) {
 	return {
-		formatString: function ($string) {
+		formatString: function ($string, $wysiwyg) {
 			var $lines = [];
+			var $divs;
 
 			if ($string.indexOf('<br>') !== -1) {
 				//remove the final and pointless br tag/tags
@@ -17,11 +18,12 @@ app.factory('quickRecipe', function ($http) {
 					$formatted_string += '<div>' + $split[i] + '</div>';
 				}
 				$string = $formatted_string;
-				$("#quick-recipe").html($string);
+				$($wysiwyg).html($string);
 			}
 
 			//turn the string into an array of lines
-			$("#quick-recipe > div").each(function () {
+			$divs = $($wysiwyg).children();
+			$($divs).each(function () {
 				var $line = $(this).html();
 				$line = $line.trim();
 				if ($line !== "") {

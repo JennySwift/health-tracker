@@ -22,6 +22,15 @@ app.factory('insert', function ($http) {
 			
 			return $http.post($url, $data);
 		},
+		recipeMethod: function ($recipe_id, $steps) {
+			var $url = 'insert/recipeMethod';
+			var $data = {
+				recipe_id: $recipe_id,
+				steps: $steps
+			};
+			
+			return $http.post($url, $data);
+		},
 		deleteAndInsertSeriesIntoWorkouts: function ($series_id, $workouts) {
 			var $url = 'insert/deleteAndInsertSeriesIntoWorkouts';
 			var $data = {

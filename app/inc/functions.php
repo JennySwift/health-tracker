@@ -760,6 +760,21 @@ function insertExerciseSeries ($name) {
 		]);
 }
 
+function insertRecipeMethod ($recipe_id, $steps) {
+	$step_number = 0;
+	foreach ($steps as $step_text) {
+		$step_number++;
+
+		DB::table('recipe_methods')
+			->insert([
+				'recipe_id' => $recipe_id,
+				'step' => $step_number,
+				'text' => $step_text,
+				'user_id' => Auth::user()->id
+			]);
+	}
+}
+
 function insertRecipeTag ($name) {
 	DB::table('recipe_tags')
 		->insert([
