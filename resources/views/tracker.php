@@ -28,6 +28,8 @@
 	<?php include($inc . '/units.php'); ?>
 	<?php include($inc . '/popups/index.php'); ?>
 
+	<h1>testing</h1>
+
 	<div ng-if="tab.entries || tab.journal || tab.food_entries || tab.exercise_entries">
 		<h1 class="row center">{{date.long}}</h1>
 		
