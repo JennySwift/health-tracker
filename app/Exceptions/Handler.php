@@ -1,7 +1,8 @@
 <?php namespace App\Exceptions;
 
-use Exception;
+use Exception, Redirect;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
 
 class Handler extends ExceptionHandler {
 
@@ -36,7 +37,16 @@ class Handler extends ExceptionHandler {
 	 */
 	public function render($request, Exception $e)
 	{
-		return parent::render($request, $e);
+		if ($e instanceof TooManyRequestsHttpException)
+		   {
+		       return Redirect::back()
+		       		->withInput($request->only('email', 'remember'))
+		       		->withErrors([
+					'email' => 'Too many failed login attempts!',
+				]);
+		   }
+
+		   return parent::render($request, $e);
 	}
 
 }
