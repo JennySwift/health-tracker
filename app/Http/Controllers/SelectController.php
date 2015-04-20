@@ -99,10 +99,6 @@ class SelectController extends Controller {
 		return getFoodInfo($food_id);
 	}
 
-	// public function exercises () {
-	// 	// $array = getExercises($db);
-	// }
-
 	public function foodList () {
 		include(app_path() . '/inc/functions.php');
 		return getFoods();
@@ -123,12 +119,6 @@ class SelectController extends Controller {
 		include(app_path() . '/inc/functions.php');
 		// $array = getFoodUnits($db);
 		return getAllFoodsWithUnits();
-	}
-
-	public function weight () {
-		include(app_path() . '/inc/functions.php');
-		$date = json_decode(file_get_contents('php://input'), true)["date"];
-		return getWeight($date);
 	}
 
 	public function recipeContents () {

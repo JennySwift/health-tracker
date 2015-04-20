@@ -164,17 +164,6 @@ app.factory('select', function ($http) {
 
 			return $http.post($url, $data);
 		},
-		displayWeight: function ($sql_date) {
-			var $url = 'select/weight';
-			var $table = "weight";
-			
-			var $data = {
-				table: $table,
-				date: $sql_date
-			};
-
-			return $http.post($url, $data);
-		},
 		recipeContents: function ($recipe_id) {
 			var $url = 'select/recipeContents';
 
