@@ -16,14 +16,6 @@ app.factory('select', function ($http) {
 			
 			return $http.post($url, $data);
 		},
-		journalEntry: function ($sql_date) {
-			var $url = 'select/journalEntry';
-			var $data = {
-				date: $sql_date
-			};
-			
-			return $http.post($url, $data);
-		},
 		autocompleteExercise: function () {
 			var $typing = $("#exercise").val();
 			var $url = 'select/autocompleteExercise';

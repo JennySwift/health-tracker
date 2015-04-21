@@ -2,8 +2,8 @@
 
 use Illuminate\Database\Eloquent\Model;
 
-class Weight extends Model {
+class Food extends Model {
 
-	protected $table = 'weight';
+	//
 
 }

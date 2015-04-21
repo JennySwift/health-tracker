@@ -2,8 +2,8 @@
 
 use Illuminate\Database\Eloquent\Model;
 
-class Weight extends Model {
+class Exercise extends Model {
 
-	protected $table = 'weight';
+	//
 
 }

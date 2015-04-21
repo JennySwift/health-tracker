@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 
+use Journal;
 use DB;
 use Auth;
 use Debugbar;
@@ -14,12 +15,6 @@ class JournalController extends Controller {
 	/**
 	 * select
 	 */
-
-	public function getJournalEntry () {
-		include(app_path() . '/inc/functions.php');
-		$date = json_decode(file_get_contents('php://input'), true)["date"];
-		return getJournalEntry($date);
-	}
 
 	/**
 	 * insert

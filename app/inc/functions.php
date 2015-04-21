@@ -1148,17 +1148,6 @@ function deleteUnitFromCalories ($food_id, $unit_id) {
 // ========================================================================
 // ========================================================================
 
-function autocompleteExercise ($exercise) {
-	$exercise = '%' . $exercise . '%';
-	$exercises = DB::table('exercises')
-		->where('name', 'LIKE', $exercise)
-		->where('user_id', Auth::user()->id)
-		->select('id', 'name', 'description', 'default_exercise_unit_id', 'default_quantity')
-		->get();
-    
-	return $exercises;
-}
-
 function autocompleteFood ($typing) {
 	$typing = '%' . $typing . '%';
 	$foods = DB::table('foods')

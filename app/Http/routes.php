@@ -52,7 +52,7 @@ Route::resource('weights', 'Weights\WeightsController');
 Route::post('select/pageLoad', 'SelectController@pageLoad');
 
 //everything (which controller??)
-Route::post('select/entries', 'SelectController@entries');
+Route::post('select/entries', 'SelectController@getEntries');
 
 //journal
 Route::post('select/journalEntry', 'Journal\JournalController@getJournalEntry');
