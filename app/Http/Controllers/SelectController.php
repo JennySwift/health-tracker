@@ -34,45 +34,13 @@ class SelectController extends Controller {
 		return $response;
 	}
 
-	public function exerciseSeriesHistory () {
-		include(app_path() . '/inc/functions.php');
-		$series_id = json_decode(file_get_contents('php://input'), true)["series_id"];
-		return getExerciseSeriesHistory($series_id);
-	}
-
-	public function specificExerciseEntries () {
-		include(app_path() . '/inc/functions.php');
-		$date = json_decode(file_get_contents('php://input'), true)["date"];
-		$exercise_id = json_decode(file_get_contents('php://input'), true)["exercise_id"];
-		$exercise_unit_id = json_decode(file_get_contents('php://input'), true)["exercise_unit_id"];
-		return getSpecificExerciseEntries($date, $exercise_id, $exercise_unit_id);
-	}
-
-	public function journalEntry () {
-		include(app_path() . '/inc/functions.php');
-		$date = json_decode(file_get_contents('php://input'), true)["date"];
-		return getJournalEntry($date);
-	}
-
-	public function autocompleteExercise () {
-		include(app_path() . '/inc/functions.php');
-		$exercise = json_decode(file_get_contents('php://input'), true)["exercise"];
-		return autocompleteExercise($exercise);
-	}
-
-	public function autocompleteFood () {
-		include(app_path() . '/inc/functions.php');
-		$typing = json_decode(file_get_contents('php://input'), true)["typing"];
-		return autocompleteFood($typing);
-	}
-
 	public function autocompleteMenu () {
 		include(app_path() . '/inc/functions.php');
 		$typing = json_decode(file_get_contents('php://input'), true)["typing"];		
 		return autocompleteMenu($typing);
 	}
 
-	public function entries () {
+	public function getEntries () {
 		include(app_path() . '/inc/functions.php');
 		$date = json_decode(file_get_contents('php://input'), true)["date"];
 		$response = array(
@@ -87,48 +55,8 @@ class SelectController extends Controller {
 		return $response;
 	}
 
-	public function foodEntries () {
-		include(app_path() . '/inc/functions.php');
-		$date = json_decode(file_get_contents('php://input'), true)["date"];
-		return getFoodEntries($date);
-	}
+	public function getUnitList () {
 
-	public function foodInfo () {
-		include(app_path() . '/inc/functions.php');
-		$food_id = json_decode(file_get_contents('php://input'), true)["id"];
-		return getFoodInfo($food_id);
-	}
-
-	public function foodList () {
-		include(app_path() . '/inc/functions.php');
-		return getFoods();
-	}
-
-	public function filterRecipes () {
-		include(app_path() . '/inc/functions.php');
-		$typing = json_decode(file_get_contents('php://input'), true)["typing"];
-		$tag_ids = json_decode(file_get_contents('php://input'), true)["tag_ids"];
-		return filterRecipes($typing, $tag_ids);
-	}
-
-	public function unitList () {
-
-	}
-
-	public function AllFoodsWithUnits () {
-		include(app_path() . '/inc/functions.php');
-		// $array = getFoodUnits($db);
-		return getAllFoodsWithUnits();
-	}
-
-	public function recipeContents () {
-		include(app_path() . '/inc/functions.php');
-		$recipe_id = json_decode(file_get_contents('php://input'), true)["recipe_id"];
-
-		return array(
-			'contents' => getRecipeContents($recipe_id),
-			'steps' => getRecipeSteps($recipe_id)
-		);
 	}
 
 }

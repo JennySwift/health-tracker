@@ -1,4 +1,4 @@
-<?php namespace App\Http\Controllers\Weights;
+<?php namespace App\Http\Controllers\Journal;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -9,22 +9,33 @@ use DB;
 use Auth;
 use Debugbar;
 
-class WeightsController extends Controller {
+class JournalController extends Controller {
 
-	public function weight () {
+	/**
+	 * select
+	 */
+
+	public function getJournalEntry () {
 		include(app_path() . '/inc/functions.php');
 		$date = json_decode(file_get_contents('php://input'), true)["date"];
-		$weight = json_decode(file_get_contents('php://input'), true)["weight"];
+		return getJournalEntry($date);
+	}
 
-		if (getWeight($date)) {
-			//This date already has a weight entry. We are updating, not inserting.
-			updateWeight($date, $weight);
-		}
-		else {
-			//we are inserting
-			insertWeight($date, $weight);
-		}
-		return getWeight($date);
+	/**
+	 * insert
+	 */
+
+	public function insertOrUpdateJournalEntry () {
+		//inserts or updates journal entry
+		include(app_path() . '/inc/functions.php');
+		$date = json_decode(file_get_contents('php://input'), true)["date"];
+		$text = json_decode(file_get_contents('php://input'), true)["text"];
+		insertOrUpdateJournalEntry($date, $text);
+		Debugbar::info('text: ' . $text);
+
+		$journal_entry = getJournalEntry($date);
+		Debugbar::info('journal_entry: ', $journal_entry);
+		return $journal_entry;
 	}
 
 	/**
