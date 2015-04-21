@@ -7,6 +7,22 @@ use Illuminate\Http\Request;
 
 class WeightsController extends Controller {
 
+	public function weight () {
+		include(app_path() . '/inc/functions.php');
+		$date = json_decode(file_get_contents('php://input'), true)["date"];
+		$weight = json_decode(file_get_contents('php://input'), true)["weight"];
+
+		if (getWeight($date)) {
+			//This date already has a weight entry. We are updating, not inserting.
+			updateWeight($date, $weight);
+		}
+		else {
+			//we are inserting
+			insertWeight($date, $weight);
+		}
+		return getWeight($date);
+	}
+
 	/**
 	 * Display a listing of the resource.
 	 *

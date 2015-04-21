@@ -239,22 +239,6 @@ class InsertController extends Controller {
 		return getFoodInfo($food_id);
 	}
 
-	public function weight () {
-		include(app_path() . '/inc/functions.php');
-		$date = json_decode(file_get_contents('php://input'), true)["date"];
-		$weight = json_decode(file_get_contents('php://input'), true)["weight"];
-
-		if (getWeight($date)) {
-			//This date already has a weight entry. We are updating, not inserting.
-			updateWeight($date, $weight);
-		}
-		else {
-			//we are inserting
-			insertWeight($date, $weight);
-		}
-		return getWeight($date);
-	}
-
 	public function item () {
 		include(app_path() . '/inc/functions.php');
 		$table = json_decode(file_get_contents('php://input'), true)["table"];
