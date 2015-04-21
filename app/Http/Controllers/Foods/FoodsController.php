@@ -5,7 +5,7 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 
-use Food;
+use App\Food;
 use DB;
 use Auth;
 use Debugbar;

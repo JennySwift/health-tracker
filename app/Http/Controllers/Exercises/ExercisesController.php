@@ -5,7 +5,7 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 
-use Exercise;
+use App\Exercise;
 use DB;
 use Auth;
 use Debugbar;
@@ -18,7 +18,8 @@ class ExercisesController extends Controller {
 	
 	public function autocompleteExercise () {
 		include(app_path() . '/inc/functions.php');
-		$exercise = json_decode(file_get_contents('php://input'), true)["exercise"];	
+		$exercise = json_decode(file_get_contents('php://input'), true)["exercise"];
+		// $exercise = Request::input('exercise');
 		$exercise = '%' . $exercise . '%';
 
 		$exercises = Exercise
