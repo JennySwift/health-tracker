@@ -11,7 +11,7 @@ use Debugbar;
 
 class WeightsController extends Controller {
 
-	public function weight () {
+	public function insertOrUpdateWeight () {
 		include(app_path() . '/inc/functions.php');
 		$date = json_decode(file_get_contents('php://input'), true)["date"];
 		$weight = json_decode(file_get_contents('php://input'), true)["weight"];

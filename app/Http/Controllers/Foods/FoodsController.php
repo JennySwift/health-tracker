@@ -40,7 +40,6 @@ class FoodsController extends Controller {
 
 	public function getAllFoodsWithUnits () {
 		include(app_path() . '/inc/functions.php');
-		// $array = getFoodUnits($db);
 		return getAllFoodsWithUnits();
 	}
 

@@ -1172,21 +1172,7 @@ function autocompleteFood ($typing) {
 
 function autocompleteMenu ($typing) {
 	$typing = '%' . $typing . '%';
-	Debugbar::info('functions.php typing: ' . $typing);
-	// $first = DB::table('foods')
-	// 	->where('name', 'LIKE', $typing)
-	// 	->where('user_id', Auth::user()->id)
-	// 	->select('id', 'name');
-
-	// $second = DB::table('recipes')
-	// 	->where('name', 'LIKE', $typing)
-	// 	->where('user_id', Auth::user()->id)
-	// 	->select('id', 'name');
-
-	// $union = $second->union($first);
-
-	// $menu = DB::select('select * FROM ' . $union . ' as table1 ORDER BY table1.name desc');
-
+	
 	$menu = DB::select("select * from (select id, name, 'food' as type from foods where name LIKE '$typing' and user_id = " . Auth::user()->id . " UNION select id, name, 'recipe' as type from recipes where name LIKE '$typing' and user_id = " . Auth::user()->id . ") as table1 order by table1.name asc");
 
 	return $menu;

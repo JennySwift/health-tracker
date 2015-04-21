@@ -144,17 +144,6 @@ app.factory('select', function ($http) {
 
 			return $http.post($url, $data);
 		},
-		displayUnitList: function () {
-			var $url = 'select/unitList';
-			var $table = "food_units";
-
-			var $data = {
-				table: $table
-			};
-
-			// return $http.post($url, $data);
-			return $http.post($url, $data);
-		},
 		getAllFoodsWithUnits: function () {
 			var $url = 'select/allFoodsWithUnits';
 			var $table = "all_foods_with_units";

@@ -48,6 +48,7 @@ class ExercisesController extends Controller {
 	}
 
 	public function deleteAndInsertSeriesIntoWorkouts () {
+		//deletes all rows with $series_id and then adds all the correct rows for $series_id
 		include(app_path() . '/inc/functions.php');
 		$series_id = json_decode(file_get_contents('php://input'), true)["series_id"];
 		$workouts = json_decode(file_get_contents('php://input'), true)["workouts"];
@@ -56,7 +57,6 @@ class ExercisesController extends Controller {
 	}
 
 	public function insertSeriesIntoWorkout () {
-		//creates a new exercise tag
 		include(app_path() . '/inc/functions.php');
 		$workout_id = json_decode(file_get_contents('php://input'), true)["workout_id"];
 		$series_id = json_decode(file_get_contents('php://input'), true)["series_id"];
@@ -65,7 +65,6 @@ class ExercisesController extends Controller {
 	}
 
 	public function insertExerciseSet () {
-		//creates a new exercise tag
 		include(app_path() . '/inc/functions.php');
 		$date = json_decode(file_get_contents('php://input'), true)["date"];
 		$exercise_id = json_decode(file_get_contents('php://input'), true)["exercise_id"];

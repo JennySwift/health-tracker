@@ -72,18 +72,15 @@ Route::post('select/allFoodsWithUnits', 'Foods\FoodsController@getAllFoodsWithUn
 Route::post('select/filterRecipes', 'Recipes\RecipesController@filterRecipes');
 Route::post('select/recipeContents', 'Recipes\RecipesController@getRecipeContents');
 
-//which controller?
+//which controller? This selects rows from both foods and recipes table.
 Route::post('select/autocompleteMenu', 'SelectController@autocompleteMenu');
-
-//units
-Route::post('select/unitList', 'SelectController@unitList');
 
 /**
  * Insert requests
  */
 
 //weight
-Route::post('insert/weight', 'Weights\WeightsController@weight');
+Route::post('insert/weight', 'Weights\WeightsController@insertOrUpdateWeight');
 
 //foods
 Route::post('insert/menuEntry', 'Foods\FoodsController@insertMenuEntry');

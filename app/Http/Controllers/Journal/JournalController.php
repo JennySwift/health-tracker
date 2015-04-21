@@ -31,11 +31,8 @@ class JournalController extends Controller {
 		$date = json_decode(file_get_contents('php://input'), true)["date"];
 		$text = json_decode(file_get_contents('php://input'), true)["text"];
 		insertOrUpdateJournalEntry($date, $text);
-		Debugbar::info('text: ' . $text);
 
-		$journal_entry = getJournalEntry($date);
-		Debugbar::info('journal_entry: ', $journal_entry);
-		return $journal_entry;
+		return getJournalEntry($date);
 	}
 
 	/**
