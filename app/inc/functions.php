@@ -38,63 +38,6 @@ function getRecipeTags () {
 	return $recipe_tags;
 }
 
-function getExerciseSeriesHistory ($series_id) {
-	//first get all exercises in the series
-	$exercise_ids = DB::table('exercises')
-		->where('series_id', $series_id)
-		->lists('id');
-
-	//get all entries in the series
-	$entries = DB::table('exercise_entries')
-		->whereIn('exercise_id', $exercise_ids)
-		->join('exercises', 'exercise_entries.exercise_id', '=', 'exercises.id')
-		->join('exercise_units', 'exercise_entries.exercise_unit_id', '=', 'exercise_units.id')
-		->select('date', 'exercises.id as exercise_id', 'exercises.name as exercise_name', 'exercises.description', 'exercises.step_number', 'quantity', 'exercise_unit_id', 'exercise_units.name as unit_name')
-		->orderBy('date', 'desc')
-		->get();
-
-	$array = array();
-	foreach ($entries as $entry) {
-		$sql_date = $entry->date;
-		$date = convertDate($sql_date, 'user');
-		$days_ago = getHowManyDaysAgo($sql_date);
-		$exercise_id = $entry->exercise_id;
-		$exercise_unit_id = $entry->exercise_unit_id;
-		$counter = 0;
-
-		$total = getTotalExerciseReps($sql_date, $exercise_id, $exercise_unit_id);
-
-		$sets = getExerciseSets($sql_date, $exercise_id, $exercise_unit_id);
-
-		//check to see if the array already has the exercise entry so it doesn't appear as a new entry for each set of exercises
-		foreach ($array as $item) {
-			if ($item['date'] === $date && $item['exercise_name'] === $entry->exercise_name && $item['unit_name'] === $entry->unit_name) {
-				//the exercise with unit already exists in the array so we don't want to add it again
-				$counter++;
-			}
-		}
-		if ($counter === 0) {
-			$array[] = array(
-				'date' => $date,
-				'days_ago' => $days_ago,
-				'exercise_id' => $entry->exercise_id,
-				'exercise_name' => $entry->exercise_name,
-				'description' => $entry->description,
-				'step_number' => $entry->step_number,
-				'unit_name' => $entry->unit_name,
-				'sets' => $sets,
-				'total' => $total,
-			);
-		}	
-	}
-	
-	return $array;
-
-	// $compacted_entries = compactExerciseEntries($entries, $date);
-
-	// return $compacted_entries;
-}
-
 function getDefaultExerciseQuantity ($exercise_id) {
 	$quantity = DB::table('exercises')
 		->where('id', $exercise_id)
@@ -635,21 +578,6 @@ function getRecipeSteps ($recipe_id) {
 // 	return $exercise_entries;
 // }
 
-function getSpecificExerciseEntries ($date, $exercise_id, $exercise_unit_id) {
-	//for when user clicks on the exercise entries table, to show the entries for just that exercise
-	$entries = DB::table('exercise_entries')
-		->where('date', $date)
-		->where('exercise_id', $exercise_id)
-		->where('exercise_unit_id', $exercise_unit_id)
-		->join('exercises', 'exercise_entries.exercise_id', '=', 'exercises.id')
-		->join('exercise_units', 'exercise_entries.exercise_unit_id', '=', 'exercise_units.id')
-		->select('exercise_id', 'quantity', 'exercises.name', 'exercise_units.name AS unit_name', 'exercise_entries.id AS entry_id')
-		->orderBy('exercises.name', 'asc')
-		->get();
-
-	return $entries;
-}
-
 function getExerciseEntries ($date) {
 	$entries = DB::table('exercise_entries')
 		->where('date', $date)
@@ -747,14 +675,6 @@ function getExercises () {
 // ========================================================================
 // ========================================================================
 
-function insertExerciseSeries ($name) {
-	DB::table('exercise_series')
-		->insert([
-			'name' => $name,
-			'user_id' => Auth::user()->id
-		]);
-}
-
 function insertRecipeMethod ($recipe_id, $steps) {
 	$step_number = 0;
 	foreach ($steps as $step_text) {
@@ -787,27 +707,6 @@ function insertTagIntoRecipe ($recipe_id, $tag_id) {
 		]);
 }
 
-function deleteAndInsertSeriesIntoWorkouts ($series_id, $workouts) {
-	//first delete all the rows with $series_id
-	DB::table('series_workout')
-		->where('series_id', $series_id)
-		->delete();
-	//then add all the rows for the series_id
-	foreach ($workouts as $workout) {
-		$workout_id = $workout['id'];
-		insertSeriesIntoWorkout($workout_id, $series_id);
-	}
-}
-
-function insertSeriesIntoWorkout ($workout_id, $series_id) {
-	DB::table('series_workout')
-		->insert([
-			'workout_id' => $workout_id,
-			'series_id' => $series_id,
-			'user_id' => Auth::user()->id
-		]);
-}
-
 function insertFood ($name) {
 	DB::table('foods')->insert([
 		'name' => $name,
@@ -834,14 +733,6 @@ function insertFoodIntoRecipe ($recipe_id, $data) {
 		]);
 }
 
-function insertNewExerciseTag ($name) {
-	DB::table('exercise_tags')
-		->insert([
-			'name' => $name,
-			'user_id' => Auth::user()->id
-		]);
-}
-
 function insertExerciseTag ($exercise_id, $tag_id) {
 	//inserts a tag into an exercise
 	DB::table('exercise_tag')
@@ -850,13 +741,6 @@ function insertExerciseTag ($exercise_id, $tag_id) {
 			'tag_id' => $tag_id,
 			'user_id' => Auth::user()->id
 		]);
-}
-
-function insertTagsInExercise ($exercise_id, $tags) {
-	foreach ($tags as $tag) {
-		$tag_id = $tag['id'];
-		insertExerciseTag($exercise_id, $tag_id);
-	}
 }
 
 function insertTagsIntoRecipe ($recipe_id, $tags) {
@@ -935,32 +819,6 @@ function insertMenuEntry ($data) {
 	]);
 }
 
-function insertExerciseEntry ($data) {
-	$date = $data['date'];
-	$new_entry = $data['new_entry'];
-
-	DB::table('exercise_entries')->insert([
-		'date' => $date,
-		'exercise_id' => $new_entry['id'],
-		'quantity' => $new_entry['quantity'],
-		'exercise_unit_id' => $new_entry['unit_id'],
-		'user_id' => Auth::user()->id
-	]);
-}
-
-function insertExerciseSet ($date, $exercise_id) {
-	$quantity = getDefaultExerciseQuantity($exercise_id);
-	$unit_id = getDefaultExerciseUnitId($exercise_id);
-
-	DB::table('exercise_entries')->insert([
-		'date' => $date,
-		'exercise_id' => $exercise_id,
-		'quantity' => $quantity,
-		'exercise_unit_id' => $unit_id,
-		'user_id' => Auth::user()->id
-	]);
-}
-
 function insertUnitInCalories ($food_id, $unit_id) {
 	DB::table('calories')
 		->insert([
@@ -968,21 +826,6 @@ function insertUnitInCalories ($food_id, $unit_id) {
 			'unit_id' => $unit_id,
 			'user_id' => Auth::user()->id
 		]);
-}
-
-function insertExercise ($name, $description) {
-	DB::table('exercises')->insert([
-		'name' => $name,
-		'description' => $description,
-		'user_id' => Auth::user()->id
-	]);
-}
-
-function insertExerciseUnit ($name) {
-	DB::table('exercise_units')->insert([
-		'name' => $name,	
-		'user_id' => Auth::user()->id
-	]);
 }
 
 function insertWeight ($date, $weight) {
@@ -1000,45 +843,12 @@ function insertWeight ($date, $weight) {
 // ========================================================================
 // ========================================================================
 
-function updateDefaultExerciseQuantity ($id, $quantity) {
-	DB::table('exercises')
-		->where('id', $id)
-		->update([
-			'default_quantity' => $quantity
-		]);
-}
-
-function updateExerciseStepNumber ($exercise_id, $step_number) {
-	DB::table('exercises')
-		->where('id', $exercise_id)
-		->update([
-			'step_number' => $step_number
-		]);
-}
-
-function updateExerciseSeries ($exercise_id, $series_id) {
-	//for assigning a series to an exercise
-	DB::table('exercises')
-		->where('id', $exercise_id)
-		->update([
-			'series_id' => $series_id
-		]);
-}
-
 function updateWeight ($date, $weight) {
 	DB::table('weight')
 		->where('date', $date)
 		->where('user_id', Auth::user()->id)
 		->update([
 			'weight' => $weight
-		]);
-}
-
-function updateDefaultExerciseUnit ($exercise_id, $default_exercise_unit_id) {
-	DB::table('exercises')
-		->where('id', $exercise_id)
-		->update([
-			'default_exercise_unit_id' => $default_exercise_unit_id
 		]);
 }
 
@@ -1086,34 +896,9 @@ function deleteRecipeMethod ($recipe_id) {
 		->delete();
 }
 
-function deleteTagFromExercise ($exercise_id, $tag_id) {
-	DB::table('exercise_tag')
-		->where('exercise_id', $exercise_id)
-		->where('tag_id', $tag_id)
-		->delete();
-}
-
-function deleteTagsFromExercise ($exercise_id) {
-	DB::table('exercise_tag')
-		->where('exercise_id', $exercise_id)
-		->delete();
-}
-
 function deleteTagsFromRecipe ($recipe_id) {
 	DB::table('recipe_tag')
 		->where('recipe_id', $recipe_id)
-		->delete();
-}
-
-function deleteExerciseSeries ($id) {
-	DB::table('exercise_series')
-		->where('id', $id)
-		->delete();
-}
-
-function deleteExerciseTag ($id) {
-	DB::table('exercise_tags')
-		->where('id', $id)
 		->delete();
 }
 

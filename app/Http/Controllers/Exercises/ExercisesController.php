@@ -16,163 +16,179 @@ class ExercisesController extends Controller {
 	 * select
 	 */
 	
-	public function autocompleteExercise () {
-		include(app_path() . '/inc/functions.php');
-		$exercise = json_decode(file_get_contents('php://input'), true)["exercise"];
-		// $exercise = Request::input('exercise');
-		$exercise = '%' . $exercise . '%';
-
+	public function autocompleteExercise (Request $request) {
+		$exercise = '%' . $request->get('exercise') . '%';
+	
 		$exercises = Exercise
 			::where('name', 'LIKE', $exercise)
 			->where('user_id', Auth::user()->id)
 			->select('id', 'name', 'description', 'default_exercise_unit_id', 'default_quantity')
 			->get();
-		   
+
 		return $exercises;
 	}
 	
-	public function getExerciseSeriesHistory () {
+	public function getExerciseSeriesHistory (Request $request) {
+		//I still need functions.php for the convertDate, getTotalExerciseReps, and getExerciseSets functions.
 		include(app_path() . '/inc/functions.php');
-		$series_id = json_decode(file_get_contents('php://input'), true)["series_id"];
-		return getExerciseSeriesHistory($series_id);
-	}
+		$series_id = $request->get('series_id');
 
-	public function getSpecificExerciseEntries () {
-		include(app_path() . '/inc/functions.php');
-		$date = json_decode(file_get_contents('php://input'), true)["date"];
-		$exercise_id = json_decode(file_get_contents('php://input'), true)["exercise_id"];
-		$exercise_unit_id = json_decode(file_get_contents('php://input'), true)["exercise_unit_id"];
-		return getSpecificExerciseEntries($date, $exercise_id, $exercise_unit_id);
+		//first get all exercises in the series
+		$exercise_ids = Exercise
+			::where('series_id', $series_id)
+			->lists('id');
+
+		//get all entries in the series
+		$entries = DB::table('exercise_entries')
+			->whereIn('exercise_id', $exercise_ids)
+			->join('exercises', 'exercise_entries.exercise_id', '=', 'exercises.id')
+			->join('exercise_units', 'exercise_entries.exercise_unit_id', '=', 'exercise_units.id')
+			->select('date', 'exercises.id as exercise_id', 'exercises.name as exercise_name', 'exercises.description', 'exercises.step_number', 'quantity', 'exercise_unit_id', 'exercise_units.name as unit_name')
+			->orderBy('date', 'desc')
+			->get();
+
+		$array = array();
+		foreach ($entries as $entry) {
+			$sql_date = $entry->date;
+			$date = convertDate($sql_date, 'user');
+			$days_ago = getHowManyDaysAgo($sql_date);
+			$exercise_id = $entry->exercise_id;
+			$exercise_unit_id = $entry->exercise_unit_id;
+			$counter = 0;
+
+			$total = getTotalExerciseReps($sql_date, $exercise_id, $exercise_unit_id);
+
+			$sets = getExerciseSets($sql_date, $exercise_id, $exercise_unit_id);
+
+			//check to see if the array already has the exercise entry so it doesn't appear as a new entry for each set of exercises
+			foreach ($array as $item) {
+				if ($item['date'] === $date && $item['exercise_name'] === $entry->exercise_name && $item['unit_name'] === $entry->unit_name) {
+					//the exercise with unit already exists in the array so we don't want to add it again
+					$counter++;
+				}
+			}
+			if ($counter === 0) {
+				$array[] = array(
+					'date' => $date,
+					'days_ago' => $days_ago,
+					'exercise_id' => $entry->exercise_id,
+					'exercise_name' => $entry->exercise_name,
+					'description' => $entry->description,
+					'step_number' => $entry->step_number,
+					'unit_name' => $entry->unit_name,
+					'sets' => $sets,
+					'total' => $total,
+				);
+			}	
+		}
+		
+		return $array;
 	}
 
 	/**
 	 * insert
 	 */
 
-	public function InsertExerciseTag () {
-		//creates a new exercise tag
-		include(app_path() . '/inc/functions.php');
-		$name = json_decode(file_get_contents('php://input'), true)["name"];
-		insertNewExerciseTag($name);
-		return getExerciseTags();
-	}
-
-	public function deleteAndInsertSeriesIntoWorkouts () {
+	public function deleteAndInsertSeriesIntoWorkouts (Request $request) {
 		//deletes all rows with $series_id and then adds all the correct rows for $series_id
+		//I need functions.php for insertSeriesIntoWorkout and getExerciseSeries
 		include(app_path() . '/inc/functions.php');
-		$series_id = json_decode(file_get_contents('php://input'), true)["series_id"];
-		$workouts = json_decode(file_get_contents('php://input'), true)["workouts"];
-		deleteAndInsertSeriesIntoWorkouts($series_id, $workouts);
+		$series_id = $request->get('series_id');
+		$workouts = $request->get('workouts');
+
+		//first delete all the rows with $series_id
+		DB::table('series_workout')
+			->where('series_id', $series_id)
+			->delete();
+		//then add all the rows for the series_id
+		foreach ($workouts as $workout) {
+			$workout_id = $workout['id'];
+			insertSeriesIntoWorkout($workout_id, $series_id);
+		}
+
 		return getExerciseSeries();
 	}
 
-	public function insertSeriesIntoWorkout () {
+	public function insertTagInExercise (Request $request) {
+		//come back to this one, because insertExerciseTag is used in functions.php
 		include(app_path() . '/inc/functions.php');
-		$workout_id = json_decode(file_get_contents('php://input'), true)["workout_id"];
-		$series_id = json_decode(file_get_contents('php://input'), true)["series_id"];
-		insertSeriesIntoWorkout($workout_id, $series_id);
-		return getExerciseSeries();
-	}
-
-	public function insertExerciseSet () {
-		include(app_path() . '/inc/functions.php');
-		$date = json_decode(file_get_contents('php://input'), true)["date"];
-		$exercise_id = json_decode(file_get_contents('php://input'), true)["exercise_id"];
-		insertExerciseSet($date, $exercise_id);
-		
-		return getExerciseEntries($date);
-	}
-
-	public function insertExerciseSeries () {
-		include(app_path() . '/inc/functions.php');
-		$name = json_decode(file_get_contents('php://input'), true)["name"];
-		insertExerciseSeries($name);
-		return getExerciseSeries();
-	}
-
-	public function insertTagInExercise () {
-		include(app_path() . '/inc/functions.php');
-		$exercise_id = json_decode(file_get_contents('php://input'), true)["exercise_id"];
-		$tag_id = json_decode(file_get_contents('php://input'), true)["tag_id"];
+		$exercise_id = $request->get('exercise_id');
+		$tag_id = $request->get('tag_id');
 		insertExerciseTag($exercise_id, $tag_id);
 		return getExercises();
 	}
 
-	public function insertTagsInExercise () {
-		//deletes all tags then adds the correct tags
+	public function insertExercise (Request $request) {
 		include(app_path() . '/inc/functions.php');
-		$exercise_id = json_decode(file_get_contents('php://input'), true)["exercise_id"];
-		$tags = json_decode(file_get_contents('php://input'), true)["tags"];
-		deleteTagsFromExercise($exercise_id);
-		insertTagsInExercise($exercise_id, $tags);
+		$name = $request->get('name');
+		$description = $request->get('description');
+		
+		Exercise::insert([
+			'name' => $name,
+			'description' => $description,
+			'user_id' => Auth::user()->id
+		]);
+
 		return getExercises();
-	}
-
-	public function insertExerciseEntry () {
-		include(app_path() . '/inc/functions.php');
-		$data = json_decode(file_get_contents('php://input'), true);
-		$date = $data['date'];
-		insertExerciseEntry($data);
-
-		return getExerciseEntries($date);
-	}
-
-	public function insertExercise () {
-		include(app_path() . '/inc/functions.php');
-		$name = json_decode(file_get_contents('php://input'), true)["name"];
-		$description = json_decode(file_get_contents('php://input'), true)["description"];
-		insertExercise($name, $description);
-		return getExercises();
-	}
-
-	public function insertExerciseUnit () {
-		include(app_path() . '/inc/functions.php');
-		$name = json_decode(file_get_contents('php://input'), true)["name"];
-		insertExerciseUnit($name);
-		return getExerciseUnits();
-	}
-	
-	public function insertExerciseEntries () {
-		$date = json_decode(file_get_contents('php://input'), true)["date"];
-		$sql = "INSERT INTO exercise_entries (date, exercise, quantity) VALUES ('$date', '$id', $quantity);";
 	}
 
 	/**
 	 * update
 	 */
 	
-	public function updateExerciseStepNumber () {
+	public function updateExerciseStepNumber (Request $request) {
 		include(app_path() . '/inc/functions.php');
-		$exercise_id = json_decode(file_get_contents('php://input'), true)["exercise_id"];
-		$step_number = json_decode(file_get_contents('php://input'), true)["step_number"];
-		updateExerciseStepNumber($exercise_id, $step_number);
-		return getExercises();
-	}
-
-	public function updateExerciseSeries () {
-		include(app_path() . '/inc/functions.php');
-		$exercise_id = json_decode(file_get_contents('php://input'), true)["exercise_id"];
-		$series_id = json_decode(file_get_contents('php://input'), true)["series_id"];
-
-		updateExerciseSeries($exercise_id, $series_id);
+		$exercise_id = $request->get('exercise_id');
+		$step_number = $request->get('step_number');
+		
+		Exercise
+			::where('id', $exercise_id)
+			->update([
+				'step_number' => $step_number
+			]);
 
 		return getExercises();
 	}
 
-	public function updateDefaultExerciseQuantity () {
+	public function updateExerciseSeries (Request $request) {
 		include(app_path() . '/inc/functions.php');
-		$id = json_decode(file_get_contents('php://input'), true)["id"];
-		$quantity = json_decode(file_get_contents('php://input'), true)["quantity"];
-		updateDefaultExerciseQuantity($id, $quantity);
+		$exercise_id = $request->get('exercise_id');
+		$series_id = $request->get('series_id');
+
+		//for assigning a series to an exercise
+		Exercise
+			::where('id', $exercise_id)
+			->update([
+				'series_id' => $series_id
+			]);
+
 		return getExercises();
 	}
 
-	public function updateDefaultExerciseUnit () {
+	public function updateDefaultExerciseQuantity (Request $request) {
 		include(app_path() . '/inc/functions.php');
-		$exercise_id = json_decode(file_get_contents('php://input'), true)["exercise_id"];
-		$default_exercise_unit_id = json_decode(file_get_contents('php://input'), true)["default_exercise_unit_id"];
+		$id = $request->get('id');
+		$quantity = $request->get('quantity');
+		
+		Exercise
+			::where('id', $id)
+			->update([
+				'default_quantity' => $quantity
+			]);
 
-		updateDefaultExerciseUnit($exercise_id, $default_exercise_unit_id);
+		return getExercises();
+	}
+
+	public function updateDefaultExerciseUnit (Request $request) {
+		include(app_path() . '/inc/functions.php');
+		$exercise_id = $request->get('exercise_id');
+		$default_exercise_unit_id = $request->get('default_exercise_unit_id');
+
+		Exercise
+			::where('id', $exercise_id)
+			->update([
+				'default_exercise_unit_id' => $default_exercise_unit_id
+			]);
 
 		return getExercises();
 	}
@@ -181,50 +197,12 @@ class ExercisesController extends Controller {
 	 * delete
 	 */
 	
-	public function deleteExercise () {
+	public function deleteExercise (Request $request) {
 		include(app_path() . '/inc/functions.php');
-		$id = json_decode(file_get_contents('php://input'), true)["id"];
-		DB::table('exercises')->where('id', $id)->delete();
+		$id = $request->get('id');
+
+		Exercise::where('id', $id)->delete();
 		return getExercises();
-	}
-
-	public function deleteExerciseUnit () {
-		include(app_path() . '/inc/functions.php');
-		$id = json_decode(file_get_contents('php://input'), true)["id"];
-		DB::table('exercise_units')->where('id', $id)->delete();
-		return getExerciseUnits();
-	}
-
-	public function deleteExerciseEntry () {
-		include(app_path() . '/inc/functions.php');
-		$id = json_decode(file_get_contents('php://input'), true)["id"];
-		$date = json_decode(file_get_contents('php://input'), true)["date"];
-		DB::table('exercise_entries')->where('id', $id)->delete();
-
-		return getExerciseEntries($date);
-	}
-
-	
-	public function deleteExerciseSeries () {
-		include(app_path() . '/inc/functions.php');
-		$id = json_decode(file_get_contents('php://input'), true)["id"];
-		deleteExerciseSeries($id);
-		return getExerciseSeries();
-	}
-
-	public function deleteTagFromExercise () {
-		include(app_path() . '/inc/functions.php');
-		$exercise_id = json_decode(file_get_contents('php://input'), true)["exercise_id"];
-		$tag_id = json_decode(file_get_contents('php://input'), true)["tag_id"];
-		deleteTagFromExercise($exercise_id, $tag_id);
-		return getExercises();
-	}
-
-	public function deleteExerciseTag () {
-		include(app_path() . '/inc/functions.php');
-		$id = json_decode(file_get_contents('php://input'), true)["id"];
-		deleteExerciseTag($id);
-		return getExerciseTags();
 	}
 
 	/**

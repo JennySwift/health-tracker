@@ -59,9 +59,11 @@ Route::post('select/journalEntry', 'Journal\JournalController@getJournalEntry');
 
 //exercises
 Route::post('select/autocompleteExercise', 'Exercises\ExercisesController@autocompleteExercise');
-Route::post('select/specificExerciseEntries', 'Exercises\ExercisesController@getSpecificExerciseEntries');
 Route::post('select/exerciseSeries', 'Exercises\ExercisesController@getExerciseSeries');
 Route::post('select/exerciseSeriesHistory', 'Exercises\ExercisesController@getExerciseSeriesHistory');
+
+//exercise entries
+Route::post('select/specificExerciseEntries', 'Exercises\ExerciseEntriesController@getSpecificExerciseEntries');
 
 //foods
 Route::post('select/autocompleteFood', 'Foods\FoodsController@autocompleteFood');
@@ -98,16 +100,28 @@ Route::post('insert/foodIntoRecipe', 'Recipes\RecipesController@insertFoodIntoRe
 Route::post('insert/recipeTag', 'Recipes\RecipesController@insertRecipeTag');
 
 //exercises
-Route::post('insert/exerciseEntry', 'Exercises\ExercisesController@insertExerciseEntry');
 Route::post('insert/tagInExercise', 'Exercises\ExercisesController@insertTagInExercise');
-Route::post('insert/tagsInExercise', 'Exercises\ExercisesController@insertTagsInExercise');
 Route::post('insert/exercise', 'Exercises\ExercisesController@insertExercise');
-Route::post('insert/exerciseUnit', 'Exercises\ExercisesController@insertExerciseUnit');
-Route::post('insert/seriesIntoWorkout', 'Exercises\ExercisesController@insertSeriesIntoWorkout');
 Route::post('insert/deleteAndInsertSeriesIntoWorkouts', 'Exercises\ExercisesController@deleteAndInsertSeriesIntoWorkouts');
-Route::post('insert/exerciseTag', 'Exercises\ExercisesController@insertExerciseTag');
-Route::post('insert/exerciseSeries', 'Exercises\ExercisesController@insertExerciseSeries');
-Route::post('insert/exerciseSet', 'Exercises\ExercisesController@insertExerciseSet');
+
+//exercise entries
+Route::post('insert/exerciseSet', 'Exercises\ExerciseEntriesController@insertExerciseSet');
+Route::post('insert/exerciseEntry', 'Exercises\ExerciseEntriesController@insertExerciseEntry');
+
+//exercise tags
+Route::post('insert/exerciseTag', 'Exercises\ExerciseTagsController@insertExerciseTag');
+
+//exercise tag
+Route::post('insert/tagsInExercise', 'Exercises\ExerciseTagController@insertTagsInExercise');
+
+//exercise units
+Route::post('insert/exerciseUnit', 'Exercises\ExerciseUnitsController@insertExerciseUnit');
+
+//exercise series
+Route::post('insert/exerciseSeries', 'Exercises\ExerciseSeriesController@insertExerciseSeries');
+
+//series workout
+Route::post('insert/seriesIntoWorkout', 'Exercises\SeriesWorkoutController@insertSeriesIntoWorkout');
 
 //journal
 Route::post('insert/journalEntry', 'Journal\JournalController@insertOrUpdateJournalEntry');
@@ -149,9 +163,19 @@ Route::post('delete/foodFromRecipe', 'Recipes\RecipesController@deleteFoodFromRe
 Route::post('delete/recipeEntry', 'Recipes\RecipesController@deleteRecipeEntry');
 
 //exercises
-Route::post('delete/exerciseSeries', 'Exercises\ExercisesController@deleteExerciseSeries');
-Route::post('delete/tagFromExercise', 'Exercises\ExercisesController@deleteTagFromExercise');
-Route::post('delete/exerciseTag', 'Exercises\ExercisesController@deleteExerciseTag');
 Route::post('delete/exercise', 'Exercises\ExercisesController@deleteExercise');
-Route::post('delete/exerciseUnit', 'Exercises\ExercisesController@deleteExerciseUnit');
-Route::post('delete/exerciseEntry', 'Exercises\ExercisesController@deleteExerciseEntry');
+
+//exercise entries
+Route::post('delete/exerciseEntry', 'Exercises\ExerciseEntriesController@deleteExerciseEntry');
+
+//exercise tags
+Route::post('delete/exerciseTag', 'Exercises\ExerciseTagsController@deleteExerciseTag');
+
+//exercise tag
+Route::post('delete/tagFromExercise', 'Exercises\ExerciseTagController@deleteTagFromExercise');
+
+//exercise units
+Route::post('delete/exerciseUnit', 'Exercises\ExerciseUnitsController@deleteExerciseUnit');
+
+//exercise series
+Route::post('delete/exerciseSeries', 'Exercises\ExerciseSeriesController@deleteExerciseSeries');
