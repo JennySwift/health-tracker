@@ -24,7 +24,7 @@ class ExerciseUnitsController extends Controller {
 			'user_id' => Auth::user()->id
 		]);
 
-		return getExerciseUnits();
+		return Exercise_units::getExerciseUnits();
 	}
 
 	/**

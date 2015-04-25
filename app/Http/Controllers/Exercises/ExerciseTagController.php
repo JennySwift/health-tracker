@@ -4,6 +4,8 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
+use App\Exercise;
+use App\Exercise_tag;
 
 class ExerciseTagController extends Controller {
 
@@ -17,7 +19,6 @@ class ExerciseTagController extends Controller {
 	
 	public function insertTagsInExercise (Request $request) {
 		//deletes all tags then adds the correct tags
-		include(app_path() . '/inc/functions.php');
 		$exercise_id = $request->get('exercise_id');
 		$tags = $request->get('tags');
 		
@@ -29,10 +30,10 @@ class ExerciseTagController extends Controller {
 		//insert tags in exercise
 		foreach ($tags as $tag) {
 			$tag_id = $tag['id'];
-			insertExerciseTag($exercise_id, $tag_id);
+			Exercise_tag::insertExerciseTag($exercise_id, $tag_id);
 		}
 
-		return getExercises();
+		return Exercise::getExercises();
 	}
 
 	/**
@@ -44,7 +45,6 @@ class ExerciseTagController extends Controller {
 	 */
 
 	public function deleteTagFromExercise (Request $request) {
-		include(app_path() . '/inc/functions.php');
 		$exercise_id = $request->get('exercise_id');
 		$tag_id = $request->get('tag_id');
 		
@@ -53,7 +53,7 @@ class ExerciseTagController extends Controller {
 			->where('tag_id', $tag_id)
 			->delete();
 
-		return getExercises();
+		return Exercise::getExercises();
 	}
 	
 	/**

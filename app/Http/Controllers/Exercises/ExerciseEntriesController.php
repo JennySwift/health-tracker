@@ -4,6 +4,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
+use App\Exercise;
 
 class ExerciseEntriesController extends Controller {
 
@@ -39,8 +40,8 @@ class ExerciseEntriesController extends Controller {
 		$date = $request->get('date');
 		$exercise_id = $request->get('exercise_id');
 
-		$quantity = getDefaultExerciseQuantity($exercise_id);
-		$unit_id = getDefaultExerciseUnitId($exercise_id);
+		$quantity = Exercise::getDefaultExerciseQuantity($exercise_id);
+		$unit_id = Exercise::getDefaultExerciseUnitId($exercise_id);
 
 		DB::table('exercise_entries')->insert([
 			'date' => $date,

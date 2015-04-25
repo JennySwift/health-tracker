@@ -1,7 +1,10 @@
 <?php
 
+use App\Series_workout;
+
 include('quick-recipe-functions.php');
 include('recipe-filter.php');
+
 
 // ========================================================================
 // ========================================================================
@@ -38,64 +41,6 @@ function getRecipeTags () {
 	return $recipe_tags;
 }
 
-function getDefaultExerciseQuantity ($exercise_id) {
-	$quantity = DB::table('exercises')
-		->where('id', $exercise_id)
-		->pluck('default_quantity');
-
-	return $quantity;
-}
-
-function getDefaultExerciseUnitId ($exercise_id) {
-	$default = DB::table('exercises')
-		->where('id', $exercise_id)
-		->pluck('default_exercise_unit_id');
-
-	return $default;
-}
-
-function getExerciseSeries () {
-	$exercise_series = DB::table('exercise_series')
-		->where('user_id', Auth::user()->id)
-		->select('name', 'id')
-		->orderBy('name', 'asc')
-		->get();
-
-	foreach ($exercise_series as $series) {
-		$series_id = $series->id;
-		$series->workouts = getSeriesWorkouts($series_id);
-	}
-
-	return $exercise_series;
-}
-
-function getSeriesWorkouts ($series_id) {
-	//find which workouts the series is part of
-	$workouts = DB::table('series_workout')
-		->where('series_id', $series_id)
-		->join('workouts', 'workout_id', '=', 'workouts.id')
-		->select('workouts.name', 'workouts.id')
-		->get();
-
-	foreach ($workouts as $workout) {
-		$workout_id = $workout->id;
-		$workout->contents = getWorkoutContents($workout_id);
-	}
-
-	return $workouts;
-}
-
-function getWorkoutContents ($workout_id) {
-	$workout_contents = DB::table('series_workout')
-		->where('workout_id', $workout_id)
-		->join('exercise_series', 'series_id', '=', 'exercise_series.id')
-		->select('series_id', 'exercise_series.name')
-		->orderBy('exercise_series.name', 'asc')
-		->get();
-
-	return $workout_contents;	
-}
-
 function getWorkouts () {
 	$workouts = DB::table('workouts')
 		->where('user_id', Auth::user()->id)
@@ -105,7 +50,7 @@ function getWorkouts () {
 	//get all the series that are in the workout
 	foreach ($workouts as $workout) {
 		$workout_id = $workout->id;
-		$workout->contents = getWorkoutContents($workout_id);
+		$workout->contents = Series_workout::getWorkoutContents($workout_id);
 	}
 
 	return $workouts;
@@ -118,27 +63,6 @@ function countItem ($table, $name) {
 		->count();
 
 	return $count;
-}
-
-function getExerciseTags () {
-	//gets all exercise tags
-	$tags = DB::table('exercise_tags')
-		->where('user_id', Auth::user()->id)
-		->select('id', 'name')
-		->get();
-
-	return $tags;
-}
-
-function getTagsForExercise ($exercise_id) {
-	//gets tags associated with each exercise
-	$tags = DB::table('exercise_tag')
-		->where('exercise_id', $exercise_id)
-		->join('exercise_tags', 'exercise_tag.tag_id', '=', 'exercise_tags.id')
-		->select('exercise_tags.id', 'name')
-		->get();
-
-	return $tags;
 }
 
 function getWeight($date) {
@@ -171,17 +95,6 @@ function getJournalEntry ($date) {
 		$response = array();
 	}
 	
-
-	// if (!isset($entry)) {
-	// 	//so that $scope.journal_entry isn't null in js
-	// 	$entry = array(
-	// 		'id' => '',
-	// 		'text' => ''
-	// 	);
-	// }
-	// Debugbar::info('journal entry: ', $entry);
-	// $entry = nl2br($entry);
-	Debugbar::info('response: ', $response);
 	return $response;
 }
 
@@ -317,22 +230,6 @@ function getFoodUnits () {
     	->get();
 
     return $food_units;
-}
-
-function getExerciseUnits () {
-    $result = DB::table('exercise_units')
-    	->where('user_id', Auth::user()->id)
-    	->select('id', 'name')
-    	->orderBy('name', 'asc')
-    	->get();
-
-    //so that it is an array, not an object
-    $exercise_units = array();
-    foreach ($result as $unit) {
-    	$exercise_units[] = $unit;
-    }
-
-    return $exercise_units;
 }
 
 function getDefaultUnit ($food_id) {
@@ -556,119 +453,6 @@ function getRecipeSteps ($recipe_id) {
 	return $steps;
 }
 
-// =================================exercise=================================
-
-// function getExerciseEntries ($date) {
-// 	$exercise_entries = DB::table('exercise_entries')
-// 		->where('date', $date)
-// 		->where('exercise_entries.user_id', Auth::user()->id)
-// 		->join('exercises', 'exercise_entries.exercise_id', '=', 'exercises.id')
-// 		->join('exercise_units', 'exercise_entries.exercise_unit_id', '=', 'exercise_units.id')
-// 		->select('exercise_id', 'quantity', 'exercises.name', 'exercise_units.name AS unit_name', 'exercise_entries.id AS entry_id')
-// 		->orderBy('exercises.name', 'asc')
-// 		->get();
-
-// 	// //get the total reps (or other unit) done of each exercise
-// 	// foreach ($exercise_entries as $entry) {
-// 	// 	$total = 0;
-// 	// 	$quantity = $entry->quantity;
-// 	// 	$unit = $entry->unit_name;
-// 	// }
-
-// 	return $exercise_entries;
-// }
-
-function getExerciseEntries ($date) {
-	$entries = DB::table('exercise_entries')
-		->where('date', $date)
-		->where('exercise_entries.user_id', Auth::user()->id)
-		->join('exercises', 'exercise_entries.exercise_id', '=', 'exercises.id')
-		->join('exercise_units', 'exercise_entries.exercise_unit_id', '=', 'exercise_units.id')
-		->select('exercise_id', 'quantity', 'exercises.description', 'exercise_unit_id', 'exercises.name', 'exercise_units.name AS unit_name', 'exercise_units.id AS unit_id', 'exercise_entries.id AS entry_id')
-		->orderBy('exercises.name', 'asc')
-		->orderBy('unit_name', 'asc')
-		->get();
-
-	return compactExerciseEntries($entries, $date);
-}
-
-function getExerciseSets ($date, $exercise_id, $exercise_unit_id) {
-	$sets = DB::table('exercise_entries')
-		->where('date', $date)
-		->where('exercise_id', $exercise_id)
-		->where('exercise_unit_id', $exercise_unit_id)
-		->where('user_id', Auth::user()->id)
-		->count();
-
-	return $sets;
-}
-
-function getTotalExerciseReps ($date, $exercise_id, $exercise_unit_id) {
-	$total = DB::table('exercise_entries')
-		->where('date', $date)
-		->where('exercise_id', $exercise_id)
-		->where('exercise_unit_id', $exercise_unit_id)
-		->where('user_id', Auth::user()->id)
-		->sum('quantity');
-
-	return $total;
-}
-
-function compactExerciseEntries ($entries, $date) {
-	$array = array();
-	foreach ($entries as $entry) {
-		$exercise_id = $entry->exercise_id;
-		$exercise_unit_id = $entry->exercise_unit_id;
-		$counter = 0;
-
-		$total = getTotalExerciseReps($date, $exercise_id, $exercise_unit_id);
-
-		$sets = getExerciseSets($date, $exercise_id, $exercise_unit_id);
-
-		//check to see if the array already has the exercise entry so it doesn't appear as a new entry for each set of exercises
-		foreach ($array as $item) {
-			if ($item['name'] === $entry->name && $item['unit_name'] === $entry->unit_name) {
-				//the exercise with unit already exists in the array so we don't want to add it again
-				$counter++;
-			}
-		}
-		if ($counter === 0) {
-			$array[] = array(
-				'exercise_id' => $entry->exercise_id,
-				'name' => $entry->name,
-				'description' => $entry->description,
-				'quantity' => $entry->quantity,
-				'unit_name' => $entry->unit_name,
-				'sets' => $sets,
-				'total' => $total,
-				'unit_id' => $entry->unit_id,
-				'default_exercise_unit_id' => getDefaultExerciseUnitId($exercise_id),
-				// 'default_quantity' => $default_quantity
-			);
-		}	
-	}
-	return $array;
-}
-
-function getExercises () {
-    $exercises = DB::table('exercises')
-    	->where('exercises.user_id', Auth::user()->id)
-    	->leftJoin('exercise_units', 'default_exercise_unit_id', '=', 'exercise_units.id')
-    	->leftJoin('exercise_series', 'exercises.series_id', '=', 'exercise_series.id')
-    	->select('exercises.id', 'exercises.name', 'exercises.description', 'exercises.step_number', 'exercise_series.name as series_name', 'default_exercise_unit_id', 'default_quantity', 'exercise_units.name AS default_exercise_unit_name')
-    	->orderBy('series_name', 'asc')
-    	->orderBy('step_number', 'asc')
-    	->get();
-
-    foreach ($exercises as $exercise) {
-    	$id = $exercise->id;
-    	$tags = getTagsForExercise($id);
-    	$exercise->tags = $tags;
-    }
-
-    return $exercises;
-}
-
 // ========================================================================
 // ========================================================================
 // =================================insert=================================
@@ -729,16 +513,6 @@ function insertFoodIntoRecipe ($recipe_id, $data) {
 			'unit_id' => $data['unit_id'],
 			'quantity' => $data['quantity'],
 			'description' => $description,
-			'user_id' => Auth::user()->id
-		]);
-}
-
-function insertExerciseTag ($exercise_id, $tag_id) {
-	//inserts a tag into an exercise
-	DB::table('exercise_tag')
-		->insert([
-			'exercise_id' => $exercise_id,
-			'tag_id' => $tag_id,
 			'user_id' => Auth::user()->id
 		]);
 }

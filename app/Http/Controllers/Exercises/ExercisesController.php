@@ -6,6 +6,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Exercise;
+use App\Exercise_entries;
+use App\Exercise_series;
+use App\Exercise_tag;
+use App\Series_workout;
 use DB;
 use Auth;
 use Debugbar;
@@ -29,7 +33,7 @@ class ExercisesController extends Controller {
 	}
 	
 	public function getExerciseSeriesHistory (Request $request) {
-		//I still need functions.php for the convertDate, getTotalExerciseReps, and getExerciseSets functions.
+		//I still need functions.php for convertDate
 		include(app_path() . '/inc/functions.php');
 		$series_id = $request->get('series_id');
 
@@ -39,13 +43,7 @@ class ExercisesController extends Controller {
 			->lists('id');
 
 		//get all entries in the series
-		$entries = DB::table('exercise_entries')
-			->whereIn('exercise_id', $exercise_ids)
-			->join('exercises', 'exercise_entries.exercise_id', '=', 'exercises.id')
-			->join('exercise_units', 'exercise_entries.exercise_unit_id', '=', 'exercise_units.id')
-			->select('date', 'exercises.id as exercise_id', 'exercises.name as exercise_name', 'exercises.description', 'exercises.step_number', 'quantity', 'exercise_unit_id', 'exercise_units.name as unit_name')
-			->orderBy('date', 'desc')
-			->get();
+		$entries = Exercise_entries::getSeriesEntries($exercise_ids);
 
 		$array = array();
 		foreach ($entries as $entry) {
@@ -56,9 +54,9 @@ class ExercisesController extends Controller {
 			$exercise_unit_id = $entry->exercise_unit_id;
 			$counter = 0;
 
-			$total = getTotalExerciseReps($sql_date, $exercise_id, $exercise_unit_id);
+			$total = Exercise_entries::getTotalExerciseReps($sql_date, $exercise_id, $exercise_unit_id);
 
-			$sets = getExerciseSets($sql_date, $exercise_id, $exercise_unit_id);
+			$sets = Exercise_entries::getExerciseSets($sql_date, $exercise_id, $exercise_unit_id);
 
 			//check to see if the array already has the exercise entry so it doesn't appear as a new entry for each set of exercises
 			foreach ($array as $item) {
@@ -91,8 +89,6 @@ class ExercisesController extends Controller {
 
 	public function deleteAndInsertSeriesIntoWorkouts (Request $request) {
 		//deletes all rows with $series_id and then adds all the correct rows for $series_id
-		//I need functions.php for insertSeriesIntoWorkout and getExerciseSeries
-		include(app_path() . '/inc/functions.php');
 		$series_id = $request->get('series_id');
 		$workouts = $request->get('workouts');
 
@@ -100,26 +96,24 @@ class ExercisesController extends Controller {
 		DB::table('series_workout')
 			->where('series_id', $series_id)
 			->delete();
+
 		//then add all the rows for the series_id
 		foreach ($workouts as $workout) {
 			$workout_id = $workout['id'];
-			insertSeriesIntoWorkout($workout_id, $series_id);
+			Series_workout::insertSeriesIntoWorkout($workout_id, $series_id);
 		}
 
-		return getExerciseSeries();
+		return Exercise_series::getExerciseSeries();
 	}
 
 	public function insertTagInExercise (Request $request) {
-		//come back to this one, because insertExerciseTag is used in functions.php
-		include(app_path() . '/inc/functions.php');
 		$exercise_id = $request->get('exercise_id');
 		$tag_id = $request->get('tag_id');
-		insertExerciseTag($exercise_id, $tag_id);
-		return getExercises();
+		Exercise_tag::insertExerciseTag($exercise_id, $tag_id);
+		return Exercise::getExercises();
 	}
 
 	public function insertExercise (Request $request) {
-		include(app_path() . '/inc/functions.php');
 		$name = $request->get('name');
 		$description = $request->get('description');
 		
@@ -129,7 +123,7 @@ class ExercisesController extends Controller {
 			'user_id' => Auth::user()->id
 		]);
 
-		return getExercises();
+		return Exercise::getExercises();
 	}
 
 	/**
@@ -137,7 +131,6 @@ class ExercisesController extends Controller {
 	 */
 	
 	public function updateExerciseStepNumber (Request $request) {
-		include(app_path() . '/inc/functions.php');
 		$exercise_id = $request->get('exercise_id');
 		$step_number = $request->get('step_number');
 		
@@ -147,11 +140,10 @@ class ExercisesController extends Controller {
 				'step_number' => $step_number
 			]);
 
-		return getExercises();
+		return Exercise::getExercises();
 	}
 
 	public function updateExerciseSeries (Request $request) {
-		include(app_path() . '/inc/functions.php');
 		$exercise_id = $request->get('exercise_id');
 		$series_id = $request->get('series_id');
 
@@ -162,11 +154,10 @@ class ExercisesController extends Controller {
 				'series_id' => $series_id
 			]);
 
-		return getExercises();
+		return Exercise::getExercises();
 	}
 
 	public function updateDefaultExerciseQuantity (Request $request) {
-		include(app_path() . '/inc/functions.php');
 		$id = $request->get('id');
 		$quantity = $request->get('quantity');
 		
@@ -176,11 +167,10 @@ class ExercisesController extends Controller {
 				'default_quantity' => $quantity
 			]);
 
-		return getExercises();
+		return Exercise::getExercises();
 	}
 
 	public function updateDefaultExerciseUnit (Request $request) {
-		include(app_path() . '/inc/functions.php');
 		$exercise_id = $request->get('exercise_id');
 		$default_exercise_unit_id = $request->get('default_exercise_unit_id');
 
@@ -190,7 +180,7 @@ class ExercisesController extends Controller {
 				'default_exercise_unit_id' => $default_exercise_unit_id
 			]);
 
-		return getExercises();
+		return Exercise::getExercises();
 	}
 
 	/**
@@ -198,11 +188,10 @@ class ExercisesController extends Controller {
 	 */
 	
 	public function deleteExercise (Request $request) {
-		include(app_path() . '/inc/functions.php');
 		$id = $request->get('id');
 
 		Exercise::where('id', $id)->delete();
-		return getExercises();
+		return Exercise::getExercises();
 	}
 
 	/**

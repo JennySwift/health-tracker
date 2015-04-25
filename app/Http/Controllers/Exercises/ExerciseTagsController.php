@@ -4,6 +4,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
+use App\Exercise_tags;
 
 class ExerciseTagsController extends Controller {
 
@@ -27,7 +28,7 @@ class ExerciseTagsController extends Controller {
 				'user_id' => Auth::user()->id
 			]);
 
-		return getExerciseTags();
+		return Exercise_tags::getExerciseTags();
 	}
 	
 	/**

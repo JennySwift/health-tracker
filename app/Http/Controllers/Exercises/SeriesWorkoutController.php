@@ -5,6 +5,8 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 
+use App\Series_workout;
+
 class SeriesWorkoutController extends Controller {
 
 	/**
@@ -20,12 +22,7 @@ class SeriesWorkoutController extends Controller {
 		$workout_id = $request->get('workout_id');
 		$series_id = $request->get('series_id');
 
-		DB::table('series_workout')
-			->insert([
-				'workout_id' => $workout_id,
-				'series_id' => $series_id,
-				'user_id' => Auth::user()->id
-			]);
+		Series_workout::insertSeriesIntoWorkout($workout_id, $series_id);
 
 		return getExerciseSeries();
 	}
