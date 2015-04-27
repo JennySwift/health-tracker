@@ -1,6 +1,7 @@
 <?php
 
-use App\Recipe;
+use App\Models\Foods\Recipe;
+use App\Models\Foods\RecipeTag;
 
 function filterRecipes ($name, $tag_ids) {
 	$recipes = Recipe::where('recipes.user_id', Auth::user()->id);
@@ -31,7 +32,7 @@ function filterRecipes ($name, $tag_ids) {
 	foreach ($recipes as $recipe) {
 		$recipe_id = $recipe->id;
 		$recipe_name = $recipe->name;
-		$tags = getTagsForRecipe($recipe_id);
+		$tags = RecipeTag::getTagsForRecipe($recipe_id);
 		
 		$array[] = array(
 			"id" => $recipe_id,

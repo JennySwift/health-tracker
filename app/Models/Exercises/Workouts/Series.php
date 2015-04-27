@@ -1,10 +1,9 @@
-<?php namespace App;
+<?php namespace App\Models\Exercises\Workouts;
 
 use Illuminate\Database\Eloquent\Model;
 use Auth;
-use App\Series_workout;
 
-class Series_workout extends Model {
+class Series extends Model {
 
 	protected $table = 'series_workout';
 

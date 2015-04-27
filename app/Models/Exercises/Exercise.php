@@ -1,13 +1,30 @@
-<?php namespace App;
+<?php namespace App\Models\Exercises;
 
 use Illuminate\Database\Eloquent\Model;
 use Auth;
-use App\Exercise_tag;
+use App\Models\Exercises\ExerciseTag;
 
 class Exercise extends Model {
 
+	public function user () {
+	    return $this->belongsTo('App\User');
+	}
+
+	public function unit () {
+		//the second argument is the name of the field, because if I don't specify it, it will look for unit_id.
+	    return $this->belongsTo('App\Models\Exercises\Unit', 'default_exercise_unit_id');
+	}
+
+	public function series () {
+	    return $this->belongsTo('App\Models\Exercises\Series');
+	}
+
+	public function entries () {
+	    return $this->hasMany('App\Models\Exercises\Entry');
+	}
+
 	public static function getExercises () {
-	    $exercises = Exercise
+	    $exercises = static
 	    	::where('exercises.user_id', Auth::user()->id)
 	    	->leftJoin('exercise_units', 'default_exercise_unit_id', '=', 'exercise_units.id')
 	    	->leftJoin('exercise_series', 'exercises.series_id', '=', 'exercise_series.id')
@@ -18,7 +35,7 @@ class Exercise extends Model {
 
 	    foreach ($exercises as $exercise) {
 	    	$id = $exercise->id;
-	    	$tags = Exercise_tag::getTagsForExercise($id);
+	    	$tags = ExerciseTag::getTagsForExercise($id);
 	    	$exercise->tags = $tags;
 	    }
 
@@ -26,7 +43,7 @@ class Exercise extends Model {
 	}
 
 	public static function getDefaultExerciseQuantity ($exercise_id) {
-		$quantity = Exercise
+		$quantity = static
 			::where('id', $exercise_id)
 			->pluck('default_quantity');
 
@@ -34,7 +51,7 @@ class Exercise extends Model {
 	}
 
 	public static function getDefaultExerciseUnitId ($exercise_id) {
-		$default = Exercise
+		$default = static
 			::where('id', $exercise_id)
 			->pluck('default_exercise_unit_id');
 

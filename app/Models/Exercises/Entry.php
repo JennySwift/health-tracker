@@ -1,10 +1,16 @@
-<?php namespace App;
+<?php namespace App\Models\Exercises;
 
 use Illuminate\Database\Eloquent\Model;
 use Auth;
-use App\Exercise;
+use App\Models\Exercises\Exercise;
 
-class Exercise_entries extends Model {
+class Entry extends Model {
+
+	protected $table = 'exercise_entries';
+
+	public function exercise () {
+	    return $this->belongsTo('App\Models\Exercises\Exercise');
+	}
 
 	public static function getSeriesEntries($exercise_ids) {
 		return static
@@ -35,7 +41,7 @@ class Exercise_entries extends Model {
 	}
 
 	public static function getExerciseEntries ($date) {
-		$entries = Exercise_entries
+		$entries = static
 			::where('date', $date)
 			->where('exercise_entries.user_id', Auth::user()->id)
 			->join('exercises', 'exercise_entries.exercise_id', '=', 'exercises.id')
@@ -45,7 +51,7 @@ class Exercise_entries extends Model {
 			->orderBy('unit_name', 'asc')
 			->get();
 
-		return Exercise_entries::compactExerciseEntries($entries, $date);
+		return static::compactExerciseEntries($entries, $date);
 	}
 
 	public static function compactExerciseEntries ($entries, $date) {

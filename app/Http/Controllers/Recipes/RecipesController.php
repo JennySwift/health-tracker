@@ -5,7 +5,7 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 
-use App\Recipe;
+use App\Models\Foods\Recipe;
 use DB;
 use Auth;
 use Debugbar;
@@ -16,14 +16,14 @@ class RecipesController extends Controller {
 	 * select
 	 */
 	
-	public function filterRecipes () {
+	public function filterRecipes (Request $request) {
 		include(app_path() . '/inc/functions.php');
 		$typing = json_decode(file_get_contents('php://input'), true)["typing"];
 		$tag_ids = json_decode(file_get_contents('php://input'), true)["tag_ids"];
 		return filterRecipes($typing, $tag_ids);
 	}
 	
-	public function getRecipeContents () {
+	public function getRecipeContents (Request $request) {
 		include(app_path() . '/inc/functions.php');
 		$recipe_id = json_decode(file_get_contents('php://input'), true)["recipe_id"];
 
@@ -37,7 +37,7 @@ class RecipesController extends Controller {
 	 * insert
 	 */
 
-	public function insertRecipeTag () {
+	public function insertRecipeTag (Request $request) {
 		//creates a new recipe tag
 		include(app_path() . '/inc/functions.php');
 		$name = json_decode(file_get_contents('php://input'), true)["name"];
@@ -45,7 +45,7 @@ class RecipesController extends Controller {
 		return getRecipeTags();
 	}
 
-	public function insertTagsIntoRecipe () {
+	public function insertTagsIntoRecipe (Request $request) {
 		//deletes all tags then adds the correct tags
 		include(app_path() . '/inc/functions.php');
 		$recipe_id = json_decode(file_get_contents('php://input'), true)["recipe_id"];
@@ -55,7 +55,7 @@ class RecipesController extends Controller {
 		return filterRecipes('', []);
 	}
 
-	public function insertQuickRecipe () {
+	public function insertQuickRecipe (Request $request) {
 		include(app_path() . '/inc/functions.php');
 		$recipe_name = json_decode(file_get_contents('php://input'), true)["recipe_name"];
 		$contents = json_decode(file_get_contents('php://input'), true)["contents"];
@@ -78,7 +78,7 @@ class RecipesController extends Controller {
 		}	
 	}
 
-	public function insertRecipeEntry () {
+	public function insertRecipeEntry (Request $request) {
 		include(app_path() . '/inc/functions.php');
 		$date = json_decode(file_get_contents('php://input'), true)["date"];
 		$recipe_id = json_decode(file_get_contents('php://input'), true)["recipe_id"];
@@ -88,14 +88,14 @@ class RecipesController extends Controller {
 		return getFoodEntries($date);
 	}
 
-	public function insertRecipe () {
+	public function insertRecipe (Request $request) {
 		include(app_path() . '/inc/functions.php');
 		$name = json_decode(file_get_contents('php://input'), true)["name"];
 		insertRecipe($name);
 		return filterRecipes('', []);
 	}
 
-	public function insertRecipeMethod () {
+	public function insertRecipeMethod (Request $request) {
 		include(app_path() . '/inc/functions.php');
 		$recipe_id = json_decode(file_get_contents('php://input'), true)["recipe_id"];
 		$steps = json_decode(file_get_contents('php://input'), true)["steps"];
@@ -107,7 +107,7 @@ class RecipesController extends Controller {
 		);
 	}
 
-	public function insertFoodIntoRecipe () {
+	public function insertFoodIntoRecipe (Request $request) {
 		include(app_path() . '/inc/functions.php');
 		$data = json_decode(file_get_contents('php://input'), true);
 		$recipe_id = $data['recipe_id'];
@@ -116,7 +116,7 @@ class RecipesController extends Controller {
 		return getRecipeContents($recipe_id);
 	}
 
-	public function insertRecipeEntries () {
+	public function insertRecipeEntries (Request $request) {
 		$food_id = json_decode(file_get_contents('php://input'), true)["food_id"];
 		$recipe_id = json_decode(file_get_contents('php://input'), true)["recipe_id"];
 
@@ -127,7 +127,7 @@ class RecipesController extends Controller {
 	 * update
 	 */
 	
-	public function updateRecipeMethod () {
+	public function updateRecipeMethod (Request $request) {
 		include(app_path() . '/inc/functions.php');
 		$recipe_id = json_decode(file_get_contents('php://input'), true)["recipe_id"];
 		$steps = json_decode(file_get_contents('php://input'), true)["steps"];
@@ -146,14 +146,14 @@ class RecipesController extends Controller {
 	 * delete
 	 */
 	
-	public function deleteRecipe () {
+	public function deleteRecipe (Request $request) {
 		include(app_path() . '/inc/functions.php');
 		$id = json_decode(file_get_contents('php://input'), true)["id"];
 		deleteRecipe($id);
 		return filterRecipes('', []);
 	}
 	
-	public function deleteFoodFromRecipe () {
+	public function deleteFoodFromRecipe (Request $request) {
 		include(app_path() . '/inc/functions.php');
 		$id = json_decode(file_get_contents('php://input'), true)["id"];
 		$recipe_id = json_decode(file_get_contents('php://input'), true)["recipe_id"];
@@ -161,14 +161,14 @@ class RecipesController extends Controller {
 		return getRecipeContents($recipe_id);
 	}
 
-	public function deleteRecipeTag () {
+	public function deleteRecipeTag (Request $request) {
 		include(app_path() . '/inc/functions.php');
 		$id = json_decode(file_get_contents('php://input'), true)["id"];
 		deleteRecipeTag($id);
 		return getRecipeTags();
 	}
 
-	public function deleteRecipeEntry () {
+	public function deleteRecipeEntry (Request $request) {
 		include(app_path() . '/inc/functions.php');
 		$date = json_decode(file_get_contents('php://input'), true)["date"];
 		$recipe_id = json_decode(file_get_contents('php://input'), true)["recipe_id"];

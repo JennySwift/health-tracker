@@ -1,12 +1,14 @@
-<?php namespace App;
+<?php namespace App\Models\Exercises;
 
 use Illuminate\Database\Eloquent\Model;
 use Auth;
 
-class Exercise_units extends Model {
+class Unit extends Model {
+
+	protected $table = 'exercise_units';
 
 	public static function getExerciseUnits () {
-	    $result = Exercise_units
+	    $result = static
 	    	::where('user_id', Auth::user()->id)
 	    	->select('id', 'name')
 	    	->orderBy('name', 'asc')

@@ -4,7 +4,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
-use App\Exercise;
+use App\Models\Exercises\Exercise;
 
 class ExerciseEntriesController extends Controller {
 
@@ -13,23 +13,68 @@ class ExerciseEntriesController extends Controller {
 	 */
 	
 	public function getSpecificExerciseEntries (Request $request) {
-		$date = $request->get('date');
-		$exercise_id = $request->get('exercise_id');
-		$exercise_unit_id = $request->get('exercise_unit_id');	
+	  
+	    // Fetch the date, exercise ID (and maybe the unit id)
+			$date = $request->get('date');
+			$exercise_id = $request->get('exercise_id');
+			// $exercise_unit_id = $request->get('exercise_unit_id');	
+			
+			// First method
+			$exercise = Exercise::find($request->get('exercise_id'));
+			$entries = $exercise->with(['entries' => function($query) use ($date)
+			{
+			    $query->where('date', $date);
+			}])->get();
+			
+			// If you need ordering, just add: ->orderBy('name') before ->get()
+			
+			// Second method
+			$entries = Entry::whereDate($date)->with(['exercise' => function($query) use ($exercise_id) {
+			    $query->whereId($exercise_id);
+			    $query->orderBy('name');
+			}])->get();
+			
+			
+			
+			// Collection of entries => exercise
 
-		//for when user clicks on the exercise entries table, to show the entries for just that exercise
-		$entries = DB::table('exercise_entries')
-			->where('date', $date)
-			->where('exercise_id', $exercise_id)
-			->where('exercise_unit_id', $exercise_unit_id)
-			->join('exercises', 'exercise_entries.exercise_id', '=', 'exercises.id')
-			->join('exercise_units', 'exercise_entries.exercise_unit_id', '=', 'exercise_units.id')
-			->select('exercise_id', 'quantity', 'exercises.name', 'exercise_units.name AS unit_name', 'exercise_entries.id AS entry_id')
-			->orderBy('exercises.name', 'asc')
-			->get();
+			// for when user clicks on the exercise entries table, 
+			// to show the entries for just that exercise
+			$entries = DB::table('exercise_entries')
+				->where('date', $date)
+				->where('exercise_id', $exercise_id)
+				->where('exercise_unit_id', $exercise_unit_id)
+				->join('exercises', 'exercise_entries.exercise_id', '=', 'exercises.id')
+				->join('exercise_units', 'exercise_entries.exercise_unit_id', '=', 'exercise_units.id')
+				->select('exercise_id', 'quantity', 'exercises.name', 'exercise_units.name AS unit_name', 'exercise_entries.id AS entry_id')
+				->orderBy('exercises.name', 'asc')
+				->get();
+				
+			
+			
+			// All the entries for this exercise, for this particular date
 
-		return $entries;
-	}
+			return $entries;
+		}
+	
+	// public function getSpecificExerciseEntries (Request $request) {
+	// 	$date = $request->get('date');
+	// 	$exercise_id = $request->get('exercise_id');
+	// 	$exercise_unit_id = $request->get('exercise_unit_id');	
+
+	// 	//for when user clicks on the exercise entries table, to show the entries for just that exercise
+	// 	$entries = DB::table('exercise_entries')
+	// 		->where('date', $date)
+	// 		->where('exercise_id', $exercise_id)
+	// 		->where('exercise_unit_id', $exercise_unit_id)
+	// 		->join('exercises', 'exercise_entries.exercise_id', '=', 'exercises.id')
+	// 		->join('exercise_units', 'exercise_entries.exercise_unit_id', '=', 'exercise_units.id')
+	// 		->select('exercise_id', 'quantity', 'exercises.name', 'exercise_units.name AS unit_name', 'exercise_entries.id AS entry_id')
+	// 		->orderBy('exercises.name', 'asc')
+	// 		->get();
+
+	// 	return $entries;
+	// }
 
 	/**
 	 * insert

@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Food;
+use App\Food_entries;
+use App\Food_units;
+use App\Calories;
 use DB;
 use Auth;
 use Debugbar;
@@ -16,136 +19,182 @@ class FoodsController extends Controller {
 	 * select
 	 */
 	
-	public function autocompleteFood () {
-		include(app_path() . '/inc/functions.php');
-		$typing = json_decode(file_get_contents('php://input'), true)["typing"];
-		return autocompleteFood($typing);
+	public function autocompleteFood (Request $request) {
+		$typing = '%' . $request->get('typing') . '%';
+
+		$foods = Food
+			::where('name', 'LIKE', $typing)
+			->where('user_id', Auth::user()->id)
+			->select('id', 'name')
+			->get();
+		   
+		return $foods;
 	}
 	
-	public function getFoodEntries () {
-		include(app_path() . '/inc/functions.php');
-		$date = json_decode(file_get_contents('php://input'), true)["date"];
-		return getFoodEntries($date);
+	public function getFoodEntries (Request $request) {
+		$date = $request->get('date');
+		return Food_entries::getFoodEntries($date);
 	}
 
-	public function getFoodInfo () {
-		include(app_path() . '/inc/functions.php');
-		$food_id = json_decode(file_get_contents('php://input'), true)["id"];
-		return getFoodInfo($food_id);
+	public function getFoodInfo (Request $request) {
+		$food_id = $request->get('food_id');
+		
+		$default_unit = Calories::getDefaultUnit($food_id);
+
+		$food_units = Food_units::getFoodUnits();
+		$assoc_units = Food_units::getAssocUnits($food_id);
+		$units = array();
+
+		//checking to see if the unit has already been given to a food, so that it appears checked.
+		foreach ($food_units as $food_unit) {
+			$unit_id = $food_unit->id;
+			$unit_name = $food_unit->name;
+			$match = 0;
+
+			foreach ($assoc_units as $assoc_unit) {
+				$assoc_unit_id = $assoc_unit['id'];
+				$calories = $assoc_unit['calories'];
+
+				if ($unit_id == $assoc_unit_id) {
+					$match++;
+				}
+			}
+			if ($match === 1) {
+				$calories = Calories::getCalories($food_id, $unit_id);
+
+				if ($unit_id === $default_unit) {
+					$units[] = array(
+						"id" => $unit_id,
+						"name" => $unit_name,
+						"checked" => true,
+						"default_unit" => true,
+						"calories" => $calories
+					);
+				}
+				else {
+					$units[] = array(
+						"id" => $unit_id,
+						"name" => $unit_name,
+						"checked" => true,
+						"default_unit" => false,
+						"calories" => $calories
+					);
+				}
+			}
+			else {
+				$units[] = array(
+					"id" => $unit_id,
+					"name" => $unit_name,
+					"checked" => false,
+					"default_unit" => false
+				);
+			}
+		}
+
+		return $units;
 	}
 
-	public function getFoodList () {
-		include(app_path() . '/inc/functions.php');
-		return getFoods();
+	public function getFoodList (Request $request) {
+		return Food::getFoods();
 	}
 
-	public function getAllFoodsWithUnits () {
-		include(app_path() . '/inc/functions.php');
-		return getAllFoodsWithUnits();
+	public function getAllFoodsWithUnits (Request $request) {
+		return Food::getAllFoodsWithUnits();
 	}
 
 	/**
 	 * insert
 	 */
 
-	public function insertMenuEntry () {
-		include(app_path() . '/inc/functions.php');
-		$data = json_decode(file_get_contents('php://input'), true);
+	public function insertMenuEntry (Request $request) {
+		$data = $request->get('data');
 		$date = $data['date'];
-		insertMenuEntry($data);
+		Food_entries::insertMenuEntry($data);
 
 		$response = array(
-			"food_entries" => getFoodEntries($date),
-			"calories_for_the_day" => number_format(getCaloriesForTimePeriod($date, "day"), 2),
-			"calories_for_the_week" => number_format(getCaloriesForTimePeriod($date, "week"), 2),
+			"food_entries" => Food_entries::getFoodEntries($date),
+			"calories_for_the_day" => number_format(Calories::getCaloriesForTimePeriod($date, "day"), 2),
+			"calories_for_the_week" => number_format(Calories::getCaloriesForTimePeriod($date, "week"), 2),
 		);
 
 		return $response;
 	}
 
-	public function insertFood () {
-		include(app_path() . '/inc/functions.php');
-		$name = json_decode(file_get_contents('php://input'), true)["name"];
-		insertFood($name);
+	public function insertFood (Request $request) {
+		$name = $request->get('name');
+		Food::insertFood($name);
 
-		return getAllFoodsWithUnits();
+		return Food::getAllFoodsWithUnits();
 	}
 
-	public function insertFoodUnit () {
+	public function insertFoodUnit (Request $request) {
 
 	}
 
-	public function insertUnitInCalories () {
-		include(app_path() . '/inc/functions.php');
-		$food_id = json_decode(file_get_contents('php://input'), true)["food_id"];
-		$unit_id = json_decode(file_get_contents('php://input'), true)["unit_id"];
-		insertUnitInCalories($food_id, $unit_id);
-		return getFoodInfo($food_id);
+	public function insertUnitInCalories (Request $request) {
+		$food_id = $request->get('food_id');
+		$unit_id = $request->get('unit_id');
+		Calories::insertUnitInCalories($food_id, $unit_id);
+		return Food::getFoodInfo($food_id);
 	}
 
 	/**
 	 * update
 	 */
 	
-	public function updateDefaultUnit () {
-		include(app_path() . '/inc/functions.php');
-		$food_id = json_decode(file_get_contents('php://input'), true)["food_id"];
-		$unit_id = json_decode(file_get_contents('php://input'), true)["unit_id"];
+	public function updateDefaultUnit (Request $request) {
+		$food_id = $request->get('food_id');
+		$unit_id = $request->get('unit_id');
 
-		updateDefaultUnit($food_id, $unit_id);
+		Calories::updateDefaultUnit($food_id, $unit_id);
 
-		return getFoodInfo($food_id);
+		return Food::getFoodInfo($food_id);
 	}
 
-	public function updateCalories () {
-		include(app_path() . '/inc/functions.php');
-		$food_id = json_decode(file_get_contents('php://input'), true)["food_id"];
-		$unit_id = json_decode(file_get_contents('php://input'), true)["unit_id"];
-		$calories = json_decode(file_get_contents('php://input'), true)["calories"];
-		
-		updateCalories($food_id, $unit_id, $calories);
+	public function updateCalories (Request $request) {
+		$food_id = $request->get('food_id');
+		$unit_id = $request->get('unit_id');
+		$calories = $request->get('calories');
 
-		return getFoodInfo($food_id);
+		Calories::updateCalories($food_id, $unit_id, $calories);
+
+		return Food::getFoodInfo($food_id);
 	}
 
 	/**
 	 * delete
 	 */
 
-	public function deleteFood () {
-		include(app_path() . '/inc/functions.php');
-		$id = json_decode(file_get_contents('php://input'), true)["id"];
-		DB::table('foods')->where('id', $id)->delete();
-		return getAllFoodsWithUnits();
+	public function deleteFood (Request $request) {
+		$id = $request->get('id');
+		Food::where('id', $id)->delete();
+		return Food::getAllFoodsWithUnits();
 	}
 
-	public function deleteFoodUnit () {
-		include(app_path() . '/inc/functions.php');
-		$id = json_decode(file_get_contents('php://input'), true)["id"];
-		DB::table('food_units')->where('id', $id)->delete();
-		return getFoodUnits();
+	public function deleteFoodUnit (Request $request) {
+		$id = $request->get('id');
+		Food_units::where('id', $id)->delete();
+		return Food_units::getFoodUnits();
 	}
 
-	public function deleteFoodEntry () {
-		include(app_path() . '/inc/functions.php');
-		$id = json_decode(file_get_contents('php://input'), true)["id"];
-		$date = json_decode(file_get_contents('php://input'), true)["date"];
-		DB::table('food_entries')->where('id', $id)->delete();
+	public function deleteFoodEntry (Request $request) {
+		$id = $request->get('id');
+		$date = $request->get('date');
+		Food_entries::where('id', $id)->delete();
 
 		$response = array(
-			"food_entries" => getFoodEntries($date),
-			"calories_for_the_day" => number_format(getCaloriesForTimePeriod($date, "day"), 2),
-			"calories_for_the_week" => number_format(getCaloriesForTimePeriod($date, "week"), 2)
+			"food_entries" => Food_entries::getFoodEntries($date),
+			"calories_for_the_day" => number_format(Calories::getCaloriesForTimePeriod($date, "day"), 2),
+			"calories_for_the_week" => number_format(Calories::getCaloriesForTimePeriod($date, "week"), 2)
 		);
 		return $response;
 	}
 
-	public function deleteUnitFromCalories () {
-		include(app_path() . '/inc/functions.php');
-		$food_id = json_decode(file_get_contents('php://input'), true)["food_id"];
-		$unit_id = json_decode(file_get_contents('php://input'), true)["unit_id"];
-		deleteUnitFromCalories($food_id, $unit_id);
-		return getFoodInfo($food_id);
+	public function deleteUnitFromCalories (Request $request) {
+		$food_id = $request->get('food_id');
+		$unit_id = $request->get('unit_id');
+		Calories::deleteUnitFromCalories($food_id, $unit_id);
+		return Food::getFoodInfo($food_id);
 	}
 
 	/**

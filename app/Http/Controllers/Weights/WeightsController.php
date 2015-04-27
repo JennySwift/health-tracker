@@ -5,27 +5,25 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 
-use App\Weight;
 use DB;
 use Auth;
 use Debugbar;
 
 class WeightsController extends Controller {
 
-	public function insertOrUpdateWeight () {
-		include(app_path() . '/inc/functions.php');
-		$date = json_decode(file_get_contents('php://input'), true)["date"];
-		$weight = json_decode(file_get_contents('php://input'), true)["weight"];
+	public function insertOrUpdateWeight (Request $request) {
+		$date = $request->get('date');
+		$weight = $request->get('weight');
 
 		if (getWeight($date)) {
 			//This date already has a weight entry. We are updating, not inserting.
-			updateWeight($date, $weight);
+			Weight::updateWeight($date, $weight);
 		}
 		else {
 			//we are inserting
-			insertWeight($date, $weight);
+			Weight::insertWeight($date, $weight);
 		}
-		return getWeight($date);
+		return Weight::getWeight($date);
 	}
 
 	/**

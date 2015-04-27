@@ -1,50 +1,11 @@
-<?php namespace App\Http\Controllers\Exercises;
+<?php namespace App\Http\Controllers\Recipes;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 
-class ExerciseSeriesController extends Controller {
-
-	/**
-	 * select
-	 */
-	
-	/**
-	 * insert
-	 */
-	
-	public function insertExerciseSeries (Request $request) {
-		$name = $request->get('name');
-		
-		DB::table('exercise_series')
-			->insert([
-				'name' => $name,
-				'user_id' => Auth::user()->id
-			]);
-
-		return getExerciseSeries();
-	}
-
-	/**
-	 * update
-	 */
-	
-	/**
-	 * delete
-	 */
-	
-	public function deleteExerciseSeries (Request $request) {
-		include(app_path() . '/inc/functions.php');
-		$id = $request->get('id');
-		
-		DB::table('exercise_series')
-			->where('id', $id)
-			->delete();
-
-		return getExerciseSeries();
-	}
+class RecipeTagController extends Controller {
 
 	/**
 	 * Display a listing of the resource.
