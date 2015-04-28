@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use DB;
 use Auth;
 use Debugbar;
+use App\Models\Weight\Weight;
 
 class WeightsController extends Controller {
 
@@ -15,7 +16,7 @@ class WeightsController extends Controller {
 		$date = $request->get('date');
 		$weight = $request->get('weight');
 
-		if (getWeight($date)) {
+		if (Weight::getWeight($date)) {
 			//This date already has a weight entry. We are updating, not inserting.
 			Weight::updateWeight($date, $weight);
 		}

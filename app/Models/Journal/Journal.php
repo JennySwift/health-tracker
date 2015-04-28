@@ -8,7 +8,7 @@ class Journal extends Model {
 	protected $table = 'journal_entries';
 
 	public static function getJournalEntry ($date) {
-		$entry = Journal
+		$entry = static
 			::where('date', $date)
 			->where('user_id', Auth::user()->id)
 			->select('id', 'text')
@@ -30,7 +30,7 @@ class Journal extends Model {
 
 	public static function insertOrUpdateJournalEntry ($date, $text) {
 		//check if an entry already exists
-		$count = Journal
+		$count = static
 			::where('date', $date)
 			->where('user_id', Auth::user()->id)
 			->count();

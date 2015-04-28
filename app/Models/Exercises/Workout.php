@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Auth;
+use App\Models\Exercises\Workouts\Series as WorkoutSeries;
 
 class Workout extends Model {
 
@@ -10,42 +11,20 @@ class Workout extends Model {
   }
 
 	public static function getWorkouts () {
+		//get the workouts
 		$workouts = static
 			::where('user_id', Auth::user()->id)
 			->select('id', 'name')
 			->get();
 
-		//get all the series that are in the workout
-		/*foreach ($workouts as $workout) {
-			$workout_id = $workout->id;
-			$workout->contents = Series_workout::getWorkoutContents($workout_id);
-		}*/
-		
+		//get all the series that are in each workout
+		foreach ($workouts as $workout) {
+			// $workout_id = $workout->id;
+			// $workout->contents = WorkoutSeries::getWorkoutContents($workout_id);
+			$workout->contents = $workout->series()->select('exercise_series.id', 'name')->orderBy('name', 'asc')->get();
+		}
 
 		return $workouts;
-		// $workouts->first()->series->user->name
 	}
 
 }
-
-// use Illuminate\Database\Eloquent\Model;
-// use Auth;
-
-// class Workout extends Model {
-
-// 	public static function getWorkouts () {
-// 		$workouts = static
-// 			::where('user_id', Auth::user()->id)
-// 			->select('id', 'name')
-// 			->get();
-
-// 		//get all the series that are in the workout
-// 		foreach ($workouts as $workout) {
-// 			$workout_id = $workout->id;
-// 			$workout->contents = Series_workout::getWorkoutContents($workout_id);
-// 		}
-
-// 		return $workouts;
-// 	}
-
-// }

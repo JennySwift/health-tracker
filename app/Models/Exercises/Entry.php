@@ -3,6 +3,7 @@
 use Illuminate\Database\Eloquent\Model;
 use Auth;
 use App\Models\Exercises\Exercise;
+use App\Models\Exercises\Entry as ExerciseEntry;
 
 class Entry extends Model {
 
@@ -10,6 +11,10 @@ class Entry extends Model {
 
 	public function exercise () {
 	    return $this->belongsTo('App\Models\Exercises\Exercise');
+	}
+
+	public function unit () {
+	    return $this->belongsTo('App\Models\Exercises\Unit');
 	}
 
 	public static function getSeriesEntries($exercise_ids) {
@@ -61,9 +66,9 @@ class Entry extends Model {
 			$exercise_unit_id = $entry->exercise_unit_id;
 			$counter = 0;
 
-			$total = Exercise_entries::getTotalExerciseReps($date, $exercise_id, $exercise_unit_id);
+			$total = ExerciseEntry::getTotalExerciseReps($date, $exercise_id, $exercise_unit_id);
 
-			$sets = Exercise_entries::getExerciseSets($date, $exercise_id, $exercise_unit_id);
+			$sets = ExerciseEntry::getExerciseSets($date, $exercise_id, $exercise_unit_id);
 
 			//check to see if the array already has the exercise entry so it doesn't appear as a new entry for each set of exercises
 			foreach ($array as $item) {

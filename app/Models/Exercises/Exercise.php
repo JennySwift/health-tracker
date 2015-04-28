@@ -6,6 +6,8 @@ use App\Models\Exercises\ExerciseTag;
 
 class Exercise extends Model {
 
+	protected $fillable = ['name', 'default_exercise_unit_id', 'description', 'default_quantity', 'step_number', 'series_id'];
+
 	public function user () {
 	    return $this->belongsTo('App\User');
 	}

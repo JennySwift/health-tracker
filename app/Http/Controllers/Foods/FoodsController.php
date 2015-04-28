@@ -5,10 +5,10 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 
-use App\Food;
-use App\Food_entries;
-use App\Food_units;
-use App\Calories;
+use App\Models\Foods\Food;
+use App\Models\Foods\FoodEntry;
+use App\Models\Foods\FoodUnit;
+use App\Models\Foods\Calories;
 use DB;
 use Auth;
 use Debugbar;

@@ -6,11 +6,36 @@ use Auth;
 
 class Food extends Model {
 
+	protected $fillable = ['name', 'user_id'];
+
 	public static function insertFood ($name) {
+		/**
+		 * This works.
+		 * Any problem with it?
+		 * What's the point of the create and save methods if this insert method works?
+		 */
+		
 		Food::insert([
 			'name' => $name,
 			'user_id' => Auth::user()->id
 		]);
+
+		/**
+		 * First failed attempt
+		 * Error: Cannot add or update a child row: a foreign key constraint fails
+		 * Also, why do I need to define the mass-assignable columns when I'm only inserting one row?
+		 */
+		
+		// $food = new Food(['name' => $name, 'user_id', Auth::user()->id]);
+
+		/**
+		 * Second failed attempt
+		 * Error: exception 'BadMethodCallException' with message 'Call to undefined method Illuminate\Database\Query\Builder::user()		
+		 */
+		
+		// $food = new Food(['name' => $name]);
+		// $food->user()->associate(Auth::user());				
+		// $food->save();
 	}
 
 	public static function getFoods () {

@@ -25,9 +25,9 @@ use App\Models\Journal\Journal;
 
 class SelectController extends Controller {
 	//
-	public function pageLoad () {
+	public function pageLoad (Request $request) {
 		include(app_path() . '/inc/functions.php');
-		$date = json_decode(file_get_contents('php://input'), true)["date"];
+		$date = $request->get('date');
 		$response = array(
 			"foods" => Food::getFoods(),
 			// "recipes" => getRecipes(),
@@ -62,13 +62,13 @@ class SelectController extends Controller {
 		include(app_path() . '/inc/functions.php');
 		$date = json_decode(file_get_contents('php://input'), true)["date"];
 		$response = array(
-			"weight" => getWeight($date),
-			"exercise_entries" => getExerciseEntries($date),
-			"journal_entry" => getJournalEntry($date),
+			"weight" => Weight::getWeight($date),
+			"exercise_entries" => ExerciseEntry::getExerciseEntries($date),
+			"journal_entry" => Journal::getJournalEntry($date),
 
-			"food_entries" => getFoodEntries($date),
-			"calories_for_the_day" => number_format(getCaloriesForTimePeriod($date, "day"), 2),
-			"calories_for_the_week" => number_format(getCaloriesForTimePeriod($date, "week"), 2)
+			"food_entries" => FoodEntry::getFoodEntries($date),
+			"calories_for_the_day" => number_format(Calories::getCaloriesForTimePeriod($date, "day"), 2),
+			"calories_for_the_week" => number_format(Calories::getCaloriesForTimePeriod($date, "week"), 2)
 		);
 		return $response;
 	}

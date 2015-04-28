@@ -8,7 +8,7 @@ class Weight extends Model {
 	protected $table = 'weight';
 
 	public static function getWeight($date) {
-		$weight = Weight
+		$weight = static
 			::where('date', $date)
 			->where('user_id', Auth::user()->id)
 			->pluck('weight');
@@ -20,7 +20,7 @@ class Weight extends Model {
 	}
 
 	public static function updateWeight ($date, $weight) {
-		Weight
+		static
 			::where('date', $date)
 			->where('user_id', Auth::user()->id)
 			->update([
@@ -29,7 +29,7 @@ class Weight extends Model {
 	}
 
 	public static function insertWeight ($date, $weight) {
-		Weight
+		static
 			::insert([
 				'date' => $date,
 				'weight' => $weight,
