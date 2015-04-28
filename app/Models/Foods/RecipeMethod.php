@@ -10,7 +10,7 @@ class RecipeMethod extends Model {
 		foreach ($steps as $step_text) {
 			$step_number++;
 
-			RecipeMethod
+			static
 				::insert([
 					'recipe_id' => $recipe_id,
 					'step' => $step_number,
@@ -21,13 +21,13 @@ class RecipeMethod extends Model {
 	}
 
 	public static function deleteRecipeMethod ($recipe_id) {
-		RecipeMethod
+		static
 			::where('recipe_id', $recipe_id)
 			->delete();
 	}
 
 	public static function getRecipeSteps ($recipe_id) {
-		$steps = RecipeMethod
+		$steps = static
 			::where('recipe_id', $recipe_id)
 			->select('step', 'text')
 			->get();

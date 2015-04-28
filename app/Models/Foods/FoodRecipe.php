@@ -13,7 +13,7 @@ class FoodRecipe extends Model {
 			$description = null;
 		}
 
-		FoodRecipe
+		static
 			::insert([
 				'recipe_id' => $recipe_id,
 				'food_id' => $data['food_id'],
@@ -25,13 +25,13 @@ class FoodRecipe extends Model {
 	}
 
 	public static function deleteFoodFromRecipe ($id) {
-		FoodRecipe
+		static
 			::where('id', $id)
 			->delete();
 	}
 
 	public static function getRecipeContents ($recipe_id) {
-		$recipe_contents = FoodRecipe
+		$recipe_contents = static
 			::where('recipe_id', $recipe_id)
 			->join('foods', 'food_recipe.food_id', '=', 'foods.id')
 			->join('food_units', 'food_recipe.unit_id', '=', 'food_units.id')

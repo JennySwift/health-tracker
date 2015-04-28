@@ -4,8 +4,53 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
+use Auth;
+use App\Models\Foods\FoodEntry;
 
 class FoodEntriesController extends Controller {
+	/**
+	 * select
+	 */
+	
+	/**
+	 * insert
+	 */
+	
+	public function insertMenuEntry (Request $request) {
+		$data = $request->get('data');
+		$date = $data['date'];
+		FoodEntry::insertMenuEntry($data);
+
+		$response = array(
+			"food_entries" => FoodEntry::getFoodEntries($date),
+			"calories_for_the_day" => number_format(Calories::getCaloriesForTimePeriod($date, "day"), 2),
+			"calories_for_the_week" => number_format(Calories::getCaloriesForTimePeriod($date, "week"), 2),
+		);
+
+		return $response;
+	}
+	
+	// public function getFoodEntries (Request $request) {
+	// 	$date = $request->get('date');
+	// 	return FoodEntry::getFoodEntries($date);
+	// }
+
+	/**
+	 * update
+	 */
+	
+	public function deleteFoodEntry (Request $request) {
+		$id = $request->get('id');
+		$date = $request->get('date');
+		FoodEntry::where('id', $id)->delete();
+
+		$response = array(
+			"food_entries" => FoodEntry::getFoodEntries($date),
+			"calories_for_the_day" => number_format(Calories::getCaloriesForTimePeriod($date, "day"), 2),
+			"calories_for_the_week" => number_format(Calories::getCaloriesForTimePeriod($date, "week"), 2)
+		);
+		return $response;
+	}
 
 	/**
 	 * Display a listing of the resource.

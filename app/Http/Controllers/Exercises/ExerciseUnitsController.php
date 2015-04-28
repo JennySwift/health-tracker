@@ -4,6 +4,8 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
+use Auth;
+use App\Models\Exercises\Unit as ExerciseUnit;
 
 class ExerciseUnitsController extends Controller {
 
@@ -16,15 +18,14 @@ class ExerciseUnitsController extends Controller {
 	 */
 	
 	public function insertExerciseUnit (Request $request) {
-		include(app_path() . '/inc/functions.php');
 		$name = $request->get('name');
 		
-		DB::table('exercise_units')->insert([
+		ExerciseUnit::insert([
 			'name' => $name,	
 			'user_id' => Auth::user()->id
 		]);
 
-		return Exercise_units::getExerciseUnits();
+		return ExerciseUnit::getExerciseUnits();
 	}
 
 	/**
@@ -36,11 +37,10 @@ class ExerciseUnitsController extends Controller {
 	 */
 
 	public function deleteExerciseUnit (Request $request) {
-		include(app_path() . '/inc/functions.php');
 		$id = $request->get('id');
 
-		DB::table('exercise_units')->where('id', $id)->delete();
-		return getExerciseUnits();
+		ExerciseUnit::where('id', $id)->delete();
+		return ExerciseUnit::getExerciseUnits();
 	}
 	
 	/**

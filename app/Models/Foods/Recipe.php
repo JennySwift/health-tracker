@@ -10,7 +10,7 @@ class Recipe extends Model {
 	}
 
 	public static function insertRecipe ($name) {
-		Recipe
+		static
 			::insert([
 				'name' => $name,
 				'user_id' => Auth::user()->id
@@ -18,7 +18,7 @@ class Recipe extends Model {
 	}
 
 	public static function getRecipes () {
-		$rows = Recipe
+		$rows = static
 			::where('user_id', Auth::user()->id)
 			->select('id', 'name')
 			->orderBy('name', 'asc')
@@ -41,7 +41,7 @@ class Recipe extends Model {
 	}
 
 	public static function deleteRecipe ($id) {
-		Recipe
+		static
 			::where('id', $id)
 			->delete();
 	}

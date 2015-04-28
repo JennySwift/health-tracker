@@ -4,8 +4,21 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
+use Auth;
+use App\Models\Foods\RecipeTags;
 
 class RecipeTagsController extends Controller {
+
+	/**
+	 * insert
+	 */
+	
+	public function insertRecipeTag (Request $request) {
+		//creates a new recipe tag
+		$name = $request->get('name');
+		RecipeTags::insertRecipeTag($name);
+		return RecipeTags::getRecipeTags();
+	}
 
 	/**
 	 * Display a listing of the resource.

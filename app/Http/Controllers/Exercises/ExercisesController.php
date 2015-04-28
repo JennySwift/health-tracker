@@ -44,24 +44,24 @@ class ExercisesController extends Controller {
 
 		//get all entries in the series
 		//the function doesn't work when I use the following line:	
-		$entries = $series->entries()
-			->select('date', 'exercises.id as exercise_id', 'exercises.name as exercise_name', 'exercises.description', 'exercises.step_number', 'quantity', 'exercise_unit_id')
-			->orderBy('date', 'desc')->get();
-		// $entries = ExerciseEntry::getSeriesEntries($exercise_ids);
+		// $entries = $series->entries()
+		// 	->select('date', 'exercises.id as exercise_id', 'exercises.name as exercise_name', 'exercises.description', 'exercises.step_number', 'quantity', 'exercise_unit_id')
+		// 	->orderBy('date', 'desc')->get();
+		$entries = ExerciseEntry::getSeriesEntries($exercise_ids);
 		
 		//create an array to return
 		$array = [];
 
 		//populate the array
 		foreach ($entries as $entry) {
-			dd($entry->unit);
+			// dd($entry->unit);
 			$sql_date = $entry->date;
 			$date = convertDate($sql_date, 'user');
 			$days_ago = getHowManyDaysAgo($sql_date);
 			$exercise_id = $entry->exercise_id;
-			// $exercise_unit_id = $entry->exercise_unit_id;
-			$exercise_unit_id = $entry->unit->id;
-			$entry->unit_name = $entry->unit->name;
+			$exercise_unit_id = $entry->exercise_unit_id;
+			// $exercise_unit_id = $entry->unit->id;
+			// $entry->unit_name = $entry->unit->name;
 			$counter = 0;
 
 			$total = ExerciseEntry::getTotalExerciseReps($sql_date, $exercise_id, $exercise_unit_id);
@@ -103,23 +103,23 @@ class ExercisesController extends Controller {
 		$workouts = $request->get('workouts');
 
 		//first delete all the rows with $series_id
-		DB::table('series_workout')
-			->where('series_id', $series_id)
+		WorkoutSeries
+			::where('series_id', $series_id)
 			->delete();
 
 		//then add all the rows for the series_id
 		foreach ($workouts as $workout) {
 			$workout_id = $workout['id'];
-			Series_workout::insertSeriesIntoWorkout($workout_id, $series_id);
+			WorkoutSeries::insertSeriesIntoWorkout($workout_id, $series_id);
 		}
 
-		return Exercise_series::getExerciseSeries();
+		return Series::getExerciseSeries();
 	}
 
 	public function insertTagInExercise (Request $request) {
 		$exercise_id = $request->get('exercise_id');
 		$tag_id = $request->get('tag_id');
-		Exercise_tag::insertExerciseTag($exercise_id, $tag_id);
+		ExerciseTag::insertExerciseTag($exercise_id, $tag_id);
 		return Exercise::getExercises();
 	}
 

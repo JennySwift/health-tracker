@@ -4,8 +4,52 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
+use Auth;
+use App\Models\Foods\Food;
+use App\Models\Foods\Calories;
 
 class CaloriesController extends Controller {
+
+	/**
+	 * update
+	 */
+	
+	public function updateCalories (Request $request) {
+		$food_id = $request->get('food_id');
+		$unit_id = $request->get('unit_id');
+		$calories = $request->get('calories');
+
+		Calories::updateCalories($food_id, $unit_id, $calories);
+
+		return Food::getFoodInfo($food_id);
+	}
+
+	public function updateDefaultUnit (Request $request) {
+		$food_id = $request->get('food_id');
+		$unit_id = $request->get('unit_id');
+
+		Calories::updateDefaultUnit($food_id, $unit_id);
+
+		return Food::getFoodInfo($food_id);
+	}
+
+	public function insertUnitInCalories (Request $request) {
+		$food_id = $request->get('food_id');
+		$unit_id = $request->get('unit_id');
+		Calories::insertUnitInCalories($food_id, $unit_id);
+		return Food::getFoodInfo($food_id);
+	}
+
+	/**
+	 * delete
+	 */
+	
+	public function deleteUnitFromCalories (Request $request) {
+		$food_id = $request->get('food_id');
+		$unit_id = $request->get('unit_id');
+		Calories::deleteUnitFromCalories($food_id, $unit_id);
+		return Food::getFoodInfo($food_id);
+	}
 
 	/**
 	 * Display a listing of the resource.

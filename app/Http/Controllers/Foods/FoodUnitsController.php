@@ -4,8 +4,18 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
+use Auth;
 
 class FoodUnitsController extends Controller {
+	/**
+	 * delete
+	 */
+	
+	public function deleteFoodUnit (Request $request) {
+		$id = $request->get('id');
+		FoodUnit::where('id', $id)->delete();
+		return FoodUnit::getFoodUnits();
+	}
 
 	/**
 	 * Display a listing of the resource.

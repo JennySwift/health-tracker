@@ -9,7 +9,7 @@ class Series extends Model {
 	protected $table = 'series_workout';
 
 	public static function insertSeriesIntoWorkout($workout_id, $series_id) {
-		Series_workout
+		static
 			::insert([
 				'workout_id' => $workout_id,
 				'series_id' => $series_id,

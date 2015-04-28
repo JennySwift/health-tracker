@@ -40,8 +40,8 @@ class ExerciseEntriesController extends Controller {
 				
 		// Collection of entries => exercise
 
-		$entries = DB::table('exercise_entries')
-			->where('date', $date)
+		$entries = ExerciseEntry
+			::where('date', $date)
 			->where('exercise_id', $exercise_id)
 			->where('exercise_unit_id', $exercise_unit_id)
 			->join('exercises', 'exercise_entries.exercise_id', '=', 'exercises.id')
@@ -58,14 +58,13 @@ class ExerciseEntriesController extends Controller {
 	 */
 	
 	public function insertExerciseSet (Request $request) {
-		include(app_path() . '/inc/functions.php');
 		$date = $request->get('date');
 		$exercise_id = $request->get('exercise_id');
 
 		$quantity = Exercise::getDefaultExerciseQuantity($exercise_id);
 		$unit_id = Exercise::getDefaultExerciseUnitId($exercise_id);
 
-		DB::table('exercise_entries')->insert([
+		ExerciseEntry::insert([
 			'date' => $date,
 			'exercise_id' => $exercise_id,
 			'quantity' => $quantity,
@@ -81,7 +80,7 @@ class ExerciseEntriesController extends Controller {
 		$date = $data['date'];
 		$new_entry = $data['new_entry'];
 
-		DB::table('exercise_entries')->insert([
+		ExerciseEntry::insert([
 			'date' => $date,
 			'exercise_id' => $new_entry['id'],
 			'quantity' => $new_entry['quantity'],
@@ -101,13 +100,12 @@ class ExerciseEntriesController extends Controller {
 	 */
 
 	public function deleteExerciseEntry (Request $request) {
-		include(app_path() . '/inc/functions.php');
 		$id = $request->get('id');
 		$date = $request->get('date');
 
-		DB::table('exercise_entries')->where('id', $id)->delete();
+		ExerciseEntry::where('id', $id)->delete();
 
-		return getExerciseEntries($date);
+		return ExerciseEntry::getExerciseEntries($date);
 	}
 
 	/**

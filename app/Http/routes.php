@@ -85,10 +85,9 @@ Route::post('select/autocompleteMenu', 'SelectController@autocompleteMenu');
 Route::post('insert/weight', 'Weights\WeightsController@insertOrUpdateWeight');
 
 //foods
-Route::post('insert/menuEntry', 'Foods\FoodsController@insertMenuEntry');
+Route::post('insert/menuEntry', 'Foods\FoodEntriesController@insertMenuEntry');
 Route::post('insert/food', 'Foods\FoodsController@insertFood');
-Route::post('insert/unitInCalories', 'Foods\FoodsController@insertUnitInCalories');
-Route::post('insert/foodUnit', 'Foods\FoodsController@insertFoodUnit');
+Route::post('insert/unitInCalories', 'Foods\CaloriesController@insertUnitInCalories');
 
 //recipes
 Route::post('insert/quickRecipe', 'Recipes\RecipesController@insertQuickRecipe');
@@ -97,7 +96,7 @@ Route::post('insert/tagsIntoRecipe', 'Recipes\RecipesController@insertTagsIntoRe
 Route::post('insert/recipe', 'Recipes\RecipesController@insertRecipe');
 Route::post('insert/recipeEntry', 'Recipes\RecipesController@insertRecipeEntry');
 Route::post('insert/foodIntoRecipe', 'Recipes\RecipesController@insertFoodIntoRecipe');
-Route::post('insert/recipeTag', 'Recipes\RecipesController@insertRecipeTag');
+Route::post('insert/recipeTag', 'Recipes\RecipeTagsController@insertRecipeTag');
 
 //exercises
 Route::post('insert/tagInExercise', 'Exercises\ExercisesController@insertTagInExercise');
@@ -131,8 +130,8 @@ Route::post('insert/journalEntry', 'Journal\JournalController@insertOrUpdateJour
  */
 
 //foods
-Route::post('update/defaultUnit', 'Foods\FoodsController@updateDefaultUnit');
-Route::post('update/calories', 'Foods\FoodsController@updateCalories');
+Route::post('update/defaultUnit', 'Foods\CaloriesController@updateDefaultUnit');
+Route::post('update/calories', 'Foods\CaloriesController@updateCalories');
 
 //recipes
 Route::post('update/recipeMethod', 'Recipes\RecipesController@updateRecipeMethod');
@@ -152,9 +151,9 @@ Route::post('update/journalEntry', 'Journal\JournalController@updateJournalEntry
 
 //foods
 Route::post('delete/food', 'Foods\FoodsController@deleteFood');
-Route::post('delete/unitFromCalories', 'Foods\FoodsController@deleteUnitFromCalories');
-Route::post('delete/foodUnit', 'Foods\FoodsController@deleteFoodUnit');
-Route::post('delete/foodEntry', 'Foods\FoodsController@deleteFoodEntry');
+Route::post('delete/unitFromCalories', 'Foods\CaloriesController@deleteUnitFromCalories');
+Route::post('delete/foodUnit', 'Foods\FoodUnitsController@deleteFoodUnit');
+Route::post('delete/foodEntry', 'Foods\FoodEntriesController@deleteFoodEntry');
 
 //recipes
 Route::post('delete/recipe', 'Recipes\RecipesController@deleteRecipe');

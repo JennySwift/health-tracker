@@ -49,7 +49,7 @@ class FoodEntry extends Model {
 	}
 
 	public static function deleteRecipeEntry ($date, $recipe_id) {
-		Food_entries
+		static
 			::where('date', $date)
 			->where('recipe_id', $recipe_id)
 			->delete();
@@ -59,7 +59,7 @@ class FoodEntry extends Model {
 		$date = $data['date'];
 		$new_entry = $data['new_entry'];
 
-		Food_entries::insert([
+		static::insert([
 			'date' => $date,
 			'food_id' => $new_entry['id'],
 			'quantity' => $new_entry['quantity'],
@@ -74,7 +74,7 @@ class FoodEntry extends Model {
 			$quantity = $item['quantity'];
 			$unit_id = $item['unit_id'];
 
-			Food_entries::insert([
+			static::insert([
 				'date' => $date,
 				'food_id' => $food_id,
 				'quantity' => $quantity,

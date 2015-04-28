@@ -4,8 +4,9 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
-use App\Exercise;
-use App\Exercise_tag;
+use App\Models\Exercises\Exercise;
+use App\Models\Exercises\ExerciseTag;
+use Auth;
 
 class ExerciseTagController extends Controller {
 
@@ -23,14 +24,14 @@ class ExerciseTagController extends Controller {
 		$tags = $request->get('tags');
 		
 		//delete tags from exercise
-		DB::table('exercise_tag')
-			->where('exercise_id', $exercise_id)
+		ExerciseTag
+			::where('exercise_id', $exercise_id)
 			->delete();
 
 		//insert tags in exercise
 		foreach ($tags as $tag) {
 			$tag_id = $tag['id'];
-			Exercise_tag::insertExerciseTag($exercise_id, $tag_id);
+			ExerciseTag::insertExerciseTag($exercise_id, $tag_id);
 		}
 
 		return Exercise::getExercises();
@@ -48,8 +49,8 @@ class ExerciseTagController extends Controller {
 		$exercise_id = $request->get('exercise_id');
 		$tag_id = $request->get('tag_id');
 		
-		DB::table('exercise_tag')
-			->where('exercise_id', $exercise_id)
+		ExerciseTag
+			::where('exercise_id', $exercise_id)
 			->where('tag_id', $tag_id)
 			->delete();
 

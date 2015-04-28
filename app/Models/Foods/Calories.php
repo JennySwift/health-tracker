@@ -7,7 +7,7 @@ use App\Models\Foods\FoodEntry;
 class Calories extends Model {
 
 	public static function updateCalories ($food_id, $unit_id, $calories) {
-		Calories
+		static
 			::where('food_id', $food_id)
 			->where('unit_id', $unit_id)
 			->update([
@@ -16,7 +16,7 @@ class Calories extends Model {
 	}
 
 	public static function insertUnitInCalories ($food_id, $unit_id) {
-		Calories
+		static
 			::insert([
 				'food_id' => $food_id,
 				'unit_id' => $unit_id,
@@ -25,21 +25,21 @@ class Calories extends Model {
 	}
 
 	public static function deleteUnitFromCalories ($food_id, $unit_id) {
-		Calories
+		static
 			::where('food_id', $food_id)
 			->where('unit_id', $unit_id)
 			->delete();
 	}
 
 	public static function updateDefaultUnit ($food_id, $unit_id) {
-		Calories
+		static
 			::where('food_id', $food_id)
 			->where('default_unit', 1)
 			->update([
 				'default_unit' => 0
 			]);
 
-		Calories
+		static
 			::where('food_id', $food_id)
 			->where('unit_id', $unit_id)
 			->update([
@@ -48,7 +48,7 @@ class Calories extends Model {
 	}
 
 	public static function getDefaultUnit ($food_id) {
-		$unit_id = Calories
+		$unit_id = static
 			::where('default_unit', 1)
 			->where('food_id', $food_id)
 			->where('user_id', Auth::user()->id)
@@ -58,7 +58,7 @@ class Calories extends Model {
 	}
 
 	public static function getCalories ($food_id, $unit_id) {
-		$calories = Calories
+		$calories = static
 			::where('food_id', $food_id)
 			->where('unit_id', $unit_id)
 			->pluck('calories');

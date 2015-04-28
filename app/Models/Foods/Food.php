@@ -15,7 +15,7 @@ class Food extends Model {
 		 * What's the point of the create and save methods if this insert method works?
 		 */
 		
-		Food::insert([
+		static::insert([
 			'name' => $name,
 			'user_id' => Auth::user()->id
 		]);
@@ -39,7 +39,7 @@ class Food extends Model {
 	}
 
 	public static function getFoods () {
-		$query = Food
+		$query = static
 			::where('user_id', Auth::user()->id)
 			->orderBy('name', 'asc')->get();
 
@@ -58,7 +58,7 @@ class Food extends Model {
 	}
 
 	public static function getAllFoodsWithUnits () {
-		$foods = Food::getFoods();
+		$foods = static::getFoods();
 		$all_foods_with_units = array();
 
 		foreach ($foods as $food) {

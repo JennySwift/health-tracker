@@ -4,8 +4,21 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
+use Auth;
+
+use App\Models\Exercises\Series as ExerciseSeries;
+use App\Models\Exercises\Workouts\Series as WorkoutSeries;
 
 class WorkoutsController extends Controller {
+
+	public function insertSeriesIntoWorkout (Request $request) {
+		$workout_id = $request->get('workout_id');
+		$series_id = $request->get('series_id');
+
+		WorkoutSeries::insertSeriesIntoWorkout($workout_id, $series_id);
+
+		return ExerciseSeries::getExerciseSeries();
+	}
 
 	/**
 	 * Display a listing of the resource.

@@ -30,19 +30,13 @@ class FoodsController extends Controller {
 		   
 		return $foods;
 	}
-	
-	public function getFoodEntries (Request $request) {
-		$date = $request->get('date');
-		return Food_entries::getFoodEntries($date);
-	}
 
 	public function getFoodInfo (Request $request) {
 		$food_id = $request->get('food_id');
-		
-		$default_unit = Calories::getDefaultUnit($food_id);
 
-		$food_units = Food_units::getFoodUnits();
-		$assoc_units = Food_units::getAssocUnits($food_id);
+		$default_unit = Calories::getDefaultUnit($food_id);
+		$food_units = FoodUnit::getFoodUnits();
+		$assoc_units = FoodUnit::getAssocUnits($food_id);
 		$units = array();
 
 		//checking to see if the unit has already been given to a food, so that it appears checked.
@@ -106,20 +100,6 @@ class FoodsController extends Controller {
 	 * insert
 	 */
 
-	public function insertMenuEntry (Request $request) {
-		$data = $request->get('data');
-		$date = $data['date'];
-		Food_entries::insertMenuEntry($data);
-
-		$response = array(
-			"food_entries" => Food_entries::getFoodEntries($date),
-			"calories_for_the_day" => number_format(Calories::getCaloriesForTimePeriod($date, "day"), 2),
-			"calories_for_the_week" => number_format(Calories::getCaloriesForTimePeriod($date, "week"), 2),
-		);
-
-		return $response;
-	}
-
 	public function insertFood (Request $request) {
 		$name = $request->get('name');
 		Food::insertFood($name);
@@ -127,39 +107,9 @@ class FoodsController extends Controller {
 		return Food::getAllFoodsWithUnits();
 	}
 
-	public function insertFoodUnit (Request $request) {
-
-	}
-
-	public function insertUnitInCalories (Request $request) {
-		$food_id = $request->get('food_id');
-		$unit_id = $request->get('unit_id');
-		Calories::insertUnitInCalories($food_id, $unit_id);
-		return Food::getFoodInfo($food_id);
-	}
-
 	/**
 	 * update
 	 */
-	
-	public function updateDefaultUnit (Request $request) {
-		$food_id = $request->get('food_id');
-		$unit_id = $request->get('unit_id');
-
-		Calories::updateDefaultUnit($food_id, $unit_id);
-
-		return Food::getFoodInfo($food_id);
-	}
-
-	public function updateCalories (Request $request) {
-		$food_id = $request->get('food_id');
-		$unit_id = $request->get('unit_id');
-		$calories = $request->get('calories');
-
-		Calories::updateCalories($food_id, $unit_id, $calories);
-
-		return Food::getFoodInfo($food_id);
-	}
 
 	/**
 	 * delete
@@ -169,32 +119,6 @@ class FoodsController extends Controller {
 		$id = $request->get('id');
 		Food::where('id', $id)->delete();
 		return Food::getAllFoodsWithUnits();
-	}
-
-	public function deleteFoodUnit (Request $request) {
-		$id = $request->get('id');
-		Food_units::where('id', $id)->delete();
-		return Food_units::getFoodUnits();
-	}
-
-	public function deleteFoodEntry (Request $request) {
-		$id = $request->get('id');
-		$date = $request->get('date');
-		Food_entries::where('id', $id)->delete();
-
-		$response = array(
-			"food_entries" => Food_entries::getFoodEntries($date),
-			"calories_for_the_day" => number_format(Calories::getCaloriesForTimePeriod($date, "day"), 2),
-			"calories_for_the_week" => number_format(Calories::getCaloriesForTimePeriod($date, "week"), 2)
-		);
-		return $response;
-	}
-
-	public function deleteUnitFromCalories (Request $request) {
-		$food_id = $request->get('food_id');
-		$unit_id = $request->get('unit_id');
-		Calories::deleteUnitFromCalories($food_id, $unit_id);
-		return Food::getFoodInfo($food_id);
 	}
 
 	/**

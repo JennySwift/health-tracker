@@ -37,17 +37,16 @@ class Journal extends Model {
 
 		if ($count === 0) {
 			//create a new entry
-			DB::table('journal_entries')
-				->insert([
-					'date' => $date,
-					'text' => $text,
-					'user_id' => Auth::user()->id
-				]);
+			static::insert([
+				'date' => $date,
+				'text' => $text,
+				'user_id' => Auth::user()->id
+			]);
 		}
 		else {
 			//update existing entry
-			DB::table('journal_entries')
-				->where('date', $date)
+			static
+				::where('date', $date)
 				->where('user_id', Auth::user()->id)
 				->update([
 					'text' => $text

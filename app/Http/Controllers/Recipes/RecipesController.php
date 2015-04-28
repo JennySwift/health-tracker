@@ -6,6 +6,12 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Models\Foods\Recipe;
+use App\Models\Foods\FoodRecipe;
+use App\Models\Foods\RecipeMethod;
+use App\Models\Foods\RecipeTag;
+use App\Models\Foods\Food;
+use App\Models\Foods\FoodUnit;
+use App\Models\Foods\FoodEntry;
 use DB;
 use Auth;
 use Debugbar;
@@ -18,18 +24,17 @@ class RecipesController extends Controller {
 	
 	public function filterRecipes (Request $request) {
 		include(app_path() . '/inc/functions.php');
-		$typing = json_decode(file_get_contents('php://input'), true)["typing"];
-		$tag_ids = json_decode(file_get_contents('php://input'), true)["tag_ids"];
+		$typing = $request->get('typing');
+		$tag_ids = $request->get('tag_ids');
 		return filterRecipes($typing, $tag_ids);
 	}
 	
 	public function getRecipeContents (Request $request) {
-		include(app_path() . '/inc/functions.php');
-		$recipe_id = json_decode(file_get_contents('php://input'), true)["recipe_id"];
+		$recipe_id = $request->get('recipe_id');
 
 		return array(
-			'contents' => getRecipeContents($recipe_id),
-			'steps' => getRecipeSteps($recipe_id)
+			'contents' => FoodRecipe::getRecipeContents($recipe_id),
+			'steps' => RecipeMethod::getRecipeSteps($recipe_id)
 		);
 	}
 
@@ -37,30 +42,24 @@ class RecipesController extends Controller {
 	 * insert
 	 */
 
-	public function insertRecipeTag (Request $request) {
-		//creates a new recipe tag
-		include(app_path() . '/inc/functions.php');
-		$name = json_decode(file_get_contents('php://input'), true)["name"];
-		insertRecipeTag($name);
-		return getRecipeTags();
-	}
-
 	public function insertTagsIntoRecipe (Request $request) {
 		//deletes all tags then adds the correct tags
 		include(app_path() . '/inc/functions.php');
-		$recipe_id = json_decode(file_get_contents('php://input'), true)["recipe_id"];
-		$tags = json_decode(file_get_contents('php://input'), true)["tags"];
-		deleteTagsFromRecipe($recipe_id);
-		insertTagsIntoRecipe($recipe_id, $tags);
+		$recipe_id = $request->get('recipe_id');
+		$tags = $request->get('tags');
+		
+		RecipeTag::deleteTagsFromRecipe($recipe_id);
+		RecipeTag::insertTagsIntoRecipe($recipe_id, $tags);
+
 		return filterRecipes('', []);
 	}
 
 	public function insertQuickRecipe (Request $request) {
 		include(app_path() . '/inc/functions.php');
-		$recipe_name = json_decode(file_get_contents('php://input'), true)["recipe_name"];
-		$contents = json_decode(file_get_contents('php://input'), true)["contents"];
-		$steps = json_decode(file_get_contents('php://input'), true)["steps"];
-		$check_similar_names = json_decode(file_get_contents('php://input'), true)["check_similar_names"];
+		$recipe_name = $request->get('recipe_name');
+		$contents = $request->get('contents');
+		$steps = $request->get('steps');
+		$check_similar_names = $request->get('check_similar_names');
 		
 		$similar_names = insertQuickRecipe($recipe_name, $contents, $steps, $check_similar_names);
 
@@ -72,55 +71,46 @@ class RecipesController extends Controller {
 		else {
 			return array(
 				'recipes' => filterRecipes('', []),
-				'foods_with_units' => getAllFoodsWithUnits(),
-				'food_units' => getFoodUnits()
+				'foods_with_units' => Food::getAllFoodsWithUnits(),
+				'food_units' => FoodUnit::getFoodUnits()
 			);
 		}	
 	}
 
 	public function insertRecipeEntry (Request $request) {
-		include(app_path() . '/inc/functions.php');
-		$date = json_decode(file_get_contents('php://input'), true)["date"];
-		$recipe_id = json_decode(file_get_contents('php://input'), true)["recipe_id"];
-		$recipe_contents = json_decode(file_get_contents('php://input'), true)["recipe_contents"];
+		$date = $request->get('date');
+		$recipe_id = $request->get('recipe_id');
+		$recipe_contents = $request->get('recipe_contents');
 
-		insertRecipeEntry($date, $recipe_id, $recipe_contents);
-		return getFoodEntries($date);
+		FoodEntry::insertRecipeEntry($date, $recipe_id, $recipe_contents);
+		return FoodEntry::getFoodEntries($date);
 	}
 
 	public function insertRecipe (Request $request) {
 		include(app_path() . '/inc/functions.php');
-		$name = json_decode(file_get_contents('php://input'), true)["name"];
-		insertRecipe($name);
+		$name = $request->get('name');
+		Recipe::insertRecipe($name);
 		return filterRecipes('', []);
 	}
 
 	public function insertRecipeMethod (Request $request) {
-		include(app_path() . '/inc/functions.php');
-		$recipe_id = json_decode(file_get_contents('php://input'), true)["recipe_id"];
-		$steps = json_decode(file_get_contents('php://input'), true)["steps"];
-		insertRecipeMethod($recipe_id, $steps);
+		$recipe_id = $request->get('recipe_id');
+		$steps = $request->get('steps');
+		
+		RecipeMethod::insertRecipeMethod($recipe_id, $steps);
 		
 		return array(
-			'contents' => getRecipeContents($recipe_id),
-			'steps' => getRecipeSteps($recipe_id)
+			'contents' => FoodRecipe::getRecipeContents($recipe_id),
+			'steps' => RecipeMethod::getRecipeSteps($recipe_id)
 		);
 	}
 
 	public function insertFoodIntoRecipe (Request $request) {
-		include(app_path() . '/inc/functions.php');
-		$data = json_decode(file_get_contents('php://input'), true);
+		$data = $request->all();
 		$recipe_id = $data['recipe_id'];
 		
-		insertFoodIntoRecipe($recipe_id, $data);
-		return getRecipeContents($recipe_id);
-	}
-
-	public function insertRecipeEntries (Request $request) {
-		$food_id = json_decode(file_get_contents('php://input'), true)["food_id"];
-		$recipe_id = json_decode(file_get_contents('php://input'), true)["recipe_id"];
-
-		$sql = "INSERT INTO food_recipe (recipe_id, food_id, quantity, unit) VALUES ($recipe_id, $food_id, $quantity, $unit_id);";
+		FoodRecipe::insertFoodIntoRecipe($recipe_id, $data);
+		return FoodRecipe::getRecipeContents($recipe_id);
 	}
 
 	/**
