@@ -14,7 +14,7 @@ class Entry extends Model {
 	}
 
 	public function unit () {
-	    return $this->belongsTo('App\Models\Exercises\Unit');
+	    return $this->belongsTo('App\Models\Exercises\Unit', 'exercise_unit_id');
 	}
 
 	public static function getSeriesEntries($exercise_ids) {

@@ -25,21 +25,20 @@ class Series extends Model {
     }
 
     public static function getExerciseSeries () {
-        // $series = Series::find(1);
-
+        //get all the series belonging to the user
         $exercise_series = static
         ::where('user_id', Auth::user()->id)
         ->select('name', 'id')
         ->orderBy('name', 'asc')
         ->get();
 
+        //for each series, add to it the workouts the series is in
         foreach ($exercise_series as $series) {
           $series_id = $series->id;
           $series->workouts = WorkoutSeries::getSeriesWorkouts($series_id);
         }
 
         return $exercise_series;
-        // $series->first()->workouts => Collection of workouts connected to this series
     }
 
 }

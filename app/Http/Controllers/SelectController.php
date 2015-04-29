@@ -17,6 +17,7 @@ use App\Models\Foods\Food;
 use App\Models\Foods\FoodUnit;
 use App\Models\Foods\FoodEntry;
 use App\Models\Foods\Calories;
+use App\Models\Foods\Recipe;
 use App\Models\Foods\RecipeTags;
 
 use App\Models\Weight\Weight;
@@ -31,7 +32,7 @@ class SelectController extends Controller {
 		$response = array(
 			"foods" => Food::getFoods(),
 			// "recipes" => getRecipes(),
-			"recipes" => filterRecipes('', []),
+			"recipes" => Recipe::filterRecipes('', []),
 			"food_units" => FoodUnit::getFoodUnits(),
 			"foods_with_units" => Food::getAllFoodsWithUnits(),
 			"weight" => Weight::getWeight($date),
@@ -54,7 +55,7 @@ class SelectController extends Controller {
 	public function autocompleteMenu () {
 		include(app_path() . '/inc/functions.php');
 		$typing = json_decode(file_get_contents('php://input'), true)["typing"];		
-		return autocompleteMenu($typing);
+		return Food::autocompleteMenu($typing);
 	}
 
 	//Which controller?

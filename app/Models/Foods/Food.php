@@ -6,36 +6,31 @@ use Auth;
 
 class Food extends Model {
 
-	protected $fillable = ['name', 'user_id'];
+	protected $fillable = ['name'];
+
+	public function user () {
+		return $this->belongsTo('App\User');
+	}
+
+	public static function autocompleteMenu ($typing) {
+		$typing = '%' . $typing . '%';
+		
+		$menu = DB::select("select * from (select id, name, 'food' as type from foods where name LIKE '$typing' and user_id = " . Auth::user()->id . " UNION select id, name, 'recipe' as type from recipes where name LIKE '$typing' and user_id = " . Auth::user()->id . ") as table1 order by table1.name asc");
+
+		return $menu;
+	}
 
 	public static function insertFood ($name) {
-		/**
-		 * This works.
-		 * Any problem with it?
-		 * What's the point of the create and save methods if this insert method works?
-		 */
-		
-		static::insert([
-			'name' => $name,
-			'user_id' => Auth::user()->id
-		]);
+		// static::insert([
+		// 	'name' => $name,
+		// 	'user_id' => Auth::user()->id
+		// ]);
+		// 
+		$food = new static(['name' => $name]);
+		$food->user()->associate(Auth::user());
+		$food->save();
 
-		/**
-		 * First failed attempt
-		 * Error: Cannot add or update a child row: a foreign key constraint fails
-		 * Also, why do I need to define the mass-assignable columns when I'm only inserting one row?
-		 */
-		
-		// $food = new Food(['name' => $name, 'user_id', Auth::user()->id]);
-
-		/**
-		 * Second failed attempt
-		 * Error: exception 'BadMethodCallException' with message 'Call to undefined method Illuminate\Database\Query\Builder::user()		
-		 */
-		
-		// $food = new Food(['name' => $name]);
-		// $food->user()->associate(Auth::user());				
-		// $food->save();
+		return $food;
 	}
 
 	public static function getFoods () {
@@ -113,6 +108,27 @@ class Food extends Model {
 		}
 	    
 		return $all_foods_with_units;
+	}
+
+	public static function insertFoodIfNotExists ($food_name) {
+		//for quick recipe
+		include(app_path() . '/inc/functions.php');
+		$count = countItem('foods', $food_name);
+
+		if ($count < 1) {
+			//the food does not exist. create the new food.
+			$food_id = static
+				::insertGetId([
+					'name' => $food_name,
+					'user_id' => Auth::user()->id
+				]);
+		}
+		else {
+			//the food exists. retrieve the id of the food
+			$food_id = getId('foods', $food_name);
+		}
+
+		return $food_id;
 	}
 
 }

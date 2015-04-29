@@ -50,4 +50,24 @@ class FoodUnit extends Model {
 		return $assoc_units;
 	}
 
+	public static function insertUnitIfNotExists ($unit_name) {
+		include(app_path() . '/inc/functions.php');
+		$count = countItem('food_units', $unit_name);
+
+		if ($count < 1) {
+			//the unit does not yet exist so we need to create it
+			$unit_id = static
+				::insertGetId([
+					'name' => $unit_name,
+					'user_id' => Auth::user()->id
+				]);
+		}
+		else {
+			//the unit exists. retrieve the id of the unit
+			$unit_id = getId('food_units', $unit_name);
+		}
+
+		return $unit_id;
+	}
+
 }

@@ -9,9 +9,11 @@ use App\Models\Foods\Recipe;
 use App\Models\Foods\FoodRecipe;
 use App\Models\Foods\RecipeMethod;
 use App\Models\Foods\RecipeTag;
+use App\Models\Foods\RecipeTags;
 use App\Models\Foods\Food;
 use App\Models\Foods\FoodUnit;
 use App\Models\Foods\FoodEntry;
+use App\Models\Foods\Calories;
 use DB;
 use Auth;
 use Debugbar;
@@ -26,7 +28,7 @@ class RecipesController extends Controller {
 		include(app_path() . '/inc/functions.php');
 		$typing = $request->get('typing');
 		$tag_ids = $request->get('tag_ids');
-		return filterRecipes($typing, $tag_ids);
+		return Recipe::filterRecipes($typing, $tag_ids);
 	}
 	
 	public function getRecipeContents (Request $request) {
@@ -51,7 +53,7 @@ class RecipesController extends Controller {
 		RecipeTag::deleteTagsFromRecipe($recipe_id);
 		RecipeTag::insertTagsIntoRecipe($recipe_id, $tags);
 
-		return filterRecipes('', []);
+		return Recipe::filterRecipes('', []);
 	}
 
 	public function insertQuickRecipe (Request $request) {
@@ -61,7 +63,7 @@ class RecipesController extends Controller {
 		$steps = $request->get('steps');
 		$check_similar_names = $request->get('check_similar_names');
 		
-		$similar_names = insertQuickRecipe($recipe_name, $contents, $steps, $check_similar_names);
+		$similar_names = Recipe::insertQuickRecipe($recipe_name, $contents, $steps, $check_similar_names);
 
 		if ($similar_names) {
 			return array(
@@ -70,7 +72,7 @@ class RecipesController extends Controller {
 		}
 		else {
 			return array(
-				'recipes' => filterRecipes('', []),
+				'recipes' => Recipe::filterRecipes('', []),
 				'foods_with_units' => Food::getAllFoodsWithUnits(),
 				'food_units' => FoodUnit::getFoodUnits()
 			);
@@ -90,7 +92,7 @@ class RecipesController extends Controller {
 		include(app_path() . '/inc/functions.php');
 		$name = $request->get('name');
 		Recipe::insertRecipe($name);
-		return filterRecipes('', []);
+		return Recipe::filterRecipes('', []);
 	}
 
 	public function insertRecipeMethod (Request $request) {
@@ -118,17 +120,16 @@ class RecipesController extends Controller {
 	 */
 	
 	public function updateRecipeMethod (Request $request) {
-		include(app_path() . '/inc/functions.php');
-		$recipe_id = json_decode(file_get_contents('php://input'), true)["recipe_id"];
-		$steps = json_decode(file_get_contents('php://input'), true)["steps"];
+		$recipe_id = $request->get('recipe_id');
+		$steps = $request->get('steps');
 
 		//delete the existing method before adding the updated method
-		deleteRecipeMethod($recipe_id);
-		insertRecipeMethod($recipe_id, $steps);
+		RecipeMethod::deleteRecipeMethod($recipe_id);
+		RecipeMethod::insertRecipeMethod($recipe_id, $steps);
 		
 		return array(
-			'contents' => getRecipeContents($recipe_id),
-			'steps' => getRecipeSteps($recipe_id)
+			'contents' => FoodRecipe::getRecipeContents($recipe_id),
+			'steps' => RecipeMethod::getRecipeSteps($recipe_id)
 		);
 	}
 
@@ -138,36 +139,33 @@ class RecipesController extends Controller {
 	
 	public function deleteRecipe (Request $request) {
 		include(app_path() . '/inc/functions.php');
-		$id = json_decode(file_get_contents('php://input'), true)["id"];
-		deleteRecipe($id);
-		return filterRecipes('', []);
+		$id = $request->get('id');
+		Recipe::deleteRecipe($id);
+		return Recipe::filterRecipes('', []);
 	}
 	
 	public function deleteFoodFromRecipe (Request $request) {
-		include(app_path() . '/inc/functions.php');
-		$id = json_decode(file_get_contents('php://input'), true)["id"];
-		$recipe_id = json_decode(file_get_contents('php://input'), true)["recipe_id"];
-		deleteFoodFromRecipe($id);
-		return getRecipeContents($recipe_id);
+		$id = $request->get('id');
+		$recipe_id = $request->get('recipe_id');
+		FoodRecipe::deleteFoodFromRecipe($id);
+		return FoodRecipe::getRecipeContents($recipe_id);
 	}
 
 	public function deleteRecipeTag (Request $request) {
-		include(app_path() . '/inc/functions.php');
-		$id = json_decode(file_get_contents('php://input'), true)["id"];
-		deleteRecipeTag($id);
-		return getRecipeTags();
+		$id = $request->get('id');
+		RecipeTags::deleteRecipeTag($id);
+		return RecipeTags::getRecipeTags();
 	}
 
 	public function deleteRecipeEntry (Request $request) {
-		include(app_path() . '/inc/functions.php');
-		$date = json_decode(file_get_contents('php://input'), true)["date"];
-		$recipe_id = json_decode(file_get_contents('php://input'), true)["recipe_id"];
-		deleteRecipeEntry($date, $recipe_id);
+		$date = $request->get('date');
+		$recipe_id = $request->get('recipe_id');
+		FoodRecipe::deleteRecipeEntry($date, $recipe_id);
 		
 		$response = array(
-			"food_entries" => getFoodEntries($date),
-			"calories_for_the_day" => number_format(getCaloriesForTimePeriod($date, "day"), 2),
-			"calories_for_the_week" => number_format(getCaloriesForTimePeriod($date, "week"), 2)
+			"food_entries" => FoodEntry::getFoodEntries($date),
+			"calories_for_the_day" => number_format(Calories::getCaloriesForTimePeriod($date, "day"), 2),
+			"calories_for_the_week" => number_format(Calories::getCaloriesForTimePeriod($date, "week"), 2)
 		);
 		return $response;
 	}
