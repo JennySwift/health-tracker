@@ -7,6 +7,18 @@ class Unit extends Model {
 
 	protected $table = 'exercise_units';
 
+	/**
+	 * Define relationships
+	 */
+
+	public function user () {
+		return $this->belongsTo('App\User');
+	}
+
+	/**
+	 * select
+	 */
+
 	public static function getExerciseUnits () {
 	    $result = static
 	    	::where('user_id', Auth::user()->id)
@@ -22,5 +34,17 @@ class Unit extends Model {
 
 	    return $exercise_units;
 	}
+
+	/**
+	 * insert
+	 */
+	
+	/**
+	 * update
+	 */
+	
+	/**
+	 * delete
+	 */
 
 }

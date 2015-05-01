@@ -7,6 +7,18 @@ class Journal extends Model {
 
 	protected $table = 'journal_entries';
 
+	/**
+	 * Define relationships
+	 */
+
+	public function user () {
+		return $this->belongsTo('App\User');
+	}
+
+	/**
+	 * select
+	 */
+
 	public static function getJournalEntry ($date) {
 		$entry = static
 			::where('date', $date)
@@ -27,6 +39,10 @@ class Journal extends Model {
 		
 		return $response;
 	}
+
+	/**
+	 * insert
+	 */
 
 	public static function insertOrUpdateJournalEntry ($date, $text) {
 		//check if an entry already exists
@@ -54,5 +70,13 @@ class Journal extends Model {
 		}
 		
 	}
+
+	/**
+	 * update
+	 */
+	
+	/**
+	 * delete
+	 */
 
 }

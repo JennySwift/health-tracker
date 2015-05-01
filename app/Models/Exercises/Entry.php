@@ -9,6 +9,14 @@ class Entry extends Model {
 
 	protected $table = 'exercise_entries';
 
+	/**
+	 * Define relationships
+	 */
+
+	public function user () {
+	    return $this->belongsTo('App\User');
+	}
+
 	public function exercise () {
 	    return $this->belongsTo('App\Models\Exercises\Exercise');
 	}
@@ -17,6 +25,10 @@ class Entry extends Model {
 	    return $this->belongsTo('App\Models\Exercises\Unit', 'exercise_unit_id');
 	}
 
+	/**
+	 * select
+	 */
+	
 	public static function getSeriesEntries($exercise_ids) {
 		return static
 			::whereIn('exercise_id', $exercise_ids)
@@ -58,6 +70,22 @@ class Entry extends Model {
 
 		return static::compactExerciseEntries($entries, $date);
 	}
+
+	/**
+	 * insert
+	 */
+	
+	/**
+	 * update
+	 */
+	
+	/**
+	 * delete
+	 */
+	
+	/**
+	 * other
+	 */
 
 	public static function compactExerciseEntries ($entries, $date) {
 		$array = array();

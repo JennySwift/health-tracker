@@ -7,6 +7,22 @@ class RecipeTags extends Model {
 
 	protected $table = 'recipe_tags';
 
+	/**
+	 * Define relationships
+	 */
+	
+	public function user () {
+		return $this->belongsTo('App\User');
+	}
+
+	public function recipes () {
+		return $this->belongsToMany('App\Models\Foods\Recipe', 'recipe_tag', 'recipe_id', 'tag_id');
+	}
+	
+	/**
+	 * select
+	 */
+	
 	public static function getRecipeTags () {
 		$recipe_tags = static
 			::where('user_id', Auth::user()->id)
@@ -17,6 +33,10 @@ class RecipeTags extends Model {
 		return $recipe_tags;
 	}
 
+	/**
+	 * insert
+	 */
+	
 	public static function insertRecipeTag ($name) {
 		static
 			::insert([
@@ -24,6 +44,14 @@ class RecipeTags extends Model {
 				'user_id' => Auth::user()->id
 			]);
 	}
+
+	/**
+	 * update
+	 */
+	
+	/**
+	 * delete
+	 */
 
 	public static function deleteRecipeTag ($id) {
 		static

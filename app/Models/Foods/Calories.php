@@ -6,47 +6,14 @@ use App\Models\Foods\FoodEntry;
 
 class Calories extends Model {
 
-	public static function updateCalories ($food_id, $unit_id, $calories) {
-		static
-			::where('food_id', $food_id)
-			->where('unit_id', $unit_id)
-			->update([
-				'calories' => $calories
-			]);
-	}
+	/**
+	 * Define relationships
+	 */
 
-	public static function insertUnitInCalories ($food_id, $unit_id) {
-		static
-			::insert([
-				'food_id' => $food_id,
-				'unit_id' => $unit_id,
-				'user_id' => Auth::user()->id
-			]);
-	}
-
-	public static function deleteUnitFromCalories ($food_id, $unit_id) {
-		static
-			::where('food_id', $food_id)
-			->where('unit_id', $unit_id)
-			->delete();
-	}
-
-	public static function updateDefaultUnit ($food_id, $unit_id) {
-		static
-			::where('food_id', $food_id)
-			->where('default_unit', 1)
-			->update([
-				'default_unit' => 0
-			]);
-
-		static
-			::where('food_id', $food_id)
-			->where('unit_id', $unit_id)
-			->update([
-				'default_unit' => 1
-			]);	
-	}
-
+	/**
+	 * select
+	 */
+	
 	public static function getDefaultUnit ($food_id) {
 		$unit_id = static
 			::where('default_unit', 1)
@@ -111,4 +78,57 @@ class Calories extends Model {
 		return $calories_for_period;
 	}
 
+	
+	/**
+	 * insert
+	 */
+	
+	public static function insertUnitInCalories ($food_id, $unit_id) {
+		static
+			::insert([
+				'food_id' => $food_id,
+				'unit_id' => $unit_id,
+				'user_id' => Auth::user()->id
+			]);
+	}
+
+	/**
+	 * update
+	 */
+	
+	public static function updateCalories ($food_id, $unit_id, $calories) {
+		static
+			::where('food_id', $food_id)
+			->where('unit_id', $unit_id)
+			->update([
+				'calories' => $calories
+			]);
+	}
+
+	public static function updateDefaultUnit ($food_id, $unit_id) {
+		static
+			::where('food_id', $food_id)
+			->where('default_unit', 1)
+			->update([
+				'default_unit' => 0
+			]);
+
+		static
+			::where('food_id', $food_id)
+			->where('unit_id', $unit_id)
+			->update([
+				'default_unit' => 1
+			]);	
+	}
+
+	/**
+	 * delete
+	 */
+
+	public static function deleteUnitFromCalories ($food_id, $unit_id) {
+		static
+			::where('food_id', $food_id)
+			->where('unit_id', $unit_id)
+			->delete();
+	}
 }

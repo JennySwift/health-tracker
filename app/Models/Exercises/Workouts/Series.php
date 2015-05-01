@@ -4,19 +4,22 @@ use Illuminate\Database\Eloquent\Model;
 use Auth;
 use App\Models\Exercises\Series as ExerciseSeries;
 
+/**
+ * pivot table model
+ */
+
 class Series extends Model {
 
 	protected $table = 'series_workout';
 
-	public static function insertSeriesIntoWorkout($workout_id, $series_id) {
-		static
-			::insert([
-				'workout_id' => $workout_id,
-				'series_id' => $series_id,
-				'user_id' => Auth::user()->id
-			]);
-	}
+	/**
+	 * Define relationships
+	 */
 
+	/**
+	 * select
+	 */
+	
 	public static function getSeriesWorkouts ($series_id) {
 		//get all the workouts an exercise series is in
 		$exercise_series = ExerciseSeries::find($series_id);
@@ -41,4 +44,26 @@ class Series extends Model {
 
 	// 	return $workout_contents;	
 	// }
+
+	/**
+	 * insert
+	 */
+	
+	public static function insertSeriesIntoWorkout($workout_id, $series_id) {
+		static
+			::insert([
+				'workout_id' => $workout_id,
+				'series_id' => $series_id,
+				'user_id' => Auth::user()->id
+			]);
+	}
+
+	/**
+	 * update
+	 */
+	
+	/**
+	 * delete
+	 */
+	
 }

@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use DB;
 use Auth;
 use Debugbar;
-use App\Models\Weight\Weight;
+use App\Models\Weights\Weight;
 
 class WeightsController extends Controller {
 

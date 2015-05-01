@@ -88,10 +88,6 @@ class FoodsController extends Controller {
 		return $units;
 	}
 
-	public function getFoodList (Request $request) {
-		return Food::getFoods();
-	}
-
 	public function getAllFoodsWithUnits (Request $request) {
 		return Food::getAllFoodsWithUnits();
 	}

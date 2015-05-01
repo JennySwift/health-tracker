@@ -3,6 +3,10 @@
 use Illuminate\Database\Eloquent\Model;
 use Auth;
 
+/**
+ * pivot table model
+ */
+
 class ExerciseTag extends Model {
 
 	protected $table = 'exercise_tag';

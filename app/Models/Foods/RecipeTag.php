@@ -3,14 +3,18 @@
 use Illuminate\Database\Eloquent\Model;
 use Auth;
 
+/**
+ * pivot table model
+ */
+
 class RecipeTag extends Model {
 
 	protected $table = 'recipe_tag';
-	
-	public function recipes () {
-		return $this->belongsToMany('App\Recipe', 'recipe_tag', 'recipe_id', 'tag_id');
-	}
 
+	/**
+	 * select
+	 */
+	
 	public static function getTagsForRecipe ($recipe_id) {
 		$tags = static
 			::where('recipe_id', $recipe_id)
@@ -21,12 +25,11 @@ class RecipeTag extends Model {
 		return $tags;
 	}
 
-	public static function deleteTagsFromRecipe ($recipe_id) {
-		static
-			::where('recipe_id', $recipe_id)
-			->delete();
-	}
 
+	/**
+	 * insert
+	 */
+	
 	public static function insertTagsIntoRecipe ($recipe_id, $tags) {
 		foreach ($tags as $tag) {
 			$tag_id = $tag['id'];
@@ -42,4 +45,20 @@ class RecipeTag extends Model {
 				'user_id' => Auth::user()->id
 			]);
 	}
+
+	/**
+	 * update
+	 */
+	
+	/**
+	 * delete
+	 */
+
+	public static function deleteTagsFromRecipe ($recipe_id) {
+		static
+			::where('recipe_id', $recipe_id)
+			->delete();
+	}
+
+	
 }

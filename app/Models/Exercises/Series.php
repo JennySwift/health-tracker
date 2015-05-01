@@ -7,6 +7,10 @@ use App\Models\Exercises\Workouts\Series as WorkoutSeries;
 class Series extends Model {
 
     protected $table = "exercise_series";
+
+    /**
+     * Define relationships
+     */
   
     public function user () {
         return $this->belongsTo('App\User');
@@ -24,6 +28,10 @@ class Series extends Model {
         return $this->hasManyThrough('App\Models\Exercises\Entry','App\Models\Exercises\Exercise');
     }
 
+    /**
+     * select
+     */
+    
     public static function getExerciseSeries () {
         //get all the series belonging to the user
         $exercise_series = static
@@ -40,5 +48,17 @@ class Series extends Model {
 
         return $exercise_series;
     }
+    
+    /**
+     * insert
+     */
+    
+    /**
+     * update
+     */
+    
+    /**
+     * delete
+     */
 
 }

@@ -44,15 +44,18 @@ Route::resource('weights', 'Weights\WeightsController');
  * Ajax
  */
 
+//which controller? This selects rows from both foods and recipes table.
+Route::post('select/autocompleteMenu', 'SelectController@autocompleteMenu');
+
+//selects everything (which controller??)
+Route::post('select/entries', 'SelectController@getEntries');
+
 /**
  * Select requests
  */
 
 //page load
 Route::post('select/pageLoad', 'SelectController@pageLoad');
-
-//everything (which controller??)
-Route::post('select/entries', 'SelectController@getEntries');
 
 //journal
 Route::post('select/journalEntry', 'Journal\JournalController@getJournalEntry');
@@ -73,9 +76,6 @@ Route::post('select/allFoodsWithUnits', 'Foods\FoodsController@getAllFoodsWithUn
 //recipes
 Route::post('select/filterRecipes', 'Recipes\RecipesController@filterRecipes');
 Route::post('select/recipeContents', 'Recipes\RecipesController@getRecipeContents');
-
-//which controller? This selects rows from both foods and recipes table.
-Route::post('select/autocompleteMenu', 'SelectController@autocompleteMenu');
 
 /**
  * Insert requests

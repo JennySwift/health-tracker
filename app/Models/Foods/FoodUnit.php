@@ -6,6 +6,18 @@ use App\Models\Foods\Calories;
 
 class FoodUnit extends Model {
 
+	/**
+	 * Define relationships
+	 */
+
+	public function user () {
+		return $this->belongsTo('App\User');
+	}
+
+	/**
+	 * select
+	 */
+	
 	public static function getFoodUnits () {
 	    $food_units = static
 	    	::where('user_id', Auth::user()->id)
@@ -50,6 +62,10 @@ class FoodUnit extends Model {
 		return $assoc_units;
 	}
 
+	/**
+	 * insert
+	 */
+	
 	public static function insertUnitIfNotExists ($unit_name) {
 		include(app_path() . '/inc/functions.php');
 		$count = countItem('food_units', $unit_name);
@@ -69,5 +85,13 @@ class FoodUnit extends Model {
 
 		return $unit_id;
 	}
+
+	/**
+	 * update
+	 */
+	
+	/**
+	 * delete
+	 */
 
 }

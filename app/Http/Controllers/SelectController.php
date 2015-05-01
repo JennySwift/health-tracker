@@ -20,7 +20,7 @@ use App\Models\Foods\Calories;
 use App\Models\Foods\Recipe;
 use App\Models\Foods\RecipeTags;
 
-use App\Models\Weight\Weight;
+use App\Models\Weights\Weight;
 
 use App\Models\Journal\Journal;
 

@@ -8,6 +8,10 @@ class Exercise extends Model {
 
 	protected $fillable = ['name', 'default_exercise_unit_id', 'description', 'default_quantity', 'step_number', 'series_id'];
 
+	/**
+	 * Define relationships
+	 */
+
 	public function user () {
 	    return $this->belongsTo('App\User');
 	}
@@ -25,6 +29,10 @@ class Exercise extends Model {
 	    return $this->hasMany('App\Models\Exercises\Entry');
 	}
 
+	/**
+	 * select
+	 */
+	
 	public static function getExercises () {
 	    $exercises = static
 	    	::where('exercises.user_id', Auth::user()->id)
@@ -60,5 +68,16 @@ class Exercise extends Model {
 		return $default;
 	}
 	
+	/**
+	 * insert
+	 */
+	
+	/**
+	 * update
+	 */
+	
+	/**
+	 * delete
+	 */
 
 }

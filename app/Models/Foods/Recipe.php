@@ -11,18 +11,34 @@ use App\Models\Foods\Calories;
 
 class Recipe extends Model {
 
+	/**
+	 * Define relationships
+	 */
+
+	public function user () {
+		return $this->belongsTo('App\User');
+	}
+
+	public function method () {
+		return $this->hasOne('App\Models\Foods\RecipeMethod');
+	}
+
+	public function foods () {
+		return $this->belongsToMany('App\Models\Foods\Food', 'food_recipe', 'food_id', 'recipe_id');
+	}
+
 	public function recipeTags () {
-		return $this->belongsToMany('App\Recipe_tag', 'recipe_tag', 'recipe_id', 'tag_id');
+		return $this->belongsToMany('App\Models\Foods\RecipeTag', 'recipe_tag', 'recipe_id', 'tag_id');
 	}
 
-	public static function insertRecipe ($name) {
-		static
-			::insert([
-				'name' => $name,
-				'user_id' => Auth::user()->id
-			]);
+	public function entries () {
+		return $this->hasMany('App\Models\Foods\FoodEntry');
 	}
 
+	/**
+	 * select
+	 */
+	
 	public static function getRecipes () {
 		$rows = static
 			::where('user_id', Auth::user()->id)
@@ -44,12 +60,6 @@ class Recipe extends Model {
 			);
 		}
 		return $recipes;
-	}
-
-	public static function deleteRecipe ($id) {
-		static
-			::where('id', $id)
-			->delete();
 	}
 
 	public static function filterRecipes ($name, $tag_ids) {
@@ -91,6 +101,19 @@ class Recipe extends Model {
 		}
 
 		return $array;
+	}
+
+
+	/**
+	 * insert
+	 */
+	
+	public static function insertRecipe ($name) {
+		static
+			::insert([
+				'name' => $name,
+				'user_id' => Auth::user()->id
+			]);
 	}
 
 	public static function insertQuickRecipe ($recipe_name, $contents, $steps, $check_similar_names) {
@@ -182,6 +205,35 @@ class Recipe extends Model {
 		}
 	}
 
+	public static function insertQuickRecipeRecipe ($name) {
+		//insert recipe into recipes table and retrieve the id
+		$id = static
+			::insertGetId([
+				'name' => $name,
+				'user_id' => Auth::user()->id
+			]);
+
+		return $id;
+	}
+
+	/**
+	 * update
+	 */
+	
+	/**
+	 * delete
+	 */
+
+	public static function deleteRecipe ($id) {
+		static
+			::where('id', $id)
+			->delete();
+	}
+
+	/**
+	 * other
+	 */
+
 	public static function checkSimilarNames ($name, $table) {
 		//for quick recipe
 		include(app_path() . '/inc/functions.php');
@@ -224,14 +276,5 @@ class Recipe extends Model {
 		}
 	}
 
-	public static function insertQuickRecipeRecipe ($name) {
-		//insert recipe into recipes table and retrieve the id
-		$id = static
-			::insertGetId([
-				'name' => $name,
-				'user_id' => Auth::user()->id
-			]);
-
-		return $id;
-	}
+	
 }

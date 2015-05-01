@@ -5,6 +5,22 @@ use Auth;
 
 class FoodEntry extends Model {
 
+	/**
+	 * Define relationships
+	 */
+
+	public function user () {
+		return $this->belongsTo('App\User');
+	}
+
+	public function food () {
+		return $this->belongsTo('App\Models\Foods\Food');
+	}
+
+	/**
+	 * select
+	 */
+	
 	public static function getFoodEntries ($date) {
 		$rows = static
 			::join('foods', 'food_entries.food_id', '=', 'foods.id')
@@ -48,13 +64,10 @@ class FoodEntry extends Model {
 	    return $food_entries;
 	}
 
-	public static function deleteRecipeEntry ($date, $recipe_id) {
-		static
-			::where('date', $date)
-			->where('recipe_id', $recipe_id)
-			->delete();
-	}
-
+	/**
+	 * insert
+	 */
+	
 	public static function insertMenuEntry ($data) {
 		$date = $data['date'];
 		$new_entry = $data['new_entry'];
@@ -83,6 +96,21 @@ class FoodEntry extends Model {
 				'user_id' => Auth::user()->id
 			]);
 		}
+	}
+
+	/**
+	 * update
+	 */
+	
+	/**
+	 * delete
+	 */
+
+	public static function deleteRecipeEntry ($date, $recipe_id) {
+		static
+			::where('date', $date)
+			->where('recipe_id', $recipe_id)
+			->delete();
 	}
 
 }

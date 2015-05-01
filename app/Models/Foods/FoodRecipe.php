@@ -3,6 +3,10 @@
 use Illuminate\Database\Eloquent\Model;
 use Auth;
 
+/**
+ * pivot table model
+ */
+
 class FoodRecipe extends Model {
 
 	public static function insertFoodIntoRecipe ($recipe_id, $data) {

@@ -3,15 +3,32 @@
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Foods\Calories;
 use Auth;
+use App\User;
 
 class Food extends Model {
 
 	protected $fillable = ['name'];
 
+	/**
+	 * Define relationships
+	 */
+
 	public function user () {
 		return $this->belongsTo('App\User');
 	}
 
+	public function entries () {
+		return $this->hasMany('App\Models\Foods\FoodEntry');
+	}
+
+	public function recipes () {
+		return $this->belongsToMany('App\Models\Foods\Recipe', 'food_recipe', 'food_id', 'recipe_id');
+	}
+
+	/**
+	 * select
+	 */
+	
 	public static function autocompleteMenu ($typing) {
 		$typing = '%' . $typing . '%';
 		
@@ -20,34 +37,26 @@ class Food extends Model {
 		return $menu;
 	}
 
-	public static function insertFood ($name) {
-		// static::insert([
-		// 	'name' => $name,
-		// 	'user_id' => Auth::user()->id
-		// ]);
-		// 
-		$food = new static(['name' => $name]);
-		$food->user()->associate(Auth::user());
-		$food->save();
-
-		return $food;
-	}
-
 	public static function getFoods () {
-		$query = static
-			::where('user_id', Auth::user()->id)
-			->orderBy('name', 'asc')->get();
+		//get all foods for the user
+		/**
+		 * Method one. This works.
+		 */
 
-		$foods = array();
-		foreach ($query as $food) {
-			$food_id = $food->id;
-			$food_name = $food->name;
-			
-			$foods[] = array(
-				"id" => $food_id,
-				"name" => $food_name
-			);
-		}
+		// $foods = static
+		// 	::where('user_id', Auth::user()->id)
+		// 	->orderBy('name', 'asc')
+		// 	->get();
+
+		/**
+		 * Method two. Refactor attempt.
+		 * This works too. Is it better than method one?
+		 */
+		
+		$user = User::find(Auth::user()->id);
+		$foods = $user->foods()
+			->orderBy('name', 'asc')
+			->get();
 
 		return $foods;
 	}
@@ -110,6 +119,23 @@ class Food extends Model {
 		return $all_foods_with_units;
 	}
 
+	/**
+	 * insert
+	 */
+	
+	public static function insertFood ($name) {
+		// static::insert([
+		// 	'name' => $name,
+		// 	'user_id' => Auth::user()->id
+		// ]);
+		// 
+		$food = new static(['name' => $name]);
+		$food->user()->associate(Auth::user());
+		$food->save();
+
+		return $food;
+	}
+
 	public static function insertFoodIfNotExists ($food_name) {
 		//for quick recipe
 		include(app_path() . '/inc/functions.php');
@@ -130,5 +156,13 @@ class Food extends Model {
 
 		return $food_id;
 	}
+
+	/**
+	 * update
+	 */
+	
+	/**
+	 * delete
+	 */
 
 }

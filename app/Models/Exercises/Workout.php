@@ -6,10 +6,22 @@ use App\Models\Exercises\Workouts\Series as WorkoutSeries;
 
 class Workout extends Model {
 
-  public function series() {
-      return $this->belongsToMany('App\Models\Exercises\Series');
-  }
+	/**
+	 * Define relationships
+	 */
 
+	public function user () {
+		return $this->belongsTo('App\User');
+	}
+
+	public function series() {
+	  return $this->belongsToMany('App\Models\Exercises\Series');
+	}
+
+	/**
+	 * select
+	 */
+	
 	public static function getWorkouts () {
 		//get the workouts
 		$workouts = static
@@ -26,5 +38,17 @@ class Workout extends Model {
 
 		return $workouts;
 	}
-
+	
+	/**
+	 * insert
+	 */
+	
+	/**
+	 * update
+	 */
+	
+	/**
+	 * delete
+	 */
+	
 }
