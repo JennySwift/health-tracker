@@ -67,8 +67,8 @@ class Calories extends Model {
 			$unit_id = $row->unit_id;
 			$quantity = $row->quantity;
 
-			$calories_for_item = getCalories($food_id, $unit_id);
-			$calories_for_quantity = getCaloriesForQuantity($calories_for_item, $quantity);
+			$calories_for_item = static::getCalories($food_id, $unit_id);
+			$calories_for_quantity = static::getCaloriesForQuantity($calories_for_item, $quantity);
 			$calories_for_period += $calories_for_quantity;
 		}
 

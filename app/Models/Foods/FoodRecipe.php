@@ -8,6 +8,7 @@ use Auth;
  */
 
 class FoodRecipe extends Model {
+	protected $table = 'food_recipe';
 
 	public static function insertFoodIntoRecipe ($recipe_id, $data) {
 		if (isset($data['description'])) {
