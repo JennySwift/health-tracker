@@ -3,6 +3,7 @@
 use Illuminate\Database\Eloquent\Model;
 use Auth;
 use App\Models\Foods\FoodEntry;
+use Carbon\Carbon;
 
 class Calories extends Model {
 
@@ -51,7 +52,8 @@ class Calories extends Model {
 				->get();
 		}
 		elseif ($period === "week") {
-			$a_week_ago = getDaysAgo($date);
+			// $a_week_ago = getDaysAgo($date);
+			$a_week_ago = Carbon::createFromFormat('Y-m-d', $date)->subWeek(1)->format('Y-m-d');
 			$rows = FoodEntry
 				::join('foods', 'food_entries.food_id', '=', 'foods.id')
 				->join('food_units', 'food_entries.unit_id', '=', 'food_units.id')
