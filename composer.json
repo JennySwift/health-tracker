@@ -15,7 +15,8 @@
 	"require-dev": {
 		"phpunit/phpunit": "~4.0",
 		"phpspec/phpspec": "~2.1",
-		"fzaninotto/faker": "~1.4"
+		"fzaninotto/faker": "~1.4",
+		"laracasts/generators": "~1.1"
 	},
 	"autoload": {
 		"classmap": [
