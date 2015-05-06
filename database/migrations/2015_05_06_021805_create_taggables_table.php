@@ -14,35 +14,12 @@ class CreateTaggablesTable extends Migration {
 	{
 		Schema::create('taggables', function(Blueprint $table)
 		{
-			$table->increments('id');
-			$table->timestamps();
-			$table->integer('exercise_id')->unsigned(); //foreign key
-			$table->integer('tag_id')->unsigned(); //foreign key
-			$table->integer('user_id')->unsigned(); //foreign key
+			$table->integer('tag_id')->unsigned()->index();
+            $table->integer('taggable_id')->unsigned()->index();
+            $table->string('taggable_type')->index();
 
-			$table->foreign('exercise_id')->references('id')->on('exercises')->onDelete('cascade');
-			$table->foreign('tag_id')->references('id')->on('exercise_tags')->onDelete('cascade');
-			$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-			
-			// $table->increments('id');
-			// $table->timestamps();
-			// $table->integer('exercise_id')->unsigned(); //foreign key
-			// $table->integer('tag_id')->unsigned(); //foreign key
-			// $table->integer('user_id')->unsigned(); //foreign key
-
-			// $table->foreign('exercise_id')->references('id')->on('exercises')->onDelete('cascade');
-			// $table->foreign('tag_id')->references('id')->on('exercise_tags')->onDelete('cascade');
-			// $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-			
-			// $table->increments('id');
-			// $table->timestamps();
-			// $table->integer('recipe_id')->unsigned(); //foreign key
-			// $table->integer('tag_id')->unsigned(); //foreign key
-			// $table->integer('user_id')->unsigned(); //foreign key
-
-			// $table->foreign('recipe_id')->references('id')->on('recipes')->onDelete('cascade');
-			// $table->foreign('tag_id')->references('id')->on('recipe_tags')->onDelete('cascade');
-			// $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('tag_id')->references('id')->on('tags')->onDelete('cascade');
+			//@VP: Shouldn't there be a foreign key for taggable_id here?
 		});
 	}
 

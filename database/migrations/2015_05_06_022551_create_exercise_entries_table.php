@@ -22,7 +22,7 @@ class CreateExerciseEntriesTable extends Migration {
 			$table->integer('user_id')->unsigned(); //foreign key
 			$table->integer('exercise_unit_id')->unsigned(); //foreign key
 
-			$table->foreign('exercise_unit_id')->references('id')->on('exercise_units')->onDelete('cascade');
+			$table->foreign('exercise_unit_id')->references('id')->on('units')->onDelete('cascade');
 			$table->foreign('exercise_id')->references('id')->on('exercises')->onDelete('cascade');
 			$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 		});

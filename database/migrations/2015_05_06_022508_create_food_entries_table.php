@@ -24,7 +24,7 @@ class CreateFoodEntriesTable extends Migration {
 			$table->integer('user_id')->unsigned(); //foreign key
 
 			$table->foreign('food_id')->references('id')->on('foods')->onDelete('cascade');
-			$table->foreign('unit_id')->references('id')->on('food_units')->onDelete('cascade');
+			$table->foreign('unit_id')->references('id')->on('units')->onDelete('cascade');
 			$table->foreign('recipe_id')->references('id')->on('recipes')->onDelete('cascade');
 			$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 		});
