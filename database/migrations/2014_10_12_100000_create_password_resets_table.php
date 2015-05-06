@@ -12,7 +12,7 @@ class CreatePasswordResetsTable extends Migration {
 	 */
 	public function up()
 	{
-		DB::statement('SET FOREIGN_KEY_CHECKS=0');
+		// DB::statement('SET FOREIGN_KEY_CHECKS=0');
 
 		Schema::create('password_resets', function(Blueprint $table)
 		{
@@ -21,7 +21,7 @@ class CreatePasswordResetsTable extends Migration {
 			$table->timestamp('created_at');
 		});
 
-		DB::statement('SET FOREIGN_KEY_CHECKS=1');
+		// DB::statement('SET FOREIGN_KEY_CHECKS=1');
 	}
 
 	/**
@@ -31,11 +31,11 @@ class CreatePasswordResetsTable extends Migration {
 	 */
 	public function down()
 	{
-		DB::statement('SET FOREIGN_KEY_CHECKS=0');
+		// DB::statement('SET FOREIGN_KEY_CHECKS=0');
 
 		Schema::drop('password_resets');
 
-		DB::statement('SET FOREIGN_KEY_CHECKS=1');
+		// DB::statement('SET FOREIGN_KEY_CHECKS=1');
 	}
 
 }

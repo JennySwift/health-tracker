@@ -12,7 +12,7 @@ class CreateJournalEntriesTable extends Migration {
 	 */
 	public function up()
 	{
-		DB::statement('SET FOREIGN_KEY_CHECKS=0');
+		// DB::statement('SET FOREIGN_KEY_CHECKS=0');
 
 		Schema::create('journal_entries', function(Blueprint $table)
 		{
@@ -25,7 +25,7 @@ class CreateJournalEntriesTable extends Migration {
 			$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 		});
 
-		DB::statement('SET FOREIGN_KEY_CHECKS=1');
+		// DB::statement('SET FOREIGN_KEY_CHECKS=1');
 	}
 
 	/**
@@ -35,11 +35,11 @@ class CreateJournalEntriesTable extends Migration {
 	 */
 	public function down()
 	{
-		DB::statement('SET FOREIGN_KEY_CHECKS=0');
+		// DB::statement('SET FOREIGN_KEY_CHECKS=0');
 
 		Schema::drop('journal_entries');
 
-		DB::statement('SET FOREIGN_KEY_CHECKS=1');
+		// DB::statement('SET FOREIGN_KEY_CHECKS=1');
 	}
 
 }

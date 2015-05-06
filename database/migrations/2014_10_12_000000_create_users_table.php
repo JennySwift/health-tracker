@@ -12,7 +12,7 @@ class CreateUsersTable extends Migration {
 	 */
 	public function up()
 	{
-		DB::statement('SET FOREIGN_KEY_CHECKS=0');
+		// DB::statement('SET FOREIGN_KEY_CHECKS=0');
 
 		Schema::create('users', function(Blueprint $table)
 		{
@@ -24,7 +24,7 @@ class CreateUsersTable extends Migration {
 			$table->timestamps();
 		});
 
-		DB::statement('SET FOREIGN_KEY_CHECKS=1');
+		// DB::statement('SET FOREIGN_KEY_CHECKS=1');
 	}
 
 	/**
@@ -34,11 +34,11 @@ class CreateUsersTable extends Migration {
 	 */
 	public function down()
 	{
-		DB::statement('SET FOREIGN_KEY_CHECKS=0');
+		// DB::statement('SET FOREIGN_KEY_CHECKS=0');
 
 		Schema::drop('users');
 
-		DB::statement('SET FOREIGN_KEY_CHECKS=1');
+		// DB::statement('SET FOREIGN_KEY_CHECKS=1');
 	}
 
 }
