@@ -24,7 +24,7 @@ class CreateExercisesTable extends Migration {
 			$table->string('description')->nullable();
 			$table->integer('default_exercise_unit_id')->nullable()->unsigned(); //foreign key
 
-			$table->foreign('default_exercise_unit_id')->references('id')->on('exercise_units');
+			$table->foreign('default_exercise_unit_id')->references('id')->on('units');
 			$table->foreign('series_id')->references('id')->on('exercise_series');
 			$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 		});

@@ -26,6 +26,16 @@ class CreateTaggablesTable extends Migration {
 			
 			// $table->increments('id');
 			// $table->timestamps();
+			// $table->integer('exercise_id')->unsigned(); //foreign key
+			// $table->integer('tag_id')->unsigned(); //foreign key
+			// $table->integer('user_id')->unsigned(); //foreign key
+
+			// $table->foreign('exercise_id')->references('id')->on('exercises')->onDelete('cascade');
+			// $table->foreign('tag_id')->references('id')->on('exercise_tags')->onDelete('cascade');
+			// $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+			
+			// $table->increments('id');
+			// $table->timestamps();
 			// $table->integer('recipe_id')->unsigned(); //foreign key
 			// $table->integer('tag_id')->unsigned(); //foreign key
 			// $table->integer('user_id')->unsigned(); //foreign key
