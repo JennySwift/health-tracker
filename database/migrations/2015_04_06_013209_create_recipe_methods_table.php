@@ -17,11 +17,11 @@ class CreateRecipeMethodsTable extends Migration {
 		Schema::create('recipe_methods', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->timestamps();
+			$table->integer('user_id')->unsigned(); //foreign key
 			$table->integer('recipe_id')->unsigned(); //foreign key
 			$table->integer('step');
 			$table->string('text');
-			$table->integer('user_id')->unsigned(); //foreign key
+			$table->timestamps();
 
 			$table->foreign('recipe_id')->references('id')->on('recipes')->onDelete('cascade');
 			$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

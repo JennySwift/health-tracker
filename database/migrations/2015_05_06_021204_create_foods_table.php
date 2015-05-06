@@ -15,9 +15,9 @@ class CreateFoodsTable extends Migration {
 		Schema::create('foods', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->timestamps();
 			$table->integer('user_id')->unsigned(); //foreign key
 			$table->string('name');
+			$table->timestamps();
 
 			$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 		});

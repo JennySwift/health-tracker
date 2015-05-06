@@ -15,13 +15,13 @@ class CreateFoodEntriesTable extends Migration {
 		Schema::create('food_entries', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->timestamps();
+			$table->integer('user_id')->unsigned(); //foreign key
 			$table->date('date');
 			$table->integer('food_id')->unsigned(); //foreign key
 			$table->decimal('quantity', 10, 2);
 			$table->integer('unit_id')->unsigned(); //foreign key
 			$table->integer('recipe_id')->unsigned()->nullable(); //foreign key
-			$table->integer('user_id')->unsigned(); //foreign key
+			$table->timestamps();
 
 			$table->foreign('food_id')->references('id')->on('foods')->onDelete('cascade');
 			$table->foreign('unit_id')->references('id')->on('units')->onDelete('cascade');

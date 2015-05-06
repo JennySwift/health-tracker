@@ -17,11 +17,11 @@ class CreateJournalEntriesTable extends Migration {
 		Schema::create('journal_entries', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->timestamps();
+			$table->integer('user_id')->unsigned(); //foreign key
 			$table->date('date');
 			$table->text('text');
-			$table->integer('user_id')->unsigned(); //foreign key
-
+			$table->timestamps();
+			
 			$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 		});
 

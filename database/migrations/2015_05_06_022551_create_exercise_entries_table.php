@@ -15,12 +15,12 @@ class CreateExerciseEntriesTable extends Migration {
 		Schema::create('exercise_entries', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->timestamps();
+			$table->integer('user_id')->unsigned(); //foreign key
 			$table->date('date');
 			$table->integer('exercise_id')->unsigned(); //foreign key
 			$table->integer('quantity');
-			$table->integer('user_id')->unsigned(); //foreign key
 			$table->integer('exercise_unit_id')->unsigned(); //foreign key
+			$table->timestamps();
 
 			$table->foreign('exercise_unit_id')->references('id')->on('units')->onDelete('cascade');
 			$table->foreign('exercise_id')->references('id')->on('exercises')->onDelete('cascade');

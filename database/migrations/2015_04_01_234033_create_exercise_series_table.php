@@ -17,9 +17,9 @@ class CreateExerciseSeriesTable extends Migration {
 		Schema::create('exercise_series', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->timestamps();
-			$table->string('name');
 			$table->integer('user_id')->unsigned(); //foreign key
+			$table->string('name');
+			$table->timestamps();
 
 			$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 		});

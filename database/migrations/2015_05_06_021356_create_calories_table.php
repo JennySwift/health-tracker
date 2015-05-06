@@ -15,12 +15,12 @@ class CreateCaloriesTable extends Migration {
 		Schema::create('calories', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->timestamps();
+			$table->integer('user_id')->unsigned(); //foreign key
 			$table->integer('food_id')->unsigned(); //foreign key
 			$table->integer('unit_id')->unsigned(); //foreign key
 			$table->decimal('calories', 10, 2)->nullable();
 			$table->boolean('default_unit')->nullable();
-			$table->integer('user_id')->unsigned(); //foreign key
+			$table->timestamps();
 
 			$table->foreign('food_id')->references('id')->on('foods')->onDelete('cascade');
 			$table->foreign('unit_id')->references('id')->on('units')->onDelete('cascade');	
