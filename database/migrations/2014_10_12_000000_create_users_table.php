@@ -41,7 +41,14 @@ class CreateUsersTable extends Migration {
 			$table->timestamps();
 			$table->string('name');
 			$table->integer('user_id')->unsigned(); //foreign key
+			$table->decimal('step_number', 10, 2)->nullable();
+			$table->integer('series_id')->nullable()->unsigned(); //foreign key
+			$table->decimal('default_quantity', 10, 2)->nullable();
+			$table->string('description')->nullable();
+			$table->integer('default_exercise_unit_id')->nullable()->unsigned(); //foreign key
 
+			$table->foreign('default_exercise_unit_id')->references('id')->on('exercise_units');
+			$table->foreign('series_id')->references('id')->on('exercise_series');
 			$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 		});
 
@@ -53,7 +60,9 @@ class CreateUsersTable extends Migration {
 			$table->integer('exercise_id')->unsigned(); //foreign key
 			$table->integer('quantity');
 			$table->integer('user_id')->unsigned(); //foreign key
+			$table->integer('exercise_unit_id')->unsigned(); //foreign key
 
+			$table->foreign('exercise_unit_id')->references('id')->on('exercise_units')->onDelete('cascade');
 			$table->foreign('exercise_id')->references('id')->on('exercises')->onDelete('cascade');
 			$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 		});
@@ -131,6 +140,7 @@ class CreateUsersTable extends Migration {
 			$table->integer('unit_id')->unsigned(); //foreign key
 			$table->integer('user_id')->unsigned(); //foreign key
 			$table->decimal('quantity', 10, 2);
+			$table->string('description')->nullable();
 
 			$table->foreign('recipe_id')->references('id')->on('recipes')->onDelete('cascade');
 			$table->foreign('food_id')->references('id')->on('foods')->onDelete('cascade');
