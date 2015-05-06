@@ -30,7 +30,7 @@ class CreateSeriesWorkoutPivotTable extends Migration {
 	 */
 	public function down()
 	{
-		//
+		Schema::drop('series_workout_pivot');
 	}
 
 }

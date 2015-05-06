@@ -34,7 +34,7 @@ class CreateFoodRecipePivotTable extends Migration {
 	 */
 	public function down()
 	{
-		//
+		Schema::drop('food_recipe_pivot');
 	}
 
 }

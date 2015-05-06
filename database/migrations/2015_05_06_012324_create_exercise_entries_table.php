@@ -32,7 +32,7 @@ class CreateExerciseEntriesTable extends Migration {
 	 */
 	public function down()
 	{
-		//
+		Schema::drop('exercise_entries');
 	}
 
 }

@@ -32,7 +32,7 @@ class CreateCaloriesTable extends Migration {
 	 */
 	public function down()
 	{
-		//
+		Schema::drop('calories');
 	}
 
 }

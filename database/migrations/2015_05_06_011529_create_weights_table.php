@@ -28,7 +28,7 @@ class CreateWeightsTable extends Migration {
 	 */
 	public function down()
 	{
-		//
+		Schema::drop('weights');
 	}
 
 }
