@@ -15,8 +15,8 @@ class ExerciseTag extends Model {
 		//gets tags associated with each exercise
 		$tags = static
 			::where('exercise_id', $exercise_id)
-			->join('exercise_tags', 'exercise_tag.tag_id', '=', 'exercise_tags.id')
-			->select('exercise_tags.id', 'name')
+			->join('tags', 'exercise_tag.tag_id', '=', 'tags.id')
+			->select('tags.id', 'name')
 			->get();
 
 		return $tags;

@@ -7,7 +7,7 @@ use App\Models\Foods\FoodEntry;
 use Faker\Factory as Faker;
 use Carbon\Carbon;
 use App\Models\Foods\Food;
-use App\Models\Foods\FoodUnit;
+use App\Models\Units\Unit;
 
 //done
 class FoodEntrySeeder extends Seeder {
@@ -38,7 +38,7 @@ class FoodEntrySeeder extends Seeder {
 			$food_ids = Food::lists('id');
 			$food_id = $faker->randomElement($food_ids);
 
-			$unit_ids = FoodUnit::lists('id');
+			$unit_ids = Unit::lists('id');
 			$unit_id = $faker->randomElement($unit_ids);
 
 			FoodEntry::create([

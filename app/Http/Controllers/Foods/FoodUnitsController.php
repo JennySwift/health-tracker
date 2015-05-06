@@ -13,8 +13,8 @@ class FoodUnitsController extends Controller {
 	
 	public function deleteFoodUnit (Request $request) {
 		$id = $request->get('id');
-		FoodUnit::where('id', $id)->delete();
-		return FoodUnit::getFoodUnits();
+		Unit::where('id', $id)->delete();
+		return Unit::getFoodUnits();
 	}
 
 	/**

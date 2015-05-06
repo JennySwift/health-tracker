@@ -6,7 +6,7 @@ use App\Models\Foods\Recipe;
 use App\Models\Foods\RecipeTag;
 use App\Models\Foods\RecipeMethod;
 use App\Models\Foods\Food;
-use App\Models\Foods\FoodUnit;
+use App\Models\Units\Unit;
 use App\Models\Foods\Calories;
 
 class Recipe extends Model {
@@ -165,7 +165,7 @@ class Recipe extends Model {
 				//retrieve the id if the food exists, insert and retrieve the id if the food does not exist
 				$food_id = Food::insertFoodIfNotExists($food_name);
 				//same for the unit
-				$unit_id = FoodUnit::insertUnitIfNotExists($unit_name);
+				$unit_id = Unit::insertUnitIfNotExists($unit_name);
 
 				//add the item to the array for inserting when all items are in the array
 				$data_to_insert[] = array(

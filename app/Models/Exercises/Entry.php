@@ -22,7 +22,7 @@ class Entry extends Model {
 	}
 
 	public function unit () {
-	    return $this->belongsTo('App\Models\Exercises\Unit', 'exercise_unit_id');
+	    return $this->belongsTo('App\Models\Units\Unit', 'exercise_unit_id');
 	}
 
 	/**
@@ -33,8 +33,8 @@ class Entry extends Model {
 		return static
 			::whereIn('exercise_id', $exercise_ids)
 			->join('exercises', 'exercise_entries.exercise_id', '=', 'exercises.id')
-			->join('exercise_units', 'exercise_entries.exercise_unit_id', '=', 'exercise_units.id')
-			->select('date', 'exercises.id as exercise_id', 'exercises.name as exercise_name', 'exercises.description', 'exercises.step_number', 'quantity', 'exercise_unit_id', 'exercise_units.name as unit_name')
+			->join('units', 'exercise_entries.exercise_unit_id', '=', 'units.id')
+			->select('date', 'exercises.id as exercise_id', 'exercises.name as exercise_name', 'exercises.description', 'exercises.step_number', 'quantity', 'exercise_unit_id', 'units.name as unit_name')
 			->orderBy('date', 'desc')
 			->get();
 	}
@@ -62,8 +62,8 @@ class Entry extends Model {
 			::where('date', $date)
 			->where('exercise_entries.user_id', Auth::user()->id)
 			->join('exercises', 'exercise_entries.exercise_id', '=', 'exercises.id')
-			->join('exercise_units', 'exercise_entries.exercise_unit_id', '=', 'exercise_units.id')
-			->select('exercise_id', 'quantity', 'exercises.description', 'exercise_unit_id', 'exercises.name', 'exercise_units.name AS unit_name', 'exercise_units.id AS unit_id', 'exercise_entries.id AS entry_id')
+			->join('units', 'exercise_entries.exercise_unit_id', '=', 'units.id')
+			->select('exercise_id', 'quantity', 'exercises.description', 'exercise_unit_id', 'exercises.name', 'units.name AS unit_name', 'units.id AS unit_id', 'exercise_entries.id AS entry_id')
 			->orderBy('exercises.name', 'asc')
 			->orderBy('unit_name', 'asc')
 			->get();

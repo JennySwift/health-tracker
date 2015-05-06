@@ -9,16 +9,14 @@ use Debugbar;
 use App\Models\Exercises\Exercise;
 use App\Models\Exercises\Series as ExerciseSeries;
 use App\Models\Exercises\Entry as ExerciseEntry;
-use App\Models\Exercises\ExerciseTags;
-use App\Models\Exercises\Unit as ExerciseUnit;
+use App\Models\Tags\Tag;
+use App\Models\Units\Unit;
 use App\Models\Exercises\Workout;
 
 use App\Models\Foods\Food;
-use App\Models\Foods\FoodUnit;
 use App\Models\Foods\FoodEntry;
 use App\Models\Foods\Calories;
 use App\Models\Foods\Recipe;
-use App\Models\Foods\RecipeTags;
 
 use App\Models\Weights\Weight;
 
@@ -33,10 +31,10 @@ class SelectController extends Controller {
 			"foods" => Food::getFoods(),
 			// "recipes" => getRecipes(),
 			"recipes" => Recipe::filterRecipes('', []),
-			"food_units" => FoodUnit::getFoodUnits(),
+			"food_units" => Unit::getFoodUnits(),
 			"foods_with_units" => Food::getAllFoodsWithUnits(),
 			"weight" => Weight::getWeight($date),
-			"exercise_units" => ExerciseUnit::getExerciseUnits(),
+			"exercise_units" => Unit::getExerciseUnits(),
 			"exercises" => Exercise::getExercises(),
 			"exercise_series" => ExerciseSeries::getExerciseSeries(),
 			"food_entries" => FoodEntry::getFoodEntries($date),
@@ -44,9 +42,9 @@ class SelectController extends Controller {
 			"calories_for_the_week" => number_format(Calories::getCaloriesForTimePeriod($date, "week"), 2),
 			"exercise_entries" => ExerciseEntry::getExerciseEntries($date),
 			"journal_entry" => Journal::getJournalEntry($date),
-			"exercise_tags" => ExerciseTags::getExerciseTags(),
+			"exercise_tags" => Tag::getExerciseTags(),
 			"workouts" => Workout::getWorkouts(),
-			"recipe_tags" => RecipeTags::getRecipeTags()
+			"recipe_tags" => Tag::getRecipeTags()
 		);
 		return $response;
 	}

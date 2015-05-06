@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Models\Foods\Food;
 use App\Models\Foods\FoodEntry;
-use App\Models\Foods\FoodUnit;
+use App\Models\Units\Unit;
 use App\Models\Foods\Calories;
 use DB;
 use Auth;
@@ -35,8 +35,8 @@ class FoodsController extends Controller {
 		$food_id = $request->get('food_id');
 
 		$default_unit = Calories::getDefaultUnit($food_id);
-		$food_units = FoodUnit::getFoodUnits();
-		$assoc_units = FoodUnit::getAssocUnits($food_id);
+		$food_units = Unit::getFoodUnits();
+		$assoc_units = Unit::getAssocUnits($food_id);
 		$units = array();
 
 		//checking to see if the unit has already been given to a food, so that it appears checked.

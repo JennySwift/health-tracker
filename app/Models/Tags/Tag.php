@@ -1,11 +1,9 @@
-<?php namespace App\Models\Foods;
+<?php namespace App\Models\Tags;
 
 use Illuminate\Database\Eloquent\Model;
 use Auth;
 
-class RecipeTags extends Model {
-
-	protected $table = 'recipe_tags';
+class Tag extends Model {
 
 	/**
 	 * Define relationships
@@ -18,6 +16,24 @@ class RecipeTags extends Model {
 	public function recipes () {
 		return $this->belongsToMany('App\Models\Foods\Recipe', 'recipe_tag', 'recipe_id', 'tag_id');
 	}
+
+	/**
+	 * exercise tags
+	 */
+
+	public static function getExerciseTags () {
+		//gets all exercise tags
+		$tags = static
+			::where('user_id', Auth::user()->id)
+			->select('id', 'name')
+			->get();
+
+		return $tags;
+	}
+
+	/**
+	 * recipe tags
+	 */
 	
 	/**
 	 * select
@@ -58,5 +74,6 @@ class RecipeTags extends Model {
 			::where('id', $id)
 			->delete();
 	}
+
 
 }

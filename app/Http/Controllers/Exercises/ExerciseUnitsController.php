@@ -5,7 +5,7 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 use Auth;
-use App\Models\Exercises\Unit as ExerciseUnit;
+use App\Models\Units\Unit;
 
 class ExerciseUnitsController extends Controller {
 
@@ -20,12 +20,12 @@ class ExerciseUnitsController extends Controller {
 	public function insertExerciseUnit (Request $request) {
 		$name = $request->get('name');
 		
-		ExerciseUnit::insert([
+		Unit::insert([
 			'name' => $name,	
 			'user_id' => Auth::user()->id
 		]);
 
-		return ExerciseUnit::getExerciseUnits();
+		return Unit::getExerciseUnits();
 	}
 
 	/**
@@ -39,8 +39,8 @@ class ExerciseUnitsController extends Controller {
 	public function deleteExerciseUnit (Request $request) {
 		$id = $request->get('id');
 
-		ExerciseUnit::where('id', $id)->delete();
-		return ExerciseUnit::getExerciseUnits();
+		Unit::where('id', $id)->delete();
+		return Unit::getExerciseUnits();
 	}
 	
 	/**

@@ -9,9 +9,9 @@ use App\Models\Foods\Recipe;
 use App\Models\Foods\FoodRecipe;
 use App\Models\Foods\RecipeMethod;
 use App\Models\Foods\RecipeTag;
-use App\Models\Foods\RecipeTags;
+use App\Models\Tags\Tag;
 use App\Models\Foods\Food;
-use App\Models\Foods\FoodUnit;
+use App\Models\Units\Unit;
 use App\Models\Foods\FoodEntry;
 use App\Models\Foods\Calories;
 use DB;
@@ -74,7 +74,7 @@ class RecipesController extends Controller {
 			return array(
 				'recipes' => Recipe::filterRecipes('', []),
 				'foods_with_units' => Food::getAllFoodsWithUnits(),
-				'food_units' => FoodUnit::getFoodUnits()
+				'food_units' => Unit::getFoodUnits()
 			);
 		}	
 	}
@@ -153,8 +153,8 @@ class RecipesController extends Controller {
 
 	public function deleteRecipeTag (Request $request) {
 		$id = $request->get('id');
-		RecipeTags::deleteRecipeTag($id);
-		return RecipeTags::getRecipeTags();
+		Tag::deleteRecipeTag($id);
+		return Tag::getRecipeTags();
 	}
 
 	public function deleteRecipeEntry (Request $request) {

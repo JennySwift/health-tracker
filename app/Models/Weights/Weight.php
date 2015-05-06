@@ -5,8 +5,6 @@ use Auth;
 
 class Weight extends Model {
 
-	protected $table = 'weight';
-
 	/**
 	 * Define relationships
 	 */

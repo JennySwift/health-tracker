@@ -45,10 +45,10 @@ class Calories extends Model {
 		if ($period === "day") {
 			$rows = FoodEntry
 				::join('foods', 'food_entries.food_id', '=', 'foods.id')
-				->join('food_units', 'food_entries.unit_id', '=', 'food_units.id')
+				->join('units', 'food_entries.unit_id', '=', 'units.id')
 				->where('date', $date)
 				->where('food_entries.user_id', Auth::user()->id)
-				->select('food_id', 'food_units.id AS unit_id', 'quantity')
+				->select('food_id', 'units.id AS unit_id', 'quantity')
 				->get();
 		}
 		elseif ($period === "week") {
@@ -56,11 +56,11 @@ class Calories extends Model {
 			$a_week_ago = Carbon::createFromFormat('Y-m-d', $date)->subWeek(1)->format('Y-m-d');
 			$rows = FoodEntry
 				::join('foods', 'food_entries.food_id', '=', 'foods.id')
-				->join('food_units', 'food_entries.unit_id', '=', 'food_units.id')
+				->join('units', 'food_entries.unit_id', '=', 'units.id')
 				->where('date', '>=', $a_week_ago)
 				->where('date', '<=', $date)
 				->where('food_entries.user_id', Auth::user()->id)
-				->select('food_id', 'food_units.id AS unit_id', 'quantity')
+				->select('food_id', 'units.id AS unit_id', 'quantity')
 				->get();
 		}
 

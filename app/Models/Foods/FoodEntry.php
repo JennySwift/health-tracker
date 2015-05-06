@@ -25,11 +25,11 @@ class FoodEntry extends Model {
 	public static function getFoodEntries ($date) {
 		$rows = static
 			::join('foods', 'food_entries.food_id', '=', 'foods.id')
-			->join('food_units', 'food_entries.unit_id', '=', 'food_units.id')
+			->join('units', 'food_entries.unit_id', '=', 'units.id')
 			->leftJoin('recipes', 'food_entries.recipe_id', '=', 'recipes.id')
 			->where('date', $date)
 			->where('food_entries.user_id', Auth::user()->id)
-			->select('food_id', 'foods.name AS food_name', 'food_entries.id AS entry_id', 'food_units.id AS unit_id', 'food_units.name AS unit_name', 'quantity', 'recipes.name AS recipe_name', 'recipes.id AS recipe_id')
+			->select('food_id', 'foods.name AS food_name', 'food_entries.id AS entry_id', 'units.id AS unit_id', 'units.name AS unit_name', 'quantity', 'recipes.name AS recipe_name', 'recipes.id AS recipe_id')
 			->get();
 	    
 

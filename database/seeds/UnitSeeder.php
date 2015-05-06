@@ -3,40 +3,48 @@
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
-use App\Models\Exercises\Unit;
+use App\Models\Units\Unit;
 //done
 class UnitSeeder extends Seeder {
 
 	public function run()
 	{
-		ExerciseUnit::truncate();
+		/**
+		 * exercise units
+		 */
+
+		Unit::truncate();
 		
-		ExerciseUnit::create([
+		Unit::create([
 			'name' => 'reps',
 			'user_id' => 1
 		]);
 
-		ExerciseUnit::create([
+		Unit::create([
 			'name' => 'minutes',
 			'user_id' => 1
 		]);
 
-		FoodUnit::create([
+		/**
+		 * food units
+		 */
+
+		Unit::create([
 			'name' => 'small',
 			'user_id' => 1
 		]);
 
-		FoodUnit::create([
+		Unit::create([
 			'name' => 'medium',
 			'user_id' => 1
 		]);
 
-		FoodUnit::create([
+		Unit::create([
 			'name' => 'large',
 			'user_id' => 1
 		]);
 
-		FoodUnit::create([
+		Unit::create([
 			'name' => 'grams',
 			'user_id' => 1
 		]);

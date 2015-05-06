@@ -1,10 +1,10 @@
-<?php namespace App\Models\Foods;
+<?php namespace App\Models\Units;
 
 use Illuminate\Database\Eloquent\Model;
 use Auth;
 use App\Models\Foods\Calories;
 
-class FoodUnit extends Model {
+class Unit extends Model {
 
 	/**
 	 * Define relationships
@@ -13,6 +13,10 @@ class FoodUnit extends Model {
 	public function user () {
 		return $this->belongsTo('App\User');
 	}
+
+	/**
+	 * food units
+	 */
 
 	/**
 	 * select
@@ -93,5 +97,41 @@ class FoodUnit extends Model {
 	/**
 	 * delete
 	 */
+	
+	/**
+	 * exercise units
+	 */
+	
+	/**
+	 * select
+	 */
+	
+	public static function getExerciseUnits () {
+	    $result = static
+	    	::where('user_id', Auth::user()->id)
+	    	->select('id', 'name')
+	    	->orderBy('name', 'asc')
+	    	->get();
 
+	    //so that it is an array, not an object
+	    $exercise_units = array();
+	    foreach ($result as $unit) {
+	    	$exercise_units[] = $unit;
+	    }
+
+	    return $exercise_units;
+	}
+
+	/**
+	 * insert
+	 */
+	
+	/**
+	 * update
+	 */
+	
+	/**
+	 * delete
+	 */
+	
 }

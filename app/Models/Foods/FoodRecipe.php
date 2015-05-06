@@ -39,8 +39,8 @@ class FoodRecipe extends Model {
 		$recipe_contents = static
 			::where('recipe_id', $recipe_id)
 			->join('foods', 'food_recipe.food_id', '=', 'foods.id')
-			->join('food_units', 'food_recipe.unit_id', '=', 'food_units.id')
-			->select('food_recipe.id', 'food_recipe.description', 'foods.name AS food_name', 'food_units.name AS unit_name', 'recipe_id', 'food_id', 'quantity', 'unit_id')
+			->join('units', 'food_recipe.unit_id', '=', 'units.id')
+			->select('food_recipe.id', 'food_recipe.description', 'foods.name AS food_name', 'units.name AS unit_name', 'recipe_id', 'food_id', 'quantity', 'unit_id')
 			->get();
 
 		foreach ($recipe_contents as $item) {

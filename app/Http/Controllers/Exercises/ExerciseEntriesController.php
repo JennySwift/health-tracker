@@ -32,8 +32,8 @@ class ExerciseEntriesController extends Controller {
 			->where('exercise_id', $exercise_id)
 			->where('exercise_unit_id', $exercise_unit_id)
 			->join('exercises', 'exercise_entries.exercise_id', '=', 'exercises.id')
-			->join('exercise_units', 'exercise_entries.exercise_unit_id', '=', 'exercise_units.id')
-			->select('exercise_id', 'quantity', 'exercises.name', 'exercise_units.name AS unit_name', 'exercise_entries.id AS entry_id')
+			->join('units', 'exercise_entries.exercise_unit_id', '=', 'units.id')
+			->select('exercise_id', 'quantity', 'exercises.name', 'units.name AS unit_name', 'exercise_entries.id AS entry_id')
 			->orderBy('exercises.name', 'asc')
 			->get();
 

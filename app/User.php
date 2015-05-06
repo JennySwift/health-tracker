@@ -50,7 +50,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	}
 
 	public function exerciseUnits () {
-		return $this->hasMany('App\Models\Exercises\Unit');
+		return $this->hasMany('App\Models\Units\Unit');
 	}
 
 	public function workouts () {

@@ -76,9 +76,9 @@ class Food extends Model {
 
 			$rows = Calories
 				::join('foods', 'food_id', '=', 'foods.id')
-				->join('food_units', 'calories.unit_id', '=', 'food_units.id')
+				->join('units', 'calories.unit_id', '=', 'units.id')
 				->where('food_id', $food_id)
-				->select('food_units.name', 'food_units.id', 'calories', 'default_unit')
+				->select('units.name', 'units.id', 'calories', 'default_unit')
 				->get();
 
 			$units = array();

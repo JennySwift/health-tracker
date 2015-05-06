@@ -18,7 +18,7 @@ class Exercise extends Model {
 
 	public function unit () {
 		//the second argument is the name of the field, because if I don't specify it, it will look for unit_id.
-	    return $this->belongsTo('App\Models\Exercises\Unit', 'default_exercise_unit_id');
+	    return $this->belongsTo('App\Models\Units\Unit', 'default_exercise_unit_id');
 	}
 
 	public function series () {
@@ -36,9 +36,9 @@ class Exercise extends Model {
 	public static function getExercises () {
 	    $exercises = static
 	    	::where('exercises.user_id', Auth::user()->id)
-	    	->leftJoin('exercise_units', 'default_exercise_unit_id', '=', 'exercise_units.id')
+	    	->leftJoin('units', 'default_exercise_unit_id', '=', 'units.id')
 	    	->leftJoin('exercise_series', 'exercises.series_id', '=', 'exercise_series.id')
-	    	->select('exercises.id', 'exercises.name', 'exercises.description', 'exercises.step_number', 'exercise_series.name as series_name', 'default_exercise_unit_id', 'default_quantity', 'exercise_units.name AS default_exercise_unit_name')
+	    	->select('exercises.id', 'exercises.name', 'exercises.description', 'exercises.step_number', 'exercise_series.name as series_name', 'default_exercise_unit_id', 'default_quantity', 'units.name AS default_exercise_unit_name')
 	    	->orderBy('series_name', 'asc')
 	    	->orderBy('step_number', 'asc')
 	    	->get();

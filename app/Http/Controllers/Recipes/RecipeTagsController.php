@@ -5,7 +5,7 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 use Auth;
-use App\Models\Foods\RecipeTags;
+use App\Models\Tags\Tag;
 
 class RecipeTagsController extends Controller {
 
@@ -16,8 +16,8 @@ class RecipeTagsController extends Controller {
 	public function insertRecipeTag (Request $request) {
 		//creates a new recipe tag
 		$name = $request->get('name');
-		RecipeTags::insertRecipeTag($name);
-		return RecipeTags::getRecipeTags();
+		Tag::insertRecipeTag($name);
+		return Tag::getRecipeTags();
 	}
 
 	/**

@@ -19,30 +19,30 @@ class DatabaseSeeder extends Seeder {
 		$this->command->info('user table seeded!');
 
 		//foods
-		$this->call('CaloriesSeeder');
-		$this->command->info('calories table seeded!');
+		// $this->call('CaloriesSeeder');
+		// $this->command->info('calories table seeded!');
 
-		$this->call('FoodEntrySeeder');
-		$this->command->info('food_entries table seeded!');
+		// $this->call('FoodEntrySeeder');
+		// $this->command->info('food_entries table seeded!');
 
-		$this->call('FoodRecipeSeeder');
-		$this->command->info('food_recipe table seeded!');
+		// $this->call('FoodRecipeSeeder');
+		// $this->command->info('food_recipe table seeded!');
 
-		$this->call('FoodSeeder');
-		$this->command->info('foods table seeded!');
+		// $this->call('FoodSeeder');
+		// $this->command->info('foods table seeded!');
 
-		$this->call('FoodUnitSeeder');
-		$this->command->info('food_units table seeded!');
+		// $this->call('UnitSeeder');
+		// $this->command->info('units table seeded!');
 
-		$this->call('RecipeMethodSeeder');
-		$this->command->info('recipe_methods table seeded!');
+		// $this->call('RecipeMethodSeeder');
+		// $this->command->info('recipe_methods table seeded!');
 
-		$this->call('RecipeSeeder');
-		$this->command->info('recipes table seeded!');
+		// $this->call('RecipeSeeder');
+		// $this->command->info('recipes table seeded!');
 
 		//exercises
-		$this->call('ExerciseEntrySeeder');
-		$this->command->info('exercise_entries table seeded!');
+		// $this->call('ExerciseEntrySeeder');
+		// $this->command->info('exercise_entries table seeded!');
 
 		// $this->call('ExerciseSeeder');
 		// $this->command->info('exercises table seeded!');

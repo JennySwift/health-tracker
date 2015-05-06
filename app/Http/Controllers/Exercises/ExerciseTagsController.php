@@ -4,7 +4,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
-use App\Models\Exercises\ExerciseTags;
+use App\Models\Tags\Tag;
 use Auth;
 
 class ExerciseTagsController extends Controller {
@@ -27,7 +27,7 @@ class ExerciseTagsController extends Controller {
 				'user_id' => Auth::user()->id
 			]);
 
-		return ExerciseTags::getExerciseTags();
+		return Tag::getExerciseTags();
 	}
 	
 	/**
@@ -45,7 +45,7 @@ class ExerciseTagsController extends Controller {
 			::where('id', $id)
 			->delete();
 
-		return ExerciseTags::getExerciseTags();
+		return Tag::getExerciseTags();
 	}
 
 	/**
