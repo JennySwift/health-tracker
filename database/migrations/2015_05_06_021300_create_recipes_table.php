@@ -12,12 +12,15 @@ class CreateRecipesTable extends Migration {
 	 */
 	public function up()
 	{
-		$table->increments('id');
-		$table->timestamps();
-		$table->string('name');
-		$table->integer('user_id')->unsigned(); //foreign key
+		Schema::create('recipes', function(Blueprint $table)
+		{
+			$table->increments('id');
+			$table->timestamps();
+			$table->string('name');
+			$table->integer('user_id')->unsigned(); //foreign key
 
-		$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+			$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+		});
 	}
 
 	/**
