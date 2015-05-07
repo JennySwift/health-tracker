@@ -16,7 +16,7 @@ class JournalSeeder extends Seeder {
 		 * Create entries for the last 50 days.
 		 * I haven't done the 'last 50 days' part yet.
 		 *
-		 * I have commented out this seeder in DatabaseSeeder.php (line 64) because it was erroring.
+		 * I have commented out this seeder in DatabaseSeeder.php (line 64) because it was erroring
 		 */
 		
 		$faker = Faker::create();

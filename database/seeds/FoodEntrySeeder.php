@@ -33,6 +33,15 @@ class FoodEntrySeeder extends Seeder {
 			 * And when I replace the hard-coded date above with $today, I get an error:
 			 *[InvalidArgumentException]  
   			 *Trailing data
+  			 * You have a shortcut to have the current date with Carbon: Carbon::now();
+  			 * You don't have to new Carbon(), most of the methods are static
+  			 * Trailing data often means that your format is invalid with the date.
+			 * As for your $food_id and $unit_id null, it is again related to the order of the seeds
+			 * in DatabaseSeeder.php, you have to seed the foods and units table before running this 
+			 * seeder. 
+			 *
+			 * If you are interested, there is a package called laracasts/testdummy that could help you generate
+			 * data to seed your database, taking care of relationships for you ;)
 			 */
 			
 			$food_ids = Food::lists('id');

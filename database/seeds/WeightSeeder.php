@@ -11,6 +11,7 @@ class WeightSeeder extends Seeder {
 
 	public function run()
 	{
+		Eloquent::unguard();
 		Weight::truncate();
 		
 		$faker = Faker::create();
@@ -21,7 +22,7 @@ class WeightSeeder extends Seeder {
 		 */
 		
 		// $today = new DateTime('now');
-		$today = Carbon::today();
+		
 
 		foreach (range(0, 49) as $index) {
 			// $diff = new DateInterval('P' . $index . 'D');
@@ -29,13 +30,19 @@ class WeightSeeder extends Seeder {
 
 			/**
 			 * @VP:
-			 * This is creating 50 entries in the weights table like I want, but not for the last 50 days-it is skipping days. Why?
+			 * This is creating 50 entries in the weights table like I want, 
+			 * but not for the last 50 days-it is skipping days. Why?
+			 * Simply create the $today variable inside the loop ;)
+			 * By the way, no need for a $date variable here!
+			 * And also, if you take a look at my migrations, I never create a 'date' field
+			 * Simply because you already have a created_at column which holds a date ;)
+			 *
 			 */
-
-			$date = $today->subDays($index)->format('Y-m-d');
+			$today = Carbon::today();
+			// $date = $today->subDays($index)->format('Y-m-d');
 
 			Weight::create([
-				'date' => $date,
+				'date' => $today->subDays($index)->format('Y-m-d'),
 				'weight' => $faker->randomFloat($nbMaxDecimals = 1, $min = 30, $max = 90),
 				'user_id' => 1
 			]);
