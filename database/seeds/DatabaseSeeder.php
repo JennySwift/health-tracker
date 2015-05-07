@@ -65,6 +65,15 @@ class DatabaseSeeder extends Seeder {
 		// $this->command->info('journal_entries table seeded!');
 
 		//tags
+
+		/**
+		 * @VP:
+		 * When I uncomment the following and try to seed my database, I get the error:
+		 * [ReflectionException]           
+  		 * Class TagSeeder does not exist
+  		 * ?? I thought I'd done it the same as all my other seeders that exist.
+		 */
+
 		// $this->call('TagSeeder');
 		// $this->command->info('tags table seeded!');
 

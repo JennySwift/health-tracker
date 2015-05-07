@@ -6,10 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Tags\Tag;
 use Faker\Factory as Faker;
 
-/**
- * still do do
- */
-
 class TagSeeder extends Seeder {
 
 	public function run()
@@ -20,8 +16,7 @@ class TagSeeder extends Seeder {
 
 		foreach (range(1, 5) as $index) {
 			Tag::create([
-				'date' => '2015-05-02',
-				'text' => $faker->paragraphs,
+				'name' => $faker->word(),
 				'user_id' => 1
 			]);
 		}

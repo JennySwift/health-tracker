@@ -10,23 +10,19 @@ use Faker\Factory as Faker;
  * still to do
  */
 
-class JournalSeeder extends Seeder {
+class TaggableSeeder extends Seeder {
 
 	public function run()
 	{
 		Taggable::truncate();
-
-		/**
-		 * create entries for the last 50 days
-		 */
 		
 		$faker = Faker::create();
 
 		foreach (range(1, 5) as $index) {
 			Tag::create([
-				'date' => '2015-05-02',
-				'text' => $faker->paragraphs,
-				'user_id' => 1
+				'tag_id' => '',
+				'taggable_id' => '',
+				'taggable_type' => ''
 			]);
 		}
 	}
