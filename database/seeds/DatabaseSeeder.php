@@ -18,21 +18,21 @@ class DatabaseSeeder extends Seeder {
 		$this->call('UserSeeder');
 		$this->command->info('user table seeded!');
 
-		//foods
-		// $this->call('CaloriesSeeder');
-		// $this->command->info('calories table seeded!');
+		// foods
+		$this->call('CaloriesSeeder');
+		$this->command->info('calories table seeded!');
 
-		// $this->call('FoodEntrySeeder');
-		// $this->command->info('food_entries table seeded!');
+		$this->call('FoodEntrySeeder');
+		$this->command->info('food_entries table seeded!');
 
-		// $this->call('FoodRecipeSeeder');
-		// $this->command->info('food_recipe table seeded!');
+		$this->call('FoodRecipeSeeder');
+		$this->command->info('food_recipe table seeded!');
 
-		// $this->call('FoodSeeder');
-		// $this->command->info('foods table seeded!');
+		$this->call('FoodSeeder');
+		$this->command->info('foods table seeded!');
 
-		// $this->call('UnitSeeder');
-		// $this->command->info('units table seeded!');
+		$this->call('UnitSeeder');
+		$this->command->info('units table seeded!');
 
 		// $this->call('RecipeMethodSeeder');
 		// $this->command->info('recipe_methods table seeded!');
