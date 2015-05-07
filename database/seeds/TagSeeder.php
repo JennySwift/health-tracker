@@ -12,14 +12,25 @@ class TagSeeder extends Seeder {
 	{
 		Tag::truncate();
 		
-		$faker = Faker::create();
+		Tag::create([
+			'name' => 'main meal',
+			'user_id' => 1
+		]);
 
-		foreach (range(1, 5) as $index) {
-			Tag::create([
-				'name' => $faker->word(),
-				'user_id' => 1
-			]);
-		}
+		Tag::create([
+			'name' => 'soup',
+			'user_id' => 1
+		]);
+
+		Tag::create([
+			'name' => 'pushups',
+			'user_id' => 1
+		]);
+
+		Tag::create([
+			'name' => 'pullups',
+			'user_id' => 1
+		]);
 	}
 
 }

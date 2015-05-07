@@ -41,63 +41,8 @@ class WeightSeeder extends Seeder {
 				'weight' => $faker->randomFloat($nbMaxDecimals = 1, $min = 30, $max = 90),
 				'user_id' => 1
 			]);
-		}
-
-		/**
-		 * doing tags table here because it was erroring in a separate file
-		 */
-
-		Tag::truncate();
+		}		
 		
-		Tag::create([
-			'name' => 'main meal',
-			'user_id' => 1
-		]);
-
-		Tag::create([
-			'name' => 'soup',
-			'user_id' => 1
-		]);
-
-		Tag::create([
-			'name' => 'pushups',
-			'user_id' => 1
-		]);
-
-		Tag::create([
-			'name' => 'pullups',
-			'user_id' => 1
-		]);
-
-		/**
-		 * taggables table was also erroring
-		 */
-		
-		Taggable::truncate();
-
-		Taggable::create([
-			'tag_id' => 3,
-			'taggable_id' => 1,
-			'taggable_type' => 'exercise'
-		]);
-
-		Taggable::create([
-			'tag_id' => 4,
-			'taggable_id' => 1,
-			'taggable_type' => 'exercise'
-		]);
-
-		Taggable::create([
-			'tag_id' => 1,
-			'taggable_id' => 2,
-			'taggable_type' => 'recipe'
-		]);
-
-		Taggable::create([
-			'tag_id' => 2,
-			'taggable_id' => 2,
-			'taggable_type' => 'recipe'
-		]);
 	}
 
 }

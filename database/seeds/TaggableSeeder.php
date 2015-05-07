@@ -15,16 +15,30 @@ class TaggableSeeder extends Seeder {
 	public function run()
 	{
 		Taggable::truncate();
-		
-		$faker = Faker::create();
 
-		foreach (range(1, 5) as $index) {
-			Taggable::create([
-				'tag_id' => '',
-				'taggable_id' => '',
-				'taggable_type' => ''
-			]);
-		}
+		Taggable::create([
+			'tag_id' => 3,
+			'taggable_id' => 1,
+			'taggable_type' => 'exercise'
+		]);
+
+		Taggable::create([
+			'tag_id' => 4,
+			'taggable_id' => 1,
+			'taggable_type' => 'exercise'
+		]);
+
+		Taggable::create([
+			'tag_id' => 1,
+			'taggable_id' => 2,
+			'taggable_type' => 'recipe'
+		]);
+
+		Taggable::create([
+			'tag_id' => 2,
+			'taggable_id' => 2,
+			'taggable_type' => 'recipe'
+		]);
 	}
 
 }
