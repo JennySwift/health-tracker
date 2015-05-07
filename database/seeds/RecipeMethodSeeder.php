@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Foods\RecipeMethod;
 use App\Models\Foods\Recipe;
 use Faker\Factory as Faker;
-//done
+
 class RecipeMethodSeeder extends Seeder {
 
 	public function run()
@@ -16,6 +16,11 @@ class RecipeMethodSeeder extends Seeder {
 		$faker = Faker::create();
 
 		$recipe_ids = Recipe::lists('id');
+
+		/**
+		 * @VP:
+		 * Nothing is being entered into this table. I suppose $recipe_ids is null, but I don't know why.
+		 */
 		
 		foreach ($recipe_ids as $recipe_id) {
 			// $counter = 0;

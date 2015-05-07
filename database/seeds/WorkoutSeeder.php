@@ -4,7 +4,6 @@ use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
 use App\Models\Exercises\Workout;
-//done
 
 class WorkoutSeeder extends Seeder {
 

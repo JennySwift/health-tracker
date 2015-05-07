@@ -5,7 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 
 use App\Models\Foods\Calories;
 use Faker\Factory as Faker;
-//done
+
 class CaloriesSeeder extends Seeder {
 
 	public function run()

@@ -9,7 +9,6 @@ use Carbon\Carbon;
 use App\Models\Foods\Food;
 use App\Models\Units\Unit;
 
-//done
 class FoodEntrySeeder extends Seeder {
 
 	public function run()
@@ -29,12 +28,13 @@ class FoodEntrySeeder extends Seeder {
 			$date = Carbon::createFromFormat('Y-m-d', '2015-05-02')->subDays($number)->format('Y-m-d');
 
 			/**
-			 * Why is $food_id and $unit_id nothing here?
-			 * And when I replace the hard-coded date above with $today, I can an error:
+			 * @VP:
+			 * Why is $food_id and $unit_id nothing here (below)?
+			 * And when I replace the hard-coded date above with $today, I get an error:
 			 *[InvalidArgumentException]  
   			 *Trailing data
 			 */
-
+			
 			$food_ids = Food::lists('id');
 			$food_id = $faker->randomElement($food_ids);
 

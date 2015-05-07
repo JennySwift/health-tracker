@@ -3,14 +3,18 @@
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
-use App\Models\Tags\Tag;
+use App\Models\Tags\Taggable;
 use Faker\Factory as Faker;
+
+/**
+ * still to do
+ */
 
 class JournalSeeder extends Seeder {
 
 	public function run()
 	{
-		Tag::truncate();
+		Taggable::truncate();
 
 		/**
 		 * create entries for the last 50 days

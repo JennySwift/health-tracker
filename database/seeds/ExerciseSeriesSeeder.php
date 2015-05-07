@@ -4,24 +4,24 @@ use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
 use App\Models\Exercises\Series;
-//done
+
 class ExerciseSeriesSeeder extends Seeder {
 
 	public function run()
 	{
-		ExerciseSeries::truncate();
+		Series::truncate();
 
-		ExerciseSeries::create([
+		Series::create([
 			'name' => 'pushup',
 			'user_id' => 1
 		]);
 
-		ExerciseSeries::create([
+		Series::create([
 			'name' => 'pullup',
 			'user_id' => 1
 		]);
 
-		ExerciseSeries::create([
+		Series::create([
 			'name' => 'squat',
 			'user_id' => 1
 		]);

@@ -6,7 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Tags\Tag;
 use Faker\Factory as Faker;
 
-class JournalSeeder extends Seeder {
+/**
+ * still do do
+ */
+
+class TagSeeder extends Seeder {
 
 	public function run()
 	{
