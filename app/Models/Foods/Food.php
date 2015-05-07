@@ -56,7 +56,7 @@ class Food extends Model {
 		$user = User::find(Auth::user()->id);
 		$foods = $user->foods()
 			->join('units', 'foods.id', '=', 'units.id')
-			->select('foods.id', 'foods.name', 'units.name as default_unit_name')
+			->select('foods.id', 'foods.name', 'units.name as default_unit_name', 'units.id as default_unit_id')
 			->orderBy('foods.name', 'asc')
 			->get();
 
@@ -70,6 +70,7 @@ class Food extends Model {
 		foreach ($foods as $food) {
 			$food_id = $food['id'];
 			$food_name = $food['name'];
+			$default_unit_id = $food['default_unit_id'];
 			$default_unit_name = $food['default_unit_name'];
 
 		    $food = array(
@@ -77,6 +78,13 @@ class Food extends Model {
 				"name" => $food_name,
 				"default_unit_name" => $default_unit_name
 		    );
+
+		    $default_unit_calories = Calories
+		    	::where('food_id', $food_id)
+		    	->where('unit_id', $default_unit_id)
+		    	->pluck('calories');
+		    	
+		    $food['default_unit_calories'] = $default_unit_calories;
 
 			$rows = Calories
 				::join('foods', 'food_id', '=', 'foods.id')
@@ -96,11 +104,11 @@ class Food extends Model {
 					$default_unit = true;
 					$default_unit_id = $unit_id;
 					// $default_unit_name = $unit_name;
-					$default_unit_calories = $calories;
+					// $default_unit_calories = $calories;
 
 					$food['default_unit_id'] = $default_unit_id;
 					// $food['default_unit_name'] = $default_unit_name;
-					$food['default_unit_calories'] = $default_unit_calories;
+					// $food['default_unit_calories'] = $default_unit_calories;
 				}
 				else {
 					$default_unit = false;
