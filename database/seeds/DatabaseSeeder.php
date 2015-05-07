@@ -61,8 +61,8 @@ class DatabaseSeeder extends Seeder {
 		$this->command->info('weight table seeded!');
 
 		//journal
-		// $this->call('JournalSeeder');
-		// $this->command->info('journal_entries table seeded!');
+		$this->call('JournalSeeder');
+		$this->command->info('journal_entries table seeded!');
 
 		//tags
 

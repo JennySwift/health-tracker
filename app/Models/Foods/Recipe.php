@@ -3,7 +3,7 @@
 use Illuminate\Database\Eloquent\Model;
 use Auth;
 use App\Models\Foods\Recipe;
-use App\Models\Foods\RecipeTag;
+use App\Models\Tags\Tag;
 use App\Models\Foods\RecipeMethod;
 use App\Models\Foods\Food;
 use App\Models\Units\Unit;
@@ -91,7 +91,7 @@ class Recipe extends Model {
 		foreach ($recipes as $recipe) {
 			$recipe_id = $recipe->id;
 			$recipe_name = $recipe->name;
-			$tags = RecipeTag::getTagsForRecipe($recipe_id);
+			$tags = Tag::getTagsForRecipe($recipe_id);
 			
 			$array[] = array(
 				"id" => $recipe_id,

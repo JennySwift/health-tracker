@@ -19,7 +19,7 @@ class TaggableSeeder extends Seeder {
 		$faker = Faker::create();
 
 		foreach (range(1, 5) as $index) {
-			Tag::create([
+			Taggable::create([
 				'tag_id' => '',
 				'taggable_id' => '',
 				'taggable_type' => ''

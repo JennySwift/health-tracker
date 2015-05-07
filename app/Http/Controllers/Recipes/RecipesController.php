@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 use App\Models\Foods\Recipe;
 use App\Models\Foods\FoodRecipe;
 use App\Models\Foods\RecipeMethod;
-use App\Models\Foods\RecipeTag;
 use App\Models\Tags\Tag;
 use App\Models\Foods\Food;
 use App\Models\Units\Unit;
@@ -50,8 +49,8 @@ class RecipesController extends Controller {
 		$recipe_id = $request->get('recipe_id');
 		$tags = $request->get('tags');
 		
-		RecipeTag::deleteTagsFromRecipe($recipe_id);
-		RecipeTag::insertTagsIntoRecipe($recipe_id, $tags);
+		Tag::deleteTagsFromRecipe($recipe_id);
+		Tag::insertTagsIntoRecipe($recipe_id, $tags);
 
 		return Recipe::filterRecipes('', []);
 	}

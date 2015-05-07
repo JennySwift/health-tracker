@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 
 use App\Models\Journal\Journal;
 use Faker\Factory as Faker;
+use Carbon\Carbon;
 
 class JournalSeeder extends Seeder {
 
@@ -14,19 +15,21 @@ class JournalSeeder extends Seeder {
 
 		/**
 		 * Create entries for the last 50 days.
-		 * I haven't done the 'last 50 days' part yet.
+		 * It is creating 50 entries but skipping days.
 		 *
-		 * I have commented out this seeder in DatabaseSeeder.php (line 64) because it was erroring.
 		 */
 		
 		$faker = Faker::create();
+		$today = Carbon::today();
 
-		foreach (range(1, 5) as $index) {
+		foreach (range(0, 49) as $index) {
+			$date = $today->subDays($index)->format('Y-m-d');
+
 			Journal::create([
-				'date' => '2015-05-02',
-				'text' => $faker->paragraphs,
+				'date' => $date,
+				'text' => $faker->paragraph(),
 				'user_id' => 1
-			]);
+			]);		
 		}
 	}
 

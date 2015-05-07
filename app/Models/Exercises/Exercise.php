@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Auth;
-use App\Models\Exercises\ExerciseTag;
+use App\Models\Tags\Tag;
 
 class Exercise extends Model {
 
@@ -45,7 +45,7 @@ class Exercise extends Model {
 
 	    foreach ($exercises as $exercise) {
 	    	$id = $exercise->id;
-	    	$tags = ExerciseTag::getTagsForExercise($id);
+	    	$tags = Tag::getTagsForExercise($id);
 	    	$exercise->tags = $tags;
 	    }
 
