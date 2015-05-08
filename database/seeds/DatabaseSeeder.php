@@ -12,11 +12,6 @@ class DatabaseSeeder extends Seeder {
 	 */
 	public function run()
 	{
-		/**
-		 * Note: Technically, you shouldn't have to run $this->command->info() since each seeder
-		 * will show up in the console when you run `php artisan db:seed`
-		 * You can of course keep them if you prefer it, no worries ;)
-		 */
 
 		DB::statement('SET FOREIGN_KEY_CHECKS=0');
 		Model::unguard();
@@ -26,28 +21,28 @@ class DatabaseSeeder extends Seeder {
 		// foods
 		$this->call('CaloriesSeeder');
 
-		$this->call('FoodEntrySeeder');
-
 		$this->call('FoodRecipeSeeder');
 
 		$this->call('FoodSeeder');
 
 		$this->call('UnitSeeder');
 
-		$this->call('RecipeMethodSeeder');
+		$this->call('FoodEntrySeeder');
 
 		$this->call('RecipeSeeder');
+
+		$this->call('RecipeMethodSeeder');
 
 		//exercises
 		$this->call('ExerciseEntrySeeder');
 
-		$this->call('ExerciseSeeder');
-
 		$this->call('ExerciseSeriesSeeder');
 
-		// $this->call('SeriesWorkoutSeeder');
+		$this->call('ExerciseSeeder');
 
 		$this->call('WorkoutSeeder');
+
+		$this->call('SeriesWorkoutSeeder');
 
 		//weight
 		$this->call('WeightSeeder');

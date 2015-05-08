@@ -16,14 +16,6 @@ class RecipeMethodSeeder extends Seeder {
 		$faker = Faker::create();
 
 		$recipe_ids = Recipe::lists('id');
-
-		/**
-		 * @VP:
-		 * Nothing is being entered into this table. I suppose $recipe_ids is null, but I don't know why.
-		 * 
-		 * Same thing: you have to seed the recipes table before seeding this table, otherwise you don't
-		 * have any data in the recipes table when running this seeder
-		 */
 		
 		foreach ($recipe_ids as $recipe_id) {
 			// $counter = 0;

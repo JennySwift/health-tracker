@@ -25,15 +25,6 @@ class ExerciseSeeder extends Seeder {
 			'description' => '',
 			'default_quantity' => $faker->numberBetween($min = 5, $max = 20),
 			'step_number' => $faker->numberBetween($min = 1, $max = 10),
-
-			/**
-			 * @VP:
-			 * 'Null' is being entered into the 'series_id' column here. Why?
-			 * 
-			 * Simply because you are running this seeder before seeding the series in 
-			 * your DatabaseSeeder.php file
-			 */
-
 			'series_id' => $faker->randomElement($series_ids),
 			'user_id' => 1
 		]);

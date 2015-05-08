@@ -13,27 +13,27 @@ class FoodSeeder extends Seeder {
 	{
 		Food::truncate();
 
-		Factory::build('App\Models\Foods\Food');
+		// Factory::build('App\Models\Foods\Food');
 
-		// $faker = Faker::create();
+		$faker = Faker::create();
 		
-		// Food::create([
-		// 	'name' => 'apple',
-		// 	'user_id' => 1,
-		// 	'default_unit_id' => $faker->numberBetween($min = 3, $max = 6)
-		// ]);
+		Food::create([
+			'name' => 'apple',
+			'user_id' => 1,
+			'default_unit_id' => $faker->numberBetween($min = 3, $max = 6)
+		]);
 
-		// Food::create([
-		// 	'name' => 'orange',
-		// 	'user_id' => 1,
-		// 	'default_unit_id' => $faker->numberBetween($min = 3, $max = 6)
-		// ]);
+		Food::create([
+			'name' => 'orange',
+			'user_id' => 1,
+			'default_unit_id' => $faker->numberBetween($min = 3, $max = 6)
+		]);
 
-		// Food::create([
-		// 	'name' => 'banana',
-		// 	'user_id' => 1,
-		// 	'default_unit_id' => $faker->numberBetween($min = 3, $max = 6)
-		// ]);
+		Food::create([
+			'name' => 'banana',
+			'user_id' => 1,
+			'default_unit_id' => $faker->numberBetween($min = 3, $max = 6)
+		]);
 	}
 
 }
