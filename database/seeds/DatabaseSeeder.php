@@ -12,6 +12,12 @@ class DatabaseSeeder extends Seeder {
 	 */
 	public function run()
 	{
+		/**
+		 * Note: Technically, you shouldn't have to run $this->command->info() since each seeder
+		 * will show up in the console when you run `php artisan db:seed`
+		 * You can of course keep them if you prefer it, no worries ;)
+		 */
+
 		DB::statement('SET FOREIGN_KEY_CHECKS=0');
 		Model::unguard();
 

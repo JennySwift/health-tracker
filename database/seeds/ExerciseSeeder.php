@@ -29,6 +29,9 @@ class ExerciseSeeder extends Seeder {
 			/**
 			 * @VP:
 			 * 'Null' is being entered into the 'series_id' column here. Why?
+			 * 
+			 * Simply because you are running this seeder before seeding the series in 
+			 * your DatabaseSeeder.php file
 			 */
 
 			'series_id' => $faker->randomElement($series_ids),
