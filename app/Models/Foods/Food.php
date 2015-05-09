@@ -1,6 +1,7 @@
 <?php namespace App\Models\Foods;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\Models\Relationships\OwnedByUser;
 use App\Models\Foods\Calories;
 use Auth;
 use App\User;
