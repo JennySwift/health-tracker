@@ -51,11 +51,18 @@ class Food extends Model {
 		/**
 		 * Method two. Refactor attempt.
 		 * This works too. Is it better than method one?
+		 * 
+		 * It works, sure, but you are using the User model in another model, this is not a good practice at all, what if tomorrow your User model changes? is renamed? etc? In the Food model, return only Food related stuff, query only using the Food model, nothing else.
+		 * You could also use the OwnedByUser trait and do like so:
+		 * 
+		 * $foods = static::forCurrentUser()
+	     *           ->orderBy('name', 'asc')
+		 *           ->get();
 		 */
 		
 		$user = User::find(Auth::user()->id);
 		$foods = $user->foods()
-			->join('units', 'foods.id', '=', 'units.id')
+			->leftJoin('units', 'foods.default_unit_id', '=', 'units.id')
 			->select('foods.id', 'foods.name', 'units.name as default_unit_name', 'units.id as default_unit_id')
 			->orderBy('foods.name', 'asc')
 			->get();
@@ -65,6 +72,8 @@ class Food extends Model {
 
 	public static function getAllFoodsWithUnits () {
 		$foods = static::getFoods();
+
+		// dd($foods);
 		$all_foods_with_units = array();
 
 		foreach ($foods as $food) {

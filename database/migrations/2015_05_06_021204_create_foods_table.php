@@ -17,7 +17,7 @@ class CreateFoodsTable extends Migration {
 			$table->increments('id');
 			$table->integer('user_id')->unsigned(); //foreign key
 			$table->string('name');
-			$table->integer('default_unit_id')->unsigned(); //foreign key
+			$table->integer('default_unit_id')->nullable()->unsigned(); //foreign key
 			$table->timestamps();
 
 			$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
