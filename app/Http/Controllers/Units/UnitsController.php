@@ -1,12 +1,55 @@
-<?php namespace App\Http\Controllers\Foods;
+<?php namespace App\Http\Controllers\Units;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
-use Auth;
+use App\Models\Units\Unit;
 
-class FoodUnitsController extends Controller {
+class UnitsController extends Controller {
+
+	/**
+	 * Exercise units
+	 */
+
+	/**
+	 * select
+	 */
+	
+	/**
+	 * insert
+	 */
+	
+	public function insertExerciseUnit (Request $request) {
+		$name = $request->get('name');
+		
+		Unit::insert([
+			'name' => $name,	
+			'user_id' => Auth::user()->id
+		]);
+
+		return Unit::getExerciseUnits();
+	}
+
+	/**
+	 * update
+	 */
+	
+	/**
+	 * delete
+	 */
+
+	public function deleteExerciseUnit (Request $request) {
+		$id = $request->get('id');
+
+		Unit::where('id', $id)->delete();
+		return Unit::getExerciseUnits();
+	}
+
+	/**
+	 * Food units
+	 */
+	
 	/**
 	 * delete
 	 */
@@ -16,6 +59,7 @@ class FoodUnitsController extends Controller {
 		Unit::where('id', $id)->delete();
 		return Unit::getFoodUnits();
 	}
+
 
 	/**
 	 * Display a listing of the resource.

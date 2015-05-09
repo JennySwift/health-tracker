@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Debugbar;
 
+use Auth;
+use App\User;
 use App\Models\Exercises\Exercise;
 use App\Models\Exercises\Series as ExerciseSeries;
 use App\Models\Exercises\Entry as ExerciseEntry;
@@ -27,14 +29,19 @@ class SelectController extends Controller {
 	public function pageLoad (Request $request) {
 		include(app_path() . '/inc/functions.php');
 		$date = $request->get('date');
+
+		$user = User::find(Auth::user()->id);
+		$exercise_units = $user->exerciseUnits()->orderBy('name', 'asc')->get();
+		$food_units = $user->foodUnits()->orderBy('name', 'asc')->get();
+
 		$response = array(
 			"foods" => Food::getFoods(),
 			// "recipes" => getRecipes(),
 			"recipes" => Recipe::filterRecipes('', []),
-			"food_units" => Unit::getFoodUnits(),
+			"food_units" => $food_units,
 			"foods_with_units" => Food::getAllFoodsWithUnits(),
 			"weight" => Weight::getWeight($date),
-			"exercise_units" => Unit::getExerciseUnits(),
+			"exercise_units" => $exercise_units,
 			"exercises" => Exercise::getExercises(),
 			"exercise_series" => ExerciseSeries::getExerciseSeries(),
 			"food_entries" => FoodEntry::getFoodEntries($date),

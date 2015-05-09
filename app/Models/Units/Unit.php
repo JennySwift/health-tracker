@@ -14,118 +14,49 @@ class Unit extends Model {
 		return $this->belongsTo('App\User');
 	}
 
-	/**
-	 * food units
-	 */
+	public function foods () {
+		return $this->belongsToMany('App\Models\Foods\Food');
+	}
 
 	/**
 	 * select
 	 */
 	
-	public static function getFoodUnits () {
-	    $food_units = static
-	    	::where('user_id', Auth::user()->id)
-	    	->select('id', 'name')
-	    	->orderBy('name', 'asc')
-	    	->get();
-
-	    return $food_units;
-	}
-
-	public static function getAssocUnits ($food_id) {
-		$rows = Calories
-			::where('food_id', $food_id)
-			->join('foods', 'food_id', '=', 'foods.id')
-			->join('food_units', 'calories.unit_id', '=', 'food_units.id')
-			->select('food_units.name', 'food_units.id', 'calories', 'default_unit')
-			->get();
-	   
-
-		$assoc_units = array();
-		foreach ($rows as $row) {
-			$unit_name = $row->name;
-			$unit_id = $row->id;
-			$calories = $row->calories;
-			$default_unit = $row->default_unit;
-
-			if ($default_unit === 1) {
-				$default_unit = true;
-			}
-			else {
-				$default_unit = false;
-			}
-
-			$assoc_units[] = array(
-				"name" => $unit_name,
-				"id" => $unit_id,
-				"calories" => $calories,
-				"default" => $default_unit
-			);
-		}
-	    
-		return $assoc_units;
-	}
-
 	/**
 	 * insert
 	 */
 	
+	/**
+	 * Insert a new food unit if it doesn't exist for the user
+	 * @param  [type] $unit_name [description]
+	 * @return [type]            [description]
+	 */
 	public static function insertUnitIfNotExists ($unit_name) {
 		include(app_path() . '/inc/functions.php');
-		$count = countItem('food_units', $unit_name);
+
+		//Check if the unit exists
+		$count = Unit::where('user_id', Auth()->user('id'))
+			->where('name', $unit_name)
+			->where('for', 'food')
+			->count();
 
 		if ($count < 1) {
 			//the unit does not yet exist so we need to create it
 			$unit_id = static
 				::insertGetId([
 					'name' => $unit_name,
+					'for' => 'food',
 					'user_id' => Auth::user()->id
 				]);
 		}
 		else {
 			//the unit exists. retrieve the id of the unit
-			$unit_id = getId('food_units', $unit_name);
+			$unit_id = getId('units', $unit_name);
 		}
 
 		return $unit_id;
 	}
 
-	/**
-	 * update
-	 */
-	
-	/**
-	 * delete
-	 */
-	
-	/**
-	 * exercise units
-	 */
-	
-	/**
-	 * select
-	 */
-	
-	public static function getExerciseUnits () {
-	    $result = static
-	    	::where('user_id', Auth::user()->id)
-	    	->select('id', 'name')
-	    	->orderBy('name', 'asc')
-	    	->get();
-
-	    //so that it is an array, not an object
-	    $exercise_units = array();
-	    foreach ($result as $unit) {
-	    	$exercise_units[] = $unit;
-	    }
-
-	    return $exercise_units;
-	}
-
-	/**
-	 * insert
-	 */
-	
 	/**
 	 * update
 	 */

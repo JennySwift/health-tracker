@@ -21,11 +21,12 @@ class DatabaseSeeder extends Seeder {
 		$this->call('UnitSeeder');
 
 		// foods
-		$this->call('CaloriesSeeder');
 
 		$this->call('FoodRecipeSeeder');
 
 		$this->call('FoodSeeder');
+
+		$this->call('CaloriesSeeder');
 
 		$this->call('FoodEntrySeeder');
 

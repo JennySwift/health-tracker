@@ -17,6 +17,7 @@ class CreateTagsTable extends Migration {
 			$table->increments('id');
 			$table->integer('user_id')->unsigned(); //foreign key
 			$table->string('name');
+			$table->enum('for', ['food', 'recipe', 'exercise']);
 			$table->timestamps();
 
 			$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

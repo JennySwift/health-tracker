@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCaloriesTable extends Migration {
+class CreateFoodUnitPivotTable extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -12,14 +12,14 @@ class CreateCaloriesTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('calories', function(Blueprint $table)
+		Schema::create('food_unit', function(Blueprint $table)
 		{
 			$table->increments('id');
 			$table->integer('user_id')->unsigned(); //foreign key
 			$table->integer('food_id')->unsigned(); //foreign key
 			$table->integer('unit_id')->unsigned(); //foreign key
 			$table->decimal('calories', 10, 2)->nullable();
-			$table->boolean('default_unit')->nullable();
+			// $table->boolean('default_unit')->nullable();
 			$table->timestamps();
 
 			$table->foreign('food_id')->references('id')->on('foods')->onDelete('cascade');
@@ -35,7 +35,7 @@ class CreateCaloriesTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('calories');
+		Schema::drop('food_unit');
 	}
 
 }

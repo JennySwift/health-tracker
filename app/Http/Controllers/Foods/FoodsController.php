@@ -19,71 +19,9 @@ class FoodsController extends Controller {
 	 * select
 	 */
 
-	/**
-	 * For when user clicks on a food in the foods table
-	 * A popup is displayed, showing all food units
-	 * with the units for that food checked
-	 * and the option to set the default unit for the food
-	 * and the option to set the calories for each of the food's units
-	 *
-	 * Needs fixing after refactor
-	 */
-
 	public function getFoodInfo (Request $request) {
 		$food_id = $request->get('food_id');
-
-		$default_unit = Calories::getDefaultUnit($food_id);
-		$food_units = Unit::getFoodUnits();
-		$assoc_units = Unit::getAssocUnits($food_id);
-		$units = array();
-
-		//checking to see if the unit has already been given to a food, so that it appears checked.
-		foreach ($food_units as $food_unit) {
-			$unit_id = $food_unit->id;
-			$unit_name = $food_unit->name;
-			$match = 0;
-
-			foreach ($assoc_units as $assoc_unit) {
-				$assoc_unit_id = $assoc_unit['id'];
-				$calories = $assoc_unit['calories'];
-
-				if ($unit_id == $assoc_unit_id) {
-					$match++;
-				}
-			}
-			if ($match === 1) {
-				$calories = Calories::getCalories($food_id, $unit_id);
-
-				if ($unit_id === $default_unit) {
-					$units[] = array(
-						"id" => $unit_id,
-						"name" => $unit_name,
-						"checked" => true,
-						"default_unit" => true,
-						"calories" => $calories
-					);
-				}
-				else {
-					$units[] = array(
-						"id" => $unit_id,
-						"name" => $unit_name,
-						"checked" => true,
-						"default_unit" => false,
-						"calories" => $calories
-					);
-				}
-			}
-			else {
-				$units[] = array(
-					"id" => $unit_id,
-					"name" => $unit_name,
-					"checked" => false,
-					"default_unit" => false
-				);
-			}
-		}
-
-		return $units;
+		return Food::getFoodInfo($food_id);
 	}
 
 	public function getAllFoodsWithUnits (Request $request) {

@@ -1,15 +1,62 @@
-<?php namespace App\Http\Controllers\Exercises;
+<?php namespace App\Http\Controllers\Tags;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
+
+use App\Models\Tags\Tag;
+use App\Models\Tags\Taggable;
 use App\Models\Exercises\Exercise;
-use App\Models\Exercises\ExerciseTag;
 use Auth;
 
-class ExerciseTagController extends Controller {
+class TagsController extends Controller {
 
+	/**
+	 * Exercises
+	 */
+	
+	/**
+	 * select
+	 */
+	
+	/**
+	 * insert
+	 */
+	
+	public function InsertExerciseTag (Request $request) {
+		//creates a new exercise tag
+		$name = $request->get('name');
+		
+		Tag::insert([
+			'name' => $name,
+			'for' => 'exercise',
+			'user_id' => Auth::user()->id
+		]);
+
+		return Tag::getExerciseTags();
+	}
+	
+	/**
+	 * update
+	 */
+	
+	/**
+	 * delete
+	 */
+
+	public function deleteExerciseTag (Request $request) {
+		$id = $request->get('id');
+		
+		Tag::find($id)->delete();
+
+		return Tag::getExerciseTags();
+	}
+
+	/**
+	 * From old ExerciseTagController
+	 */
+	
 	/**
 	 * select
 	 */
@@ -24,14 +71,12 @@ class ExerciseTagController extends Controller {
 		$tags = $request->get('tags');
 		
 		//delete tags from exercise
-		ExerciseTag
-			::where('exercise_id', $exercise_id)
-			->delete();
+		Tag::where('exercise_id', $exercise_id)->delete();
 
 		//insert tags in exercise
 		foreach ($tags as $tag) {
 			$tag_id = $tag['id'];
-			ExerciseTag::insertExerciseTag($exercise_id, $tag_id);
+			Tag::insertExerciseTag($exercise_id, $tag_id);
 		}
 
 		return Exercise::getExercises();
@@ -49,14 +94,25 @@ class ExerciseTagController extends Controller {
 		$exercise_id = $request->get('exercise_id');
 		$tag_id = $request->get('tag_id');
 		
-		ExerciseTag
+		Tag
 			::where('exercise_id', $exercise_id)
 			->where('tag_id', $tag_id)
 			->delete();
 
 		return Exercise::getExercises();
 	}
+
+	/**
+	 * Recipes
+	 */
 	
+	public function insertRecipeTag (Request $request) {
+		//creates a new recipe tag
+		$name = $request->get('name');
+		Tag::insertRecipeTag($name);
+		return Tag::getRecipeTags();
+	}
+
 	/**
 	 * Display a listing of the resource.
 	 *

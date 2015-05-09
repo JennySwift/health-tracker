@@ -22,43 +22,7 @@ class ExerciseEntriesController extends Controller {
 		$exercise_id = $request->get('exercise_id');
 		$exercise_unit_id = $request->get('exercise_unit_id');
 
-		/**
-		 * This works. Methods one and/or two (see below) need to accomplish the same thing this query accomplishes. (They need the unit.)
-		 * (Although, even when it is working in my app, postman is returning an empty array. And I don't think I entered the wrong things in postman since method one below did not return an empty array.)
-		 */
-
-		$entries = ExerciseEntry
-			::where('date', $date)
-			->where('exercise_id', $exercise_id)
-			->where('exercise_unit_id', $exercise_unit_id)
-			->join('exercises', 'exercise_entries.exercise_id', '=', 'exercises.id')
-			->join('units', 'exercise_entries.exercise_unit_id', '=', 'units.id')
-			->select('exercise_id', 'quantity', 'exercises.name', 'units.name AS unit_name', 'exercise_entries.id AS entry_id')
-			->orderBy('exercises.name', 'asc')
-			->get();
-
-		/**
-		 * method one
-		 * I tried this but the query is returning various exercises for some reason.
-		 */
-		
-		// $exercise = Exercise::find($request->get('exercise_id'));
-		// $entries = $exercise->with(['entries' => function($query) use ($date)
-		// {
-		//     $query->where('date', $date);
-		// }])->get();
-			
-		/**
-		 * method two
-		 * Error: Missing argument 2 for Illuminate\Database\Query\Builder::whereDate()
-		 */
-		
-		// $entries = ExerciseEntry::whereDate($date)->with(['exercise' => function($query) use ($exercise_id) {
-		//     $query->whereId($exercise_id);
-		//     $query->orderBy('name');
-		// }])->get();
-
-		return $entries;
+		return ExerciseEntry::getSpecificExerciseEntries($date, $exercise_id, $exercise_unit_id);
 	}
 
 	/**

@@ -21,73 +21,10 @@ class ExercisesController extends Controller {
 	 */
 	
 	public function getExerciseSeriesHistory (Request $request) {
-		//I still need functions.php for convertDate
-		include(app_path() . '/inc/functions.php');
-
 		//Fetch the series (singular-the series that was clicked on)
 		$series = Series::find($request->get('series_id'));
 
-		//get all exercises in the series
-		$exercise_ids = $series->exercises->lists('id');
-
-		//get all entries in the series
-		//the function doesn't work when I use the following line:	
-		$entries = $series->entries()
-			
-			->select('exercise_entries.id',
-				'date',
-				'exercises.id as exercise_id',
-				'exercises.name as exercise_name',
-				'exercises.description',
-				'exercises.step_number',
-				'quantity',
-				'exercise_unit_id')
-			->with(['unit' => function($query) {
-				$query->select('name', 'id');
-			}])
-			// ->with('unit')
-			->orderBy('date', 'desc')->get();
-		// $entries = ExerciseEntry::getSeriesEntries($exercise_ids);
-		
-		//create an array to return
-		$array = [];
-
-		//populate the array
-		foreach ($entries as $entry) {
-			$sql_date = $entry->date;
-			$date = convertDate($sql_date, 'user');
-			$days_ago = getHowManyDaysAgo($sql_date);
-			$exercise_id = $entry->exercise_id;
-			$exercise_unit_id = $entry->exercise_unit_id;
-			$counter = 0;
-
-			$total = ExerciseEntry::getTotalExerciseReps($sql_date, $exercise_id, $exercise_unit_id);
-
-			$sets = ExerciseEntry::getExerciseSets($sql_date, $exercise_id, $exercise_unit_id);
-
-			//check to see if the array already has the exercise entry so it doesn't appear as a new entry for each set of exercises
-			foreach ($array as $item) {
-				if ($item['date'] === $date && $item['exercise_name'] === $entry->exercise_name && $item['unit_name'] === $entry->unit_name) {
-					//the exercise with unit already exists in the array so we don't want to add it again
-					$counter++;
-				}
-			}
-			if ($counter === 0) {
-				$array[] = array(
-					'date' => $date,
-					'days_ago' => $days_ago,
-					'exercise_id' => $entry->exercise_id,
-					'exercise_name' => $entry->exercise_name,
-					'description' => $entry->description,
-					'step_number' => $entry->step_number,
-					'unit_name' => $entry->unit->name,
-					'sets' => $sets,
-					'total' => $total,
-				);
-			}	
-		}
-		
-		return $array;
+		return Exercise::getExerciseSeriesHistory($series_id);
 	}
 
 	/**
@@ -116,7 +53,7 @@ class ExercisesController extends Controller {
 	public function insertTagInExercise (Request $request) {
 		$exercise_id = $request->get('exercise_id');
 		$tag_id = $request->get('tag_id');
-		ExerciseTag::insertExerciseTag($exercise_id, $tag_id);
+		Tag::insertExerciseTag($exercise_id, $tag_id);
 		return Exercise::getExercises();
 	}
 

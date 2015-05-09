@@ -366,7 +366,8 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 			$scope.food_popup.name = $food_name;
 			$scope.show.popups.food_info = true;
 			select.foodInfo($food_id).then(function (response) {
-				$scope.food_popup.info = response.data;
+				$scope.food_popup.units = response.data.units;
+				$scope.food_popup.food = response.data.food;
 			});
 			
 		};

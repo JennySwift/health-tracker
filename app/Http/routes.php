@@ -48,6 +48,18 @@ Route::resource('weights', 'Weights\WeightsController');
 Route::post('select/entries', 'SelectController@getEntries');
 
 /**
+ * Tags
+ */
+Route::post('insert/tagsIntoRecipe', 'Tags\TagsController@insertTagsIntoRecipe');
+Route::post('insert/recipeTag', 'Tags\TagsController@insertRecipeTag');
+Route::post('insert/tagInExercise', 'Tags\TagsController@insertTagInExercise');
+Route::post('insert/exerciseTag', 'Tags\TagsController@insertExerciseTag');
+Route::post('insert/tagsInExercise', 'Tags\TagsController@insertTagsInExercise');
+Route::post('delete/exerciseTag', 'Tags\TagsController@deleteExerciseTag');
+Route::post('delete/recipeTag', 'Tags\TagsController@deleteRecipeTag');
+Route::post('delete/tagFromExercise', 'Tags\TagsController@deleteTagFromExercise');
+
+/**
  * Select requests
  */
 
@@ -94,26 +106,17 @@ Route::post('insert/unitInCalories', 'Foods\CaloriesController@insertUnitInCalor
 //recipes
 Route::post('insert/quickRecipe', 'Recipes\RecipesController@insertQuickRecipe');
 Route::post('insert/recipeMethod', 'Recipes\RecipesController@insertRecipeMethod');
-Route::post('insert/tagsIntoRecipe', 'Recipes\RecipesController@insertTagsIntoRecipe');
 Route::post('insert/recipe', 'Recipes\RecipesController@insertRecipe');
 Route::post('insert/recipeEntry', 'Recipes\RecipesController@insertRecipeEntry');
 Route::post('insert/foodIntoRecipe', 'Recipes\RecipesController@insertFoodIntoRecipe');
-Route::post('insert/recipeTag', 'Recipes\RecipeTagsController@insertRecipeTag');
 
 //exercises
-Route::post('insert/tagInExercise', 'Exercises\ExercisesController@insertTagInExercise');
 Route::post('insert/exercise', 'Exercises\ExercisesController@insertExercise');
 Route::post('insert/deleteAndInsertSeriesIntoWorkouts', 'Exercises\ExercisesController@deleteAndInsertSeriesIntoWorkouts');
 
 //exercise entries
 Route::post('insert/exerciseSet', 'Exercises\ExerciseEntriesController@insertExerciseSet');
 Route::post('insert/exerciseEntry', 'Exercises\ExerciseEntriesController@insertExerciseEntry');
-
-//exercise tags
-Route::post('insert/exerciseTag', 'Exercises\ExerciseTagsController@insertExerciseTag');
-
-//exercise tag
-Route::post('insert/tagsInExercise', 'Exercises\ExerciseTagController@insertTagsInExercise');
 
 //exercise units
 Route::post('insert/exerciseUnit', 'Exercises\ExerciseUnitsController@insertExerciseUnit');
@@ -159,7 +162,6 @@ Route::post('delete/foodEntry', 'Foods\FoodEntriesController@deleteFoodEntry');
 
 //recipes
 Route::post('delete/recipe', 'Recipes\RecipesController@deleteRecipe');
-Route::post('delete/recipeTag', 'Recipes\RecipesController@deleteRecipeTag');
 Route::post('delete/foodFromRecipe', 'Recipes\RecipesController@deleteFoodFromRecipe');
 Route::post('delete/recipeEntry', 'Recipes\RecipesController@deleteRecipeEntry');
 
@@ -168,12 +170,6 @@ Route::post('delete/exercise', 'Exercises\ExercisesController@deleteExercise');
 
 //exercise entries
 Route::post('delete/exerciseEntry', 'Exercises\ExerciseEntriesController@deleteExerciseEntry');
-
-//exercise tags
-Route::post('delete/exerciseTag', 'Exercises\ExerciseTagsController@deleteExerciseTag');
-
-//exercise tag
-Route::post('delete/tagFromExercise', 'Exercises\ExerciseTagController@deleteTagFromExercise');
 
 //exercise units
 Route::post('delete/exerciseUnit', 'Exercises\ExerciseUnitsController@deleteExerciseUnit');

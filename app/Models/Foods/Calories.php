@@ -5,8 +5,12 @@ use Auth;
 use App\Models\Foods\FoodEntry;
 use Carbon\Carbon;
 
-class Calories extends Model {
+/**
+ * Calories is now food_unit pivot table so I don't think I should have a calories model
+ */
 
+class Calories extends Model {
+	protected $table = 'food_unit';
 	/**
 	 * Define relationships
 	 */

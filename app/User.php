@@ -50,7 +50,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	}
 
 	public function exerciseUnits () {
-		return $this->hasMany('App\Models\Units\Unit');
+		return $this->hasMany('App\Models\Units\Unit')->where('for', 'exercise');
 	}
 
 	public function workouts () {
@@ -67,7 +67,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	}
 
 	public function foodUnits () {
-		return $this->hasMany('App\Models\Foods\Unit');
+		return $this->hasMany('App\Models\Units\Unit')->where('for', 'food');
 	}
 
 	public function recipes () {
