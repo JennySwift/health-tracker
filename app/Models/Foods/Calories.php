@@ -21,6 +21,17 @@ class Calories extends Model {
 			->where('food_id', $food_id)
 			->where('user_id', Auth::user()->id)
 			->pluck('unit_id');
+
+
+		/**
+		 * You'll need to use the OwnedByUser trait for this one and setup the Food relationship
+	     *   $unit_id = static::where('default_unit', 1)
+	     *                    ->with(['food' => function($query) use ($food_id){
+	     *                       $query->whereId($food_id);
+	     *                    }])
+	     *                    ->forCurrentUser()
+	     *                    ->pluck('unit_id');
+		 */
 		
 		return $unit_id;
 	}
