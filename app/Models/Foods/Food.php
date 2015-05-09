@@ -64,22 +64,22 @@ class Food extends Model {
 		 * If I'm right, why is it static::forCurrentUser() and not static::scopeForCurrentUser()?
 		 */
 
-		$foods = static::forCurrentUser()
-			->leftJoin('units', 'foods.default_unit_id', '=', 'units.id')
-			->select('foods.id', 'foods.name', 'units.name as default_unit_name', 'units.id as default_unit_id')
-			->orderBy('foods.name', 'asc')
-			->get();
+		// $foods = static::forCurrentUser()
+		// 	->leftJoin('units', 'foods.default_unit_id', '=', 'units.id')
+		// 	->select('foods.id', 'foods.name', 'units.name as default_unit_name', 'units.id as default_unit_id')
+		// 	->orderBy('foods.name', 'asc')
+		// 	->get();
 
 		/**
 		 * This is my old code that works
 		 */
 		 
-		// $user = User::find(Auth::user()->id);
-		// $foods = $user->foods()
-		// 	->leftJoin('units', 'foods.default_unit_id', '=', 'units.id')
-		// 	->select('foods.id', 'foods.name', 'units.name as default_unit_name', 'units.id as default_unit_id')
-		// 	->orderBy('foods.name', 'asc')
-		// 	->get();
+		$user = User::find(Auth::user()->id);
+		$foods = $user->foods()
+			->leftJoin('units', 'foods.default_unit_id', '=', 'units.id')
+			->select('foods.id', 'foods.name', 'units.name as default_unit_name', 'units.id as default_unit_id')
+			->orderBy('foods.name', 'asc')
+			->get();
 
 		return $foods;
 	}
@@ -87,7 +87,7 @@ class Food extends Model {
 	public static function getAllFoodsWithUnits () {
 		$foods = static::getFoods();
 
-		dd($foods);
+		// dd($foods);
 		$all_foods_with_units = array();
 
 		foreach ($foods as $food) {
