@@ -31,6 +31,16 @@ class FoodsController extends Controller {
 		return $foods;
 	}
 
+	/**
+	 * For when user clicks on a food in the foods table
+	 * A popup is displayed, showing all food units
+	 * with the units for that food checked
+	 * and the option to set the default unit for the food
+	 * and the option to set the calories for each of the food's units
+	 *
+	 * Needs fixing after refactor
+	 */
+
 	public function getFoodInfo (Request $request) {
 		$food_id = $request->get('food_id');
 
