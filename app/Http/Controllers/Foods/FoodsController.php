@@ -18,18 +18,6 @@ class FoodsController extends Controller {
 	/**
 	 * select
 	 */
-	
-	public function autocompleteFood (Request $request) {
-		$typing = '%' . $request->get('typing') . '%';
-
-		$foods = Food
-			::where('name', 'LIKE', $typing)
-			->where('user_id', Auth::user()->id)
-			->select('id', 'name')
-			->get();
-		   
-		return $foods;
-	}
 
 	/**
 	 * For when user clicks on a food in the foods table

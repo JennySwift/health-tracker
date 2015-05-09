@@ -49,13 +49,6 @@ class SelectController extends Controller {
 		return $response;
 	}
 
-	//Which controller? Selects rows from both foods and recipes table.
-	public function autocompleteMenu () {
-		include(app_path() . '/inc/functions.php');
-		$typing = json_decode(file_get_contents('php://input'), true)["typing"];		
-		return Food::autocompleteMenu($typing);
-	}
-
 	//Which controller?
 	public function getEntries () {
 		include(app_path() . '/inc/functions.php');

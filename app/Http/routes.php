@@ -44,9 +44,6 @@ Route::resource('weights', 'Weights\WeightsController');
  * Ajax
  */
 
-//which controller? This selects rows from both foods and recipes table.
-Route::post('select/autocompleteMenu', 'SelectController@autocompleteMenu');
-
 //selects everything (which controller??)
 Route::post('select/entries', 'SelectController@getEntries');
 
@@ -57,11 +54,17 @@ Route::post('select/entries', 'SelectController@getEntries');
 //page load
 Route::post('select/pageLoad', 'SelectController@pageLoad');
 
+//Autocomplete
+
+//This selects rows from both foods and recipes table.
+Route::post('select/autocompleteMenu', 'Search\AutocompleteController@autocompleteMenu');
+Route::post('select/autocompleteExercise', 'Search\AutocompleteController@autocompleteExercise');
+Route::post('select/autocompleteFood', 'Search\AutocompleteController@autocompleteFood');
+
 //journal
 Route::post('select/journalEntry', 'Journal\JournalController@getJournalEntry');
 
 //exercises
-Route::post('select/autocompleteExercise', 'Exercises\ExercisesController@autocompleteExercise');
 Route::post('select/exerciseSeries', 'Exercises\ExercisesController@getExerciseSeries');
 Route::post('select/exerciseSeriesHistory', 'Exercises\ExercisesController@getExerciseSeriesHistory');
 
@@ -69,7 +72,6 @@ Route::post('select/exerciseSeriesHistory', 'Exercises\ExercisesController@getEx
 Route::post('select/specificExerciseEntries', 'Exercises\ExerciseEntriesController@getSpecificExerciseEntries');
 
 //foods
-Route::post('select/autocompleteFood', 'Foods\FoodsController@autocompleteFood');
 Route::post('select/foodInfo', 'Foods\FoodsController@getFoodInfo');
 Route::post('select/allFoodsWithUnits', 'Foods\FoodsController@getAllFoodsWithUnits');
 

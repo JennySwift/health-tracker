@@ -37,14 +37,6 @@ class Food extends Model {
 	/**
 	 * select
 	 */
-	
-	public static function autocompleteMenu ($typing) {
-		$typing = '%' . $typing . '%';
-		
-		$menu = DB::select("select * from (select id, name, 'food' as type from foods where name LIKE '$typing' and user_id = " . Auth::user()->id . " UNION select id, name, 'recipe' as type from recipes where name LIKE '$typing' and user_id = " . Auth::user()->id . ") as table1 order by table1.name asc");
-
-		return $menu;
-	}
 
 	/**
 	 * Get all the user's foods, with the name of each food's default unit

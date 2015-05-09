@@ -20,18 +20,6 @@ class ExercisesController extends Controller {
 	 * select
 	 */
 	
-	public function autocompleteExercise (Request $request) {
-		$exercise = '%' . $request->get('exercise') . '%';
-	
-		$exercises = Exercise
-			::where('name', 'LIKE', $exercise)
-			->where('user_id', Auth::user()->id)
-			->select('id', 'name', 'description', 'default_exercise_unit_id', 'default_quantity')
-			->get();
-
-		return $exercises;
-	}
-	
 	public function getExerciseSeriesHistory (Request $request) {
 		//I still need functions.php for convertDate
 		include(app_path() . '/inc/functions.php');
