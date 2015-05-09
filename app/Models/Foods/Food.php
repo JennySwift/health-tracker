@@ -8,6 +8,14 @@ use App\User;
 
 class Food extends Model {
 
+	/**
+	 * @VP:
+	 * Why is the following line needed when there is already this at the top of the file:
+	 * use App\Traits\Models\Relationships\OwnedByUser;
+	 */
+
+	use OwnedByUser;
+
 	protected $fillable = ['name'];
 
 	/**
@@ -38,35 +46,40 @@ class Food extends Model {
 		return $menu;
 	}
 
-	public static function getFoods () {
-		//get all foods for the user
-		/**
-		 * Method one. This works.
-		 */
+	/**
+	 * Get all the user's foods, with the name of each food's default unit
+	 */
 
-		// $foods = static
-		// 	::where('user_id', Auth::user()->id)
-		// 	->orderBy('name', 'asc')
-		// 	->get();
-
+	public static function getFoods () { 
 		/**
-		 * Method two. Refactor attempt.
-		 * This works too. Is it better than method one?
-		 * 
-		 * It works, sure, but you are using the User model in another model, this is not a good practice at all, what if tomorrow your User model changes? is renamed? etc? In the Food model, return only Food related stuff, query only using the Food model, nothing else.
-		 * You could also use the OwnedByUser trait and do like so:
-		 * 
-		 * $foods = static::forCurrentUser()
-	     *           ->orderBy('name', 'asc')
-		 *           ->get();
+		 * @VP:
+		 * When I use this code I get the following error.
+		 * Column 'user_id' in where clause is ambiguous
+		 * (SQL: select `foods`.`id`, `foods`.`name`, `units`.`name` as `default_unit_name`, `units`.`id` as `default_unit_id` from `foods` left join `units` on `foods`.`default_unit_id` = `units`.`id` where `user_id` = 1 order by `foods`.`name` asc)
 		 */
 		
-		$user = User::find(Auth::user()->id);
-		$foods = $user->foods()
+		/**
+		 * @VP:
+		 * Also, this is calling the scopeForCurrentUser method in OwnedByUser.php, right?
+		 * If I'm right, why is it static::forCurrentUser() and not static::scopeForCurrentUser()?
+		 */
+
+		$foods = static::forCurrentUser()
 			->leftJoin('units', 'foods.default_unit_id', '=', 'units.id')
 			->select('foods.id', 'foods.name', 'units.name as default_unit_name', 'units.id as default_unit_id')
 			->orderBy('foods.name', 'asc')
 			->get();
+
+		/**
+		 * This is my old code that works
+		 */
+		 
+		// $user = User::find(Auth::user()->id);
+		// $foods = $user->foods()
+		// 	->leftJoin('units', 'foods.default_unit_id', '=', 'units.id')
+		// 	->select('foods.id', 'foods.name', 'units.name as default_unit_name', 'units.id as default_unit_id')
+		// 	->orderBy('foods.name', 'asc')
+		// 	->get();
 
 		return $foods;
 	}
@@ -74,7 +87,7 @@ class Food extends Model {
 	public static function getAllFoodsWithUnits () {
 		$foods = static::getFoods();
 
-		// dd($foods);
+		dd($foods);
 		$all_foods_with_units = array();
 
 		foreach ($foods as $food) {
