@@ -18,11 +18,8 @@ class RecipeMethod extends Model {
 	 */
 	
 	public static function getRecipeSteps ($recipe_id) {
-		$steps = static
-			::where('recipe_id', $recipe_id)
-			->select('step', 'text')
-			->get();
-
+		$recipe = Recipe::find($recipe_id);
+		$steps = $recipe->steps;
 		return $steps;
 	}
 

@@ -17,11 +17,11 @@
 						<th>default</th>
 						<th>calories</th>
 					</tr>
-					<tr ng-repeat="item in all_foods_with_units | filter:filter.foods" data-food-id="{{item.food.id}}">
-						<td ng-click="getFoodInfo(item.food.id, item.food.name)" class="pointer">{{item.food.name}}</td>
-						<td>{{item.food.default_unit_name}}</td>
-						<td>{{item.food.default_unit_calories}}</td>
-						<td><i ng-click="deleteFood(item.food.id)" class="delete-item fa fa-times"></i></td>
+					<tr ng-repeat="item in all_foods_with_units | filter:filter.foods" data-food-id="{{item.id}}">
+						<td ng-click="getFoodInfo(item.food.id, item.food.name)" class="pointer">{{item.name}}</td>
+						<td>{{item.default_unit_name}}</td>
+						<td>{{item.default_unit_calories}}</td>
+						<td><i ng-click="deleteFood(item.id)" class="delete-item fa fa-times"></i></td>
 					</tr>
 				</table>
 			</div>

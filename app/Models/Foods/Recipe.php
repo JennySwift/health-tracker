@@ -19,16 +19,16 @@ class Recipe extends Model {
 		return $this->belongsTo('App\User');
 	}
 
-	public function method () {
-		return $this->hasOne('App\Models\Foods\RecipeMethod');
+	public function steps () {
+		return $this->hasMany('App\Models\Foods\RecipeMethod');
 	}
 
 	public function foods () {
 		return $this->belongsToMany('App\Models\Foods\Food', 'food_recipe', 'food_id', 'recipe_id');
 	}
 
-	public function recipeTags () {
-		return $this->belongsToMany('App\Models\Foods\RecipeTag', 'recipe_tag', 'recipe_id', 'tag_id');
+	public function tags () {
+		return $this->belongsToMany('App\Models\Tags\Tag', 'taggables', 'tag_id', 'taggable_id');
 	}
 
 	public function entries () {
@@ -38,30 +38,13 @@ class Recipe extends Model {
 	/**
 	 * select
 	 */
-	
-	public static function getRecipes () {
-		$rows = static
-			::where('user_id', Auth::user()->id)
-			->select('id', 'name')
-			->orderBy('name', 'asc')
-			->get();
-		
 
-		$recipes = array();
-		foreach ($rows as $row) {
-			$recipe_id = $row->id;
-			$recipe_name = $row->name;
-			$tags = getTagsForRecipe($recipe_id);
-			
-			$recipes[] = array(
-				"id" => $recipe_id,
-				"name" => $recipe_name,
-				"tags" => $tags
-			);
-		}
-		return $recipes;
-	}
-
+	/**
+	 * Get all recipes, along with their tags, for the user, and that match the $name filter
+	 * @param  [type] $name    [description]
+	 * @param  [type] $tag_ids [description]
+	 * @return [type]          [description]
+	 */
 	public static function filterRecipes ($name, $tag_ids) {
 		$recipes = static::where('recipes.user_id', Auth::user()->id);
 
@@ -76,8 +59,8 @@ class Recipe extends Model {
 		//filter by tags
 		if (count($tag_ids) > 0) {
 			foreach ($tag_ids as $tag_id) {
-			    $recipes = $recipes->whereHas('recipeTags', function ($q) use ($tag_id) {
-			        $q->where('recipe_tags.id', $tag_id); 
+			    $recipes = $recipes->whereHas('tags', function ($q) use ($tag_id) {
+			        $q->where('tags.id', $tag_id); 
 			    });
 			}
 		}
@@ -89,18 +72,24 @@ class Recipe extends Model {
 
 		$array = array();
 		foreach ($recipes as $recipe) {
-			$recipe_id = $recipe->id;
-			$recipe_name = $recipe->name;
-			$tags = Tag::getTagsForRecipe($recipe_id);
+			$id = $recipe->id;
+			$name = $recipe->name;
+			$tags = static::getRecipeTags($id);
 			
 			$array[] = array(
-				"id" => $recipe_id,
-				"name" => $recipe_name,
+				"id" => $id,
+				"name" => $name,
 				"tags" => $tags
 			);
 		}
 
 		return $array;
+	}
+
+	public static function getRecipeTags ($recipe_id) {
+		$recipe = static::find($recipe_id);
+		$tags = $recipe->tags()->orderBy('name', 'asc')->get();
+		return $tags;
 	}
 
 

@@ -12,6 +12,7 @@ use App\Models\Foods\Calories;
 use DB;
 use Auth;
 use Debugbar;
+use App\User;
 
 class FoodsController extends Controller {
 
@@ -25,7 +26,7 @@ class FoodsController extends Controller {
 	}
 
 	public function getAllFoodsWithUnits (Request $request) {
-		return Food::getAllFoodsWithUnits();
+		return User::getAllFoodsWithUnits();
 	}
 
 	/**

@@ -61,7 +61,6 @@ class Food extends Model {
 			->select('units.name', 'units.id', 'calories')
 			->get();
 
-		dd($assoc_units);
 		$units = array();
 		$default_unit_id = Food
 			::where('id', $food_id)
@@ -155,53 +154,6 @@ class Food extends Model {
 			->get();
 
 		return $foods;
-	}
-
-	public static function getAllFoodsWithUnits () {
-		// $foods = static::getFoods();
-
-		// // dd($foods);
-		// $all_foods_with_units = array();
-
-		// foreach ($foods as $food) {
-		// 	$food_id = $food['id'];
-		// 	$food_name = $food['name'];
-		// 	$default_unit_id = $food['default_unit_id'];
-		// 	$default_unit_name = $food['default_unit_name'];
-
-		// 	//populate the food object
-		//     $food = array(
-		// 		"id" => $food_id,
-		// 		"name" => $food_name,
-		// 		"default_unit_id" => $default_unit_id,
-		// 		"default_unit_name" => $default_unit_name
-		//     );
-
-		//     $default_unit_calories = Calories
-		//     	::where('food_id', $food_id)
-		//     	->where('unit_id', $default_unit_id)
-		//     	->pluck('calories');
-		    	
-		//     $food['default_unit_calories'] = $default_unit_calories;
-
-		//     //Populate $units
-		//     //Each unit is an object with id, name and calories
-		// 	$units = Calories
-		// 		::join('foods', 'food_id', '=', 'foods.id')
-		// 		->join('units', 'calories.unit_id', '=', 'units.id')
-		// 		->where('food_id', $food_id)
-		// 		->select('units.name', 'units.id', 'calories')
-		// 		->get();
-
-		// 	// dd($rows);
-
-		//     $all_foods_with_units[] = array(
-		//     	"food" => $food,
-		//     	"units" => $units
-		//     );
-		// }
-	    
-		// return $all_foods_with_units;
 	}
 
 	/**

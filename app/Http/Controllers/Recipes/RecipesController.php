@@ -153,7 +153,7 @@ class RecipesController extends Controller {
 	public function deleteRecipeTag (Request $request) {
 		$id = $request->get('id');
 		Tag::deleteRecipeTag($id);
-		return Tag::getRecipeTags();
+		return Recipe::getRecipeTags();
 	}
 
 	public function deleteRecipeEntry (Request $request) {

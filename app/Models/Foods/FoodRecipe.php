@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Auth;
+use App\Models\Foods\Food;
 
 /**
  * pivot table model
@@ -44,8 +45,8 @@ class FoodRecipe extends Model {
 			->get();
 
 		foreach ($recipe_contents as $item) {
-			$food_id = $item->food_id;
-			$assoc_units = getAssocUnits($food_id);
+			$food = Food::find($item->food_id);
+			$assoc_units = $food->units;
 			$item->assoc_units = $assoc_units;
 		}
 		

@@ -22,23 +22,6 @@ class Workout extends Model {
 	 * select
 	 */
 	
-	public static function getWorkouts () {
-		//get the workouts
-		$workouts = static
-			::where('user_id', Auth::user()->id)
-			->select('id', 'name')
-			->get();
-
-		//get all the series that are in each workout
-		foreach ($workouts as $workout) {
-			// $workout_id = $workout->id;
-			// $workout->contents = WorkoutSeries::getWorkoutContents($workout_id);
-			$workout->contents = $workout->series()->select('exercise_series.id', 'name')->orderBy('name', 'asc')->get();
-		}
-
-		return $workouts;
-	}
-	
 	/**
 	 * insert
 	 */

@@ -14,7 +14,7 @@ class Tag extends Model {
 	}
 
 	public function recipes () {
-		return $this->belongsToMany('App\Models\Foods\Recipe', 'recipe_tag', 'recipe_id', 'tag_id');
+		return $this->belongsToMany('App\Models\Foods\Recipe', 'recipe_tag', 'tag_id', 'taggable_id');
 	}
 
 	public function exercises () {
@@ -24,36 +24,6 @@ class Tag extends Model {
 	/**
 	 * select
 	 */
-
-	public static function getExerciseTags () {
-		//gets all exercise tags
-		$tags = static
-			::where('user_id', Auth::user()->id)
-			->select('id', 'name')
-			->get();
-
-		return $tags;
-	}
-
-	public static function getTagsForRecipe ($recipe_id) {
-		// $tags = static
-		// 	::where('recipe_id', $recipe_id)
-		// 	->join('recipe_tags', 'tag_id', '=', 'recipe_tags.id')
-		// 	->select('tag_id as id', 'recipe_tags.name as name')
-		// 	->get();
-
-		// return $tags;
-	}
-
-	public static function getRecipeTags () {
-		$recipe_tags = static
-			::where('user_id', Auth::user()->id)
-			->orderBy('name', 'asc')
-			->select('id', 'name')
-			->get();
-
-		return $recipe_tags;
-	}
 
 	/**
 	 * insert
@@ -70,7 +40,7 @@ class Tag extends Model {
 	public static function insertTagsIntoRecipe ($recipe_id, $tags) {
 		foreach ($tags as $tag) {
 			$tag_id = $tag['id'];
-			insertTagIntoRecipe($recipe_id, $tag_id);
+			static::insertTagIntoRecipe($recipe_id, $tag_id);
 		}
 	}
 

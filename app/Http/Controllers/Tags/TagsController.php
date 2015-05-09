@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Models\Tags\Tag;
-use App\Models\Tags\Taggable;
 use App\Models\Exercises\Exercise;
 use Auth;
 
@@ -110,7 +109,7 @@ class TagsController extends Controller {
 		//creates a new recipe tag
 		$name = $request->get('name');
 		Tag::insertRecipeTag($name);
-		return Tag::getRecipeTags();
+		return Recipe::getRecipeTags();
 	}
 
 	/**

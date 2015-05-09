@@ -49,6 +49,7 @@ Route::post('select/entries', 'SelectController@getEntries');
 
 /**
  * Tags
+ * These might need fixing up, changing to the correct controller
  */
 Route::post('insert/tagsIntoRecipe', 'Tags\TagsController@insertTagsIntoRecipe');
 Route::post('insert/recipeTag', 'Tags\TagsController@insertRecipeTag');

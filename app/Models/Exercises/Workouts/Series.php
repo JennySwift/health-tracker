@@ -19,20 +19,6 @@ class Series extends Model {
 	/**
 	 * select
 	 */
-	
-	public static function getSeriesWorkouts ($series_id) {
-		//get all the workouts an exercise series is in
-		$exercise_series = ExerciseSeries::find($series_id);
-		$workouts = $exercise_series->workouts()->select('workouts.name', 'workouts.id')->get();
-
-		foreach ($workouts as $workout) {
-			$workout_id = $workout->id;
-			// $workout->contents = static::getWorkoutContents($workout_id);
-			$workout->contents = $workout->series()->select('exercise_series.id', 'name')->orderBy('name', 'asc')->get();
-		}
-
-		return $workouts;
-	}
 
 	// public static function getWorkoutContents ($workout_id) {
 	// 	$workout_contents = static

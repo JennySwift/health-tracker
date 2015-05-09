@@ -33,13 +33,14 @@ class SelectController extends Controller {
 		$user = User::find(Auth::user()->id);
 		$exercise_units = $user->exerciseUnits()->orderBy('name', 'asc')->get();
 		$food_units = $user->foodUnits()->orderBy('name', 'asc')->get();
+		$recipe_tags = $user->recipeTags()->orderBy('name', 'asc')->get();
+		$exercise_tags = $user->exerciseTags()->orderBy('name', 'asc')->get();
 
 		$response = array(
 			"foods" => Food::getFoods(),
-			// "recipes" => getRecipes(),
 			"recipes" => Recipe::filterRecipes('', []),
 			"food_units" => $food_units,
-			"foods_with_units" => Food::getAllFoodsWithUnits(),
+			"foods_with_units" => User::getAllFoodsWithUnits(),
 			"weight" => Weight::getWeight($date),
 			"exercise_units" => $exercise_units,
 			"exercises" => Exercise::getExercises(),
@@ -49,9 +50,9 @@ class SelectController extends Controller {
 			"calories_for_the_week" => number_format(Calories::getCaloriesForTimePeriod($date, "week"), 2),
 			"exercise_entries" => ExerciseEntry::getExerciseEntries($date),
 			"journal_entry" => Journal::getJournalEntry($date),
-			"exercise_tags" => Tag::getExerciseTags(),
-			"workouts" => Workout::getWorkouts(),
-			"recipe_tags" => Tag::getRecipeTags()
+			"exercise_tags" => $exercise_tags,
+			"workouts" => User::getWorkouts(),
+			"recipe_tags" => $recipe_tags
 		);
 		return $response;
 	}

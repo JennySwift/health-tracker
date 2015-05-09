@@ -22,6 +22,11 @@ class FoodEntry extends Model {
 	 * select
 	 */
 	
+	/**
+	 * Get a user's food entries for one day
+	 * @param  [type] $date [description]
+	 * @return [type]       [description]
+	 */
 	public static function getFoodEntries ($date) {
 		$rows = static
 			::join('foods', 'food_entries.food_id', '=', 'foods.id')
