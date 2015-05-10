@@ -44,7 +44,7 @@ class SelectController extends Controller {
 			"weight" => Weight::getWeight($date),
 			"exercise_units" => $exercise_units,
 			"exercises" => Exercise::getExercises(),
-			"exercise_series" => ExerciseSeries::getExerciseSeries(),
+			"exercise_series" => User::getExerciseSeries(),
 			"food_entries" => FoodEntry::getFoodEntries($date),
 			"calories_for_the_day" => number_format(Calories::getCaloriesForTimePeriod($date, "day"), 2),
 			"calories_for_the_week" => number_format(Calories::getCaloriesForTimePeriod($date, "week"), 2),

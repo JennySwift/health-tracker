@@ -26,7 +26,7 @@ class ExerciseSeriesController extends Controller {
 				'user_id' => Auth::user()->id
 			]);
 
-		return ExerciseSeries::getExerciseSeries();
+		return User::getExerciseSeries();
 	}
 
 	/**
@@ -42,7 +42,7 @@ class ExerciseSeriesController extends Controller {
 		
 		ExerciseSeries::where('id', $id)->delete();
 
-		return ExerciseSeries::getExerciseSeries();
+		return User::getExerciseSeries();
 	}
 
 	/**

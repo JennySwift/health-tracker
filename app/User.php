@@ -116,6 +116,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	 * @return [type] [description]
 	 */
 	public static function getWorkouts () {
+		$user = User::find(Auth::user()->id);
 		$workouts = $user->workouts;
 
 		//get all the series that are in each workout
@@ -131,21 +132,22 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	 * @return [type] [description]
 	 */
 	public static function getExerciseSeries () {
+		$user = User::find(Auth::user()->id);
 		$series = $user->exerciseSeries()->orderBy('name', 'asc')->get();
 
 	    //for each series, add to it the workouts the series is in
-	    foreach ($exercise_series as $series) {
-	      $series_id = $series->id;
+	    // foreach ($exercise_series as $series) {
+	    //   $series_id = $series->id;
 
-	      $workouts = $series->workouts;
+	    //   $workouts = $series->workouts;
 	      
-	      foreach ($workouts as $workout) {
-	      	$workout_id = $workout->id;
-	      	$workout->contents = $workout->series()->select('exercise_series.id', 'name')->orderBy('name', 'asc')->get();
-	      }
+	    //   foreach ($workouts as $workout) {
+	    //   	$workout_id = $workout->id;
+	    //   	$workout->contents = $workout->series()->select('exercise_series.id', 'name')->orderBy('name', 'asc')->get();
+	    //   }
 
-	      $series->workouts = $workouts;
-	    }
+	    //   $series->workouts = $workouts;
+	    // }
 
 	    return $series;
 	}

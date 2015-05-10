@@ -3,6 +3,8 @@
 use Illuminate\Database\Eloquent\Model;
 use Auth;
 use App\Models\Tags\Tag;
+use App\Models\Exercises\Series;
+use App\Models\Exercises\Entry as ExerciseEntry;
 
 class Exercise extends Model {
 
@@ -61,7 +63,7 @@ class Exercise extends Model {
 	    return $exercises;
 	}
 
-	public static function getExerciseSeriesHistory ($series_id) {
+	public static function getExerciseSeriesHistory ($series) {
 		//I still need functions.php for convertDate
 		include(app_path() . '/inc/functions.php');
 
@@ -69,9 +71,7 @@ class Exercise extends Model {
 		$exercise_ids = $series->exercises->lists('id');
 
 		//get all entries in the series
-		//the function doesn't work when I use the following line:	
-		$entries = $series->entries()
-			
+		$entries = $series->entries()	
 			->select('exercise_entries.id',
 				'date',
 				'exercises.id as exercise_id',
@@ -85,7 +85,6 @@ class Exercise extends Model {
 			}])
 			// ->with('unit')
 			->orderBy('date', 'desc')->get();
-		// $entries = ExerciseEntry::getSeriesEntries($exercise_ids);
 		
 		//create an array to return
 		$array = [];

@@ -34,4 +34,44 @@ class Workout extends Model {
 	 * delete
 	 */
 	
+	/**
+	 * pivot table
+	 */
+	
+	/**
+	 * select
+	 */
+
+	// public static function getWorkoutContents ($workout_id) {
+	// 	$workout_contents = static
+	// 		::where('workout_id', $workout_id)
+	// 		->join('exercise_series', 'series_id', '=', 'exercise_series.id')
+	// 		->select('series_id', 'exercise_series.name')
+	// 		->orderBy('exercise_series.name', 'asc')
+	// 		->get();
+
+	// 	return $workout_contents;	
+	// }
+
+	/**
+	 * insert
+	 */
+	
+	public static function insertSeriesIntoWorkout($workout_id, $series_id) {
+		static
+			::insert([
+				'workout_id' => $workout_id,
+				'series_id' => $series_id,
+				'user_id' => Auth::user()->id
+			]);
+	}
+
+	/**
+	 * update
+	 */
+	
+	/**
+	 * delete
+	 */
+	
 }

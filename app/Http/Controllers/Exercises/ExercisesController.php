@@ -24,7 +24,7 @@ class ExercisesController extends Controller {
 		//Fetch the series (singular-the series that was clicked on)
 		$series = Series::find($request->get('series_id'));
 
-		return Exercise::getExerciseSeriesHistory($series_id);
+		return Exercise::getExerciseSeriesHistory($series);
 	}
 
 	/**

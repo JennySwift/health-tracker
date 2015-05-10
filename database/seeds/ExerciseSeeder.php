@@ -16,38 +16,39 @@ class ExerciseSeeder extends Seeder {
 
 		$faker = Faker::create();
 
+		$pushup_series = ['kneeling pushups', 'pushups', 'one-arm pushups'];
+		$squat_series = ['assisted squats', 'squats', 'one-legged-squats'];
+
 		$exercise_unit_ids = Unit::where('for', 'exercise')->lists('id');
 		$series_ids = Series::lists('id');
 
-		Exercise::create([
-			'name' => 'kneeling pushups',
-			'default_exercise_unit_id' => $faker->randomElement($exercise_unit_ids),
-			'description' => '',
-			'default_quantity' => $faker->numberBetween($min = 5, $max = 20),
-			'step_number' => $faker->numberBetween($min = 1, $max = 10),
-			'series_id' => $faker->randomElement($series_ids),
-			'user_id' => 1
-		]);
+		$index = 0;
+		foreach ($pushup_series as $exercise) {
+			$index++;
+			Exercise::create([
+				'name' => $exercise,
+				'default_exercise_unit_id' => $faker->randomElement($exercise_unit_ids),
+				'description' => '',
+				'default_quantity' => $faker->numberBetween($min = 5, $max = 20),
+				'step_number' => $index,
+				'series_id' => 1,
+				'user_id' => 1
+			]);
+		}
 
-		Exercise::create([
-			'name' => 'pushups',
-			'default_exercise_unit_id' => $faker->randomElement($exercise_unit_ids),
-			'description' => '',
-			'default_quantity' => $faker->numberBetween($min = 5, $max = 20),
-			'step_number' => $faker->numberBetween($min = 1, $max = 10),
-			'series_id' => $faker->randomElement($series_ids),
-			'user_id' => 1
-		]);
-
-		Exercise::create([
-			'name' => 'one arm pushups',
-			'default_exercise_unit_id' => $faker->randomElement($exercise_unit_ids),
-			'description' => '',
-			'default_quantity' => $faker->numberBetween($min = 5, $max = 20),
-			'step_number' => $faker->numberBetween($min = 1, $max = 10),
-			'series_id' => $faker->randomElement($series_ids),
-			'user_id' => 1
-		]);
+		$index = 0;
+		foreach ($squat_series as $exercise) {
+			$index++;
+			Exercise::create([
+				'name' => $exercise,
+				'default_exercise_unit_id' => $faker->randomElement($exercise_unit_ids),
+				'description' => '',
+				'default_quantity' => $faker->numberBetween($min = 5, $max = 20),
+				'step_number' => $index,
+				'series_id' => 3,
+				'user_id' => 1
+			]);
+		}
 	}
 
 }

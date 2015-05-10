@@ -35,11 +35,11 @@ class DatabaseSeeder extends Seeder {
 		$this->call('RecipeMethodSeeder');
 
 		//exercises
-		$this->call('ExerciseEntrySeeder');
-
 		$this->call('ExerciseSeriesSeeder');
 
 		$this->call('ExerciseSeeder');
+
+		$this->call('ExerciseEntrySeeder');
 
 		$this->call('WorkoutSeeder');
 

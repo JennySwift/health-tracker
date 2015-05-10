@@ -17,7 +17,7 @@ class WorkoutsController extends Controller {
 
 		WorkoutSeries::insertSeriesIntoWorkout($workout_id, $series_id);
 
-		return ExerciseSeries::getExerciseSeries();
+		return User::getExerciseSeries();
 	}
 
 	/**

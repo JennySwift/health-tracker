@@ -19,10 +19,10 @@ class ExerciseEntriesController extends Controller {
 	public function getSpecificExerciseEntries (Request $request) {
 		//returns all entries for an exercise on a specific date where the exercise has the specified unit			
 		$date = $request->get('date');
-		$exercise_id = $request->get('exercise_id');
+		$exercise = Exercise::find($request->get('exercise_id'));
 		$exercise_unit_id = $request->get('exercise_unit_id');
 
-		return ExerciseEntry::getSpecificExerciseEntries($date, $exercise_id, $exercise_unit_id);
+		return ExerciseEntry::getSpecificExerciseEntries($date, $exercise, $exercise_unit_id);
 	}
 
 	/**
