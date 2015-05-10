@@ -99,6 +99,18 @@ class Calories extends Model {
 	 * insert
 	 */
 	
+	/**
+	 * Please refactor
+     *
+     * Instead of sending $food_id and $unit_id, you could just in your controller use this code
+     *
+     * $calories = new Calories;
+     * $calories->user()->associate($userObject);
+     * $calories->food()->associate($foodObject);
+     * $calories->unit()->associate($unitObject);
+     *
+     * Or pass these object to this method and use the refactor code below
+	 */
 	public static function insertUnitInCalories ($food_id, $unit_id) {
 		static
 			::insert([
@@ -108,8 +120,26 @@ class Calories extends Model {
 			]);
 	}
 
+		
+   // public static function insertUnitInCalories(Food $food, Unit $unit)
+   // {
+   //     $calories = new static;
+   //     $calories->user()->associate(Auth::user());
+   //     $calories->food()->associate($food);
+   //     $calories->unit()->associate($unit);
+   //     $calories->save();
+
+   //     return $calories;
+   // }
+	
+
 	/**
 	 * update
+	 */
+	
+	/**
+	 * Please refactor
+     * Not much to do here, except the same changes as above to set the food and unit by passing objects and not ids
 	 */
 	
 	public static function updateCalories ($food_id, $unit_id, $calories) {
@@ -141,6 +171,12 @@ class Calories extends Model {
 	 * delete
 	 */
 
+	/**
+	 * Please refactor
+     * Seems like you are doing where('food_id'...) and where('unit_id'...) a lot, you could create a scope for that.
+     *
+     * Otherwise, nothing to refactor here except again, use the objects and not ids.
+	 */
 	public static function deleteUnitFromCalories ($food_id, $unit_id) {
 		static
 			::where('food_id', $food_id)
