@@ -33,11 +33,8 @@ class FoodsController extends Controller {
 	public function getFoodInfo (Request $request) {
 		$food = Food::find($request->get('food_id'));
 		$user = User::find(Auth::user()->id);
-		Debugbar::info('food', $food);
-		Debugbar::info('user', $user);
 		$all_food_units = $user->foodUnits;
-		Debugbar::info('all_food_units', $all_food_units);
-		$food_units = $food->units;
+		$food_units = $food->units()->lists('unit_id');
 
 		return [
 			"all_food_units" => $all_food_units,
