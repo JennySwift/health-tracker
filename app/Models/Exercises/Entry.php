@@ -63,6 +63,13 @@ class Entry extends Model {
 		 * I want it to only get one exercise, i.e., $exercise.
 		 * The line above this comment get only the exercise I want,
 		 * so why is the following getting every exercise?
+		 *
+		 * If you want to test the response in Postman,
+		 * you can use my seeders and here is the info for Postman:
+		 * route: select/specificExerciseEntries
+		 * date: the current date
+		 * exercise_id: 1
+		 * exercise_unit_id: 1
 		 */
 
 		$entries = $exercise::with(['entries' => function ($query) use ($date, $exercise_unit_id) {
@@ -82,9 +89,18 @@ class Entry extends Model {
 
 		return $entries;
 
+		/**
+		 * @VP:
+		 * Could you also give me an example here please of how you would view the above query (in Postman?)?
+		 * I tried replacing ->get() with ->toSql(), and all it said was:
+		 * select * from `exercises`
+		 * rather than the entire query
+		 */
+
 		
 			
 		/**
+		 * When I try the following I get:
 		 * Error: Missing argument 2 for Illuminate\Database\Query\Builder::whereDate()
 		 */
 		
