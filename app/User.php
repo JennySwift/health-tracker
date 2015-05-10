@@ -6,6 +6,8 @@ use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Auth;
+use App\Models\Exercises\Entry as ExerciseEntry;
+use App\Models\Exercises\Exercise;
 
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract {
 
@@ -128,6 +130,25 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	}
 
 	/**
+	 * Get all exercise entries belonging to the user on a specific date
+	 * @param  [type] $date [description]
+	 * @return [type]       [description]
+	 */
+	public static function getExerciseEntries ($date) {
+		$user = User::find(Auth::user()->id);
+
+		$entries = $user->exerciseEntries()
+			->where('date', $date)
+			->with('exercise')
+			->with('unit')
+			->get();
+
+		$entries = ExerciseEntry::compactExerciseEntries($entries, $date);
+		
+		return $entries;
+	}
+
+	/**
 	 * Get all the exercise series that belong to the user
 	 * @return [type] [description]
 	 */
@@ -150,6 +171,39 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	    // }
 
 	    return $series;
+	}
+
+	/**
+	 * Get all exercises for the user along with their tags,
+	 * default unit name and the name of the series each exercise belongs to
+	 * @return [type] [description]
+	 */
+	public static function getExercises () {
+		$user = User::find(Auth::user()->id);
+		$exercises = $user->exercises()
+			->with('unit')
+			->with('series')
+			->with('tags')
+			/**
+			 * @VP:
+			 * I want to order the exercises by series name and then by step number.
+			 * The following didn't work.
+			 * How would I do it?
+			 */
+			// ->with(['series', function ($q) {
+			// 	$q->orderBy('name');
+			// }])
+			->orderBy('step_number')
+			->get();
+
+	    //Add the tags to each exercise
+	    // foreach ($exercises as $exercise) {
+	    // 	$exercise = Exercise::find($exercise->id);
+	    // 	$tags = $exercise->tags;
+	    // 	$exercise->tags = $tags;
+	    // }
+
+	    return $exercises;
 	}
 	
 }

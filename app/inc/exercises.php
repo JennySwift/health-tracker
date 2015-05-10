@@ -23,9 +23,9 @@
 						<td ng-click="showExercisePopup(exercise)" class="pointer">{{exercise.name}}</td>
 						<td ng-click="showExercisePopup(exercise)" class="pointer">{{exercise.description}}</td>
 						<td ng-click="showExercisePopup(exercise)" class="pointer">{{exercise.step_number}}</td>
-						<td ng-click="showExercisePopup(exercise)" class="pointer">{{exercise.series_name}}</td>
+						<td ng-click="showExercisePopup(exercise)" class="pointer">{{exercise.series.name}}</td>
 						<td ng-click="showExercisePopup(exercise)" class="pointer">{{exercise.default_quantity}}</td>
-						<td ng-click="showExercisePopup(exercise)" class="pointer">{{exercise.default_exercise_unit_name}}</td>
+						<td ng-click="showExercisePopup(exercise)" class="pointer">{{exercise.unit.name}}</td>
 						<td ng-click="showExercisePopup(exercise)" class="pointer">
 							<span ng-repeat="tag in exercise.tags" class="badge">{{tag.name}}</span>
 						</td>

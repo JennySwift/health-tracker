@@ -44,7 +44,7 @@ class ExerciseEntriesController extends Controller {
 			'user_id' => Auth::user()->id
 		]);
 		
-		return ExerciseEntry::getExerciseEntries($date);
+		return User::getExerciseEntries($date);
 	}
 
 	public function insertExerciseEntry (Request $request) {

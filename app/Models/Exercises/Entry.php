@@ -109,16 +109,6 @@ class Entry extends Model {
 		//     $query->orderBy('name');
 		// }])->get();
 	}
-	
-	public static function getSeriesEntries($exercise_ids) {
-		return static
-			::whereIn('exercise_id', $exercise_ids)
-			->join('exercises', 'exercise_entries.exercise_id', '=', 'exercises.id')
-			->join('units', 'exercise_entries.exercise_unit_id', '=', 'units.id')
-			->select('date', 'exercises.id as exercise_id', 'exercises.name as exercise_name', 'exercises.description', 'exercises.step_number', 'quantity', 'exercise_unit_id', 'units.name as unit_name')
-			->orderBy('date', 'desc')
-			->get();
-	}
 
 	public static function getExerciseSets ($date, $exercise_id, $exercise_unit_id) {
 		return static
@@ -138,20 +128,6 @@ class Entry extends Model {
 			->sum('quantity');
 	}
 
-	public static function getExerciseEntries ($date) {
-		$entries = static
-			::where('date', $date)
-			->where('exercise_entries.user_id', Auth::user()->id)
-			->join('exercises', 'exercise_entries.exercise_id', '=', 'exercises.id')
-			->join('units', 'exercise_entries.exercise_unit_id', '=', 'units.id')
-			->select('exercise_id', 'quantity', 'exercises.description', 'exercise_unit_id', 'exercises.name', 'units.name AS unit_name', 'units.id AS unit_id', 'exercise_entries.id AS entry_id')
-			->orderBy('exercises.name', 'asc')
-			->orderBy('unit_name', 'asc')
-			->get();
-
-		return static::compactExerciseEntries($entries, $date);
-	}
-
 	/**
 	 * insert
 	 */
@@ -168,36 +144,47 @@ class Entry extends Model {
 	 * other
 	 */
 
+	/**
+	 * This is for displaying a user's exercise entries for one day.
+	 * If the user has 5 pushup entries with the same unit
+	 * I want them to be presented in one row, and with the total reps,
+	 * rather than having 5 rows.
+	 * @param  [type] $entries [description]
+	 * @param  [type] $date    [description]
+	 * @return [type]          [description]
+	 */
 	public static function compactExerciseEntries ($entries, $date) {
 		$array = array();
 		foreach ($entries as $entry) {
-			$exercise_id = $entry->exercise_id;
+			$exercise_id = $entry->exercise->id;
 			$exercise_unit_id = $entry->exercise_unit_id;
+			$exercise_name = $entry->exercise->name;
+			$unit_name = $entry->unit->name;
 			$counter = 0;
 
 			$total = ExerciseEntry::getTotalExerciseReps($date, $exercise_id, $exercise_unit_id);
 
 			$sets = ExerciseEntry::getExerciseSets($date, $exercise_id, $exercise_unit_id);
 
-			//check to see if the array already has the exercise entry so it doesn't appear as a new entry for each set of exercises
+			//Check to see if the array already has the exercise entry
+			//so it doesn't appear as a new entry for each set of exercises
 			foreach ($array as $item) {
-				if ($item['name'] === $entry->name && $item['unit_name'] === $entry->unit_name) {
+				if ($item['name'] === $exercise_name && $item['unit_name'] === $unit_name) {
 					//the exercise with unit already exists in the array so we don't want to add it again
 					$counter++;
 				}
 			}
 			if ($counter === 0) {
 				$array[] = array(
-					'exercise_id' => $entry->exercise_id,
-					'name' => $entry->name,
-					'description' => $entry->description,
+					'exercise_id' => $exercise_id,
+					'name' => $exercise_name,
+					'description' => $entry->exercise->description,
 					'quantity' => $entry->quantity,
-					'unit_name' => $entry->unit_name,
+					'unit_name' => $entry->unit->name,
 					'sets' => $sets,
 					'total' => $total,
-					'unit_id' => $entry->unit_id,
+					'unit_id' => $entry->unit->id,
 					'default_exercise_unit_id' => Exercise::getDefaultExerciseUnitId($exercise_id),
-					// 'default_quantity' => $default_quantity
 				);
 			}	
 		}

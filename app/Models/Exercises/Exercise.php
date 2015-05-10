@@ -32,36 +32,12 @@ class Exercise extends Model {
 	}
 
 	public function tags () {
-		return $this->belongsToMany('App\Models\Tags\Tag', 'taggables', 'tag_id', 'taggable_id');
+		return $this->belongsToMany('App\Models\Tags\Tag', 'taggables', 'tag_id', 'taggable_id')->where('for', 'exercise');
 	}
 
 	/**
 	 * select
 	 */
-	
-	/**
-	 * Get all exercises for the user along with their tags
-	 * @return [type] [description]
-	 */
-	public static function getExercises () {
-	    $exercises = static
-	    	::where('exercises.user_id', Auth::user()->id)
-	    	->leftJoin('units', 'default_exercise_unit_id', '=', 'units.id')
-	    	->leftJoin('exercise_series', 'exercises.series_id', '=', 'exercise_series.id')
-	    	->select('exercises.id', 'exercises.name', 'exercises.description', 'exercises.step_number', 'exercise_series.name as series_name', 'default_exercise_unit_id', 'default_quantity', 'units.name AS default_exercise_unit_name')
-	    	->orderBy('series_name', 'asc')
-	    	->orderBy('step_number', 'asc')
-	    	->get();
-
-	    //Add the tags to each exercise
-	    foreach ($exercises as $exercise) {
-	    	$exercise = Exercise::find($exercise->id);
-	    	$tags = $exercise->tags;
-	    	$exercise->tags = $tags;
-	    }
-
-	    return $exercises;
-	}
 
 	public static function getExerciseSeriesHistory ($series) {
 		//I still need functions.php for convertDate
