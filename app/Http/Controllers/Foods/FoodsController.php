@@ -20,9 +20,30 @@ class FoodsController extends Controller {
 	 * select
 	 */
 
+	/**
+	 * Get all food units that belong to the user,
+	 * as well as all units that belong to the particular food.
+	 * 
+	 * For when user clicks on a food in the foods table
+	 * A popup is displayed, showing all food units
+	 * with the units for that food checked
+	 * and the option to set the default unit for the food
+	 * and the option to set the calories for each of the food's units
+	 */
 	public function getFoodInfo (Request $request) {
-		$food_id = $request->get('food_id');
-		return Food::getFoodInfo($food_id);
+		$food = Food::find($request->get('food_id'));
+		$user = User::find(Auth::user()->id);
+		Debugbar::info('food', $food);
+		Debugbar::info('user', $user);
+		$all_food_units = $user->foodUnits;
+		Debugbar::info('all_food_units', $all_food_units);
+		$food_units = $food->units;
+
+		return [
+			"all_food_units" => $all_food_units,
+			"food" => $food,
+			"food_units" => $food_units
+		];
 	}
 
 	public function getAllFoodsWithUnits (Request $request) {

@@ -27,36 +27,11 @@ class Workout extends Model {
 	 */
 	
 	/**
-	 * update
+	 * This needs fixing. It is from my old pivot table model, series_workout.
+	 * @param  [type] $workout_id [description]
+	 * @param  [type] $series_id  [description]
+	 * @return [type]             [description]
 	 */
-	
-	/**
-	 * delete
-	 */
-	
-	/**
-	 * pivot table
-	 */
-	
-	/**
-	 * select
-	 */
-
-	// public static function getWorkoutContents ($workout_id) {
-	// 	$workout_contents = static
-	// 		::where('workout_id', $workout_id)
-	// 		->join('exercise_series', 'series_id', '=', 'exercise_series.id')
-	// 		->select('series_id', 'exercise_series.name')
-	// 		->orderBy('exercise_series.name', 'asc')
-	// 		->get();
-
-	// 	return $workout_contents;	
-	// }
-
-	/**
-	 * insert
-	 */
-	
 	public static function insertSeriesIntoWorkout($workout_id, $series_id) {
 		static
 			::insert([
@@ -65,7 +40,7 @@ class Workout extends Model {
 				'user_id' => Auth::user()->id
 			]);
 	}
-
+	
 	/**
 	 * update
 	 */

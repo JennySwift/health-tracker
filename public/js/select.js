@@ -77,7 +77,7 @@ app.factory('select', function ($http) {
 			var $url = 'select/foodInfo';
 			
 			var $data = {
-				id: $id
+				food_id: $id
 			};
 
 			return $http.post($url, $data);

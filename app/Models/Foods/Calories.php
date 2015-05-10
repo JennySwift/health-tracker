@@ -67,7 +67,6 @@ class Calories extends Model {
 				->get();
 		}
 		elseif ($period === "week") {
-			// $a_week_ago = getDaysAgo($date);
 			$a_week_ago = Carbon::createFromFormat('Y-m-d', $date)->subWeek(1)->format('Y-m-d');
 			$rows = FoodEntry
 				::join('foods', 'food_entries.food_id', '=', 'foods.id')

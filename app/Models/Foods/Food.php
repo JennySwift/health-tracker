@@ -44,84 +44,8 @@ class Food extends Model {
 	 */
 	
 	/**
-	 * For when user clicks on a food in the foods table
-	 * A popup is displayed, showing all food units
-	 * with the units for that food checked
-	 * and the option to set the default unit for the food
-	 * and the option to set the calories for each of the food's units
-	 *
-	 * Needs fixing after refactor
-	 */
-	public static function getFoodInfo ($food_id) {
-		$food_units = Unit::getFoodUnits();
-
-		//Get all units that belong to the food
-		$food = Food::find($food_id);
-		$assoc_units = $food->units()
-			->select('units.name', 'units.id', 'calories')
-			->get();
-
-		$units = array();
-		$default_unit_id = Food
-			::where('id', $food_id)
-			->pluck('default_unit_id');
-
-		//checking to see if the unit has already been given to a food, so that it appears checked.
-		foreach ($food_units as $food_unit) {
-			$unit_id = $food_unit->id;
-			$unit_name = $food_unit->name;
-			$match = 0;
-
-			foreach ($assoc_units as $assoc_unit) {
-				$assoc_unit_id = $assoc_unit['id'];
-				$calories = $assoc_unit['calories'];
-
-				if ($unit_id == $assoc_unit_id) {
-					$match++;
-				}
-			}
-			if ($match === 1) {
-				$calories = Calories::getCalories($food_id, $unit_id);
-
-				$units[] = array(
-					"id" => $unit_id,
-					"name" => $unit_name,
-					"checked" => true,
-					"calories" => $calories
-				);
-			}
-			else {
-				$units[] = array(
-					"id" => $unit_id,
-					"name" => $unit_name,
-					"checked" => false,
-				);
-			}
-		}
-
-		/**
-		 * Why, oh why, is id in my javascript response null here, when Postman has the correct value?
-		 * And Postman has the correct "checked" values, whereas in my JS respone they are all false.
-		 */
-
-		$food = array(
-			"id" => $food_id,
-			"default_unit_id" => $default_unit_id
-		);
-
-
-
-			
-		return [
-			"food" => $food,
-			"units" => $units
-		];
-	}
-
-	/**
 	 * Get all the user's foods, with the name of each food's default unit
 	 */
-
 	public static function getFoods () { 
 		/**
 		 * @VP:

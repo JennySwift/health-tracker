@@ -44,14 +44,6 @@ function convertDate ($date, $for) {
 	return $date;
 }
 
-// function getDaysAgo ($date) {
-// 	//I think this gets a date 7 days ago
-// 	$date = new DateTime($date);
-// 	$diff = new DateInterval('P7D');
-// 	$date = $date->sub($diff);
-// 	return $date;
-// }
-
 function getHowManyDaysAgo ($date) {
 	//to find out how many days ago a date was
 	$now = new DateTime('now');
