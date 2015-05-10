@@ -32,7 +32,7 @@ class Exercise extends Model {
 	}
 
 	public function tags () {
-		return $this->belongsToMany('App\Models\Tags\Tag', 'taggables', 'tag_id', 'taggable_id')->where('for', 'exercise');
+		return $this->belongsToMany('App\Models\Tags\Tag', 'taggables', 'taggable_id', 'tag_id')->where('taggable_type', 'exercise');
 	}
 
 	/**

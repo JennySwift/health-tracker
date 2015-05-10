@@ -180,6 +180,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	 */
 	public static function getExercises () {
 		$user = User::find(Auth::user()->id);
+
 		$exercises = $user->exercises()
 			->with('unit')
 			->with('series')
