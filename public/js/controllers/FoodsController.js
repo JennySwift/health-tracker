@@ -4,6 +4,42 @@ var app = angular.module('tracker');
 	app.controller('foods', function ($scope, $http) {
 
 		/**
+		 * scope properties
+		 */
+		
+		$scope.food_popup = {};
+		$scope.menu_item = {}; //id, name, type. for displaying the chosen autocompleted option (food or recipe)
+		$scope.food = {};//id, name. for displaying the chosen autocompleted option. Taken from $scope.menu_item.
+		$scope.recipe = {
+			temporary_contents: []
+		}; //id, name, contents, temporary_contents, temporary_contents_clone (for calculating portions based on the original quantities).
+		$scope.food_id = "";//probably should change this to an object. for the food popup-the food_id of the clicked on food that brings up the popup.
+		$scope.food_name = "";//probably should change this to an object. likewise, for the food popup	
+		
+		$scope.foods = {}; //all foods
+		$scope.recipes = {
+			filtered: {}
+		};
+		$scope.menu = {};//all foods plus all recipes
+		$scope.food_entries = {};//all foods/recipes entered on a given day
+		$scope.calories = {};//calorie info for a given day
+		
+		//quick recipe
+		$scope.quick_recipe = {};
+
+		//recipe_popup
+		$scope.recipe_popup = {
+
+		};
+
+		$scope.temporary_recipe_popup = {};
+
+		//new item-eg new food, as opposed to to food entry
+		$scope.new_item = {
+			recipe: {}
+		};
+
+		/**
 		 * select
 		 */
 		

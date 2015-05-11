@@ -6,8 +6,14 @@
 var app = angular.module('tracker');
 
 (function () {
-	app.controller('journal', function ($scope, $http) {
-
+	app.controller('journal', function ($scope, $http, date, journal) {
+		/**
+		 * scope properties
+		 */
+		
+		//journal
+		$scope.journal_entry = {};
+		
 		/**
 		 * select
 		 */
@@ -17,7 +23,7 @@ var app = angular.module('tracker');
 		 */
 		
 		$scope.insertOrUpdateJournalEntry = function () {
-			insert.journalEntry($scope.date.sql, $scope.journal_entry.text).then(function (response) {
+			journal.insertJournalEntry($scope.date.sql, $scope.journal_entry.text).then(function (response) {
 				$scope.journal_entry = response.data;
 			});
 		};

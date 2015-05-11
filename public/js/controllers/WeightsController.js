@@ -1,7 +1,13 @@
 var app = angular.module('tracker');
 
 (function () {
-	app.controller('weights', function ($scope, $http, date, select, autocomplete, quickRecipe, foods, exercises, journal, tags, units, weights) {
+	app.controller('weights', function ($scope, $http, date, weights) {
+		/**
+		 * scope properties
+		 */
+		
+		$scope.weight = "";
+		$scope.edit_weight = false;
 
 		/**
 		 * select
@@ -13,7 +19,7 @@ var app = angular.module('tracker');
 		
 		$scope.insertOrUpdateWeight = function ($keycode) {
 			if ($keycode === 13) {
-				insert.weight($scope.date.sql).then(function (response) {
+				weights.insertWeight($scope.date.sql).then(function (response) {
 					$scope.weight = response.data;
 					$scope.edit_weight = false;
 					$("#weight").val("");

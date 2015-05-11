@@ -4,6 +4,13 @@ var app = angular.module('tracker');
 	app.controller('exercises', function ($scope, $http, date, select, autocomplete, quickRecipe, foods, exercises, journal, tags, units, weights) {
 
 		/**
+		 * scope properties
+		 */
+		
+		$scope.exercises = {};
+		$scope.exercise_entries = {};
+		
+		/**
 		 * select
 		 */
 

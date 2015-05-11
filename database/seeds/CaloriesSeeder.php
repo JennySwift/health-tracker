@@ -3,7 +3,6 @@
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
-use App\Models\Foods\Calories;
 use App\Models\Foods\Food;
 use App\Models\Units\Unit;
 use Faker\Factory as Faker;
@@ -20,7 +19,7 @@ class CaloriesSeeder extends Seeder {
 
 	public function run()
 	{
-		Calories::truncate();
+		DB::table('food_unit')->truncate();
 		
 		$faker = Faker::create();
 
@@ -55,7 +54,7 @@ class CaloriesSeeder extends Seeder {
 						$calories = null;
 					}
 
-					Calories::create([
+					DB::table('food_unit')->insert([
 						'food_id' => $food_id,
 						'unit_id' => $unit_id,
 						'calories' => $calories,

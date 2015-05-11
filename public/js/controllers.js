@@ -16,7 +16,7 @@ var app = angular.module('tracker', ['ngSanitize', 'checklist-model']);
 		};
 		//=============tabs=============
 		$scope.tab = {
-			foods: true
+			food_entries: true
 		};
 
 		//autocomplete
@@ -57,16 +57,6 @@ var app = angular.module('tracker', ['ngSanitize', 'checklist-model']);
 			exercise_unit: {}
 		};
 
-		//quick recipe
-		$scope.quick_recipe = {};
-
-		//recipe_popup
-		$scope.recipe_popup = {
-
-		};
-
-		$scope.temporary_recipe_popup = {};
-
 		//new entry
 		$scope.new_entry = {
 			exercise: {
@@ -76,50 +66,17 @@ var app = angular.module('tracker', ['ngSanitize', 'checklist-model']);
 			menu: {},
 			food: {},
 		};
-
-		//new item-eg new food, as opposed to to food entry
-		$scope.new_item = {
-			recipe: {}
-		};
-		//journal
-		$scope.journal_entry = {};
-		// exercise
-		$scope.exercises = {};
-		$scope.exercise_entries = {};
+		
 
 		//edit
 		$scope.edit = {
 			recipe_method: false
 		};
-
-		// weight
-		$scope.weight = "";
-		$scope.edit_weight = false;
+		
 		//other
 		$scope.date = {};
 		$scope.loading = false;
-
-		//=============errors=============
-
 		$scope.errors = {};
-
-		//=============food=============
-		$scope.food_popup = {};
-		$scope.menu_item = {}; //id, name, type. for displaying the chosen autocompleted option (food or recipe)
-		$scope.food = {};//id, name. for displaying the chosen autocompleted option. Taken from $scope.menu_item.
-		$scope.recipe = {
-			temporary_contents: []
-		}; //id, name, contents, temporary_contents, temporary_contents_clone (for calculating portions based on the original quantities).
-		$scope.food_id = "";//probably should change this to an object. for the food popup-the food_id of the clicked on food that brings up the popup.
-		$scope.food_name = "";//probably should change this to an object. likewise, for the food popup	
-		
-		$scope.foods = {}; //all foods
-		$scope.recipes = {
-			filtered: {}
-		};
-		$scope.menu = {};//all foods plus all recipes
-		$scope.food_entries = {};//all foods/recipes entered on a given day
-		$scope.calories = {};//calorie info for a given day
 
 		$scope.units = {
 			food: {},
@@ -132,6 +89,11 @@ var app = angular.module('tracker', ['ngSanitize', 'checklist-model']);
 		$scope.assoc_units = {};//associated units for one chosen food. This is made from $scope.all_foods_with_units.
 		$scope.food_and_assoc_units_array = {};//for the food popup, with checked state and calorie info. Associated units of one food. I could probably combine this info all into $scope.all_foods_with_units and get rid of this.
 
+
+		/**
+		 * functions
+		 */
+		
 		// ===========================dates===========================
 
 		if ($scope.date.typed === undefined) {
@@ -152,6 +114,11 @@ var app = angular.module('tracker', ['ngSanitize', 'checklist-model']);
 		};
 		$scope.goToDate = function ($number) {
 			$scope.date.typed = date.goToDate($scope.date.typed, $number);
+		};
+
+		$scope.changeTab = function ($tab) {
+			$scope.tab = {};
+			$scope.tab[$tab] = true;
 		};
 
 		// ========================================================================
@@ -230,8 +197,6 @@ var app = angular.module('tracker', ['ngSanitize', 'checklist-model']);
 			});
 		};
 
-		//exercises, entries on date,
-
 		// ===========================entries===========================
 
 		$scope.getEntries = function () {
@@ -305,11 +270,6 @@ var app = angular.module('tracker', ['ngSanitize', 'checklist-model']);
 		/**
 		 * other
 		 */
-
-		$scope.changeTab = function ($tab) {
-			$scope.tab = {};
-			$scope.tab[$tab] = true;
-		};
 
 		$scope.closePopup = function ($event, $popup) {
 			var $target = $event.target;
