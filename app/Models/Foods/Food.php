@@ -15,7 +15,11 @@ class Food extends Model {
 	 * @VP:
 	 * Why is the following line needed when there is already this at the top of the file:
 	 * use App\Traits\Models\Relationships\OwnedByUser;
-	 */
+     * @JS:
+     * Simply because the use statement at the top import the PHP trait into this PHP script. Then you need to
+     * tell PHP that you want to use this trait in this particular class (because even if it is a very bad practice,
+     * you could still write multiple classes in one single PHP file!
+     */
 
 	use OwnedByUser;
 
@@ -77,12 +81,22 @@ class Food extends Model {
 		 * When I use this code I get the following error.
 		 * Column 'user_id' in where clause is ambiguous
 		 * (SQL: select `foods`.`id`, `foods`.`name`, `units`.`name` as `default_unit_name`, `units`.`id` as `default_unit_id` from `foods` left join `units` on `foods`.`default_unit_id` = `units`.`id` where `user_id` = 1 order by `foods`.`name` asc)
+         * @JS:
+         * This one is easy: that is only because in your where clause, you are trying to do "user_id=1", but you are
+         * joining two tables together and both have a user_id field, so you need to be more specific on which
+         * user_id you want: foods.user_id or units.user_id ??
 		 */
 		
 		/**
 		 * @VP:
 		 * Also, this is calling the scopeForCurrentUser method in OwnedByUser.php, right?
 		 * If I'm right, why is it static::forCurrentUser() and not static::scopeForCurrentUser()?
+         * @JS:
+         * When you create a method starting with the scope keyword on a model, Laravel will automatically "create" a
+         * method with the following name, for example:
+         *    scopeWithDefaultUnit => withDefaultUnit()
+
+         * You can check the documentation here: http://laravel.com/docs/4.2/eloquent#query-scopes
 		 */
 
 		// $foods = static::forCurrentUser()
