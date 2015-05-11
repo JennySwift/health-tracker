@@ -90,7 +90,12 @@ class Food extends Model {
 		 * @VP:
 		 * I get that, but in case it was unclear I was referring to the code down below
 		 * that is now on line 107. So I don't know how to change your forCurrentUser method to use the correct user_id.
-		 */
+         * @JS:
+         * The method forCurrentUser() has no argument (try to go in the
+         * App\Traits\Models\Relationships\OwnedByUser file and see for yourself) this will automatically use the
+         * logged user for you (that is why I called the method forCurrentUser) so no need to fetch the user before
+         * or anything, just use the scope like you did line 112.
+         */
 		
 		/**
 		 * @VP:
