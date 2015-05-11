@@ -16,11 +16,15 @@
 <script type="text/javascript" src="tools/mousetrap.min.js"></script>
 <script type="text/javascript" src="tools/checklist-model.js"></script>
 
-<script type="text/javascript" src="js/controllers.js"></script>
-<script type="text/javascript" src="js/my-date.js"></script>
-<script type="text/javascript" src="js/quick-recipe.js"></script>
-<script type="text/javascript" src="js/select.js"></script>
-<script type="text/javascript" src="js/insert.js"></script>
-<script type="text/javascript" src="js/update.js"></script>
-<script type="text/javascript" src="js/delete.js"></script>
-<script type="text/javascript" src="js/autocomplete.js"></script>
+<script type="text/javascript" src="js/controllers/controllers.js"></script>
+
+<script type="text/javascript" src="js/factories/date.js"></script>
+<script type="text/javascript" src="js/factories/quick-recipe.js"></script>
+<script type="text/javascript" src="js/factories/select.js"></script>
+<script type="text/javascript" src="js/factories/exercises.js"></script>
+<script type="text/javascript" src="js/factories/foods.js"></script>
+<script type="text/javascript" src="js/factories/journal.js"></script>
+<script type="text/javascript" src="js/factories/tags.js"></script>
+<script type="text/javascript" src="js/factories/units.js"></script>
+<script type="text/javascript" src="js/factories/weights.js"></script>
+<script type="text/javascript" src="js/factories/autocomplete.js"></script>

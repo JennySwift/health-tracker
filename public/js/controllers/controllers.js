@@ -2,7 +2,7 @@ var $page = window.location.pathname;
 var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 
 (function () {
-	app.controller('display', function ($scope, $http, date, select, autocomplete, insert, deleteItem, update, quickRecipe) {
+	app.controller('display', function ($scope, $http, date, select, autocomplete, quickRecipe, foods, exercises, journal, tags, units, weights) {
 
 		// ========================================================================
 		// ========================================================================
@@ -294,7 +294,7 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 		// ===========================entries===========================
 
 		$scope.getEntries = function () {
-			select.entries($scope.date.sql).then(function (response) {
+			select.getEntries($scope.date.sql).then(function (response) {
 				$scope.weight = response.data.weight;
 				$scope.exercise_entries = response.data.exercise_entries;
 				$scope.journal_entry = response.data.journal_entry;	
@@ -986,23 +986,6 @@ var app = angular.module('foodApp', ['ngSanitize', 'checklist-model']);
 		$scope.deleteFromTemporaryRecipe = function ($item) {
 			$scope.recipe.temporary_contents = _.without($scope.recipe.temporary_contents, $item);
 		};
-
-		// $scope.deleteItem = function ($table, $item, $id, $func) {
-		// 	deleteItem.deleteItem($table, $item, $id).then(function (response) {
-		// 		if ($table === 'food_recipe') {
-		// 			$scope.displayRecipeContents($scope.recipe.id, $scope.recipe.name);
-		// 		}
-		// 		else if ($table === 'food_entries') {
-		// 			$scope.displayFoodEntries($scope.date.sql);
-		// 		}
-		// 		else {
-		// 			$func();
-		// 			if ($table === 'foods') {
-		// 				$scope.getAllFoodsWithUnits();
-		// 			}
-		// 		}
-		// 	});
-		// };
 
 		// ========================================================================
 		// ========================================================================
