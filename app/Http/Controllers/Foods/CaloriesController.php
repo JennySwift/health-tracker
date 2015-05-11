@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Auth;
 use App\Models\Foods\Food;
-use App\Models\Foods\Calories;
 
 class CaloriesController extends Controller {
 
@@ -16,10 +15,13 @@ class CaloriesController extends Controller {
 	
 	public function updateCalories (Request $request) {
 		$food_id = $request->get('food_id');
+		$food = Food::find($request->get('food_id'));
 		$unit_id = $request->get('unit_id');
 		$calories = $request->get('calories');
 
-		Calories::updateCalories($food_id, $unit_id, $calories);
+		$food->units()
+			->where('unit_id', $unit_id)
+			->update(['calories' => $calories]);
 
 		return Food::getFoodInfo($food_id);
 	}
@@ -28,7 +30,7 @@ class CaloriesController extends Controller {
 		$food_id = $request->get('food_id');
 		$unit_id = $request->get('unit_id');
 
-		Calories::updateDefaultUnit($food_id, $unit_id);
+		Food::updateDefaultUnit($food_id, $unit_id);
 
 		return Food::getFoodInfo($food_id);
 	}
@@ -36,7 +38,7 @@ class CaloriesController extends Controller {
 	public function insertUnitInCalories (Request $request) {
 		$food_id = $request->get('food_id');
 		$unit_id = $request->get('unit_id');
-		Calories::insertUnitInCalories($food_id, $unit_id);
+		Food::insertUnitInCalories($food, $unit_id);
 		return Food::getFoodInfo($food_id);
 	}
 
@@ -45,9 +47,9 @@ class CaloriesController extends Controller {
 	 */
 	
 	public function deleteUnitFromCalories (Request $request) {
-		$food_id = $request->get('food_id');
+		$food = Food::find($request->get('food_id'));
 		$unit_id = $request->get('unit_id');
-		Calories::deleteUnitFromCalories($food_id, $unit_id);
+		$food->units()->detach($unit_id);
 		return Food::getFoodInfo($food_id);
 	}
 

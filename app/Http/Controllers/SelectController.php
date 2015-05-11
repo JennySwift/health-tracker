@@ -17,7 +17,6 @@ use App\Models\Exercises\Workout;
 
 use App\Models\Foods\Food;
 use App\Models\Foods\FoodEntry;
-use App\Models\Foods\Calories;
 use App\Models\Foods\Recipe;
 
 use App\Models\Weights\Weight;
@@ -46,8 +45,8 @@ class SelectController extends Controller {
 			"exercises" => User::getExercises(),
 			"exercise_series" => User::getExerciseSeries(),
 			"food_entries" => FoodEntry::getFoodEntries($date),
-			"calories_for_the_day" => number_format(Calories::getCaloriesForTimePeriod($date, "day"), 2),
-			"calories_for_the_week" => number_format(Calories::getCaloriesForTimePeriod($date, "week"), 2),
+			"calories_for_the_day" => number_format(Food::getCaloriesForTimePeriod($date, "day"), 2),
+			"calories_for_the_week" => number_format(Food::getCaloriesForTimePeriod($date, "week"), 2),
 			"exercise_entries" => User::getExerciseEntries($date),
 			"journal_entry" => Journal::getJournalEntry($date),
 			"exercise_tags" => $exercise_tags,

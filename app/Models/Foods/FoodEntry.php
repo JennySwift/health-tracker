@@ -50,8 +50,8 @@ class FoodEntry extends Model {
 	    	$recipe_name = $row->recipe_name;
 	    	$recipe_id = $row->recipe_id;
 
-	    	$calories_for_item = Calories::getCalories($food_id, $unit_id);
-	    	$calories_for_quantity = Calories::getCaloriesForQuantity($calories_for_item, $quantity);
+	    	$calories_for_item = Food::getCalories($food_id, $unit_id);
+	    	$calories_for_quantity = Food::getCaloriesForQuantity($calories_for_item, $quantity);
 	    	$calories_for_quantity = number_format($calories_for_quantity, 2);
 
 	    	$food_entries[] = array(

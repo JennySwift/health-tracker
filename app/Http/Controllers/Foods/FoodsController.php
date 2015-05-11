@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 use App\Models\Foods\Food;
 use App\Models\Foods\FoodEntry;
 use App\Models\Units\Unit;
-use App\Models\Foods\Calories;
 use DB;
 use Auth;
 use Debugbar;
@@ -20,27 +19,10 @@ class FoodsController extends Controller {
 	 * select
 	 */
 
-	/**
-	 * Get all food units that belong to the user,
-	 * as well as all units that belong to the particular food.
-	 * 
-	 * For when user clicks on a food in the foods table
-	 * A popup is displayed, showing all food units
-	 * with the units for that food checked
-	 * and the option to set the default unit for the food
-	 * and the option to set the calories for each of the food's units
-	 */
 	public function getFoodInfo (Request $request) {
 		$food = Food::find($request->get('food_id'));
-		$user = User::find(Auth::user()->id);
-		$all_food_units = $user->foodUnits;
-		$food_units = $food->units()->lists('unit_id');
-
-		return [
-			"all_food_units" => $all_food_units,
-			"food" => $food,
-			"food_units" => $food_units
-		];
+		dd($food);
+		return Food::getFoodInfo($food);
 	}
 
 	public function getAllFoodsWithUnits (Request $request) {

@@ -12,7 +12,6 @@ use App\Models\Tags\Tag;
 use App\Models\Foods\Food;
 use App\Models\Units\Unit;
 use App\Models\Foods\FoodEntry;
-use App\Models\Foods\Calories;
 use DB;
 use Auth;
 use Debugbar;
@@ -144,9 +143,10 @@ class RecipesController extends Controller {
 	}
 	
 	public function deleteFoodFromRecipe (Request $request) {
-		$id = $request->get('id');
+		$food_id = $request->get('id');
 		$recipe_id = $request->get('recipe_id');
-		FoodRecipe::deleteFoodFromRecipe($id);
+		$recipe = Recipe::find($request->get('recipe_id'));
+		$recipe->foods()->detach($food_id);
 		return FoodRecipe::getRecipeContents($recipe_id);
 	}
 
@@ -163,8 +163,8 @@ class RecipesController extends Controller {
 		
 		$response = array(
 			"food_entries" => FoodEntry::getFoodEntries($date),
-			"calories_for_the_day" => number_format(Calories::getCaloriesForTimePeriod($date, "day"), 2),
-			"calories_for_the_week" => number_format(Calories::getCaloriesForTimePeriod($date, "week"), 2)
+			"calories_for_the_day" => number_format(Food::getCaloriesForTimePeriod($date, "day"), 2),
+			"calories_for_the_week" => number_format(Food::getCaloriesForTimePeriod($date, "week"), 2)
 		);
 		return $response;
 	}

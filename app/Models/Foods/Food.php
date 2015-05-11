@@ -6,6 +6,8 @@ use App\Models\Foods\Calories;
 use App\Models\Units\Unit;
 use Auth;
 use App\User;
+use DB;
+use Carbon\Carbon;
 
 class Food extends Model {
 
@@ -44,6 +46,29 @@ class Food extends Model {
 	 */
 	
 	/**
+	 * Get all food units that belong to the user,
+	 * as well as all units that belong to the particular food.
+	 * 
+	 * For when user clicks on a food in the foods table
+	 * A popup is displayed, showing all food units
+	 * with the units for that food checked
+	 * and the option to set the default unit for the food
+	 * and the option to set the calories for each of the food's units
+	 */
+	public static function getFoodInfo ($food) {
+		dd($food);
+		$user = User::find(Auth::user()->id);
+		$all_food_units = $user->foodUnits;
+		$food_units = $food->units()->lists('unit_id');
+
+		return [
+			"all_food_units" => $all_food_units,
+			"food" => $food,
+			"food_units" => $food_units
+		];
+	}
+	
+	/**
 	 * Get all the user's foods, with the name of each food's default unit
 	 */
 	public static function getFoods () { 
@@ -78,6 +103,60 @@ class Food extends Model {
 			->get();
 
 		return $foods;
+	}
+
+	public static function getCalories ($food_id, $unit_id) {
+		$food = static::find($food_id);
+		$calories = $food->units()
+			->where('unit_id', $unit_id)
+			->pluck('calories');
+
+		return $calories;
+	}
+
+	public static function getCaloriesForQuantity ($calories_for_item, $quantity) {
+		$calories_for_quantity = $calories_for_item * $quantity;
+		return $calories_for_quantity;
+	}
+
+	public static function getCaloriesForTimePeriod ($date, $period) {
+		$calories_for_period = 0;
+
+		if ($period === "day") {
+			$rows = FoodEntry
+				::join('foods', 'food_entries.food_id', '=', 'foods.id')
+				->join('units', 'food_entries.unit_id', '=', 'units.id')
+				->where('date', $date)
+				->where('food_entries.user_id', Auth::user()->id)
+				->select('food_id', 'units.id AS unit_id', 'quantity')
+				->get();
+		}
+		elseif ($period === "week") {
+			$a_week_ago = Carbon::createFromFormat('Y-m-d', $date)->subWeek(1)->format('Y-m-d');
+			$rows = FoodEntry
+				::join('foods', 'food_entries.food_id', '=', 'foods.id')
+				->join('units', 'food_entries.unit_id', '=', 'units.id')
+				->where('date', '>=', $a_week_ago)
+				->where('date', '<=', $date)
+				->where('food_entries.user_id', Auth::user()->id)
+				->select('food_id', 'units.id AS unit_id', 'quantity')
+				->get();
+		}
+
+		foreach ($rows as $row) {
+			$food_id = $row->food_id;
+			$unit_id = $row->unit_id;
+			$quantity = $row->quantity;
+
+			$calories_for_item = Food::getCalories($food_id, $unit_id);
+			$calories_for_quantity = static::getCaloriesForQuantity($calories_for_item, $quantity);
+			$calories_for_period += $calories_for_quantity;
+		}
+
+		if ($period === "week") {
+			$calories_for_period /= 7;
+		}
+		return $calories_for_period;
 	}
 
 	/**
@@ -118,6 +197,10 @@ class Food extends Model {
 		return $food_id;
 	}
 
+	public static function insertUnitInCalories ($food, $unit_id) {
+		$food->units()->attach($unit_id, ['user_id' => Auth::user()->id]);
+	}
+
 	/**
 	 * update
 	 */
@@ -125,51 +208,5 @@ class Food extends Model {
 	/**
 	 * delete
 	 */
-	
-	/**
-	 * from old FoodRecipe model
-	 */
-	
-	public static function insertFoodIntoRecipe ($recipe_id, $data) {
-		if (isset($data['description'])) {
-			$description = $data['description'];
-		}
-		else {
-			$description = null;
-		}
-
-		static
-			::insert([
-				'recipe_id' => $recipe_id,
-				'food_id' => $data['food_id'],
-				'unit_id' => $data['unit_id'],
-				'quantity' => $data['quantity'],
-				'description' => $description,
-				'user_id' => Auth::user()->id
-			]);
-	}
-
-	public static function deleteFoodFromRecipe ($id) {
-		static
-			::where('id', $id)
-			->delete();
-	}
-
-	public static function getRecipeContents ($recipe_id) {
-		$recipe_contents = static
-			::where('recipe_id', $recipe_id)
-			->join('foods', 'food_recipe.food_id', '=', 'foods.id')
-			->join('units', 'food_recipe.unit_id', '=', 'units.id')
-			->select('food_recipe.id', 'food_recipe.description', 'foods.name AS food_name', 'units.name AS unit_name', 'recipe_id', 'food_id', 'quantity', 'unit_id')
-			->get();
-
-		foreach ($recipe_contents as $item) {
-			$food = Food::find($item->food_id);
-			$assoc_units = $food->units;
-			$item->assoc_units = $assoc_units;
-		}
-		
-		return $recipe_contents;
-	}
 
 }
