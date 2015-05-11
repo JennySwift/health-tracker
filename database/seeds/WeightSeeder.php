@@ -18,7 +18,13 @@ class WeightSeeder extends Seeder {
 		 * Why did you add the following line?
 		 * I already have Model::unguard(); in DatabaseSeeder.php.
 		 * How is Eloquent::unguard(); different?
-		 */
+         * @JS:
+         * Eloquent::unguard works if you have line 4: `use Illuminate\Database\Eloquent\Model as Eloquent;`
+         * This is basically the same.
+         * Now I am using it here, because you should try running your seeders alone (php artisan db:seed
+         * --class=WhateverSeeder) to make sure they work independently. Seeders must be "decoupled", which means you
+         * should be able to run each one of them separately if needed!
+         */
 
 		Eloquent::unguard();
 		Weight::truncate();
@@ -75,6 +81,17 @@ class WeightSeeder extends Seeder {
 			 * @VP:
 			 * I see, but I'd still like to understand the code here for the sake of learning.
 			 */
+
+            /**
+             * @JS:
+             * You were on the right track with your loop, the issue was creating the today variable outside the
+             * loop. If you create the today date outside the loop, let's say the first time you enter the loop
+             * (first iteration) you have May 1st as your today date, index is 0 so your date will be May 1st. On the
+             * second iteration, index will be 1 and today will be changed to April 30th. On the third iteration
+             * though, index will be equal to 2, and the today variable after subDays() method will be equal to April
+             * 28th. So you are skipping days, because your today date won't be equal to today on each iteration.
+             * That is why we need to reset it to today's date inside the loop :)
+             */
 			
 			$today = Carbon::today();
 			
