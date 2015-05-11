@@ -11,17 +11,17 @@ class UserSeeder extends Seeder {
 	{
 		User::truncate();
 		
-		User::create([
-			'name' => 'Dummy1',
-			'email' => 'cheezyspaghetti@gmail.com',
-			'password' => bcrypt('abcdefg')
-		]);
+		// User::create([
+		// 	'name' => 'Dummy1',
+		// 	'email' => 'cheezyspaghetti@gmail.com',
+		// 	'password' => bcrypt('abcdefg')
+		// ]);
 
-		User::create([
-			'name' => 'Dummy2',
-			'email' => 'cheezyspaghetti@optusnet.com.au',
-			'password' => bcrypt('hijklmnop')
-		]);
+		// User::create([
+		// 	'name' => 'Dummy2',
+		// 	'email' => 'cheezyspaghetti@optusnet.com.au',
+		// 	'password' => bcrypt('hijklmnop')
+		// ]);
 	}
 
 }
