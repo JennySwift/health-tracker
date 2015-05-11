@@ -164,6 +164,17 @@ li {
     right: 0;
     top: -4px; }
 
+#info-entries-wrapper {
+  display: flex;
+  justify-content: space-around; }
+
+#entries {
+  display: flex;
+  justify-content: space-around; }
+  #entries > * {
+    flex-grow: 1;
+    margin: 0px 10px; }
+
 @media (max-width: 320px) {
   .row {
     max-width: 300px; } }

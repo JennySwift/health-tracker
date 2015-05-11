@@ -2,11 +2,15 @@
 
 	<div>
 
-		<?php include($inc . '/info.php'); ?> 
+		<div id="info-entries-wrapper">
+			<?php
+				include($inc . '/info.php');
+				include($inc . '/entry-inputs.php');
+			?> 
+		</div>
+		
 
-		<?php include($inc . '/entry-inputs.php'); ?> 
-
-		<div>
+		<div id="entries">
 			<!-- display food entries -->
 			<div ng-if="tab.entries || tab.food_entries">
 				<table class="table table-bordered">
