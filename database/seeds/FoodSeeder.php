@@ -14,16 +14,15 @@ class FoodSeeder extends Seeder {
 
 	public function run()
 	{
-		DB::statement('SET FOREIGN_KEY_CHECKS=0');
+		// DB::statement('SET FOREIGN_KEY_CHECKS=0');
 
 		Food::truncate();
-		User::truncate();
 
 		$foods = ['apple', 'banana', 'orange', 'mango', 'watermelon', 'papaya', 'pear', 'peach', 'nectarine', 'plum', 'rockmelon', 'blueberry', 'strawberry', 'raspberry', 'blackberry', 'walnut', 'brazilnut', 'cashew', 'almond', 'sesame seeds', 'pumpkin seeds', 'sunflower seeds'];
 
-		foreach ($foods as $food) {
-			Factory::create('App\Models\Foods\Food', ['name' => $food]);
-		}
+		// foreach ($foods as $food) {
+		// 	Factory::create('App\Models\Foods\Food', ['name' => $food]);
+		// }
 		
 		// dd($food->toArray());
 
@@ -44,24 +43,24 @@ class FoodSeeder extends Seeder {
 		 * Create foods but only add a default_unit_id to most of them, not all of them, to make it more realistic.
 		 */
 
-		// foreach ($foods as $food) {
-		// 	// $has_default_unit_id = $faker->boolean($chanceOfGettingTrue = 80);
+		foreach ($foods as $food) {
+			// $has_default_unit_id = $faker->boolean($chanceOfGettingTrue = 80);
 
-		// 	// if ($has_default_unit_id) {
-		// 	// 	$default_unit_id = $faker->randomElement($food_unit_ids);
-		// 	// }
-		// 	// else {
-		// 	// 	$default_unit_id = null;
-		// 	// }
+			// if ($has_default_unit_id) {
+			// 	$default_unit_id = $faker->randomElement($food_unit_ids);
+			// }
+			// else {
+			// 	$default_unit_id = null;
+			// }
 
-		// 	Food::create([
-		// 		'name' => $food,
-		// 		'user_id' => 1
-		// 		// 'default_unit_id' => $default_unit_id
-		// 	]);
-		// }
+			Food::create([
+				'name' => $food,
+				'user_id' => 1
+				// 'default_unit_id' => $default_unit_id
+			]);
+		}
 
-		DB::statement('SET FOREIGN_KEY_CHECKS=1');
+		// DB::statement('SET FOREIGN_KEY_CHECKS=1');
 	}
 
 }

@@ -1,4 +1,4 @@
-<div ng-if="tab.entries || tab.journal || tab.food_entries || tab.exercise_entries">
+<div ng-controller="dates" ng-if="tab.entries || tab.journal || tab.food_entries || tab.exercise_entries">
 	<h1 class="row center">{{date.long}}</h1>
 	
 	<div class="row margin-bottom">

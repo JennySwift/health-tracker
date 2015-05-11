@@ -57,9 +57,8 @@ class SelectController extends Controller {
 	}
 
 	//Which controller?
-	public function getEntries () {
-		include(app_path() . '/inc/functions.php');
-		$date = json_decode(file_get_contents('php://input'), true)["date"];
+	public function getEntries (Request $request) {
+		$date = $request->get('date');
 		$response = array(
 			"weight" => Weight::getWeight($date),
 			"exercise_entries" => User::getExerciseEntries($date),

@@ -4,6 +4,34 @@ var app = angular.module('tracker');
 	app.controller('foods', function ($scope, $http) {
 
 		/**
+		 * scope properties
+		 */
+		
+		//associated food units
+		$scope.all_foods_with_units = {};//all foods, with their associated units and default unit		
+		$scope.assoc_units = {};//associated units for one chosen food. This is made from $scope.all_foods_with_units.
+		$scope.food_and_assoc_units_array = {};//for the food popup, with checked state and calorie info. Associated units of one food. I could probably combine this info all into $scope.all_foods_with_units and get rid of this.
+
+		/**
+		 * watches
+		 */
+		
+		$scope.$watch('recipe.portion', function (newValue, oldValue) {
+			$($scope.recipe.temporary_contents).each(function () {
+				if (this.original_quantity) {
+					//making sure we don't alter the quantity of a food that has been added to the temporary recipe (by doing the if check)
+					this.quantity = this.original_quantity * newValue;
+				}
+			});
+		});
+
+		$scope.$watchCollection('filter.recipes.tag_ids', function (newValue, oldValue) {
+			if (newValue !== oldValue) {
+				$scope.filterRecipes();
+			}
+		});
+		
+		/**
 		 * select
 		 */
 		

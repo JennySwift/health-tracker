@@ -1,8 +1,3 @@
-// angular.module('tracker').controller('journal', ['$scope', function ($scope) {
-
-// }]);
-
-
 var app = angular.module('tracker');
 
 (function () {

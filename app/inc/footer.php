@@ -16,7 +16,8 @@
 <script type="text/javascript" src="tools/mousetrap.min.js"></script>
 <script type="text/javascript" src="tools/checklist-model.js"></script>
 
-<script type="text/javascript" src="js/controllers.js"></script>
+<script type="text/javascript" src="js/controllers/controllers.js"></script>
+<script type="text/javascript" src="js/controllers/DatesController.js"></script>
 <script type="text/javascript" src="js/controllers/JournalController.js"></script>
 <script type="text/javascript" src="js/controllers/FoodsController.js"></script>
 <script type="text/javascript" src="js/controllers/ExercisesController.js"></script>
