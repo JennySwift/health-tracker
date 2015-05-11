@@ -86,6 +86,11 @@ class Food extends Model {
          * joining two tables together and both have a user_id field, so you need to be more specific on which
          * user_id you want: foods.user_id or units.user_id ??
 		 */
+		/**
+		 * @VP:
+		 * I get that, but in case it was unclear I was referring to the code down below
+		 * that is now on line 107. So I don't know how to change your forCurrentUser method to use the correct user_id.
+		 */
 		
 		/**
 		 * @VP:
@@ -95,7 +100,7 @@ class Food extends Model {
          * When you create a method starting with the scope keyword on a model, Laravel will automatically "create" a
          * method with the following name, for example:
          *    scopeWithDefaultUnit => withDefaultUnit()
-
+         *    
          * You can check the documentation here: http://laravel.com/docs/4.2/eloquent#query-scopes
 		 */
 
