@@ -37,23 +37,6 @@ class WeightSeeder extends Seeder {
 		 */		
 		
 		foreach (range(0, 49) as $index) {
-			/**
-			 * @VP:
-			 * This is creating 50 entries in the weights table like I want, 
-			 * but not for the last 50 days-it is skipping days. Why?
-			 */
-			
-			/**
-			 * @JS:
-			 * Simply create the $today variable inside the loop ;)
-			 */
-			 
-			/**
-			 * @VP:
-			 * So it worked, but why?
-			 * I thought $today would be the same value whether inside or outside the loop.
-			 * $today->subDays($index)->format('Y-m-d') actually changes the value of the $today variable??
-			 */
 			
 			/**
 			 * @JS:
@@ -70,28 +53,6 @@ class WeightSeeder extends Seeder {
 			 * because it's like taking one step at a time rather than trying to do too many things at once.
 			 * What do you think? Is there a good reason I should change this habit?
 			 */
-			
-			/** 
-			 * @JS:
-			 * And also, if you take a look at my migrations, I never create a 'date' field
-			 * Simply because you already have a created_at column which holds a date ;)
-			 */
-			
-			/**
-			 * @VP:
-			 * I see, but I'd still like to understand the code here for the sake of learning.
-			 */
-
-            /**
-             * @JS:
-             * You were on the right track with your loop, the issue was creating the today variable outside the
-             * loop. If you create the today date outside the loop, let's say the first time you enter the loop
-             * (first iteration) you have May 1st as your today date, index is 0 so your date will be May 1st. On the
-             * second iteration, index will be 1 and today will be changed to April 30th. On the third iteration
-             * though, index will be equal to 2, and the today variable after subDays() method will be equal to April
-             * 28th. So you are skipping days, because your today date won't be equal to today on each iteration.
-             * That is why we need to reset it to today's date inside the loop :)
-             */
 			
 			$today = Carbon::today();
 			

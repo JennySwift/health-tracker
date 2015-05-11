@@ -11,16 +11,6 @@ use Carbon\Carbon;
 
 class Food extends Model {
 
-	/**
-	 * @VP:
-	 * Why is the following line needed when there is already this at the top of the file:
-	 * use App\Traits\Models\Relationships\OwnedByUser;
-     * @JS:
-     * Simply because the use statement at the top import the PHP trait into this PHP script. Then you need to
-     * tell PHP that you want to use this trait in this particular class (because even if it is a very bad practice,
-     * you could still write multiple classes in one single PHP file!
-     */
-
 	use OwnedByUser;
 
 	protected $fillable = ['name'];
@@ -96,18 +86,6 @@ class Food extends Model {
          * logged user for you (that is why I called the method forCurrentUser) so no need to fetch the user before
          * or anything, just use the scope like you did line 112.
          */
-		
-		/**
-		 * @VP:
-		 * Also, this is calling the scopeForCurrentUser method in OwnedByUser.php, right?
-		 * If I'm right, why is it static::forCurrentUser() and not static::scopeForCurrentUser()?
-         * @JS:
-         * When you create a method starting with the scope keyword on a model, Laravel will automatically "create" a
-         * method with the following name, for example:
-         *    scopeWithDefaultUnit => withDefaultUnit()
-         *    
-         * You can check the documentation here: http://laravel.com/docs/4.2/eloquent#query-scopes
-		 */
 
 		// $foods = static::forCurrentUser()
 		// 	->leftJoin('units', 'foods.default_unit_id', '=', 'units.id')
