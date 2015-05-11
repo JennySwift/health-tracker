@@ -2,7 +2,6 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Auth;
-use App\Models\Foods\Recipe;
 use App\Models\Tags\Tag;
 use App\Models\Foods\RecipeMethod;
 use App\Models\Foods\Food;
@@ -10,6 +9,8 @@ use App\Models\Units\Unit;
 use App\Models\Foods\Calories;
 
 class Recipe extends Model {
+
+    protected $fillable = ['name'];
 
 	/**
 	 * Define relationships

@@ -6,6 +6,8 @@ use App\Models\Foods\Calories;
 
 class FoodEntry extends Model {
 
+    protected $fillable = ['date', 'quantity'];
+
 	/**
 	 * Define relationships
 	 */

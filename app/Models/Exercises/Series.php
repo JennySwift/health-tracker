@@ -6,6 +6,8 @@ use App\Models\Exercises\Workouts\Series as WorkoutSeries;
 
 class Series extends Model {
 
+    protected $fillable = ['name'];
+
     protected $table = "exercise_series";
 
     /**

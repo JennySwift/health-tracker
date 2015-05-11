@@ -5,6 +5,13 @@ use Auth;
 
 class RecipeMethod extends Model {
 
+    /**
+     * @JS: The recipe_id field shouldn't have to be in the fillable property, it means that we'll have some work
+     * with your insert/update with relationships
+     * @var array
+     */
+    protected $fillable = ['recipe_id'];
+
 	/**
 	 * Define relationships
 	 */

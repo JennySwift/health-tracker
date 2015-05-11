@@ -7,6 +7,8 @@ use App\Models\Exercises\Entry as ExerciseEntry;
 
 class Entry extends Model {
 
+    protected $fillable = ['date', 'quantity'];
+
 	protected $table = 'exercise_entries';
 
 	/**

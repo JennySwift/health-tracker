@@ -6,6 +6,8 @@ use App\Models\Exercises\Workouts\Series as WorkoutSeries;
 
 class Workout extends Model {
 
+    protected $fillable = ['name'];
+
 	/**
 	 * Define relationships
 	 */
