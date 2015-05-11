@@ -62,12 +62,12 @@ class SelectController extends Controller {
 		$date = json_decode(file_get_contents('php://input'), true)["date"];
 		$response = array(
 			"weight" => Weight::getWeight($date),
-			"exercise_entries" => ExerciseEntry::getExerciseEntries($date),
+			"exercise_entries" => User::getExerciseEntries($date),
 			"journal_entry" => Journal::getJournalEntry($date),
 
 			"food_entries" => FoodEntry::getFoodEntries($date),
-			"calories_for_the_day" => number_format(Calories::getCaloriesForTimePeriod($date, "day"), 2),
-			"calories_for_the_week" => number_format(Calories::getCaloriesForTimePeriod($date, "week"), 2)
+			"calories_for_the_day" => number_format(Food::getCaloriesForTimePeriod($date, "day"), 2),
+			"calories_for_the_week" => number_format(Food::getCaloriesForTimePeriod($date, "week"), 2)
 		);
 		return $response;
 	}

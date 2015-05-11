@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Models\Foods\Recipe;
-use App\Models\Foods\FoodRecipe;
 use App\Models\Foods\RecipeMethod;
 use App\Models\Tags\Tag;
 use App\Models\Foods\Food;

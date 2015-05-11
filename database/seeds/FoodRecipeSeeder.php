@@ -3,18 +3,17 @@
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
-use App\Models\Foods\FoodRecipe;
 use Faker\Factory as Faker;
 
 class FoodRecipeSeeder extends Seeder {
 
 	public function run()
 	{
-		FoodRecipe::truncate();
+		DB::table('food_recipe')->truncate();
 		
 		$faker = Faker::create();
 
-		FoodRecipe::create([
+		DB::table('food_recipe')->insert([
 			'recipe_id' => 1,
 			'food_id' => 1,
 			'unit_id' => 1,
@@ -23,7 +22,7 @@ class FoodRecipeSeeder extends Seeder {
 			'user_id' => 1
 		]);
 
-		FoodRecipe::create([
+		DB::table('food_recipe')->insert([
 			'recipe_id' => 1,
 			'food_id' => 2,
 			'unit_id' => 1,
@@ -32,7 +31,7 @@ class FoodRecipeSeeder extends Seeder {
 			'user_id' => 1
 		]);
 
-		FoodRecipe::create([
+		DB::table('food_recipe')->insert([
 			'recipe_id' => 1,
 			'food_id' => 3,
 			'unit_id' => 1,

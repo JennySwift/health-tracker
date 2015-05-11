@@ -1,4 +1,4 @@
-<div ng-if="tab.entries" id="info" class="col-xs-12 col-sm-4">
+<div ng-if="tab.entries" id="info">
 	<ul class="list-group">
 		<li class="list-group-item">
 			<span>Today's total calories: </span>
@@ -10,13 +10,15 @@
 			<span class="badge">{{calories.week_avg}}</span>
 		</li>
 
-		<li ng-show="edit_weight !== true" ng-click="editWeight()" class="list-group-item pointer">
+		<li ng-controller="weights" ng-show="edit_weight !== true" ng-click="editWeight()" class="list-group-item pointer">
 			<span>Today's weight: </span>
 			<span class="badge">{{weight}}</span>
 		</li>
 
-		<li ng-show="edit_weight === true" class="list-group-item">
+		<li ng-controller="weights" ng-show="edit_weight === true" class="list-group-item">
 			<input ng-keyup="insertOrUpdateWeight($event.keyCode)" type="number" placeholder="enter your weight" id="weight">
 		</li>
 	</ul>
+
+	<div ng-controller="weights">edit_weight: {{edit_weight}} weight: {{weight}}</div>
 </div>

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" class="" ng-app="foodApp">
+<html lang="en" class="" ng-app="tracker">
 <head>
 
     <meta charset="UTF-8" name="viewport" content="initial-scale = 1">
@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 
-<body class="" ng-controller="display">
+<body class="" ng-controller="controller">
 
 <?php
 	include($inc . '/header.php');
@@ -25,50 +25,16 @@
 
 	<h5>branch:refactor</h5>
 	
-	<?php include($inc . '/foods.php'); ?>
-	<?php include($inc . '/exercises.php'); ?>
-	<?php include($inc . '/units.php'); ?>
-	<?php include($inc . '/popups/index.php'); ?>
-
-	<div ng-if="tab.entries || tab.journal || tab.food_entries || tab.exercise_entries">
-		<h1 class="row center">{{date.long}}</h1>
-		
-		<div class="row margin-bottom">
-
-			<?php include($inc . '/date-navigation.php'); ?> 
-
-		</div>	<!-- .row -->
-	</div>
-
-	<div ng-show="tab.entries || tab.food_entries || tab.exercise_entries">
-
-		<div class="row">
-
-			<?php include($inc . '/info.php'); ?> 
-
-			<?php include($inc . '/entry-inputs.php'); ?> 
-
-		</div> <!-- .row -->
-
-		<?php include($inc . '/entries.php'); ?>
-		
-	</div> <!-- end entries tab -->
-
-	<div ng-show="tab.journal" id="journal">
-
-		<!-- <div ng-show="!journal_entry.edit" ng-bind-html="journal_entry.text"></div> -->
-		<div class="btn-toolbar" data-role="editor-toolbar" data-target="#wysiwyg">
-			<a data-edit="bold" class="fa fa-bold"></a>
-		</div>
-		<div ng-bind-html="journal_entry.text" id="journal-entry" class="wysiwyg margin-bottom"></div>
-
-		<!-- <button ng-click="journal_entry.edit = true">edit</button> -->
-		<button ng-click="insertOrUpdateJournalEntry()">save entry</button>
-
-	</div>
-
+	<?php
+		include($inc . '/foods.php');
+		include($inc . '/exercises.php');
+		include($inc . '/date-navigation.php');
+		include($inc . '/journal.php');
+		include($inc . '/units.php');
+		include($inc . '/popups/index.php');
+		include($inc . '/entries.php');
+	?>
 	
-      
 </div> <!-- .container -->  
 
 <?php include($inc . '/footer.php'); ?>

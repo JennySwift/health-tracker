@@ -1,0 +1,45 @@
+#info-entries-wrapper {
+	display: flex;
+	justify-content: space-around;
+}
+
+// #entry-inputs {
+// 	display: flex;
+// 	justify-content: space-around;
+// 	> * {
+// 		margin: 0px 10px;
+// 	}
+// }
+
+#entries {
+	display: flex;
+	justify-content: space-around;
+	> * {
+		flex-grow: 1;
+		margin: 0px 10px;
+	}
+}
+
+.row {
+	@media (max-width: 320px) {
+		max-width: 300px;
+	}
+}
+
+.container {
+	@media (max-width: 320px) {
+		padding: 0 5px;
+	}
+}
+
+body {
+	@media (max-width: 320px) {
+		max-width: 280px;
+	}
+}
+
+html {
+	@media (max-width: 320px) {
+		max-width: 280px;
+	}
+}

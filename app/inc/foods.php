@@ -1,4 +1,4 @@
-<div ng-show="tab.foods" id="foods-tab">
+<div ng-controller="foods" ng-show="tab.foods" id="foods-tab">
 
 	<?php include('quick-recipe.php'); ?>
 	

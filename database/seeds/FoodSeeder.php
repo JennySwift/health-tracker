@@ -14,7 +14,7 @@ class FoodSeeder extends Seeder {
 	{
 		Food::truncate();
 
-		// Factory::build('App\Models\Foods\Food');
+		Factory::build('App\Models\Foods\Food');
 
 		$faker = Faker::create();
 
