@@ -96,13 +96,25 @@ class Entry extends Model {
 		 * select * from `exercises`
 		 * rather than the entire query
 		 */
-
+        /**
+         * @JS: And this was correct, that is what you are doing apparently!! lol
+         */
 		
 			
 		/**
 		 * When I try the following I get:
 		 * Error: Missing argument 2 for Illuminate\Database\Query\Builder::whereDate()
 		 */
+        /**
+         * You cannot use the shortcut whereField on a field named "date" simply because the
+         * Illuminate\Database\Query\Builder already has a whereDate method, which is a little different. Try doing
+         * it this way:
+         *
+         * whereDate('date', $date)
+         *
+         * or you can keep the where('date', $date) as well
+
+         */
 		
 		// $entries = ExerciseEntry::whereDate($date)->with(['exercise' => function($query) use ($exercise_id) {
 		//     $query->whereId($exercise_id);
