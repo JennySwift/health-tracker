@@ -10,11 +10,13 @@ class Unit extends Model {
 	 * Define relationships
 	 */
 
-	public function user () {
+	public function user()
+	{
 		return $this->belongsTo('App\User');
 	}
 
-	public function foods () {
+	public function foods()
+	{
 		return $this->belongsToMany('App\Models\Foods\Food');
 	}
 
@@ -31,7 +33,8 @@ class Unit extends Model {
 	 * @param  [type] $unit_name [description]
 	 * @return [type]            [description]
 	 */
-	public static function insertUnitIfNotExists ($unit_name) {
+	public static function insertUnitIfNotExists($unit_name)
+	{
 		include(app_path() . '/inc/functions.php');
 
 		//Check if the unit exists

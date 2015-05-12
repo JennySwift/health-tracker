@@ -11,7 +11,8 @@ class Journal extends Model {
 	 * Define relationships
 	 */
 
-	public function user () {
+	public function user()
+	{
 		return $this->belongsTo('App\User');
 	}
 
@@ -19,7 +20,8 @@ class Journal extends Model {
 	 * select
 	 */
 
-	public static function getJournalEntry ($date) {
+	public static function getJournalEntry($date)
+	{
 		$entry = static
 			::where('date', $date)
 			->where('user_id', Auth::user()->id)
@@ -44,7 +46,8 @@ class Journal extends Model {
 	 * insert
 	 */
 
-	public static function insertOrUpdateJournalEntry ($date, $text) {
+	public static function insertOrUpdateJournalEntry($date, $text)
+	{
 		//check if an entry already exists
 		$count = static
 			::where('date', $date)

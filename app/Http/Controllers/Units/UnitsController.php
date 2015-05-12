@@ -20,7 +20,8 @@ class UnitsController extends Controller {
 	 * insert
 	 */
 	
-	public function insertExerciseUnit (Request $request) {
+	public function insertExerciseUnit(Request $request)
+	{
 		$name = $request->get('name');
 		
 		Unit::insert([
@@ -39,7 +40,8 @@ class UnitsController extends Controller {
 	 * delete
 	 */
 
-	public function deleteExerciseUnit (Request $request) {
+	public function deleteExerciseUnit(Request $request)
+	{
 		$id = $request->get('id');
 
 		Unit::where('id', $id)->delete();
@@ -54,7 +56,8 @@ class UnitsController extends Controller {
 	 * delete
 	 */
 	
-	public function deleteFoodUnit (Request $request) {
+	public function deleteFoodUnit(Request $request)
+	{
 		$id = $request->get('id');
 		Unit::where('id', $id)->delete();
 		return Unit::getFoodUnits();

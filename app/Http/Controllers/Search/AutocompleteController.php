@@ -13,7 +13,8 @@ use App\Models\Exercises\Exercise;
 class AutocompleteController extends Controller {
 
     //Selects rows from both foods and recipes table.
-    public function autocompleteMenu (Request $request) {
+    public function autocompleteMenu(Request $request)
+    {
         $typing = '%' . $request->get('typing') . '%';
         
         $menu = DB::select("select * from (select id, name, 'food' as type from foods where name LIKE '$typing' and user_id = " . Auth::user()->id . " UNION select id, name, 'recipe' as type from recipes where name LIKE '$typing' and user_id = " . Auth::user()->id . ") as table1 order by table1.name asc");
@@ -21,7 +22,8 @@ class AutocompleteController extends Controller {
         return $menu;
     }
 
-    public function autocompleteFood (Request $request) {
+    public function autocompleteFood(Request $request)
+    {
         $typing = '%' . $request->get('typing') . '%';
 
         $foods = Food
@@ -33,7 +35,8 @@ class AutocompleteController extends Controller {
         return $foods;
     }
 
-    public function autocompleteExercise (Request $request) {
+    public function autocompleteExercise(Request $request)
+    {
         $exercise = '%' . $request->get('exercise') . '%';
     
         $exercises = Exercise

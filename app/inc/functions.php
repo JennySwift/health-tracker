@@ -4,7 +4,8 @@
  * not sure where these functions should go because they are not specific to a model
  */
 
-function pluckName ($name, $table) {
+function pluckName($name, $table)
+{
 	//for quick recipe
 	$name = DB::table($table)
 		->where('name', $name)
@@ -14,7 +15,8 @@ function pluckName ($name, $table) {
 	return $name;
 }
 
-function getId ($table, $name) {
+function getId($table, $name)
+{
 	$id = DB::table($table)
 		->where('name', $name)
 		->where('user_id', Auth::user()->id)
@@ -23,7 +25,8 @@ function getId ($table, $name) {
 	return $id;
 }
 
-function countItem ($table, $name) {
+function countItem($table, $name)
+{
 	$count = DB::table($table)
 		->where('name', $name)
 		->where('user_id', Auth::user()->id)
@@ -32,7 +35,8 @@ function countItem ($table, $name) {
 	return $count;
 }
 
-function convertDate ($date, $for) {
+function convertDate($date, $for)
+{
 	$date = new DateTime($date);
 
 	if ($for === 'user') {
@@ -44,7 +48,8 @@ function convertDate ($date, $for) {
 	return $date;
 }
 
-function getHowManyDaysAgo ($date) {
+function getHowManyDaysAgo($date)
+{
 	//to find out how many days ago a date was
 	$now = new DateTime('now');
 	$date = new DateTime($date);

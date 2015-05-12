@@ -16,24 +16,29 @@ class Recipe extends Model {
 	 * Define relationships
 	 */
 
-	public function user () {
+	public function user()
+	{
 		return $this->belongsTo('App\User');
 	}
 
-	public function steps () {
+	public function steps()
+	{
 		return $this->hasMany('App\Models\Foods\RecipeMethod');
 	}
 
-	public function foods () {
+	public function foods()
+	{
 		return $this->belongsToMany('App\Models\Foods\Food', 'food_recipe', 'food_id', 'recipe_id');
 	}
 
-	public function tags () {
+	public function tags()
+	{
 		return $this->belongsToMany('App\Models\Tags\Tag', 'taggables', 'tag_id', 'taggable_id');
 	}
 
-	public function entries () {
-		return $this->hasMany('App\Models\Foods\FoodEntry');
+	public function entries()
+	{
+		return $this->hasMany('App\Models\Foods\Entry');
 	}
 
 	/**
@@ -46,7 +51,8 @@ class Recipe extends Model {
 	 * @param  [type] $tag_ids [description]
 	 * @return [type]          [description]
 	 */
-	public static function filterRecipes ($name, $tag_ids) {
+	public static function filterRecipes($name, $tag_ids)
+	{
 		$recipes = static::where('recipes.user_id', Auth::user()->id);
 
 		//filter by name
@@ -87,7 +93,8 @@ class Recipe extends Model {
 		return $array;
 	}
 
-	public static function getRecipeTags ($recipe_id) {
+	public static function getRecipeTags($recipe_id)
+	{
 		$recipe = static::find($recipe_id);
 		$tags = $recipe->tags()->orderBy('name', 'asc')->get();
 		return $tags;
@@ -98,7 +105,8 @@ class Recipe extends Model {
 	 * @param  [type] $recipe_id [description]
 	 * @return [type]            [description]
 	 */
-	public static function getRecipeContents ($recipe_id) {
+	public static function getRecipeContents($recipe_id)
+	{
 		$recipe_contents = static
 			::where('recipe_id', $recipe_id)
 			->join('foods', 'food_recipe.food_id', '=', 'foods.id')
@@ -120,7 +128,8 @@ class Recipe extends Model {
 	 * insert
 	 */
 	
-	public static function insertRecipe ($name) {
+	public static function insertRecipe($name)
+	{
 		static
 			::insert([
 				'name' => $name,
@@ -128,7 +137,8 @@ class Recipe extends Model {
 			]);
 	}
 
-	public static function insertQuickRecipe ($recipe_name, $contents, $steps, $check_similar_names) {
+	public static function insertQuickRecipe($recipe_name, $contents, $steps, $check_similar_names)
+	{
 		$similar_names = array();
 		$data_to_insert = array();
 		//$index is so if a similar name is found, I know what index it is in the quick recipe array for the javascript.
@@ -217,7 +227,8 @@ class Recipe extends Model {
 		}
 	}
 
-	public static function insertQuickRecipeRecipe ($name) {
+	public static function insertQuickRecipeRecipe($name)
+	{
 		//insert recipe into recipes table and retrieve the id
 		$id = static
 			::insertGetId([
@@ -234,7 +245,8 @@ class Recipe extends Model {
 	 * @param  [type] $data      [description]
 	 * @return [type]            [description]
 	 */
-	public static function insertFoodIntoRecipe ($recipe_id, $data) {
+	public static function insertFoodIntoRecipe($recipe_id, $data)
+	{
 		if (isset($data['description'])) {
 			$description = $data['description'];
 		}
@@ -261,7 +273,8 @@ class Recipe extends Model {
 	 * delete
 	 */
 
-	public static function deleteRecipe ($id) {
+	public static function deleteRecipe($id)
+	{
 		static
 			::where('id', $id)
 			->delete();
@@ -271,7 +284,8 @@ class Recipe extends Model {
 	 * other
 	 */
 
-	public static function checkSimilarNames ($name, $table) {
+	public static function checkSimilarNames($name, $table)
+	{
 		//for quick recipe
 		include(app_path() . '/inc/functions.php');
 		$count = countItem($table, $name);

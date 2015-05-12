@@ -12,11 +12,13 @@ class Workout extends Model {
 	 * Define relationships
 	 */
 
-	public function user () {
+	public function user()
+	{
 		return $this->belongsTo('App\User');
 	}
 
-	public function series() {
+	public function series()
+	{
 	  return $this->belongsToMany('App\Models\Exercises\Series');
 	}
 
@@ -34,7 +36,8 @@ class Workout extends Model {
 	 * @param  [type] $series_id  [description]
 	 * @return [type]             [description]
 	 */
-	public static function insertSeriesIntoWorkout($workout_id, $series_id) {
+	public static function insertSeriesIntoWorkout($workout_id, $series_id)
+	{
 		static
 			::insert([
 				'workout_id' => $workout_id,

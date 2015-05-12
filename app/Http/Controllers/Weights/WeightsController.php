@@ -12,7 +12,8 @@ use App\Models\Weights\Weight;
 
 class WeightsController extends Controller {
 
-	public function insertOrUpdateWeight (Request $request) {
+	public function insertOrUpdateWeight(Request $request)
+	{
 		$date = $request->get('date');
 		$weight = $request->get('weight');
 

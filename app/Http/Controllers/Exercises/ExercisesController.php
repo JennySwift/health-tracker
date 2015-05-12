@@ -20,7 +20,8 @@ class ExercisesController extends Controller {
 	 * select
 	 */
 	
-	public function getExerciseSeriesHistory (Request $request) {
+	public function getExerciseSeriesHistory(Request $request)
+	{
 		//Fetch the series (singular-the series that was clicked on)
 		$series = Series::find($request->get('series_id'));
 
@@ -31,7 +32,8 @@ class ExercisesController extends Controller {
 	 * insert
 	 */
 
-	public function deleteAndInsertSeriesIntoWorkouts (Request $request) {
+	public function deleteAndInsertSeriesIntoWorkouts(Request $request)
+	{
 		//deletes all rows with $series_id and then adds all the correct rows for $series_id
 		$series_id = $request->get('series_id');
 		$workouts = $request->get('workouts');
@@ -50,14 +52,16 @@ class ExercisesController extends Controller {
 		return Series::getExerciseSeries();
 	}
 
-	public function insertTagInExercise (Request $request) {
+	public function insertTagInExercise(Request $request)
+	{
 		$exercise_id = $request->get('exercise_id');
 		$tag_id = $request->get('tag_id');
 		Tag::insertExerciseTag($exercise_id, $tag_id);
 		return Exercise::getExercises();
 	}
 
-	public function insertExercise (Request $request) {
+	public function insertExercise(Request $request)
+	{
 		//Build an Exercise object (without saving in database yet)
 		$exercise = new Exercise($request->only('name', 'description'));	
 				
@@ -74,7 +78,8 @@ class ExercisesController extends Controller {
 	 * update
 	 */
 	
-	public function updateExerciseStepNumber (Request $request) {
+	public function updateExerciseStepNumber(Request $request)
+	{
 		$exercise_id = $request->get('exercise_id');
 		$step_number = $request->get('step_number');
 		
@@ -87,7 +92,8 @@ class ExercisesController extends Controller {
 		return Exercise::getExercises();
 	}
 
-	public function updateExerciseSeries (Request $request) {
+	public function updateExerciseSeries(Request $request)
+	{
 		$exercise_id = $request->get('exercise_id');
 		$series_id = $request->get('series_id');
 
@@ -101,7 +107,8 @@ class ExercisesController extends Controller {
 		return Exercise::getExercises();
 	}
 
-	public function updateDefaultExerciseQuantity (Request $request) {
+	public function updateDefaultExerciseQuantity(Request $request)
+	{
 		$id = $request->get('id');
 		$quantity = $request->get('quantity');
 		
@@ -114,7 +121,8 @@ class ExercisesController extends Controller {
 		return Exercise::getExercises();
 	}
 
-	public function updateDefaultExerciseUnit (Request $request) {
+	public function updateDefaultExerciseUnit(Request $request)
+	{
 		$exercise_id = $request->get('exercise_id');
 		$default_exercise_unit_id = $request->get('default_exercise_unit_id');
 
@@ -131,7 +139,8 @@ class ExercisesController extends Controller {
 	 * delete
 	 */
 	
-	public function deleteExercise (Request $request) {
+	public function deleteExercise(Request $request)
+	{
 		$id = $request->get('id');
 
 		Exercise::where('id', $id)->delete();

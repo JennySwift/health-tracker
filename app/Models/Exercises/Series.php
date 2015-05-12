@@ -14,19 +14,23 @@ class Series extends Model {
      * Define relationships
      */
   
-    public function user () {
+    public function user()
+    {
         return $this->belongsTo('App\User');
     }
   
-    public function workouts () {
+    public function workouts()
+    {
         return $this->belongsToMany('App\Models\Exercises\Workout');
     }
 
-    public function exercises () {
+    public function exercises()
+    {
         return $this->hasMany('App\Models\Exercises\Exercise');
     }
 
-    public function entries () {
+    public function entries()
+    {
         return $this->hasManyThrough('App\Models\Exercises\Entry','App\Models\Exercises\Exercise');
     }
 

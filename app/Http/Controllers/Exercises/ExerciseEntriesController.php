@@ -16,7 +16,8 @@ class ExerciseEntriesController extends Controller {
 	 * select
 	 */
 	
-	public function getSpecificExerciseEntries (Request $request) {
+	public function getSpecificExerciseEntries(Request $request)
+	{
 		//returns all entries for an exercise on a specific date where the exercise has the specified unit			
 		$date = $request->get('date');
 		$exercise = Exercise::find($request->get('exercise_id'));
@@ -29,7 +30,8 @@ class ExerciseEntriesController extends Controller {
 	 * insert
 	 */
 	
-	public function insertExerciseSet (Request $request) {
+	public function insertExerciseSet(Request $request)
+	{
 		$date = $request->get('date');
 		$exercise_id = $request->get('exercise_id');
 
@@ -47,7 +49,8 @@ class ExerciseEntriesController extends Controller {
 		return User::getExerciseEntries($date);
 	}
 
-	public function insertExerciseEntry (Request $request) {
+	public function insertExerciseEntry(Request $request)
+	{
 		$data = $request->all();
 		$date = $data['date'];
 		$new_entry = $data['new_entry'];
@@ -71,7 +74,8 @@ class ExerciseEntriesController extends Controller {
 	 * delete
 	 */
 
-	public function deleteExerciseEntry (Request $request) {
+	public function deleteExerciseEntry(Request $request)
+	{
 		$id = $request->get('id');
 		$date = $request->get('date');
 

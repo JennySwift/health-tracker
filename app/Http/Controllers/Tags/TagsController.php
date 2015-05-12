@@ -23,7 +23,8 @@ class TagsController extends Controller {
 	 * insert
 	 */
 	
-	public function InsertExerciseTag (Request $request) {
+	public function InsertExerciseTag(Request $request)
+	{
 		//creates a new exercise tag
 		$name = $request->get('name');
 		
@@ -44,7 +45,8 @@ class TagsController extends Controller {
 	 * delete
 	 */
 
-	public function deleteExerciseTag (Request $request) {
+	public function deleteExerciseTag(Request $request)
+	{
 		$id = $request->get('id');
 		
 		Tag::find($id)->delete();
@@ -64,7 +66,8 @@ class TagsController extends Controller {
 	 * insert
 	 */
 	
-	public function insertTagsInExercise (Request $request) {
+	public function insertTagsInExercise(Request $request)
+	{
 		//deletes all tags then adds the correct tags
 		$exercise_id = $request->get('exercise_id');
 		$tags = $request->get('tags');
@@ -89,7 +92,8 @@ class TagsController extends Controller {
 	 * delete
 	 */
 
-	public function deleteTagFromExercise (Request $request) {
+	public function deleteTagFromExercise(Request $request)
+	{
 		$exercise_id = $request->get('exercise_id');
 		$tag_id = $request->get('tag_id');
 		
@@ -105,7 +109,8 @@ class TagsController extends Controller {
 	 * Recipes
 	 */
 	
-	public function insertRecipeTag (Request $request) {
+	public function insertRecipeTag(Request $request)
+	{
 		//creates a new recipe tag
 		$name = $request->get('name');
 		Tag::insertRecipeTag($name);

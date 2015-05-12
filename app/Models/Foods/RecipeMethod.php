@@ -16,7 +16,8 @@ class RecipeMethod extends Model {
 	 * Define relationships
 	 */
 
-	public function recipe () {
+	public function recipe()
+	{
 		return $this->belongsTo('App\Models\Foods\Recipe');
 	}
 
@@ -24,7 +25,8 @@ class RecipeMethod extends Model {
 	 * select
 	 */
 	
-	public static function getRecipeSteps ($recipe_id) {
+	public static function getRecipeSteps($recipe_id)
+	{
 		$recipe = Recipe::find($recipe_id);
 		$steps = $recipe->steps;
 		return $steps;
@@ -34,7 +36,8 @@ class RecipeMethod extends Model {
 	 * insert
 	 */
 	
-	public static function insertRecipeMethod ($recipe_id, $steps) {
+	public static function insertRecipeMethod($recipe_id, $steps)
+	{
 		$step_number = 0;
 		foreach ($steps as $step_text) {
 			$step_number++;
@@ -57,7 +60,8 @@ class RecipeMethod extends Model {
 	 * delete
 	 */
 
-	public static function deleteRecipeMethod ($recipe_id) {
+	public static function deleteRecipeMethod($recipe_id)
+	{
 		static
 			::where('recipe_id', $recipe_id)
 			->delete();

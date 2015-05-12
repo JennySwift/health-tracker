@@ -11,7 +11,8 @@ use App\Models\Exercises\Workouts\Series as WorkoutSeries;
 
 class WorkoutsController extends Controller {
 
-	public function insertSeriesIntoWorkout (Request $request) {
+	public function insertSeriesIntoWorkout(Request $request)
+	{
 		$workout_id = $request->get('workout_id');
 		$series_id = $request->get('series_id');
 

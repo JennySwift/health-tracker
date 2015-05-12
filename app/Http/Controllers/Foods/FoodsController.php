@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Models\Foods\Food;
-use App\Models\Foods\FoodEntry;
 use App\Models\Units\Unit;
 use DB;
 use Auth;
@@ -19,13 +18,15 @@ class FoodsController extends Controller {
 	 * select
 	 */
 
-	public function getFoodInfo (Request $request) {
+	public function getFoodInfo(Request $request)
+	{
 		$food = Food::find($request->get('food_id'));
 		dd($food);
 		return Food::getFoodInfo($food);
 	}
 
-	public function getAllFoodsWithUnits (Request $request) {
+	public function getAllFoodsWithUnits(Request $request)
+	{
 		return User::getAllFoodsWithUnits();
 	}
 
@@ -33,7 +34,8 @@ class FoodsController extends Controller {
 	 * insert
 	 */
 
-	public function insertFood (Request $request) {
+	public function insertFood(Request $request)
+	{
 		$name = $request->get('name');
 		Food::insertFood($name);
 
@@ -48,7 +50,8 @@ class FoodsController extends Controller {
 	 * delete
 	 */
 
-	public function deleteFood (Request $request) {
+	public function deleteFood(Request $request)
+	{
 		$id = $request->get('id');
 		Food::where('id', $id)->delete();
 		return Food::getAllFoodsWithUnits();

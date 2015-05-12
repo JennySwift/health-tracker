@@ -13,7 +13,8 @@ class CaloriesController extends Controller {
 	 * update
 	 */
 	
-	public function updateCalories (Request $request) {
+	public function updateCalories(Request $request)
+	{
 		$food_id = $request->get('food_id');
 		$food = Food::find($request->get('food_id'));
 		$unit_id = $request->get('unit_id');
@@ -26,7 +27,8 @@ class CaloriesController extends Controller {
 		return Food::getFoodInfo($food_id);
 	}
 
-	public function updateDefaultUnit (Request $request) {
+	public function updateDefaultUnit(Request $request)
+	{
 		$food_id = $request->get('food_id');
 		$unit_id = $request->get('unit_id');
 
@@ -35,7 +37,8 @@ class CaloriesController extends Controller {
 		return Food::getFoodInfo($food_id);
 	}
 
-	public function insertUnitInCalories (Request $request) {
+	public function insertUnitInCalories(Request $request)
+	{
 		$food_id = $request->get('food_id');
 		$unit_id = $request->get('unit_id');
 		Food::insertUnitInCalories($food, $unit_id);
@@ -46,7 +49,8 @@ class CaloriesController extends Controller {
 	 * delete
 	 */
 	
-	public function deleteUnitFromCalories (Request $request) {
+	public function deleteUnitFromCalories(Request $request)
+	{
 		$food = Food::find($request->get('food_id'));
 		$unit_id = $request->get('unit_id');
 		$food->units()->detach($unit_id);

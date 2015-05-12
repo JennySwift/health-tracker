@@ -10,7 +10,7 @@ use App\Models\Foods\RecipeMethod;
 use App\Models\Tags\Tag;
 use App\Models\Foods\Food;
 use App\Models\Units\Unit;
-use App\Models\Foods\FoodEntry;
+use App\Models\Foods\Entry as FoodEntry;
 use DB;
 use Auth;
 use Debugbar;
@@ -21,14 +21,15 @@ class RecipesController extends Controller {
 	 * select
 	 */
 	
-	public function filterRecipes (Request $request) {
-		include(app_path() . '/inc/functions.php');
+	public function filterRecipes(Request $request)
+	{
 		$typing = $request->get('typing');
 		$tag_ids = $request->get('tag_ids');
 		return Recipe::filterRecipes($typing, $tag_ids);
 	}
 	
-	public function getRecipeContents (Request $request) {
+	public function getRecipeContents(Request $request)
+	{
 		$recipe_id = $request->get('recipe_id');
 
 		return array(
@@ -41,9 +42,9 @@ class RecipesController extends Controller {
 	 * insert
 	 */
 
-	public function insertTagsIntoRecipe (Request $request) {
+	public function insertTagsIntoRecipe(Request $request)
+	{
 		//deletes all tags then adds the correct tags
-		include(app_path() . '/inc/functions.php');
 		$recipe_id = $request->get('recipe_id');
 		$tags = $request->get('tags');
 		
@@ -53,8 +54,8 @@ class RecipesController extends Controller {
 		return Recipe::filterRecipes('', []);
 	}
 
-	public function insertQuickRecipe (Request $request) {
-		include(app_path() . '/inc/functions.php');
+	public function insertQuickRecipe(Request $request)
+	{
 		$recipe_name = $request->get('recipe_name');
 		$contents = $request->get('contents');
 		$steps = $request->get('steps');
@@ -76,7 +77,8 @@ class RecipesController extends Controller {
 		}	
 	}
 
-	public function insertRecipeEntry (Request $request) {
+	public function insertRecipeEntry(Request $request)
+	{
 		$date = $request->get('date');
 		$recipe_id = $request->get('recipe_id');
 		$recipe_contents = $request->get('recipe_contents');
@@ -85,14 +87,15 @@ class RecipesController extends Controller {
 		return FoodEntry::getFoodEntries($date);
 	}
 
-	public function insertRecipe (Request $request) {
-		include(app_path() . '/inc/functions.php');
+	public function insertRecipe(Request $request)
+	{
 		$name = $request->get('name');
 		Recipe::insertRecipe($name);
 		return Recipe::filterRecipes('', []);
 	}
 
-	public function insertRecipeMethod (Request $request) {
+	public function insertRecipeMethod(Request $request)
+	{
 		$recipe_id = $request->get('recipe_id');
 		$steps = $request->get('steps');
 		
@@ -104,7 +107,8 @@ class RecipesController extends Controller {
 		);
 	}
 
-	public function insertFoodIntoRecipe (Request $request) {
+	public function insertFoodIntoRecipe(Request $request)
+	{
 		$data = $request->all();
 		$recipe_id = $data['recipe_id'];
 		
@@ -116,7 +120,8 @@ class RecipesController extends Controller {
 	 * update
 	 */
 	
-	public function updateRecipeMethod (Request $request) {
+	public function updateRecipeMethod(Request $request)
+	{
 		$recipe_id = $request->get('recipe_id');
 		$steps = $request->get('steps');
 
@@ -134,14 +139,15 @@ class RecipesController extends Controller {
 	 * delete
 	 */
 	
-	public function deleteRecipe (Request $request) {
-		include(app_path() . '/inc/functions.php');
+	public function deleteRecipe(Request $request)
+	{
 		$id = $request->get('id');
 		Recipe::deleteRecipe($id);
 		return Recipe::filterRecipes('', []);
 	}
 	
-	public function deleteFoodFromRecipe (Request $request) {
+	public function deleteFoodFromRecipe(Request $request)
+	{
 		$food_id = $request->get('id');
 		$recipe_id = $request->get('recipe_id');
 		$recipe = Recipe::find($request->get('recipe_id'));
@@ -149,13 +155,15 @@ class RecipesController extends Controller {
 		return FoodRecipe::getRecipeContents($recipe_id);
 	}
 
-	public function deleteRecipeTag (Request $request) {
+	public function deleteRecipeTag(Request $request)
+	{
 		$id = $request->get('id');
 		Tag::deleteRecipeTag($id);
 		return Recipe::getRecipeTags();
 	}
 
-	public function deleteRecipeEntry (Request $request) {
+	public function deleteRecipeEntry(Request $request)
+	{
 		$date = $request->get('date');
 		$recipe_id = $request->get('recipe_id');
 		FoodRecipe::deleteRecipeEntry($date, $recipe_id);

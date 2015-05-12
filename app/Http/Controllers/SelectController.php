@@ -16,7 +16,7 @@ use App\Models\Units\Unit;
 use App\Models\Exercises\Workout;
 
 use App\Models\Foods\Food;
-use App\Models\Foods\FoodEntry;
+use App\Models\Foods\Entry as FoodEntry;
 use App\Models\Foods\Recipe;
 
 use App\Models\Weights\Weight;
@@ -25,7 +25,8 @@ use App\Models\Journal\Journal;
 
 class SelectController extends Controller {
 	//
-	public function pageLoad (Request $request) {
+	public function pageLoad(Request $request)
+	{
 		include(app_path() . '/inc/functions.php');
 		$date = $request->get('date');
 
@@ -57,7 +58,8 @@ class SelectController extends Controller {
 	}
 
 	//Which controller?
-	public function getEntries (Request $request) {
+	public function getEntries(Request $request)
+	{
 		$date = $request->get('date');
 		$response = array(
 			"weight" => Weight::getWeight($date),

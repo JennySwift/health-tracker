@@ -20,7 +20,8 @@ class JournalController extends Controller {
 	 * insert
 	 */
 
-	public function insertOrUpdateJournalEntry (Request $request) {
+	public function insertOrUpdateJournalEntry(Request $request)
+	{
 		//inserts or updates journal entry
 		$date = $request->get('date');
 		$text = $request->get('text');

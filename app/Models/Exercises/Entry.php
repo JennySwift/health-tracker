@@ -15,19 +15,23 @@ class Entry extends Model {
 	 * Define relationships
 	 */
 
-	public function user () {
+	public function user()
+	{
 	    return $this->belongsTo('App\User');
 	}
 
-	public function exercise () {
+	public function exercise()
+	{
 	    return $this->belongsTo('App\Models\Exercises\Exercise');
 	}
 
-	public function unit () {
+	public function unit()
+	{
 	    return $this->belongsTo('App\Models\Units\Unit', 'exercise_unit_id');
 	}
 
-	public function entries () {
+	public function entries()
+	{
 		return $this->hasMany('App\Models\Exercises\Entry');
 	}
 
@@ -42,7 +46,8 @@ class Entry extends Model {
 	 * @param  [type] $exercise_unit_id [description]
 	 * @return [type]                   [description]
 	 */
-	public static function getSpecificExerciseEntries ($date, $exercise, $exercise_unit_id) {
+	public static function getSpecificExerciseEntries($date, $exercise, $exercise_unit_id)
+	{
 		/**
 		 * The following query works how I want it to 
 		 */
@@ -74,7 +79,8 @@ class Entry extends Model {
 		 * exercise_unit_id: 1
 		 */
 
-		$entries = $exercise::with(['entries' => function ($query) use ($date, $exercise_unit_id) {
+		$entries = $exercise::with(['entries' => function($query) use ($date, $exercise_unit_id)
+		{
 			$query
 				->where('date', $date)
 				->where('exercise_unit_id', $exercise_unit_id)
@@ -115,16 +121,17 @@ class Entry extends Model {
          * whereDate('date', $date)
          *
          * or you can keep the where('date', $date) as well
-
          */
 		
-		// $entries = ExerciseEntry::whereDate($date)->with(['exercise' => function($query) use ($exercise_id) {
+		// $entries = ExerciseEntry::whereDate($date)->with(['exercise' => function($query) use ($exercise_id)
+		// {
 		//     $query->whereId($exercise_id);
 		//     $query->orderBy('name');
 		// }])->get();
 	}
 
-	public static function getExerciseSets ($date, $exercise_id, $exercise_unit_id) {
+	public static function getExerciseSets($date, $exercise_id, $exercise_unit_id)
+	{
 		return static
 			::where('date', $date)
 			->where('exercise_id', $exercise_id)
@@ -133,7 +140,8 @@ class Entry extends Model {
 			->count();
 	}
 
-	public static function getTotalExerciseReps ($date, $exercise_id, $exercise_unit_id) {
+	public static function getTotalExerciseReps($date, $exercise_id, $exercise_unit_id)
+	{
 		return static
 			::where('date', $date)
 			->where('exercise_id', $exercise_id)
@@ -167,7 +175,8 @@ class Entry extends Model {
 	 * @param  [type] $date    [description]
 	 * @return [type]          [description]
 	 */
-	public static function compactExerciseEntries ($entries, $date) {
+	public static function compactExerciseEntries($entries, $date)
+	{
 		$array = array();
 		foreach ($entries as $entry) {
 			$exercise_id = $entry->exercise->id;
@@ -188,6 +197,7 @@ class Entry extends Model {
 					$counter++;
 				}
 			}
+
 			if ($counter === 0) {
 				$array[] = array(
 					'exercise_id' => $exercise_id,

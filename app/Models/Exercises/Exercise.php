@@ -14,24 +14,29 @@ class Exercise extends Model {
 	 * Define relationships
 	 */
 
-	public function user () {
+	public function user()
+	{
 	    return $this->belongsTo('App\User');
 	}
 
-	public function unit () {
+	public function unit()
+	{
 		//the second argument is the name of the field, because if I don't specify it, it will look for unit_id.
 	    return $this->belongsTo('App\Models\Units\Unit', 'default_exercise_unit_id');
 	}
 
-	public function series () {
+	public function series()
+	{
 	    return $this->belongsTo('App\Models\Exercises\Series');
 	}
 
-	public function entries () {
+	public function entries()
+	{
 	    return $this->hasMany('App\Models\Exercises\Entry');
 	}
 
-	public function tags () {
+	public function tags()
+	{
 		return $this->belongsToMany('App\Models\Tags\Tag', 'taggables', 'taggable_id', 'tag_id')->where('taggable_type', 'exercise');
 	}
 
@@ -39,7 +44,8 @@ class Exercise extends Model {
 	 * select
 	 */
 
-	public static function getExerciseSeriesHistory ($series) {
+	public static function getExerciseSeriesHistory($series)
+	{
 		//I still need functions.php for convertDate
 		include(app_path() . '/inc/functions.php');
 
@@ -103,7 +109,8 @@ class Exercise extends Model {
 		return $array;
 	}
 
-	public static function getDefaultExerciseQuantity ($exercise_id) {
+	public static function getDefaultExerciseQuantity($exercise_id)
+	{
 		$quantity = static
 			::where('id', $exercise_id)
 			->pluck('default_quantity');
@@ -111,7 +118,8 @@ class Exercise extends Model {
 		return $quantity;
 	}
 
-	public static function getDefaultExerciseUnitId ($exercise_id) {
+	public static function getDefaultExerciseUnitId($exercise_id)
+	{
 		$default = static
 			::where('id', $exercise_id)
 			->pluck('default_exercise_unit_id');

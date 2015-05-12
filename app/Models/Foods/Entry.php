@@ -12,11 +12,13 @@ class FoodEntry extends Model {
 	 * Define relationships
 	 */
 
-	public function user () {
+	public function user()
+	{
 		return $this->belongsTo('App\User');
 	}
 
-	public function food () {
+	public function food()
+	{
 		return $this->belongsTo('App\Models\Foods\Food');
 	}
 
@@ -29,7 +31,8 @@ class FoodEntry extends Model {
 	 * @param  [type] $date [description]
 	 * @return [type]       [description]
 	 */
-	public static function getFoodEntries ($date) {
+	public static function getFoodEntries($date)
+	{
 		$rows = static
 			::join('foods', 'food_entries.food_id', '=', 'foods.id')
 			->join('units', 'food_entries.unit_id', '=', 'units.id')
@@ -76,7 +79,8 @@ class FoodEntry extends Model {
 	 * insert
 	 */
 	
-	public static function insertMenuEntry ($data) {
+	public static function insertMenuEntry($data)
+	{
 		$date = $data['date'];
 		$new_entry = $data['new_entry'];
 
@@ -89,7 +93,8 @@ class FoodEntry extends Model {
 		]);
 	}
 
-	public static function insertRecipeEntry ($date, $recipe_id, $recipe_contents) {
+	public static function insertRecipeEntry($date, $recipe_id, $recipe_contents)
+	{
 		foreach ($recipe_contents as $item) {
 			$food_id = $item['food_id'];
 			$quantity = $item['quantity'];
@@ -114,7 +119,8 @@ class FoodEntry extends Model {
 	 * delete
 	 */
 
-	public static function deleteRecipeEntry ($date, $recipe_id) {
+	public static function deleteRecipeEntry($date, $recipe_id)
+	{
 		static
 			::where('date', $date)
 			->where('recipe_id', $recipe_id)

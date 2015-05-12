@@ -9,7 +9,8 @@ class Weight extends Model {
 	 * Define relationships
 	 */
 
-	public function user () {
+	public function user()
+	{
 		return $this->belongsTo('App\User');
 	}
 
@@ -17,7 +18,8 @@ class Weight extends Model {
 	 * select
 	 */
 	
-	public static function getWeight($date) {
+	public static function getWeight($date)
+	{
 		$weight = static
 			::where('date', $date)
 			->where('user_id', Auth::user()->id)
@@ -33,7 +35,8 @@ class Weight extends Model {
 	 * insert
 	 */
 	
-	public static function insertWeight ($date, $weight) {
+	public static function insertWeight($date, $weight)
+	{
 		static
 			::insert([
 				'date' => $date,
@@ -46,7 +49,8 @@ class Weight extends Model {
 	 * update
 	 */
 	
-	public static function updateWeight ($date, $weight) {
+	public static function updateWeight($date, $weight)
+	{
 		static
 			::where('date', $date)
 			->where('user_id', Auth::user()->id)

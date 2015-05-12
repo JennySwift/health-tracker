@@ -19,19 +19,23 @@ class Food extends Model {
 	 * Define relationships
 	 */
 
-	public function user () {
+	public function user()
+	{
 		return $this->belongsTo('App\User');
 	}
 
-	public function entries () {
-		return $this->hasMany('App\Models\Foods\FoodEntry');
+	public function entries()
+	{
+		return $this->hasMany('App\Models\Foods\Entry');
 	}
 
-	public function recipes () {
+	public function recipes()
+	{
 		return $this->belongsToMany('App\Models\Foods\Recipe', 'food_recipe', 'food_id', 'recipe_id');
 	}
 
-	public function units () {
+	public function units()
+	{
 		return $this->belongsToMany('App\Models\Units\Unit');
 	}
 
@@ -49,7 +53,8 @@ class Food extends Model {
 	 * and the option to set the default unit for the food
 	 * and the option to set the calories for each of the food's units
 	 */
-	public static function getFoodInfo ($food) {
+	public static function getFoodInfo($food)
+	{
 		dd($food);
 		$user = User::find(Auth::user()->id);
 		$all_food_units = $user->foodUnits;
@@ -65,7 +70,8 @@ class Food extends Model {
 	/**
 	 * Get all the user's foods, with the name of each food's default unit
 	 */
-	public static function getFoods () { 
+	public static function getFoods()
+	{ 
 		/**
 		 * @VP:
 		 * When I use this code I get the following error.
@@ -107,7 +113,8 @@ class Food extends Model {
 		return $foods;
 	}
 
-	public static function getCalories ($food_id, $unit_id) {
+	public static function getCalories($food_id, $unit_id)
+	{
 		$food = static::find($food_id);
 		$calories = $food->units()
 			->where('unit_id', $unit_id)
@@ -116,12 +123,14 @@ class Food extends Model {
 		return $calories;
 	}
 
-	public static function getCaloriesForQuantity ($calories_for_item, $quantity) {
+	public static function getCaloriesForQuantity($calories_for_item, $quantity)
+	{
 		$calories_for_quantity = $calories_for_item * $quantity;
 		return $calories_for_quantity;
 	}
 
-	public static function getCaloriesForTimePeriod ($date, $period) {
+	public static function getCaloriesForTimePeriod($date, $period)
+	{
 		$calories_for_period = 0;
 
 		if ($period === "day") {
@@ -165,7 +174,8 @@ class Food extends Model {
 	 * insert
 	 */
 	
-	public static function insertFood ($name) {
+	public static function insertFood($name)
+	{
 		// static::insert([
 		// 	'name' => $name,
 		// 	'user_id' => Auth::user()->id
@@ -178,7 +188,8 @@ class Food extends Model {
 		return $food;
 	}
 
-	public static function insertFoodIfNotExists ($food_name) {
+	public static function insertFoodIfNotExists($food_name)
+	{
 		//for quick recipe
 		include(app_path() . '/inc/functions.php');
 		$count = countItem('foods', $food_name);
@@ -199,7 +210,8 @@ class Food extends Model {
 		return $food_id;
 	}
 
-	public static function insertUnitInCalories ($food, $unit_id) {
+	public static function insertUnitInCalories($food, $unit_id)
+	{
 		$food->units()->attach($unit_id, ['user_id' => Auth::user()->id]);
 	}
 

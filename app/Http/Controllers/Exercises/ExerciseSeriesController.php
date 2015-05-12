@@ -17,7 +17,8 @@ class ExerciseSeriesController extends Controller {
 	 * insert
 	 */
 	
-	public function insertExerciseSeries (Request $request) {
+	public function insertExerciseSeries(Request $request)
+	{
 		$name = $request->get('name');
 		
 		ExerciseSeries
@@ -37,7 +38,8 @@ class ExerciseSeriesController extends Controller {
 	 * delete
 	 */
 	
-	public function deleteExerciseSeries (Request $request) {
+	public function deleteExerciseSeries(Request $request)
+	{
 		$id = $request->get('id');
 		
 		ExerciseSeries::where('id', $id)->delete();

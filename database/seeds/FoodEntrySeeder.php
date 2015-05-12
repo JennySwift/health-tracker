@@ -3,7 +3,7 @@
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
-use App\Models\Foods\FoodEntry;
+use App\Models\Foods\Entry as FoodEntry;
 use Faker\Factory as Faker;
 use Carbon\Carbon;
 use App\Models\Foods\Food;

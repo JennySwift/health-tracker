@@ -5,7 +5,7 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 use Auth;
-use App\Models\Foods\FoodEntry;
+use App\Models\Foods\Entry as FoodEntry;
 
 class FoodEntriesController extends Controller {
 	/**
@@ -16,7 +16,8 @@ class FoodEntriesController extends Controller {
 	 * insert
 	 */
 	
-	public function insertMenuEntry (Request $request) {
+	public function insertMenuEntry(Request $request)
+	{
 		$data = $request->get('data');
 		$date = $data['date'];
 		FoodEntry::insertMenuEntry($data);
@@ -30,7 +31,8 @@ class FoodEntriesController extends Controller {
 		return $response;
 	}
 	
-	// public function getFoodEntries (Request $request) {
+	// public function getFoodEntries(Request $request)
+	// {
 	// 	$date = $request->get('date');
 	// 	return FoodEntry::getFoodEntries($date);
 	// }
@@ -39,7 +41,8 @@ class FoodEntriesController extends Controller {
 	 * update
 	 */
 	
-	public function deleteFoodEntry (Request $request) {
+	public function deleteFoodEntry(Request $request)
+	{
 		$id = $request->get('id');
 		$date = $request->get('date');
 		FoodEntry::where('id', $id)->delete();
