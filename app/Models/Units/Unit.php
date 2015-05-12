@@ -24,6 +24,16 @@ class Unit extends Model {
 	 * select
 	 */
 	
+	public static function getId($table, $name)
+	{
+		$id = DB::table($table)
+			->where('name', $name)
+			->where('user_id', Auth::user()->id)
+			->pluck('id');
+
+		return $id;
+	}
+
 	/**
 	 * insert
 	 */
@@ -35,8 +45,6 @@ class Unit extends Model {
 	 */
 	public static function insertUnitIfNotExists($unit_name)
 	{
-		include(app_path() . '/inc/functions.php');
-
 		//Check if the unit exists
 		$count = Unit::where('user_id', Auth()->user('id'))
 			->where('name', $unit_name)
@@ -54,7 +62,7 @@ class Unit extends Model {
 		}
 		else {
 			//the unit exists. retrieve the id of the unit
-			$unit_id = getId('units', $unit_name);
+			$unit_id = static::getId('units', $unit_name);
 		}
 
 		return $unit_id;

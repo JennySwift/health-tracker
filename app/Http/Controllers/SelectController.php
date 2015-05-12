@@ -27,7 +27,6 @@ class SelectController extends Controller {
 	//
 	public function pageLoad(Request $request)
 	{
-		include(app_path() . '/inc/functions.php');
 		$date = $request->get('date');
 
 		$user = User::find(Auth::user()->id);

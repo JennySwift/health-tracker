@@ -100,6 +100,16 @@ class Recipe extends Model {
 		return $tags;
 	}
 
+	public static function countItem($table, $name)
+	{
+		$count = DB::table($table)
+			->where('name', $name)
+			->where('user_id', Auth::user()->id)
+			->count();
+
+		return $count;
+	}
+
 	/**
 	 * This probably needs doing after refactor
 	 * @param  [type] $recipe_id [description]
@@ -121,6 +131,17 @@ class Recipe extends Model {
 		}
 		
 		return $recipe_contents;
+	}
+
+	public static function static::pluckName($name, $table)
+	{
+		//for quick recipe
+		$name = DB::table($table)
+			->where('name', $name)
+			->where('user_id', Auth::user()->id)
+			->pluck('name');
+
+		return $name;
 	}
 
 
@@ -287,8 +308,7 @@ class Recipe extends Model {
 	public static function checkSimilarNames($name, $table)
 	{
 		//for quick recipe
-		include(app_path() . '/inc/functions.php');
-		$count = countItem($table, $name);
+		$count = static::countItem($table, $name);
 
 		if ($count < 1) {
 			//the name does not exist
@@ -296,30 +316,30 @@ class Recipe extends Model {
 			if (substr($name, -3) === 'ies') {
 				//the name ends in 'ies'. check if it's singular form exists.
 				$similar_name = substr($name, 0, -3) . 'y';
-				$found = pluckName($similar_name, $table);
+				$found = static::pluckName($similar_name, $table);
 			}
 			elseif (substr($name, -1) === 'y') {
 				//the name ends in 'y'. Check if it's plural form exists.
 				$similar_name = substr($name, 0, -1) . 'ies';
-				$found = pluckName($similar_name, $table);
+				$found = static::pluckName($similar_name, $table);
 			}
 
 			elseif (substr($name, -1) === 's' && !isset($found)) {
 				//the name ends in s. check if its singular form is in the database
 				$similar_name = substr($name, 0, -1);
-				$found = pluckName($similar_name, $table);
+				$found = static::pluckName($similar_name, $table);
 
 				//if nothing was found, check if its plural form is in the database
 				if (!isset($found)) {
 					$similar_name = $name . 'es';
-					$found = pluckName($similar_name, $table);
+					$found = static::pluckName($similar_name, $table);
 				}
 			}
 
 			//check if it's plural form exists if no singular forms were found
 			if (!isset($found)) {
 				$similar_name = $name . 's';
-				$found = pluckName($similar_name, $table);
+				$found = static::pluckName($similar_name, $table);
 			}
 		}
 		if (isset($found)) {

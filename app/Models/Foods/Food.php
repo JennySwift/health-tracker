@@ -170,6 +170,26 @@ class Food extends Model {
 		return $calories_for_period;
 	}
 
+	public static function getId($table, $name)
+	{
+		$id = DB::table($table)
+			->where('name', $name)
+			->where('user_id', Auth::user()->id)
+			->pluck('id');
+
+		return $id;
+	}
+
+	public static function countItem($table, $name)
+	{
+		$count = DB::table($table)
+			->where('name', $name)
+			->where('user_id', Auth::user()->id)
+			->count();
+
+		return $count;
+	}
+
 	/**
 	 * insert
 	 */
@@ -191,8 +211,7 @@ class Food extends Model {
 	public static function insertFoodIfNotExists($food_name)
 	{
 		//for quick recipe
-		include(app_path() . '/inc/functions.php');
-		$count = countItem('foods', $food_name);
+		$count = static::countItem('foods', $food_name);
 
 		if ($count < 1) {
 			//the food does not exist. create the new food.
@@ -204,7 +223,7 @@ class Food extends Model {
 		}
 		else {
 			//the food exists. retrieve the id of the food
-			$food_id = getId('foods', $food_name);
+			$food_id = static::getId('foods', $food_name);
 		}
 
 		return $food_id;

@@ -46,9 +46,6 @@ class Exercise extends Model {
 
 	public static function getExerciseSeriesHistory($series)
 	{
-		//I still need functions.php for convertDate
-		include(app_path() . '/inc/functions.php');
-
 		//get all exercises in the series
 		$exercise_ids = $series->exercises->lists('id');
 
@@ -74,8 +71,8 @@ class Exercise extends Model {
 		//populate the array
 		foreach ($entries as $entry) {
 			$sql_date = $entry->date;
-			$date = convertDate($sql_date, 'user');
-			$days_ago = getHowManyDaysAgo($sql_date);
+			$date = static::convertDate($sql_date, 'user');
+			$days_ago = static::getHowManyDaysAgo($sql_date);
 			$exercise_id = $entry->exercise_id;
 			$exercise_unit_id = $entry->exercise_unit_id;
 			$counter = 0;
@@ -138,5 +135,32 @@ class Exercise extends Model {
 	/**
 	 * delete
 	 */
+	
+	/**
+	 * other
+	 */
+	
+	public static function convertDate($date, $for)
+	{
+		$date = new DateTime($date);
+
+		if ($for === 'user') {
+			$date = $date->format('d/m/y');
+		}
+		elseif ($for === 'sql') {
+			$date = $date->format('Y-m-d');
+		}
+		return $date;
+	}
+
+	public static function getHowManyDaysAgo($date)
+	{
+		//to find out how many days ago a date was
+		$now = new DateTime('now');
+		$date = new DateTime($date);
+		$diff = $now->diff($date);
+		$days_ago = $diff->days;
+		return $days_ago;
+	}
 
 }
