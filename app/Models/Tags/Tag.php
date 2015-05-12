@@ -59,16 +59,6 @@ class Tag extends Model {
 			]);
 	}
 
-	public static function insertExerciseTag($exercise_id, $tag_id)
-	{
-		//inserts a tag into an exercise
-		// static::insert([
-		// 	'exercise_id' => $exercise_id,
-		// 	'tag_id' => $tag_id,
-		// 	'user_id' => Auth::user()->id
-		// ]);
-	}
-
 	/**
 	 * update
 	 */

@@ -133,7 +133,7 @@ class Recipe extends Model {
 		return $recipe_contents;
 	}
 
-	public static function static::pluckName($name, $table)
+	public static function pluckName($name, $table)
 	{
 		//for quick recipe
 		$name = DB::table($table)
