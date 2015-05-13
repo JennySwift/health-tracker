@@ -4,7 +4,9 @@ use Illuminate\Database\Eloquent\Model;
 use Auth;
 use App\Models\Foods\Calories;
 
-class FoodEntry extends Model {
+class Entry extends Model {
+
+	protected $table = 'food_entries';
 
     protected $fillable = ['date', 'quantity'];
 

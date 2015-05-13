@@ -3,6 +3,7 @@
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\Models\Relationships\OwnedByUser;
 use App\Models\Foods\Calories;
+use App\Models\Foods\Entry as FoodEntry;
 use App\Models\Units\Unit;
 use Auth;
 use App\User;
