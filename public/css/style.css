@@ -25,6 +25,18 @@ body {
     body {
       padding-top: 42px; } }
 
+html, body {
+  height: 100%; }
+
+body {
+  display: flex;
+  flex-direction: column; }
+  body .container {
+    flex-grow: 1; }
+  body footer {
+    padding: 11px;
+    background: rgba(119, 119, 119, 0.12); }
+
 p {
   padding: 0 20px;
   text-align: center; }

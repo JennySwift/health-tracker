@@ -69,6 +69,10 @@
 
 	
       
-</div> <!-- .container -->  
+</div> <!-- .container -->
+
+<footer>
+	<a href="http://jennyswiftcreations.com/privacy-policy">Privacy Policy</a>
+</footer>
 
 <?php include($inc . '/footer.php'); ?>
