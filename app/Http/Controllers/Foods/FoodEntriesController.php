@@ -5,7 +5,8 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 use Auth;
-use App\Models\Foods\Entry as FoodEntry;
+
+use App\Models\Foods\Entry;
 
 class FoodEntriesController extends Controller {
 	/**
@@ -20,10 +21,10 @@ class FoodEntriesController extends Controller {
 	{
 		$data = $request->get('data');
 		$date = $data['date'];
-		FoodEntry::insertMenuEntry($data);
+		Entry::insertMenuEntry($data);
 
 		$response = array(
-			"food_entries" => FoodEntry::getFoodEntries($date),
+			"food_entries" => Entry::getFoodEntries($date),
 			"calories_for_the_day" => number_format(Calories::getCaloriesForTimePeriod($date, "day"), 2),
 			"calories_for_the_week" => number_format(Calories::getCaloriesForTimePeriod($date, "week"), 2),
 		);
@@ -34,7 +35,7 @@ class FoodEntriesController extends Controller {
 	// public function getFoodEntries(Request $request)
 	// {
 	// 	$date = $request->get('date');
-	// 	return FoodEntry::getFoodEntries($date);
+	// 	return Entry::getFoodEntries($date);
 	// }
 
 	/**
@@ -45,10 +46,10 @@ class FoodEntriesController extends Controller {
 	{
 		$id = $request->get('id');
 		$date = $request->get('date');
-		FoodEntry::where('id', $id)->delete();
+		Entry::where('id', $id)->delete();
 
 		$response = array(
-			"food_entries" => FoodEntry::getFoodEntries($date),
+			"food_entries" => Entry::getFoodEntries($date),
 			"calories_for_the_day" => number_format(Calories::getCaloriesForTimePeriod($date, "day"), 2),
 			"calories_for_the_week" => number_format(Calories::getCaloriesForTimePeriod($date, "week"), 2)
 		);

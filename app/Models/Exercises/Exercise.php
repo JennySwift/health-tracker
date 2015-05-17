@@ -1,12 +1,15 @@
 <?php namespace App\Models\Exercises;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\Models\Relationships\OwnedByUser;
 use Auth;
 use App\Models\Tags\Tag;
 use App\Models\Exercises\Series;
 use App\Models\Exercises\Entry as ExerciseEntry;
 
 class Exercise extends Model {
+
+	use OwnedByUser;
 
 	protected $fillable = ['name', 'default_exercise_unit_id', 'description', 'default_quantity', 'step_number', 'series_id'];
 
@@ -43,6 +46,24 @@ class Exercise extends Model {
 	/**
 	 * select
 	 */
+	
+	/**
+	 * Get all exercises for the current user,
+	 * along with their tags, default unit name and the name of the series each exercise belongs to.
+	 * Order first by series name, then by step number.
+	 * I haven't yet ordered by series name.
+	 * @return [type] [description]
+	 */
+	public static function getExercises () {
+		$exercises = static::forCurrentUser('exercises')
+			->with('unit')
+			->with('series')
+			->with('tags')
+			->orderBy('step_number')
+			->get();
+
+	    return $exercises;
+	}
 
 	public static function getExerciseSeriesHistory($series)
 	{

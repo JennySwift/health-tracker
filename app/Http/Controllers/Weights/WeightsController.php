@@ -4,10 +4,9 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
-
-use DB;
 use Auth;
 use Debugbar;
+
 use App\Models\Weights\Weight;
 
 class WeightsController extends Controller {

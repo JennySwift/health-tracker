@@ -4,8 +4,9 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
-use App\Models\Units\Unit;
 use Auth;
+
+use App\Models\Units\Unit;
 
 class UnitsController extends Controller {
 

@@ -2,11 +2,14 @@
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-
 use App\Services\Autocomplete\FoodsAndRecipesAutocomplete;
 use Illuminate\Http\Request;
 use DB;
 use Auth;
+
+/**
+ * Models
+ */
 use App\Models\Foods\Food;
 use App\Models\Exercises\Exercise;
 

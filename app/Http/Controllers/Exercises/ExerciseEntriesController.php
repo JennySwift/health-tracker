@@ -4,11 +4,15 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
-use App\Models\Exercises\Exercise;
-use App\Models\Exercises\Entry as ExerciseEntry;
-use DB;
+
 use Auth;
 use Debugbar;
+
+/**
+ * Models
+ */
+use App\Models\Exercises\Exercise;
+use App\Models\Exercises\Entry;
 
 class ExerciseEntriesController extends Controller {
 
@@ -23,7 +27,7 @@ class ExerciseEntriesController extends Controller {
 		$exercise = Exercise::find($request->get('exercise_id'));
 		$exercise_unit_id = $request->get('exercise_unit_id');
 
-		return ExerciseEntry::getSpecificExerciseEntries($date, $exercise, $exercise_unit_id);
+		return Entry::getSpecificExerciseEntries($date, $exercise, $exercise_unit_id);
 	}
 
 	/**
@@ -38,7 +42,7 @@ class ExerciseEntriesController extends Controller {
 		$quantity = Exercise::getDefaultExerciseQuantity($exercise_id);
 		$unit_id = Exercise::getDefaultExerciseUnitId($exercise_id);
 
-		ExerciseEntry::insert([
+		Entry::insert([
 			'date' => $date,
 			'exercise_id' => $exercise_id,
 			'quantity' => $quantity,
@@ -55,7 +59,7 @@ class ExerciseEntriesController extends Controller {
 		$date = $data['date'];
 		$new_entry = $data['new_entry'];
 
-		ExerciseEntry::insert([
+		Entry::insert([
 			'date' => $date,
 			'exercise_id' => $new_entry['id'],
 			'quantity' => $new_entry['quantity'],
@@ -79,7 +83,7 @@ class ExerciseEntriesController extends Controller {
 		$id = $request->get('id');
 		$date = $request->get('date');
 
-		ExerciseEntry::where('id', $id)->delete();
+		Entry::where('id', $id)->delete();
 
 		return User::getExerciseEntries($date);
 	}

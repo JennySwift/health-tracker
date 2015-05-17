@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 use Auth;
+
 use App\Models\Foods\Food;
 
 class CaloriesController extends Controller {

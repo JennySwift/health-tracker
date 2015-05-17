@@ -4,16 +4,18 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
+use Auth;
+use Debugbar;
 
+/**
+ * Models
+ */
 use App\Models\Foods\Recipe;
 use App\Models\Foods\RecipeMethod;
 use App\Models\Tags\Tag;
 use App\Models\Foods\Food;
 use App\Models\Units\Unit;
-use App\Models\Foods\Entry as FoodEntry;
-use DB;
-use Auth;
-use Debugbar;
+use App\Models\Foods\Entry;
 
 class RecipesController extends Controller {
 
@@ -83,8 +85,8 @@ class RecipesController extends Controller {
 		$recipe_id = $request->get('recipe_id');
 		$recipe_contents = $request->get('recipe_contents');
 
-		FoodEntry::insertRecipeEntry($date, $recipe_id, $recipe_contents);
-		return FoodEntry::getFoodEntries($date);
+		Entry::insertRecipeEntry($date, $recipe_id, $recipe_contents);
+		return Entry::getFoodEntries($date);
 	}
 
 	public function insertRecipe(Request $request)
@@ -169,7 +171,7 @@ class RecipesController extends Controller {
 		FoodRecipe::deleteRecipeEntry($date, $recipe_id);
 		
 		$response = array(
-			"food_entries" => FoodEntry::getFoodEntries($date),
+			"food_entries" => Entry::getFoodEntries($date),
 			"calories_for_the_day" => number_format(Food::getCaloriesForTimePeriod($date, "day"), 2),
 			"calories_for_the_week" => number_format(Food::getCaloriesForTimePeriod($date, "week"), 2)
 		);

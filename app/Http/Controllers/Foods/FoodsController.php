@@ -4,12 +4,13 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
-
-use App\Models\Foods\Food;
-use App\Models\Units\Unit;
-use DB;
 use Auth;
 use Debugbar;
+
+/**
+ * Models
+ */
+use App\Models\Foods\Food;
 use App\User;
 
 class FoodsController extends Controller {
@@ -21,7 +22,6 @@ class FoodsController extends Controller {
 	public function getFoodInfo(Request $request)
 	{
 		$food = Food::find($request->get('food_id'));
-		dd($food);
 		return Food::getFoodInfo($food);
 	}
 

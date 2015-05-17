@@ -83,43 +83,22 @@ class Food extends Model {
 	 */
 	public static function getFoods()
 	{ 
-		/**
-		 * @VP:
-		 * When I use this code I get the following error.
-		 * Column 'user_id' in where clause is ambiguous
-		 * (SQL: select `foods`.`id`, `foods`.`name`, `units`.`name` as `default_unit_name`, `units`.`id` as `default_unit_id` from `foods` left join `units` on `foods`.`default_unit_id` = `units`.`id` where `user_id` = 1 order by `foods`.`name` asc)
-         * @JS:
-         * This one is easy: that is only because in your where clause, you are trying to do "user_id=1", but you are
-         * joining two tables together and both have a user_id field, so you need to be more specific on which
-         * user_id you want: foods.user_id or units.user_id ??
-		 */
-		/**
-		 * @VP:
-		 * I get that, but in case it was unclear I was referring to the code down below
-		 * that is now on line 107. So I don't know how to change your forCurrentUser method to use the correct user_id.
-         * @JS:
-         * The method forCurrentUser() has no argument (try to go in the
-         * App\Traits\Models\Relationships\OwnedByUser file and see for yourself) this will automatically use the
-         * logged user for you (that is why I called the method forCurrentUser) so no need to fetch the user before
-         * or anything, just use the scope like you did line 112.
-         */
-
-		// $foods = static::forCurrentUser('foods')
-		// 	->leftJoin('units', 'foods.default_unit_id', '=', 'units.id')
-		// 	->select('foods.id', 'foods.name', 'units.name as default_unit_name', 'units.id as default_unit_id')
-		// 	->orderBy('foods.name', 'asc')
-		// 	->get();
+		$foods = static::forCurrentUser('foods')
+			->leftJoin('units', 'foods.default_unit_id', '=', 'units.id')
+			->select('foods.id', 'foods.name', 'units.name as default_unit_name', 'units.id as default_unit_id')
+			->orderBy('foods.name', 'asc')
+			->get();
 
 		/**
 		 * This is my old code that works
 		 */
 		 
-		$user = User::find(Auth::user()->id);
-		$foods = $user->foods()
-			->leftJoin('units', 'foods.default_unit_id', '=', 'units.id')
-			->select('foods.id', 'foods.name', 'units.name as default_unit_name', 'units.id as default_unit_id')
-			->orderBy('foods.name', 'asc')
-			->get();
+		// $user = User::find(Auth::user()->id);
+		// $foods = $user->foods()
+		// 	->leftJoin('units', 'foods.default_unit_id', '=', 'units.id')
+		// 	->select('foods.id', 'foods.name', 'units.name as default_unit_name', 'units.id as default_unit_id')
+		// 	->orderBy('foods.name', 'asc')
+		// 	->get();
 
 		return $foods;
 	}

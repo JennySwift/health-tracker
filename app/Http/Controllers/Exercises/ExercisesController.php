@@ -5,14 +5,15 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 
-use App\Models\Exercises\Exercise;
-use App\Models\Exercises\Entry as ExerciseEntry;
-use App\Models\Exercises\Series;
-use App\Models\Exercises\ExerciseTag;
-use App\Models\Exercises\Workouts\Series as WorkoutSeries;
-use DB;
 use Auth;
 use Debugbar;
+
+/**
+ * Models
+ */
+use App\Models\Exercises\Exercise;
+use App\Models\Exercises\Series;
+use App\Models\Tags\Tag;
 
 class ExercisesController extends Controller {
 
@@ -32,6 +33,9 @@ class ExercisesController extends Controller {
 	 * insert
 	 */
 
+	/**
+	 * Needs updating. WorkoutSeries no longer exists.
+	 */
 	public function deleteAndInsertSeriesIntoWorkouts(Request $request)
 	{
 		//deletes all rows with $series_id and then adds all the correct rows for $series_id

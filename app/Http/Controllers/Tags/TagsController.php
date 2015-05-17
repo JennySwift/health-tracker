@@ -4,10 +4,13 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
+use Auth;
 
+/**
+ * Models
+ */
 use App\Models\Tags\Tag;
 use App\Models\Exercises\Exercise;
-use Auth;
 
 class TagsController extends Controller {
 

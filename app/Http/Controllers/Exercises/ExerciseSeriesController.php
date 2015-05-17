@@ -4,8 +4,9 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
-use App\Models\Exercises\Series as ExerciseSeries;
 use Auth;
+
+use App\Models\Exercises\Series as ExerciseSeries;
 
 class ExerciseSeriesController extends Controller {
 

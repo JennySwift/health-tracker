@@ -6,9 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Auth;
 
-use App\Models\Exercises\Series as ExerciseSeries;
-use App\Models\Exercises\Workouts\Series as WorkoutSeries;
-
 class WorkoutsController extends Controller {
 
 	public function insertSeriesIntoWorkout(Request $request)

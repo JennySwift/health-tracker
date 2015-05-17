@@ -4,11 +4,13 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
-
-use App\Models\Journal\Journal;
-use DB;
 use Auth;
 use Debugbar;
+
+/**
+ * Models
+ */
+use App\Models\Journal\Journal;
 
 class JournalController extends Controller {
 
