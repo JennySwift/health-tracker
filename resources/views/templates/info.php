@@ -20,5 +20,4 @@
 		</li>
 	</ul>
 
-	<div ng-controller="weights">edit_weight: {{edit_weight}} weight: {{weight}}</div>
 </div>
