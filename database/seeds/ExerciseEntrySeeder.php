@@ -13,6 +13,8 @@ class ExerciseEntrySeeder extends Seeder {
 
 	public function run()
 	{
+		// DB::statement('SET FOREIGN_KEY_CHECKS=0');
+
 		ExerciseEntry::truncate();
 		
 		$faker = Faker::create();
@@ -29,6 +31,7 @@ class ExerciseEntrySeeder extends Seeder {
 			$date = $today->subDays($index)->format('Y-m-d');
 			$exercise_id = $faker->randomElement($exercise_ids);
 			$unit_id = $faker->randomElement($unit_ids);
+			$user_id = 1;
 
 			//Create the entries for the same exercise but with different units
 			//for today, so that I can test out the getSpecificExerciseEntries
@@ -36,16 +39,16 @@ class ExerciseEntrySeeder extends Seeder {
 			if ($date === Carbon::today()->format('Y-m-d')) {
 				// dd('if' . $date);
 				foreach (range(0, 2) as $index) {
-					ExerciseEntry::create([
+					DB::table('exercise_entries')->insert([
 						'date' => $date,
 						'exercise_id' => 1,
 						'quantity' => $faker->numberBetween($min = 4, $max = 30),
 						'exercise_unit_id' => 1,
-						'user_id' => 1
+						'user_id' => $user_id
 					]);
 				}
 				foreach (range(0, 1) as $index) {
-					ExerciseEntry::create([
+					DB::table('exercise_entries')->insert([
 						'date' => $date,
 						'exercise_id' => 1,
 						'quantity' => $faker->numberBetween($min = 4, $max = 30),
@@ -56,9 +59,8 @@ class ExerciseEntrySeeder extends Seeder {
 			}
 
 			else {
-				// dd('else' . $date);
 				foreach (range(0, 2) as $index) {
-					ExerciseEntry::create([
+					DB::table('exercise_entries')->insert([
 						'date' => $date,
 						'exercise_id' => $exercise_id,
 						'quantity' => $faker->numberBetween($min = 4, $max = 30),
@@ -67,6 +69,8 @@ class ExerciseEntrySeeder extends Seeder {
 					]);
 				}
 			}
-		}		
+		}
+		
+		// DB::statement('SET FOREIGN_KEY_CHECKS=1');		
 	}
 }

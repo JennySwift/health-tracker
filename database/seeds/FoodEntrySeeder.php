@@ -27,7 +27,7 @@ class FoodEntrySeeder extends Seeder {
 			$food_ids = Food::lists('id');
 			$unit_ids = Unit::lists('id');
 
-			FoodEntry::create([
+			DB::table('food_entries')->insert([
 				'date' => $today->subDays($index)->format('Y-m-d'),
 				'food_id' => $faker->randomElement($food_ids),
 				'quantity' => $faker->numberBetween($min=1, $max=9),
