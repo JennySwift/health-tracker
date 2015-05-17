@@ -1,13 +1,13 @@
 <div ng-controller="entries" ng-show="tab.entries || tab.food_entries || tab.exercise_entries">
 
-	<?php include($inc . '/date-navigation.php'); ?>
+	<?php include($templates . '/date-navigation.php'); ?>
 	
 	<div>
 
 		<div id="info-entries-wrapper">
 			<?php
-				include($inc . '/info.php');
-				include($inc . '/entry-inputs.php');
+				include($templates . '/info.php');
+				include($templates . '/entry-inputs.php');
 			?> 
 		</div>
 		

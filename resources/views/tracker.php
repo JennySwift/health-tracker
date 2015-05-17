@@ -5,7 +5,7 @@
     <meta charset="UTF-8" name="viewport" content="initial-scale = 1">
     <title>Food App!</title>
     <?php
-    	include(app_path().'/inc/config.php');
+    	include(base_path().'/resources/views/templates/config.php');
     ?>
 
     <link rel="stylesheet" href="tools/bootstrap.min.css">
@@ -17,7 +17,7 @@
 <body class="" ng-controller="controller">
 
 <?php
-	include($inc . '/header.php');
+	include($templates . '/header.php');
 ?>   
 
 <!-- ==============================.container============================== -->    
@@ -26,14 +26,14 @@
 	<h5>branch:refactor</h5>
 	
 	<?php
-		include($inc . '/foods.php');
-		include($inc . '/exercises.php');
-		include($inc . '/journal.php');
-		include($inc . '/units.php');
-		include($inc . '/popups/index.php');
-		include($inc . '/entries.php');
+		include($templates . '/foods.php');
+		include($templates . '/exercises.php');
+		include($templates . '/journal.php');
+		include($templates . '/units.php');
+		include($templates . '/popups/index.php');
+		include($templates . '/entries.php');
 	?>
 	
 </div> <!-- .container -->  
 
-<?php include($inc . '/footer.php'); ?>
+<?php include($templates . '/footer.php'); ?>
