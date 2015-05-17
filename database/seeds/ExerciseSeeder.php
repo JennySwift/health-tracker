@@ -25,7 +25,7 @@ class ExerciseSeeder extends Seeder {
 		$index = 0;
 		foreach ($pushup_series as $exercise) {
 			$index++;
-			Exercise::create([
+			DB::table('exercises')->insert([
 				'name' => $exercise,
 				'default_exercise_unit_id' => $faker->randomElement($exercise_unit_ids),
 				'description' => '',
@@ -39,7 +39,7 @@ class ExerciseSeeder extends Seeder {
 		$index = 0;
 		foreach ($squat_series as $exercise) {
 			$index++;
-			Exercise::create([
+			DB::table('exercises')->insert([
 				'name' => $exercise,
 				'default_exercise_unit_id' => $faker->randomElement($exercise_unit_ids),
 				'description' => '',
