@@ -33,4 +33,9 @@ class HomeController extends Controller {
 		return view('tracker');
 	}
 
+	public function foods()
+	{
+		return view('foods');
+	}
+
 }

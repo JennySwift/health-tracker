@@ -142,6 +142,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 			->with('exercise')
 			->with('unit')
 			->get();
+		// dd($entries);
 
 		$entries = ExerciseEntry::compactExerciseEntries($entries, $date);
 		

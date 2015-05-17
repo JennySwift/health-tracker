@@ -94,7 +94,7 @@ class Food extends Model {
          * or anything, just use the scope like you did line 112.
          */
 
-		// $foods = static::forCurrentUser()
+		// $foods = static::forCurrentUser('foods')
 		// 	->leftJoin('units', 'foods.default_unit_id', '=', 'units.id')
 		// 	->select('foods.id', 'foods.name', 'units.name as default_unit_name', 'units.id as default_unit_id')
 		// 	->orderBy('foods.name', 'asc')

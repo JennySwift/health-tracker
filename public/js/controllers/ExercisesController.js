@@ -84,14 +84,6 @@ var app = angular.module('tracker');
 				$scope.exercise_entries = response.data;
 			});
 		};
-
-		$scope.insertExerciseUnit = function ($keycode) {
-			if ($keycode === 13) {
-				insert.exerciseUnit().then(function (response) {
-					$scope.units.exercise = response.data;
-				});
-			}
-		};
 		
 		/**
 		 * update
@@ -155,12 +147,6 @@ var app = angular.module('tracker');
 		$scope.deleteExercise = function ($id) {
 			deleteItem.exercise($id).then(function (response) {
 				$scope.exercises = response.data;
-			});
-		};
-
-		$scope.deleteExerciseUnit = function ($id) {
-			deleteItem.exerciseUnit($id).then(function (response) {
-				$scope.units.exercise = response.data;
 			});
 		};
 

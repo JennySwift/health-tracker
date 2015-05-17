@@ -1,9 +1,9 @@
-<div ng-if="tab.units">
+<div ng-controller="units" ng-if="tab.units">
 
 	<div class="row">
 
 		<div class="col col-sm-6">
-			<input ng-keyup="insert($event.keyCode, 'food_units', displayUnitList)" type="text" placeholder="add a new food unit" id="create-new-food-unit" class="form-control">
+			<input ng-keyup="insertFoodUnit($event.keyCode)" type="text" placeholder="add a new food unit" id="create-new-food-unit" class="form-control">
 			<hr>
 		
 			<div id="display-food-units">

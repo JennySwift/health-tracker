@@ -5,6 +5,12 @@ app.factory('units', function ($http) {
 		 * select
 		 */
 		
+		getAllUnits: function () {
+			var $url = 'select/allUnits';
+			
+			return $http.post($url);
+		},
+
 		/**
 		 * insert
 		 */
@@ -18,6 +24,17 @@ app.factory('units', function ($http) {
 			};
 
 			$("#create-new-exercise-unit").val("");		
+			return $http.post($url, $data);
+		},
+		insertFoodUnit: function () {
+			var $url = 'insert/foodUnit';
+			var $name = $("#create-new-food-unit").val();
+			
+			var $data = {
+				name: $name
+			};
+
+			$("#create-new-food-unit").val("");		
 			return $http.post($url, $data);
 		},
 		insertUnitInCalories: function ($food_id, $unit_id, $checked_previously) {

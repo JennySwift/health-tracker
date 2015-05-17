@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 use App\Models\Units\Unit;
+use Auth;
 
 class UnitsController extends Controller {
 
@@ -16,16 +17,45 @@ class UnitsController extends Controller {
 	 * select
 	 */
 	
+	public function getExerciseUnits()
+	{
+		return Unit::getExerciseUnits();
+	}
+
+	public function getFoodUnits()
+	{
+		return Unit::getFoodUnits();
+	}
+
+	public function getAllUnits()
+	{
+		return Unit::getAllUnits();
+	}
+
 	/**
 	 * insert
 	 */
+	
+	public function insertfoodUnit(Request $request)
+	{
+		$name = $request->get('name');
+		
+		Unit::insert([
+			'name' => $name,
+			'for' => 'food',
+			'user_id' => Auth::user()->id
+		]);
+
+		return Unit::getFoodUnits();
+	}
 	
 	public function insertExerciseUnit(Request $request)
 	{
 		$name = $request->get('name');
 		
 		Unit::insert([
-			'name' => $name,	
+			'name' => $name,
+			'for' => 'exercise',
 			'user_id' => Auth::user()->id
 		]);
 

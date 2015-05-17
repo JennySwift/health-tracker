@@ -92,6 +92,9 @@ Route::post('select/allFoodsWithUnits', 'Foods\FoodsController@getAllFoodsWithUn
 Route::post('select/filterRecipes', 'Recipes\RecipesController@filterRecipes');
 Route::post('select/recipeContents', 'Recipes\RecipesController@getRecipeContents');
 
+//units
+Route::post('select/allUnits', 'Units\UnitsController@getAllUnits');
+
 /**
  * Insert requests
  */
@@ -119,8 +122,9 @@ Route::post('insert/deleteAndInsertSeriesIntoWorkouts', 'Exercises\ExercisesCont
 Route::post('insert/exerciseSet', 'Exercises\ExerciseEntriesController@insertExerciseSet');
 Route::post('insert/exerciseEntry', 'Exercises\ExerciseEntriesController@insertExerciseEntry');
 
-//exercise units
-Route::post('insert/exerciseUnit', 'Exercises\ExerciseUnitsController@insertExerciseUnit');
+//units
+Route::post('insert/exerciseUnit', 'Units\UnitsController@insertExerciseUnit');
+Route::post('insert/foodUnit', 'Units\UnitsController@insertFoodUnit');
 
 //exercise series
 Route::post('insert/exerciseSeries', 'Exercises\ExerciseSeriesController@insertExerciseSeries');
@@ -158,7 +162,6 @@ Route::post('update/journalEntry', 'Journal\JournalController@updateJournalEntry
 //foods
 Route::post('delete/food', 'Foods\FoodsController@deleteFood');
 Route::post('delete/unitFromCalories', 'Foods\CaloriesController@deleteUnitFromCalories');
-Route::post('delete/foodUnit', 'Foods\FoodUnitsController@deleteFoodUnit');
 Route::post('delete/foodEntry', 'Foods\FoodEntriesController@deleteFoodEntry');
 
 //recipes
@@ -172,8 +175,9 @@ Route::post('delete/exercise', 'Exercises\ExercisesController@deleteExercise');
 //exercise entries
 Route::post('delete/exerciseEntry', 'Exercises\ExerciseEntriesController@deleteExerciseEntry');
 
-//exercise units
-Route::post('delete/exerciseUnit', 'Exercises\ExerciseUnitsController@deleteExerciseUnit');
-
 //exercise series
 Route::post('delete/exerciseSeries', 'Exercises\ExerciseSeriesController@deleteExerciseSeries');
+
+//units
+Route::post('delete/foodUnit', 'Units\UnitsController@deleteFoodUnit');
+Route::post('delete/exerciseUnit', 'Units\UnitsController@deleteExerciseUnit');

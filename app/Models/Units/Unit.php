@@ -24,6 +24,39 @@ class Unit extends Model {
 	 * select
 	 */
 	
+	public static function getExerciseUnits()
+	{
+		$units = static
+			::where('user_id', Auth::user()->id)
+			->where('for', 'exercise')
+			->get();
+
+		return $units;
+	}
+
+	public static function getFoodUnits()
+	{
+		$units = static
+			::where('user_id', Auth::user()->id)
+			->where('for', 'food')
+			->get();
+
+		return $units;
+	}
+
+	public static function getAllUnits()
+	{
+		$food_units = static::getFoodUnits();
+		$exercise_units = static::getExerciseUnits();
+
+		$units = [
+			'food' => $food_units,
+			'exercise' => $exercise_units
+		];
+
+		return $units;
+	}
+	
 	public static function getId($table, $name)
 	{
 		$id = DB::table($table)

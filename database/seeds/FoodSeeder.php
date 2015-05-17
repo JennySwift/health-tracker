@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Foods\Food;
 use App\Models\Units\Unit;
 use Faker\Factory as Faker;
-use Laracasts\TestDummy\Factory;
+use Laracasts\TestDummy\Factory as Dummy;
 // use Laracasts\TestDummy\DbTestCase;
 use App\User;
 
@@ -20,11 +20,12 @@ class FoodSeeder extends Seeder {
 
 		$foods = ['apple', 'banana', 'orange', 'mango', 'watermelon', 'papaya', 'pear', 'peach', 'nectarine', 'plum', 'rockmelon', 'blueberry', 'strawberry', 'raspberry', 'blackberry', 'walnut', 'brazilnut', 'cashew', 'almond', 'sesame seeds', 'pumpkin seeds', 'sunflower seeds'];
 
-		// foreach ($foods as $food) {
-		// 	Factory::create('App\Models\Foods\Food', ['name' => $food]);
-		// }
-		
-		// dd($food->toArray());
+		foreach ($foods as $food) {
+			Dummy::create('App\Models\Foods\Food', [
+				'name' => $food,
+				'user_id' => 1
+			]);
+		}
 
 		$faker = Faker::create();
 
@@ -43,7 +44,7 @@ class FoodSeeder extends Seeder {
 		 * Create foods but only add a default_unit_id to most of them, not all of them, to make it more realistic.
 		 */
 
-		foreach ($foods as $food) {
+		// foreach ($foods as $food) {
 			// $has_default_unit_id = $faker->boolean($chanceOfGettingTrue = 80);
 
 			// if ($has_default_unit_id) {
@@ -53,12 +54,12 @@ class FoodSeeder extends Seeder {
 			// 	$default_unit_id = null;
 			// }
 
-			Food::create([
-				'name' => $food,
-				'user_id' => 1
+			// Food::create([
+				// 'name' => $food,
+				// 'user_id' => 1
 				// 'default_unit_id' => $default_unit_id
-			]);
-		}
+			// ]);
+		// }
 
 		// DB::statement('SET FOREIGN_KEY_CHECKS=1');
 	}

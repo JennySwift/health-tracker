@@ -8,8 +8,8 @@ $factory('App\User', [
 
 $factory('App\Models\Foods\Food', [
 	'name' => 'apple',
-	'user_id' => 1,
-	'default_unit_id' => 'factory:App\Models\Units\Unit'
+	'user_id' => 'factory:App\User'
+	// 'default_unit_id' => 'factory:App\Models\Units\Unit'
 ]);
 
 $factory('App\Models\Units\Unit', [

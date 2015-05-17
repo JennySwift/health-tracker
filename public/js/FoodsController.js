@@ -218,12 +218,6 @@ var app = angular.module('tracker');
 			});
 		};
 
-		$scope.deleteFoodUnit = function ($id) {
-			deleteItem.foodUnit($id).then(function (response) {
-				$scope.units.food = response.data;
-			});
-		};
-
 		$scope.deleteFoodEntry = function ($entry_id) {
 			$entry_id = $entry_id || $scope.selected.entry.id;
 
