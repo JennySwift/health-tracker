@@ -1,7 +1,7 @@
 var app = angular.module('tracker');
 
 (function () {
-	app.controller('foods', function ($scope, $http) {
+	app.controller('foods', function ($scope, $http, foods) {
 
 		/**
 		 * scope properties
@@ -21,7 +21,6 @@ var app = angular.module('tracker');
 			filtered: {}
 		};
 		$scope.menu = {};//all foods plus all recipes
-		$scope.food_entries = {};//all foods/recipes entered on a given day
 		$scope.calories = {};//calorie info for a given day
 		
 		//quick recipe
@@ -39,9 +38,41 @@ var app = angular.module('tracker');
 			recipe: {}
 		};
 
+		//associated food units
+		$scope.all_foods_with_units = {};//all foods, with their associated units and default unit		
+		$scope.assoc_units = {};//associated units for one chosen food. This is made from $scope.all_foods_with_units.
+		$scope.food_and_assoc_units_array = {};//for the food popup, with checked state and calorie info. Associated units of one food. I could probably combine this info all into $scope.all_foods_with_units and get rid of this.
+
+		/**
+		 * watches
+		 */
+		
+		$scope.$watch('recipe.portion', function (newValue, oldValue) {
+			$($scope.recipe.temporary_contents).each(function () {
+				if (this.original_quantity) {
+					//making sure we don't alter the quantity of a food that has been added to the temporary recipe (by doing the if check)
+					this.quantity = this.original_quantity * newValue;
+				}
+			});
+		});
+
+		$scope.$watchCollection('filter.recipes.tag_ids', function (newValue, oldValue) {
+			if (newValue !== oldValue) {
+				$scope.filterRecipes();
+			}
+		});
+
 		/**
 		 * select
 		 */
+		
+		$scope.getAllFoodsWithUnits = function () {
+			foods.getAllFoodsWithUnits().then(function (response) {
+				$scope.all_foods_with_units = response.data;
+			});
+		};
+
+		$scope.getAllFoodsWithUnits();
 		
 		$scope.filterRecipes = function () {
 			select.filterRecipes($scope.filter.recipes.tag_ids).then(function (response) {
@@ -114,37 +145,10 @@ var app = angular.module('tracker');
 
 		$scope.insertFood = function ($keycode) {
 			if ($keycode === 13) {
-				insert.food().then(function (response) {
+				foods.insertFood().then(function (response) {
 					$scope.all_foods_with_units = response.data;
 				});
 			}
-		};
-
-		$scope.insertMenuEntry = function () {
-			$scope.new_entry.food.id = $scope.selected.food.id;
-			$scope.new_entry.food.name = $scope.selected.food.name;
-			$scope.new_entry.food.unit_id = $("#food-unit").val();
-
-			insert.menuEntry($scope.date.sql, $scope.new_entry.food).then(function (response) {
-				$scope.food_entries = response.data.food_entries;
-				$scope.calories.day = response.data.calories_for_the_day;
-				$scope.calories.week_avg = response.data.calories_for_the_week;
-
-				if ($scope.recipe.temporary_contents) {
-					$scope.recipe.temporary_contents.length = 0;
-				}
-				$scope.loading = false;
-			});
-		};
-
-		$scope.insertRecipeEntry = function () {
-			$scope.new_entry.food.id = $scope.selected.food.id;
-			$scope.new_entry.food.name = $scope.selected.food.name;
-
-			insert.recipeEntry($scope.date.sql, $scope.selected.menu.id, $scope.recipe.temporary_contents).then(function (response) {
-				$scope.food_entries = response.data;
-				$scope.show.popups.temporary_recipe = false;
-			});
 		};
 
 		/**
@@ -229,26 +233,6 @@ var app = angular.module('tracker');
 		$scope.deleteFoodUnit = function ($id) {
 			deleteItem.foodUnit($id).then(function (response) {
 				$scope.units.food = response.data;
-			});
-		};
-
-		$scope.deleteFoodEntry = function ($entry_id) {
-			$entry_id = $entry_id || $scope.selected.entry.id;
-
-			deleteItem.foodEntry($entry_id, $scope.date.sql).then(function (response) {
-				$scope.food_entries = response.data.food_entries;
-				$scope.calories.day = response.data.calories_for_the_day;
-				$scope.calories.week_avg = response.data.calories_for_the_week;
-				$scope.show.popups.delete_food_or_recipe_entry = false;
-			});
-		};
-
-		$scope.deleteRecipeEntry = function () {
-			deleteItem.recipeEntry($scope.date.sql, $scope.selected.recipe.id).then(function (response) {
-				$scope.food_entries = response.data.food_entries;
-				$scope.calories.day = response.data.calories_for_the_day;
-				$scope.calories.week_avg = response.data.calories_for_the_week;
-				$scope.show.popups.delete_food_or_recipe_entry = false;
 			});
 		};
 

@@ -28,6 +28,7 @@
 
 <script type="text/javascript" src="js/factories/date.js"></script>
 <script type="text/javascript" src="js/factories/quick-recipe.js"></script>
+<script type="text/javascript" src="js/factories/entries.js"></script>
 <script type="text/javascript" src="js/factories/select.js"></script>
 <script type="text/javascript" src="js/factories/exercises.js"></script>
 <script type="text/javascript" src="js/factories/foods.js"></script>

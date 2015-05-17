@@ -19,11 +19,8 @@ app.factory('foods', function ($http) {
 		getAllFoodsWithUnits: function () {
 			var $url = 'select/allFoodsWithUnits';
 			var $table = "all_foods_with_units";
-			var $data = {
-				table: $table
-			};
 
-			return $http.post($url, $data);
+			return $http.post($url);
 		},
 		getRecipeContents: function ($recipe_id) {
 			var $url = 'select/recipeContents';

@@ -39,7 +39,7 @@ class FoodsController extends Controller {
 		$name = $request->get('name');
 		Food::insertFood($name);
 
-		return Food::getAllFoodsWithUnits();
+		return User::getAllFoodsWithUnits();
 	}
 
 	/**

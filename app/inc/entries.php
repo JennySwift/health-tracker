@@ -1,5 +1,7 @@
-<div ng-show="tab.entries || tab.food_entries || tab.exercise_entries">
+<div ng-controller="entries" ng-show="tab.entries || tab.food_entries || tab.exercise_entries">
 
+	<?php include($inc . '/date-navigation.php'); ?>
+	
 	<div>
 
 		<div id="info-entries-wrapper">
@@ -16,7 +18,7 @@
 				<table class="table table-bordered">
 					<caption class="bg-blue">food entries</caption>
 					<tr><th>food</th><th>quantity</th><th>unit</th><th>calories</th><th>recipe</th></tr>
-					<tr ng-repeat="entry in food_entries" data-entry-id="{{entry.entry_id}}">
+					<tr ng-repeat="entry in entries.menu" data-entry-id="{{entry.entry_id}}">
 						<td>{{entry.food_name}}</td>
 						<td>{{entry.quantity}}</td>
 						<td>{{entry.unit_name}}</td>
@@ -44,7 +46,7 @@
 						<th></th>
 					</tr>
 
-					<tr ng-repeat="entry in exercise_entries" data-entry-id="{{entry.entry_id}}">
+					<tr ng-repeat="entry in entries.exercise" data-entry-id="{{entry.entry_id}}">
 						<td>{{entry.name}}</td>
 						<td>{{entry.description}}</td>
 						<td ng-click="getSpecificExerciseEntries(entry.exercise_id, entry.unit_id)" class="pointer">{{entry.sets}}</td>

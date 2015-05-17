@@ -28,7 +28,6 @@
 	<?php
 		include($inc . '/foods.php');
 		include($inc . '/exercises.php');
-		include($inc . '/date-navigation.php');
 		include($inc . '/journal.php');
 		include($inc . '/units.php');
 		include($inc . '/popups/index.php');

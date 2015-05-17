@@ -102,7 +102,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
 	public static function getAllFoodsWithUnits () {
 		$user = User::find(Auth::user()->id);
-		$foods = $user->foods;
+		$foods = $user->foods()->orderBy('name', 'asc')->get();
 
 		$array = [];
 		foreach ($foods as $food) {
@@ -136,7 +136,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	 */
 	public static function getExerciseEntries ($date) {
 		$user = User::find(Auth::user()->id);
-
+		// dd($user->exerciseEntries);
 		$entries = $user->exerciseEntries()
 			->where('date', $date)
 			->with('exercise')

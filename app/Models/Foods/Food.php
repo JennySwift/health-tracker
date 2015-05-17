@@ -45,6 +45,16 @@ class Food extends Model {
 	 */
 	
 	/**
+	 * Get all foods owned by the user
+	 * @return array
+	 */
+	// public static function getFoods()
+	// {
+	// 	$foods = static::where('user_id', Auth::user()->id)->get();
+	// 	return $foods;
+	// }
+	
+	/**
 	 * Get all food units that belong to the user,
 	 * as well as all units that belong to the particular food.
 	 * 
