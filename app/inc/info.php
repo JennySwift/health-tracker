@@ -10,12 +10,12 @@
 			<span class="badge">{{calories.week_avg}}</span>
 		</li>
 
-		<li ng-controller="weights" ng-show="edit_weight !== true" ng-click="editWeight()" class="list-group-item pointer">
+		<li ng-show="edit_weight !== true" ng-click="editWeight()" class="list-group-item pointer">
 			<span>Today's weight: </span>
 			<span class="badge">{{weight}}</span>
 		</li>
 
-		<li ng-controller="weights" ng-show="edit_weight === true" class="list-group-item">
+		<li ng-show="edit_weight === true" class="list-group-item">
 			<input ng-keyup="insertOrUpdateWeight($event.keyCode)" type="number" placeholder="enter your weight" id="weight">
 		</li>
 	</ul>

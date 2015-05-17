@@ -1,7 +1,7 @@
 var app = angular.module('tracker');
 
 (function () {
-	app.controller('entries', function ($scope, $http, date, entries) {
+	app.controller('entries', function ($scope, $http, date, entries, weights) {
 
 		/**
 		 * scope properties
@@ -12,6 +12,9 @@ var app = angular.module('tracker');
 			exercise: []
 		};
 		
+		$scope.weight = "";
+		$scope.edit_weight = false;
+
 		$scope.date = {};
 		
 		if ($scope.date.typed === undefined) {
@@ -129,10 +132,27 @@ var app = angular.module('tracker');
 			});
 		};
 
+		$scope.insertOrUpdateWeight = function ($keycode) {
+			if ($keycode === 13) {
+				weights.insertWeight($scope.date.sql).then(function (response) {
+					$scope.weight = response.data;
+					$scope.edit_weight = false;
+					$("#weight").val("");
+				});
+			}
+		};
+
 
 		/**
 		 * update
 		 */
+		
+		$scope.editWeight = function () {
+			$scope.edit_weight = true;
+			setTimeout(function () {
+				$("#weight").focus();
+			}, 500);
+		};
 		
 		/**
 		 * delete
