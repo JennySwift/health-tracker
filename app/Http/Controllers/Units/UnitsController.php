@@ -11,6 +11,15 @@ use App\Models\Units\Unit;
 class UnitsController extends Controller {
 
 	/**
+	 * Index
+	 */
+
+	public function index()
+	{
+		return view('units');
+	}
+
+	/**
 	 * Exercise units
 	 */
 
@@ -100,10 +109,10 @@ class UnitsController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function index()
-	{
-		//
-	}
+	// public function index()
+	// {
+	// 	//
+	// }
 
 	/**
 	 * Show the form for creating a new resource.

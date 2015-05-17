@@ -13,10 +13,24 @@ use Debugbar;
 use App\Models\Journal\Journal;
 
 class JournalController extends Controller {
+	/**
+	 * Index
+	 */
+
+	public function index()
+	{
+		return view('journal');
+	}
 
 	/**
 	 * select
 	 */
+	
+	public function getJournalEntry(Request $request)
+	{
+		$date = $request->get('date');
+		return Journal::getJournalEntry($date);
+	}
 
 	/**
 	 * insert
@@ -37,10 +51,10 @@ class JournalController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function index()
-	{
-		//
-	}
+	// public function index()
+	// {
+	// 	//
+	// }
 
 	/**
 	 * Show the form for creating a new resource.

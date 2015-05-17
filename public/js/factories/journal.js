@@ -4,6 +4,15 @@ app.factory('journal', function ($http) {
 		 * select
 		 */
 		
+		getJournalEntry: function ($sql_date) {
+			var $url = 'select/getJournalEntry';
+			var $data = {
+				date: $sql_date
+			};
+			
+			return $http.post($url, $data);
+		},
+		
 		/**
 		 * insert
 		 */

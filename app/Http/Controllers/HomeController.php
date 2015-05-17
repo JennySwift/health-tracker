@@ -30,12 +30,6 @@ class HomeController extends Controller {
 	 */
 	public function index()
 	{
-		return view('tracker');
+		return view('entries');
 	}
-
-	public function foods()
-	{
-		return view('foods');
-	}
-
 }

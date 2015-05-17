@@ -18,6 +18,15 @@ use App\Models\Tags\Tag;
 class ExercisesController extends Controller {
 
 	/**
+	 * Index
+	 */
+
+	public function index()
+	{
+		return view('exercises');
+	}
+
+	/**
 	 * select
 	 */
 	
@@ -156,10 +165,10 @@ class ExercisesController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function index()
-	{
-		//
-	}
+	// public function index()
+	// {
+	// 	//
+	// }
 
 	/**
 	 * Show the form for creating a new resource.

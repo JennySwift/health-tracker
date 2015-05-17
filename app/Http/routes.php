@@ -1,10 +1,23 @@
 <?php
 
 /**
- * Homepage
+ * Views
  */
 
+//Homepage (entries)
 Route::get('/', 'HomeController@index');
+
+//Units
+Route::get('/units', 'Units\UnitsController@index');
+
+//Foods
+Route::get('/foods', 'Foods\FoodsController@index');
+
+//Exercises
+Route::get('/exercises', 'Exercises\ExercisesController@index');
+
+//Journal
+Route::get('/journal', 'Journal\JournalController@index');
 
 /**
  * Authentication
@@ -75,7 +88,7 @@ Route::post('select/autocompleteExercise', 'Search\AutocompleteController@autoco
 Route::post('select/autocompleteFood', 'Search\AutocompleteController@autocompleteFood');
 
 //journal
-Route::post('select/journalEntry', 'Journal\JournalController@getJournalEntry');
+Route::post('select/getJournalEntry', 'Journal\JournalController@getJournalEntry');
 
 //exercises
 Route::post('select/exerciseSeries', 'Exercises\ExercisesController@getExerciseSeries');

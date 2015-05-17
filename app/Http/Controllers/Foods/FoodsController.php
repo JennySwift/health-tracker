@@ -14,6 +14,14 @@ use App\Models\Foods\Food;
 use App\User;
 
 class FoodsController extends Controller {
+	/**
+	 * Index
+	 */
+
+	public function index()
+	{
+		return view('foods');
+	}
 
 	/**
 	 * select
@@ -62,10 +70,10 @@ class FoodsController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function index()
-	{
-		//
-	}
+	// public function index()
+	// {
+	// 	//
+	// }
 
 	/**
 	 * Show the form for creating a new resource.
