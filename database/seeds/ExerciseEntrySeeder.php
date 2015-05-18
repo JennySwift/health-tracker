@@ -63,16 +63,27 @@ class ExerciseEntrySeeder extends Seeder {
 				 * Objective: Create a few entries for each of a few different exercises (no duplicates).
 				 * Ideally, a random number of different exercises.
 				 */
+				
+				$number = $faker->numberBetween($min = 1, $max = 6);
+				$random_exercise_ids = $faker->randomElements($exercise_ids, $count = $number);
 
-				foreach (range(0, 2) as $index) {
-					DB::table('exercise_entries')->insert([
-						'date' => $date,
-						'exercise_id' => $exercise_id,
-						'quantity' => $faker->numberBetween($min = 4, $max = 30),
-						'exercise_unit_id' => $unit_id,
-						'user_id' => 1
-					]);
-				}
+				//Insert a few sets for each $random_exercise_id
+				foreach ($random_exercise_ids as $random_exercise_id) {
+					//Reset the unit id for each different exercise
+					$random_unit_id = $faker->randomElement($unit_ids);
+					//Set the number of sets that will be done for the exercise
+					$range_limit = $faker->numberBetween($min = 1, $max = 7);
+					//Insert the same exercise with the same unit a few times so we have exercise sets.
+					foreach (range(0, $range_limit) as $index) {
+						DB::table('exercise_entries')->insert([
+							'date' => $date,
+							'exercise_id' => $random_exercise_id,
+							'quantity' => $faker->numberBetween($min = 4, $max = 30),
+							'exercise_unit_id' => $random_unit_id,
+							'user_id' => 1
+						]);
+					}
+				}	
 			}
 		}
 		

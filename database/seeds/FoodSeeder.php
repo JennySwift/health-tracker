@@ -17,6 +17,7 @@ class FoodSeeder extends Seeder {
 		// DB::statement('SET FOREIGN_KEY_CHECKS=0');
 
 		Food::truncate();
+		$faker = Faker::create();
 
 		/**
 		 * Objective:
@@ -28,6 +29,8 @@ class FoodSeeder extends Seeder {
 		 * The problem is the food_units table is not yet seeded, so we don't yet know what units belong to a food.
 		 * But the food_units table needs the foods table to be seeded before it is seeded.
 		 * I got this working by setting the default_unit_id in the FoodUnitSeeder. Could it be better?
+		 *
+		 * And I don't really see much benefit of using TestDummy yet. How does it help?
 		 */
 
 		$user_one_foods = ['apple', 'banana', 'orange', 'mango', 'watermelon', 'papaya', 'pear', 'peach', 'nectarine', 'plum', 'rockmelon', 'blueberry', 'strawberry', 'raspberry', 'blackberry', 'walnut', 'brazilnut', 'cashew', 'almond', 'sesame seeds', 'pumpkin seeds', 'sunflower seeds'];
@@ -40,26 +43,12 @@ class FoodSeeder extends Seeder {
 			]);
 		}
 
-		$faker = Faker::create();
-		
-		// $food_unit_ids = Unit::where('for', 'food')->lists('id');
-
-		// foreach ($foods as $food) {
-			// $has_default_unit_id = $faker->boolean($chanceOfGettingTrue = 80);
-
-			// if ($has_default_unit_id) {
-			// 	$default_unit_id = $faker->randomElement($food_unit_ids);
-			// }
-			// else {
-			// 	$default_unit_id = null;
-			// }
-
-			// Food::create([
-				// 'name' => $food,
-				// 'user_id' => 1
-				// 'default_unit_id' => $default_unit_id
-			// ]);
-		// }
+		foreach ($user_two_foods as $food) {
+			Dummy::create('App\Models\Foods\Food', [
+				'name' => $food,
+				'user_id' => 2
+			]);
+		}
 
 		// DB::statement('SET FOREIGN_KEY_CHECKS=1');
 	}
