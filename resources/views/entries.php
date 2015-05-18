@@ -13,7 +13,7 @@
 <?php
 	include($header);
 	include($templates . '/popups/entry/index.php');
-?>   
+?> 
 
 <!-- ==============================.container============================== -->
 <div class="container">

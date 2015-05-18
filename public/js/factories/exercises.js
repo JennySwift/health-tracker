@@ -4,6 +4,10 @@ app.factory('exercises', function ($http) {
 		 * select
 		 */
 		
+		getExercises: function () {
+			var $url = 'select/getExercises';
+			return $http.post($url);
+		},
 		getSpecificExerciseEntries: function ($sql_date, $exercise_id, $exercise_unit_id) {
 			var $url = 'select/specificExerciseEntries';
 			var $data = {

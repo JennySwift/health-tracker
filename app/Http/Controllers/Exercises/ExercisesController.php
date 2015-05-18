@@ -30,6 +30,11 @@ class ExercisesController extends Controller {
 	 * select
 	 */
 	
+	public function getExercises()
+	{
+		return Exercise::where('user_id', Auth::user()->id)->get();
+	}
+	
 	public function getExerciseSeriesHistory(Request $request)
 	{
 		//Fetch the series (singular-the series that was clicked on)

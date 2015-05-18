@@ -1,7 +1,7 @@
 var app = angular.module('tracker');
 
 (function () {
-	app.controller('exercises', function ($scope, $http, date, select, autocomplete, quickRecipe, foods, exercises, journal, tags, units, weights) {
+	app.controller('exercises', function ($scope, $http, exercises, tags) {
 
 		/**
 		 * scope properties
@@ -13,13 +13,22 @@ var app = angular.module('tracker');
 		/**
 		 * select
 		 */
+		
+		$scope.getExercises = function () {
+			exercises.getExercises().then(function (response) {
+				$scope.exercises = response.data;
+			});
+		};
 
-		 $scope.getExerciseSeriesHistory = function ($series_id) {
-		 	select.exerciseSeriesHistory($series_id).then(function (response) {
-		 		$scope.show.popups.exercise_series_history = true;
-		 		$scope.exercise_series_history = response.data;
-		 	});
-		 };
+		$scope.getExercises();
+
+
+		$scope.getExerciseSeriesHistory = function ($series_id) {
+			select.exerciseSeriesHistory($series_id).then(function (response) {
+				$scope.show.popups.exercise_series_history = true;
+				$scope.exercise_series_history = response.data;
+			});
+		};
 
 		 $scope.getSpecificExerciseEntries = function ($exercise_id, $exercise_unit_id) {
 		 	select.specificExerciseEntries($scope.date.sql, $exercise_id, $exercise_unit_id).then(function (response) {
