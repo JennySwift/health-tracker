@@ -59,6 +59,11 @@ class ExerciseEntrySeeder extends Seeder {
 			}
 
 			else {
+				/**
+				 * Objective: Create a few entries for each of a few different exercises (no duplicates).
+				 * Ideally, a random number of different exercises.
+				 */
+
 				foreach (range(0, 2) as $index) {
 					DB::table('exercise_entries')->insert([
 						'date' => $date,

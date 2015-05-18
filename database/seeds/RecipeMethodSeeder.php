@@ -21,7 +21,7 @@ class RecipeMethodSeeder extends Seeder {
 			// $counter = 0;
 			foreach (range(1, 5) as $index) {
 				// $counter++;
-				RecipeMethod::create([
+				DB::table('recipe_methods')->insert([
 					'recipe_id' => $recipe_id,
 					'step' => $index,
 					'text' => $faker->sentence,

@@ -18,9 +18,20 @@ class FoodSeeder extends Seeder {
 
 		Food::truncate();
 
-		$foods = ['apple', 'banana', 'orange', 'mango', 'watermelon', 'papaya', 'pear', 'peach', 'nectarine', 'plum', 'rockmelon', 'blueberry', 'strawberry', 'raspberry', 'blackberry', 'walnut', 'brazilnut', 'cashew', 'almond', 'sesame seeds', 'pumpkin seeds', 'sunflower seeds'];
+		/**
+		 * Objective:
+		 * Give one user all foods in $user_one_foods.
+		 * Give second user all foods in $user_two_foods.
+		 * Add a default_unit_id to most foods, but not all of them, to make it more realistic.
+		 * The default_unit_id must be a unit id that belongs to the food (in food_units table).
+		 * The problem is the food_units table is not yet seeded, so we don't yet know what units belong to a food.
+		 * But the food_units table needs the foods table to be seeded before it is seeded.
+		 */
 
-		foreach ($foods as $food) {
+		$user_one_foods = ['apple', 'banana', 'orange', 'mango', 'watermelon', 'papaya', 'pear', 'peach', 'nectarine', 'plum', 'rockmelon', 'blueberry', 'strawberry', 'raspberry', 'blackberry', 'walnut', 'brazilnut', 'cashew', 'almond', 'sesame seeds', 'pumpkin seeds', 'sunflower seeds'];
+		$user_two_foods = ['quinoa', 'rice', 'buckwheat'];
+
+		foreach ($user_one_foods as $food) {
 			Dummy::create('App\Models\Foods\Food', [
 				'name' => $food,
 				'user_id' => 1
@@ -28,21 +39,8 @@ class FoodSeeder extends Seeder {
 		}
 
 		$faker = Faker::create();
-
-		/**
-		 * $food_unit_ids should be only the units the food has
-		 * in order to make sure the default unit is a unit the food has.
-		 * The problem is the calories table is not yet seeded we don't yet know what units a food has.
-		 * And the calories table needs the foods table to be seeded before it is seeded.
-		 */
 		
 		// $food_unit_ids = Unit::where('for', 'food')->lists('id');
-
-		
-		
-		/**
-		 * Create foods but only add a default_unit_id to most of them, not all of them, to make it more realistic.
-		 */
 
 		// foreach ($foods as $food) {
 			// $has_default_unit_id = $faker->boolean($chanceOfGettingTrue = 80);

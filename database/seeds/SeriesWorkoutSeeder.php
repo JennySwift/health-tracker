@@ -14,15 +14,23 @@ class SeriesWorkoutSeeder extends Seeder {
 		
 		$faker = Faker::create();
 
+		/**
+		 * Objective:
+		 * Make a random number of exercise series belong to each workout.
+		 * No duplicate series for a workout. (Currently there are duplicates.)
+		 */
+
 		$workout_ids = Workout::lists('id');
 		$series_ids = ExerciseSeries::lists('id');
 
-		foreach (range(1, 5) as $index) {
-			DB::table('series_workout')->insert([
-				'workout_id' => $faker->randomElement($workout_ids),
-				'series_id' => $faker->randomElement($series_ids),
-				'user_id' => 1
-			]);
+		foreach ($workout_ids as $workout_id) {
+			foreach (range(1, 3) as $index) {
+				DB::table('series_workout')->insert([
+					'workout_id' => $workout_id,
+					'series_id' => $faker->randomElement($series_ids),
+					'user_id' => 1
+				]);
+			}
 		}
 	}
 

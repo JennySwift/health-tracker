@@ -15,7 +15,7 @@ use Faker\Factory as Faker;
  */
 // use DB;
 
-class CaloriesSeeder extends Seeder {
+class FoodUnitSeeder extends Seeder {
 
 	public function run()
 	{
@@ -23,13 +23,18 @@ class CaloriesSeeder extends Seeder {
 		
 		$faker = Faker::create();
 
+		/**
+		 * Objective:
+		 * Add a random number of rows to the food_units table for each food
+		 * so that each food has many units (no duplicates).
+		 * Set the calories for some, but not all, of the rows.
+		 *
+		 * Also, for a food's default unit, is it better to have a 'default_unit_id' column in my foods table (with a foreign key),
+		 * or to have a 'default' column in my food_units table (with a boolean value)?
+		 */
+
 		$food_ids = Food::lists('id');
 		$food_unit_ids = Unit::where('for', 'food')->lists('id');
-
-		/**
-		 * Add a few rows (a random number of rows) to the calories table for each food
-		 * so that more than one unit can be used for the food
-		 */
 		
 		/**
 		 * This code isn't working properly. I guess I'll wait till the TestDummy is working.

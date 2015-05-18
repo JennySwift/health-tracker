@@ -11,17 +11,17 @@ class ExerciseSeriesSeeder extends Seeder {
 	{
 		Series::truncate();
 
-		Series::create([
+		DB::table('exercise_series')->insert([
 			'name' => 'pushup',
 			'user_id' => 1
 		]);
 
-		Series::create([
+		DB::table('exercise_series')->insert([
 			'name' => 'pullup',
 			'user_id' => 1
 		]);
 
-		Series::create([
+		DB::table('exercise_series')->insert([
 			'name' => 'squat',
 			'user_id' => 1
 		]);

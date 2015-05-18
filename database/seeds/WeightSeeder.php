@@ -18,6 +18,7 @@ class WeightSeeder extends Seeder {
 		 * Why did you add the following line?
 		 * I already have Model::unguard(); in DatabaseSeeder.php.
 		 * How is Eloquent::unguard(); different?
+		 * 
          * @JS:
          * Eloquent::unguard works if you have line 4: `use Illuminate\Database\Eloquent\Model as Eloquent;`
          * This is basically the same.

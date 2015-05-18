@@ -11,12 +11,12 @@ class WorkoutSeeder extends Seeder {
 	{
 		Workout::truncate();
 		
-		Workout::create([
+		DB::table('workouts')->insert([
 			'name' => 'day one',
 			'user_id' => 1
 		]);
 
-		Workout::create([
+		DB::table('workouts')->insert([
 			'name' => 'day two',
 			'user_id' => 1
 		]);

@@ -18,7 +18,7 @@ class FoodEntrySeeder extends Seeder {
 		$faker = Faker::create();
 
 		/**
-		 * create a food entry for the last 50 days
+		 * Objective: create a random number of food entries (no duplicates) for each of the last 50 days
 		 */
 
 		foreach (range(0, 49) as $index) {

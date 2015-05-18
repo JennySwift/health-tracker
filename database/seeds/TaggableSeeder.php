@@ -5,10 +5,6 @@ use Illuminate\Database\Eloquent\Model;
 
 use Faker\Factory as Faker;
 
-/**
- * still to do
- */
-
 class TaggableSeeder extends Seeder {
 
 	public function run()

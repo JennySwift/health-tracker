@@ -11,12 +11,12 @@ class RecipeSeeder extends Seeder {
 	{
 		Recipe::truncate();
 		
-		Recipe::create([
+		DB::table('recipes')->insert([
 			'name' => 'delicious recipe',
 			'user_id' => 1
 		]);
 
-		Recipe::create([
+		DB::table('recipes')->insert([
 			'name' => 'fruit salad',
 			'user_id' => 1
 		]);
