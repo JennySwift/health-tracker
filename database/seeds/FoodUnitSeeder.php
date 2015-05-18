@@ -65,6 +65,18 @@ class FoodUnitSeeder extends Seeder {
 				}
 			}
 		}
+
+		//Now that both the foods table and the food units table have been populated
+		//set the default unit ids of foods
+		
+		foreach ($food_ids as $food_id) {
+			//Grab the units that belong to the food
+			$unit_ids_for_food = DB::table('food_unit')->where('food_id', $food_id)->lists('unit_id');
+			//Update the default_unit_id for that food
+			DB::table('foods')->where('id', $food_id)->update([
+				'default_unit_id' => $faker->randomElement($unit_ids_for_food)
+			]);
+		}
 	}
 
 }
