@@ -28,6 +28,7 @@ class FoodUnitSeeder extends Seeder {
 		 * Add a random number of rows to the food_units table for each food
 		 * so that each food has many units (no duplicates).
 		 * Set the calories for some, but not all, of the rows.
+		 * My code works, but could it be better?
 		 *
 		 * Also, for a food's default unit, is it better to have a 'default_unit_id' column in my foods table (with a foreign key),
 		 * or to have a 'default' column in my food_units table (with a boolean value)?
@@ -35,10 +36,6 @@ class FoodUnitSeeder extends Seeder {
 
 		$food_ids = Food::lists('id');
 		$food_unit_ids = Unit::where('for', 'food')->lists('id');
-		
-		/**
-		 * This code isn't working properly. I guess I'll wait till the TestDummy is working.
-		 */
 
 		foreach ($food_ids as $food_id) {
 			$food_has_default_unit = false;
@@ -65,32 +62,6 @@ class FoodUnitSeeder extends Seeder {
 						'calories' => $calories,
 						'user_id' => 1
 					]);	
-
-					// //Decide if this unit should be the food's default unit
-					// //but only if the food does not yet have its default unit set
-					// if ($food_has_default_unit) {
-					// 	Calories::create([
-					// 		'food_id' => $food_id,
-					// 		'unit_id' => $unit_id,
-					// 		'calories' => $calories,
-					// 		'user_id' => 1
-					// 	]);	
-					// }
-					// else {
-					// 	//Food does not have a default unit yet
-					// 	$is_default_unit = $faker->boolean($chanceOfGettingTrue = 30);
-
-					// 	if ($is_default_unit) {
-					// 		$food_has_default_unit = true;
-					// 		//Food now has a default unit. Insert it into the foods table.
-					// 		Food
-					// 			::where('id', $food_id)
-					// 			->update([
-					// 				'default_unit_id' => $unit_id
-					// 			]);
-					// 	}
-					// }
-
 				}
 			}
 		}
