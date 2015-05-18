@@ -60,7 +60,7 @@ class ExerciseEntrySeeder extends Seeder {
 
 			else {
 				/**
-				 * Objective: Create a few entries for each of a few different exercises (no duplicates).
+				 * Create a few entries for each of a few different exercises (no duplicates).
 				 * Ideally, a random number of different exercises.
 				 */
 				
