@@ -1,32 +1,23 @@
 <?php
 
-
+use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
 use App\Models\Foods\Food;
 use App\Models\Units\Unit;
-
+use Faker\Factory as Faker;
 use Laracasts\TestDummy\Factory as Dummy;
+// use Laracasts\TestDummy\DbTestCase;
 use App\User;
 
-
-class FoodSeeder extends MasterSeeder {
-  
-  protected $user_one_foods = [
-    'apple', 'banana', 'orange', 'mango', 'watermelon', 'papaya', 'pear', 'peach', 
-    'nectarine', 'plum', 'rockmelon', 'blueberry', 'strawberry', 'raspberry', 'blackberry',
-    'walnut', 'brazilnut', 'cashew', 'almond', 'sesame seeds', 'pumpkin seeds', 'sunflower seeds'
-  ];
-	protected $user_two_foods = [
-	  'quinoa', 'rice', 'buckwheat'
-  ];
+class FoodSeeder extends Seeder {
 
 	public function run()
 	{
 		// DB::statement('SET FOREIGN_KEY_CHECKS=0');
 
 		Food::truncate();
-		//$faker = Faker::create();
+		$faker = Faker::create();
 
 		/**
 		 * Objective:
@@ -41,29 +32,25 @@ class FoodSeeder extends MasterSeeder {
 		 *
 		 * And I don't really see much benefit of using TestDummy yet. How does it help?
 		 */
-    $this->createUserOne();
-    $this->createUserTwo();
-		
 
-		// DB::statement('SET FOREIGN_KEY_CHECKS=1');
-	}
-	
-	private function createUserOne(){
-	  foreach ($this->user_one_foods as $food) {
+		$user_one_foods = ['apple', 'banana', 'orange', 'mango', 'watermelon', 'papaya', 'pear', 'peach', 'nectarine', 'plum', 'rockmelon', 'blueberry', 'strawberry', 'raspberry', 'blackberry', 'walnut', 'brazilnut', 'cashew', 'almond', 'sesame seeds', 'pumpkin seeds', 'sunflower seeds'];
+		$user_two_foods = ['quinoa', 'rice', 'buckwheat'];
+
+		foreach ($user_one_foods as $food) {
 			Dummy::create('App\Models\Foods\Food', [
 				'name' => $food,
 				'user_id' => 1
 			]);
-		} 
-	}
-	
-	private function createUserTwo(){
-	  foreach ($this->user_two_foods as $food) {
+		}
+
+		foreach ($user_two_foods as $food) {
 			Dummy::create('App\Models\Foods\Food', [
 				'name' => $food,
 				'user_id' => 2
 			]);
 		}
+
+		// DB::statement('SET FOREIGN_KEY_CHECKS=1');
 	}
 
 }

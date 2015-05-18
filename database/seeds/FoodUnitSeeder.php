@@ -13,15 +13,14 @@ use Faker\Factory as Faker;
  * [ErrorException]
  * The use statement with non-compound name 'DB' has no effect
  */
-// use DB;
+  // use DB;
+  //Only needed for classes that have a namespace
 
-class FoodUnitSeeder extends Seeder {
+class FoodUnitSeeder extends MasterSeeder {
 
 	public function run()
 	{
 		DB::table('food_unit')->truncate();
-		
-		$faker = Faker::create();
 
 		/**
 		 * Objective:
@@ -33,50 +32,62 @@ class FoodUnitSeeder extends Seeder {
 		 * Also, for a food's default unit, is it better to have a 'default_unit_id' column in my foods table (with a foreign key),
 		 * or to have a 'default' column in my food_units table (with a boolean value)?
 		 */
-
-		$food_ids = Food::lists('id');
-		$food_unit_ids = Unit::where('for', 'food')->lists('id');
-
-		foreach ($food_ids as $food_id) {
-			$food_has_default_unit = false;
-
-			//Add a few units for each food
-			foreach ($food_unit_ids as $unit_id) {
-				//Decide if this food should have this unit
-				$food_has_unit = $faker->boolean($chanceOfGettingTrue = 50);
-				
-				if ($food_has_unit) {
-					//Decide if this food with this unit should have calories set
-					$has_calories = $faker->boolean($chanceOfGettingTrue = 80);
-
-					if ($has_calories) {
-						$calories = $faker->numberBetween($min = 30, $max = 150);
-					}
-					else {
-						$calories = null;
-					}
-
-					DB::table('food_unit')->insert([
-						'food_id' => $food_id,
-						'unit_id' => $unit_id,
-						'calories' => $calories,
-						'user_id' => 1
-					]);	
-				}
-			}
-		}
-
-		//Now that both the foods table and the food units table have been populated
-		//set the default unit ids of foods
+		 $this->createPivotRows();
+	}
+	
+	private function createPivotRows()
+	{
+	  $foods = Food::all();
 		
-		foreach ($food_ids as $food_id) {
-			//Grab the units that belong to the food
-			$unit_ids_for_food = DB::table('food_unit')->where('food_id', $food_id)->lists('unit_id');
-			//Update the default_unit_id for that food
-			DB::table('foods')->where('id', $food_id)->update([
-				'default_unit_id' => $faker->randomElement($unit_ids_for_food)
-			]);
+		foreach ($foods as $food) {
+			//Add a few units for each food
+			
+			$this->createPivotRow($food);
+			
+			
 		}
+	}
+	
+	private function setDefaultFoodUnits($food)
+	{
+	    //Now that both the foods table and the food units table have been populated
+		  //set the default unit ids of foods
+
+			//Grab the units that belong to the food
+			$unit_ids_for_food = DB::table('food_unit')->where('food_id', $food->id)->lists('unit_id');
+			//Update the default_unit_id for that food
+			$food->update([
+				'default_unit_id' => $this->faker->randomElement($unit_ids_for_food)
+			]);
+		
+	}
+	
+	private function createPivotRow($food)
+	{
+	  foreach (Unit::where('for', 'food')->get() as $unit) {
+	    // Decide if this food should have this unit
+  		if($this->faker->boolean($chanceOfGettingTrue = 50)) {
+  			
+  			$data = [
+  			  'food_id' => $food->id,
+  				'unit_id' => $unit->id,
+  				'user_id' => 1
+  		  ];
+  
+  			$data['calories'] = $this->hasCalories();
+  
+  			DB::table('food_unit')->insert($data);	
+  		}
+	  }
+	  $this->setDefaultFoodUnits($food);
+	}
+	
+	// Decide if this food with this unit should have calories set
+	private function hasCalories()
+	{
+	    if ($this->faker->boolean($chanceOfGettingTrue = 80)) {
+				return $this->faker->numberBetween($min = 30, $max = 150);
+			} 
 	}
 
 }
