@@ -19,6 +19,12 @@ Route::get('/exercises', 'Exercises\ExercisesController@index');
 //Journal
 Route::get('/journal', 'Journal\JournalController@index');
 
+//Credits
+Route::get('/credits', function()
+{
+    return view('credits');
+});
+
 /**
  * Authentication
  */
@@ -139,9 +145,6 @@ Route::post('insert/foodUnit', 'Units\UnitsController@insertFoodUnit');
 
 //exercise series
 Route::post('insert/exerciseSeries', 'Exercises\ExerciseSeriesController@insertExerciseSeries');
-
-//series workout
-Route::post('insert/seriesIntoWorkout', 'Exercises\SeriesWorkoutController@insertSeriesIntoWorkout');
 
 //journal
 Route::post('insert/journalEntry', 'Journal\JournalController@insertOrUpdateJournalEntry');

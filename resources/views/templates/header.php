@@ -6,7 +6,7 @@
             <li><a href="/units">units</a></li>
             <li><a href="/auth/logout">Logout <?php echo Auth::user()->name; ?></a></li>
             <li><a href="#" style="cursor:default">branch:master</a></li>
-            <li><a href="credits.php">credits</a></li>
+            <li><a href="/credits">credits</a></li>
         </ul>
     </li>
     

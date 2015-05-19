@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use Auth;
 use Debugbar;
+use DB;
 
 /**
  * Models
@@ -19,6 +20,16 @@ use App\User;
 
 class ExercisesController extends Controller {
 
+	/**
+	 * Create a new controller instance.
+	 *
+	 * @return void
+	 */
+	public function __construct()
+	{
+		$this->middleware('auth');
+	}
+	
 	/**
 	 * Index
 	 */
@@ -59,24 +70,20 @@ class ExercisesController extends Controller {
 	 * insert
 	 */
 
-	/**
-	 * Needs updating. WorkoutSeries no longer exists.
-	 */
 	public function deleteAndInsertSeriesIntoWorkouts(Request $request)
 	{
 		//deletes all rows with $series_id and then adds all the correct rows for $series_id
 		$series_id = $request->get('series_id');
 		$workouts = $request->get('workouts');
+		$series = Series::find($series_id);
 
 		//first delete all the rows with $series_id
-		WorkoutSeries
-			::where('series_id', $series_id)
-			->delete();
+		DB::table('series_workout')->where('series_id', $series->id)->delete();
 
 		//then add all the rows for the series_id
 		foreach ($workouts as $workout) {
 			$workout_id = $workout['id'];
-			WorkoutSeries::insertSeriesIntoWorkout($workout_id, $series_id);
+			$series->workouts()->attach($workout_id);
 		}
 
 		return Series::getExerciseSeries();

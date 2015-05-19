@@ -116,7 +116,11 @@
 
 	</div> <!-- exercises tab -->
 
-	<?php include($footer); ?>
+	<?php
+		include($footer);
+		include(base_path() . '/resources/views/footer.php');
+
+	?>
 
 </body>
 </html>

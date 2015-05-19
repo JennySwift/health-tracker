@@ -8,16 +8,6 @@ use Auth;
 
 class WorkoutsController extends Controller {
 
-	public function insertSeriesIntoWorkout(Request $request)
-	{
-		$workout_id = $request->get('workout_id');
-		$series_id = $request->get('series_id');
-
-		WorkoutSeries::insertSeriesIntoWorkout($workout_id, $series_id);
-
-		return User::getExerciseSeries();
-	}
-
 	/**
 	 * Display a listing of the resource.
 	 *
