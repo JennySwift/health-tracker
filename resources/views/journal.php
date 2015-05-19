@@ -8,25 +8,26 @@
 		include($head_links);
 	?>
 </head>
-<body>
+<body ng-controller="journal">
 
-	<?php
-		include($header);
-	?>
+	<?php include($header); ?>
 	
 	<div class="container">
-		<div ng-controller="journal" id="journal">
-		
-			<?php include($templates . '/date-navigation.php'); ?>
+
+		<?php include($templates . '/date-navigation.php'); ?>
+
+		<div id="journal">
 		
 			<div class="btn-toolbar" data-role="editor-toolbar" data-target="#wysiwyg">
 				<a data-edit="bold" class="fa fa-bold"></a>
 			</div>
+		
 			<div ng-bind-html="journal_entry.text" id="journal-entry" class="wysiwyg margin-bottom"></div>
 		
 			<button ng-click="insertOrUpdateJournalEntry()">save entry</button>
 		
 		</div>
+		
 	</div>
 
 	<?php include($footer); ?>

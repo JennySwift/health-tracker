@@ -283,25 +283,6 @@ li {
 .fa {
   font-size: 19px; }
 
-.flex-parent {
-  display: flex;
-  display: -webkit-flex; }
-  .flex-parent .flex-grow-1 {
-    flex-grow: 1;
-    -webkit-flex-grow: 1; }
-  .flex-parent .flex-grow-2 {
-    flex-grow: 2;
-    -webkit-flex-grow: 2; }
-  .flex-parent .flex-basis-xs {
-    flex-basis: 20px;
-    -webkit-flex-basis: 20px; }
-  .flex-parent .flex-basis-sm {
-    flex-basis: 40px;
-    -webkit-flex-basis: 40px; }
-  .flex-parent .flex-basis-md {
-    flex-basis: 80px;
-    -webkit-flex-basis: 80px; }
-
 .min-width-md {
   min-width: 40px; }
 
@@ -360,14 +341,6 @@ li {
 @media all and (min-width: 680px) {
   .popup-inner {
     padding: 22px; } }
-#journal {
-  display: flex;
-  flex-direction: column;
-  align-items: center; }
-  #journal button {
-    width: 100%;
-    max-width: 600px; }
-
 .wysiwyg {
   height: 350px;
   width: 100%;
@@ -473,6 +446,35 @@ li {
         margin: 0;
         height: 30px;
         width: 30px; }
+
+#date-navigation {
+  display: flex;
+  display: -webkit-flex; }
+  #date-navigation > div, #date-navigation button {
+    flex-grow: 2; }
+  #date-navigation > input {
+    flex-grow: 1; }
+  #date-navigation > div {
+    min-width: 40px; }
+  #date-navigation > button {
+    max-width: 80px; }
+  #date-navigation .flex-basis-xs {
+    flex-basis: 20px;
+    -webkit-flex-basis: 20px; }
+  #date-navigation .flex-basis-sm {
+    flex-basis: 40px;
+    -webkit-flex-basis: 40px; }
+  #date-navigation .flex-basis-md {
+    flex-basis: 80px;
+    -webkit-flex-basis: 80px; }
+
+#journal {
+  display: flex;
+  flex-direction: column;
+  align-items: center; }
+  #journal button {
+    width: 100%;
+    max-width: 600px; }
 
 body.browser-height {
   box-sizing: border-box; }

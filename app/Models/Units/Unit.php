@@ -29,6 +29,7 @@ class Unit extends Model {
 		$units = static
 			::where('user_id', Auth::user()->id)
 			->where('for', 'exercise')
+			->orderBy('name', 'asc')
 			->get();
 
 		return $units;
@@ -39,6 +40,7 @@ class Unit extends Model {
 		$units = static
 			::where('user_id', Auth::user()->id)
 			->where('for', 'food')
+			->orderBy('name', 'asc')
 			->get();
 
 		return $units;

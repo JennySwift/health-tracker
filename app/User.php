@@ -99,17 +99,4 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	/**
 	 * End of defining relationships
 	 */
-
-	public static function getAllFoodsWithUnits () {
-		$user = User::find(Auth::user()->id);
-		$foods = $user->foods()->orderBy('name', 'asc')->get();
-
-		$array = [];
-		foreach ($foods as $food) {
-			$units = $food->units;
-			$food->units = $units;
-			$array[] = $food;
-		}
-		return $array;
-	}
 }

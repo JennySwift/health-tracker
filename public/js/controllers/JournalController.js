@@ -36,6 +36,12 @@ var app = angular.module('tracker');
 		};
 
 		/**
+		 * plugins
+		 */
+		
+		$(".wysiwyg").wysiwyg();
+
+		/**
 		 * watches
 		 */
 		

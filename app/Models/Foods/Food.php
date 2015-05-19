@@ -66,9 +66,7 @@ class Food extends Model {
 	 */
 	public static function getFoodInfo($food)
 	{
-		dd($food);
-		$user = User::find(Auth::user()->id);
-		$all_food_units = $user->foodUnits;
+		$all_food_units = Unit::getFoodUnits();
 		$food_units = $food->units()->lists('unit_id');
 
 		return [
@@ -101,6 +99,18 @@ class Food extends Model {
 		// 	->get();
 
 		return $foods;
+	}
+
+	public static function getAllFoodsWithUnits () {
+		$foods = static::forCurrentUser('foods')->orderBy('name', 'asc')->get();
+
+		$array = [];
+		foreach ($foods as $food) {
+			$units = $food->units;
+			$food->units = $units;
+			$array[] = $food;
+		}
+		return $array;
 	}
 
 	public static function getCalories($food_id, $unit_id)

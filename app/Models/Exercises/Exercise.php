@@ -163,6 +163,7 @@ class Exercise extends Model {
 	
 	public static function convertDate($date, $for)
 	{
+		//Use Carbon here
 		$date = new DateTime($date);
 
 		if ($for === 'user') {
@@ -174,9 +175,14 @@ class Exercise extends Model {
 		return $date;
 	}
 
+	/**
+	 * Find out how many days ago a date was
+	 * Use Carbon
+	 * @param  [type] $date [description]
+	 * @return [type]       [description]
+	 */
 	public static function getHowManyDaysAgo($date)
 	{
-		//to find out how many days ago a date was
 		$now = new DateTime('now');
 		$date = new DateTime($date);
 		$diff = $now->diff($date);

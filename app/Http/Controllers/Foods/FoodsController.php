@@ -35,7 +35,7 @@ class FoodsController extends Controller {
 
 	public function getAllFoodsWithUnits(Request $request)
 	{
-		return User::getAllFoodsWithUnits();
+		return Food::getAllFoodsWithUnits();
 	}
 
 	/**
@@ -47,7 +47,7 @@ class FoodsController extends Controller {
 		$name = $request->get('name');
 		Food::insertFood($name);
 
-		return User::getAllFoodsWithUnits();
+		return Food::getAllFoodsWithUnits();
 	}
 
 	/**

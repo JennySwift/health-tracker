@@ -11,6 +11,35 @@ var app = angular.module('tracker');
 			menu: [],
 			exercise: []
 		};
+
+		//selected
+		$scope.selected = {
+			exercise: {
+				unit: {}
+			},
+			dropdown_item: {},
+			food: {},
+			unit: {},
+			exercise_unit: {}
+		};
+
+		//new entry
+		$scope.new_entry = {
+			exercise: {
+				unit: {}
+			},
+			exercise_unit: {},
+			menu: {},
+			food: {},
+		};
+
+		//autocomplete
+		$scope.autocomplete_options = {
+			exercises: {},
+			menu_items: {},
+			foods: {},
+			temporary_recipe_foods: {}
+		};
 		
 		$scope.weight = "";
 		$scope.edit_weight = false;
@@ -176,7 +205,20 @@ var app = angular.module('tracker');
 				$scope.calories.week_avg = response.data.calories_for_the_week;
 				$scope.show.popups.delete_food_or_recipe_entry = false;
 			});
-		};	
+		};
+
+		/**
+		 * media queries
+		 */
+		
+		enquire.register("screen and (max-width: 890px", {
+			match: function () {
+				$("#avg-calories-for-the-week-text").text('Avg: ');
+			},
+			unmatch: function () {
+				$("#avg-calories-for-the-week-text").text('Avg calories (last 7 days): ');
+			}
+		});	
 		
 	}); //end controller
 

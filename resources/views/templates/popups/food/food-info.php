@@ -4,7 +4,7 @@
 	
 		<div class="popup-inner">
 	
-			<h3 class="center">{{food_popup.name}}</h3>
+			<h3 class="center">{{food_popup.food.name}}</h3>
 			
 			<ul class="list-group">
 
