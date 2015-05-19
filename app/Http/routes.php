@@ -58,7 +58,7 @@ Route::resource('weights', 'Weights\WeightsController');
  */
 
 //selects everything (which controller??)
-Route::post('select/entries', 'SelectController@getEntries');
+Route::post('select/entries', 'HomeController@getEntries');
 
 /**
  * Tags
@@ -76,9 +76,6 @@ Route::post('delete/tagFromExercise', 'Tags\TagsController@deleteTagFromExercise
 /**
  * Select requests
  */
-
-//page load
-Route::post('select/pageLoad', 'SelectController@pageLoad');
 
 //Autocomplete
 

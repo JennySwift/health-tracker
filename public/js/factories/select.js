@@ -1,14 +1,5 @@
 app.factory('select', function ($http) {
 	return {
-		pageLoad: function ($sql_date) {
-			var $url = 'select/pageLoad';
-			var $data = {
-				date: $sql_date
-			};
-			
-			return $http.post($url, $data);
-		},
-		
 		autocompleteExercise: function () {
 			var $typing = $("#exercise").val();
 			var $url = 'select/autocompleteExercise';
@@ -48,13 +39,5 @@ app.factory('select', function ($http) {
 		// 	}
 		// 	return $menu_autocomplete;
 		// },
-		getEntries: function ($sql_date) {
-			var $url = 'select/entries';
-			var $data = {
-				date: $sql_date
-			};
-			
-			return $http.post($url, $data);
-		},	
 	};
 });
