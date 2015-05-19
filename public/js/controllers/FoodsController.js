@@ -7,6 +7,21 @@ var app = angular.module('tracker');
 		 * scope properties
 		 */
 		
+		//show
+		$scope.show = {
+			autocomplete_options: {
+				menu_items: false,
+				foods: false,
+				temporary_recipe_foods: false
+			},
+			popups: {
+				recipe: false,
+				similar_names: false,
+				temporary_recipe: false,
+				food_info: false,
+			}
+		};
+		
 		$scope.food_popup = {};
 		$scope.menu_item = {}; //id, name, type. for displaying the chosen autocompleted option (food or recipe)
 		$scope.food = {};//id, name. for displaying the chosen autocompleted option. Taken from $scope.menu_item.
@@ -91,7 +106,7 @@ var app = angular.module('tracker');
 			$scope.food_popup.id = $food_id;
 			$scope.food_popup.name = $food_name;
 			$scope.show.popups.food_info = true;
-			select.foodInfo($food_id).then(function (response) {
+			foods.getFoodInfo($food_id).then(function (response) {
 				$scope.food_popup = response.data;
 			});
 			
@@ -448,6 +463,16 @@ var app = angular.module('tracker');
 				$scope.all_foods_with_units = response.data.foods_with_units;
 				$scope.units.food = response.data.food_units;
 			});
+		};
+
+		/**
+		 * other
+		 */
+		$scope.closePopup = function ($event, $popup) {
+			var $target = $event.target;
+			if ($target.className === 'popup-outer') {
+				$scope.show.popups[$popup] = false;
+			}
 		};
 		
 		

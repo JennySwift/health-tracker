@@ -95,7 +95,6 @@ Route::post('select/getJournalEntry', 'Journal\JournalController@getJournalEntry
 
 //exercises
 Route::post('select/getExercises', 'Exercises\ExercisesController@getExercises');
-Route::post('select/exerciseSeries', 'Exercises\ExercisesController@getExerciseSeries');
 Route::post('select/exerciseSeriesHistory', 'Exercises\ExercisesController@getExerciseSeriesHistory');
 
 //exercise entries

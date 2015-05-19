@@ -14,6 +14,7 @@ use DB;
  */
 use App\Models\Exercises\Exercise;
 use App\Models\Exercises\Series;
+use App\Models\Exercises\Workout;
 use App\Models\Tags\Tag;
 use JavaScript;
 use App\User;
@@ -29,7 +30,7 @@ class ExercisesController extends Controller {
 	{
 		$this->middleware('auth');
 	}
-	
+
 	/**
 	 * Index
 	 */
@@ -42,8 +43,12 @@ class ExercisesController extends Controller {
 			 * If I instead did:
 			 * 'exercises' => $this->getExercises()
 			 * it didn't work. Why wouldn't it let me call it 'exercises?'
+			 * The same thing happened when I tried to use 'tags' instead of 'exercise_tags.'
 			 */
-			'all_exercises' => $this->getExercises()
+			'all_exercises' => $this->getExercises(),
+			'series' => $this->getExerciseSeries(),
+			'workouts' => Workout::getWorkouts(),
+			'exercise_tags' => Tag::where('user_id', Auth::user()->id)->where('for', 'exercise')->orderBy('name', 'asc')->get()
 		]);
 
 		return view('exercises');
@@ -56,6 +61,11 @@ class ExercisesController extends Controller {
 	public function getExercises()
 	{
 		return Exercise::where('user_id', Auth::user()->id)->get();
+	}
+
+	public function getExerciseSeries()
+	{
+		return Series::getExerciseSeries();
 	}
 	
 	public function getExerciseSeriesHistory(Request $request)

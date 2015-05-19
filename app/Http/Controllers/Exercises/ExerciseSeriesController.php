@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Auth;
 
-use App\Models\Exercises\Series as ExerciseSeries;
+use App\Models\Exercises\Series;
 
 class ExerciseSeriesController extends Controller {
 
@@ -22,13 +22,13 @@ class ExerciseSeriesController extends Controller {
 	{
 		$name = $request->get('name');
 		
-		ExerciseSeries
+		Series
 			::insert([
 				'name' => $name,
 				'user_id' => Auth::user()->id
 			]);
 
-		return User::getExerciseSeries();
+		return Series::getExerciseSeries();
 	}
 
 	/**
@@ -43,9 +43,9 @@ class ExerciseSeriesController extends Controller {
 	{
 		$id = $request->get('id');
 		
-		ExerciseSeries::where('id', $id)->delete();
+		Series::where('id', $id)->delete();
 
-		return User::getExerciseSeries();
+		return Series::getExerciseSeries();
 	}
 
 	/**

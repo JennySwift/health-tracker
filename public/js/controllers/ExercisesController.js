@@ -9,6 +9,21 @@ var app = angular.module('tracker');
 		
 		$scope.exercises = all_exercises;
 		$scope.exercise_entries = {};
+		$scope.exercise_series = series;
+		$scope.workouts = workouts;
+		$scope.exercise_tags = exercise_tags;
+
+		//show
+		$scope.show = {
+			autocomplete_options: {
+				exercises: false,
+			},
+			popups: {
+				exercise: false,
+				exercise_entries: false,
+				exercise_series_history: false
+			}
+		};
 		
 		/**
 		 * select

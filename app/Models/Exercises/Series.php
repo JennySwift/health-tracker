@@ -1,10 +1,15 @@
 <?php namespace App\Models\Exercises;
 
-use Auth;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\Models\Relationships\OwnedByUser;
+
+use Auth;
+
 use App\Models\Exercises\Workouts\Series as WorkoutSeries;
 
 class Series extends Model {
+
+    use OwnedByUser;
 
     protected $fillable = ['name'];
 
@@ -38,6 +43,33 @@ class Series extends Model {
      * select
      */
     
+    /**
+     * Get all the exercise series that belong to the user
+     * @return [type] [description]
+     */
+    public static function getExerciseSeries () {
+        // $user = User::find(Auth::user()->id);
+        // $series = $user->exerciseSeries()->orderBy('name', 'asc')->get();
+
+        $series = static::forCurrentUser('exercise_series')->orderBy('name', 'asc')->get();
+
+        //for each series, add to it the workouts the series is in
+        // foreach ($exercise_series as $series) {
+        //   $series_id = $series->id;
+
+        //   $workouts = $series->workouts;
+          
+        //   foreach ($workouts as $workout) {
+        //      $workout_id = $workout->id;
+        //      $workout->contents = $workout->series()->select('exercise_series.id', 'name')->orderBy('name', 'asc')->get();
+        //   }
+
+        //   $series->workouts = $workouts;
+        // }
+
+        return $series;
+    }
+
     /**
      * insert
      */

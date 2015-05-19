@@ -1,11 +1,14 @@
 <?php namespace App\Models\Exercises;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\Models\Relationships\OwnedByUser;
 use Auth;
 use App\Models\Exercises\Exercise;
 use App\Models\Exercises\Entry as ExerciseEntry;
 
 class Entry extends Model {
+
+	use OwnedByUser;
 
     protected $fillable = ['date', 'quantity'];
 
@@ -38,6 +41,30 @@ class Entry extends Model {
 	/**
 	 * select
 	 */
+	
+	/**
+	 * Get all exercise entries belonging to the user on a specific date
+	 * @param  [type] $date [description]
+	 * @return [type]       [description]
+	 */
+	public static function getExerciseEntries ($date) {
+		// $user = User::find(Auth::user()->id);
+		// $entries = $user->exerciseEntries()
+		// 	->where('date', $date)
+		// 	->with('exercise')
+		// 	->with('unit')
+		// 	->get();
+
+		$entries = static::forCurrentUser('exercise_entries')
+			->where('date', $date)
+			->with('exercise')
+			->with('unit')
+			->get();
+
+		$entries = ExerciseEntry::compactExerciseEntries($entries, $date);
+		
+		return $entries;
+	}
 	
 	public static function getSpecificExerciseEntries($date, $exercise, $exercise_unit_id) {
 		// dd($exercise_unit_id);

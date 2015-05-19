@@ -50,7 +50,7 @@ class ExerciseEntriesController extends Controller {
 			'user_id' => Auth::user()->id
 		]);
 		
-		return User::getExerciseEntries($date);
+		return Entry::getExerciseEntries($date);
 	}
 
 	public function insertExerciseEntry(Request $request)
@@ -67,7 +67,7 @@ class ExerciseEntriesController extends Controller {
 			'user_id' => Auth::user()->id
 		]);
 
-		return User::getExerciseEntries($date);
+		return Entry::getExerciseEntries($date);
 	}
 	
 	/**
@@ -85,7 +85,7 @@ class ExerciseEntriesController extends Controller {
 
 		Entry::where('id', $id)->delete();
 
-		return User::getExerciseEntries($date);
+		return Entry::getExerciseEntries($date);
 	}
 
 	/**

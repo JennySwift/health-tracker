@@ -28,25 +28,6 @@ var app = angular.module('tracker', ['ngSanitize', 'checklist-model']);
 			temporary_recipe_foods: {}
 		};
 
-		//show
-		$scope.show = {
-			autocomplete_options: {
-				exercises: false,
-				menu_items: false,
-				foods: false,
-				temporary_recipe_foods: false
-			},
-			popups: {
-				recipe: false,
-				similar_names: false,
-				temporary_recipe: false,
-				food_info: false,
-				exercise: false,
-				exercise_entries: false,
-				exercise_series_history: false
-			}
-		};
-
 		//selected
 		$scope.selected = {
 			exercise: {
@@ -157,19 +138,7 @@ var app = angular.module('tracker', ['ngSanitize', 'checklist-model']);
 			unmatch: function () {
 				$("#avg-calories-for-the-week-text").text('Avg calories (last 7 days): ');
 			}
-		});
-
-		/**
-		 * other
-		 */
-
-		$scope.closePopup = function ($event, $popup) {
-			var $target = $event.target;
-			if ($target.className === 'popup-outer') {
-				$scope.show.popups[$popup] = false;
-			}
-			console.log('something');
-		};
+		});	
 		
 	}); //end controller
 

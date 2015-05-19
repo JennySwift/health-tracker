@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
  */
 use App\Models\Weights\Weight;
 use App\Models\Foods\Entry as FoodEntry;
+use App\Models\Exercises\Entry as ExerciseEntry;
 use App\User;
 use App\Models\Journal\Journal;
 use App\Models\Foods\Food;
@@ -49,7 +50,7 @@ class EntriesController extends Controller {
 		$date = $request->get('date');
 		$response = array(
 			"weight" => Weight::getWeight($date),
-			"exercise_entries" => User::getExerciseEntries($date),
+			"exercise_entries" => ExerciseEntry::getExerciseEntries($date),
 			"journal_entry" => Journal::getJournalEntry($date),
 
 			"food_entries" => FoodEntry::getFoodEntries($date),

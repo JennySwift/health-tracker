@@ -9,15 +9,14 @@
 	?>
 </head>
 <body>
-
-	<?php
-		include($header);
-		include($templates . '/popups/food/index.php');
-	?>
 	
 	<div ng-controller="foods" id="foods-tab">
 
-		<?php include($templates . '/quick-recipe.php'); ?>
+		<?php
+			include($header);
+			include($templates . '/popups/food/index.php');
+			include($templates . '/quick-recipe.php');
+		?>
 		
 		<!-- ==========================foods========================== -->
 
