@@ -14,6 +14,8 @@ use Debugbar;
 use App\Models\Exercises\Exercise;
 use App\Models\Exercises\Series;
 use App\Models\Tags\Tag;
+use JavaScript;
+use App\User;
 
 class ExercisesController extends Controller {
 
@@ -23,6 +25,16 @@ class ExercisesController extends Controller {
 
 	public function index()
 	{
+		JavaScript::put([
+			/**
+			 * @VP:
+			 * If I instead did:
+			 * 'exercises' => $this->getExercises()
+			 * it didn't work. Why wouldn't it let me call it 'exercises?'
+			 */
+			'all_exercises' => $this->getExercises()
+		]);
+
 		return view('exercises');
 	}
 

@@ -7,22 +7,13 @@ var app = angular.module('tracker');
 		 * scope properties
 		 */
 		
-		$scope.exercises = {};
+		$scope.exercises = all_exercises;
 		$scope.exercise_entries = {};
 		
 		/**
 		 * select
 		 */
 		
-		$scope.getExercises = function () {
-			exercises.getExercises().then(function (response) {
-				$scope.exercises = response.data;
-			});
-		};
-
-		$scope.getExercises();
-
-
 		$scope.getExerciseSeriesHistory = function ($series_id) {
 			select.exerciseSeriesHistory($series_id).then(function (response) {
 				$scope.show.popups.exercise_series_history = true;
