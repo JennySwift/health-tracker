@@ -27,8 +27,8 @@ class ExerciseSeeder extends Seeder {
 			$index++;
 			DB::table('exercises')->insert([
 				'name' => $exercise,
-				'default_exercise_unit_id' => $faker->randomElement($exercise_unit_ids),
-				'description' => '',
+				'default_unit_id' => $faker->randomElement($exercise_unit_ids),
+				'description' => $faker->word,
 				'default_quantity' => $faker->numberBetween($min = 5, $max = 20),
 				'step_number' => $index,
 				'series_id' => 1,
@@ -41,8 +41,8 @@ class ExerciseSeeder extends Seeder {
 			$index++;
 			DB::table('exercises')->insert([
 				'name' => $exercise,
-				'default_exercise_unit_id' => $faker->randomElement($exercise_unit_ids),
-				'description' => '',
+				'default_unit_id' => $faker->randomElement($exercise_unit_ids),
+				'description' => $faker->word,
 				'default_quantity' => $faker->numberBetween($min = 5, $max = 20),
 				'step_number' => $index,
 				'series_id' => 3,

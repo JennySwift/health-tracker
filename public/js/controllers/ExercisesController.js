@@ -47,6 +47,15 @@ var app = angular.module('tracker');
 		 * insert
 		 */
 		
+		$scope.insertWorkout = function ($keypress) {
+			if ($keypress !== 13) {
+				return;
+			}
+			exercises.insertWorkout().then(function (response) {
+				$scope.workouts = response.data;
+			});
+		};
+		
 		$scope.insertExerciseSeries = function ($keypress) {
 			if ($keypress !== 13) {
 				return;
@@ -81,7 +90,7 @@ var app = angular.module('tracker');
 
 		$scope.insertExercise = function ($keycode) {
 			if ($keycode === 13) {
-				insert.exercise().then(function (response) {
+				exercises.insertExercise().then(function (response) {
 					$scope.exercises = response.data;
 				});
 			}

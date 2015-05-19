@@ -31,6 +31,17 @@ app.factory('exercises', function ($http) {
 		 * insert
 		 */
 		
+		insertWorkout: function () {
+			var $url = 'insert/workout';
+			var $name = $("#workout").val();
+			var $data = {
+				name: $name
+			};
+			
+			$("#workout").val("");
+
+			return $http.post($url, $data);
+		},
 		insertExerciseEntry: function ($sql_date, $new_entry) {
 			var $url = 'insert/exerciseEntry';
 		

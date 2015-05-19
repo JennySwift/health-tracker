@@ -21,10 +21,10 @@ class CreateExercisesTable extends Migration {
 			$table->integer('series_id')->nullable()->unsigned(); //foreign key
 			$table->decimal('default_quantity', 10, 2)->nullable();
 			$table->string('description')->nullable();
-			$table->integer('default_exercise_unit_id')->nullable()->unsigned(); //foreign key
+			$table->integer('default_unit_id')->nullable()->unsigned(); //foreign key
 			$table->timestamps();
 
-			$table->foreign('default_exercise_unit_id')->references('id')->on('units');
+			$table->foreign('default_unit_id')->references('id')->on('units');
 			$table->foreign('series_id')->references('id')->on('exercise_series');
 			$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 		});

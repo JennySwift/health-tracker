@@ -3,6 +3,8 @@
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\Models\Relationships\OwnedByUser;
 use Auth;
+use DB;
+
 use App\Models\Tags\Tag;
 use App\Models\Exercises\Series;
 use App\Models\Exercises\Entry as ExerciseEntry;
@@ -51,15 +53,23 @@ class Exercise extends Model {
 	 * Get all exercises for the current user,
 	 * along with their tags, default unit name and the name of the series each exercise belongs to.
 	 * Order first by series name, then by step number.
-	 * I haven't yet ordered by series name.
 	 * @return [type] [description]
 	 */
 	public static function getExercises () {
+		// $exercises = static::forCurrentUser('exercises')
+		// 	->with('unit')
+		// 	->with('series')
+		// 	->with('tags')
+		// 	->orderBy('step_number')
+		// 	->get();
+
 		$exercises = static::forCurrentUser('exercises')
-			->with('unit')
-			->with('series')
-			->with('tags')
+			->leftJoin('exercise_series', 'series_id', '=', 'exercise_series.id')
+			->join('units', 'default_unit_id', '=', 'units.id')
+			->select('exercises.id', 'exercises.name', 'step_number', 'default_quantity', 'series_id', 'description', 'default_unit_id', 'exercise_series.id as series_id', 'exercise_series.name as series_name', 'units.name as default_unit_name')
+			->orderBy('series_name')
 			->orderBy('step_number')
+			->with('tags')
 			->get();
 
 	    return $exercises;

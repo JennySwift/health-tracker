@@ -60,7 +60,7 @@ class ExercisesController extends Controller {
 	
 	public function getExercises()
 	{
-		return Exercise::where('user_id', Auth::user()->id)->get();
+		return Exercise::getExercises();
 	}
 
 	public function getExerciseSeries()

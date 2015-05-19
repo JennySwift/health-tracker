@@ -96,6 +96,8 @@ Route::post('select/getJournalEntry', 'Journal\JournalController@getJournalEntry
 //exercises
 Route::post('select/getExercises', 'Exercises\ExercisesController@getExercises');
 Route::post('select/exerciseSeriesHistory', 'Exercises\ExercisesController@getExerciseSeriesHistory');
+//For testing
+Route::post('select/getExercises', 'Exercises\ExercisesController@getExercises');
 
 //exercise entries
 Route::post('select/specificExerciseEntries', 'Exercises\ExerciseEntriesController@getSpecificExerciseEntries');
@@ -144,6 +146,9 @@ Route::post('insert/foodUnit', 'Units\UnitsController@insertFoodUnit');
 
 //exercise series
 Route::post('insert/exerciseSeries', 'Exercises\ExerciseSeriesController@insertExerciseSeries');
+
+//workout
+Route::post('insert/workout', 'Exercises\WorkoutsController@insertWorkout');
 
 //journal
 Route::post('insert/journalEntry', 'Journal\JournalController@insertOrUpdateJournalEntry');

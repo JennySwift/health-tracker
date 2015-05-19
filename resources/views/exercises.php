@@ -40,9 +40,9 @@
 							<td ng-click="showExercisePopup(exercise)" class="pointer">{{exercise.name}}</td>
 							<td ng-click="showExercisePopup(exercise)" class="pointer">{{exercise.description}}</td>
 							<td ng-click="showExercisePopup(exercise)" class="pointer">{{exercise.step_number}}</td>
-							<td ng-click="showExercisePopup(exercise)" class="pointer">{{exercise.series.name}}</td>
+							<td ng-click="showExercisePopup(exercise)" class="pointer">{{exercise.series_name}}</td>
 							<td ng-click="showExercisePopup(exercise)" class="pointer">{{exercise.default_quantity}}</td>
-							<td ng-click="showExercisePopup(exercise)" class="pointer">{{exercise.unit.name}}</td>
+							<td ng-click="showExercisePopup(exercise)" class="pointer">{{exercise.default_unit_name}}</td>
 							<td ng-click="showExercisePopup(exercise)" class="pointer">
 								<span ng-repeat="tag in exercise.tags" class="badge">{{tag.name}}</span>
 							</td>
@@ -104,6 +104,7 @@
 		<!-- workouts -->
 		<div id="workouts">
 			<h4 class="center">workouts</h4>
+			<input ng-keyup="insertWorkout($event.keyCode)" type="text" id="workout" class="form-control">
 			<div class="flex">
 				<div ng-repeat="workout in workouts">
 					<h3 class="center">{{workout.name}}</h3>
