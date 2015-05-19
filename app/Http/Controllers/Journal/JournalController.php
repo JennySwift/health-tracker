@@ -3,6 +3,7 @@
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
+use App\Repositories\Weights\WeightsRepository;
 use Illuminate\Http\Request;
 use Auth;
 use Debugbar;
@@ -35,7 +36,6 @@ class JournalController extends Controller {
 	/**
 	 * insert
 	 */
-
 	public function insertOrUpdateJournalEntry(Request $request)
 	{
 		//inserts or updates journal entry
