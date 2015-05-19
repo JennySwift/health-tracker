@@ -5,7 +5,7 @@
  */
 
 //Homepage (entries)
-Route::get('/', 'HomeController@index');
+Route::get('/', 'EntriesController@index');
 
 //Units
 Route::get('/units', 'Units\UnitsController@index');
@@ -58,7 +58,7 @@ Route::resource('weights', 'Weights\WeightsController');
  */
 
 //selects everything (which controller??)
-Route::post('select/entries', 'HomeController@getEntries');
+Route::post('select/entries', 'EntriesController@getEntries');
 
 /**
  * Tags

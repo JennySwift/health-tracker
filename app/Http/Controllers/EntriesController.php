@@ -11,7 +11,7 @@ use App\User;
 use App\Models\Journal\Journal;
 use App\Models\Foods\Food;
 
-class HomeController extends Controller {
+class EntriesController extends Controller {
 
 	/*
 	|--------------------------------------------------------------------------
