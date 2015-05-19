@@ -1,9 +1,12 @@
 <?php namespace App\Models\Tags;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\Models\Relationships\OwnedByUser;
 use Auth;
 
 class Tag extends Model {
+
+	use OwnedByUser;
 
 	/**
 	 * Define relationships
@@ -27,6 +30,12 @@ class Tag extends Model {
 	/**
 	 * select
 	 */
+	
+	public static function getExerciseTags()
+	{
+		return static::forCurrentUser()->where('for', 'exercise')->get();
+		// return static::where('user_id', Auth::user()->id)->where('for', 'exercise')->get();
+	}
 
 	/**
 	 * insert

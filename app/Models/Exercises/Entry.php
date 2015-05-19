@@ -48,20 +48,13 @@ class Entry extends Model {
 	 * @return [type]       [description]
 	 */
 	public static function getExerciseEntries ($date) {
-		// $user = User::find(Auth::user()->id);
-		// $entries = $user->exerciseEntries()
-		// 	->where('date', $date)
-		// 	->with('exercise')
-		// 	->with('unit')
-		// 	->get();
-
 		$entries = static::forCurrentUser('exercise_entries')
 			->where('date', $date)
 			->with('exercise')
 			->with('unit')
 			->get();
 
-		$entries = ExerciseEntry::compactExerciseEntries($entries, $date);
+		$entries = Exercise::compactExerciseEntries($entries, $date);
 		
 		return $entries;
 	}
@@ -219,54 +212,7 @@ class Entry extends Model {
 	 * other
 	 */
 
-	/**
-	 * This is for displaying a user's exercise entries for one day.
-	 * If the user has 5 pushup entries with the same unit
-	 * I want them to be presented in one row, and with the total reps,
-	 * rather than having 5 rows.
-	 * @param  [type] $entries [description]
-	 * @param  [type] $date    [description]
-	 * @return [type]          [description]
-	 */
-	public static function compactExerciseEntries($entries, $date)
-	{
-		$array = array();
-		foreach ($entries as $entry) {
-			$exercise_id = $entry->exercise->id;
-			$exercise_unit_id = $entry->exercise_unit_id;
-			$exercise_name = $entry->exercise->name;
-			$unit_name = $entry->unit->name;
-			$counter = 0;
-
-			$total = ExerciseEntry::getTotalExerciseReps($date, $exercise_id, $exercise_unit_id);
-
-			$sets = ExerciseEntry::getExerciseSets($date, $exercise_id, $exercise_unit_id);
-
-			//Check to see if the array already has the exercise entry
-			//so it doesn't appear as a new entry for each set of exercises
-			foreach ($array as $item) {
-				if ($item['name'] === $exercise_name && $item['unit_name'] === $unit_name) {
-					//the exercise with unit already exists in the array so we don't want to add it again
-					$counter++;
-				}
-			}
-
-			if ($counter === 0) {
-				$array[] = array(
-					'exercise_id' => $exercise_id,
-					'name' => $exercise_name,
-					'description' => $entry->exercise->description,
-					'quantity' => $entry->quantity,
-					'unit_name' => $entry->unit->name,
-					'sets' => $sets,
-					'total' => $total,
-					'unit_id' => $entry->unit->id,
-					'default_exercise_unit_id' => Exercise::getDefaultExerciseUnitId($exercise_id),
-				);
-			}	
-		}
-		return $array;
-	}
+	
 
 
 }

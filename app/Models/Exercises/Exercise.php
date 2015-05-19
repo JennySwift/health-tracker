@@ -4,6 +4,8 @@ use Illuminate\Database\Eloquent\Model;
 use App\Traits\Models\Relationships\OwnedByUser;
 use Auth;
 use DB;
+use Carbon\Carbon;
+use Debugbar;
 
 use App\Models\Tags\Tag;
 use App\Models\Exercises\Series;
@@ -65,7 +67,7 @@ class Exercise extends Model {
 
 		$exercises = static::forCurrentUser('exercises')
 			->leftJoin('exercise_series', 'series_id', '=', 'exercise_series.id')
-			->join('units', 'default_unit_id', '=', 'units.id')
+			->leftJoin('units', 'default_unit_id', '=', 'units.id')
 			->select('exercises.id', 'exercises.name', 'step_number', 'default_quantity', 'series_id', 'description', 'default_unit_id', 'exercise_series.id as series_id', 'exercise_series.name as series_name', 'units.name as default_unit_name')
 			->orderBy('series_name')
 			->orderBy('step_number')
@@ -75,6 +77,15 @@ class Exercise extends Model {
 	    return $exercises;
 	}
 
+	/**
+	 * Get all exercise entries that belong to a series.
+	 * Calculate the number of days ago,
+	 * the number of reps,
+	 * and the number of sets.
+	 * If entries share the same exercise, date, and unit, compact them into one item.
+	 * @param  [type] $series [description]
+	 * @return [type]         [description]
+	 */
 	public static function getExerciseSeriesHistory($series)
 	{
 		//get all exercises in the series
@@ -82,10 +93,10 @@ class Exercise extends Model {
 
 		//get all entries in the series
 		$entries = $series->entries()	
-			->select('exercise_entries.id',
+			->select(
 				'date',
 				'exercises.id as exercise_id',
-				'exercises.name as exercise_name',
+				'exercises.name',
 				'exercises.description',
 				'exercises.step_number',
 				'quantity',
@@ -93,9 +104,16 @@ class Exercise extends Model {
 			->with(['unit' => function($query) {
 				$query->select('name', 'id');
 			}])
-			// ->with('unit')
 			->orderBy('date', 'desc')->get();
+
+		//Populate an array to return
+		$array = static::compactExerciseEntries($entries);
 		
+		return $array;
+	}
+
+	public static function compactExerciseEntries($entries)
+	{
 		//create an array to return
 		$array = [];
 
@@ -103,39 +121,37 @@ class Exercise extends Model {
 		foreach ($entries as $entry) {
 			$sql_date = $entry->date;
 			$date = static::convertDate($sql_date, 'user');
-			$days_ago = static::getHowManyDaysAgo($sql_date);
-			$exercise_id = $entry->exercise_id;
-			$exercise_unit_id = $entry->exercise_unit_id;
 			$counter = 0;
 
-			$total = ExerciseEntry::getTotalExerciseReps($sql_date, $exercise_id, $exercise_unit_id);
-
-			$sets = ExerciseEntry::getExerciseSets($sql_date, $exercise_id, $exercise_unit_id);
-
-			//check to see if the array already has the exercise entry so it doesn't appear as a new entry for each set of exercises
-			foreach ($array as $item) {
-				if ($item['date'] === $date && $item['exercise_name'] === $entry->exercise_name && $item['unit_name'] === $entry->unit_name) {
-					//the exercise with unit already exists in the array so we don't want to add it again
-					$counter++;
+			//check to see if the array already has the exercise entry
+			//so it doesn't appear as a new entry for each set of exercises
+			if (count($array) > 0) {
+				foreach ($array as $item) {
+					if ($item['date'] === $date && $item['name'] === $entry->name && $item['unit_name'] === $entry->unit->name) {
+						//the exercise with unit already exists in the array
+						//so we don't want to add it again
+						$counter++;
+					}
 				}
 			}
 			if ($counter === 0) {
 				$array[] = array(
 					'date' => $date,
-					'days_ago' => $days_ago,
-					'exercise_id' => $entry->exercise_id,
-					'exercise_name' => $entry->exercise_name,
+					'days_ago' => static::getHowManyDaysAgo($sql_date),
+					'id' => $entry->exercise_id,
+					'name' => $entry->name,
 					'description' => $entry->description,
 					'step_number' => $entry->step_number,
 					'unit_name' => $entry->unit->name,
-					'sets' => $sets,
-					'total' => $total,
+					'sets' => ExerciseEntry::getExerciseSets($sql_date, $entry->exercise_id, $entry->exercise_unit_id),
+					'total' => ExerciseEntry::getTotalExerciseReps($sql_date, $entry->exercise_id, $entry->exercise_unit_id),
+					'quantity' => $entry->quantity,
 				);
-			}	
+			}
 		}
-		
+
 		return $array;
-	}
+	}	
 
 	public static function getDefaultExerciseQuantity($exercise_id)
 	{
@@ -173,8 +189,7 @@ class Exercise extends Model {
 	
 	public static function convertDate($date, $for)
 	{
-		//Use Carbon here
-		$date = new DateTime($date);
+		$date = Carbon::createFromFormat('Y-m-d', $date);
 
 		if ($for === 'user') {
 			$date = $date->format('d/m/y');
@@ -193,8 +208,8 @@ class Exercise extends Model {
 	 */
 	public static function getHowManyDaysAgo($date)
 	{
-		$now = new DateTime('now');
-		$date = new DateTime($date);
+		$now = Carbon::now();
+		$date = Carbon::createFromFormat('Y-m-d', $date);
 		$diff = $now->diff($date);
 		$days_ago = $diff->days;
 		return $days_ago;

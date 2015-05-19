@@ -12,10 +12,11 @@
 
 	<?php
 		include($header);
-		include($templates . '/popups/exercise/index.php');
 	?> 
 	
 	<div ng-controller="exercises" id="exercises">
+
+		<?php include($templates . '/popups/exercise/index.php'); ?>
 
 		<div>
 			<div class="margin-bottom">

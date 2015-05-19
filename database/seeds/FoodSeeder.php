@@ -9,7 +9,6 @@ use App\Models\Units\Unit;
 use Laracasts\TestDummy\Factory as Dummy;
 use App\User;
 
-
 class FoodSeeder extends MasterSeeder {
   
   protected $user_one_foods = [

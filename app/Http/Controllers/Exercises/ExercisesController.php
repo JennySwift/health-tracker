@@ -73,6 +73,12 @@ class ExercisesController extends Controller {
 		//Fetch the series (singular-the series that was clicked on)
 		$series = Series::find($request->get('series_id'));
 
+		/**
+		 * @VP:
+		 * How do I use a non-static method that is in my Exercise model?
+		 * Why doesn't Exercise->someMethod() work?
+		 */
+
 		return Exercise::getExerciseSeriesHistory($series);
 	}
 
@@ -114,6 +120,7 @@ class ExercisesController extends Controller {
 				
 		//Attach the current user to the user relationship on the Exercise
 		$exercise->user()->associate(Auth::user());
+		// dd($exercise);
 				
 		//Save the exercise in the DB
 		$exercise->save();
