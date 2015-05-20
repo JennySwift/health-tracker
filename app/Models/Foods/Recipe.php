@@ -93,6 +93,11 @@ class Recipe extends Model {
 		return $array;
 	}
 
+	/**
+	 * Get all tags that belong to a recipe
+	 * @param  [type] $recipe_id [description]
+	 * @return [type]            [description]
+	 */
 	public static function getRecipeTags($recipe_id)
 	{
 		$recipe = static::find($recipe_id);

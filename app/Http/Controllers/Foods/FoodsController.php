@@ -6,20 +6,40 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Auth;
 use Debugbar;
+use JavaScript;
 
 /**
  * Models
  */
 use App\Models\Foods\Food;
+use App\Models\Foods\Recipe;
+use App\Models\Tags\Tag;
 use App\User;
 
 class FoodsController extends Controller {
+
+	/**
+	 * Create a new controller instance.
+	 *
+	 * @return void
+	 */
+	public function __construct()
+	{
+		$this->middleware('auth');
+	}
+
 	/**
 	 * Index
 	 */
 
 	public function index()
 	{
+		JavaScript::put([
+			'foods_with_units' => Food::getAllFoodsWithUnits(),
+			'recipes' => Recipe::where('user_id', Auth::user()->id)->get(),
+			'recipe_tags' => Tag::getRecipeTags()
+		]);
+
 		return view('foods');
 	}
 

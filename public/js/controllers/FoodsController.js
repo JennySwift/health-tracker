@@ -7,6 +7,13 @@ var app = angular.module('tracker');
 		 * scope properties
 		 */
 		
+		$scope.all_foods_with_units = foods_with_units;
+		$scope.recipes = {
+			all: recipes,
+			filtered: recipes
+		};
+		$scope.recipe_tags = recipe_tags;
+		
 		//show
 		$scope.show = {
 			autocomplete_options: {
@@ -49,9 +56,6 @@ var app = angular.module('tracker');
 		$scope.food_name = "";//probably should change this to an object. likewise, for the food popup	
 		
 		$scope.foods = {}; //all foods
-		$scope.recipes = {
-			filtered: {}
-		};
 		$scope.menu = {};//all foods plus all recipes
 		$scope.calories = {};//calorie info for a given day
 		
@@ -71,7 +75,6 @@ var app = angular.module('tracker');
 		};
 
 		//associated food units
-		$scope.all_foods_with_units = {};//all foods, with their associated units and default unit		
 		$scope.assoc_units = {};//associated units for one chosen food. This is made from $scope.all_foods_with_units.
 		$scope.food_and_assoc_units_array = {};//for the food popup, with checked state and calorie info. Associated units of one food. I could probably combine this info all into $scope.all_foods_with_units and get rid of this.
 
@@ -103,14 +106,6 @@ var app = angular.module('tracker');
 		/**
 		 * select
 		 */
-		
-		$scope.getAllFoodsWithUnits = function () {
-			foods.getAllFoodsWithUnits().then(function (response) {
-				$scope.all_foods_with_units = response.data;
-			});
-		};
-
-		$scope.getAllFoodsWithUnits();
 		
 		$scope.filterRecipes = function () {
 			select.filterRecipes($scope.filter.recipes.tag_ids).then(function (response) {

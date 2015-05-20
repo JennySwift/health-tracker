@@ -34,7 +34,15 @@ class Tag extends Model {
 	public static function getExerciseTags()
 	{
 		return static::forCurrentUser()->where('for', 'exercise')->get();
-		// return static::where('user_id', Auth::user()->id)->where('for', 'exercise')->get();
+	}
+
+	/**
+	 * Get all the user's tags for recipes
+	 * @return [type] [description]
+	 */
+	public static function getRecipeTags()
+	{
+		return static::forCurrentUser()->where('for', 'recipe')->get();
 	}
 
 	/**

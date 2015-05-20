@@ -22,7 +22,7 @@ class RecipesController extends Controller {
 	/**
 	 * select
 	 */
-	
+
 	public function filterRecipes(Request $request)
 	{
 		$typing = $request->get('typing');
