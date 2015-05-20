@@ -12,6 +12,7 @@ var app = angular.module('tracker');
 		$scope.exercise_series = series;
 		$scope.workouts = workouts;
 		$scope.exercise_tags = exercise_tags;
+		$scope.units = units;
 
 		//show
 		$scope.show = {
@@ -24,6 +25,9 @@ var app = angular.module('tracker');
 				exercise_series_history: false
 			}
 		};
+
+		//selected
+		$scope.selected = {};
 		
 		/**
 		 * select
@@ -82,7 +86,7 @@ var app = angular.module('tracker');
 
 		$scope.insertTagsInExercise = function () {
 			//deletes tags from the exercise then adds the correct ones
-			exercises.insertTagsInExercise($scope.selected.exercise.id, $scope.selected.exercise.tags).then(function (response) {
+			exercises.insertTagsInExercise($scope.selected.exercise.id, $scope.exercise_popup.tags).then(function (response) {
 				$scope.exercises = response.data;
 				$scope.show.popups.exercise = false;
 			});
@@ -141,7 +145,6 @@ var app = angular.module('tracker');
 		$scope.updateDefaultExerciseUnit = function ($unit_id) {
 			exercises.updateDefaultExerciseUnit($scope.selected.exercise.id, $unit_id).then(function (response) {
 				$scope.exercises = response.data;
-				$scope.show.popups.exercise = false;
 			});
 		};
 
@@ -186,7 +189,11 @@ var app = angular.module('tracker');
 		
 		$scope.showExercisePopup = function ($exercise) {
 			$scope.selected.exercise = $exercise;
-			$scope.show.popups.exercise = true;
+
+			exercises.getExerciseInfo($exercise.id).then(function (response) {
+				$scope.exercise_popup = response.data;
+				$scope.show.popups.exercise = true;
+			});
 		};
 
 		$scope.showExerciseSeriesPopup = function ($series) {

@@ -15,6 +15,7 @@ use DB;
 use App\Models\Exercises\Exercise;
 use App\Models\Exercises\Series;
 use App\Models\Exercises\Workout;
+use App\Models\Units\Unit;
 use App\Models\Tags\Tag;
 use JavaScript;
 use App\User;
@@ -48,7 +49,8 @@ class ExercisesController extends Controller {
 			'all_exercises' => $this->getExercises(),
 			'series' => $this->getExerciseSeries(),
 			'workouts' => Workout::getWorkouts(),
-			'exercise_tags' => Tag::where('user_id', Auth::user()->id)->where('for', 'exercise')->orderBy('name', 'asc')->get()
+			'exercise_tags' => Tag::where('user_id', Auth::user()->id)->where('for', 'exercise')->orderBy('name', 'asc')->get(),
+			'units' => Unit::getExerciseUnits()
 		]);
 
 		return view('exercises');
@@ -57,6 +59,20 @@ class ExercisesController extends Controller {
 	/**
 	 * select
 	 */
+	
+	public function getExerciseInfo(Request $request)
+	{
+		$exercise = Exercise::find($request->get('exercise_id'));
+
+		$all_exercise_tags = Tag::getExerciseTags();
+		$exercise_tags = $exercise->tags()->lists('id');
+
+		return [
+			"all_exercise_tags" => $all_exercise_tags,
+			"exercise" => $exercise,
+			"tags" => $exercise_tags
+		];
+	}
 	
 	public function getExercises()
 	{
@@ -183,7 +199,7 @@ class ExercisesController extends Controller {
 		Exercise
 			::where('id', $exercise_id)
 			->update([
-				'default_exercise_unit_id' => $default_exercise_unit_id
+				'default_unit_id' => $default_exercise_unit_id
 			]);
 
 		return Exercise::getExercises();

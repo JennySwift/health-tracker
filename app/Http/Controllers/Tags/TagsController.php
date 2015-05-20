@@ -5,6 +5,8 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 use Auth;
+use DB;
+use Debugbar;
 
 /**
  * Models
@@ -69,19 +71,24 @@ class TagsController extends Controller {
 	 * insert
 	 */
 	
+	/**
+	 * Deletes all tags from the exercise then adds the correct tags to the exercise
+	 * @param  Request $request [description]
+	 * @return [type]           [description]
+	 */
 	public function insertTagsInExercise(Request $request)
 	{
-		//deletes all tags then adds the correct tags
-		$exercise_id = $request->get('exercise_id');
-		$tags = $request->get('tags');
+		$exercise = Exercise::find($request->get('exercise_id'));
+		$tag_ids = $request->get('tags');
 		
-		//delete tags from exercise
-		Tag::where('exercise_id', $exercise_id)->delete();
+		//delete tags from the exercise
+		//I wasn't sure if detach would work for this since I want to delete all tags that belong to the exercise.
+		DB::table('taggables')->where('taggable_id', $exercise->id)->delete();
 
-		//insert tags in exercise
-		foreach ($tags as $tag) {
-			$tag_id = $tag['id'];
-			Tag::insertExerciseTag($exercise_id, $tag_id);
+		//add tags to the exercise
+		foreach ($tag_ids as $tag_id) {
+			//add tag to the exercise
+			$exercise->tags()->attach($tag_id, ['taggable_type' => 'exercise']);
 		}
 
 		return Exercise::getExercises();

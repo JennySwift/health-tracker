@@ -17,15 +17,6 @@ app.factory('tags', function ($http) {
 			
 			return $http.post($url, $data);
 		},
-		insertTagsInExercise: function ($exercise_id, $tags) {
-			var $url = 'insert/tagsInExercise';
-			var $data = {
-				exercise_id: $exercise_id,
-				tags: $tags
-			};
-			
-			return $http.post($url, $data);
-		},
 		insertTagsIntoRecipe: function ($recipe_id, $tags) {
 			var $url = 'insert/tagsIntoRecipe';
 			var $data = {

@@ -7,9 +7,16 @@ var app = angular.module('tracker');
 		 * scope properties
 		 */
 		
+		$scope.weight = weight;
+		
 		$scope.entries = {
-			menu: [],
-			exercise: []
+			menu: menu_entries,
+			exercise: exercise_entries
+		};
+
+		$scope.calories = {
+			day: calories_for_the_day,
+			week_avg: calories_for_the_week
 		};
 
 		//selected
@@ -41,7 +48,7 @@ var app = angular.module('tracker');
 			temporary_recipe_foods: {}
 		};
 		
-		$scope.weight = "";
+		
 		$scope.edit_weight = false;
 
 		$scope.date = {};
@@ -65,9 +72,9 @@ var app = angular.module('tracker');
 		};
 
 		//Just defining these here after I refactred the controllers so it doesn't error.
-		$scope.calories = {};
-		$scope.units = {};
-		$scope.recipes = {};
+		// $scope.calories = {};
+		// $scope.units = {};
+		// $scope.recipes = {};
 
 		/**
 		 * watches
@@ -122,9 +129,8 @@ var app = angular.module('tracker');
 			entries.getEntries($scope.date.sql).then(function (response) {
 				$scope.weight = response.data.weight;
 				$scope.entries.exercise = response.data.exercise_entries;
-				$scope.journal_entry = response.data.journal_entry;	
 
-				$scope.entries.menu = response.data.food_entries;
+				$scope.entries.menu = response.data.menu_entries;
 				$scope.calories.day = response.data.calories_for_the_day;
 				$scope.calories.week_avg = response.data.calories_for_the_week;
 			});

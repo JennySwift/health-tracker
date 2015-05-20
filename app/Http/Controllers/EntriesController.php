@@ -1,6 +1,9 @@
 <?php namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Repositories\Weights\WeightsRepository;
+use JavaScript;
+use Carbon\Carbon;
 
 /**
  * Models
@@ -40,20 +43,29 @@ class EntriesController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function index()
+	public function index(WeightsRepository $weightsRepository)
 	{
+		$date = Carbon::today()->format('Y-m-d');
+		JavaScript::put([
+			"weight" => $weightsRepository->getWeight($date),
+			"exercise_entries" => ExerciseEntry::getExerciseEntries($date),
+
+			"menu_entries" => FoodEntry::getFoodEntries($date),
+			"calories_for_the_day" => number_format(Food::getCaloriesForTimePeriod($date, "day"), 2),
+			"calories_for_the_week" => number_format(Food::getCaloriesForTimePeriod($date, "week"), 2)
+		]);
+
 		return view('entries');
 	}
 
-	public function getEntries(Request $request)
+	public function getEntries(Request $request, WeightsRepository $weightsRepository)
 	{
 		$date = $request->get('date');
 		$response = array(
-			"weight" => Weight::getWeight($date),
+			"weight" => $weightsRepository->getWeight($date),
 			"exercise_entries" => ExerciseEntry::getExerciseEntries($date),
-			"journal_entry" => Journal::getJournalEntry($date),
 
-			"food_entries" => FoodEntry::getFoodEntries($date),
+			"menu_entries" => FoodEntry::getFoodEntries($date),
 			"calories_for_the_day" => number_format(Food::getCaloriesForTimePeriod($date, "day"), 2),
 			"calories_for_the_week" => number_format(Food::getCaloriesForTimePeriod($date, "week"), 2)
 		);

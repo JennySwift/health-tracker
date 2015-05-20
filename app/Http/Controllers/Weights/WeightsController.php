@@ -22,7 +22,7 @@ class WeightsController extends Controller {
 		$date = $request->get('date');
 		$weight = $request->get('weight');
 
-        $weightsRepository->insertOrUpdate($date, $weight);
+        return $weightsRepository->insertOrUpdate($date, $weight);
 
 	}
 

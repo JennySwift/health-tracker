@@ -8,6 +8,14 @@ app.factory('exercises', function ($http) {
 			var $url = 'select/getExercises';
 			return $http.post($url);
 		},
+		getExerciseInfo: function ($exercise_id) {
+			var $url = 'select/getExerciseInfo';
+			var $data = {
+				exercise_id: $exercise_id
+			};
+			
+			return $http.post($url, $data);
+		},
 		getSpecificExerciseEntries: function ($sql_date, $exercise_id, $exercise_unit_id) {
 			var $url = 'select/specificExerciseEntries';
 			var $data = {
@@ -31,6 +39,15 @@ app.factory('exercises', function ($http) {
 		 * insert
 		 */
 		
+		insertTagsInExercise: function ($exercise_id, $tags) {
+			var $url = 'insert/tagsInExercise';
+			var $data = {
+				exercise_id: $exercise_id,
+				tags: $tags
+			};
+			
+			return $http.post($url, $data);
+		},
 		insertWorkout: function () {
 			var $url = 'insert/workout';
 			var $name = $("#workout").val();

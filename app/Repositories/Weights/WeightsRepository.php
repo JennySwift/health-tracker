@@ -1,6 +1,7 @@
 <?php namespace App\Repositories\Weights;
 
 use App\Models\Weights\Weight;
+use Auth;
 
 /**
  * Class WeightsRepository
