@@ -20,7 +20,8 @@ return [
      * Please tell me what I need to do in order to access my variables in my other views.
      * I was testing it out with views/exercises.php, where I have used an include in an attempt to get this to work.
      */
-    'bind_js_vars_to_this_view' => 'exercises',
+    'bind_js_vars_to_this_view' => 'footer',
+    // 'bind_js_vars_to_this_view' => base_path() . '/resources/views/footer.blade.php',
 
     /*
     |--------------------------------------------------------------------------

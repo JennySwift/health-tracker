@@ -1,4 +1,4 @@
-<h1 class="center">{{date.long}}</h1>
+<h1 class="center">[[date.long]]</h1>
 
 <div id="date-navigation" class="margin-bottom">
 

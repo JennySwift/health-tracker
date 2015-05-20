@@ -10,9 +10,9 @@
 				<th>x</th>
 			</tr>
 
-			<tr ng-repeat="entry in specific_exercise_entries" data-entry-id="{{entry.entry_id}}">
-				<td>{{entry.name}}</td>
-				<td>{{entry.quantity}}</td>
+			<tr ng-repeat="entry in specific_exercise_entries" data-entry-id="[[entry.entry_id]]">
+				<td>[[entry.name]]</td>
+				<td>[[entry.quantity]]</td>
 				<td><i ng-click="deleteExerciseEntry(entry.entry_id)" class="delete-item fa fa-times"></i></td>
 			</tr>
 		</table>

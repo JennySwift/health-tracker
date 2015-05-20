@@ -24,7 +24,7 @@
 			
 				<div id="display-food-units">
 					<li ng-repeat="unit in units.food" class="list-group-item">
-						{{unit.name}}
+						[[unit.name]]
 						<i ng-click="deleteFoodUnit(unit.id)" class="delete-item fa fa-times"></i>
 					</li>
 				</div>
@@ -36,7 +36,7 @@
 
 				<div id="display-exercise-units">
 					<li ng-repeat="unit in units.exercise" class="list-group-item">
-						{{unit.name}}
+						[[unit.name]]
 						<i ng-click="deleteExerciseUnit(unit.id)" class="delete-item fa fa-times"></i>
 					</li>
 				</div>
@@ -48,6 +48,8 @@
 	</div> <!-- units tab -->
 
 	<?php include($footer); ?>
+
+	@include('footer');
 
 </body>
 </html>

@@ -1,5 +1,8 @@
 var $page = window.location.pathname;
-var app = angular.module('tracker', ['ngSanitize', 'checklist-model']);
+var app = angular.module('tracker', ['ngSanitize', 'checklist-model'], function ($interpolateProvider) {
+	$interpolateProvider.startSymbol('[[');
+	$interpolateProvider.endSymbol(']]');
+});
 
 (function () {
 	app.controller('controller', function ($scope, $http, date, select, autocomplete, quickRecipe, foods, exercises, journal, tags, units, weights) {

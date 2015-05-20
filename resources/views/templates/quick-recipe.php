@@ -22,14 +22,14 @@
 	<button ng-click="quickRecipe()"class="btn">go</button>
 
 	<div>
-		<div ng-repeat="error in errors.quick_recipe">{{error}}</div>
+		<div ng-repeat="error in errors.quick_recipe">[[error]]</div>
 	</div>
 
 	<!-- <div>
-		<div ng-repeat="item in quick_recipe.contents">{{item}}</div>
+		<div ng-repeat="item in quick_recipe.contents">[[item]]</div>
 	</div>
 
 	<div>
-		<div ng-repeat="step in quick_recipe.steps">{{step}}</div>
+		<div ng-repeat="step in quick_recipe.steps">[[step]]</div>
 	</div> -->
 </div>

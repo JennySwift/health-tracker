@@ -27,20 +27,19 @@
 			?> 
 		</div>
 		
-		
 		<div id="entries">
 			<!-- display food entries -->
 			<div>
 				<table class="table table-bordered">
 					<caption class="bg-blue">food entries</caption>
 					<tr><th>food</th><th>quantity</th><th>unit</th><th>calories</th><th>recipe</th></tr>
-					<tr ng-repeat="entry in entries.menu" data-entry-id="{{entry.entry_id}}">
-						<td>{{entry.food_name}}</td>
-						<td>{{entry.quantity}}</td>
-						<td>{{entry.unit_name}}</td>
-						<td>{{entry.calories}}</td>
+					<tr ng-repeat="entry in entries.menu" data-entry-id="[[entry.entry_id]]">
+						<td>[[entry.food_name]]</td>
+						<td>[[entry.quantity]]</td>
+						<td>[[entry.unit_name]]</td>
+						<td>[[entry.calories]]</td>
 						<td>
-							<span ng-if="entry.recipe_name" class="badge">{{entry.recipe_name}}</span>
+							<span ng-if="entry.recipe_name" class="badge">[[entry.recipe_name]]</span>
 							<span ng-if="!entry.recipe_name">N/A</span>
 						</td>
 						<td>
@@ -62,11 +61,11 @@
 						<th></th>
 					</tr>
 		
-					<tr ng-repeat="entry in entries.exercise" data-entry-id="{{entry.entry_id}}">
-						<td>{{entry.name}}</td>
-						<td>{{entry.description}}</td>
-						<td ng-click="getSpecificExerciseEntries(entry.exercise_id, entry.unit_id)" class="pointer">{{entry.sets}}</td>
-						<td>{{entry.total}} {{entry.unit_name}}</td>
+					<tr ng-repeat="entry in entries.exercise" data-entry-id="[[entry.entry_id]]">
+						<td>[[entry.name]]</td>
+						<td>[[entry.description]]</td>
+						<td ng-click="getSpecificExerciseEntries(entry.exercise_id, entry.unit_id)" class="pointer">[[entry.sets]]</td>
+						<td>[[entry.total]] [[entry.unit_name]]</td>
 						<td><button ng-if="entry.unit_id === entry.default_exercise_unit_id" ng-click="insertExerciseSet(entry.exercise_id)" class="btn-xs">add set</button></td>
 					</tr>
 				</table>
@@ -76,6 +75,8 @@
 	</div>
 
 	<?php include($footer); ?>
+
+	@include('footer');
 
 </body>
 </html>

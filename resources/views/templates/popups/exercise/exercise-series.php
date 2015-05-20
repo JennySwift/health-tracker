@@ -2,10 +2,10 @@
 
 	<div class="popup-inner">
 
-		<h5>{{selected.exercise_series.name}}</h5>
+		<h5>[[selected.exercise_series.name]]</h5>
 
 		<div ng-repeat="workout in workouts">
-			{{workout.name}}
+			[[workout.name]]
 			<input checklist-model="selected.exercise_series.workouts" checklist-value="workout" type="checkbox">
 		</div>
 

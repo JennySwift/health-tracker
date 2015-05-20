@@ -33,10 +33,10 @@
 							<th>default</th>
 							<th>calories</th>
 						</tr>
-						<tr ng-repeat="item in all_foods_with_units | filter:filter.foods" data-food-id="{{item.id}}">
-							<td ng-click="getFoodInfo(item.id, item.name)" class="pointer">{{item.name}}</td>
-							<td>{{item.default_unit_name}}</td>
-							<td>{{item.default_unit_calories}}</td>
+						<tr ng-repeat="item in all_foods_with_units | filter:filter.foods" data-food-id="[[item.id]]">
+							<td ng-click="getFoodInfo(item.id, item.name)" class="pointer">[[item.name]]</td>
+							<td>[[item.default_unit_name]]</td>
+							<td>[[item.default_unit_calories]]</td>
 							<td><i ng-click="deleteFood(item.id)" class="delete-item fa fa-times"></i></td>
 						</tr>
 					</table>
@@ -60,10 +60,10 @@
 							<th></th>
 						</tr>
 						<tr ng-repeat="recipe in recipes.filtered">
-							<td ng-click="showRecipePopup(recipe)" class="pointer">{{recipe.name}}</td>
+							<td ng-click="showRecipePopup(recipe)" class="pointer">[[recipe.name]]</td>
 							<td>calories</td>
 							<td>
-								<span ng-repeat="tag in recipe.tags" class="badge">{{tag.name}}</span>
+								<span ng-repeat="tag in recipe.tags" class="badge">[[tag.name]]</span>
 							</td>
 							<td><i ng-click="deleteRecipe(recipe.id)" class="delete-item fa fa-times"></i></td>
 						</tr>
@@ -88,7 +88,7 @@
 							<th></th>
 						</tr>
 						<tr ng-repeat="tag in recipe_tags | filter:filter.recipe_tags">
-							<td>{{tag.name}}</td>
+							<td>[[tag.name]]</td>
 							<td>
 								<input checklist-model="filter.recipes.tag_ids" checklist-value="tag.id" type="checkbox">
 							</td>
@@ -104,6 +104,8 @@
 	</div> <!-- foods tab -->
 
 	<?php include($footer); ?>
+
+	@include('footer');
 
 </body>
 </html>

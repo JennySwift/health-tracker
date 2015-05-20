@@ -2,7 +2,7 @@
 
 	<div id="default-exercise-unit-popup" class="popup-inner">
 
-		<h3 class="center">{{selected.exercise.name}}</h3>
+		<h3 class="center">[[selected.exercise.name]]</h3>
 
 		<div class="flex">
 			<div>
@@ -13,14 +13,14 @@
 			<div>
 				<h5 class="center">series</h5>
 				<li ng-repeat="series in exercise_series" class="list-group-item hover pointer" ng-click="updateExerciseSeries(selected.exercise.id, series.id)">
-					{{series.name}}
+					[[series.name]]
 				</li>
 			</div>
 			
 			<div>
 				<h5 class="center">default unit</h5>
 				<li ng-repeat="unit in units.exercise" class="list-group-item hover pointer" ng-click="updateDefaultExerciseUnit(unit.id)">
-					{{unit.name}}
+					[[unit.name]]
 				</li>
 			</div>
 			
@@ -35,7 +35,7 @@
 
 		<div id="default-exercise-unit-popup-checkboxes" class="flex">
 			<label ng-repeat="tag in exercise_tags">
-				{{tag.name}}
+				[[tag.name]]
 				<input checklist-model="selected.exercise.tags" checklist-value="tag" type="checkbox">
 			</label>
 		</div>

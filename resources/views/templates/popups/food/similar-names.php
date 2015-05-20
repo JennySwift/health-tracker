@@ -14,13 +14,13 @@
 
 			<tr ng-repeat="item in quick_recipe.similar_names.foods">
 				<td>
-					{{item.specified_food.name}}
+					[[item.specified_food.name]]
 					<div class="vertical-center">
 						<input ng-model="item.checked" ng-value="item.specified_food.name" type="radio">
 					</div>
 				</td>
 				<td>
-					{{item.existing_food.name}}
+					[[item.existing_food.name]]
 					<div class="vertical-center">
 						<input ng-model="item.checked" ng-value="item.existing_food.name" type="radio">
 					</div>
@@ -36,13 +36,13 @@
 
 			<tr ng-repeat="item in quick_recipe.similar_names.units">
 				<td>
-					{{item.specified_unit.name}}
+					[[item.specified_unit.name]]
 					<div class="vertical-center">
 						<input ng-model="item.checked" ng-value="item.specified_unit.name" type="radio">
 					</div>
 				</td>
 				<td>
-					{{item.existing_unit.name}}
+					[[item.existing_unit.name]]
 					<div class="vertical-center">
 						<input ng-model="item.checked" ng-value="item.existing_unit.name" type="radio">
 					</div>
