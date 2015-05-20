@@ -2,6 +2,9 @@
 	display: flex;
 	justify-content: space-around;
 	flex-wrap: wrap;
+	> div {
+		margin: 0 20px;
+	}
 }
 
 #default-exercise-unit-popup-checkboxes {
