@@ -60,10 +60,14 @@ class ExercisesController extends Controller {
 	 * select
 	 */
 	
+	/**
+	 * For the exercise popup
+	 * @param  Request $request [description]
+	 * @return [type]           [description]
+	 */
 	public function getExerciseInfo(Request $request)
 	{
 		$exercise = Exercise::find($request->get('exercise_id'));
-
 		$all_exercise_tags = Tag::getExerciseTags();
 		$exercise_tags = $exercise->tags()->lists('id');
 
@@ -74,6 +78,24 @@ class ExercisesController extends Controller {
 		];
 	}
 	
+	/**
+	 * For the exercise series popup
+	 * @param  Request $request [description]
+	 * @return [type]           [description]
+	 */
+	public function getExerciseSeriesInfo(Request $request)
+	{
+		$series = Series::find($request->get('series_id'));
+		$all_workouts = Workout::getWorkouts();
+		$workouts = $series->workouts()->lists('workout_id');
+
+		return [
+			"all_workouts" => $all_workouts,
+			"series" => $series,
+			"workouts" => $workouts
+		];
+	}
+
 	public function getExercises()
 	{
 		return Exercise::getExercises();
@@ -102,23 +124,28 @@ class ExercisesController extends Controller {
 	 * insert
 	 */
 
+	/**
+	 * Deletes all workouts from the series then adds the correct workouts to the series
+	 * @param  Request $request [description]
+	 * @return [type]           [description]
+	 */
 	public function deleteAndInsertSeriesIntoWorkouts(Request $request)
 	{
-		//deletes all rows with $series_id and then adds all the correct rows for $series_id
-		$series_id = $request->get('series_id');
-		$workouts = $request->get('workouts');
-		$series = Series::find($series_id);
-
-		//first delete all the rows with $series_id
+		$series = Series::find($request->get('series_id'));
+		$workout_ids = $request->get('workout_ids');
+		
+		//delete workouts from the series
+		//I wasn't sure if detach would work for this since I want to delete all tags that belong to the exercise.
 		DB::table('series_workout')->where('series_id', $series->id)->delete();
 
-		//then add all the rows for the series_id
-		foreach ($workouts as $workout) {
-			$workout_id = $workout['id'];
-			$series->workouts()->attach($workout_id);
+		//add tags to the exercise
+		foreach ($workout_ids as $workout_id) {
+			//add tag to the exercise
+			$series->workouts()->attach($workout_id, ['user_id' => Auth::user()->id]);
 		}
 
-		return Series::getExerciseSeries();
+		// return Series::getExerciseSeries();
+		return Workout::getWorkouts();
 	}
 
 	public function insertTagInExercise(Request $request)

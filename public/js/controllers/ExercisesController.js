@@ -153,8 +153,9 @@ var app = angular.module('tracker');
 		 */
 		
 		$scope.deleteAndInsertSeriesIntoWorkouts = function () {
-			exercises.deleteAndInsertSeriesIntoWorkouts($scope.selected.exercise_series.id, $scope.selected.exercise_series.workouts).then(function (response) {
-				$scope.exercise_series = response.data;
+			exercises.deleteAndInsertSeriesIntoWorkouts($scope.selected.exercise_series.id, $scope.exercise_series_popup.workouts).then(function (response) {
+				// $scope.exercise_series = response.data;
+				$scope.workouts = response.data;
 				$scope.show.popups.exercise_series = false;
 			});
 		};
@@ -198,7 +199,11 @@ var app = angular.module('tracker');
 
 		$scope.showExerciseSeriesPopup = function ($series) {
 			$scope.selected.exercise_series = $series;
-			$scope.show.popups.exercise_series = true;
+
+			exercises.getExerciseSeriesInfo($series.id).then(function (response) {
+				$scope.exercise_series_popup = response.data;
+				$scope.show.popups.exercise_series = true;
+			});
 		};
 
 		$scope.closePopup = function ($event, $popup) {

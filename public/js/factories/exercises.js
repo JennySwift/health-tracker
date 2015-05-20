@@ -16,6 +16,14 @@ app.factory('exercises', function ($http) {
 			
 			return $http.post($url, $data);
 		},
+		getExerciseSeriesInfo: function ($series_id) {
+			var $url = 'select/getExerciseSeriesInfo';
+			var $data = {
+				series_id: $series_id
+			};
+			
+			return $http.post($url, $data);
+		},
 		getSpecificExerciseEntries: function ($sql_date, $exercise_id, $exercise_unit_id) {
 			var $url = 'select/specificExerciseEntries';
 			var $data = {
@@ -167,7 +175,7 @@ app.factory('exercises', function ($http) {
 			var $url = 'insert/deleteAndInsertSeriesIntoWorkouts';
 			var $data = {
 				series_id: $series_id,
-				workouts: $workouts
+				workout_ids: $workouts
 			};
 			
 			return $http.post($url, $data);
