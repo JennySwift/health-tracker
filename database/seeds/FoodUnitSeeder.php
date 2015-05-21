@@ -20,6 +20,7 @@ class FoodUnitSeeder extends MasterSeeder {
 
 	public function run()
 	{
+		// Model::unguard();
 		DB::table('food_unit')->truncate();
 
 		/**
@@ -37,31 +38,14 @@ class FoodUnitSeeder extends MasterSeeder {
 	
 	private function createPivotRows()
 	{
-	  $foods = Food::all();
+		$foods = Food::all();
 		
 		foreach ($foods as $food) {
-			//Add a few units for each food
-			
-			$this->createPivotRow($food);
-			
-			
+			//Add a few units for each food	
+			$this->createPivotRow($food);	
 		}
 	}
-	
-	private function setDefaultFoodUnits($food)
-	{
-	    //Now that both the foods table and the food units table have been populated
-		  //set the default unit ids of foods
 
-			//Grab the units that belong to the food
-			$unit_ids_for_food = DB::table('food_unit')->where('food_id', $food->id)->lists('unit_id');
-			//Update the default_unit_id for that food
-			$food->update([
-				'default_unit_id' => $this->faker->randomElement($unit_ids_for_food)
-			]);
-		
-	}
-	
 	private function createPivotRow($food)
 	{
 	  foreach (Unit::where('for', 'food')->get() as $unit) {
@@ -69,9 +53,9 @@ class FoodUnitSeeder extends MasterSeeder {
   		if($this->faker->boolean($chanceOfGettingTrue = 50)) {
   			
   			$data = [
-  			  'food_id' => $food->id,
-  				'unit_id' => $unit->id,
-  				'user_id' => 1
+				'food_id' => $food->id,
+				'unit_id' => $unit->id,
+				'user_id' => 1
   		  ];
   
   			$data['calories'] = $this->hasCalories();
@@ -80,6 +64,21 @@ class FoodUnitSeeder extends MasterSeeder {
   		}
 	  }
 	  $this->setDefaultFoodUnits($food);
+	}
+	
+	private function setDefaultFoodUnits($food)
+	{
+	    //Now that both the foods table and the food units table have been populated
+		//set the default unit ids of foods
+
+		//Grab the units that belong to the food
+		$unit_ids_for_food = DB::table('food_unit')->where('food_id', $food->id)->lists('unit_id');
+		// dd($unit_ids_for_food);
+		//Update the default_unit_id for that food
+		$food->update([
+			'default_unit_id' => $this->faker->randomElement($unit_ids_for_food)
+		]);
+		
 	}
 	
 	// Decide if this food with this unit should have calories set

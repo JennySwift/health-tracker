@@ -14,7 +14,7 @@ class Food extends Model {
 
 	use OwnedByUser;
 
-	protected $fillable = ['name'];
+	protected $fillable = ['name', 'default_unit_id'];
 
 	/**
 	 * Define relationships
