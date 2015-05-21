@@ -55,6 +55,7 @@ class EntriesController extends Controller {
 			"calories_for_the_week" => number_format(Food::getCaloriesForTimePeriod($date, "week"), 2)
 		]);
 
+		// return ExerciseEntry::getExerciseEntries($date);
 		return view('entries');
 	}
 

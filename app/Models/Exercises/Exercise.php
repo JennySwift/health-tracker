@@ -112,6 +112,12 @@ class Exercise extends Model {
 		return $array;
 	}
 
+	/**
+	 * For getExerciseSeriesHistory.
+	 * If entries share the same exercise, date, and unit, compact them into one item.
+	 * @param  [type] $entries [description]
+	 * @return [type]          [description]
+	 */
 	public static function compactExerciseEntries($entries)
 	{
 		//create an array to return
