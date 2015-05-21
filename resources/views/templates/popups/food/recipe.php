@@ -32,7 +32,7 @@
 						<th>description</th>
 					</tr>
 					<tr ng-repeat="item in recipe.contents">
-						<td>[[item.food_name]]</td>
+						<td>[[item.name]]</td>
 						<td>[[item.unit_name]]</td>
 						<td>[[item.quantity]]</td>
 						<td>[[item.description]]</td>

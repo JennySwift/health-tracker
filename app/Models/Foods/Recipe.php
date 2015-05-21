@@ -38,7 +38,7 @@ class Recipe extends Model {
 
 	public function tags()
 	{
-		return $this->belongsToMany('App\Models\Tags\Tag', 'taggables', 'tag_id', 'taggable_id');
+		return $this->belongsToMany('App\Models\Tags\Tag', 'taggables', 'taggable_id', 'tag_id')->where('taggable_type', 'recipe');
 	}
 
 	public function entries()
@@ -99,24 +99,42 @@ class Recipe extends Model {
 	}
 
 	/**
+	 * Get recipe contents and steps.
+	 * Contents should include the foods that belong to the recipe,
+	 * along with the description, quantity, and unit for the food when used in the recipe (from food_recipe table),
+	 * and with the tags for the recipe.
 	 * Redoing after refactor. Still need description, quantity, unit.
 	 * @param  [type] $recipe_id [description]
 	 * @return [type]            [description]
 	 */
 	public static function getRecipeInfo($recipe)
 	{
-		$recipe_info = static::where('id', $recipe->id)
-			->with('foods')
-			->with('steps')
+		/**
+		 * @VP:
+		 * Why can't I do:
+		 * $recipe_info = static::where('id', $recipe->id)
+		 * ->with('foods')
+		 * ->with('steps')
+		 * ->get();
+		 * and then dd($recipe_info->foods)?
+		 * It gives an error.
+		 */
+		
+		$contents = DB::table('food_recipe')
+			->where('recipe_id', $recipe->id)
+			->join('foods', 'food_id', '=', 'foods.id')
+			->join('units', 'unit_id', '=', 'units.id')
+			->select('foods.name', 'units.name as unit_name', 'quantity', 'description')
 			->get();
 
-		// foreach ($recipe_contents as $item) {
-		// 	$food = Food::find($item->food_id);
-		// 	$assoc_units = $food->units;
-		// 	$item->assoc_units = $assoc_units;
-		// }
+		// dd($contents);
 		
-		return $recipe_info;
+		return [
+			'recipe' => $recipe,
+			'contents' => $contents,
+			'steps' => $recipe->steps,
+			'tags' => $recipe->tags
+		];
 	}
 
 	/**
