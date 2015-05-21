@@ -71,7 +71,7 @@ class Food extends Model {
 	 */
 	public static function getFoodInfo($food)
 	{
-		$all_food_units = Unit::getFoodUnits();
+		$all_food_units = Unit::getFoodUnitsWithCalories($food);
 		$food_units = $food->units()->lists('unit_id');
 
 		return [
@@ -108,16 +108,46 @@ class Food extends Model {
 
 	/**
 	 * Get all foods, along with their default unit (and calories), and all their units.
+	 * Also, add the calories for each food's units.
 	 * @return [type] [description]
 	 */
-	public static function getAllFoodsWithUnits () {
+	public static function getAllFoodsWithUnits()
+	{
 		$foods = static::forCurrentUser('foods')
 			->with('defaultUnit')
-			->with('units')
 			->orderBy('foods.name', 'asc')->get();
 
-		//Add the default unit calories
+		//Add the default unit calories and the units with their calories
 		foreach ($foods as $food) {
+			$food->default_unit_calories = DB::table('food_unit')->where('food_id', $food->id)->where('unit_id', $food->default_unit_id)->pluck('calories');
+
+			$units = DB::table('food_unit')
+				->where('food_id', $food->id)
+				->join('units', 'unit_id', '=', 'units.id')
+				->select('calories', 'units.id', 'units.name')
+				->get();
+
+			$food->units = $units;			
+		}
+		
+		return $foods;
+	}
+
+	/**
+	 * Get all foods, along with their default unit (and calories), and all their units.
+	 * Also, add the calories for each food's units.
+	 * I've redone this method (see above) but left this here for the comments for Valentin.
+	 * @return [type] [description]
+	 */
+	// public static function getAllFoodsWithUnits()
+	// {
+	// 	$foods = static::forCurrentUser('foods')
+	// 		->with('defaultUnit')
+	// 		->with('units')
+	// 		->orderBy('foods.name', 'asc')->get();
+
+	// 	//Add the default unit calories
+	// 	foreach ($foods as $food) {
 			/**
 			 * @VP:
 			 * Why is $food->default_unit null here?
@@ -127,10 +157,14 @@ class Food extends Model {
 			 * And is there a better way to add the calories than what I'm doing here?
 			 */
 			// dd($food->default_unit);
-			$food->default_unit_calories = DB::table('food_unit')->where('food_id', $food->id)->where('unit_id', $food->default_unit_id)->pluck('calories');
-		}
-		return $foods;
-	}
+			// $food->default_unit_calories = DB::table('food_unit')->where('food_id', $food->id)->where('unit_id', $food->default_unit_id)->pluck('calories');
+
+			//Add the calories to each food's units
+			
+	// 	}
+		
+	// 	return $foods;
+	// }
 
 	public static function getCalories($food_id, $unit_id)
 	{

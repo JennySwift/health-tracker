@@ -39,6 +39,7 @@ class FoodsController extends Controller {
 			'recipes' => Recipe::where('user_id', Auth::user()->id)->get(),
 			'recipe_tags' => Tag::getRecipeTags()
 		]);
+		// return Food::getAllFoodsWithUnits();
 		return view('foods');
 	}
 
@@ -72,6 +73,18 @@ class FoodsController extends Controller {
 	/**
 	 * update
 	 */
+
+	public function updateDefaultUnit(Request $request)
+	{
+		$food = Food::find($request->get('food_id'));
+		$unit_id = $request->get('unit_id');
+
+		$food->update([
+			'default_unit_id' => $unit_id
+		]);
+
+		return Food::getFoodInfo($food);
+	}
 
 	/**
 	 * delete

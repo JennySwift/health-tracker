@@ -52,17 +52,6 @@ app.factory('units', function ($http) {
 		/**
 		 * update
 		 */
-		
-		updateDefaultUnit: function ($food_id, $unit_id) {
-			var $url = 'update/defaultUnit';
-
-			var $data = {
-				food_id: $food_id,
-				unit_id: $unit_id
-			};
-
-			return $http.post($url, $data);
-		},
 
 		/**
 		 * delete

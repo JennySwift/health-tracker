@@ -28,16 +28,6 @@ class CaloriesController extends Controller {
 		return Food::getFoodInfo($food_id);
 	}
 
-	public function updateDefaultUnit(Request $request)
-	{
-		$food_id = $request->get('food_id');
-		$unit_id = $request->get('unit_id');
-
-		Food::updateDefaultUnit($food_id, $unit_id);
-
-		return Food::getFoodInfo($food_id);
-	}
-
 	public function insertUnitInCalories(Request $request)
 	{
 		$food_id = $request->get('food_id');

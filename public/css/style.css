@@ -134,13 +134,10 @@ li {
 @media all and (min-width: 680px) {
   .popup-inner {
     padding: 22px; } }
-.popup {
-  margin: auto; }
-  .popup .make-default, .popup .default {
-    position: absolute;
-    right: 0; }
-  .popup .default-unit {
-    background: lightgreen; }
+#food-info-popup .default-unit {
+  background: lightgreen; }
+#food-info-popup input {
+  background: #FEE6BE; }
 
 #steps td {
   text-align: left; }

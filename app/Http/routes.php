@@ -160,7 +160,7 @@ Route::post('insert/journalEntry', 'Journal\JournalController@insertOrUpdateJour
  */
 
 //foods
-Route::post('update/defaultUnit', 'Foods\CaloriesController@updateDefaultUnit');
+Route::post('update/defaultUnit', 'Foods\FoodsController@updateDefaultUnit');
 Route::post('update/calories', 'Foods\CaloriesController@updateCalories');
 
 //recipes

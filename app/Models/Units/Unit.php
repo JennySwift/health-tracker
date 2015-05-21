@@ -2,6 +2,8 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Auth;
+use DB;
+
 use App\Models\Foods\Calories;
 
 class Unit extends Model {
@@ -42,6 +44,27 @@ class Unit extends Model {
 			->where('for', 'food')
 			->orderBy('name', 'asc')
 			->get();
+
+		return $units;
+	}
+
+	public static function getFoodUnitsWithCalories($food)
+	{
+		$units = static
+			::where('user_id', Auth::user()->id)
+			->where('for', 'food')
+			->orderBy('name', 'asc')
+			->get();
+
+		//Add the calories for the units that belong to the food
+		foreach ($units as $unit) {
+			$calories = DB::table('food_unit')
+				->where('food_id', $food->id)
+				->where('unit_id', $unit->id)
+				->pluck('calories');
+
+			$unit->calories = $calories;	
+		}
 
 		return $units;
 	}

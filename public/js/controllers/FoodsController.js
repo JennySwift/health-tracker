@@ -249,17 +249,17 @@ var app = angular.module('tracker');
 			});	
 		};
 
-		$scope.updateCalories = function ($keycode, $unit_id, $calories) {
+		$scope.updateCalories = function ($keycode, $unit_id) {
 			if ($keycode === 13) {
-				update.calories($scope.food_popup.id, $unit_id, $calories).then(function (response) {
+				foods.updateCalories($scope.food_popup.id, $unit_id).then(function (response) {
 					$scope.food_popup.info = response.data;
 				});
 			}
 		};
 
-		$scope.updateDefaultUnit = function ($unit_id) {
-			update.defaultUnit($scope.food_popup.id, $unit_id).then(function (response) {
-				$scope.food_popup.info = response.data;
+		$scope.updateDefaultUnit = function ($food_id, $unit_id) {
+			foods.updateDefaultUnit($food_id, $unit_id).then(function (response) {
+				$scope.food_popup = response.data;
 			});
 		};
 
