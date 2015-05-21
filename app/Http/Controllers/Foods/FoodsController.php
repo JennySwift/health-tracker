@@ -39,7 +39,6 @@ class FoodsController extends Controller {
 			'recipes' => Recipe::where('user_id', Auth::user()->id)->get(),
 			'recipe_tags' => Tag::getRecipeTags()
 		]);
-
 		return view('foods');
 	}
 

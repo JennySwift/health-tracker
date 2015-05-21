@@ -40,6 +40,11 @@ class Food extends Model {
 		return $this->belongsToMany('App\Models\Units\Unit');
 	}
 
+	public function defaultUnit()
+	{
+		return $this->hasOne('App\Models\Units\Unit', 'id', 'default_unit_id');
+	}
+
 	/**
 	 * select
 	 */
@@ -101,16 +106,30 @@ class Food extends Model {
 		return $foods;
 	}
 
+	/**
+	 * Get all foods, along with their default unit (and calories), and all their units.
+	 * @return [type] [description]
+	 */
 	public static function getAllFoodsWithUnits () {
-		$foods = static::forCurrentUser('foods')->orderBy('name', 'asc')->get();
+		$foods = static::forCurrentUser('foods')
+			->with('defaultUnit')
+			->with('units')
+			->orderBy('foods.name', 'asc')->get();
 
-		$array = [];
+		//Add the default unit calories
 		foreach ($foods as $food) {
-			$units = $food->units;
-			$food->units = $units;
-			$array[] = $food;
+			/**
+			 * @VP:
+			 * Why is $food->default_unit null here?
+			 * How would I do something to the effect of:
+			 * $food->default_unit->calories = ...?
+			 *
+			 * And is there a better way to add the calories than what I'm doing here?
+			 */
+			// dd($food->default_unit);
+			$food->default_unit_calories = DB::table('food_unit')->where('food_id', $food->id)->where('unit_id', $food->default_unit_id)->pluck('calories');
 		}
-		return $array;
+		return $foods;
 	}
 
 	public static function getCalories($food_id, $unit_id)
