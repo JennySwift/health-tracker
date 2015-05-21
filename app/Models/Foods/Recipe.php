@@ -2,6 +2,11 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Auth;
+use DB;
+
+/**
+ * Models
+ */
 use App\Models\Tags\Tag;
 use App\Models\Foods\RecipeMethod;
 use App\Models\Foods\Food;
@@ -28,7 +33,7 @@ class Recipe extends Model {
 
 	public function foods()
 	{
-		return $this->belongsToMany('App\Models\Foods\Food', 'food_recipe', 'food_id', 'recipe_id');
+		return $this->belongsToMany('App\Models\Foods\Food', 'food_recipe', 'recipe_id', 'food_id');
 	}
 
 	public function tags()
@@ -94,6 +99,27 @@ class Recipe extends Model {
 	}
 
 	/**
+	 * Redoing after refactor. Still need description, quantity, unit.
+	 * @param  [type] $recipe_id [description]
+	 * @return [type]            [description]
+	 */
+	public static function getRecipeInfo($recipe)
+	{
+		$recipe_info = static::where('id', $recipe->id)
+			->with('foods')
+			->with('steps')
+			->get();
+
+		// foreach ($recipe_contents as $item) {
+		// 	$food = Food::find($item->food_id);
+		// 	$assoc_units = $food->units;
+		// 	$item->assoc_units = $assoc_units;
+		// }
+		
+		return $recipe_info;
+	}
+
+	/**
 	 * Get all tags that belong to a recipe
 	 * @param  [type] $recipe_id [description]
 	 * @return [type]            [description]
@@ -113,29 +139,6 @@ class Recipe extends Model {
 			->count();
 
 		return $count;
-	}
-
-	/**
-	 * This probably needs doing after refactor
-	 * @param  [type] $recipe_id [description]
-	 * @return [type]            [description]
-	 */
-	public static function getRecipeContents($recipe_id)
-	{
-		$recipe_contents = static
-			::where('recipe_id', $recipe_id)
-			->join('foods', 'food_recipe.food_id', '=', 'foods.id')
-			->join('units', 'food_recipe.unit_id', '=', 'units.id')
-			->select('food_recipe.id', 'food_recipe.description', 'foods.name AS food_name', 'units.name AS unit_name', 'recipe_id', 'food_id', 'quantity', 'unit_id')
-			->get();
-
-		foreach ($recipe_contents as $item) {
-			$food = Food::find($item->food_id);
-			$assoc_units = $food->units;
-			$item->assoc_units = $assoc_units;
-		}
-		
-		return $recipe_contents;
 	}
 
 	public static function pluckName($name, $table)

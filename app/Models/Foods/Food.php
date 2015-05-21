@@ -30,6 +30,11 @@ class Food extends Model {
 		return $this->hasMany('App\Models\Foods\Entry');
 	}
 
+	/**
+	 * Not sure if the 3rd and 4th parameters should be switched here.
+	 * I had to switch them in the recipe model.
+	 * @return [type] [description]
+	 */
 	public function recipes()
 	{
 		return $this->belongsToMany('App\Models\Foods\Recipe', 'food_recipe', 'food_id', 'recipe_id');

@@ -1,7 +1,7 @@
 var app = angular.module('tracker');
 
 (function () {
-	app.controller('foods', function ($scope, $http, foods) {
+	app.controller('foods', function ($scope, $http, foods, tags) {
 
 		/**
 		 * scope properties
@@ -13,6 +13,8 @@ var app = angular.module('tracker');
 			filtered: recipes
 		};
 		$scope.recipe_tags = recipe_tags;
+
+		$scope.selected = {};
 		
 		//show
 		$scope.show = {
@@ -108,7 +110,7 @@ var app = angular.module('tracker');
 		 */
 		
 		$scope.filterRecipes = function () {
-			select.filterRecipes($scope.filter.recipes.tag_ids).then(function (response) {
+			foods.filterRecipes($scope.filter.recipes.tag_ids).then(function (response) {
 				$scope.recipes.filtered = response.data;
 			});
 		};
@@ -166,14 +168,14 @@ var app = angular.module('tracker');
 			if ($keycode !== 13) {
 				return;
 			}
-			insert.recipeTag().then(function (response) {
+			tags.insertRecipeTag().then(function (response) {
 				$scope.recipe_tags = response.data;
 			});
 		};
 
 		$scope.insertTagsIntoRecipe = function () {
 			//deletes tags from the recipe then adds the correct ones
-			insert.tagsIntoRecipe($scope.selected.recipe.id, $scope.selected.recipe.tags).then(function (response) {
+			foods.insertTagsIntoRecipe($scope.selected.recipe.id, $scope.selected.recipe.tags).then(function (response) {
 				$scope.recipes.filtered = response.data;
 			});
 		};
@@ -184,7 +186,7 @@ var app = angular.module('tracker');
 			if ($keycode !== 13) {
 				return;
 			}
-			insert.recipe($scope.new_item.recipe.name).then(function (response) {
+			foods.insertRecipe($scope.new_item.recipe.name).then(function (response) {
 				$scope.recipes.filtered = response.data;
 			});
 		};
@@ -250,7 +252,7 @@ var app = angular.module('tracker');
 				$steps.push($line);
 			});
 
-			update.recipeMethod($scope.selected.recipe.id, $steps).then(function (response) {
+			foods.updateRecipeMethod($scope.selected.recipe.id, $steps).then(function (response) {
 				$scope.recipe.contents = response.data.contents;
 				$scope.recipe.steps = response.data.steps;
 				$scope.edit.recipe_method = false;
@@ -276,32 +278,26 @@ var app = angular.module('tracker');
 		 */
 		
 		$scope.deleteRecipeTag = function ($id) {
-			deleteItem.recipeTag($id).then(function (response) {
+			tags.deleteRecipeTag($id).then(function (response) {
 				$scope.recipe_tags = response.data;
 			});
 		};
 
 		$scope.deleteFoodFromRecipe = function ($id) {
-			deleteItem.foodFromRecipe($id, $scope.selected.recipe.id).then(function (response) {
+			foods.deleteFoodFromRecipe($id, $scope.selected.recipe.id).then(function (response) {
 				$scope.recipe.contents = response.data;
 			});
 		};
 
 		$scope.deleteRecipe = function ($id) {
-			deleteItem.recipe($id).then(function (response) {
+			foods.deleteRecipe($id).then(function (response) {
 				$scope.recipes.filtered = response.data;
 			});
 		};
 
 		$scope.deleteFood = function ($id) {
-			deleteItem.food($id).then(function (response) {
+			foods.deleteFood($id).then(function (response) {
 				$scope.all_foods_with_units = response.data;
-			});
-		};
-
-		$scope.deleteFoodUnit = function ($id) {
-			deleteItem.foodUnit($id).then(function (response) {
-				$scope.units.food = response.data;
 			});
 		};
 
@@ -315,7 +311,7 @@ var app = angular.module('tracker');
 		
 		$scope.showRecipePopup = function ($recipe) {
 			$scope.selected.recipe = $recipe;
-			select.recipeContents($recipe.id).then(function (response) {
+			foods.getRecipeContents($recipe.id).then(function (response) {
 				$scope.show.popups.recipe = true;
 				$scope.recipe.contents = response.data.contents;
 				$scope.recipe.steps = response.data.steps;
@@ -453,7 +449,7 @@ var app = angular.module('tracker');
 			$scope.quick_recipe.steps = $steps;
 			$scope.quick_recipe.name = prompt('name your recipe');
 
-			insert.quickRecipe($scope.quick_recipe.name, $contents, $steps, true).then(function (response) {
+			foods.insertQuickRecipe($scope.quick_recipe.name, $contents, $steps, true).then(function (response) {
 				if (response.data.similar_names) {
 					$scope.quick_recipe.similar_names = response.data.similar_names;
 					$scope.show.popups.similar_names = true;
@@ -476,7 +472,7 @@ var app = angular.module('tracker');
 				$steps.push($line);
 			});
 
-			insert.recipeMethod($scope.selected.recipe.id, $steps).then(function (response) {
+			foods.insertRecipeMethod($scope.selected.recipe.id, $steps).then(function (response) {
 				$scope.recipe.contents = response.data.contents;
 				$scope.recipe.steps = response.data.steps;
 			});
@@ -512,7 +508,7 @@ var app = angular.module('tracker');
 				}
 			});
 
-			insert.quickRecipe($scope.quick_recipe.name, $scope.quick_recipe.contents, $scope.quick_recipe.steps, false).then(function (response) {
+			foods.insertQuickRecipe($scope.quick_recipe.name, $scope.quick_recipe.contents, $scope.quick_recipe.steps, false).then(function (response) {
 				$scope.recipes.filtered = response.data.recipes;
 				$scope.all_foods_with_units = response.data.foods_with_units;
 				$scope.units.food = response.data.food_units;

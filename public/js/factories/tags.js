@@ -17,15 +17,6 @@ app.factory('tags', function ($http) {
 			
 			return $http.post($url, $data);
 		},
-		insertTagsIntoRecipe: function ($recipe_id, $tags) {
-			var $url = 'insert/tagsIntoRecipe';
-			var $data = {
-				recipe_id: $recipe_id,
-				tags: $tags
-			};
-			
-			return $http.post($url, $data);
-		},
 		insertExerciseTag: function () {
 			var $name = $("#create-exercise-tag").val();
 			var $url = 'insert/exerciseTag';

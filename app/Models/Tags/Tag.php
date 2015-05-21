@@ -54,6 +54,7 @@ class Tag extends Model {
 		static
 			::insert([
 				'name' => $name,
+				'for' => 'recipe',
 				'user_id' => Auth::user()->id
 			]);
 	}

@@ -25,9 +25,8 @@ class RecipeMethod extends Model {
 	 * select
 	 */
 	
-	public static function getRecipeSteps($recipe_id)
+	public static function getRecipeSteps($recipe)
 	{
-		$recipe = Recipe::find($recipe_id);
 		$steps = $recipe->steps;
 		return $steps;
 	}

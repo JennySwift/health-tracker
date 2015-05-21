@@ -30,14 +30,20 @@ class RecipesController extends Controller {
 		return Recipe::filterRecipes($typing, $tag_ids);
 	}
 	
+	/**
+	 * Get recipe contents and steps. Change name of method.
+	 * @param  Request $request [description]
+	 * @return [type]           [description]
+	 */
 	public function getRecipeContents(Request $request)
 	{
-		$recipe_id = $request->get('recipe_id');
+		$recipe = Recipe::find($request->get('recipe_id'));
+		return Recipe::getRecipeInfo($recipe);
 
-		return array(
-			'contents' => FoodRecipe::getRecipeContents($recipe_id),
-			'steps' => RecipeMethod::getRecipeSteps($recipe_id)
-		);
+		// return array(
+		// 	'contents' => Recipe::getRecipeContents($recipe),
+		// 	'steps' => RecipeMethod::getRecipeSteps($recipe)
+		// );
 	}
 
 	/**
@@ -155,13 +161,6 @@ class RecipesController extends Controller {
 		$recipe = Recipe::find($request->get('recipe_id'));
 		$recipe->foods()->detach($food_id);
 		return FoodRecipe::getRecipeContents($recipe_id);
-	}
-
-	public function deleteRecipeTag(Request $request)
-	{
-		$id = $request->get('id');
-		Tag::deleteRecipeTag($id);
-		return Recipe::getRecipeTags();
 	}
 
 	public function deleteRecipeEntry(Request $request)

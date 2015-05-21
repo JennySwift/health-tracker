@@ -60,6 +60,18 @@ class TagsController extends Controller {
 	}
 
 	/**
+	 * Delete tag from tags table. The tag was for a recipe.
+	 * @param  Request $request [description]
+	 * @return [type]           [description]
+	 */
+	public function deleteRecipeTag(Request $request)
+	{
+		$id = $request->get('id');
+		Tag::deleteRecipeTag($id);
+		return Tag::getRecipeTags();
+	}
+
+	/**
 	 * From old ExerciseTagController
 	 */
 	
@@ -119,12 +131,16 @@ class TagsController extends Controller {
 	 * Recipes
 	 */
 	
+	/**
+	 * Insert a new tag into the tags table, for recipes
+	 * @param  Request $request [description]
+	 * @return [type]           [description]
+	 */
 	public function insertRecipeTag(Request $request)
 	{
-		//creates a new recipe tag
 		$name = $request->get('name');
 		Tag::insertRecipeTag($name);
-		return Recipe::getRecipeTags();
+		return Tag::getRecipeTags();
 	}
 
 	/**
