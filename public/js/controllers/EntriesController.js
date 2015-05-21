@@ -20,7 +20,8 @@ var app = angular.module('tracker');
 		};
 
 		$scope.show = {
-			autocomplete_options: {}
+			autocomplete_options: {},
+			popups: {}
 		};
 
 		//selected
@@ -141,6 +142,19 @@ var app = angular.module('tracker');
 		};
 
 		/**
+		 * Get all the the user's entries for a particular exercise with a particular unit on a particular date.
+		 * @param  {[type]} $exercise_id      [description]
+		 * @param  {[type]} $exercise_unit_id [description]
+		 * @return {[type]}                   [description]
+		 */
+		$scope.getSpecificExerciseEntries = function ($exercise_id, $exercise_unit_id) {
+			entries.getSpecificExerciseEntries($scope.date.sql, $exercise_id, $exercise_unit_id).then(function (response) {
+				$scope.show.popups.exercise_entries = true;
+				$scope.exercise_entries_popup = response.data;
+			});
+		};
+
+		/**
 		 * insert
 		 */
 		
@@ -181,6 +195,18 @@ var app = angular.module('tracker');
 			}
 		};
 
+		$scope.insertExerciseEntry = function () {
+			$scope.new_entry.exercise.unit_id = $scope.selected.exercise_unit.id;
+			entries.insertExerciseEntry($scope.date.sql, $scope.new_entry.exercise).then(function (response) {
+				$scope.entries.exercise = response.data;
+			});
+		};
+
+		$scope.insertExerciseSet = function ($exercise_id) {
+			entries.insertExerciseSet($scope.date.sql, $exercise_id).then(function (response) {
+				$scope.entries.exercise = response.data;
+			});
+		};
 
 		/**
 		 * update
@@ -200,8 +226,8 @@ var app = angular.module('tracker');
 		$scope.deleteFoodEntry = function ($entry_id) {
 			$entry_id = $entry_id || $scope.selected.entry.id;
 
-			deleteItem.foodEntry($entry_id, $scope.date.sql).then(function (response) {
-				$scope.food_entries = response.data.food_entries;
+			entries.deleteFoodEntry($entry_id, $scope.date.sql).then(function (response) {
+				$scope.entries.menu = response.data.food_entries;
 				$scope.calories.day = response.data.calories_for_the_day;
 				$scope.calories.week_avg = response.data.calories_for_the_week;
 				$scope.show.popups.delete_food_or_recipe_entry = false;
@@ -209,11 +235,18 @@ var app = angular.module('tracker');
 		};
 
 		$scope.deleteRecipeEntry = function () {
-			deleteItem.recipeEntry($scope.date.sql, $scope.selected.recipe.id).then(function (response) {
-				$scope.food_entries = response.data.food_entries;
+			entries.deleteRecipeEntry($scope.date.sql, $scope.selected.recipe.id).then(function (response) {
+				$scope.entries.menu = response.data.food_entries;
 				$scope.calories.day = response.data.calories_for_the_day;
 				$scope.calories.week_avg = response.data.calories_for_the_week;
 				$scope.show.popups.delete_food_or_recipe_entry = false;
+			});
+		};
+
+		$scope.deleteExerciseEntry = function ($id) {
+			entries.deleteExerciseEntry($id, $scope.date.sql, $scope.exercise_entries_popup.exercise.id, $scope.exercise_entries_popup.unit.id).then(function (response) {
+				$scope.entries.exercise = response.data.entries_for_day;
+				$scope.exercise_entries_popup = response.data.entries_for_popup;
 			});
 		};
 
@@ -470,6 +503,17 @@ var app = angular.module('tracker');
 			
 			$("#temporary-recipe-food-input").val("").focus();
 		};
+
+		/**
+		 * other
+		 */
+		$scope.closePopup = function ($event, $popup) {
+			var $target = $event.target;
+			if ($target.className === 'popup-outer') {
+				$scope.show.popups[$popup] = false;
+			}
+		};
+
 	}); //end controller
 
 })();

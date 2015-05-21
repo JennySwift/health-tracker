@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Auth;
 
 use App\Models\Foods\Entry;
+use App\Models\Foods\Food;
 
 class FoodEntriesController extends Controller {
 	/**
@@ -50,8 +51,8 @@ class FoodEntriesController extends Controller {
 
 		$response = array(
 			"food_entries" => Entry::getFoodEntries($date),
-			"calories_for_the_day" => number_format(Calories::getCaloriesForTimePeriod($date, "day"), 2),
-			"calories_for_the_week" => number_format(Calories::getCaloriesForTimePeriod($date, "week"), 2)
+			"calories_for_the_day" => number_format(Food::getCaloriesForTimePeriod($date, "day"), 2),
+			"calories_for_the_week" => number_format(Food::getCaloriesForTimePeriod($date, "week"), 2)
 		);
 		return $response;
 	}

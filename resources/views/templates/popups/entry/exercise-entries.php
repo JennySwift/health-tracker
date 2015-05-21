@@ -3,17 +3,17 @@
 	<div class="popup-inner">
 
 		<table class="table table-bordered">
-			<caption class="bg-blue">exercise entries</caption>
+			<caption class="bg-blue">Entries for [[exercise_entries_popup.exercise.name]] with [[exercise_entries_popup.unit.name]] on [[date.typed]]</caption>
 			<tr>
 				<th>exercise</th>
 				<th>quantity</th>
 				<th>x</th>
 			</tr>
 
-			<tr ng-repeat="entry in specific_exercise_entries" data-entry-id="[[entry.entry_id]]">
-				<td>[[entry.name]]</td>
+			<tr ng-repeat="entry in exercise_entries_popup.entries">
+				<td>[[entry.exercise.name]]</td>
 				<td>[[entry.quantity]]</td>
-				<td><i ng-click="deleteExerciseEntry(entry.entry_id)" class="delete-item fa fa-times"></i></td>
+				<td><i ng-click="deleteExerciseEntry(entry.id)" class="delete-item fa fa-times"></i></td>
 			</tr>
 		</table>
 

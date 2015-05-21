@@ -5,6 +5,7 @@ use App\Traits\Models\Relationships\OwnedByUser;
 use Auth;
 use App\Models\Exercises\Exercise;
 use App\Models\Exercises\Entry as ExerciseEntry;
+use App\Models\Units\Unit;
 
 class Entry extends Model {
 
@@ -94,7 +95,7 @@ class Entry extends Model {
 			}
 			if ($counter === 0) {
 				$array[] = array(
-					'id' => $entry->exercise_id,
+					'exercise_id' => $entry->exercise_id,
 					'name' => $entry->exercise->name,
 					'description' => $entry->exercise->description,
 					'step_number' => $entry->exercise->step_number,
@@ -109,19 +110,47 @@ class Entry extends Model {
 		}
 
 		return $array;
-	}	
-	
-	public static function getSpecificExerciseEntries($date, $exercise, $exercise_unit_id) {
-		// dd($exercise_unit_id);
-		$entries = static::where('date', $date)
-				                  ->with(['exercise' => function($query) use ($exercise) {
-				                    $query->whereId($exercise->id);
-				                  }, 'unit' => function($query) use ($exercise_unit_id){
-				                    $query->whereId($exercise_unit_id);
-				                  }])->get();
-
-		return $entries;
 	}
+
+	/**
+	 * Get all entries for one exercise with a particular unit on a particular date.
+	 * Get exercise name, quantity, and entry id.
+	 * @param  [type] $date             [description]
+	 * @param  [type] $exercise_id      [description]
+	 * @param  [type] $exercise_unit_id [description]
+	 * @return [type]                   [description]
+	 */
+	public static function getSpecificExerciseEntries($date, $exercise, $exercise_unit_id) {
+		$entries = static::where('exercise_id', $exercise->id)
+			->where('date', $date)
+			->where('exercise_unit_id', $exercise_unit_id)
+			->with('exercise')
+			->get();
+
+		$unit = Unit::find($exercise_unit_id);
+
+		return [
+			'entries' => $entries,
+			'exercise' => $exercise,
+			'unit' => $unit
+		];
+	}
+	
+	// public static function getSpecificExerciseEntries($date, $exercise, $exercise_unit_id) {
+	// 	// dd($exercise_unit_id);
+	// 	$entries = static::where('date', $date)
+	// 		->with([
+	// 			'exercise' => function($query) use ($exercise)
+	// 			{
+	// 				$query->whereId($exercise->id);
+	// 			}, 'unit' => function($query) use ($exercise_unit_id)
+	// 			{
+	// 				$query->whereId($exercise_unit_id);
+	// 			}
+	// 		])->get();
+
+	// 	return $entries;
+	// }
 
 	// public static function getSpecificExerciseEntries($date, $exercise, $exercise_unit_id) {
 	// 	$entries = ExerciseEntry

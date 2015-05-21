@@ -78,14 +78,24 @@ class ExerciseEntriesController extends Controller {
 	 * delete
 	 */
 
+	/**
+	 * Return the info to update the popup
+	 * @param  Request $request [description]
+	 * @return [type]           [description]
+	 */
 	public function deleteExerciseEntry(Request $request)
 	{
 		$id = $request->get('id');
 		$date = $request->get('date');
+		$exercise = Exercise::find($request->get('exercise_id'));
+		$exercise_unit_id = $request->get('exercise_unit_id');
 
 		Entry::where('id', $id)->delete();
 
-		return Entry::getExerciseEntries($date);
+		return [
+			'entries_for_day' => Entry::getExerciseEntries($date),
+			'entries_for_popup' => Entry::getSpecificExerciseEntries($date, $exercise, $exercise_unit_id)
+		];
 	}
 
 	/**

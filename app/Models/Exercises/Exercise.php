@@ -172,7 +172,7 @@ class Exercise extends Model {
 	{
 		$default = static
 			::where('id', $exercise_id)
-			->pluck('default_exercise_unit_id');
+			->pluck('default_unit_id');
 
 		return $default;
 	}

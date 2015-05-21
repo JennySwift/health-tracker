@@ -24,16 +24,6 @@ app.factory('exercises', function ($http) {
 			
 			return $http.post($url, $data);
 		},
-		getSpecificExerciseEntries: function ($sql_date, $exercise_id, $exercise_unit_id) {
-			var $url = 'select/specificExerciseEntries';
-			var $data = {
-				date: $sql_date,
-				exercise_id: $exercise_id,
-				exercise_unit_id: $exercise_unit_id
-			};
-			
-			return $http.post($url, $data);
-		},
 		getExerciseSeriesHistory: function ($series_id) {
 			var $url = 'select/exerciseSeriesHistory';
 			var $data = {
@@ -65,27 +55,6 @@ app.factory('exercises', function ($http) {
 			
 			$("#workout").val("");
 
-			return $http.post($url, $data);
-		},
-		insertExerciseEntry: function ($sql_date, $new_entry) {
-			var $url = 'insert/exerciseEntry';
-		
-			var $data = {
-				date: $sql_date,
-				new_entry: $new_entry,
-			};
-
-			$("#exercise").val("").focus();
-
-			return $http.post($url, $data);
-		},
-		insertExerciseSet: function ($sql_date, $exercise_id) {
-			var $url = 'insert/exerciseSet';
-			var $data = {
-				date: $sql_date,
-				exercise_id: $exercise_id
-			};
-			
 			return $http.post($url, $data);
 		},
 		insertExercise: function () {
@@ -196,17 +165,6 @@ app.factory('exercises', function ($http) {
 				var $url = 'delete/exercise';
 				var $data = {
 					id: $id
-				};
-				
-				return $http.post($url, $data);
-			}
-		},
-		deleteExerciseEntry: function ($id, $sql_date) {
-			if (confirm("Are you sure you want to delete this entry?")) {
-				var $url = 'delete/exerciseEntry';
-				var $data = {
-					id: $id,
-					date: $sql_date
 				};
 				
 				return $http.post($url, $data);

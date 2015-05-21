@@ -251,26 +251,6 @@ app.factory('foods', function ($http) {
 				return $http.post($url, $data);
 			}
 		},
-		deleteFoodEntry: function ($id, $sql_date) {
-			if (confirm("Are you sure you want to delete this entry?")) {
-				var $url = 'delete/foodEntry';
-				var $data = {
-					id: $id,
-					date: $sql_date
-				};
-				
-				return $http.post($url, $data);
-			}
-		},
-		deleteRecipeEntry: function ($sql_date, $recipe_id) {
-			var $url = 'delete/recipeEntry';
-			var $data = {
-				recipe_id: $recipe_id,
-				date: $sql_date
-			};
-			
-			return $http.post($url, $data);
-		},
 		deleteUnitFromCalories: function ($food_id, $unit_id) {
 			var $url = 'delete/unitFromCalories';
 			var $data = {

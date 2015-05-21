@@ -40,13 +40,6 @@ var app = angular.module('tracker');
 			});
 		};
 
-		 $scope.getSpecificExerciseEntries = function ($exercise_id, $exercise_unit_id) {
-		 	exercises.getSpecificExerciseEntries($scope.date.sql, $exercise_id, $exercise_unit_id).then(function (response) {
-		 		$scope.show.popups.exercise_entries = true;
-		 		$scope.specific_exercise_entries = response.data;
-		 	});
-		 };
-
 		/**
 		 * insert
 		 */
@@ -98,19 +91,6 @@ var app = angular.module('tracker');
 					$scope.exercises = response.data;
 				});
 			}
-		};
-
-		$scope.insertExerciseEntry = function () {
-			$scope.new_entry.exercise.unit_id = $scope.selected.exercise_unit.id;
-			exercises.insertExerciseEntry($scope.date.sql, $scope.new_entry.exercise).then(function (response) {
-				$scope.exercise_entries = response.data;
-			});
-		};
-
-		$scope.insertExerciseSet = function ($exercise_id) {
-			exercises.insertExerciseSet($scope.date.sql, $exercise_id).then(function (response) {
-				$scope.exercise_entries = response.data;
-			});
 		};
 		
 		/**
@@ -175,12 +155,6 @@ var app = angular.module('tracker');
 		$scope.deleteExercise = function ($id) {
 			exercises.deleteExercise($id).then(function (response) {
 				$scope.exercises = response.data;
-			});
-		};
-
-		$scope.deleteExerciseEntry = function ($id) {
-			exercises.deleteExerciseEntry($id, $scope.date.sql).then(function (response) {
-				$scope.exercise_entries = response.data;
 			});
 		};
 		
