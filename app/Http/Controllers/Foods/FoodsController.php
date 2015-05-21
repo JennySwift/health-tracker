@@ -37,7 +37,7 @@ class FoodsController extends Controller {
 	{
 		JavaScript::put([
 			'foods_with_units' => Food::getAllFoodsWithUnits(),
-			'recipes' => Recipe::where('user_id', Auth::user()->id)->get(),
+			'recipes' => Recipe::filterRecipes('', []),
 			'recipe_tags' => Tag::getRecipeTags()
 		]);
 		// return Food::getAllFoodsWithUnits();

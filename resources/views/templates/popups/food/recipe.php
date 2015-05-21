@@ -4,10 +4,14 @@
 
 	<div class="popup-inner">
 
-		<h4 class="center">[[recipe.name]]</h4>
+		<h1 class="center">[[recipe_popup.recipe.name]]</h1>
+		<hr>
+
+		<h3>Add ingredient</h3>
+
 		<div class="margin-bottom">
 			<div>
-				<input ng-model="recipe_popup.food.name" ng-keyup="autocompleteFood($event.keyCode); insertOrAutocompleteFoodEntry($event.keyCode)" ng-blur="show.autocomplete_options.foods = false" type="text" placeholder="add food to [[recipe.name]]" id="recipe-popup-food-input" class="form-control">
+				<input ng-model="recipe_popup.food.name" ng-keyup="autocompleteFood($event.keyCode); insertOrAutocompleteFoodEntry($event.keyCode)" ng-blur="show.autocomplete_options.foods = false" type="text" placeholder="add food to [[recipe_popup.recipe.name]]" id="recipe-popup-food-input" class="form-control">
 				
 				<div ng-show="show.autocomplete_options.foods" class="autocomplete-dropdown">
 					<div ng-repeat="food in autocomplete_options.foods" ng-class="{'selected': food.selected}" class="autocomplete-dropdown-item">[[food.name]]</div>
@@ -21,6 +25,10 @@
 				<input ng-model="recipe_popup.food.description" ng-keyup="insertOrAutocompleteFoodEntry($event.keyCode)" type="text" placeholder="description" class="form-control">
 			</div>
 		</div>
+
+		<hr>
+
+		<h3>Ingredients</h3>
 			
 		<div>
 			<div>
@@ -31,7 +39,7 @@
 						<th>quantity</th>
 						<th>description</th>
 					</tr>
-					<tr ng-repeat="item in recipe.contents">
+					<tr ng-repeat="item in recipe_popup.contents">
 						<td>[[item.name]]</td>
 						<td>[[item.unit_name]]</td>
 						<td>[[item.quantity]]</td>
@@ -41,14 +49,18 @@
 				</table>
 			</div>
 		</div>
+
+		<hr>
+
+		<h3>Steps</h3>
+		<h5>Use the checkboxes while you make your recipe.</h5>
 		
 		<div>
 
-			<div ng-show="recipe.steps.length > 0">
+			<div ng-show="recipe_popup.steps.length > 0">
 				<button ng-click="editRecipeMethod()">edit method</button>
 				<table id="steps" class="table table-bordered">
-					<caption>Method <br><small>Use the checkboxes while you make your recipe.</small></caption>
-					<tr ng-repeat="step in recipe.steps">
+					<tr ng-repeat="step in recipe_popup.steps">
 						<td>
 							<div class="vertical-center">
 								<input type="checkbox">
@@ -60,7 +72,7 @@
 			</div>
 
 			<!-- add method -->
-			<div ng-show="recipe.steps.length < 1">enter the method for this recipe
+			<div ng-show="recipe_popup.steps.length < 1">enter the method for this recipe
 				<div id="recipe-method" class="wysiwyg"></div>
 				<button ng-click="insertRecipeMethod()">add method</button>
 			</div>
@@ -73,13 +85,16 @@
 
 		</div>
 
-		<div>
-			<h3 class="center">tags</h3>
+		<hr>
 
-			<ul>
-				<li ng-repeat="tag in recipe_tags">
+		<h3 class="center">Tags</h3>
+
+		<div>
+
+			<ul class="list-group">
+				<li ng-repeat="tag in recipe_tags" class="list-group-item">
 					<span>[[tag.name]]</span>
-					<input checklist-model="selected.recipe.tags" checklist-value="tag" type="checkbox">
+					<input checklist-model="recipe_popup.tags" checklist-value="tag.id" type="checkbox">
 				</li>
 			</ul>
 

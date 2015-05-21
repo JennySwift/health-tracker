@@ -78,6 +78,7 @@ class Recipe extends Model {
 		}
 		
 		$recipes = $recipes
+			->with('tags')
 			->select('id', 'name')
 			->orderBy('name', 'asc')
 			->get();
@@ -133,7 +134,7 @@ class Recipe extends Model {
 			'recipe' => $recipe,
 			'contents' => $contents,
 			'steps' => $recipe->steps,
-			'tags' => $recipe->tags
+			'tags' => $recipe->tags->lists('id')
 		];
 	}
 

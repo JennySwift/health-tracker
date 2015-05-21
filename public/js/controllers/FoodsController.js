@@ -310,11 +310,10 @@ var app = angular.module('tracker');
 		 */
 		
 		$scope.showRecipePopup = function ($recipe) {
-			$scope.selected.recipe = $recipe;
+			// $scope.selected.recipe = $recipe;
 			foods.getRecipeContents($recipe.id).then(function (response) {
 				$scope.show.popups.recipe = true;
-				$scope.recipe.contents = response.data.contents;
-				$scope.recipe.steps = response.data.steps;
+				$scope.recipe_popup = response.data;
 			});
 		};
 

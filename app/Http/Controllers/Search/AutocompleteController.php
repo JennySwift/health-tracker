@@ -45,7 +45,7 @@ class AutocompleteController extends Controller {
         $exercises = Exercise
             ::where('name', 'LIKE', $exercise)
             ->where('user_id', Auth::user()->id)
-            ->select('id', 'name', 'description', 'default_exercise_unit_id', 'default_quantity')
+            ->select('id', 'name', 'description', 'default_unit_id', 'default_quantity')
             ->get();
 
         return $exercises;
