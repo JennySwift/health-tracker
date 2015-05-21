@@ -282,11 +282,6 @@ class Food extends Model {
 		return $food_id;
 	}
 
-	public static function insertUnitInCalories($food, $unit_id)
-	{
-		$food->units()->attach($unit_id, ['user_id' => Auth::user()->id]);
-	}
-
 	/**
 	 * update
 	 */

@@ -189,17 +189,25 @@ var app = angular.module('tracker');
 			});
 		};
 
-		$scope.insertOrDeleteUnitInCalories = function ($unit_id, $checked_previously) {
-			if (!$checked_previously) {
-				//we are inserting the unit
-				insert.unitInCalories($scope.food_popup.id, $unit_id, $checked_previously).then(function (response) {
-					$scope.food_popup.info = response.data;
+		/**
+		 * Add a unit to a food or remove the unit from the food.
+		 * The method name is old and should probably be changed.
+		 * @param  {[type]} $unit_id            [description]
+		 * @param  {[type]} $checked_previously [description]
+		 * @return {[type]}                     [description]
+		 */
+		$scope.insertOrDeleteUnitInCalories = function ($unit_id) {
+			//Check if the checkbox is checked
+			if ($scope.food_popup.food_units.indexOf($unit_id) === -1) {
+				//It is now unchecked. Remove the unit from the food.
+				foods.deleteUnitFromCalories($scope.food_popup.food.id, $unit_id).then(function (response) {
+					$scope.food_popup = response.data;
 				});
 			}
 			else {
-				//we are deleting the unit
-				deleteItem.unitFromCalories($scope.food_popup.id, $unit_id).then(function (response) {
-					$scope.food_popup.info = response.data;
+				// It is now checked. Add the unit to the food.
+				foods.insertUnitInCalories($scope.food_popup.food.id, $unit_id).then(function (response) {
+					$scope.food_popup = response.data;
 				});
 			}
 		};
@@ -249,10 +257,10 @@ var app = angular.module('tracker');
 			});	
 		};
 
-		$scope.updateCalories = function ($keycode, $unit_id) {
+		$scope.updateCalories = function ($keycode, $unit_id, $calories) {
 			if ($keycode === 13) {
-				foods.updateCalories($scope.food_popup.id, $unit_id).then(function (response) {
-					$scope.food_popup.info = response.data;
+				foods.updateCalories($scope.food_popup.food.id, $unit_id, $calories).then(function (response) {
+					$scope.food_popup = response.data;
 				});
 			}
 		};

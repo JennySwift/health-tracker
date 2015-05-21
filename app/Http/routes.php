@@ -125,7 +125,7 @@ Route::post('insert/weight', 'Weights\WeightsController@insertOrUpdateWeight');
 //foods
 Route::post('insert/menuEntry', 'Foods\FoodEntriesController@insertMenuEntry');
 Route::post('insert/food', 'Foods\FoodsController@insertFood');
-Route::post('insert/unitInCalories', 'Foods\CaloriesController@insertUnitInCalories');
+Route::post('insert/unitInCalories', 'Foods\FoodsController@insertUnitInCalories');
 
 //recipes
 Route::post('insert/quickRecipe', 'Recipes\RecipesController@insertQuickRecipe');
@@ -161,7 +161,7 @@ Route::post('insert/journalEntry', 'Journal\JournalController@insertOrUpdateJour
 
 //foods
 Route::post('update/defaultUnit', 'Foods\FoodsController@updateDefaultUnit');
-Route::post('update/calories', 'Foods\CaloriesController@updateCalories');
+Route::post('update/calories', 'Foods\FoodsController@updateCalories');
 
 //recipes
 Route::post('update/recipeMethod', 'Recipes\RecipesController@updateRecipeMethod');
@@ -181,7 +181,7 @@ Route::post('update/journalEntry', 'Journal\JournalController@updateJournalEntry
 
 //foods
 Route::post('delete/food', 'Foods\FoodsController@deleteFood');
-Route::post('delete/unitFromCalories', 'Foods\CaloriesController@deleteUnitFromCalories');
+Route::post('delete/unitFromCalories', 'Foods\FoodsController@deleteUnitFromCalories');
 Route::post('delete/foodEntry', 'Foods\FoodEntriesController@deleteFoodEntry');
 
 //recipes

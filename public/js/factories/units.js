@@ -37,17 +37,6 @@ app.factory('units', function ($http) {
 			$("#create-new-food-unit").val("");		
 			return $http.post($url, $data);
 		},
-		insertUnitInCalories: function ($food_id, $unit_id, $checked_previously) {
-			var $url = 'insert/unitInCalories';
-
-			var $data = {
-				food_id: $food_id,
-				unit_id: $unit_id,
-				checked_previously: $checked_previously
-			};
-
-			return $http.post($url, $data);
-		},
 
 		/**
 		 * update
@@ -76,15 +65,6 @@ app.factory('units', function ($http) {
 				
 				return $http.post($url, $data);
 			}
-		},
-		deleteUnitFromCalories: function ($food_id, $unit_id) {
-			var $url = 'delete/unitFromCalories';
-			var $data = {
-				food_id: $food_id,
-				unit_id: $unit_id
-			};
-			
-			return $http.post($url, $data);
-		},
+		}
 	};
 });

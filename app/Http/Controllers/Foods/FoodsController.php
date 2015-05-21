@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 use Auth;
+use DB;
 use Debugbar;
 use JavaScript;
 
@@ -70,9 +71,31 @@ class FoodsController extends Controller {
 		return Food::getAllFoodsWithUnits();
 	}
 
+	public function insertUnitInCalories(Request $request)
+	{
+		$food = Food::find($request->get('food_id'));
+		$unit_id = $request->get('unit_id');
+		$food->units()->attach($unit_id, ['user_id' => Auth::user()->id]);
+		return Food::getFoodInfo($food);
+	}
+
 	/**
 	 * update
 	 */
+	
+	public function updateCalories(Request $request)
+	{
+		$food = Food::find($request->get('food_id'));
+		$unit_id = $request->get('unit_id');
+		$calories = $request->get('calories');
+
+		DB::table('food_unit')
+			->where('food_id', $food->id)
+			->where('unit_id', $unit_id)
+			->update(['calories' => $calories]);
+
+		return Food::getFoodInfo($food);
+	}
 
 	public function updateDefaultUnit(Request $request)
 	{
@@ -95,6 +118,14 @@ class FoodsController extends Controller {
 		$id = $request->get('id');
 		Food::where('id', $id)->delete();
 		return Food::getAllFoodsWithUnits();
+	}
+
+	public function deleteUnitFromCalories(Request $request)
+	{
+		$food = Food::find($request->get('food_id'));
+		$unit_id = $request->get('unit_id');
+		$food->units()->detach($unit_id);
+		return Food::getFoodInfo($food);
 	}
 
 	/**
