@@ -168,7 +168,7 @@ var app = angular.module('tracker');
 			$scope.new_entry.food.name = $scope.selected.food.name;
 			$scope.new_entry.food.unit_id = $("#food-unit").val();
 
-			insert.menuEntry($scope.date.sql, $scope.new_entry.food).then(function (response) {
+			entries.insertMenuEntry($scope.date.sql, $scope.new_entry.food).then(function (response) {
 				$scope.entries.menu = response.data.food_entries;
 				$scope.calories.day = response.data.calories_for_the_day;
 				$scope.calories.week_avg = response.data.calories_for_the_week;
@@ -184,7 +184,7 @@ var app = angular.module('tracker');
 			$scope.new_entry.food.id = $scope.selected.food.id;
 			$scope.new_entry.food.name = $scope.selected.food.name;
 
-			insert.recipeEntry($scope.date.sql, $scope.selected.menu.id, $scope.recipe.temporary_contents).then(function (response) {
+			entries.insertRecipeEntry($scope.date.sql, $scope.selected.menu.id, $scope.recipe.temporary_contents).then(function (response) {
 				$scope.food_entries = response.data;
 				$scope.show.popups.temporary_recipe = false;
 			});

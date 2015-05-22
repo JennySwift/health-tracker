@@ -115,32 +115,6 @@ app.factory('foods', function ($http) {
 
 			return $http.post($url, $data);
 		},
-		insertMenuEntry: function ($sql_date, $new_entry) {
-			//for logging a food. there is a separate function if we are logging a recipe.
-			var $url = 'insert/menuEntry';
-		
-			var $data = {
-				date: $sql_date,
-				new_entry: $new_entry,
-			};
-
-			$("#menu").val("").focus();
-
-			return $http.post($url, $data);
-		},
-		insertRecipeEntry: function ($sql_date, $recipe_id, $recipe_contents) {
-			var $url = 'insert/recipeEntry';
-		
-			var $data = {
-				date: $sql_date,
-				recipe_id: $recipe_id,
-				recipe_contents: $recipe_contents
-			};
-
-			$("#menu").val("").focus();
-
-			return $http.post($url, $data);
-		},
 		insertRecipe: function ($name) {
 			var $url = 'insert/recipe';
 			var $data = {

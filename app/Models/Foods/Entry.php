@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Auth;
+use Debugbar;
 use App\Models\Foods\Calories;
 
 class Entry extends Model {

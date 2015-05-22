@@ -19,6 +19,12 @@ app.factory('autocomplete', function ($http) {
 			$selected.selected = false;
 		}
 	};
+
+	/**
+	 * For when the dropdown options are in an array
+	 * @param  {[type]} $array [description]
+	 * @return {[type]}        [description]
+	 */
 	$object.autocompleteDownArrow = function ($array) {
 		// if ($(".selected").next(".autocomplete-dropdown-item").length > 0) {
 		// 	//there is an item after the selected one
@@ -38,6 +44,27 @@ app.factory('autocomplete', function ($http) {
 			$selected.selected = false;
 		}
 	};
+
+	/**
+	 * For when the dropdown options are in an object.
+	 * I haven't finished it.
+	 * @param  {[type]} $array [description]
+	 * @return {[type]}        [description]
+	 */
+	// $object.autocompleteDownArrowForObject = function ($object) {
+	// 	//find the selected object in the array
+	// 	var $selected = _.findWhere($object, {selected: true});
+
+	// 	//get its index
+	// 	var $index = $array.indexOf($selected);
+	// 	var $next_index = $index + 1;
+	// 	if ($array[$next_index]) {
+	// 		//there is an item after the selected one
+	// 		var $next = $array[$next_index];
+	// 		$next.selected = true;
+	// 		$selected.selected = false;
+	// 	}
+	// };
 
 	$object.exercise = function () {
 		var $typing = $("#exercise").val();
