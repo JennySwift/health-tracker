@@ -7,6 +7,8 @@ use App\Repositories\Weights\WeightsRepository;
 use Illuminate\Http\Request;
 use Auth;
 use Debugbar;
+use Carbon\Carbon;
+use JavaScript;
 
 /**
  * Models
@@ -20,6 +22,12 @@ class JournalController extends Controller {
 
 	public function index()
 	{
+		$date = Carbon::today()->format('Y-m-d');
+
+		JavaScript::put([
+			'entry' => Journal::getJournalEntry($date)
+		]);
+
 		return view('journal');
 	}
 

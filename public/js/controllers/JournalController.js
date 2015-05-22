@@ -7,7 +7,7 @@ var app = angular.module('tracker');
 		 */
 		
 		//journal
-		$scope.journal_entry = {};
+		$scope.journal_entry = entry;
 
 		//date
 		/**
