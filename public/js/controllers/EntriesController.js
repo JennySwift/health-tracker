@@ -14,6 +14,11 @@ var app = angular.module('tracker');
 			exercise: exercise_entries
 		};
 
+		$scope.units = {
+			food: food_units,
+			exercise: exercise_units
+		};
+
 		$scope.calories = {
 			day: calories_for_the_day,
 			week_avg: calories_for_the_week
@@ -267,6 +272,10 @@ var app = angular.module('tracker');
 		 * autocomplete
 		 */
 		
+		/**
+		 * autocomplete exercise
+		 */
+		
 		$scope.autocompleteExercise = function ($keycode) {
 			if ($keycode !== 13 && $keycode !== 38 && $keycode !== 40) {
 				//not enter, up arrow or down arrow
@@ -290,6 +299,47 @@ var app = angular.module('tracker');
 			}
 		};
 
+		$scope.finishExerciseAutocomplete = function ($array, $selected) {
+			//array, input_to_focus, autocomplete_to_hide, input_to_fill, selected_property_to_define
+			$selected = $selected || _.findWhere($array, {selected: true});
+			$scope.selected.exercise = $selected;
+			$scope.selected.exercise_unit.id = $scope.selected.exercise.default_exercise_unit_id;
+			$scope.new_entry.exercise = $selected;
+			$scope.new_entry.exercise.quantity = $scope.selected.exercise.default_quantity;
+			$scope.selected.exercise = $selected;
+			$scope.show.autocomplete_options.exercises = false;
+			setTimeout(function () {
+				$("#exercise-quantity").focus().select();
+			}, 500);
+		};
+
+		$scope.insertOrAutocompleteExerciseEntry = function ($keycode) {
+			if ($keycode !== 13) {
+				return;
+			}
+			//enter is pressed
+			if ($scope.show.autocomplete_options.exercises) {
+				//if enter is for the autocomplete
+				$scope.finishExerciseAutocomplete($scope.autocomplete_options.exercises);
+			}
+			else {
+				// if enter is to add the entry
+				$scope.insertExerciseEntry();
+				console.log('something');
+			}
+		};
+
+		/**
+		 * autocomplete menu
+		 */
+
+		/**
+		 * As user types in the input, populate the dropdown.
+		 * If user presses arrows, select the appropriate item in the dropdown.
+		 * If user presses enter, that is taken care of in $scope.insertOrAutocompleteMenuEntry.
+		 * @param  {[type]} $keycode [description]
+		 * @return {[type]}          [description]
+		 */
 		$scope.autocompleteMenu = function ($keycode) {
 			if ($keycode !== 13 && $keycode !== 38 && $keycode !== 40) {
 				//not enter, up arrow or down arrow
@@ -312,6 +362,48 @@ var app = angular.module('tracker');
 				autocomplete.autocompleteDownArrow($scope.autocomplete_options.menu_items);
 			}
 		};
+
+		/**
+		 * For when the user presses enter from any of the relevant input fields.
+		 * If enter is to complete the autocomplete, call appropriate functions.
+		 * If enter is to add an entry, call the appropriate function.
+		 * @param  {[type]} $keycode [description]
+		 * @return {[type]}          [description]
+		 */
+		$scope.insertOrAutocompleteMenuEntry = function ($keycode) {
+			if ($keycode !== 13) {
+				return;
+			}
+
+			//enter is pressed
+			if ($scope.show.autocomplete_options.menu_items) {
+				//if enter is for the autocomplete
+				$scope.finishMenuAutocomplete($scope.autocomplete_options.menu_items, $("#food-quantity"));
+
+				if ($scope.selected.menu.type === 'recipe') {
+					$scope.showTemporaryRecipePopup();
+				}
+			}
+
+			// enter is to add the entry
+			else {
+				$scope.insertMenuEntry();
+			}
+		};
+
+		$scope.finishMenuAutocomplete = function ($array, $set_focus) {
+			//array, input_to_focus, autocomplete_to_hide, input_to_fill, selected_property_to_define
+			var $selected = _.findWhere($array, {selected: true});
+			$scope.selected.food = $selected;
+			$scope.new_entry.menu = $selected;
+			$scope.selected.menu = $selected;
+			$scope.show.autocomplete_options.menu_items = false;
+			$($set_focus).val("").focus();
+		};
+
+		/**
+		 * autocomplete food
+		 */
 
 		$scope.autocompleteFood = function ($keycode) {
 			var $typing = $("#recipe-popup-food-input").val();
@@ -336,6 +428,52 @@ var app = angular.module('tracker');
 				autocomplete.autocompleteDownArrow($scope.autocomplete_options.foods);
 			}
 		};
+
+		$scope.finishFoodAutocomplete = function ($array, $set_focus) {
+			//array, input_to_focus, autocomplete_to_hide, input_to_fill, selected_property_to_define
+			var $selected = _.findWhere($array, {selected: true});
+			$scope.recipe_popup.food = $selected;
+			$scope.selected.food = $selected;
+			$scope.show.autocomplete_options.foods = false;
+			$($set_focus).val("").focus();
+		};
+
+		$scope.insertOrAutocompleteFoodEntry = function ($keycode) {
+			if ($keycode !== 13) {
+				return;
+			}
+			//enter is pressed
+			if ($scope.show.autocomplete_options.foods) {
+				//enter is for the autocomplete
+				$scope.finishFoodAutocomplete($scope.autocomplete_options.foods, $("#recipe-popup-food-quantity"));
+				$scope.displayAssocUnitOptions();
+			}
+			else {
+				// if enter is to add the entry
+				$scope.insertFoodIntoRecipe();
+			}
+		};
+
+		$scope.insertFoodIntoRecipe = function () {
+			//we are adding a food to a permanent recipe
+			var $data = {
+				recipe_id: $scope.selected.recipe.id,
+				food_id: $scope.selected.food.id,
+				unit_id: $scope.selected.unit.id,
+				quantity: $scope.recipe_popup.food.quantity,
+				description: $scope.recipe_popup.food.description
+			};
+
+			insert.foodIntoRecipe($data).then(function (response) {
+				$scope.recipe.contents = response.data;
+			});
+			$("#recipe-popup-food-input").val("").focus();
+			$scope.recipe_popup.food.description = "";
+		};
+
+		/**
+		 * autocomplete temporary recipe food
+		 */
 
 		$scope.autocompleteTemporaryRecipeFood = function ($keycode) {
 			var $typing = $("#temporary-recipe-food-input").val();
@@ -362,39 +500,6 @@ var app = angular.module('tracker');
 			}
 		};
 
-		$scope.finishExerciseAutocomplete = function ($array, $selected) {
-			//array, input_to_focus, autocomplete_to_hide, input_to_fill, selected_property_to_define
-			$selected = $selected || _.findWhere($array, {selected: true});
-			$scope.selected.exercise = $selected;
-			$scope.selected.exercise_unit.id = $scope.selected.exercise.default_exercise_unit_id;
-			$scope.new_entry.exercise = $selected;
-			$scope.new_entry.exercise.quantity = $scope.selected.exercise.default_quantity;
-			$scope.selected.exercise = $selected;
-			$scope.show.autocomplete_options.exercises = false;
-			setTimeout(function () {
-				$("#exercise-quantity").focus().select();
-			}, 500);
-		};
-
-		$scope.finishMenuAutocomplete = function ($array, $set_focus) {
-			//array, input_to_focus, autocomplete_to_hide, input_to_fill, selected_property_to_define
-			var $selected = _.findWhere($array, {selected: true});
-			$scope.selected.food = $selected;
-			$scope.new_entry.menu = $selected;
-			$scope.selected.menu = $selected;
-			$scope.show.autocomplete_options.menu_items = false;
-			$($set_focus).val("").focus();
-		};
-
-		$scope.finishFoodAutocomplete = function ($array, $set_focus) {
-			//array, input_to_focus, autocomplete_to_hide, input_to_fill, selected_property_to_define
-			var $selected = _.findWhere($array, {selected: true});
-			$scope.recipe_popup.food = $selected;
-			$scope.selected.food = $selected;
-			$scope.show.autocomplete_options.foods = false;
-			$($set_focus).val("").focus();
-		};
-
 		$scope.finishTemporaryRecipeFoodAutocomplete = function ($array, $set_focus) {
 			//array, input_to_focus, autocomplete_to_hide, input_to_fill, selected_property_to_define
 			var $selected = _.findWhere($array, {selected: true});
@@ -402,58 +507,6 @@ var app = angular.module('tracker');
 			$scope.selected.food = $selected;
 			$scope.show.autocomplete_options.temporary_recipe_foods = false;
 			$($set_focus).val("").focus();
-		};
-
-		$scope.insertOrAutocompleteExerciseEntry = function ($keycode) {
-			if ($keycode !== 13) {
-				return;
-			}
-			//enter is pressed
-			if ($scope.show.autocomplete_options.exercises) {
-				//if enter is for the autocomplete
-				$scope.finishExerciseAutocomplete($scope.autocomplete_options.exercises);
-			}
-			else {
-				// if enter is to add the entry
-				$scope.insertExerciseEntry();
-				console.log('something');
-			}
-		};
-
-		$scope.insertOrAutocompleteMenuEntry = function ($keycode) {
-			if ($keycode !== 13) {
-				return;
-			}
-			//enter is pressed
-			if ($scope.show.autocomplete_options.menu_items) {
-				//if enter is for the autocomplete
-				$scope.finishMenuAutocomplete($scope.autocomplete_options.menu_items, $("#food-quantity"));
-				$scope.displayAssocUnitOptions();
-
-				if ($scope.selected.menu.type === 'recipe') {
-					$scope.showTemporaryRecipePopup();
-				}
-			}
-			else {
-				// if enter is to add the entry
-				$scope.insertMenuEntry();
-			}
-		};
-
-		$scope.insertOrAutocompleteFoodEntry = function ($keycode) {
-			if ($keycode !== 13) {
-				return;
-			}
-			//enter is pressed
-			if ($scope.show.autocomplete_options.foods) {
-				//enter is for the autocomplete
-				$scope.finishFoodAutocomplete($scope.autocomplete_options.foods, $("#recipe-popup-food-quantity"));
-				$scope.displayAssocUnitOptions();
-			}
-			else {
-				// if enter is to add the entry
-				$scope.insertFoodIntoRecipe();
-			}
 		};
 
 		$scope.insertOrAutocompleteTemporaryRecipeFood = function ($keycode) {
@@ -470,23 +523,6 @@ var app = angular.module('tracker');
 				// if enter is to add the entry
 				$scope.insertFoodIntoTemporaryRecipe();
 			}
-		};
-
-		$scope.insertFoodIntoRecipe = function () {
-			//we are adding a food to a permanent recipe
-			var $data = {
-				recipe_id: $scope.selected.recipe.id,
-				food_id: $scope.selected.food.id,
-				unit_id: $scope.selected.unit.id,
-				quantity: $scope.recipe_popup.food.quantity,
-				description: $scope.recipe_popup.food.description
-			};
-
-			insert.foodIntoRecipe($data).then(function (response) {
-				$scope.recipe.contents = response.data;
-			});
-			$("#recipe-popup-food-input").val("").focus();
-			$scope.recipe_popup.food.description = "";
 		};
 
 		$scope.insertFoodIntoTemporaryRecipe = function () {
@@ -507,6 +543,7 @@ var app = angular.module('tracker');
 		/**
 		 * other
 		 */
+		
 		$scope.closePopup = function ($event, $popup) {
 			var $target = $event.target;
 			if ($target.className === 'popup-outer') {

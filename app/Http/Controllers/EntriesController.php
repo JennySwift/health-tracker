@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use App\Models\Weights\Weight;
 use App\Models\Foods\Entry as FoodEntry;
 use App\Models\Exercises\Entry as ExerciseEntry;
+use App\Models\Units\Unit;
 use App\User;
 use App\Models\Journal\Journal;
 use App\Models\Foods\Food;
@@ -49,6 +50,8 @@ class EntriesController extends Controller {
 		JavaScript::put([
 			"weight" => $weightsRepository->getWeight($date),
 			"exercise_entries" => ExerciseEntry::getExerciseEntries($date),
+			"food_units" => Unit::getFoodUnits(),
+			"exercise_units" => Unit::getExerciseUnits(),
 
 			"menu_entries" => FoodEntry::getFoodEntries($date),
 			"calories_for_the_day" => number_format(Food::getCaloriesForTimePeriod($date, "day"), 2),

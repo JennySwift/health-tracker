@@ -132,33 +132,17 @@ var app = angular.module('tracker');
 			
 		};
 
-		$scope.getAssocUnits = function () {
-			//for just one food
-			for (var i = 0; i < $scope.all_foods_with_units.length; i++) {
-				var $iteration = $scope.all_foods_with_units[i];
-				var $iteration_food_id = $iteration.food.food_id;
+		// $scope.getAssocUnits = function () {
+		// 	//for just one food
+		// 	for (var i = 0; i < $scope.all_foods_with_units.length; i++) {
+		// 		var $iteration = $scope.all_foods_with_units[i];
+		// 		var $iteration_food_id = $iteration.food.food_id;
 
-				if ($iteration_food_id === $scope.food.id) {
-					$scope.selected.food.assoc_units = $iteration.units;
-				}
-			}
-		};
-
-		$scope.displayAssocUnitOptions = function () {
-			for (var i = 0; i < $scope.all_foods_with_units.length; i++) {
-				var $iteration = $scope.all_foods_with_units[i];
-				var $iteration_food_id = $iteration.food.id;
-
-				if ($iteration_food_id == $scope.selected.food.id) {
-					// $scope.food_with_assoc_units = $iteration;
-					$scope.selected.food.assoc_units = $iteration.units;
-					$scope.selected.unit.id = $iteration.food.default_unit_id;
-					
-				}
-			}
-			
-		};
-
+		// 		if ($iteration_food_id === $scope.food.id) {
+		// 			$scope.selected.food.assoc_units = $iteration.units;
+		// 		}
+		// 	}
+		// };
 
 		/**
 		 * insert

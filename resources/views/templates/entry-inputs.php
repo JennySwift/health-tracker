@@ -1,4 +1,4 @@
-<!-- food entry -->
+<!-- menu entry -->
 <div>
 	<div>	
 		<input ng-model="new_entry.menu.name" ng-keyup="autocompleteMenu($event.keyCode); insertOrAutocompleteMenuEntry($event.keyCode)" ng-blur="autocomplete_options.menu_items = ''" type="text" placeholder="food" id="menu" class="form-control">
@@ -10,7 +10,7 @@
 		<div>
 			<input ng-model="new_entry.food.quantity" ng-keyup="insertOrAutocompleteMenuEntry($event.keyCode, 'menu')" type="text" placeholder="quantity" id="food-quantity" class="form-control">
 			<select ng-keyup="insertOrAutocompleteMenuEntry($event.keyCode, 'menu')" name="" id="food-unit" class="form-control">
-				<option ng-repeat="unit in selected.food.assoc_units" ng-selected="unit.default_unit === true" value="[[unit.id]]">[[unit.name]]</option>
+				<option ng-repeat="unit in selected.food.units" ng-selected="unit.id === selected.food.default_unit.id" value="[[unit.id]]">[[unit.name]]</option>
 			</select>
 		</div>
 	</div>
@@ -29,7 +29,7 @@
 		<input ng-model="new_entry.exercise.quantity" ng-keyup="insertOrAutocompleteExerciseEntry($event.keyCode, 'exercise')" type="text" id="exercise-quantity" placeholder="quantity" class="form-control">
 
 		<select ng-model="selected.exercise_unit.id" ng-keyup="insertOrAutocompleteExerciseEntry($event.keyCode, 'exercise')" class="form-control">
-			<option ng-repeat="unit in units.exercise" ng-selected="unit.id === selected.exercise.default_exercise_unit_id" value="[[unit.id]]" id="exercise-unit">[[unit.name]]</option>
+			<option ng-repeat="unit in units.exercise" ng-selected="unit.id === selected.exercise.default_unit_id" value="[[unit.id]]" id="exercise-unit">[[unit.name]]</option>
 		</select>
 	</div>
 </div>
