@@ -128,7 +128,7 @@ Route::post('insert/food', 'Foods\FoodsController@insertFood');
 Route::post('insert/unitInCalories', 'Foods\FoodsController@insertUnitInCalories');
 
 //recipes
-Route::post('insert/quickRecipe', 'Recipes\RecipesController@insertQuickRecipe');
+Route::post('insert/quickRecipe', 'Recipes\QuickRecipesController@quickRecipe');
 Route::post('insert/recipeMethod', 'Recipes\RecipesController@insertRecipeMethod');
 Route::post('insert/recipe', 'Recipes\RecipesController@insertRecipe');
 Route::post('insert/recipeEntry', 'Recipes\RecipesController@insertRecipeEntry');

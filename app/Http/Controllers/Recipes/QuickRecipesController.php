@@ -2,8 +2,19 @@
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Debugbar;
+use DB;
+use Auth;
 
 use Illuminate\Http\Request;
+
+/**
+ * Models
+ */
+use App\Models\Foods\Food;
+use App\Models\Foods\Recipe;
+use App\Models\Foods\RecipeMethod;
+use App\Models\Units\Unit;
 
 class QuickRecipesController extends Controller {
 
@@ -38,12 +49,17 @@ class QuickRecipesController extends Controller {
 	{	
 		$recipe_name = $request->get('recipe_name');
 		$steps = $request->get('steps');
+		$contents = $request->get('contents');
+
+		Debugbar::info('contents', $contents);
+		// dd($contents);
 
 		if ($request->get('check_similar_names')) {
 			//We are checking for similar names
-			$similar_names = $this->checkEntireRecipeForSimilarNames($request->get('contents'));
-			
-			if (count($similar_names) > 0) {
+			$similar_names = $this->checkEntireRecipeForSimilarNames($contents);
+			// dd($similar_names);
+
+			if (isset($similar_names['foods']) || isset($similar_names['units'])) {
 				//Similar names were found, so return them
 				return array(
 					'similar_names' => $similar_names
@@ -53,8 +69,7 @@ class QuickRecipesController extends Controller {
 				//We have checked, but no similar names were found.
 				//So insert the recipe.
 				//Then return the recipes and foods and units.
-
-				$data_to_insert = $this->populateArrayBeforeInserting($food_name, $unit_name, $quantity, $description);
+				$data_to_insert = $this->populateArrayBeforeInserting($contents);
 
 				return $this->insertEverything($recipe_name, $steps, $data_to_insert);
 			}	
@@ -62,7 +77,7 @@ class QuickRecipesController extends Controller {
 		else {
 			//We are not checking for similar names,
 			//so we are inserting the recipe
-			$data_to_insert = $this->populateArrayBeforeInserting($food_name, $unit_name, $quantity, $description);
+			$data_to_insert = $this->populateArrayBeforeInserting($contents);
 
 			return $this->insertEverything($recipe_name, $steps, $data_to_insert);
 		}
@@ -87,25 +102,36 @@ class QuickRecipesController extends Controller {
 				$description = null;
 			}
 
-			$similar_names['foods'] = $this->populateSimilarFoodNames($food_name, $index);
-			$similar_names['units'] = $this->populateSimilarUnitNames($unit_name, $index);
-		}
+			$similar_food_info = $this->populateSimilarFoodNames($food_name, $index);
 
+			if (count($similar_food_info) > 0) {
+				$similar_names['foods'][] = $similar_food_info;
+			}
+
+			$similar_unit_info = $this->populateSimilarUnitNames($unit_name, $index);
+
+			if (count($similar_unit_info) > 0) {
+				$similar_names['units'][] = $similar_unit_info;
+			}
+			
+			
+		}
+		// dd($similar_names);
 		return $similar_names;
 	}
 
 	private function populateSimilarUnitNames($unit_name, $index)
 	{
 		$similar_unit_names = [];
-		$found = $this->checkSimilarNames($unit_name, 'food_units');
+		$found = $this->checkSimilarNames($unit_name, 'units');
 
 		if ($found) {
-			$similar_unit_names[] = array(
+			$similar_unit_names = [
 				'specified_unit' => array('name' => $unit_name),
 				'existing_unit' => array('name' => $found),
 				'checked' => $found,
 				'index' => $index
-			);
+			];
 		}
 
 		return $similar_unit_names;
@@ -117,14 +143,14 @@ class QuickRecipesController extends Controller {
 		$found = $this->checkSimilarNames($food_name, 'foods');
 
 		if ($found) {
-			$similar_names['foods'][] = array(
+			$similar_food_names = [
 				'specified_food' => array('name' => $food_name),
 				'existing_food' => array('name' => $found),
 				'checked' => $found,
 				'index' => $index
-			);
+			];
 		}
-
+		// dd($similar_food_names);
 		return $similar_food_names;
 	}
 
@@ -184,8 +210,8 @@ class QuickRecipesController extends Controller {
 			Recipe::insertFoodIntoRecipe($recipe_id, $item);
 
 			//insert food and unit ids into calories table (if the row doesn't exist already in the table) so that the unit is an associated unit of the food
-			$count = Calories
-				::where('food_id', $item['food_id'])
+			$count = DB::table('food_unit')
+				->where('food_id', $item['food_id'])
 				->where('unit_id', $item['unit_id'])
 				->where('user_id', Auth::user()->id)
 				->count();
@@ -206,7 +232,7 @@ class QuickRecipesController extends Controller {
 	private function insertRecipe($name)
 	{
 		//insert recipe into recipes table and retrieve the id
-		$id = static
+		$id = Recipe
 			::insertGetId([
 				'name' => $name,
 				'user_id' => Auth::user()->id
@@ -237,6 +263,13 @@ class QuickRecipesController extends Controller {
 		return $count;
 	}
 	
+	/**
+	 * Currently this checks the units table for similar names.
+	 * I should change it to find them only if the unit type is for food.
+	 * @param  [type] $name  [description]
+	 * @param  [type] $table [description]
+	 * @return [type]        [description]
+	 */
 	private function checkSimilarNames($name, $table)
 	{
 		//for quick recipe

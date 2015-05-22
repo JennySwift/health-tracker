@@ -1,7 +1,7 @@
 var app = angular.module('tracker');
 
 (function () {
-	app.controller('foods', function ($scope, $http, foods, tags) {
+	app.controller('foods', function ($scope, $http, foods, quickRecipe, tags) {
 
 		/**
 		 * scope properties
@@ -15,6 +15,7 @@ var app = angular.module('tracker');
 		$scope.recipe_tags = recipe_tags;
 
 		$scope.selected = {};
+		$scope.errors = {};
 		
 		//show
 		$scope.show = {
@@ -326,6 +327,16 @@ var app = angular.module('tracker');
 		 * quick recipe
 		 */
 		
+		/**
+		 * End goal of the function: Call foods.insertQuickRecipe, with $check_similar_names as true.
+		 * Send the contents, steps, and name of new recipe.
+		 * The PHP checks for similar names and returns similar names if found.
+		 * The JS checks for similar names in the response.
+		 * If they exist, a popup shows. From there, the user can click a button which fires $scope.quickRecipeFinish,
+		 * sending the recipe info again but this time without the similar name check.
+		 * If none exist, the recipe should have been entered with the PHP and things should update accordingly on the page.
+		 * @return {[type]} [description]
+		 */
 		$scope.quickRecipe = function () {
 			//remove any previous error styling so it doesn't wreck up the html
 			$("#quick-recipe > *").removeAttr("style");
@@ -432,6 +443,11 @@ var app = angular.module('tracker');
 			$scope.quick_recipe.steps = $steps;
 			$scope.quick_recipe.name = prompt('name your recipe');
 
+			//If the user changes their mind and cancels
+			if (!$scope.quick_recipe.name) {
+				return;
+			}
+
 			foods.insertQuickRecipe($scope.quick_recipe.name, $contents, $steps, true).then(function (response) {
 				if (response.data.similar_names) {
 					$scope.quick_recipe.similar_names = response.data.similar_names;
@@ -440,7 +456,6 @@ var app = angular.module('tracker');
 				else {
 					$scope.recipes.filtered = response.data.recipes;
 					$scope.all_foods_with_units = response.data.foods_with_units;
-					$scope.units.food = response.data.food_units;
 				}	
 			});
 		};
@@ -461,8 +476,13 @@ var app = angular.module('tracker');
 			});
 		};
 
+		/**
+		 * This is for entering the recipe after the similar name check is done.
+		 * We call foods.insertQuickRecipe again, but this time with $check_similar_names parameter as false,
+		 * so that the recipe gets entered.
+		 * @return {[type]} [description]
+		 */
 		$scope.quickRecipeFinish = function () {
-			//this is for entering the recipe after the similar name check is done
 			$scope.show.popups.similar_names = false;
 
 			//first do the foods
@@ -494,7 +514,6 @@ var app = angular.module('tracker');
 			foods.insertQuickRecipe($scope.quick_recipe.name, $scope.quick_recipe.contents, $scope.quick_recipe.steps, false).then(function (response) {
 				$scope.recipes.filtered = response.data.recipes;
 				$scope.all_foods_with_units = response.data.foods_with_units;
-				$scope.units.food = response.data.food_units;
 			});
 		};
 

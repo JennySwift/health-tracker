@@ -178,8 +178,8 @@ class Recipe extends Model {
 			$description = null;
 		}
 
-		static
-			::insert([
+		DB::table('food_recipe')
+			->insert([
 				'recipe_id' => $recipe_id,
 				'food_id' => $data['food_id'],
 				'unit_id' => $data['unit_id'],
