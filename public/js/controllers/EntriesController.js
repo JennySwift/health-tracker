@@ -201,7 +201,7 @@ var app = angular.module('tracker');
 		};
 
 		$scope.insertExerciseEntry = function () {
-			$scope.new_entry.exercise.unit_id = $scope.selected.exercise_unit.id;
+			$scope.new_entry.exercise.unit_id = $("#exercise-unit").val();
 			entries.insertExerciseEntry($scope.date.sql, $scope.new_entry.exercise).then(function (response) {
 				$scope.entries.exercise = response.data;
 			});
