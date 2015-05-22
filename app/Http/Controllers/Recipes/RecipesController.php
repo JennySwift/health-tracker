@@ -62,29 +62,6 @@ class RecipesController extends Controller {
 		return Recipe::filterRecipes('', []);
 	}
 
-	public function insertQuickRecipe(Request $request)
-	{
-		$recipe_name = $request->get('recipe_name');
-		$contents = $request->get('contents');
-		$steps = $request->get('steps');
-		$check_similar_names = $request->get('check_similar_names');
-		
-		$similar_names = Recipe::insertQuickRecipe($recipe_name, $contents, $steps, $check_similar_names);
-
-		if ($similar_names) {
-			return array(
-				'similar_names' => $similar_names
-			);
-		}
-		else {
-			return array(
-				'recipes' => Recipe::filterRecipes('', []),
-				'foods_with_units' => Food::getAllFoodsWithUnits(),
-				'food_units' => Unit::getFoodUnits()
-			);
-		}	
-	}
-
 	public function insertRecipeEntry(Request $request)
 	{
 		$date = $request->get('date');

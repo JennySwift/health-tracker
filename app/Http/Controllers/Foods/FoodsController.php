@@ -75,8 +75,7 @@ class FoodsController extends Controller {
 	{
 		$food = Food::find($request->get('food_id'));
 		$unit_id = $request->get('unit_id');
-		$food->units()->attach($unit_id, ['user_id' => Auth::user()->id]);
-		return Food::getFoodInfo($food);
+		return Food::insertUnitInCalories($food, $unit_id);
 	}
 
 	/**
