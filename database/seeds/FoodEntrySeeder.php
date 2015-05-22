@@ -21,20 +21,31 @@ class FoodEntrySeeder extends Seeder {
 		 * Objective: create a random number of food entries (no duplicates) for each of the last 50 days
 		 */
 
-		foreach (range(0, 49) as $index) {
+		foreach (range(0, 50) as $days) {
+			//Everything that happens in this loop is for one day
 			$today = Carbon::today();
-			
+			$date = $today->subDays($days)->format('Y-m-d');
+			$number = $faker->numberBetween($min = 1, $max = 6);		
 			$food_ids = Food::lists('id');
-			$unit_ids = Unit::lists('id');
 
-			DB::table('food_entries')->insert([
-				'date' => $today->subDays($index)->format('Y-m-d'),
-				'food_id' => $faker->randomElement($food_ids),
-				'quantity' => $faker->numberBetween($min=1, $max=9),
-				'unit_id' => $faker->randomElement($unit_ids),
-				'recipe_id' => '',
-				'user_id' => 1
-			]);
+			foreach (range(0, $number) as $index) {
+				$unit_ids = [];
+				while (count($unit_ids) === 0) {
+					$food_id = $faker->randomElement($food_ids);
+					$food = Food::find($food_id);
+					//So that the entry doesn't have a unit that doesn't belong to the food
+					$unit_ids = $food->units()->lists('unit_id');
+				}
+
+				DB::table('food_entries')->insert([
+					'date' => $date,
+					'food_id' => $food_id,
+					'quantity' => $faker->numberBetween($min=1, $max=9),
+					'unit_id' => $faker->randomElement($unit_ids),
+					'recipe_id' => '',
+					'user_id' => 1
+				]);
+			}
 		}
 	}
 
