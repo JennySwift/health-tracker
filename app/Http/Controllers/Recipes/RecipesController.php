@@ -171,8 +171,8 @@ class RecipesController extends Controller {
 		
 		$response = array(
 			"food_entries" => Entry::getFoodEntries($date),
-			"calories_for_the_day" => number_format(Food::getCaloriesForTimePeriod($date, "day"), 2),
-			"calories_for_the_week" => number_format(Food::getCaloriesForTimePeriod($date, "week"), 2)
+			"calories_for_the_day" => number_format(Food::getCaloriesForDay($date), 2),
+			"calories_for_the_week" => number_format(Food::getCaloriesFor7Days($date), 2)
 		);
 		return $response;
 	}

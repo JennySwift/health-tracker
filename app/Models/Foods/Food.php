@@ -3,11 +3,12 @@
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\Models\Relationships\OwnedByUser;
 use App\Models\Foods\Calories;
-use App\Models\Foods\Entry as FoodEntry;
+use App\Models\Foods\Entry;
 use App\Models\Units\Unit;
 use Auth;
 use App\User;
 use DB;
+use Debugbar;
 use Carbon\Carbon;
 
 class Food extends Model {
@@ -187,45 +188,87 @@ class Food extends Model {
 		return $calories_for_quantity;
 	}
 
-	public static function getCaloriesForTimePeriod($date, $period)
+	// public static function getCaloriesForTimePeriod($date, $period)
+	// {
+	// 	$calories_for_period = 0;
+
+	// 	if ($period === "day") {
+	// 		//Get the user's food entries for the date
+	// 		$entries = Entry
+	// 			::where('date', $date)
+	// 			->where('food_entries.user_id', Auth::user()->id)
+	// 			->select('food_id', 'unit_id', 'quantity', 'date')
+	// 			->get();
+	// 	}
+	// 	elseif ($period === "week") {
+	// 		//Get the user's food entries for the last 7 days
+	// 		$a_week_ago = Carbon::createFromFormat('Y-m-d', $date)->subWeek(1)->format('Y-m-d');
+	// 		$entries = Entry
+	// 			::where('date', '>=', $a_week_ago)
+	// 			->where('date', '<=', $date)
+	// 			->where('food_entries.user_id', Auth::user()->id)
+	// 			->select('food_id', 'unit_id', 'quantity', 'date')
+	// 			->get();
+	// 	}
+
+	// 	return $entries;
+
+	// 	foreach ($entries as $entry) {
+	// 		$food_id = $entry->food_id;
+	// 		$unit_id = $entry->unit_id;
+	// 		$quantity = $entry->quantity;
+
+	// 		$calories_for_item = Food::getCalories($food_id, $unit_id);
+	// 		$calories_for_quantity = static::getCaloriesForQuantity($calories_for_item, $quantity);
+	// 		$calories_for_period += $calories_for_quantity;
+	// 	}
+
+	// 	if ($period === "week") {
+	// 		$calories_for_period /= 7;
+	// 	}
+	// 	return $calories_for_period;
+	// }
+
+	public static function getCaloriesForDay($date)
 	{
-		$calories_for_period = 0;
+		$calories_for_day = 0;
 
-		if ($period === "day") {
-			$rows = FoodEntry
-				::join('foods', 'food_entries.food_id', '=', 'foods.id')
-				->join('units', 'food_entries.unit_id', '=', 'units.id')
-				->where('date', $date)
-				->where('food_entries.user_id', Auth::user()->id)
-				->select('food_id', 'units.id AS unit_id', 'quantity')
-				->get();
-		}
-		elseif ($period === "week") {
-			$a_week_ago = Carbon::createFromFormat('Y-m-d', $date)->subWeek(1)->format('Y-m-d');
-			$rows = FoodEntry
-				::join('foods', 'food_entries.food_id', '=', 'foods.id')
-				->join('units', 'food_entries.unit_id', '=', 'units.id')
-				->where('date', '>=', $a_week_ago)
-				->where('date', '<=', $date)
-				->where('food_entries.user_id', Auth::user()->id)
-				->select('food_id', 'units.id AS unit_id', 'quantity')
-				->get();
+		//Get the user's food entries for the date
+		$entries = Entry
+			::where('date', $date)
+			->where('food_entries.user_id', Auth::user()->id)
+			->select('food_entries.food_id', 'food_entries.unit_id', 'quantity', 'date')
+			->get();
+
+		// return $entries;
+
+		//Get the calories for the entries
+		foreach ($entries as $entry) {
+			$calories_for_item = Food::getCalories($entry->food_id, $entry->unit_id);
+			$calories_for_quantity = static::getCaloriesForQuantity($calories_for_item, $entry->quantity);
+			$calories_for_day += $calories_for_quantity;
 		}
 
-		foreach ($rows as $row) {
-			$food_id = $row->food_id;
-			$unit_id = $row->unit_id;
-			$quantity = $row->quantity;
+		return $calories_for_day;
+	}
 
-			$calories_for_item = Food::getCalories($food_id, $unit_id);
-			$calories_for_quantity = static::getCaloriesForQuantity($calories_for_item, $quantity);
-			$calories_for_period += $calories_for_quantity;
+	/**
+	 * Get total calories for 7 days ago, starting from $date.
+	 * Return the average/day.
+	 * @param  [type] $date [description]
+	 * @return [type]       [description]
+	 */
+	public static function getCaloriesFor7Days($date)
+	{
+		$total = 0;
+
+		foreach (range(0, 6) as $days) {
+			$calories_for_one_day = static::getCaloriesForDay(Carbon::createFromFormat('Y-m-d', $date)->subDays($days)->format('Y-m-d'));
+			// var_dump($calories_for_one_day);
+			$total+= $calories_for_one_day;
 		}
 
-		if ($period === "week") {
-			$calories_for_period /= 7;
-		}
-		return $calories_for_period;
+		return $total / 7;
 	}
 
 	public static function getId($table, $name)

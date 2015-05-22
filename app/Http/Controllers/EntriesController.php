@@ -47,6 +47,11 @@ class EntriesController extends Controller {
 	public function index(WeightsRepository $weightsRepository)
 	{
 		$date = Carbon::today()->format('Y-m-d');
+
+		// return ExerciseEntry::getExerciseEntries($date);
+		// return Food::getCaloriesForTimePeriod($date, 'week');
+		// return Food::getCaloriesFor7Days($date);
+
 		JavaScript::put([
 			"weight" => $weightsRepository->getWeight($date),
 			"exercise_entries" => ExerciseEntry::getExerciseEntries($date),
@@ -54,24 +59,27 @@ class EntriesController extends Controller {
 			"exercise_units" => Unit::getExerciseUnits(),
 
 			"menu_entries" => FoodEntry::getFoodEntries($date),
-			"calories_for_the_day" => number_format(Food::getCaloriesForTimePeriod($date, "day"), 2),
-			"calories_for_the_week" => number_format(Food::getCaloriesForTimePeriod($date, "week"), 2)
+			"calories_for_the_day" => number_format(Food::getCaloriesForDay($date), 2),
+			"calories_for_the_week" => number_format(Food::getCaloriesFor7Days($date), 2)
 		]);
 
-		// return ExerciseEntry::getExerciseEntries($date);
 		return view('entries');
 	}
 
 	public function getEntries(Request $request, WeightsRepository $weightsRepository)
 	{
 		$date = $request->get('date');
+
+		// return Food::getCaloriesFor7Days($date);
+
+		
 		$response = array(
 			"weight" => $weightsRepository->getWeight($date),
 			"exercise_entries" => ExerciseEntry::getExerciseEntries($date),
 
 			"menu_entries" => FoodEntry::getFoodEntries($date),
-			"calories_for_the_day" => number_format(Food::getCaloriesForTimePeriod($date, "day"), 2),
-			"calories_for_the_week" => number_format(Food::getCaloriesForTimePeriod($date, "week"), 2)
+			"calories_for_the_day" => number_format(Food::getCaloriesForDay($date), 2),
+			"calories_for_the_week" => number_format(Food::getCaloriesFor7Days($date), 2)
 		);
 		return $response;
 	}
