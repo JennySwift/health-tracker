@@ -31,6 +31,12 @@ app.factory('quickRecipe', function ($http) {
 		return $recipe;
 	};
 
+	/**
+	 * $lines is an array of all the lines in the wysywig.
+	 * We want to return an object containing the item lines, and the method lines, separate from each other.
+	 * @param  {[type]} $lines [description]
+	 * @return {[type]}        [description]
+	 */
 	$object.separateMethod = function ($lines) {
 		var $items;
 		var $method;
@@ -153,7 +159,16 @@ app.factory('quickRecipe', function ($http) {
 		return $string;
 	};
 
+	/**
+	 * $items is an array of strings.
+	 * The string should include the quantity, unit, food, and description, providing the user has entered them.
+	 * We want to take each string and turn it into an object with food, unit, quantity and description properties.
+	 * Then return the new array of objects.
+	 * @param  {[type]} $items [description]
+	 * @return {[type]}        [description]
+	 */
 	$object.populateItemsArray = function ($items) {
+		var $formatted_items = [];
 		$($items).each(function () {
 			$line = this;
 			var $item = {};
@@ -176,12 +191,17 @@ app.factory('quickRecipe', function ($http) {
 			$item.food = $line[2];
 
 			//Add the item object to the items array
-			$items.push($item);
+			$formatted_items.push($item);
 		});
 
-		return $items;
+		return $formatted_items;
 	};
 
+	/**
+	 * Return an array of errors for each line that does not have a quantity, unit and food
+	 * @param  {[type]} $items [description]
+	 * @return {[type]}        [description]
+	 */
 	$object.errorCheck = function ($items) {
 		var $line_number = 0;
 		var $errors = [];
@@ -190,8 +210,9 @@ app.factory('quickRecipe', function ($http) {
 			var $item = this;
 			$line_number++;
 
-			if (!$item.quantity || !$item.food || !$item.description) {
+			if (!$item.quantity || !$item.unit || !$item.food) {
 				$errors.push('Error on line ' + $line_number);
+				$("#quick-recipe > div").eq($line_number-1).css('background', 'red');
 			}
 		});
 

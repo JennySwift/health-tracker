@@ -343,7 +343,7 @@ var app = angular.module('tracker');
 			$("#quick-recipe > *").removeAttr("style");
 
 			var $string = $("#quick-recipe").html();
-			//Recipe is an object, with items and method.
+			//Recipe is an object, with an array of items and an array of steps.
 			var $recipe = quickRecipe.formatString($string, $("#quick-recipe"));
 			var $line;
 			var $items = [];
