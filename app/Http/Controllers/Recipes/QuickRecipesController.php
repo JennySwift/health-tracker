@@ -48,14 +48,13 @@ class QuickRecipesController extends Controller {
 	public function quickRecipe(Request $request)
 	{	
 		$recipe = $request->get('recipe');
+		Debugbar::info('recipe', $recipe);
+		Debugbar::info('request->all()', $request->all());
+		Debugbar::info('items', $recipe['items']);
+		
 		$recipe_name = $recipe['name'];
 		$steps = $recipe['steps'];
 		$contents = $recipe['items'];
-		// $steps = $request->get('steps');
-		// $contents = $request->get('contents');
-
-		// Debugbar::info('contents', $contents);
-		// dd($contents);
 
 		if ($request->get('check_similar_names')) {
 			//We are checking for similar names
@@ -95,8 +94,8 @@ class QuickRecipesController extends Controller {
 
 		foreach ($contents as $item) {
 			$index++;
-			$food_name = $item['food_name'];
-			$unit_name = $item['unit_name'];
+			$food_name = $item['food'];
+			$unit_name = $item['unit'];
 
 			if (isset($item['description'])) {
 				$description = $item['description'];
@@ -169,8 +168,8 @@ class QuickRecipesController extends Controller {
 		$data_to_insert = [];
 
 		foreach ($contents as $item) {
-			$food_name = $item['food_name'];
-			$unit_name = $item['unit_name'];
+			$food_name = $item['food'];
+			$unit_name = $item['unit'];
 			$quantity = $item['quantity'];
 
 			if (isset($item['description'])) {

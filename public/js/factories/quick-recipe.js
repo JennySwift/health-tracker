@@ -205,19 +205,79 @@ app.factory('quickRecipe', function ($http) {
 	$object.errorCheck = function ($items) {
 		var $line_number = 0;
 		var $errors = [];
+		var $checked_quantity;
 
 		$($items).each(function () {
 			var $item = this;
 			$line_number++;
 
 			if (!$item.quantity || !$item.unit || !$item.food) {
-				$errors.push('Error on line ' + $line_number);
+				$errors.push('Quantity, unit, and food have not all been included on line ' + $line_number);
 				$("#quick-recipe > div").eq($line_number-1).css('background', 'red');
+			}
+			//The line contains quantity, unit and food.
+			//Check the quantity is valid.
+			else {
+				$checked_quantity = $object.validQuantityCheck($item.quantity);
+				if (!$checked_quantity) {
+					//Quantity is invalid
+					$errors.push('Quantity is invalid on line ' + $line_number);
+					$("#quick-recipe > div").eq($line_number-1).css('background', 'red');
+				}
+				else {
+					// Quantity is valid and if it was a fraction, it has now been converted to a decimal.
+					$item.quantity = $checked_quantity;
+				}
 			}
 		});
 
-		return $errors;
+		return {
+			items: $items,
+			errors: $errors
+		};
 	};
+
+	/**
+	 * Check the quantity for any invalid characters.
+	 * If the quantity is a fraction, convert it to a decimal.
+	 * @param  {[type]} $quantity [description]
+	 * @return {[type]}           [description]
+	 */
+	$object.validQuantityCheck = function ($quantity) {
+		for (var i = 0; i < $quantity.length; i++) {
+			var $character = $quantity[i];
+
+			if (isNaN($character) && $character !== '.' && $character !== '/') {
+				//$character is not a number, '.', or '/'. The quantity is invalid.
+				$quantity = false;
+			}
+			else {
+				$quantity = $object.convertQuantityToDecimal($quantity);
+			}
+		}
+
+		return $quantity;
+	};
+
+	/**
+	 * Check if $quantity is a fraction, and if so, convert to decimal
+	 * @param  {[type]} $quantity [description]
+	 * @return {[type]}           [description]
+	 */
+	$object.convertQuantityToDecimal = function ($quantity) {
+		if ($quantity.indexOf('/') !== -1) {
+			//it is a fraction
+			var $parts = $quantity.split('/');
+			var $decimal = parseInt($parts[0], 10) / parseInt($parts[1], 10);
+			$quantity = $decimal;
+		}
+
+		return $quantity;
+	};
+
+	// $object.requiredValuesCheck = function () {
+
+	// };
 
 	// quantity: function ($string, $index) {
 	// 	//Find out how many digits the quantity contains.

@@ -21,7 +21,7 @@
 
 	<button ng-click="quickRecipe()"class="btn">go</button>
 
-	<div>
+	<div id="quick-recipe-errors">
 		<div ng-repeat="error in errors.quick_recipe">[[error]]</div>
 	</div>
 

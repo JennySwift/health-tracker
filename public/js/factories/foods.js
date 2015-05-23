@@ -86,7 +86,6 @@ app.factory('foods', function ($http) {
 		insertQuickRecipe: function ($recipe, $check_similar_names) {
 			var $url = 'insert/quickRecipe';
 			var $data = {
-				recipe_name: $recipe_name,
 				recipe: $recipe,
 				check_similar_names: $check_similar_names
 			};

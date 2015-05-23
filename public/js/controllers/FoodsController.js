@@ -341,6 +341,10 @@ var app = angular.module('tracker');
 		$scope.quickRecipe = function () {
 			//remove any previous error styling so it doesn't wreck up the html
 			$("#quick-recipe > *").removeAttr("style");
+			//Empty the errors array from any previous attempts
+			$scope.errors.quick_recipe = [];
+			//Hide the errors div because even with emptying the scope property, the display is slow to update.
+			$("#quick-recipe-errors").hide();
 
 			var $string = $("#quick-recipe").html();
 			//Recipe is an object, with an array of items and an array of steps.
@@ -353,17 +357,19 @@ var app = angular.module('tracker');
 			$items = quickRecipe.populateItemsArray($recipe.items);
 
 			//check item contains quantity, unit and food
-			$errors = quickRecipe.errorCheck($items);
-
-			//still to do: check quantity is a number
+			//and convert quantities to decimals if necessary
+			$items_and_errors = quickRecipe.errorCheck($items);
+			$items = $items_and_errors.items;
+			$errors = $items_and_errors.errors;
 
 			if ($errors.length > 0) {
 				$scope.errors.quick_recipe = $errors;
+				$("#quick-recipe-errors").show();
 				return;
 			}
 
 			//Prompt the user for the recipe name
-			$recipe_name = prompt('name your recipe');
+			var $recipe_name = prompt('name your recipe');
 
 			//If the user changes their mind and cancels
 			if (!$recipe_name) {
@@ -373,18 +379,16 @@ var app = angular.module('tracker');
 			$recipe = {
 				name: $recipe_name,
 				items: $items,
-				method: $method,
+				steps: $method,
 			};
 
-			$scope.quick_recipe.contents = $recipe.items;
-			$scope.quick_recipe.steps = $recipe.steps;
-			$scope.quick_recipe.name = $recipe.name;
+			$scope.quick_recipe = $recipe;
 
 			//Attempt to insert the recipe. It won't be inserted if similar names are found.
-			// $scope.quickRecipeAttemptInsert($recipe);
+			$scope.quickRecipeAttemptInsert($recipe);
 		};
 
-		$scope.quickRecipeAttemptInsert = function () {
+		$scope.quickRecipeAttemptInsert = function ($recipe) {
 			foods.insertQuickRecipe($recipe, true).then(function (response) {
 				if (response.data.similar_names) {
 					$scope.quick_recipe.similar_names = response.data.similar_names;
@@ -415,7 +419,7 @@ var app = angular.module('tracker');
 
 				if ($checked === $existing_food) {
 					//we are using the existing food rather than creating a new food. therefore, change $scope.quick_recipe.contents to use the correct food name.
-					$scope.quick_recipe.contents[$index].food_name = $existing_food;
+					$scope.quick_recipe.items[$index].food = $existing_food;
 				}
 			});
 
@@ -428,11 +432,11 @@ var app = angular.module('tracker');
 
 				if ($checked === $existing_unit) {
 					//we are using the existing unit rather than creating a new unit. therefore, change $scope.quick_recipe.contents to use the correct unit name.
-					$scope.quick_recipe.contents[$index].unit_name = $existing_unit;
+					$scope.quick_recipe.items[$index].unit = $existing_unit;
 				}
 			});
 
-			foods.insertQuickRecipe($scope.quick_recipe.name, $scope.quick_recipe.contents, $scope.quick_recipe.steps, false).then(function (response) {
+			foods.insertQuickRecipe($scope.quick_recipe, false).then(function (response) {
 				$scope.recipes.filtered = response.data.recipes;
 				$scope.all_foods_with_units = response.data.foods_with_units;
 			});
