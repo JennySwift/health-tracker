@@ -83,21 +83,11 @@ app.factory('foods', function ($http) {
 		 * insert
 		 */
 		
-		insertRecipeMethod: function ($recipe_id, $steps) {
-			var $url = 'insert/recipeMethod';
-			var $data = {
-				recipe_id: $recipe_id,
-				steps: $steps
-			};
-			
-			return $http.post($url, $data);
-		},
-		insertQuickRecipe: function ($recipe_name, $contents, $steps, $check_similar_names) {
+		insertQuickRecipe: function ($recipe, $check_similar_names) {
 			var $url = 'insert/quickRecipe';
 			var $data = {
 				recipe_name: $recipe_name,
-				contents: $contents,
-				steps: $steps,
+				recipe: $recipe,
 				check_similar_names: $check_similar_names
 			};
 			

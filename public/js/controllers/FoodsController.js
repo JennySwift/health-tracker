@@ -328,7 +328,8 @@ var app = angular.module('tracker');
 		 */
 		
 		/**
-		 * End goal of the function: Call foods.insertQuickRecipe, with $check_similar_names as true.
+		 * End goal of the function:
+		 * Call foods.insertQuickRecipe, with $check_similar_names as true.
 		 * Send the contents, steps, and name of new recipe.
 		 * The PHP checks for similar names and returns similar names if found.
 		 * The JS checks for similar names in the response.
@@ -342,113 +343,49 @@ var app = angular.module('tracker');
 			$("#quick-recipe > *").removeAttr("style");
 
 			var $string = $("#quick-recipe").html();
+			//Recipe is an object, with items and method.
+			var $recipe = quickRecipe.formatString($string, $("#quick-recipe"));
+			var $line;
+			var $items = [];
+			var $method = $recipe.method;
 
-			var $lines = quickRecipe.formatString($string, $("#quick-recipe"));
+			//Populate items array
+			$items = quickRecipe.populateItemsArray($recipe.items);
 
-			var $contents = [];
-			var $new_line;
-			var $character;
-			var $unit_name;
-			var $description;
-			var $food_name;
-			var $item = {};
-			var $errors = [];
-			var $line_number = 0;
-			var $steps = [];
-			var $method_trigger_line_number;
-			var $method = false;
+			//check item contains quantity, unit and food
+			$errors = quickRecipe.errorCheck($items);
 
-			$($lines).each(function () {
-				var $line = this;
-				$line_number++;
-
-				//acceptable method triggers are: method, directions, or preparation, any case, with or without a colon.
-				if ($line.toLowerCase() === "Method".toLowerCase() || $line.toLowerCase() === "Method:".toLowerCase() || $line.toLowerCase() === "Preparation".toLowerCase() || $line.toLowerCase() === "Preparation:".toLowerCase() || $line.toLowerCase() === "Directions".toLowerCase() || $line.toLowerCase() === "Directions:".toLowerCase()) {
-					$method = true;
-					$method_trigger_line_number = $line_number;
-				}
-
-				if (!$method) {
-					for (var $index = 0; $index < $line.length; $index++) {
-						$character = $line.substr($index, 1);
-
-						//get the quantity
-						if (!$item.quantity) {
-							if (isNaN($character) && $character !== '.') {
-								//not a number or a decimal point
-							}
-							//the following if check is so that quantity is not defined when it has not been specified
-							else if ($character !== " ") {
-								//the quantity is a valid number
-								$quantity_response = quickRecipe.quantity($line, $index);
-								$quantity = $quantity_response[0];
-								$end_quantity_index = $quantity_response[1];
-								$item.quantity = $quantity;
-							}
-						}
-						
-						//get the unit. unit is one word.
-						if (!$item.unit_name && $item.quantity && $index >= $end_quantity_index) {	
-							var $unit_response = quickRecipe.unitName($line, $end_quantity_index);
-							if (!$unit_response.error) {
-								//no error
-								$unit_name = $unit_response.name;
-								$end_unit_index = $unit_response.end_index;
-								$item.unit_name = $unit_name;
-							}
-						}
-						
-						//get the food
-						if (!$item.food_name && $item.unit_name && $index >= $end_unit_index) {
-							var $food_response = quickRecipe.foodName($line, $end_unit_index);
-							$food_name = $food_response[0];
-							$end_food_index = $food_response[1];
-							$item.food_name = $food_name;
-						}
-						
-						//get the description
-						if (!$item.description && $item.food_name && $item.quantity && $item.unit_name && $index >= $end_food_index) {
-							$description = quickRecipe.description($line, $end_food_index);
-							$item.description = $description;
-						}				
-
-						//check if it's the end of a line, to check if all values were entered
-						if ($index === $line.length - 1) {
-							//it's the end of a line
-							if (!$item.food_name || !$item.quantity || !$item.unit_name) {
-								$errors.push('Food, quantity and unit have not all been specified on line ' + $line_number);
-								$("#quick-recipe > *:nth-child(" + $line_number + ")").css('background', 'red');
-							}
-							else {
-								$contents.push($item);
-								$item = {};
-							}
-						}			
-					}
-				}
-				else if ($line_number !== $method_trigger_line_number) {
-					//it is the actual method, not the ingredients or the method trigger line
-					$steps.push($line);
-				}
-				
-			});
-
-			$scope.errors.quick_recipe = $errors;
+			//still to do: check quantity is a number
 
 			if ($errors.length > 0) {
+				$scope.errors.quick_recipe = $errors;
 				return;
 			}
 
-			$scope.quick_recipe.contents = $contents;
-			$scope.quick_recipe.steps = $steps;
-			$scope.quick_recipe.name = prompt('name your recipe');
+			//Prompt the user for the recipe name
+			$recipe_name = prompt('name your recipe');
 
 			//If the user changes their mind and cancels
-			if (!$scope.quick_recipe.name) {
+			if (!$recipe_name) {
 				return;
 			}
 
-			foods.insertQuickRecipe($scope.quick_recipe.name, $contents, $steps, true).then(function (response) {
+			$recipe = {
+				name: $recipe_name,
+				items: $items,
+				method: $method,
+			};
+
+			$scope.quick_recipe.contents = $recipe.items;
+			$scope.quick_recipe.steps = $recipe.steps;
+			$scope.quick_recipe.name = $recipe.name;
+
+			//Attempt to insert the recipe. It won't be inserted if similar names are found.
+			// $scope.quickRecipeAttemptInsert($recipe);
+		};
+
+		$scope.quickRecipeAttemptInsert = function () {
+			foods.insertQuickRecipe($recipe, true).then(function (response) {
 				if (response.data.similar_names) {
 					$scope.quick_recipe.similar_names = response.data.similar_names;
 					$scope.show.popups.similar_names = true;
@@ -457,22 +394,6 @@ var app = angular.module('tracker');
 					$scope.recipes.filtered = response.data.recipes;
 					$scope.all_foods_with_units = response.data.foods_with_units;
 				}	
-			});
-		};
-
-		$scope.insertRecipeMethod = function () {
-			var $string = $("#recipe-method").html();
-			var $lines = quickRecipe.formatString($string, $("#recipe-method"));
-			var $steps = [];
-
-			$($lines).each(function () {
-				var $line = this;
-				$steps.push($line);
-			});
-
-			foods.insertRecipeMethod($scope.selected.recipe.id, $steps).then(function (response) {
-				$scope.recipe.contents = response.data.contents;
-				$scope.recipe.steps = response.data.steps;
 			});
 		};
 
@@ -520,6 +441,7 @@ var app = angular.module('tracker');
 		/**
 		 * other
 		 */
+		
 		$scope.closePopup = function ($event, $popup) {
 			var $target = $event.target;
 			if ($target.className === 'popup-outer') {

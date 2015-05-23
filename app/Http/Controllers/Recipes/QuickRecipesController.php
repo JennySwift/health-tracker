@@ -47,11 +47,14 @@ class QuickRecipesController extends Controller {
 	 */
 	public function quickRecipe(Request $request)
 	{	
-		$recipe_name = $request->get('recipe_name');
-		$steps = $request->get('steps');
-		$contents = $request->get('contents');
+		$recipe = $request->get('recipe');
+		$recipe_name = $recipe['name'];
+		$steps = $recipe['steps'];
+		$contents = $recipe['items'];
+		// $steps = $request->get('steps');
+		// $contents = $request->get('contents');
 
-		Debugbar::info('contents', $contents);
+		// Debugbar::info('contents', $contents);
 		// dd($contents);
 
 		if ($request->get('check_similar_names')) {
