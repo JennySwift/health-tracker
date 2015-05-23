@@ -29,6 +29,9 @@ var app = angular.module('tracker');
 				similar_names: false,
 				temporary_recipe: false,
 				food_info: false,
+			},
+			help: {
+				quick_recipe: false
 			}
 		};
 
@@ -451,6 +454,10 @@ var app = angular.module('tracker');
 			if ($target.className === 'popup-outer') {
 				$scope.show.popups[$popup] = false;
 			}
+		};
+
+		$scope.toggleQuickRecipeHelp = function () {
+			$scope.show.help.quick_recipe = !$scope.show.help.quick_recipe;
 		};
 		
 		

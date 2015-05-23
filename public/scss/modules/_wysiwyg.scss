@@ -4,4 +4,15 @@
 	max-width: 600px;
 	background: white;
 	overflow: scroll;
+	border-radius: 8px;
+}
+
+.wysiwyg-toolbar {
+	display: flex;
+	padding: 5px 0;
+	a {
+		cursor: pointer;
+		font-size: 18px;
+		margin: 0 14px;
+	}
 }

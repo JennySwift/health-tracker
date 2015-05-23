@@ -1,5 +1,5 @@
 var $page = window.location.pathname;
-var app = angular.module('tracker', ['ngSanitize', 'checklist-model'], function ($interpolateProvider) {
+var app = angular.module('tracker', ['ngSanitize', 'ngAnimate', 'checklist-model'], function ($interpolateProvider) {
 	$interpolateProvider.startSymbol('[[');
 	$interpolateProvider.endSymbol(']]');
 });

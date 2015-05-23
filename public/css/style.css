@@ -257,9 +257,27 @@ li {
   color: red;
   cursor: pointer; }
 
-#foods-tab .flex {
+#foods .flex {
   display: flex;
-  justify-content: space-around; }
+  justify-content: space-around;
+  flex-wrap: wrap; }
+#foods #quick-recipe-container {
+  display: flex;
+  justify-content: center; }
+  #foods #quick-recipe-container #quick-recipe-div {
+    width: 445px; }
+    #foods #quick-recipe-container #quick-recipe-div button {
+      width: 100%; }
+    #foods #quick-recipe-container #quick-recipe-div .transition {
+      opacity: 1;
+      height: 625px; }
+    #foods #quick-recipe-container #quick-recipe-div .transition.ng-hide-add.ng-hide-add-active,
+    #foods #quick-recipe-container #quick-recipe-div .transition.ng-hide-remove.ng-hide-remove-active {
+      -webkit-transition: all linear .5s;
+      transition: all linear .5s; }
+    #foods #quick-recipe-container #quick-recipe-div .transition.ng-hide {
+      opacity: 0;
+      height: 0px; }
 
 #login-form {
   margin-top: 130px; }
@@ -365,7 +383,16 @@ li {
   width: 100%;
   max-width: 600px;
   background: white;
-  overflow: scroll; }
+  overflow: scroll;
+  border-radius: 8px; }
+
+.wysiwyg-toolbar {
+  display: flex;
+  padding: 5px 0; }
+  .wysiwyg-toolbar a {
+    cursor: pointer;
+    font-size: 18px;
+    margin: 0 14px; }
 
 #exercises {
   display: flex;

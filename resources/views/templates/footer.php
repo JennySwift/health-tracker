@@ -1,6 +1,7 @@
 <!-- plugins -->
 <script type="text/javascript" src="tools/angular.min.js"></script>
 <script type="text/javascript" src="tools/angular-sanitize.min.js"></script>
+<script type="text/javascript" src="tools/angular-animate.min.js"></script>
 <script type="text/javascript" src="tools/jquery.js"></script>
 <script type="text/javascript" src="tools/underscore-min.js"></script>
 <script type="text/javascript" src="tools/enquire.min.js"></script>
