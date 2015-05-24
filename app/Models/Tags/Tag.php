@@ -49,30 +49,17 @@ class Tag extends Model {
 	 * insert
 	 */
 	
+	/**
+	 * Inserts a new tag (of type recipe) into the tags table
+	 * @param  [type] $name [description]
+	 * @return [type]       [description]
+	 */
 	public static function insertRecipeTag($name)
 	{
 		static
 			::insert([
 				'name' => $name,
 				'for' => 'recipe',
-				'user_id' => Auth::user()->id
-			]);
-	}
-
-	public static function insertTagsIntoRecipe($recipe_id, $tags)
-	{
-		foreach ($tags as $tag) {
-			$tag_id = $tag['id'];
-			static::insertTagIntoRecipe($recipe_id, $tag_id);
-		}
-	}
-
-	public static function insertTagIntoRecipe($recipe_id, $tag_id)
-	{
-		static
-			::insert([
-				'recipe_id' => $recipe_id,
-				'tag_id' => $tag_id,
 				'user_id' => Auth::user()->id
 			]);
 	}
@@ -85,6 +72,11 @@ class Tag extends Model {
 	 * delete
 	 */
 
+	/**
+	 * Deletes a recipe tag from the tags table
+	 * @param  [type] $id [description]
+	 * @return [type]     [description]
+	 */
 	public static function deleteRecipeTag($id)
 	{
 		static
@@ -92,11 +84,4 @@ class Tag extends Model {
 			->delete();
 	}
 
-	public static function deleteTagsFromRecipe($recipe_id)
-	{
-		static
-			::where('recipe_id', $recipe_id)
-			->delete();
-	}
-	
 }

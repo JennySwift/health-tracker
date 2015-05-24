@@ -163,7 +163,9 @@ var app = angular.module('tracker');
 
 		$scope.insertTagsIntoRecipe = function () {
 			//deletes tags from the recipe then adds the correct ones
-			foods.insertTagsIntoRecipe($scope.selected.recipe.id, $scope.selected.recipe.tags).then(function (response) {
+			$scope.recipe_popup.notification = 'Saving tags...';
+			foods.insertTagsIntoRecipe($scope.recipe_popup.recipe.id, $scope.recipe_popup.tags).then(function (response) {
+				$scope.recipe_popup.notification = 'Tags have been saved.';
 				$scope.recipes.filtered = response.data;
 			});
 		};

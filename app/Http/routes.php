@@ -70,7 +70,7 @@ Route::post('select/entries', 'EntriesController@getEntries');
  * Tags
  * These might need fixing up, changing to the correct controller
  */
-Route::post('insert/tagsIntoRecipe', 'Tags\TagsController@insertTagsIntoRecipe');
+Route::post('insert/tagsIntoRecipe', 'Recipes\RecipesController@insertTagsIntoRecipe');
 Route::post('insert/recipeTag', 'Tags\TagsController@insertRecipeTag');
 Route::post('insert/tagInExercise', 'Tags\TagsController@insertTagInExercise');
 Route::post('insert/exerciseTag', 'Tags\TagsController@insertExerciseTag');

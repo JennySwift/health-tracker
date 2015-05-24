@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 use Auth;
+use DB;
 use Debugbar;
 
 /**
@@ -50,14 +51,20 @@ class RecipesController extends Controller {
 	 * insert
 	 */
 
+	/**
+	 * Delete all tags from the recipe then adds the correct tags to it
+	 * @param  Request $request [description]
+	 * @return [type]           [description]
+	 */
 	public function insertTagsIntoRecipe(Request $request)
 	{
-		//deletes all tags then adds the correct tags
-		$recipe_id = $request->get('recipe_id');
-		$tags = $request->get('tags');
-		
-		Tag::deleteTagsFromRecipe($recipe_id);
-		Tag::insertTagsIntoRecipe($recipe_id, $tags);
+		$recipe = Recipe::find($request->get('recipe_id'));
+		$tag_ids = $request->get('tags');
+
+		//Delete all the tags from the recipe
+		DB::table('taggables')->where('taggable_id', $recipe->id)->where('taggable_type', 'recipe')->delete();
+		//Insert the correct tags for the recipe
+		Recipe::insertTagsIntoRecipe($recipe, $tag_ids);
 
 		return Recipe::filterRecipes('', []);
 	}

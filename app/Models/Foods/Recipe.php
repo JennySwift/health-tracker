@@ -3,6 +3,7 @@
 use Illuminate\Database\Eloquent\Model;
 use Auth;
 use DB;
+use Debugbar;
 
 /**
  * Models
@@ -161,6 +162,24 @@ class Recipe extends Model {
 				'name' => $name,
 				'user_id' => Auth::user()->id
 			]);
+	}
+
+	public static function insertTagsIntoRecipe($recipe, $tag_ids)
+	{
+		foreach ($tag_ids as $tag_id) {
+			static::insertTagIntoRecipe($recipe, $tag_id);
+		}
+	}
+
+	/**
+	 * Inserts a tag into the taggables table for a recipe
+	 * @param  [type] $recipe_id [description]
+	 * @param  [type] $tag_id    [description]
+	 * @return [type]            [description]
+	 */
+	public static function insertTagIntoRecipe($recipe, $tag_id)
+	{
+		$recipe->tags()->attach($tag_id, ['taggable_type' => 'recipe']);
 	}
 
 	/**
