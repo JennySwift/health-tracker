@@ -35,7 +35,7 @@ class RecipeMethod extends Model {
 	 * insert
 	 */
 	
-	public static function insertRecipeMethod($recipe_id, $steps)
+	public static function insertRecipeMethod($recipe, $steps)
 	{
 		$step_number = 0;
 		foreach ($steps as $step_text) {
@@ -43,7 +43,7 @@ class RecipeMethod extends Model {
 
 			static
 				::insert([
-					'recipe_id' => $recipe_id,
+					'recipe_id' => $recipe->id,
 					'step' => $step_number,
 					'text' => $step_text,
 					'user_id' => Auth::user()->id
@@ -59,10 +59,10 @@ class RecipeMethod extends Model {
 	 * delete
 	 */
 
-	public static function deleteRecipeMethod($recipe_id)
+	public static function deleteRecipeMethod($recipe)
 	{
 		static
-			::where('recipe_id', $recipe_id)
+			::where('recipe_id', $recipe->id)
 			->delete();
 	}
 

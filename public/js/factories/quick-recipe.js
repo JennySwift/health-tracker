@@ -5,30 +5,40 @@ app.factory('quickRecipe', function ($http) {
 		var $lines = [];
 		var $divs;
 
-		//format for Firefox
-		if ($string.indexOf('<br>') !== -1) {
-			$string = $object.formatForFirefox($string, $wysiwyg);
-		}
+		//Format for any browser (hopefully)
+		var $string_and_array = $object.formatForAnyBrowser($string, $wysiwyg);
+		$string = $string_and_array.string;
+		var $array = $string_and_array.array;
 
-		//Format for Chrome
-		else if ($string.indexOf('<div>') !== -1) {
-			$string = $object.formatForChrome($string, $wysiwyg);
-		}
-
-		//turn the string into an array of lines
-		$divs = $($wysiwyg).children();
-		$($divs).each(function () {
-			var $line = $(this).html();
-			$line = $line.trim();
-			if ($line !== "") {
-				$lines.push($line);
-			}	
+		//trim the items in the array
+		$($array).each(function () {
+			this.trim();
 		});
 
 		//separate the method from the recipe
-		$recipe = $object.separateMethod($lines);
+		$recipe = $object.separateMethod($array);
 
 		return $recipe;
+
+		//format for Firefox
+		// if ($string.indexOf('<br>') !== -1) {
+		// 	$string = $object.formatForFirefox($string, $wysiwyg);
+		// }
+
+		//Format for Chrome
+		// else if ($string.indexOf('<div>') !== -1) {
+		// 	$string = $object.formatForChrome($string, $wysiwyg);
+		// }
+
+		//turn the string into an array of lines
+		// $divs = $($wysiwyg).children();
+		// $($divs).each(function () {
+		// 	var $line = $(this).html();
+		// 	$line = $line.trim();
+		// 	if ($line !== "") {
+		// 		$lines.push($line);
+		// 	}	
+		// });
 	};
 
 	/**
@@ -115,49 +125,96 @@ app.factory('quickRecipe', function ($http) {
 		return $recipe;
 	};
 
-	$object.formatForFirefox = function ($string, $wysiwyg) {
-		//remove the final and pointless br tag/tags
-		while ($string.substr($string.length - 4, 4) === '<br>') {
-			//there is a br tag at the end. remove it.
-			$string = $string.substring(0, $string.length - 4);
+	/**
+	 * The $string may contain unwanted br tags and both opening and closing div tags.
+	 * Format the string so into a string of div tags to populate the html of the wysiwyg.
+	 * And create an array from the $string.
+	 * Return both the formatted string and the array.
+	 * @param  {[type]} $string  [description]
+	 * @param  {[type]} $wysiwyg [description]
+	 * @return {[type]}          [description]
+	 */
+	$object.formatForAnyBrowser = function ($string, $wysiwyg) {
+		//Remove any closing div tags and replace any opening div tags with a br tag.
+		while ($string.indexOf('<div>') !== -1 || $string.indexOf('</div>') !== -1) {
+			$string = $string.replace('<div>', '<br>').replace('</div>', '');
 		}
 
-		//change br tags to divs
-		var $split = $string.split('<br>');
+		//turn the string into an array of divs by first splitting at the br tags
+		var $array = $string.split('<br>');
+
+		//remove any empty elements from the array
+		$array = _.without($array, '');
+
 		var $formatted_string = "";
-		for (var i = 0; i < $split.length; i++) {
-			$formatted_string += '<div>' + $split[i] + '</div>';
+
+		//make $formatted_string a string with div tags
+		for (var j = 0; j < $array.length; j++) {
+			$formatted_string += '<div>' + $array[j] + '</div>';
 		}
+		
 		$string = $formatted_string;
 		$($wysiwyg).html($string);
 
-		return $string;
+		return {
+			string: $string,
+			array: $array
+		};
 	};
 
-	$object.formatForChrome = function ($string, $wysiwyg) {
-		//remove any closing div tags
-		while ($string.indexOf('</div>') !== -1) {
-			$string = $string.replace('</div>', '');
-		}
+	// $object.formatForFirefox = function ($string, $wysiwyg) {
+	// 	//remove the final and pointless br tag/tags
+	// 	while ($string.substr($string.length - 4, 4) === '<br>') {
+	// 		//there is a br tag at the end. remove it.
+	// 		$string = $string.substring(0, $string.length - 4);
+	// 	}
 
-		//split the string
-		$split = $string.split('<div>');
+	// 	//change br tags to divs
+	// 	var $split = $string.split('<br>');
+	// 	var $formatted_string = "";
+	// 	for (var i = 0; i < $split.length; i++) {
+	// 		//First check there aren't any divs. When I tried editing a recipe in Chrome, the html of the existing method contained br tags, but when I added a new line it made it a div tag, messing up my code.
+	// 		if ($split[i].indexOf('<div>' !== -1)) {
+	// 			//There is an opening div tag. Get rid of it.
+	// 			$split[i] = $split[i].replace('<div>', '');
+	// 		}
+	// 		if ($split[i].indexOf('</div>' !== -1)) {
+	// 			//There is an closing div tag. Get rid of it.
+	// 			$split[i] = $split[i].replace('</div>', '');
+	// 		}
 
-		//turn the string into an array of divs
-		$formatted_string = "";	
-		for (var j = 0; j < $split.length; j++) {
-			//This if check is because when I would run the function a second time, $split had an '' value,
-			//causing this next code to create an empty div.
-			if ($split[j] !== '') {
-				$formatted_string += '<div>' + $split[j] + '</div>';
-			}
-		}
+	// 		$formatted_string += '<div>' + $split[i] + '</div>';
+	// 	}
+	// 	$string = $formatted_string;
+	// 	$($wysiwyg).html($string);
 
-		$string = $formatted_string;
-		$($wysiwyg).html($string);
+	// 	return $string;
+	// };
 
-		return $string;
-	};
+	// $object.formatForChrome = function ($string, $wysiwyg) {
+	// 	//remove any closing div tags
+	// 	while ($string.indexOf('</div>') !== -1) {
+	// 		$string = $string.replace('</div>', '');
+	// 	}
+
+	// 	//split the string
+	// 	$split = $string.split('<div>');
+
+	// 	//turn the string into an array of divs
+	// 	$formatted_string = "";	
+	// 	for (var j = 0; j < $split.length; j++) {
+	// 		//This if check is because when I would run the function a second time, $split had an '' value,
+	// 		//causing this next code to create an empty div.
+	// 		if ($split[j] !== '') {
+	// 			$formatted_string += '<div>' + $split[j] + '</div>';
+	// 		}
+	// 	}
+
+	// 	$string = $formatted_string;
+	// 	$($wysiwyg).html($string);
+
+	// 	return $string;
+	// };
 
 	/**
 	 * $items is an array of strings.
@@ -274,86 +331,6 @@ app.factory('quickRecipe', function ($http) {
 
 		return $quantity;
 	};
-
-	// $object.requiredValuesCheck = function () {
-
-	// };
-
-	// quantity: function ($string, $index) {
-	// 	//Find out how many digits the quantity contains.
-	// 	var $end_quantity_index = $index + 1;
-
-	// 	//check if the following characters are numbers, or empty strings (isNan return false for empty string), a decimal point, or a / for a fractional number
-	// 	while (!isNaN($string.substr($end_quantity_index, 1)) && $string.substr($end_quantity_index, 1) !== ' ' || $string.substr($end_quantity_index, 1) === '.' || $string.substr($end_quantity_index, 1) === '/') {
-	// 		//in other words, the next character is a number, '.' or '/'.
-	// 		$end_quantity_index++;
-	// 	}
-
-	// 	$quantity = $string.substring($index, $end_quantity_index);
-
-	// 	//check if $quantity is a fraction, and if so, convert to decimal
-	// 	if ($quantity.indexOf('/') !== -1) {
-	// 		//it is a fraction
-	// 		var $parts = $quantity.split('/');
-	// 		var $decimal = parseInt($parts[0], 10) / parseInt($parts[1], 10);
-	// 		$quantity = $decimal;
-	// 	}
-
-	// 	return [$quantity, $end_quantity_index];
-	// },
-	// unitName: function ($string, $end_quantity_index) {
-	// 	$start_unit_index = $end_quantity_index + 1;
-	// 	var $end_unit_index = $start_unit_index + 1;
-	// 	var $unit_name;
-
-	// 	while ($string.substr($end_unit_index, 1) !== ' ') {
-	// 		if ($string.substr($end_unit_index, 1) === '<' || $string.substr($end_unit_index, 1) === ',' || $string.substr($end_unit_index, 1) === '') {
-	// 			//there was an error-after the unit there is a tag, comma, or it is the end of the line.
-	// 			return {
-	// 				error: true
-	// 			};
-	// 		}
-	// 		$end_unit_index++;
-	// 	}
-
-	// 	$unit_name = $string.substring($start_unit_index, $end_unit_index);
-
-	// 	return {
-	// 		name: $unit_name,
-	// 		end_index: $end_unit_index,
-	// 		error: false
-	// 	};
-	// },
-	// foodName: function ($string, $end_unit_index) {
-	// 	var $start_food_index = $end_unit_index + 1;
-	// 	var $end_food_index = $start_food_index + 1;
-
-	// 	while ($string.substr($end_food_index, 1) !== ',' && $string.substr($end_food_index, 1) !== "") {
-	// 		//we haven't reached a comma or the end of a line
-	// 		$end_food_index++;
-	// 	}
-		
-	// 	var $food_name = $string.substring($start_food_index, $end_food_index);
-
-	// 	return [$food_name, $end_food_index];
-	// },
-	// description: function ($string, $end_food_index) {
-	// 	var $description;
-
-	// 	//check there is a comma
-	// 	if ($string.substr($end_food_index, 1) === ',') {
-	// 		var $start_description_index = $end_food_index + 1;
-	// 		var $end_description_index = $start_description_index + 1;
-
-	// 		while ($string.substr($end_description_index, 1) !== "") {
-	// 			$end_description_index++;
-	// 		}
-			
-	// 		$description = $string.substring($start_description_index + 1, $end_description_index);
-	// 	}
-
-	// 	return $description;
-	// }
 	
 	return $object;
 });

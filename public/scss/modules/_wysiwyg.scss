@@ -1,7 +1,10 @@
+.wysiwyg-container {
+	width: 100%;
+	max-width: 600px;
+}
 .wysiwyg {
 	height: 350px;
 	width: 100%;
-	max-width: 600px;
 	background: white;
 	overflow: scroll;
 	border-radius: 8px;

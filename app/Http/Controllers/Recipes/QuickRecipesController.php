@@ -51,6 +51,8 @@ class QuickRecipesController extends Controller {
 		Debugbar::info('recipe', $recipe);
 		Debugbar::info('request->all()', $request->all());
 		Debugbar::info('items', $recipe['items']);
+
+		// return 'nothing';
 		
 		$recipe_name = $recipe['name'];
 		$steps = $recipe['steps'];
@@ -201,15 +203,15 @@ class QuickRecipesController extends Controller {
 	private function insertEverything($recipe_name, $steps, $data_to_insert)
 	{
 		//insert recipe into recipes table
-		$recipe_id = $this->insertRecipe($recipe_name);
+		$recipe = Recipe::find($this->insertRecipe($recipe_name));
 
 		//insert the method for the recipe
-		RecipeMethod::insertRecipeMethod($recipe_id, $steps);
+		RecipeMethod::insertRecipeMethod($recipe, $steps);
 
 		//insert the items into food_recipe table
 		foreach ($data_to_insert as $item) {
 			//insert a row into food_recipe table
-			Recipe::insertFoodIntoRecipe($recipe_id, $item);
+			Recipe::insertFoodIntoRecipe($recipe, $item);
 
 			//insert food and unit ids into calories table (if the row doesn't exist already in the table) so that the unit is an associated unit of the food
 			$count = DB::table('food_unit')

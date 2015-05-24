@@ -142,21 +142,41 @@ li {
 #food-info-popup input {
   background: #FEE6BE; }
 
-#steps td {
+#recipe-popup button, #recipe-popup ul {
+  width: 100%; }
+#recipe-popup > div {
+  margin-bottom: 100px; }
+  #recipe-popup > div:last-child {
+    margin-bottom: 10px; }
+#recipe-popup #steps-table td {
   text-align: left; }
-  #steps td:nth-child(1) {
+  #recipe-popup #steps-table td:nth-child(1) {
     padding: 0px 20px;
     position: relative; }
-    #steps td:nth-child(1) div {
+    #recipe-popup #steps-table td:nth-child(1) div {
       position: absolute;
       top: 0;
       bottom: 0;
       left: 0;
       right: 0; }
-      #steps td:nth-child(1) div input {
+      #recipe-popup #steps-table td:nth-child(1) div input {
         margin: 0;
         height: 30px;
         width: 30px; }
+#recipe-popup .flex {
+  display: flex;
+  flex-direction: column;
+  align-items: center; }
+#recipe-popup .transition {
+  opacity: 1;
+  height: 400px; }
+#recipe-popup .transition.ng-hide-add.ng-hide-add-active,
+#recipe-popup .transition.ng-hide-remove.ng-hide-remove-active {
+  -webkit-transition: all linear .5s;
+  transition: all linear .5s; }
+#recipe-popup .transition.ng-hide {
+  opacity: 0;
+  height: 0px; }
 
 #exercise-popup h3:first-child {
   margin-top: 0;
@@ -378,10 +398,13 @@ li {
     #navbar li a {
       color: #777; }
 
+.wysiwyg-container {
+  width: 100%;
+  max-width: 600px; }
+
 .wysiwyg {
   height: 350px;
   width: 100%;
-  max-width: 600px;
   background: white;
   overflow: scroll;
   border-radius: 8px; }

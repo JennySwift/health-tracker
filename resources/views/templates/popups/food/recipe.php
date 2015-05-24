@@ -2,10 +2,10 @@
 
 <div ng-show="show.popups.recipe" ng-click="closePopup($event, 'recipe')" class="popup-outer">
 
-	<div class="popup-inner">
+	<div id="recipe-popup" class="popup-inner">
 
 		<h1 class="center">[[recipe_popup.recipe.name]]</h1>
-		<hr>
+		<!-- <hr> -->
 
 		<h3>Add ingredient</h3>
 
@@ -28,7 +28,7 @@
 			</div>
 		</div>
 
-		<hr>
+		<!-- <hr> -->
 
 		<h3>Ingredients</h3>
 			
@@ -53,16 +53,16 @@
 			</div>
 		</div>
 
-		<hr>
+		<!-- <hr> -->
 
 		<h3>Steps</h3>
 		<h5>Use the checkboxes while you make your recipe.</h5>
 		
 		<div>
+			<!-- steps-only show if they exist -->
+			<div ng-show="recipe_popup.steps.length > 0" class="flex">
 
-			<div ng-show="recipe_popup.steps.length > 0">
-				<button ng-click="editRecipeMethod()">edit method</button>
-				<table id="steps" class="table table-bordered">
+				<table id="steps-table" class="table table-bordered">
 					<tr ng-repeat="step in recipe_popup.steps">
 						<td>
 							<div class="vertical-center">
@@ -72,27 +72,35 @@
 						<td>[[step.text]]</td>
 					</tr>
 				</table>
+
+				<button ng-click="toggleEditMethod()" class="margin-bottom">edit method</button>
+
 			</div>
 
 			<!-- add method -->
-			<div ng-show="recipe_popup.steps.length < 1">enter the method for this recipe
+			<div ng-show="recipe_popup.steps.length < 1" class="flex">
+				<h1>Enter the method for this recipe</h1>
 				<div id="recipe-method" class="wysiwyg"></div>
 				<button ng-click="insertRecipeMethod()">add method</button>
 			</div>
 
 			<!-- edit method -->
-			<div ng-show="edit.recipe_method">enter the method for this recipe
-				<div id="edit-recipe-method" class="wysiwyg"></div>
-				<button ng-click="updateRecipeMethod()">save changes</button>
+			<div ng-show="recipe_popup.edit_method" class="transition flex">enter the method for this recipe
+				
+				<div class="wysiwyg-container">
+					<div id="edit-recipe-method" class="wysiwyg margin-bottom"></div>
+					<button ng-click="updateRecipeMethod()">save changes</button>
+				</div>
+
 			</div>
 
 		</div>
 
-		<hr>
+		<!-- <hr> -->
 
 		<h3 class="center">Tags</h3>
 
-		<div>
+		<div class="flex">
 
 			<ul class="list-group">
 				<li ng-repeat="tag in recipe_tags" class="list-group-item">
@@ -101,7 +109,7 @@
 				</li>
 			</ul>
 
-			<button ng-click="insertTagsIntoRecipe()">save tags</button>
+			<button ng-click="insertTagsIntoRecipe()" class="margin-bottom">save tags</button>
 			<div>[[recipe_popup.notification]]</div>
 
 		</div>

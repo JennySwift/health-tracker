@@ -41,11 +41,6 @@ var app = angular.module('tracker');
 				tag_ids: []
 			}
 		};
-
-		//edit
-		$scope.edit = {
-			recipe_method: false
-		};
 		
 		$scope.food_popup = {};
 		$scope.menu_item = {}; //id, name, type. for displaying the chosen autocompleted option (food or recipe)
@@ -210,26 +205,11 @@ var app = angular.module('tracker');
 		/**
 		 * update
 		 */
-		
-		$scope.editRecipeMethod = function () {
-			$scope.edit.recipe_method = true;
-			var $text;
-			var $string = "";
-
-			//convert the array into a string so I can make the wysiwyg display the steps
-			$($scope.recipe_popup.steps).each(function () {
-				$text = this.text;
-				$text = $text + '<br>';
-				// $text = '<div>' + $text + '</div>';
-				$string+= $text;
-			});
-			$("#edit-recipe-method").html($string);
-		};
 
 		$scope.updateRecipeMethod = function () {
 			//this is some duplication of insertRecipeMethod
 			var $string = $("#edit-recipe-method").html();
-			var $lines = quickRecipe.formatString($string, $("#edit-recipe-method"));
+			var $lines = quickRecipe.formatString($string, $("#edit-recipe-method")).items;
 			var $steps = [];
 
 			$($lines).each(function () {
@@ -239,7 +219,7 @@ var app = angular.module('tracker');
 
 			foods.updateRecipeMethod($scope.recipe_popup.recipe.id, $steps).then(function (response) {
 				$scope.recipe_popup = response.data;
-				$scope.edit.recipe_method = false;
+				$scope.recipe_popup.edit_method = false;
 			});	
 		};
 
@@ -524,7 +504,26 @@ var app = angular.module('tracker');
 		$scope.toggleQuickRecipeHelp = function () {
 			$scope.show.help.quick_recipe = !$scope.show.help.quick_recipe;
 		};
-		
+
+		$scope.toggleEditMethod = function () {
+			//Toggle the visibility of the wysywig
+			$scope.recipe_popup.edit_method = !$scope.recipe_popup.edit_method;
+
+			//If we are editing the recipe, prepare the html of the wysiwyg
+			if ($scope.recipe_popup.edit_method) {
+				var $text;
+				var $string = "";
+
+				//convert the array into a string so I can make the wysiwyg display the steps
+				$($scope.recipe_popup.steps).each(function () {
+					$text = this.text;
+					$text = $text + '<br>';
+					// $text = '<div>' + $text + '</div>';
+					$string+= $text;
+				});
+				$("#edit-recipe-method").html($string);
+			}
+		};		
 		
 	}); //end controller
 
