@@ -183,11 +183,11 @@ app.factory('foods', function ($http) {
 		 * delete
 		 */
 
-		deleteFoodFromRecipe: function ($id, $recipe_id) {
+		deleteFoodFromRecipe: function ($food_id, $recipe_id) {
 			if (confirm("Are you sure you want to remove this food from your recipe?")) {
 				var $url = 'delete/foodFromRecipe';
 				var $data = {
-					id: $id,
+					food_id: $food_id,
 					recipe_id: $recipe_id
 				};
 				

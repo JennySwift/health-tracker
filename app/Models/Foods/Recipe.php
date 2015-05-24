@@ -126,7 +126,7 @@ class Recipe extends Model {
 			->where('recipe_id', $recipe->id)
 			->join('foods', 'food_id', '=', 'foods.id')
 			->join('units', 'unit_id', '=', 'units.id')
-			->select('foods.name', 'units.name as unit_name', 'quantity', 'description')
+			->select('foods.id as food_id', 'foods.name', 'units.name as unit_name', 'quantity', 'description')
 			->get();
 
 		// dd($contents);

@@ -40,11 +40,6 @@ class RecipesController extends Controller {
 	{
 		$recipe = Recipe::find($request->get('recipe_id'));
 		return Recipe::getRecipeInfo($recipe);
-
-		// return array(
-		// 	'contents' => Recipe::getRecipeContents($recipe),
-		// 	'steps' => RecipeMethod::getRecipeSteps($recipe)
-		// );
 	}
 
 	/**
@@ -88,24 +83,21 @@ class RecipesController extends Controller {
 
 	public function insertRecipeMethod(Request $request)
 	{
-		$recipe_id = $request->get('recipe_id');
+		$recipe = Recipe::find($request->get('recipe_id'));
 		$steps = $request->get('steps');
 		
-		RecipeMethod::insertRecipeMethod($recipe_id, $steps);
+		RecipeMethod::insertRecipeMethod($recipe, $steps);
 		
-		return array(
-			'contents' => FoodRecipe::getRecipeContents($recipe_id),
-			'steps' => RecipeMethod::getRecipeSteps($recipe_id)
-		);
+		return Recipe::getRecipeInfo($recipe);
 	}
 
 	public function insertFoodIntoRecipe(Request $request)
 	{
 		$data = $request->all();
-		$recipe_id = $data['recipe_id'];
+		$recipe = Recipe::find($data['recipe_id']);
 		
-		FoodRecipe::insertFoodIntoRecipe($recipe_id, $data);
-		return FoodRecipe::getRecipeContents($recipe_id);
+		Recipe::insertFoodIntoRecipe($recipe, $data);
+		return Recipe::getRecipeInfo($recipe);
 	}
 
 	/**
@@ -114,17 +106,14 @@ class RecipesController extends Controller {
 	
 	public function updateRecipeMethod(Request $request)
 	{
-		$recipe_id = $request->get('recipe_id');
+		$recipe = Recipe::find($request->get('recipe_id'));
 		$steps = $request->get('steps');
 
 		//delete the existing method before adding the updated method
-		RecipeMethod::deleteRecipeMethod($recipe_id);
-		RecipeMethod::insertRecipeMethod($recipe_id, $steps);
+		RecipeMethod::deleteRecipeMethod($recipe);
+		RecipeMethod::insertRecipeMethod($recipe, $steps);
 		
-		return array(
-			'contents' => FoodRecipe::getRecipeContents($recipe_id),
-			'steps' => RecipeMethod::getRecipeSteps($recipe_id)
-		);
+		return Recipe::getRecipeInfo($recipe);
 	}
 
 	/**
@@ -140,18 +129,21 @@ class RecipesController extends Controller {
 	
 	public function deleteFoodFromRecipe(Request $request)
 	{
-		$food_id = $request->get('id');
-		$recipe_id = $request->get('recipe_id');
+		$food_id = $request->get('food_id');
 		$recipe = Recipe::find($request->get('recipe_id'));
+		// Debugbar::info('recipe', $recipe);
+		// Debugbar::info('recipe->id: ' . $recipe->id);
+		// Debugbar::info('food_recipe_id: ' . $food_recipe_id);
+
 		$recipe->foods()->detach($food_id);
-		return FoodRecipe::getRecipeContents($recipe_id);
+		return Recipe::getRecipeInfo($recipe);
 	}
 
 	public function deleteRecipeEntry(Request $request)
 	{
 		$date = $request->get('date');
 		$recipe_id = $request->get('recipe_id');
-		FoodRecipe::deleteRecipeEntry($date, $recipe_id);
+		Entry::deleteRecipeEntry($date, $recipe_id);
 		
 		$response = array(
 			"food_entries" => Entry::getFoodEntries($date),

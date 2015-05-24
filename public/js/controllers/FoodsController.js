@@ -222,7 +222,7 @@ var app = angular.module('tracker');
 			var $string = "";
 
 			//convert the array into a string so I can make the wysiwyg display the steps
-			$($scope.recipe.steps).each(function () {
+			$($scope.recipe_popup.steps).each(function () {
 				$text = this.text;
 				$text = $text + '<br>';
 				// $text = '<div>' + $text + '</div>';
@@ -242,9 +242,8 @@ var app = angular.module('tracker');
 				$steps.push($line);
 			});
 
-			foods.updateRecipeMethod($scope.selected.recipe.id, $steps).then(function (response) {
-				$scope.recipe.contents = response.data.contents;
-				$scope.recipe.steps = response.data.steps;
+			foods.updateRecipeMethod($scope.recipe_popup.recipe.id, $steps).then(function (response) {
+				$scope.recipe_popup = response.data;
 				$scope.edit.recipe_method = false;
 			});	
 		};
@@ -273,9 +272,9 @@ var app = angular.module('tracker');
 			});
 		};
 
-		$scope.deleteFoodFromRecipe = function ($id) {
-			foods.deleteFoodFromRecipe($id, $scope.selected.recipe.id).then(function (response) {
-				$scope.recipe.contents = response.data;
+		$scope.deleteFoodFromRecipe = function ($food_id) {
+			foods.deleteFoodFromRecipe($food_id, $scope.recipe_popup.recipe.id).then(function (response) {
+				$scope.recipe_popup = response.data;
 			});
 		};
 
