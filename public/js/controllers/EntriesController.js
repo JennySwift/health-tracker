@@ -402,76 +402,6 @@ var app = angular.module('tracker');
 		};
 
 		/**
-		 * autocomplete food
-		 */
-
-		$scope.autocompleteFood = function ($keycode) {
-			var $typing = $("#recipe-popup-food-input").val();
-			if ($keycode !== 13 && $keycode !== 38 && $keycode !== 40) {
-				//not enter, up arrow or down arrow
-				//fill the dropdown
-				autocomplete.food($typing).then(function (response) {
-					$scope.autocomplete_options.foods = response.data;
-					//show the dropdown
-					$scope.show.autocomplete_options.foods = true;
-					//select the first item
-					$scope.autocomplete_options.foods[0].selected = true;
-				});
-			}
-			else if ($keycode === 38) {
-				//up arrow pressed
-				autocomplete.autocompleteUpArrow($scope.autocomplete_options.foods);
-				
-			}
-			else if ($keycode === 40) {
-				//down arrow pressed
-				autocomplete.autocompleteDownArrow($scope.autocomplete_options.foods);
-			}
-		};
-
-		$scope.finishFoodAutocomplete = function ($array, $set_focus) {
-			//array, input_to_focus, autocomplete_to_hide, input_to_fill, selected_property_to_define
-			var $selected = _.findWhere($array, {selected: true});
-			$scope.recipe_popup.food = $selected;
-			$scope.selected.food = $selected;
-			$scope.show.autocomplete_options.foods = false;
-			$($set_focus).val("").focus();
-		};
-
-		$scope.insertOrAutocompleteFoodEntry = function ($keycode) {
-			if ($keycode !== 13) {
-				return;
-			}
-			//enter is pressed
-			if ($scope.show.autocomplete_options.foods) {
-				//enter is for the autocomplete
-				$scope.finishFoodAutocomplete($scope.autocomplete_options.foods, $("#recipe-popup-food-quantity"));
-				$scope.displayAssocUnitOptions();
-			}
-			else {
-				// if enter is to add the entry
-				$scope.insertFoodIntoRecipe();
-			}
-		};
-
-		$scope.insertFoodIntoRecipe = function () {
-			//we are adding a food to a permanent recipe
-			var $data = {
-				recipe_id: $scope.selected.recipe.id,
-				food_id: $scope.selected.food.id,
-				unit_id: $scope.selected.unit.id,
-				quantity: $scope.recipe_popup.food.quantity,
-				description: $scope.recipe_popup.food.description
-			};
-
-			insert.foodIntoRecipe($data).then(function (response) {
-				$scope.recipe.contents = response.data;
-			});
-			$("#recipe-popup-food-input").val("").focus();
-			$scope.recipe_popup.food.description = "";
-		};
-
-		/**
 		 * autocomplete temporary recipe food
 		 */
 
@@ -517,7 +447,7 @@ var app = angular.module('tracker');
 			if ($scope.show.autocomplete_options.temporary_recipe_foods) {
 				//enter is for the autocomplete
 				$scope.finishTemporaryRecipeFoodAutocomplete($scope.autocomplete_options.temporary_recipe_foods, $("#temporary-recipe-popup-food-quantity"));
-				$scope.displayAssocUnitOptions();
+				// $scope.displayAssocUnitOptions();
 			}
 			else {
 				// if enter is to add the entry

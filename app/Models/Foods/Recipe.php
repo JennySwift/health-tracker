@@ -188,7 +188,7 @@ class Recipe extends Model {
 	 * @param  [type] $data      [description]
 	 * @return [type]            [description]
 	 */
-	public static function insertFoodIntoRecipe($recipe_id, $data)
+	public static function insertFoodIntoRecipe($recipe, $data)
 	{
 		if (isset($data['description'])) {
 			$description = $data['description'];
@@ -197,9 +197,12 @@ class Recipe extends Model {
 			$description = null;
 		}
 
+		Debugbar::info('recipeid: ' . $recipe->id);
+		Debugbar::info('data', $data);
+
 		DB::table('food_recipe')
 			->insert([
-				'recipe_id' => $recipe_id,
+				'recipe_id' => $recipe->id,
 				'food_id' => $data['food_id'],
 				'unit_id' => $data['unit_id'],
 				'quantity' => $data['quantity'],

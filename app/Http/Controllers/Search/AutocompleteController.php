@@ -20,17 +20,8 @@ class AutocompleteController extends Controller {
     public function autocompleteMenu(Request $request)
     {
         $typing = '%' . $request->get('typing') . '%';
-
-        $foods = Food::where('user_id', Auth::user()->id)
-            ->where('name', 'LIKE', $typing)
-            ->with('defaultUnit')
-            ->with('units')
-            ->get();
-
-        $recipes = Recipe::where('user_id', Auth::user()->id)
-            ->where('name', 'LIKE', $typing)
-            ->get();
-
+        $foods = $this->foods($typing);
+        $recipes = $this->recipes($typing);
         $menu = $foods->merge($recipes);
 
         /**
@@ -56,14 +47,27 @@ class AutocompleteController extends Controller {
     public function autocompleteFood(Request $request)
     {
         $typing = '%' . $request->get('typing') . '%';
+        return $this->foods($typing);
+    }
 
-        $foods = Food
-            ::where('name', 'LIKE', $typing)
-            ->where('user_id', Auth::user()->id)
-            ->select('id', 'name')
+    private function foods($typing)
+    {
+        $foods = Food::where('user_id', Auth::user()->id)
+            ->where('name', 'LIKE', $typing)
+            ->with('defaultUnit')
+            ->with('units')
             ->get();
            
         return $foods;
+    }
+
+    private function recipes($typing)
+    {
+        $recipes = Recipe::where('user_id', Auth::user()->id)
+            ->where('name', 'LIKE', $typing)
+            ->get();
+
+        return $recipes;
     }
 
     public function autocompleteExercise(Request $request)
