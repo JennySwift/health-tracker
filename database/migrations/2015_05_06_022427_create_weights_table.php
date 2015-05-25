@@ -17,7 +17,8 @@ class CreateWeightsTable extends Migration {
 			$table->increments('id')->index();
 			$table->integer('user_id')->unsigned()->index();
 			$table->date('date')->index();
-			$table->decimal('weight', 10, 2);
+			$table->decimal('weight', 10, 1);
+			// $table->double('weight');
 			$table->timestamps();
 
 			$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
