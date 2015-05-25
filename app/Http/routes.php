@@ -1,17 +1,33 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Application Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register all of the routes for an application.
-| It's a breeze. Simply tell Laravel the URIs it should respond to
-| and give it the controller to call when that URI is requested.
-|
-*/
+/**
+ * Views
+ */
 
-Route::get('/', 'HomeController@index');
+//Homepage (entries)
+Route::get('/', 'EntriesController@index');
+
+//Units
+Route::get('/units', 'Units\UnitsController@index');
+
+//Foods
+Route::get('/foods', 'Foods\FoodsController@index');
+
+//Exercises
+Route::get('/exercises', 'Exercises\ExercisesController@index');
+
+//Journal
+Route::get('/journal', 'Journal\JournalController@index');
+
+//Credits
+Route::get('/credits', function()
+{
+    return view('credits');
+});
+
+/**
+ * Authentication
+ */
 
 Route::group(['prefix' => 'auth', 'namespace' => 'Auth'], function(){
 
@@ -37,89 +53,151 @@ Route::controllers([
 	'password' => 'Auth\PasswordController',
 ]);
 
-//throttle
-// Route::get('/', array('before' => 'throttle:2,1', function () {
-//     return 'failed login limit reached';
-// }, ));
+/**
+ * Resources
+ */
 
-// ====================================================================================
-// ========================================ajax========================================
-// ====================================================================================
+Route::resource('weights', 'Weights\WeightsController');
 
-// ========================================select========================================
+/**
+ * Ajax
+ */
 
-Route::post('select/pageLoad', 'SelectController@pageLoad');
-Route::post('select/journalEntry', 'SelectController@journalEntry');
-Route::post('select/specificExerciseEntries', 'SelectController@specificExerciseEntries');
-Route::post('select/exerciseSeriesHistory', 'SelectController@exerciseSeriesHistory');
-Route::post('select/entries', 'SelectController@entries');
-Route::post('select/foodInfo', 'SelectController@foodInfo');
-Route::post('select/exerciseSeries', 'SelectController@exerciseSeries');
-// Route::post('select/foodEntries', 'SelectController@foodEntries');
-// Route::post('select/exercises', 'SelectController@exercises');
-// Route::post('select/foodList', 'SelectController@foodList');
-// Route::post('select/exerciseList', 'SelectController@exerciseList');
-Route::post('select/filterRecipes', 'SelectController@filterRecipes');
-Route::post('select/unitList', 'SelectController@unitList');
-Route::post('select/allFoodsWithUnits', 'SelectController@allFoodsWithUnits');
-Route::post('select/weight', 'SelectController@weight');
-Route::post('select/recipeContents', 'SelectController@recipeContents');
-Route::post('select/autocompleteExercise', 'SelectController@autocompleteExercise');
-Route::post('select/autocompleteFood', 'SelectController@autocompleteFood');
-Route::post('select/autocompleteMenu', 'SelectController@autocompleteMenu');
+//selects everything (which controller??)
+Route::post('select/entries', 'EntriesController@getEntries');
 
-// ========================================insert========================================
+/**
+ * Tags
+ * These might need fixing up, changing to the correct controller
+ */
+Route::post('insert/tagsIntoRecipe', 'Recipes\RecipesController@insertTagsIntoRecipe');
+Route::post('insert/recipeTag', 'Tags\TagsController@insertRecipeTag');
+Route::post('insert/tagInExercise', 'Tags\TagsController@insertTagInExercise');
+Route::post('insert/exerciseTag', 'Tags\TagsController@insertExerciseTag');
+Route::post('insert/tagsInExercise', 'Tags\TagsController@insertTagsInExercise');
+Route::post('delete/exerciseTag', 'Tags\TagsController@deleteExerciseTag');
+Route::post('delete/recipeTag', 'Tags\TagsController@deleteRecipeTag');
+Route::post('delete/tagFromExercise', 'Tags\TagsController@deleteTagFromExercise');
 
-Route::post('insert/item', 'InsertController@item');
-Route::post('insert/recipeTag', 'InsertController@recipeTag');
-Route::post('insert/seriesIntoWorkout', 'InsertController@seriesIntoWorkout');
-Route::post('insert/deleteAndInsertSeriesIntoWorkouts', 'InsertController@deleteAndInsertSeriesIntoWorkouts');
-Route::post('insert/exerciseTag', 'InsertController@exerciseTag');
-Route::post('insert/exerciseSeries', 'InsertController@exerciseSeries');
-Route::post('insert/exerciseSet', 'InsertController@exerciseSet');
-Route::post('insert/tagInExercise', 'InsertController@tagInExercise');
-Route::post('insert/tagsInExercise', 'InsertController@tagsInExercise');
-Route::post('insert/tagsIntoRecipe', 'InsertController@tagsIntoRecipe');
-Route::post('insert/quickRecipe', 'InsertController@quickRecipe');
-Route::post('insert/recipeMethod', 'InsertController@recipeMethod');
-Route::post('insert/journalEntry', 'InsertController@journalEntry');
-Route::post('insert/food', 'InsertController@food');
-Route::post('insert/recipe', 'InsertController@recipe');
-Route::post('insert/exercise', 'InsertController@exercise');
-Route::post('insert/exerciseUnit', 'InsertController@exerciseUnit');
-Route::post('insert/unitInCalories', 'InsertController@unitInCalories');
-Route::post('insert/foodUnit', 'InsertController@foodUnit');
-Route::post('insert/menuEntry', 'InsertController@menuEntry');
-Route::post('insert/recipeEntry', 'InsertController@recipeEntry');
-Route::post('insert/exerciseEntry', 'InsertController@exerciseEntry');
-Route::post('insert/weight', 'InsertController@weight');
-Route::post('insert/foodIntoRecipe', 'InsertController@foodIntoRecipe');
+/**
+ * Select requests
+ */
 
-// ========================================update========================================
+//Autocomplete
 
-Route::post('update/defaultUnit', 'UpdateController@defaultUnit');
-Route::post('update/exerciseSeries', 'UpdateController@exerciseSeries');
-Route::post('update/exerciseStepNumber', 'UpdateController@exerciseStepNumber');
-Route::post('update/recipeMethod', 'UpdateController@recipeMethod');
-Route::post('update/defaultExerciseQuantity', 'UpdateController@defaultExerciseQuantity');
-Route::post('update/journalEntry', 'UpdateController@journalEntry');
-Route::post('update/defaultExerciseUnit', 'UpdateController@defaultExerciseUnit');
-Route::post('update/calories', 'UpdateController@calories');
+//This selects rows from both foods and recipes table.
+Route::post('select/autocompleteMenu', 'Search\AutocompleteController@autocompleteMenu');
+Route::post('select/autocompleteExercise', 'Search\AutocompleteController@autocompleteExercise');
+Route::post('select/autocompleteFood', 'Search\AutocompleteController@autocompleteFood');
 
-// ========================================delete========================================
+//journal
+Route::post('select/getJournalEntry', 'Journal\JournalController@getJournalEntry');
 
-// Route::post('delete/item', 'DeleteController@item');
-Route::post('delete/recipe', 'DeleteController@recipe');
-Route::post('delete/recipeTag', 'DeleteController@recipeTag');
-Route::post('delete/exerciseSeries', 'DeleteController@exerciseSeries');
-Route::post('delete/tagFromExercise', 'DeleteController@tagFromExercise');
-Route::post('delete/exerciseTag', 'DeleteController@exerciseTag');
-Route::post('delete/foodFromRecipe', 'DeleteController@foodFromRecipe');
-Route::post('delete/food', 'DeleteController@food');
-Route::post('delete/unitFromCalories', 'DeleteController@unitFromCalories');
-Route::post('delete/exercise', 'DeleteController@exercise');
-Route::post('delete/exerciseUnit', 'DeleteController@exerciseUnit');
-Route::post('delete/foodUnit', 'DeleteController@foodUnit');
-Route::post('delete/foodEntry', 'DeleteController@foodEntry');
-Route::post('delete/recipeEntry', 'DeleteController@recipeEntry');
-Route::post('delete/exerciseEntry', 'DeleteController@exerciseEntry');
+//exercises
+Route::post('select/getExercises', 'Exercises\ExercisesController@getExercises');
+Route::post('select/getExerciseInfo', 'Exercises\ExercisesController@getExerciseInfo');
+Route::post('select/getExerciseSeriesInfo', 'Exercises\ExercisesController@getExerciseSeriesInfo');
+Route::post('select/exerciseSeriesHistory', 'Exercises\ExercisesController@getExerciseSeriesHistory');
+//For testing
+Route::post('select/getExercises', 'Exercises\ExercisesController@getExercises');
+
+//exercise entries
+Route::post('select/specificExerciseEntries', 'Exercises\ExerciseEntriesController@getSpecificExerciseEntries');
+
+//foods
+Route::post('select/foodInfo', 'Foods\FoodsController@getFoodInfo');
+Route::post('select/allFoodsWithUnits', 'Foods\FoodsController@getAllFoodsWithUnits');
+
+//recipes
+Route::post('select/filterRecipes', 'Recipes\RecipesController@filterRecipes');
+Route::post('select/recipeContents', 'Recipes\RecipesController@getRecipeContents');
+
+//units
+Route::post('select/allUnits', 'Units\UnitsController@getAllUnits');
+
+/**
+ * Insert requests
+ */
+
+//weight
+Route::post('insert/weight', 'Weights\WeightsController@insertOrUpdateWeight');
+
+//foods
+Route::post('insert/menuEntry', 'Foods\FoodEntriesController@insertMenuEntry');
+Route::post('insert/food', 'Foods\FoodsController@insertFood');
+Route::post('insert/unitInCalories', 'Foods\FoodsController@insertUnitInCalories');
+
+//recipes
+Route::post('insert/quickRecipe', 'Recipes\QuickRecipesController@quickRecipe');
+Route::post('insert/recipeMethod', 'Recipes\RecipesController@insertRecipeMethod');
+Route::post('insert/recipe', 'Recipes\RecipesController@insertRecipe');
+Route::post('insert/recipeEntry', 'Recipes\RecipesController@insertRecipeEntry');
+Route::post('insert/foodIntoRecipe', 'Recipes\RecipesController@insertFoodIntoRecipe');
+
+//exercises
+Route::post('insert/exercise', 'Exercises\ExercisesController@insertExercise');
+Route::post('insert/deleteAndInsertSeriesIntoWorkouts', 'Exercises\ExercisesController@deleteAndInsertSeriesIntoWorkouts');
+
+//exercise entries
+Route::post('insert/exerciseSet', 'Exercises\ExerciseEntriesController@insertExerciseSet');
+Route::post('insert/exerciseEntry', 'Exercises\ExerciseEntriesController@insertExerciseEntry');
+
+//units
+Route::post('insert/exerciseUnit', 'Units\UnitsController@insertExerciseUnit');
+Route::post('insert/foodUnit', 'Units\UnitsController@insertFoodUnit');
+
+//exercise series
+Route::post('insert/exerciseSeries', 'Exercises\ExerciseSeriesController@insertExerciseSeries');
+
+//workout
+Route::post('insert/workout', 'Exercises\WorkoutsController@insertWorkout');
+
+//journal
+Route::post('insert/journalEntry', 'Journal\JournalController@insertOrUpdateJournalEntry');
+
+/**
+ * Update requests
+ */
+
+//foods
+Route::post('update/defaultUnit', 'Foods\FoodsController@updateDefaultUnit');
+Route::post('update/calories', 'Foods\FoodsController@updateCalories');
+
+//recipes
+Route::post('update/recipeMethod', 'Recipes\RecipesController@updateRecipeMethod');
+
+//exercises
+Route::post('update/exerciseSeries', 'Exercises\ExercisesController@updateExerciseSeries');
+Route::post('update/exerciseStepNumber', 'Exercises\ExercisesController@updateExerciseStepNumber');
+Route::post('update/defaultExerciseQuantity', 'Exercises\ExercisesController@updateDefaultExerciseQuantity');
+Route::post('update/defaultExerciseUnit', 'Exercises\ExercisesController@updateDefaultExerciseUnit');
+
+//journal
+Route::post('update/journalEntry', 'Journal\JournalController@updateJournalEntry');
+
+/**
+ * Delete requests
+ */
+
+//foods
+Route::post('delete/food', 'Foods\FoodsController@deleteFood');
+Route::post('delete/unitFromCalories', 'Foods\FoodsController@deleteUnitFromCalories');
+Route::post('delete/foodEntry', 'Foods\FoodEntriesController@deleteFoodEntry');
+
+//recipes
+Route::post('delete/recipe', 'Recipes\RecipesController@deleteRecipe');
+Route::post('delete/foodFromRecipe', 'Recipes\RecipesController@deleteFoodFromRecipe');
+Route::post('delete/recipeEntry', 'Recipes\RecipesController@deleteRecipeEntry');
+
+//exercises
+Route::post('delete/exercise', 'Exercises\ExercisesController@deleteExercise');
+
+//exercise entries
+Route::post('delete/exerciseEntry', 'Exercises\ExerciseEntriesController@deleteExerciseEntry');
+
+//exercise series
+Route::post('delete/exerciseSeries', 'Exercises\ExerciseSeriesController@deleteExerciseSeries');
+
+//units
+Route::post('delete/foodUnit', 'Units\UnitsController@deleteFoodUnit');
+Route::post('delete/exerciseUnit', 'Units\UnitsController@deleteExerciseUnit');

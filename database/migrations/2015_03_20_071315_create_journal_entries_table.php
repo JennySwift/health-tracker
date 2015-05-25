@@ -12,20 +12,25 @@ class CreateJournalEntriesTable extends Migration {
 	 */
 	public function up()
 	{
-		DB::statement('SET FOREIGN_KEY_CHECKS=0');
-
 		Schema::create('journal_entries', function(Blueprint $table)
 		{
-			$table->increments('id');
-			$table->timestamps();
-			$table->date('date');
+			$table->increments('id')->index();
+			$table->integer('user_id')->unsigned()->index();
+			$table->date('date')->index();
 			$table->text('text');
-			$table->integer('user_id')->unsigned(); //foreign key
-
+			$table->timestamps();
+			
 			$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-		});
 
-		DB::statement('SET FOREIGN_KEY_CHECKS=1');
+			/**
+			 * @VP:
+			 * When I tried adding ->index() to my 'text' column, and ran my migrations and seeders, I got the following error:
+			 * [Illuminate\Database\QueryException]
+  			 * SQLSTATE[42000]: Syntax error or access violation: 1170 BLOB/TEXT column 'text' used in key spec
+  			 * ification without a key length (SQL: alter table `journal_entries` add index journal_entries_tex
+  			 * t_index(`text`))
+			 */
+		});
 	}
 
 	/**
@@ -35,11 +40,7 @@ class CreateJournalEntriesTable extends Migration {
 	 */
 	public function down()
 	{
-		DB::statement('SET FOREIGN_KEY_CHECKS=0');
-
 		Schema::drop('journal_entries');
-
-		DB::statement('SET FOREIGN_KEY_CHECKS=1');
 	}
 
 }

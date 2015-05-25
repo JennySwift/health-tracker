@@ -161,34 +161,34 @@
 	}
 }
 
-.flex-parent {
-	display: flex;
-	display: -webkit-flex;
-	.flex-child {
-		// flex-basis: 1;
-		// flex-grow: 1;
-	}
-	.flex-grow-1 {
-		flex-grow: 1;
-		-webkit-flex-grow: 1;
-	}
-	.flex-grow-2 {
-		flex-grow: 2;
-		-webkit-flex-grow: 2;
-	}
-	.flex-basis-xs {
-		flex-basis: 20px;
-		-webkit-flex-basis: 20px;
-	}
-	.flex-basis-sm {
-		flex-basis: 40px;
-		-webkit-flex-basis: 40px;
-	}
-	.flex-basis-md {
-		flex-basis: 80px;
-		-webkit-flex-basis: 80px;
-	}
-}
+// .flex-parent {
+// 	display: flex;
+// 	display: -webkit-flex;
+// 	.flex-child {
+// 		// flex-basis: 1;
+// 		// flex-grow: 1;
+// 	}
+// 	.flex-grow-1 {
+// 		flex-grow: 1;
+// 		-webkit-flex-grow: 1;
+// 	}
+// 	.flex-grow-2 {
+// 		flex-grow: 2;
+// 		-webkit-flex-grow: 2;
+// 	}
+// 	.flex-basis-xs {
+// 		flex-basis: 20px;
+// 		-webkit-flex-basis: 20px;
+// 	}
+// 	.flex-basis-sm {
+// 		flex-basis: 40px;
+// 		-webkit-flex-basis: 40px;
+// 	}
+// 	.flex-basis-md {
+// 		flex-basis: 80px;
+// 		-webkit-flex-basis: 80px;
+// 	}
+// }
 
 .min-width-md {
 	min-width: 40px;

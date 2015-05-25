@@ -1,21 +1,19 @@
 
+@import 'popups/index';
+
 @import 'extends';
 
 @import 'font-awesome';
 
-@import 'display-entries';
+@import 'entries';
 
 @import 'foods';
-
-@import 'food-units-popup';
 
 @import 'login';
 
 @import 'helper-classes';
 
 @import 'navbar';
-
-@import 'popup';
 
 @import 'wysiwyg';
 
@@ -25,4 +23,6 @@
 
 @import 'checkboxes';
 
-@import 'recipe-popup';
+@import 'date-navigation';
+
+@import 'journal';

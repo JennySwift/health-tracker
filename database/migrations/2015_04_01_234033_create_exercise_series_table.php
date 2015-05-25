@@ -12,19 +12,15 @@ class CreateExerciseSeriesTable extends Migration {
 	 */
 	public function up()
 	{
-		DB::statement('SET FOREIGN_KEY_CHECKS=0');
-
 		Schema::create('exercise_series', function(Blueprint $table)
 		{
-			$table->increments('id');
+			$table->increments('id')->index();
+			$table->integer('user_id')->unsigned()->index();
+			$table->string('name')->index();
 			$table->timestamps();
-			$table->string('name');
-			$table->integer('user_id')->unsigned(); //foreign key
 
 			$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 		});
-
-		DB::statement('SET FOREIGN_KEY_CHECKS=1');
 	}
 
 	/**
@@ -34,11 +30,7 @@ class CreateExerciseSeriesTable extends Migration {
 	 */
 	public function down()
 	{
-		DB::statement('SET FOREIGN_KEY_CHECKS=0');
-
 		Schema::drop('exercise_series');
-
-		DB::statement('SET FOREIGN_KEY_CHECKS=1');
 	}
 
 }
