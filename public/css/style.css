@@ -1,82 +1,579 @@
-/*
-Syntax error: Invalid CSS after "}": expected "}", was ""
-        on line 115 of base/_base.scss
-        from line 1 of base/_index.scss
-        from line 7 of style.scss
+/*==============================colours==============================*/
+/* $income_background: #B0FFC5; */
+/* $expense_background: #FFD6C8; */
+/* $income_background: $light_blue;
+$expense_background: $light_blue; */
+/*==============================variables==============================*/
+/* $border: .5px solid black; */
+/* @mixin hover_span {
+	position: absolute;
+	background: black;
+	color: white;
+	height: 35px;
+	border-radius: 5px;
+	text-align: center;
+} */
+/*==============================global==============================*/
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+  background: lightgray; }
 
-110: 		font-size: 20px;
-111: 		margin: 2px 2px;
-112: 	}
-113: }
+body {
+  padding-top: 63px; }
+  @media (max-width: 600px) {
+    body {
+      padding-top: 42px; } }
 
-Backtrace:
-base/_base.scss:115
-base/_index.scss:1
-style.scss:7
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/scss/parser.rb:1308:in `expected'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/scss/parser.rb:1242:in `expected'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/scss/parser.rb:1237:in `tok!'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/scss/parser.rb:637:in `block'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/scss/parser.rb:630:in `ruleset'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/scss/parser.rb:654:in `block_child'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/scss/parser.rb:647:in `block_contents'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/scss/parser.rb:116:in `stylesheet'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/scss/parser.rb:41:in `parse'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/engine.rb:409:in `_to_tree'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/engine.rb:305:in `to_tree'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/tree/visitors/perform.rb:295:in `block in visit_import'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/stack.rb:88:in `block in with_import'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/stack.rb:121:in `with_frame'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/stack.rb:88:in `with_import'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/tree/visitors/perform.rb:294:in `visit_import'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/tree/visitors/base.rb:36:in `visit'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/tree/visitors/perform.rb:152:in `block in visit'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/stack.rb:79:in `block in with_base'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/stack.rb:121:in `with_frame'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/stack.rb:79:in `with_base'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/tree/visitors/perform.rb:152:in `visit'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/tree/visitors/perform.rb:297:in `block (2 levels) in visit_import'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/tree/visitors/perform.rb:297:in `map'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/tree/visitors/perform.rb:297:in `block in visit_import'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/stack.rb:88:in `block in with_import'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/stack.rb:121:in `with_frame'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/stack.rb:88:in `with_import'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/tree/visitors/perform.rb:294:in `visit_import'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/tree/visitors/base.rb:36:in `visit'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/tree/visitors/perform.rb:152:in `block in visit'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/stack.rb:79:in `block in with_base'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/stack.rb:121:in `with_frame'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/stack.rb:79:in `with_base'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/tree/visitors/perform.rb:152:in `visit'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/tree/visitors/base.rb:52:in `block in visit_children'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/tree/visitors/base.rb:52:in `map'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/tree/visitors/base.rb:52:in `visit_children'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/tree/visitors/perform.rb:161:in `block in visit_children'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/tree/visitors/perform.rb:173:in `with_environment'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/tree/visitors/perform.rb:160:in `visit_children'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/tree/visitors/base.rb:36:in `block in visit'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/tree/visitors/perform.rb:180:in `visit_root'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/tree/visitors/base.rb:36:in `visit'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/tree/visitors/perform.rb:151:in `visit'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/tree/visitors/perform.rb:8:in `visit'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/tree/root_node.rb:36:in `css_tree'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/tree/root_node.rb:20:in `render'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/engine.rb:274:in `render'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/plugin/compiler.rb:414:in `update_stylesheet'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/plugin/compiler.rb:189:in `block in update_stylesheets'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/plugin/compiler.rb:186:in `each'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/plugin/compiler.rb:186:in `update_stylesheets'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/plugin/compiler.rb:393:in `on_file_changed'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/lib/sass/plugin/compiler.rb:248:in `block in watch'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/vendor/listen/lib/listen/listener.rb:252:in `call'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/vendor/listen/lib/listen/listener.rb:252:in `on_change'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/vendor/listen/lib/listen/listener.rb:290:in `block in initialize_adapter'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/vendor/listen/lib/listen/adapter.rb:252:in `call'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/vendor/listen/lib/listen/adapter.rb:252:in `report_changes'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/vendor/listen/lib/listen/adapter.rb:321:in `poll_changed_directories'
-/usr/local/rvm/gems/ruby-1.9.3-p392/gems/sass-3.3.4/vendor/listen/lib/listen/adapter.rb:297:in `block in start_poller'
-*/
-body:before {
-  white-space: pre;
-  font-family: monospace;
-  content: "Syntax error: Invalid CSS after \"}\": expected \"}\", was \"\"\A         on line 115 of base/_base.scss\A         from line 1 of base/_index.scss\A         from line 7 of style.scss\A \A 110: 		font-size: 20px;\A 111: 		margin: 2px 2px;\A 112: 	}\A 113: }"; }
+html, body {
+  height: 100%; }
+
+body {
+  display: flex;
+  flex-direction: column; }
+  body .container {
+    flex-grow: 1; }
+  body footer {
+    padding: 11px;
+    background: rgba(119, 119, 119, 0.12); }
+
+h1, h2, h3, h4, h5 {
+  text-align: center; }
+
+p {
+  padding: 0 20px;
+  text-align: center; }
+
+select {
+  padding-top: 4px; }
+
+button {
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+  color: #555;
+  font-size: 14px;
+  padding: 6px 12px; }
+  button:active {
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.125) inset;
+    border: 1px solid black; }
+  button:focus {
+    outline: thin dotted;
+    outline-offset: -2px; }
+  button:hover, button:focus, button:active {
+    background-color: #e6e6e6;
+    border-color: #adadad;
+    color: #333; }
+
+input {
+  padding: 0;
+  margin: 0;
+  border: 0;
+  overflow: scroll;
+  background: transparent;
+  text-align: center; }
+
+input[type="checkbox"] {
+  margin: 0; }
+
+th, table {
+  text-align: center; }
+  th td, table td {
+    vertical-align: middle !important; }
+  @media (max-width: 600px) {
+    th, table {
+      font-size: 7px; } }
+
+caption {
+  padding: 8px;
+  font-weight: bold; }
+
+li {
+  list-style-type: none; }
+
+@media (max-width: 600px) {
+  h1 {
+    font-size: 20px;
+    margin: 2px 2px; } }
+
+@media (max-width: 480px) {
+  .my-input-group input {
+    padding-left: 0;
+    padding-right: 0; }
+  .my-input-group button {
+    padding-left: 0;
+    padding-right: 0; }
+
+  .my-btn-group button {
+    padding-left: 0;
+    padding-right: 0; }
+
+  #today {
+    padding-left: 0;
+    padding-right: 0;
+    max-width: 40px; } }
+#home-container, #home-row {
+  height: 100%; }
+
+.main {
+  height: 100%; }
+
+.container {
+  width: 100%; }
+
+.popup-outer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 999; }
+  .popup-outer .popup-inner {
+    position: relative;
+    border-radius: 5px;
+    margin-top: 10%;
+    background: white;
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+    overflow: scroll;
+    height: 500px;
+    padding: 25px; }
+
+#recipe-method, #edit-recipe-method {
+  background: lightgrey; }
+
+@media all and (min-width: 680px) {
+  .popup-inner {
+    padding: 22px; } }
+#food-info-popup .default-unit {
+  background: lightgreen; }
+#food-info-popup input {
+  background: #FEE6BE; }
+
+#recipe-popup button, #recipe-popup ul {
+  width: 100%; }
+#recipe-popup > div {
+  margin-bottom: 100px; }
+  #recipe-popup > div:last-child {
+    margin-bottom: 10px; }
+#recipe-popup #steps-table td {
+  text-align: left; }
+  #recipe-popup #steps-table td:nth-child(1) {
+    padding: 0px 20px;
+    position: relative; }
+    #recipe-popup #steps-table td:nth-child(1) div {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0; }
+      #recipe-popup #steps-table td:nth-child(1) div input {
+        margin: 0;
+        height: 30px;
+        width: 30px; }
+#recipe-popup .flex {
+  display: flex;
+  flex-direction: column;
+  align-items: center; }
+#recipe-popup .transition {
+  opacity: 1;
+  height: 400px; }
+#recipe-popup .transition.ng-hide-add.ng-hide-add-active,
+#recipe-popup .transition.ng-hide-remove.ng-hide-remove-active {
+  -webkit-transition: all linear .5s;
+  transition: all linear .5s; }
+#recipe-popup .transition.ng-hide {
+  opacity: 0;
+  height: 0px; }
+
+#exercise-popup h3:first-child {
+  margin-top: 0;
+  margin-bottom: 25px; }
+#exercise-popup .flex {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap; }
+#exercise-popup input {
+  background: #FEE6BE; }
+
+/*==============================font awesome==============================*/
+.fa-home {
+  font-size: 35px; }
+
+.fa-cog {
+  font-size: 31px; }
+
+.fa-bar-chart-o {
+  font-size: 36px; }
+
+.fa-search {
+  font-size: 21px; }
+
+.fa-bars {
+  font-size: 30px; }
+
+.fa-edit {
+  visibility: hidden;
+  font-size: 32px;
+  cursor: pointer; }
+
+.fa-heart {
+  color: #ff6666 !important; }
+
+.delete_category, .delete_account {
+  visibility: hidden;
+  cursor: pointer; }
+
+#budget-button {
+  font-size: 21px; }
+
+.fa-trash-o {
+  font-size: 24px; }
+
+.delete {
+  visibility: hidden;
+  padding: 0 !important;
+  border: none !important;
+  color: red;
+  font-size: 32px;
+  cursor: pointer;
+  position: absolute;
+  z-index: 9;
+  height: 100%;
+  background: none !important;
+  border: none; }
+  .delete.delete-transaction {
+    height: 14px;
+    font-size: 15px;
+    left: 0;
+    top: -4px;
+    line-height: 100%; }
+  .delete.delete_budget {
+    font-size: 15px;
+    right: 0;
+    top: -4px; }
+
+#info-entries-wrapper {
+  display: flex;
+  justify-content: space-around; }
+
+#entries {
+  display: flex;
+  justify-content: space-around; }
+  #entries > * {
+    flex-grow: 1;
+    margin: 0px 10px; }
+
+@media (max-width: 320px) {
+  .row {
+    max-width: 300px; } }
+
+@media (max-width: 320px) {
+  .container {
+    padding: 0 5px; } }
+
+@media (max-width: 320px) {
+  body {
+    max-width: 280px; } }
+
+@media (max-width: 320px) {
+  html {
+    max-width: 280px; } }
+
+.delete-item {
+  font-size: 20px;
+  color: red;
+  cursor: pointer; }
+
+#foods .flex {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap; }
+#foods #quick-recipe-container {
+  display: flex;
+  justify-content: center; }
+  #foods #quick-recipe-container #quick-recipe-div {
+    width: 445px; }
+    #foods #quick-recipe-container #quick-recipe-div button {
+      width: 100%; }
+    #foods #quick-recipe-container #quick-recipe-div .transition {
+      opacity: 1;
+      height: 625px; }
+    #foods #quick-recipe-container #quick-recipe-div .transition.ng-hide-add.ng-hide-add-active,
+    #foods #quick-recipe-container #quick-recipe-div .transition.ng-hide-remove.ng-hide-remove-active {
+      -webkit-transition: all linear .5s;
+      transition: all linear .5s; }
+    #foods #quick-recipe-container #quick-recipe-div .transition.ng-hide {
+      opacity: 0;
+      height: 0px; }
+
+#login-form {
+  margin-top: 130px; }
+
+.pointer {
+  cursor: pointer; }
+
+.bold {
+  font-weight: bold; }
+
+.center {
+  text-align: center; }
+
+.vertical-center {
+  display: flex;
+  align-items: center;
+  justify-content: center; }
+
+.margin-bottom {
+  margin-bottom: 15px; }
+
+.bg-blue {
+  background: #6d84b4; }
+
+.hover:hover {
+  background: #b5b5b5; }
+
+.my-input {
+  width: 0%;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+  color: #555;
+  font-size: 14px;
+  height: 34px;
+  line-height: 1.42857;
+  padding: 6px 12px; }
+  .my-input:focus {
+    border-color: #66afe9;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6); }
+
+.my-btn {
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+  color: #555;
+  font-size: 14px;
+  height: 34px;
+  padding: 6px 12px; }
+  .my-btn:active {
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.125) inset;
+    border: 1px solid black; }
+  .my-btn:focus {
+    outline: thin dotted;
+    outline-offset: -2px; }
+  .my-btn:hover, .my-btn:focus, .my-btn:active {
+    background-color: #e6e6e6;
+    border-color: #adadad;
+    color: #333; }
+
+.my-input-group input, .my-input-group button {
+  display: block;
+  width: 100%; }
+
+.my-btn-group {
+  display: flex;
+  display: -webkit-flex; }
+  .my-btn-group button {
+    display: block;
+    width: 100%; }
+
+.fa {
+  font-size: 19px; }
+
+.min-width-md {
+  min-width: 40px; }
+
+.max-width-md {
+  max-width: 40px; }
+
+.max-width-lg {
+  max-width: 80px; }
+
+#navbar {
+  display: flex;
+  display: -webkit-flex;
+  justify-content: space-around;
+  -webkit-justify-content: space-around;
+  background: white;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  padding: 0; }
+  #navbar li {
+    padding: 10px 0; }
+    #navbar li a {
+      color: #777; }
+
+.wysiwyg-container {
+  width: 100%;
+  max-width: 600px; }
+
+.wysiwyg {
+  height: 350px;
+  width: 100%;
+  background: white;
+  overflow: scroll;
+  border-radius: 8px; }
+
+.wysiwyg-toolbar {
+  display: flex;
+  padding: 5px 0; }
+  .wysiwyg-toolbar a {
+    cursor: pointer;
+    font-size: 18px;
+    margin: 0 14px; }
+
+#exercises {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap; }
+  #exercises > div {
+    margin: 0 20px; }
+
+#default-exercise-unit-popup-checkboxes {
+  display: flex;
+  flex-wrap: wrap; }
+  #default-exercise-unit-popup-checkboxes label {
+    padding: 2px 8px; }
+
+#workouts .flex {
+  display: flex;
+  flex-wrap: wrap; }
+
+@media (max-width: 600px) {
+  .autocomplete-dropdown-item {
+    padding: 8px 0; } }
+
+.checkbox-wrapper {
+  display: flex;
+  align-items: center; }
+
+.cb-container {
+  display: flex;
+  justify-content: center;
+  align-items: center; }
+  .cb-container .label-text {
+    padding: 0px 5px; }
+
+.cb-slider-wrapper {
+  width: 38px;
+  height: 16px;
+  border-radius: 8px;
+  background: black;
+  position: relative; }
+  .cb-slider-wrapper input {
+    visibility: hidden; }
+  .cb-slider-wrapper label span.label-icon {
+    background: red;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    position: absolute;
+    left: 0;
+    cursor: pointer;
+    transition: all, .5s, ease; }
+  .cb-slider-wrapper input:checked + label span.label-icon {
+    background: green;
+    left: 23px; }
+
+.cb-fa-wrapper {
+  width: 40px;
+  height: 40px;
+  position: relative; }
+  .cb-fa-wrapper input {
+    visibility: hidden; }
+  .cb-fa-wrapper label {
+    text-align: center;
+    border: 1px solid black;
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    cursor: pointer;
+    transition: all, .5s, ease; }
+    .cb-fa-wrapper label i {
+      position: absolute;
+      left: 0;
+      right: 0;
+      margin: auto;
+      top: 0;
+      bottom: 0;
+      color: green;
+      font-size: 24px;
+      opacity: .2; }
+  .cb-fa-wrapper input:checked + label i {
+    opacity: 1; }
+
+#date-navigation {
+  display: flex;
+  display: -webkit-flex; }
+  #date-navigation > div, #date-navigation button {
+    flex-grow: 2; }
+  #date-navigation > input {
+    flex-grow: 1; }
+  #date-navigation > div {
+    min-width: 40px; }
+  #date-navigation > button {
+    max-width: 80px; }
+  #date-navigation .flex-basis-xs {
+    flex-basis: 20px;
+    -webkit-flex-basis: 20px; }
+  #date-navigation .flex-basis-sm {
+    flex-basis: 40px;
+    -webkit-flex-basis: 40px; }
+  #date-navigation .flex-basis-md {
+    flex-basis: 80px;
+    -webkit-flex-basis: 80px; }
+
+#journal {
+  display: flex;
+  flex-direction: column;
+  align-items: center; }
+  #journal button {
+    width: 100%;
+    max-width: 600px; }
+
+body.browser-height {
+  box-sizing: border-box; }
+
+.bg-dark {
+  background: #e0eef3; }
+
+.table {
+  width: 100%; }
+
+#my_results .my-dropdown-container, #new-transaction-wrapper .my-dropdown-container {
+  padding: 0px !important; }
+
+.list-group-heading {
+  text-align: center; }
+
+.label {
+  margin-right: 3px; }
+
+#description_autocomplete {
+  display: none; }
+  #description_autocomplete tbody:nth-child(even) {
+    background: white; }
+  #description_autocomplete tbody:nth-child(odd) {
+    background: #f2f8fa; }
+
+.selected {
+  background: #6d84b4; }
+
+@media (max-width: 600px) {
+  .desktop {
+    display: none; } }
+@media (min-width: 601px) {
+  .iphone {
+    display: none; } }
