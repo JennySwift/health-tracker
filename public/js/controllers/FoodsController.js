@@ -22,12 +22,10 @@ var app = angular.module('tracker');
 			autocomplete_options: {
 				menu_items: false,
 				foods: false,
-				temporary_recipe_foods: false
 			},
 			popups: {
 				recipe: false,
 				similar_names: false,
-				temporary_recipe: false,
 				food_info: false,
 			},
 			help: {
@@ -45,9 +43,6 @@ var app = angular.module('tracker');
 		$scope.food_popup = {};
 		$scope.menu_item = {}; //id, name, type. for displaying the chosen autocompleted option (food or recipe)
 		$scope.food = {};//id, name. for displaying the chosen autocompleted option. Taken from $scope.menu_item.
-		$scope.recipe = {
-			temporary_contents: []
-		}; //id, name, contents, temporary_contents, temporary_contents_clone (for calculating portions based on the original quantities).
 		$scope.food_id = "";//probably should change this to an object. for the food popup-the food_id of the clicked on food that brings up the popup.
 		$scope.food_name = "";//probably should change this to an object. likewise, for the food popup	
 		
@@ -63,8 +58,6 @@ var app = angular.module('tracker');
 
 		};
 
-		$scope.temporary_recipe_popup = {};
-
 		//new item-eg new food, as opposed to to food entry
 		$scope.new_item = {
 			recipe: {}
@@ -77,15 +70,6 @@ var app = angular.module('tracker');
 		/**
 		 * watches
 		 */
-		
-		$scope.$watch('recipe.portion', function (newValue, oldValue) {
-			$($scope.recipe.temporary_contents).each(function () {
-				if (this.original_quantity) {
-					//making sure we don't alter the quantity of a food that has been added to the temporary recipe (by doing the if check)
-					this.quantity = this.original_quantity * newValue;
-				}
-			});
-		});
 
 		$scope.$watchCollection('filter.recipes.tag_ids', function (newValue, oldValue) {
 			if (newValue !== oldValue) {
@@ -264,10 +248,6 @@ var app = angular.module('tracker');
 				$scope.all_foods_with_units = response.data;
 			});
 		};
-
-		$scope.deleteFromTemporaryRecipe = function ($item) {
-			$scope.recipe.temporary_contents = _.without($scope.recipe.temporary_contents, $item);
-		};
 		
 		/**
 		 * popups
@@ -279,27 +259,6 @@ var app = angular.module('tracker');
 				$scope.show.popups.recipe = true;
 				$scope.recipe_popup = response.data;
 			});
-		};
-
-		$scope.showTemporaryRecipePopup = function () {
-			$scope.show.popups.temporary_recipe = true;
-			select.recipeContents($scope.selected.menu.id).then(function (response) {
-				$scope.recipe.temporary_contents = response.data.contents;
-
-				$($scope.recipe.temporary_contents).each(function () {
-					this.original_quantity = this.quantity;
-				});
-			});
-		};
-
-		$scope.showDeleteFoodOrRecipeEntryPopup = function ($entry_id, $recipe_id) {
-			$scope.show.popups.delete_food_or_recipe_entry = true;
-			$scope.selected.entry = {
-				id: $entry_id
-			};
-			$scope.selected.recipe = {
-				id: $recipe_id
-			};
 		};
 
 		/**

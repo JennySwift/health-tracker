@@ -5,7 +5,7 @@
 	
 		<div class="popup-inner">
 	
-			<h4 class="center">[[recipe.name]]</h4>
+			<h4 class="center">[[temporary_recipe_popup.recipe.name]]</h4>
 			<p class="col-sm-12">Editing your recipe here will not change the default contents of your recipe.</p>
 			<div class="row margin-bottom">
 				<div class="col-sm-10 col-sm-offset-1">
@@ -24,24 +24,25 @@
 
 
 					
-					<input ng-model="food.quantity" ng-keyup="enter($event.keyCode, 'food', 'temporary_recipe')" type="text" placeholder="quantity" id="temporary-recipe-popup-food-quantity" class="form-control">
-					<select ng-model="unit_id" ng-keyup="enter($event.keyCode, 'food', 'temporary_recipe')" name="" id="temporary-recipe-popup-unit-select" class="form-control">
-						<option ng-repeat="unit in assoc_units" ng-selected="unit.default_unit === true" data-unit-id="[[unit.unit_id]]">[[unit.unit_name]]</option>
+					<input ng-model="temporary_recipe_popup.quantity" ng-keyup="insertOrAutocompleteTemporaryRecipeFood($event.keyCode)" type="text" placeholder="quantity" id="temporary-recipe-popup-food-quantity" class="form-control">
+					<select ng-model="temporary_recipe_popup.unit_id" ng-keyup="insertOrAutocompleteTemporaryRecipeFood($event.keyCode)" name="" id="temporary-recipe-popup-unit" class="form-control">
+						<option ng-repeat="unit in selected.food.units" ng-selected="unit.id === selected.food.default_unit.id" ng-value="unit.id">[[unit.name]]</option>
 					</select>
 				</div>
 			</div>
+
 			<table class="table table-bordered">
 				<tr>
 					<th>food</th>
 					<th>quantity</th>
 					<th>unit</th>
 				</tr>
-				<tr ng-repeat="item in recipe.temporary_contents">
-					<td>[[item.food_name]]</td>
+				<tr ng-repeat="item in temporary_recipe_popup.contents">
+					<td>[[item.name]]</td>
 					<td><input ng-model="item.quantity" type="text"></td>
 					<td>
-						<select name="" id="">
-							<option ng-repeat="unit in item.assoc_units" ng-selected="unit.name === item.unit_name" value="">[[unit.name]]</option>
+						<select ng-model="item.unit_id" name="" id="">
+							<option ng-repeat="unit in item.units" ng-selected="unit.name === item.unit_name" ng-value="unit.id">[[unit.name]]</option>
 						</select>
 					</td>
 					<td><i ng-click="deleteFromTemporaryRecipe(item)" class="delete-item fa fa-times"></i></td>

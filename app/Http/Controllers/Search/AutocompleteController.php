@@ -22,6 +22,15 @@ class AutocompleteController extends Controller {
         $typing = '%' . $request->get('typing') . '%';
         $foods = $this->foods($typing);
         $recipes = $this->recipes($typing);
+
+        //Specify whether the menu item is a food or recipe
+        foreach ($foods as $food) {
+            $food->type = 'food';
+        }
+        foreach ($recipes as $recipe) {
+            $recipe->type = 'recipe';
+        }
+        
         $menu = $foods->merge($recipes);
 
         /**

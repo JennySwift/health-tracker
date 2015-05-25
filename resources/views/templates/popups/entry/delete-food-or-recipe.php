@@ -3,7 +3,7 @@
 	<div class="popup-inner">
 
 		<button ng-click="deleteFoodEntry()">delete only this food</button>
-		<button ng-click="deleteRecipeEntry()">delete the whole recipe</button>
+		<button ng-click="deleteRecipeEntry()">delete all foods entered for the day from the recipe</button>
 
 	</div>
 	

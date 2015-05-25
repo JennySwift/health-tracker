@@ -126,14 +126,21 @@ class Recipe extends Model {
 			->where('recipe_id', $recipe->id)
 			->join('foods', 'food_id', '=', 'foods.id')
 			->join('units', 'unit_id', '=', 'units.id')
-			->select('foods.id as food_id', 'foods.name', 'units.name as unit_name', 'quantity', 'description')
+			->select('foods.id as food_id', 'foods.name', 'units.name as unit_name', 'units.id as unit_id', 'quantity', 'description')
 			->get();
 
-		// dd($contents);
+		//Add the units to all the foods in $contents, for the temporary recipe popup
+		$contents_with_units = [];
+		foreach ($contents as $ingredient) {
+			$food_id = $ingredient->food_id;
+			$food = Food::find($food_id);
+			$ingredient->units = $food->units;
+			$contents_with_units[] = $ingredient;
+		}
 		
 		return [
 			'recipe' => $recipe,
-			'contents' => $contents,
+			'contents' => $contents_with_units,
 			'steps' => $recipe->steps,
 			'tags' => $recipe->tags->lists('id')
 		];

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Faker\Factory as Faker;
 
 use App\Models\Units\Unit;
+use App\Models\Foods\Food;
 
 class FoodRecipeSeeder extends Seeder {
 
@@ -14,65 +15,67 @@ class FoodRecipeSeeder extends Seeder {
 		DB::table('food_recipe')->truncate();
 		
 		$faker = Faker::create();
-		$unit_ids = Unit::where('for', 'food')->lists('id');
+		$food_ids = Food::lists('id');
 
 		//Insert some rows for recipe_id 1
 
-		DB::table('food_recipe')->insert([
-			'recipe_id' => 1,
-			'food_id' => 1,
-			'unit_id' => $faker->randomElement($unit_ids),
-			'quantity' => 3,
-			'description' => '',
-			'user_id' => 1
-		]);
+		foreach (range(0,2) as $number) {
+			$unit_ids_owned_by_food = [];
+			while (count($unit_ids_owned_by_food) === 0) {
+				$food_id = $faker->randomElement($food_ids);
+				$food = Food::find($food_id);
 
-		DB::table('food_recipe')->insert([
-			'recipe_id' => 1,
-			'food_id' => 2,
-			'unit_id' => $faker->randomElement($unit_ids),
-			'quantity' => 3,
-			'description' => '',
-			'user_id' => 1
-		]);
+				/**
+				 * @VP:
+				 * Why do I get the following error when I specify 'units.id?'
+				 * Integrity constraint violation: 1052 Column 'id' in field list is ambiguous (SQ
+	  			 * L: select `id` from `units` inner join `food_unit` on `units`.`id` = `food_unit`.`unit_id` where
+	   			 * `food_unit`.`food_id` = 1)
+				 */
+				// $unit_ids_owned_by_food = $food->units()->lists('units.id');
 
-		DB::table('food_recipe')->insert([
-			'recipe_id' => 1,
-			'food_id' => 3,
-			'unit_id' => $faker->randomElement($unit_ids),
-			'quantity' => 3,
-			'description' => '',
-			'user_id' => 1
-		]);
+				//populate the unit_ids_owned_by_food array
+				$units_owned_by_food = $food->units;
+				foreach ($units_owned_by_food as $unit) {
+					$unit_ids_owned_by_food[] = $unit->id;
+				}
+			}	
+
+			DB::table('food_recipe')->insert([
+				'recipe_id' => 1,
+				'food_id' => $food_id,
+				'unit_id' => $faker->randomElement($unit_ids_owned_by_food),
+				'quantity' => 3,
+				'description' => '',
+				'user_id' => 1
+			]);
+		}
 
 		//Insert some rows for recipe_id 2
 
-		DB::table('food_recipe')->insert([
-			'recipe_id' => 2,
-			'food_id' => 10,
-			'unit_id' => $faker->randomElement($unit_ids),
-			'quantity' => 3,
-			'description' => '',
-			'user_id' => 1
-		]);
+		foreach (range(0,2) as $number) {
+			$unit_ids_owned_by_food = [];
+			while (count($unit_ids_owned_by_food) === 0) {
+				$food_id = $faker->randomElement($food_ids);
+				$food = Food::find($food_id);
 
-		DB::table('food_recipe')->insert([
-			'recipe_id' => 2,
-			'food_id' => 11,
-			'unit_id' => $faker->randomElement($unit_ids),
-			'quantity' => 3,
-			'description' => '',
-			'user_id' => 1
-		]);
+				//populate the unit_ids_owned_by_food array
+				$units_owned_by_food = $food->units;
 
-		DB::table('food_recipe')->insert([
-			'recipe_id' => 2,
-			'food_id' => 12,
-			'unit_id' => $faker->randomElement($unit_ids),
-			'quantity' => 3,
-			'description' => 'yummy',
-			'user_id' => 1
-		]);
+				foreach ($units_owned_by_food as $unit) {
+					$unit_ids_owned_by_food[] = $unit->id;
+				}
+			}
+			
+			DB::table('food_recipe')->insert([
+				'recipe_id' => 2,
+				'food_id' => $food_id,
+				'unit_id' => $faker->randomElement($unit_ids_owned_by_food),
+				'quantity' => 3,
+				'description' => '',
+				'user_id' => 1
+			]);
+		}
 	}
 
 }

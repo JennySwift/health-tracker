@@ -1,7 +1,7 @@
 var app = angular.module('tracker');
 
 (function () {
-	app.controller('entries', function ($scope, $http, date, entries, autocomplete, weights) {
+	app.controller('entries', function ($scope, $http, date, entries, autocomplete, weights, foods) {
 
 		/**
 		 * scope properties
@@ -13,6 +13,8 @@ var app = angular.module('tracker');
 			menu: menu_entries,
 			exercise: exercise_entries
 		};
+
+		$scope.temporary_recipe_popup = {};
 
 		$scope.units = {
 			food: food_units,
@@ -102,6 +104,15 @@ var app = angular.module('tracker');
 				$scope.getEntries();
 			}
 		});
+
+		$scope.$watch('recipe.portion', function (newValue, oldValue) {
+			$($scope.temporary_recipe_popup.contents).each(function () {
+				if (this.original_quantity) {
+					//making sure we don't alter the quantity of a food that has been added to the temporary recipe (by doing the if check)
+					this.quantity = this.original_quantity * newValue;
+				}
+			});
+		});
 		
 		/**
 		 * select
@@ -173,19 +184,19 @@ var app = angular.module('tracker');
 				$scope.calories.day = response.data.calories_for_the_day;
 				$scope.calories.week_avg = response.data.calories_for_the_week;
 
-				if ($scope.recipe.temporary_contents) {
-					$scope.recipe.temporary_contents.length = 0;
+				if ($scope.temporary_recipe_popup.contents) {
+					$scope.temporary_recipe_popup.contents.length = 0;
 				}
 				$scope.loading = false;
 			});
 		};
 
 		$scope.insertRecipeEntry = function () {
-			$scope.new_entry.food.id = $scope.selected.food.id;
-			$scope.new_entry.food.name = $scope.selected.food.name;
+			// $scope.new_entry.food.id = $scope.selected.food.id;
+			// $scope.new_entry.food.name = $scope.selected.food.name;
 
-			entries.insertRecipeEntry($scope.date.sql, $scope.selected.menu.id, $scope.recipe.temporary_contents).then(function (response) {
-				$scope.food_entries = response.data;
+			entries.insertRecipeEntry($scope.date.sql, $scope.selected.menu.id, $scope.temporary_recipe_popup.contents).then(function (response) {
+				$scope.entries.menu = response.data;
 				$scope.show.popups.temporary_recipe = false;
 			});
 		};
@@ -457,14 +468,14 @@ var app = angular.module('tracker');
 
 		$scope.insertFoodIntoTemporaryRecipe = function () {
 			//we are adding a food to a temporary recipe
-			var $unit_name = $("#temporary-recipe-popup-unit-select option:selected").text();
-			$scope.recipe.temporary_contents.push({
-				"food_id": $scope.food.id,
-				"food_name": $scope.food.name,
-				"quantity": $scope.food.quantity,
-				"unit_id": $scope.unit_id,
+			var $unit_name = $("#temporary-recipe-popup-unit option:selected").text();
+			$scope.temporary_recipe_popup.contents.push({
+				"food_id": $scope.temporary_recipe_popup.food.id,
+				"name": $scope.temporary_recipe_popup.food.name,
+				"quantity": $scope.temporary_recipe_popup.quantity,
+				"unit_id": $("#temporary-recipe-popup-unit").val(),
 				"unit_name": $unit_name,
-				"assoc_units": $scope.food.assoc_units
+				"units": $scope.temporary_recipe_popup.food.units
 			});
 			
 			$("#temporary-recipe-food-input").val("").focus();
@@ -479,6 +490,31 @@ var app = angular.module('tracker');
 			if ($target.className === 'popup-outer') {
 				$scope.show.popups[$popup] = false;
 			}
+		};
+
+		$scope.deleteFromTemporaryRecipe = function ($item) {
+			$scope.temporary_recipe_popup.contents = _.without($scope.temporary_recipe_popup.contents, $item);
+		};
+
+		$scope.showTemporaryRecipePopup = function () {
+			$scope.show.popups.temporary_recipe = true;
+			foods.getRecipeContents($scope.selected.menu.id).then(function (response) {
+				$scope.temporary_recipe_popup = response.data;
+
+				$($scope.temporary_recipe_popup.contents).each(function () {
+					this.original_quantity = this.quantity;
+				});
+			});
+		};
+
+		$scope.showDeleteFoodOrRecipeEntryPopup = function ($entry_id, $recipe_id) {
+			$scope.show.popups.delete_food_or_recipe_entry = true;
+			$scope.selected.entry = {
+				id: $entry_id
+			};
+			$scope.selected.recipe = {
+				id: $recipe_id
+			};
 		};
 
 	}); //end controller
