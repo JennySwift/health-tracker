@@ -14,14 +14,14 @@ class CreateExercisesTable extends Migration {
 	{
 		Schema::create('exercises', function(Blueprint $table)
 		{
-			$table->increments('id');
-			$table->integer('user_id')->unsigned(); //foreign key
-			$table->string('name');
+			$table->increments('id')->index();
+			$table->integer('user_id')->unsigned()->index();
+			$table->string('name')->index();
 			$table->decimal('step_number', 10, 2)->nullable();
-			$table->integer('series_id')->nullable()->unsigned(); //foreign key
+			$table->integer('series_id')->nullable()->unsigned();
 			$table->decimal('default_quantity', 10, 2)->nullable();
 			$table->string('description')->nullable();
-			$table->integer('default_unit_id')->nullable()->unsigned(); //foreign key
+			$table->integer('default_unit_id')->nullable()->unsigned();
 			$table->timestamps();
 
 			$table->foreign('default_unit_id')->references('id')->on('units');

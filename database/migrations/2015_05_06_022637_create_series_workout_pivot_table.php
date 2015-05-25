@@ -14,11 +14,9 @@ class CreateSeriesWorkoutPivotTable extends Migration {
 	{
 		Schema::create('series_workout', function(Blueprint $table)
 		{
-			$table->increments('id');
-			$table->integer('user_id')->unsigned(); //foreign key
-			$table->integer('workout_id')->unsigned(); //foreign key
-			$table->integer('series_id')->unsigned(); //foreign key
-			$table->timestamps();
+			$table->integer('user_id')->unsigned()->index();
+			$table->integer('workout_id')->unsigned()->index();
+			$table->integer('series_id')->unsigned()->index();
 
 			$table->foreign('workout_id')->references('id')->on('workouts')->onDelete('cascade');
 			$table->foreign('series_id')->references('id')->on('exercise_series')->onDelete('cascade');

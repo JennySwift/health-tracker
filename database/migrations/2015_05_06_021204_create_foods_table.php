@@ -14,10 +14,10 @@ class CreateFoodsTable extends Migration {
 	{
 		Schema::create('foods', function(Blueprint $table)
 		{
-			$table->increments('id');
-			$table->integer('user_id')->unsigned(); //foreign key
-			$table->string('name');
-			$table->integer('default_unit_id')->nullable()->unsigned(); //foreign key
+			$table->increments('id')->index();
+			$table->integer('user_id')->unsigned()->index();
+			$table->string('name')->index();
+			$table->integer('default_unit_id')->nullable()->unsigned()->index();
 			$table->timestamps();
 
 			$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

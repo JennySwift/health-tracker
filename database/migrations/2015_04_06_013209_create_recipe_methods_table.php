@@ -12,13 +12,11 @@ class CreateRecipeMethodsTable extends Migration {
 	 */
 	public function up()
 	{
-		// DB::statement('SET FOREIGN_KEY_CHECKS=0');
-
 		Schema::create('recipe_methods', function(Blueprint $table)
 		{
-			$table->increments('id');
-			$table->integer('user_id')->unsigned(); //foreign key
-			$table->integer('recipe_id')->unsigned(); //foreign key
+			$table->increments('id')->index();
+			$table->integer('user_id')->unsigned()->index();
+			$table->integer('recipe_id')->unsigned()->index();
 			$table->integer('step');
 			$table->string('text');
 			$table->timestamps();
@@ -26,8 +24,6 @@ class CreateRecipeMethodsTable extends Migration {
 			$table->foreign('recipe_id')->references('id')->on('recipes')->onDelete('cascade');
 			$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 		});
-
-		// DB::statement('SET FOREIGN_KEY_CHECKS=1');
 	}
 
 	/**
@@ -37,11 +33,7 @@ class CreateRecipeMethodsTable extends Migration {
 	 */
 	public function down()
 	{
-		// DB::statement('SET FOREIGN_KEY_CHECKS=0');
-
 		Schema::drop('recipe_methods');
-
-		// DB::statement('SET FOREIGN_KEY_CHECKS=1');
 	}
 
 }
