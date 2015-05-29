@@ -1,3 +1,9 @@
+<!-- privacy policy -->
+
+<footer>
+	<a href="http://jennyswiftcreations.com/privacy-policy">Privacy Policy</a>
+</footer>
+
 <!-- plugins -->
 <script type="text/javascript" src="tools/angular.min.js"></script>
 <script type="text/javascript" src="tools/angular-sanitize.min.js"></script>
