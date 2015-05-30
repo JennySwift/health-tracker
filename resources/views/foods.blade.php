@@ -10,7 +10,7 @@
 </head>
 <body>
 	
-	<div ng-controller="foods">
+	<div ng-controller="foods" class="container">
 
 		<?php
 			include($header);
@@ -111,7 +111,7 @@
 
 	<?php include($footer); ?>
 
-	@include('footer');
+	@include('footer')
 
 </body>
 </html>
