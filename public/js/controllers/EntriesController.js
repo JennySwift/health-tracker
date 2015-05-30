@@ -343,7 +343,7 @@ var app = angular.module('tracker');
 		/**
 		 * autocomplete menu
 		 */
-
+		
 		/**
 		 * As user types in the input, populate the dropdown.
 		 * If user presses arrows, select the appropriate item in the dropdown.
