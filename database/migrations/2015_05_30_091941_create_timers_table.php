@@ -17,6 +17,7 @@ class CreateTimersTable extends Migration {
 			$table->increments('id');
 			$table->integer('payee_id')->unsigned()->index();
 			$table->integer('payer_id')->unsigned()->nullable()->index();
+			$table->string('description');
 			$table->decimal('rate_per_hour', 10, 2)->nullable();
 			$table->boolean('paid')->nullable()->index();
 			$table->timestamps();

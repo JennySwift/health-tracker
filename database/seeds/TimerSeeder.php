@@ -19,6 +19,7 @@ class TimerSeeder extends Seeder {
 		Timer::create([
 			'payee_id' => 1,
 			'payer_id' => 2,
+			'description' => $faker->word,
 			'rate_per_hour' => 40,
 			'paid' => 0
 		]);
@@ -26,6 +27,7 @@ class TimerSeeder extends Seeder {
 		Timer::create([
 			'payee_id' => 1,
 			'payer_id' => 2,
+			'description' => $faker->word,
 			'rate_per_hour' => 40,
 			'paid' => 0
 		]);
@@ -33,6 +35,7 @@ class TimerSeeder extends Seeder {
 		Timer::create([
 			'payee_id' => 1,
 			'payer_id' => 2,
+			'description' => $faker->word,
 			'rate_per_hour' => 40,
 			'paid' => 1
 		]);
@@ -42,6 +45,7 @@ class TimerSeeder extends Seeder {
 		Timer::create([
 			'payee_id' => 2,
 			'payer_id' => 1,
+			'description' => $faker->word,
 			'rate_per_hour' => 1,
 			'paid' => 1
 		]);
@@ -49,6 +53,7 @@ class TimerSeeder extends Seeder {
 		Timer::create([
 			'payee_id' => 2,
 			'payer_id' => 1,
+			'description' => $faker->word,
 			'rate_per_hour' => 2,
 			'paid' => 0
 		]);

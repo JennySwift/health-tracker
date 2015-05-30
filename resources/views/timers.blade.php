@@ -21,11 +21,13 @@
 		<table class="table table-bordered margin-bottom-lg">
 			<tr>
 				<th>Payer</th>
+				<th>Description</th>
 				<th>Rate/hour</th>
 				<th>Paid</th>
 			</tr>
 			<tr ng-repeat="timer in timers.payee">
 				<td>[[timer.payer.name]]</td>
+				<td>[[timer.description]]</td>
 				<td>$[[timer.rate_per_hour]]</td>
 				<td>
 					<span ng-if="!timer.paid" class="label label-danger">unpaid</span>
@@ -40,11 +42,13 @@
 		<table class="table table-bordered">
 			<tr>
 				<th>Payee</th>
+				<th>Description</th>
 				<th>Rate/hour</th>
 				<th>Paid</th>
 			</tr>
 			<tr ng-repeat="timer in timers.payer">
 				<td>[[timer.payee.name]]</td>
+				<td>[[timer.description]]</td>
 				<td>$[[timer.rate_per_hour]]</td>
 				<td>
 					<span ng-if="!timer.paid" class="label label-danger">unpaid</span>
