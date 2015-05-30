@@ -19,6 +19,9 @@ Route::get('/exercises', 'Exercises\ExercisesController@index');
 //Journal
 Route::get('/journal', 'Journal\JournalController@index');
 
+//Timer
+Route::get('/timer', 'Timer\TimerController@index');
+
 //Credits
 Route::get('/credits', function()
 {
