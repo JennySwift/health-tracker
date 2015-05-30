@@ -332,6 +332,9 @@ li {
 .margin-bottom {
   margin-bottom: 15px; }
 
+.margin-bottom-lg {
+  margin-bottom: 140px; }
+
 .bg-blue {
   background: #6d84b4; }
 
@@ -543,6 +546,9 @@ li {
   #journal button {
     width: 100%;
     max-width: 600px; }
+
+#timers h1 {
+  margin-bottom: 30px; }
 
 body.browser-height {
   box-sizing: border-box; }

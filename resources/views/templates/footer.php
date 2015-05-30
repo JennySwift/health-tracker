@@ -31,6 +31,7 @@
 <script type="text/javascript" src="js/controllers/FoodsController.js"></script>
 <script type="text/javascript" src="js/controllers/ExercisesController.js"></script>
 <script type="text/javascript" src="js/controllers/WeightsController.js"></script>
+<script type="text/javascript" src="js/controllers/TimersController.js"></script>
 
 <script type="text/javascript" src="js/factories/date.js"></script>
 <script type="text/javascript" src="js/factories/quick-recipe.js"></script>
@@ -41,4 +42,5 @@
 <script type="text/javascript" src="js/factories/tags.js"></script>
 <script type="text/javascript" src="js/factories/units.js"></script>
 <script type="text/javascript" src="js/factories/weights.js"></script>
+<script type="text/javascript" src="js/factories/TimersFactory.js"></script>
 <script type="text/javascript" src="js/factories/autocomplete.js"></script>

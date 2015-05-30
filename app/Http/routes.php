@@ -20,7 +20,7 @@ Route::get('/exercises', 'Exercises\ExercisesController@index');
 Route::get('/journal', 'Journal\JournalController@index');
 
 //Timer
-Route::get('/timer', 'Timer\TimerController@index');
+Route::get('/timer', 'Timers\TimersController@index');
 
 //Credits
 Route::get('/credits', function()
