@@ -14,11 +14,8 @@ return [
    
     /**
      * @VP:
-     * This works for my exercises view, but I want access to the variables in my other views, too.
-     * But when I replace 'exercises' with anything else, I get an error.
-     * I tried replacing it with 'footer', and base_path() . '/resources/views/footer.php', and neither worked.
-     * Please tell me what I need to do in order to access my variables in my other views.
-     * I was testing it out with views/exercises.php, where I have used an include in an attempt to get this to work.
+     * Why wouldn't my commented attempt work here? (See views/exercises.php.)
+     * The only way I got it to work was to use a blade include.
      */
     'bind_js_vars_to_this_view' => 'footer',
     // 'bind_js_vars_to_this_view' => base_path() . '/resources/views/footer.blade.php',

@@ -48,12 +48,6 @@ class QuickRecipesController extends Controller {
 	public function quickRecipe(Request $request)
 	{	
 		$recipe = $request->get('recipe');
-		Debugbar::info('recipe', $recipe);
-		Debugbar::info('request->all()', $request->all());
-		Debugbar::info('items', $recipe['items']);
-
-		// return 'nothing';
-		
 		$recipe_name = $recipe['name'];
 		$steps = $recipe['steps'];
 		$contents = $recipe['items'];
@@ -61,7 +55,6 @@ class QuickRecipesController extends Controller {
 		if ($request->get('check_similar_names')) {
 			//We are checking for similar names
 			$similar_names = $this->checkEntireRecipeForSimilarNames($contents);
-			// dd($similar_names);
 
 			if (isset($similar_names['foods']) || isset($similar_names['units'])) {
 				//Similar names were found, so return them
