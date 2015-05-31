@@ -23,12 +23,16 @@
 				<th>Payer</th>
 				<th>Description</th>
 				<th>Rate/hour</th>
+				<th>Time</th>
+				<th>$</th>
 				<th>Paid</th>
 			</tr>
 			<tr ng-repeat="timer in timers.payee">
 				<td>[[timer.payer.name]]</td>
 				<td>[[timer.description]]</td>
 				<td>$[[timer.rate_per_hour]]</td>
+				<td>[[timer.total_time_user_formatted]]</td>
+				<td>[[timer.price]]</td>
 				<td>
 					<span ng-if="!timer.paid" class="label label-danger">unpaid</span>
 					<span ng-if="timer.paid" class="label label-success">paid</span>
@@ -44,12 +48,16 @@
 				<th>Payee</th>
 				<th>Description</th>
 				<th>Rate/hour</th>
+				<th>Time</th>
+				<th>$</th>
 				<th>Paid</th>
 			</tr>
 			<tr ng-repeat="timer in timers.payer">
 				<td>[[timer.payee.name]]</td>
 				<td>[[timer.description]]</td>
 				<td>$[[timer.rate_per_hour]]</td>
+				<td>[[timer.total_time_user_formatted]]</td>
+				<td>[[timer.price]]</td>
 				<td>
 					<span ng-if="!timer.paid" class="label label-danger">unpaid</span>
 					<span ng-if="timer.paid" class="label label-success">paid</span>

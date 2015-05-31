@@ -18,4 +18,9 @@ class Timer extends Model {
 	    return $this->belongsTo('App\User');
 	}
 
+	public function times()
+	{
+	    return $this->hasMany('App\Models\Timers\Time');
+	}
+
 }
