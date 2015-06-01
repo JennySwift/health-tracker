@@ -20,7 +20,8 @@ Route::get('/exercises', 'Exercises\ExercisesController@index');
 Route::get('/journal', 'Journal\JournalController@index');
 
 //Timer
-Route::get('/timer', 'Timers\TimersController@index');
+Route::get('projects', ['as' => 'projects', 'uses' => 'Projects\ProjectsController@index']);
+Route::resource('projects', 'Projects\ProjectsController', ['only' => ['index', 'store']]);
 
 //Credits
 Route::get('/credits', function()
@@ -121,6 +122,9 @@ Route::post('select/allUnits', 'Units\UnitsController@getAllUnits');
 /**
  * Insert requests
  */
+
+//Projects
+
 
 //weight
 Route::post('insert/weight', 'Weights\WeightsController@insertOrUpdateWeight');

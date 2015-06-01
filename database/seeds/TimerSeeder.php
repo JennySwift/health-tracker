@@ -6,21 +6,21 @@ use Illuminate\Database\Eloquent\Model;
 use Faker\Factory as Faker;
 use Carbon\Carbon;
 
-use App\Models\Timers\Timer;
-use App\Models\Timers\Time;
+use App\Models\Projects\Timer;
+use App\Models\Projects\Project;
 
 class TimerSeeder extends Seeder {
 
 	public function run()
 	{
+		Project::truncate();
 		Timer::truncate();
-		Time::truncate();
 
 		$faker = Faker::create();
 
 		//user is payee
 		
-		$timer = Timer::create([
+		$project = Project::create([
 			'payee_id' => 1,
 			'payer_id' => 2,
 			'description' => $faker->word,
@@ -32,17 +32,17 @@ class TimerSeeder extends Seeder {
 			$finish = $faker->dateTimeBetween($startDate = '-1 days', $endDate = 'now');
 			$start = $faker->dateTimeBetween($startDate = '-1 days', $endDate = $finish);
 
-			$time = new Time([
+			$timer = new Timer([
 				'start' => $start,
 				'finish' => $finish
 			]);
 
-			$timer->times()->save($time);
+			$project->timers()->save($timer);
 		}
 
 		
 
-		Timer::create([
+		Project::create([
 			'payee_id' => 1,
 			'payer_id' => 2,
 			'description' => $faker->word,
@@ -50,7 +50,7 @@ class TimerSeeder extends Seeder {
 			'paid' => 0
 		]);
 
-		Timer::create([
+		Project::create([
 			'payee_id' => 1,
 			'payer_id' => 2,
 			'description' => $faker->word,
@@ -60,7 +60,7 @@ class TimerSeeder extends Seeder {
 
 		//user is payer
 
-		Timer::create([
+		Project::create([
 			'payee_id' => 2,
 			'payer_id' => 1,
 			'description' => $faker->word,
@@ -68,7 +68,7 @@ class TimerSeeder extends Seeder {
 			'paid' => 1
 		]);
 
-		Timer::create([
+		Project::create([
 			'payee_id' => 2,
 			'payer_id' => 1,
 			'description' => $faker->word,

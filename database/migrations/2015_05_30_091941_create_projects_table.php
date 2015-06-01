@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTimersTable extends Migration {
+class CreateProjectsTable extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -12,14 +12,14 @@ class CreateTimersTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('timers', function(Blueprint $table)
+		Schema::create('projects', function(Blueprint $table)
 		{
 			$table->increments('id');
 			$table->integer('payee_id')->unsigned()->index();
 			$table->integer('payer_id')->unsigned()->nullable()->index();
 			$table->string('description');
 			$table->decimal('rate_per_hour', 10, 2)->nullable();
-			$table->boolean('paid')->nullable()->index();
+			$table->boolean('paid')->default(0)->nullable()->index();
 			$table->timestamps();
 
 			$table->foreign('payer_id')->references('id')->on('users')->onDelete('cascade');
@@ -34,7 +34,7 @@ class CreateTimersTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('timers');
+		Schema::drop('projects');
 	}
 
 }

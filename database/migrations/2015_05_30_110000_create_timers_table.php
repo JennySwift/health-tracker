@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTimesTable extends Migration {
+class CreateTimersTable extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -12,15 +12,14 @@ class CreateTimesTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('times', function(Blueprint $table)
+		Schema::create('timers', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->integer('timer_id')->unsigned()->index();
+			$table->integer('project_id')->unsigned()->index();
 			$table->timestamp('start');
 			$table->timestamp('finish');
-			$table->timestamps();
 
-			$table->foreign('timer_id')->references('id')->on('timers')->onDelete('cascade');
+			$table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
 		});
 	}
 
@@ -31,7 +30,7 @@ class CreateTimesTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('times');
+		Schema::drop('timers');
 	}
 
 }

@@ -23,7 +23,8 @@
     </li>
     <li><a href="/exercises" class="fa fa-heart"></a></li>
     <li><a href="/journal" class="fa fa-pencil"></a></li>
-    <li><a href="/timer" class="fa fa-clock-o"></a></li>
+    <!-- <li><a href="{{route('projects')}}" class="fa fa-clock-o"></a></li> -->
+    <li><a href="{{route('projects.index')}}" class="fa fa-clock-o"></a></li>
     
     <li><a href="#" id="search_button" class="location_button fa fa-search"></a></li>
 </ul>

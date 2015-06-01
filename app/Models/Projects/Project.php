@@ -1,8 +1,10 @@
-<?php namespace App\Models\Timers;
+<?php namespace App\Models\Projects;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Timer extends Model {
+class Project extends Model {
+
+	protected $fillable = ['description', 'rate_per_hour'];
 
 	/**
 	 * Define relationships
@@ -18,9 +20,9 @@ class Timer extends Model {
 	    return $this->belongsTo('App\User');
 	}
 
-	public function times()
+	public function timers()
 	{
-	    return $this->hasMany('App\Models\Timers\Time');
+	    return $this->hasMany('App\Models\Projects\Timer');
 	}
 
 }
