@@ -25,6 +25,6 @@ return [
     |
     */
 
-    'driver' => 'memcached',
+    'driver' => null,
 
 ];
