@@ -10,7 +10,11 @@
 </head>
 <body ng-controller="journal">
 
-	<?php include($header); ?>
+	<?php
+		// include($header);
+	?>
+
+	@include('templates.header')
 	
 	<div class="container">
 

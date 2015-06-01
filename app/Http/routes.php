@@ -21,7 +21,6 @@ Route::get('/journal', 'Journal\JournalController@index');
 
 //Timer
 Route::get('projects', ['as' => 'projects', 'uses' => 'Projects\ProjectsController@index']);
-Route::resource('projects', 'Projects\ProjectsController', ['only' => ['index', 'store']]);
 
 //Credits
 Route::get('/credits', function()
@@ -62,6 +61,9 @@ Route::controllers([
  */
 
 Route::resource('weights', 'Weights\WeightsController');
+Route::resource('projects', 'Projects\ProjectsController', ['only' => ['index', 'store', 'destroy']]);
+
+Route::post('delete/project', 'Projects\ProjectsController@destroy');
 
 /**
  * Ajax

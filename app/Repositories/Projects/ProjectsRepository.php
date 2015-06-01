@@ -7,8 +7,8 @@ use App\User;
 use App\Models\Projects\Project;
 
 /**
- * Class WeightsRepository
- * @package App\Repositories\Weights
+ * Class ProjectsRepository
+ * @package App\Repositories\Projects
  */
 class ProjectsRepository
 {

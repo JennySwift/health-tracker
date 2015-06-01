@@ -32,6 +32,11 @@ var app = angular.module('tracker');
 		 * delete
 		 */
 		
+		$scope.deleteProject = function ($id) {
+			ProjectsFactory.deleteProject($id).then(function (response) {
+				$scope.projects = response.data;
+			});
+		};
 		
 	}); //end controller
 

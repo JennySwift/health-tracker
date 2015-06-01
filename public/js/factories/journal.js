@@ -24,10 +24,21 @@ app.factory('journal', function ($http) {
 				date: $sql_date,
 				text: $text
 			};
-
-			console.log('text from js: ' + $text);
 			
 			return $http.post($url, $data);
+
+			//This didn't seem to do much
+			// return $http.post($url, $data).
+			// success(function(data, status, headers, config) {
+			//    // this callback will be called asynchronously
+			//    // when the response is available
+			//    data = 'something';
+			//  }).
+			//  error(function(data, status, headers, config) {
+			//    // called asynchronously if an error occurs
+			//    // or server returns response with an error status.
+			//    data = 'We have an error';
+			//  });
 		},
 		
 		/**

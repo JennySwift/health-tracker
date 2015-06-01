@@ -31,6 +31,7 @@
 				<th>Time</th>
 				<th>$</th>
 				<th>Paid</th>
+				<th></th>
 			</tr>
 			<tr ng-repeat="project in projects.payee">
 				<td>[[project.payer.name]]</td>
@@ -41,6 +42,9 @@
 				<td>
 					<span ng-if="!project.paid" class="label label-danger">unpaid</span>
 					<span ng-if="project.paid" class="label label-success">paid</span>
+				</td>
+				<td>
+					<button ng-click="deleteProject(project.id)" class="btn btn-xs">delete</button>
 				</td>
 			</tr>
 			
@@ -56,6 +60,7 @@
 				<th>Time</th>
 				<th>$</th>
 				<th>Paid</th>
+				<th></th>
 			</tr>
 			<tr ng-repeat="project in projects.payer">
 				<td>[[project.payee.name]]</td>
@@ -66,6 +71,9 @@
 				<td>
 					<span ng-if="!project.paid" class="label label-danger">unpaid</span>
 					<span ng-if="project.paid" class="label label-success">paid</span>
+				</td>
+				<td>
+					<button ng-click="deleteProject(project.id)" class="btn btn-xs">delete</button>
 				</td>
 			</tr>
 			

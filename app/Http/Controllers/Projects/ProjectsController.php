@@ -9,6 +9,8 @@ use JavaScript;
 use Auth;
 use Carbon\Carbon;
 
+use App\Models\Projects\Project;
+
 class ProjectsController extends Controller {
 
 	protected $projectsRepository;
@@ -49,6 +51,26 @@ class ProjectsController extends Controller {
 		$rate = $request->get('rate');
 
 		$this->projectsRepository->createProject($payer_email, $description, $rate);
+
+		$projects = [
+			'payee' => $this->projectsRepository->getProjectsAsPayee(),
+			'payer' => $this->projectsRepository->getProjectsAsPayer()
+		];
+
+		return response()->json($projects);
+	}
+
+	/**
+	 * Remove the specified resource from storage.
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function destroy(Request $request)
+	{
+		$id = $request->get('id');
+
+		Project::destroy($id);
 
 		$projects = [
 			'payee' => $this->projectsRepository->getProjectsAsPayee(),
