@@ -2,6 +2,7 @@
 
 use Closure;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken as BaseVerifier;
+use App;
 
 class VerifyCsrfToken extends BaseVerifier {
 
@@ -14,7 +15,9 @@ class VerifyCsrfToken extends BaseVerifier {
 	 */
 	public function handle($request, Closure $next)
 	{
+		//So that I don't have to remember to uncomment line 18 of kernel.php before pushing
 		return parent::handle($request, $next);
+			
 	}
 
 }

@@ -27,6 +27,13 @@ class FoodsController extends Controller {
 	public function __construct()
 	{
 		$this->middleware('auth');
+
+		//So that I don't have to remember to uncomment line 18 of kernel.php before pushing
+
+		// if (App::environment() != 'local') {
+		// 	$this->middleware('csrf');
+		// }
+		$this->activateCsrfMiddleware();
 	}
 
 	/**

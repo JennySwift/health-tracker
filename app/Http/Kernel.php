@@ -15,7 +15,8 @@ class Kernel extends HttpKernel {
 		'Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse',
 		'Illuminate\Session\Middleware\StartSession',
 		'Illuminate\View\Middleware\ShareErrorsFromSession',
-		'App\Http\Middleware\VerifyCsrfToken',
+		// 'App\Http\Middleware\VerifyCsrfToken',
+
 	];
 
 	/**
@@ -27,6 +28,10 @@ class Kernel extends HttpKernel {
 		'auth' => 'App\Http\Middleware\Authenticate',
 		'auth.basic' => 'Illuminate\Auth\Middleware\AuthenticateWithBasicAuth',
 		'guest' => 'App\Http\Middleware\RedirectIfAuthenticated',
+		//So that I don't have to remember to uncomment line 18 of kernel.php before pushing
+
+		'csrf' => 'App\Http\Middleware\VerifyCsrfToken',
+
 	];
 
 }
