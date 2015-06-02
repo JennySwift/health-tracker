@@ -27,12 +27,16 @@ app.factory('ProjectsFactory', function ($http) {
 		/**
 		 * delete
 		 */
-		
-		deleteProject: function ($project) {
+		deleteProject: function ($scope, $project, $context) {
             var $url = $project.path;
 
-			return $http.delete($url);
-		}
+            // Update the scope with the collection without the project we are deleting
 
+            // Take the context and delete the project from the javascript version of the collection
+            // You can access the id of the object with $project.id
+            //$scope.projects = the array without the project we deleted;
+
+			return $http.delete($url); // Return same thing here
+		}
 	};
 });

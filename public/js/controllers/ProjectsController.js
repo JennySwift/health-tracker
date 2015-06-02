@@ -32,10 +32,12 @@ var app = angular.module('tracker');
 		 * delete
 		 */
 		
-		$scope.deleteProject = function ($id) {
-			ProjectsFactory.deleteProject($id).then(function (response) {
-				$scope.projects = response.data;
+		$scope.deleteProject = function ($project, $context) {
+			ProjectsFactory.deleteProject($scope, $project, $context).then(function (response) {
+				//$scope.projects = response.data;
+                console.log($scope.projects);
 			});
+            // The then method should disapear or you could show a confirmation message
 		};
 		
 	}); //end controller

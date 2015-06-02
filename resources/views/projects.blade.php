@@ -44,7 +44,7 @@
 					<span ng-if="project.paid" class="label label-success">paid</span>
 				</td>
 				<td>
-					<button ng-click="deleteProject(project)" class="btn btn-xs">delete</button>
+					<button ng-click="deleteProject(project,projects.payee)" class="btn btn-xs">delete</button>
 				</td>
 			</tr>
 			
@@ -63,7 +63,7 @@
 				<th></th>
 			</tr>
 			<tr ng-repeat="project in projects.payer">
-				<td>[[project.payee.name]] <img src="[[project.payee.gravatar]]"</td>
+				<td>[[project.payee.name]] <img src="[[project.payee.gravatar]]"></td>
 				<td>[[project.description]]</td>
 				<td>$[[project.rate_per_hour]]</td>
 				<td>[[project.total_time_user_formatted]]</td>
@@ -73,7 +73,7 @@
 					<span ng-if="project.paid" class="label label-success">paid</span>
 				</td>
 				<td>
-					<button ng-click="deleteProject(project)" class="btn btn-xs">delete</button>
+					<button ng-click="deleteProject(project,projects.payer)" class="btn btn-xs">delete</button>
 				</td>
 			</tr>
 			
