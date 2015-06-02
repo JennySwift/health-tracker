@@ -28,8 +28,8 @@ app.factory('ProjectsFactory', function ($http) {
 		 * delete
 		 */
 		
-		deleteProject: function ($id) {
-			var $url = '/projects/' + $id;
+		deleteProject: function ($project) {
+            var $url = $project.path;
 
 			return $http.delete($url);
 		}

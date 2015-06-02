@@ -6,6 +6,8 @@ class Project extends Model {
 
 	protected $fillable = ['description', 'rate_per_hour'];
 
+    protected $appends = ['path'];
+
 	/**
 	 * Define relationships
 	 */
@@ -24,5 +26,15 @@ class Project extends Model {
 	{
 	    return $this->hasMany('App\Models\Projects\Timer');
 	}
+
+    /**
+     * Return the URL of the project
+     * it needs to be called getFieldAttribute
+     * @return string
+     */
+    public function getPathAttribute()
+    {
+        return route('projects.destroy', $this->id); // http://tracker.dev/projects/$id
+    }
 
 }

@@ -44,7 +44,7 @@
 					<span ng-if="project.paid" class="label label-success">paid</span>
 				</td>
 				<td>
-					<button ng-click="deleteProject(project.id)" class="btn btn-xs">delete</button>
+					<button ng-click="deleteProject(project)" class="btn btn-xs">delete</button>
 				</td>
 			</tr>
 			
@@ -73,7 +73,7 @@
 					<span ng-if="project.paid" class="label label-success">paid</span>
 				</td>
 				<td>
-					<button ng-click="deleteProject(project.id)" class="btn btn-xs">delete</button>
+					<button ng-click="deleteProject(project)" class="btn btn-xs">delete</button>
 				</td>
 			</tr>
 			

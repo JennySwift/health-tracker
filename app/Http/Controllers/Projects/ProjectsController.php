@@ -37,14 +37,18 @@ class ProjectsController extends Controller {
 			'projects' => $this->getProjects(),
 		]);
 
-		// return $this->getResponse();
+		//return $this->getProjects()['payee']->first();
 		return view('projects');
 	}
 
+    /**
+     * Fetch the projects in database
+     * @return array
+     */
 	public function getProjects()
 	{
 		return [
-			'payee' => $this->projectsRepository->getProjectsAsPayee(),
+			'payee' => $this->projectsRepository->getProjectsAsPayee(), // This is a Illuminate\Database\Eloquent\Object
 			'payer' => $this->projectsRepository->getProjectsAsPayer()
 		];	
 	}
