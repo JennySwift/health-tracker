@@ -37,7 +37,7 @@ Route::group(['prefix' => 'auth', 'namespace' => 'Auth'], function(){
     Route::group(['middleware' => 'guest'], function(){
         // Login
         Route::get('login', ['as' => 'auth.login', 'uses' => 'AuthController@getLogin']);
-        Route::post('login', ['as' => 'auth.login.store', 'before' => 'throttle:6,60', 'uses' => 'AuthController@postLogin']);
+        Route::post('login', ['as' => 'auth.login.store', 'before' => 'throttle:2,60', 'uses' => 'AuthController@postLogin']);
 
         // Register
         Route::get('register', ['as' => 'auth.register', 'uses' => 'AuthController@getRegister']);
