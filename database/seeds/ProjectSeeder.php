@@ -83,8 +83,8 @@ class ProjectSeeder extends Seeder {
 		]);
 
 		Project::create([
-			'payee_id' => 2,
-			'payer_id' => 1,
+			'payee_id' => $jenny_id,
+			'payer_id' => $john_id,
 			'description' => $faker->word,
 			'rate_per_hour' => 2,
 			'paid' => 0
