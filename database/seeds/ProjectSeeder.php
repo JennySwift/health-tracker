@@ -8,8 +8,9 @@ use Carbon\Carbon;
 
 use App\Models\Projects\Timer;
 use App\Models\Projects\Project;
+use App\User;
 
-class TimerSeeder extends Seeder {
+class ProjectSeeder extends Seeder {
 
 	public function run()
 	{
@@ -18,11 +19,16 @@ class TimerSeeder extends Seeder {
 
 		$faker = Faker::create();
 
-		//user is payee
+		//John is payee
+		//Jenny is payer
 		
+		$john_id = User::where('name', 'John')->pluck('id');
+		$jenny_id = User::where('name', 'Jenny')->pluck('id');
+		$jane_id = User::where('name', 'Jane')->pluck('id');
+
 		$project = Project::create([
-			'payee_id' => 1,
-			'payer_id' => 2,
+			'payee_id' => $john_id,
+			'payer_id' => $jenny_id,
 			'description' => $faker->word,
 			'rate_per_hour' => 40,
 			'paid' => 0
@@ -40,29 +46,37 @@ class TimerSeeder extends Seeder {
 			$project->timers()->save($timer);
 		}
 
-		
-
 		Project::create([
-			'payee_id' => 1,
-			'payer_id' => 2,
+			'payee_id' => $john_id,
+			'payer_id' => $jenny_id,
 			'description' => $faker->word,
 			'rate_per_hour' => 40,
 			'paid' => 0
 		]);
 
 		Project::create([
-			'payee_id' => 1,
-			'payer_id' => 2,
+			'payee_id' => $john_id,
+			'payer_id' => $jenny_id,
 			'description' => $faker->word,
 			'rate_per_hour' => 40,
 			'paid' => 1
 		]);
 
+		//Give the payee another payer
+
+		$project = Project::create([
+			'payee_id' => $john_id,
+			'payer_id' => $jane_id,
+			'description' => $faker->word,
+			'rate_per_hour' => 40,
+			'paid' => 0
+		]);
+
 		//user is payer
 
 		Project::create([
-			'payee_id' => 2,
-			'payer_id' => 1,
+			'payee_id' => $jenny_id,
+			'payer_id' => $john_id,
 			'description' => $faker->word,
 			'rate_per_hour' => 1,
 			'paid' => 1

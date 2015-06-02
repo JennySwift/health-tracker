@@ -10,9 +10,7 @@
 </head>
 <body>
 
-	<?php
-		include($header);
-	?> 
+	@include('templates.header')
 	
 	<div ng-controller="exercises" id="exercises">
 

@@ -2,6 +2,7 @@
 
 use Auth;
 use Carbon\Carbon;
+use Gravatar;
 
 use App\User;
 use App\Models\Projects\Project;
@@ -17,38 +18,52 @@ class ProjectsRepository
      * select
      */
     
+    public function getGravatar($email)
+    {
+        return Gravatar::src($email);
+        // return Gravatar::exists('cheezyspaghetti@gmail.com');
+    }
+    
     public function getProjectsAsPayee()
     {
-        $timers = Project::where('payee_id', Auth::user()->id)
+        $projects = Project::where('payee_id', Auth::user()->id)
             ->with('payee')
             ->with('payer')
             ->get();
 
-        foreach ($timers as $timer) {
-            $timer->times = $this->getProjectTimers($timer);
-            $timer->total_time = $this->getProjectTotalTime($timer);
-            $timer->total_time_user_formatted = $this->formatTimeForUser($timer->total_time);
-            $timer->price = $this->getProjectPrice($timer);
+        foreach ($projects as $project) {
+            $project->timers = $this->getProjectTimers($project);
+            $project->total_time = $this->getProjectTotalTime($project);
+            $project->total_time_user_formatted = $this->formatTimeForUser($project->total_time);
+            $project->price = $this->getProjectPrice($project);
+
+            //Add gravatars
+            $project->payee->gravatar = $this->getGravatar($project->payee->email);
+            $project->payer->gravatar = $this->getGravatar($project->payer->email);
         }
 
-        return $timers;
+        return $projects;
     }
 
     public function getProjectsAsPayer()
     {
-        $timers = Project::where('payer_id', Auth::user()->id)
+        $projects = Project::where('payer_id', Auth::user()->id)
             ->with('payee')
             ->with('payer')
             ->get();
 
-        foreach ($timers as $timer) {
-            $timer->times = $this->getProjectTimers($timer);
-            $timer->total_time = $this->getProjectTotalTime($timer);
-            $timer->total_time_user_formatted = $this->formatTimeForUser($timer->total_time);
-            $timer->price = $this->getProjectPrice($timer);
+        foreach ($projects as $project) {
+            $project->timers = $this->getProjectTimers($project);
+            $project->total_time = $this->getProjectTotalTime($project);
+            $project->total_time_user_formatted = $this->formatTimeForUser($project->total_time);
+            $project->price = $this->getProjectPrice($project);
+
+            //Add gravatars
+            $project->payee->gravatar = $this->getGravatar($project->payee->email);
+            $project->payer->gravatar = $this->getGravatar($project->payer->email);
         }
 
-        return $timers;
+        return $projects;
     }
 
     /**
@@ -77,17 +92,17 @@ class ProjectsRepository
      * @param  [type] $timer [description]
      * @return [type]        [description]
      */
-    public function getProjectTotalTime($timer)
+    public function getProjectTotalTime($project)
     {
         $hours = 0;
         $minutes = 0;
         $seconds = 0;
 
-        foreach ($timer->times as $time) {
+        foreach ($project->timers as $timer) {
             //Calculate hours, minutes and seconds
-            $hours+= $time->time->h;
-            $minutes+= $time->time->i;
-            $seconds+= $time->time->s;
+            $hours+= $timer->time->h;
+            $minutes+= $timer->time->i;
+            $seconds+= $timer->time->s;
         }
 
         $total_time = [
@@ -105,10 +120,10 @@ class ProjectsRepository
         return $time;
     }
 
-    public function getProjectPrice($timer)
+    public function getProjectPrice($project)
     {
-        $rate = $timer->rate_per_hour;
-        $time = $timer->total_time;
+        $rate = $project->rate_per_hour;
+        $time = $project->total_time;
         $price = 0;
 
         $price+= $rate * $time['hours'];

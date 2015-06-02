@@ -34,14 +34,19 @@ class ProjectsController extends Controller {
 	public function index()
 	{
 		JavaScript::put([
-			'projects' => [
-				'payee' => $this->projectsRepository->getProjectsAsPayee(),
-				'payer' => $this->projectsRepository->getProjectsAsPayer()
-			]
+			'projects' => $this->getProjects(),
 		]);
 
-		// return $this->getPayeeTimers();
-		return view('timers');
+		// return $this->getResponse();
+		return view('projects');
+	}
+
+	public function getProjects()
+	{
+		return [
+			'payee' => $this->projectsRepository->getProjectsAsPayee(),
+			'payer' => $this->projectsRepository->getProjectsAsPayer()
+		];	
 	}
 
 	public function store(Request $request)

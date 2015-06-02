@@ -59,7 +59,7 @@ class DatabaseSeeder extends Seeder {
 
 		//timers
 
-		$this->call('TimerSeeder');
+		$this->call('ProjectSeeder');
 
 		DB::statement('SET FOREIGN_KEY_CHECKS=1');
 

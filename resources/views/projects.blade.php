@@ -34,7 +34,7 @@
 				<th></th>
 			</tr>
 			<tr ng-repeat="project in projects.payee">
-				<td>[[project.payer.name]]</td>
+				<td>[[project.payer.name]] <img src="[[project.payer.gravatar]]" alt=""></td>
 				<td>[[project.description]]</td>
 				<td>$[[project.rate_per_hour]]</td>
 				<td>[[project.total_time_user_formatted]]</td>
@@ -63,7 +63,7 @@
 				<th></th>
 			</tr>
 			<tr ng-repeat="project in projects.payer">
-				<td>[[project.payee.name]]</td>
+				<td>[[project.payee.name]] <img src="[[project.payee.gravatar]]"</td>
 				<td>[[project.description]]</td>
 				<td>$[[project.rate_per_hour]]</td>
 				<td>[[project.total_time_user_formatted]]</td>

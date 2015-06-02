@@ -12,8 +12,10 @@
 	
 	<div ng-controller="foods" class="container">
 
+		@include('templates.header')
+		
 		<?php
-			include($header);
+			// include($header);
 			include($templates . '/popups/food/index.php');
 		?>
 		

@@ -147,7 +147,8 @@ return [
 		'Barryvdh\Debugbar\ServiceProvider',
 		'Spatie\Backup\BackupServiceProvider',
 		'GrahamCampbell\Throttle\ThrottleServiceProvider',
-		'Laracasts\Utilities\JavaScript\JavascriptServiceProvider'
+		'Laracasts\Utilities\JavaScript\JavascriptServiceProvider',
+		'Thomaswelton\LaravelGravatar\LaravelGravatarServiceProvider'
 
 	],
 
@@ -197,7 +198,8 @@ return [
 		'Validator' => 'Illuminate\Support\Facades\Validator',
 		'View'      => 'Illuminate\Support\Facades\View',
 		'Debugbar' => 'Barryvdh\Debugbar\Facade',
-		'Throttle' => 'GrahamCampbell\Throttle\Facades\Throttle'
+		'Throttle' => 'GrahamCampbell\Throttle\Facades\Throttle',
+		'Gravatar' => 'Thomaswelton\LaravelGravatar\Facades\Gravatar'
 
 	],
 

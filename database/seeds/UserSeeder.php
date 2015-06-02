@@ -10,17 +10,23 @@ class UserSeeder extends Seeder {
 	public function run()
 	{
 		User::truncate();
-		
+
 		User::create([
-			'name' => 'John',
+			'name' => 'Jenny',
 			'email' => 'cheezyspaghetti@gmail.com',
 			'password' => bcrypt('abcdefg')
 		]);
 
 		User::create([
-			'name' => 'Jane',
+			'name' => 'John',
 			'email' => 'cheezyspaghetti@optusnet.com.au',
-			'password' => bcrypt('hijklmnop')
+			'password' => bcrypt('abcdefg')
+		]);
+
+		User::create([
+			'name' => 'Jane',
+			'email' => 'jane@someplace.com',
+			'password' => bcrypt('abcdefg')
 		]);
 	}
 
