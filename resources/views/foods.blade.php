@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<title>tracker</title>
 	<?php
-		include(base_path().'/resources/views/templates/config.php');
+		include base_path().'/resources/views/templates/config.php';
 		include($head_links);
 	?>
 </head>

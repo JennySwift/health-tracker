@@ -33,27 +33,30 @@ class FoodsController extends Controller {
 		// if (App::environment() != 'local') {
 		// 	$this->middleware('csrf');
 		// }
-<<<<<<< Updated upstream
-		// $this->activateCsrfMiddleware();
-=======
+
 		//$this->activateCsrfMiddleware();
->>>>>>> Stashed changes
+
 	}
 
 	/**
 	 * Index
 	 */
 
-	public function index()
-	{
-		JavaScript::put([
-			'foods_with_units' => Food::getAllFoodsWithUnits(),
-			'recipes' => Recipe::filterRecipes('', []),
-			'recipe_tags' => Tag::getRecipeTags()
-		]);
-		// return Food::getAllFoodsWithUnits();
-		return view('foods');
-	}
+    /**
+     *
+     * @return \Illuminate\View\View
+     */
+    public function index()
+    {
+        JavaScript::put([
+            'foods_with_units' => Food::getAllFoodsWithUnits(),
+            'recipes' => Recipe::filterRecipes('', []),
+            'recipe_tags' => Tag::getRecipeTags()
+        ]);
+
+        // return Food::getAllFoodsWithUnits();
+        return view('foods');
+    }
 
 	/**
 	 * select

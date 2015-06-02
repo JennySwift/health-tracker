@@ -71,10 +71,8 @@ class ProjectsController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy(Request $request)
-	{
-		$id = $request->get('id');
-
+	public function destroy(Request $request, $id)
+    {
 		Project::destroy($id);
 
 		$projects = [

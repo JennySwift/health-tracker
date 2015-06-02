@@ -29,12 +29,9 @@ app.factory('ProjectsFactory', function ($http) {
 		 */
 		
 		deleteProject: function ($id) {
-			var $url = 'delete/project';
-			var $data = {
-				id: $id
-			};
-			
-			return $http.post($url, $data);
+			var $url = '/projects/' + $id;
+
+			return $http.delete($url);
 		}
 
 	};

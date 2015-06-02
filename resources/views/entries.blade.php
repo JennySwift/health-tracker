@@ -17,6 +17,8 @@
 		include($templates . '/popups/entry/index.php');
 	?>
 
+
+    
 	<div class="container">
 		<h5>branch:refactor</h5>
 

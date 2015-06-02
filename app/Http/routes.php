@@ -63,7 +63,7 @@ Route::controllers([
 Route::resource('weights', 'Weights\WeightsController');
 Route::resource('projects', 'Projects\ProjectsController', ['only' => ['index', 'store', 'destroy']]);
 
-Route::post('delete/project', 'Projects\ProjectsController@destroy');
+//Route::post('delete/project', 'Projects\ProjectsController@destroy');
 
 /**
  * Ajax
