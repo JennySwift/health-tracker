@@ -11,11 +11,11 @@ abstract class Controller extends BaseController {
 
 	//So that I don't have to remember to uncomment line 18 of kernel.php before pushing
 
-	public function activateCsrfMiddleware()
-	{
-		if (App::environment() != 'local') {
-			$this->middleware('csrf');
-		}	
-	}
+	// public function activateCsrfMiddleware()
+	// {
+	// 	if (App::environment() != 'local') {
+	// 		$this->middleware('csrf');
+	// 	}	
+	// }
 
 }

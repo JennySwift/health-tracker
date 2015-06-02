@@ -33,7 +33,7 @@ class FoodsController extends Controller {
 		// if (App::environment() != 'local') {
 		// 	$this->middleware('csrf');
 		// }
-		$this->activateCsrfMiddleware();
+		// $this->activateCsrfMiddleware();
 	}
 
 	/**
