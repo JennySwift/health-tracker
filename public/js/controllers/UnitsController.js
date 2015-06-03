@@ -12,8 +12,6 @@ var app = angular.module('tracker');
 			exercise: []
 		};
 
-		$scope.unit_id = ""; //for the select element in the recipe popup
-
 		/**
 		 * select
 		 */

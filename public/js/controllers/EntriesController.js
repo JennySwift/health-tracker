@@ -83,11 +83,6 @@ var app = angular.module('tracker');
 			}
 		};
 
-		//Just defining these here after I refactred the controllers so it doesn't error.
-		// $scope.calories = {};
-		// $scope.units = {};
-		// $scope.recipes = {};
-
 		/**
 		 * watches
 		 */
@@ -117,31 +112,6 @@ var app = angular.module('tracker');
 		/**
 		 * select
 		 */
-		
-		// $scope.pageLoad = function () {
-		// 	select.pageLoad($scope.date.sql).then(function (response) {
-		// 		$scope.foods = response.data.foods;
-		// 		$scope.food_entries = response.data.food_entries;
-		// 		$scope.calories.day = response.data.calories_for_the_day;
-		// 		$scope.calories.week_avg = response.data.calories_for_the_week;
-		// 		$scope.exercise_entries = response.data.exercise_entries;
-		// 		$scope.recipes.filtered = response.data.recipes;
-		// 		$scope.units.food = response.data.food_units;
-		// 		$scope.units.exercise = response.data.exercise_units;
-		// 		$scope.all_foods_with_units = response.data.foods_with_units;
-		// 		$scope.weight = response.data.weight;
-		// 		$scope.units.exercise = response.data.exercise_units;
-		// 		$scope.exercises = response.data.exercises;
-		// 		$scope.exercise_series = response.data.exercise_series;
-		// 		// $scope.getMenu($scope.foods, $scope.recipes);
-		// 		$scope.journal_entry = response.data.journal_entry;
-		// 		$scope.exercise_tags = response.data.exercise_tags;
-		// 		$scope.workouts = response.data.workouts;
-		// 		$scope.recipe_tags = response.data.recipe_tags;
-
-		// 		$scope.selected.exercise_unit.id = $scope.units.exercise[0].id;
-		// 	});
-		// };
 
 		/**
 		 * Get all the user's entries for the current date
@@ -192,9 +162,6 @@ var app = angular.module('tracker');
 		};
 
 		$scope.insertRecipeEntry = function () {
-			// $scope.new_entry.food.id = $scope.selected.food.id;
-			// $scope.new_entry.food.name = $scope.selected.food.name;
-
 			entries.insertRecipeEntry($scope.date.sql, $scope.selected.menu.id, $scope.temporary_recipe_popup.contents).then(function (response) {
 				$scope.entries.menu = response.data;
 				$scope.show.popups.temporary_recipe = false;

@@ -62,8 +62,8 @@ Route::controllers([
 
 Route::resource('weights', 'Weights\WeightsController');
 Route::resource('projects', 'Projects\ProjectsController', ['only' => ['index', 'store', 'destroy']]);
-
-//Route::post('delete/project', 'Projects\ProjectsController@destroy');
+//Route::resource('journal', 'Journal\JournalController', ['only' => ['index', 'store', 'destroy']]);
+Route::post('select/getJournalEntry', 'Journal\JournalController@getJournalEntry');
 
 /**
  * Ajax
@@ -96,9 +96,6 @@ Route::post('select/autocompleteMenu', 'Search\AutocompleteController@autocomple
 Route::post('select/autocompleteExercise', 'Search\AutocompleteController@autocompleteExercise');
 Route::post('select/autocompleteFood', 'Search\AutocompleteController@autocompleteFood');
 
-//journal
-Route::post('select/getJournalEntry', 'Journal\JournalController@getJournalEntry');
-
 //exercises
 Route::post('select/getExercises', 'Exercises\ExercisesController@getExercises');
 Route::post('select/getExerciseInfo', 'Exercises\ExercisesController@getExerciseInfo');
@@ -124,9 +121,6 @@ Route::post('select/allUnits', 'Units\UnitsController@getAllUnits');
 /**
  * Insert requests
  */
-
-//Projects
-
 
 //weight
 Route::post('insert/weight', 'Weights\WeightsController@insertOrUpdateWeight');

@@ -34,7 +34,6 @@
 				<th></th>
 			</tr>
 			<tr ng-repeat="project in projects.payee">
-                <td>[[project.payer.gravatar]]</td>
 				<td>[[project.payer.name]] <img ng-src="[[project.payer.gravatar]]" alt=""></td>
 				<td>[[project.description]]</td>
 				<td>$[[project.rate_per_hour]]</td>

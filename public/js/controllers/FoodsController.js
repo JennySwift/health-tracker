@@ -41,31 +41,16 @@ var app = angular.module('tracker');
 		};
 		
 		$scope.food_popup = {};
-		$scope.menu_item = {}; //id, name, type. for displaying the chosen autocompleted option (food or recipe)
-		$scope.food = {};//id, name. for displaying the chosen autocompleted option. Taken from $scope.menu_item.
-		$scope.food_id = "";//probably should change this to an object. for the food popup-the food_id of the clicked on food that brings up the popup.
-		$scope.food_name = "";//probably should change this to an object. likewise, for the food popup	
-		
+		$scope.recipe_popup = {};
+
 		$scope.foods = {}; //all foods
-		$scope.menu = {};//all foods plus all recipes
-		$scope.calories = {};//calorie info for a given day
-		
-		//quick recipe
+		$scope.menu = {};//all foods and all recipes
+		$scope.calories = {};
 		$scope.quick_recipe = {};
 
-		//recipe_popup
-		$scope.recipe_popup = {
-
-		};
-
-		//new item-eg new food, as opposed to to food entry
 		$scope.new_item = {
 			recipe: {}
 		};
-
-		//associated food units
-		$scope.assoc_units = {};//associated units for one chosen food. This is made from $scope.all_foods_with_units.
-		$scope.food_and_assoc_units_array = {};//for the food popup, with checked state and calorie info. Associated units of one food. I could probably combine this info all into $scope.all_foods_with_units and get rid of this.
 
 		/**
 		 * watches
@@ -109,18 +94,6 @@ var app = angular.module('tracker');
 			});
 			
 		};
-
-		// $scope.getAssocUnits = function () {
-		// 	//for just one food
-		// 	for (var i = 0; i < $scope.all_foods_with_units.length; i++) {
-		// 		var $iteration = $scope.all_foods_with_units[i];
-		// 		var $iteration_food_id = $iteration.food.food_id;
-
-		// 		if ($iteration_food_id === $scope.food.id) {
-		// 			$scope.selected.food.assoc_units = $iteration.units;
-		// 		}
-		// 	}
-		// };
 
 		/**
 		 * insert
