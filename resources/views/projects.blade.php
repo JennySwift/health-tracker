@@ -11,6 +11,8 @@
 <body>
 
 	@include('templates.header')
+
+    <h1>projects</h1>
 	
 	<div ng-controller="projects" id="timers" class="container">
 
