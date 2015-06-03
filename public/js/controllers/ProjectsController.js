@@ -9,6 +9,10 @@ var app = angular.module('tracker');
 		
 		$scope.projects = projects;
 		$scope.new_project = {};
+        $scope.show = {
+            popups: {}
+        };
+        $scope.selected = {};
 
 		/**
 		 * select
@@ -23,6 +27,12 @@ var app = angular.module('tracker');
 		 		$scope.projects = response.data;
 		 	});
 		 };
+
+        $scope.startProjectTimer = function () {
+            ProjectsFactory.startProjectTimer($project_id).then(function (response) {
+                $scope.projects = response.data;
+            });
+        };
 
 		/**
 		 * update
@@ -39,6 +49,22 @@ var app = angular.module('tracker');
 			});
             // The then method should disapear or you could show a confirmation message
 		};
+
+        /**
+         * other
+         */
+
+        $scope.showProjectPopup = function ($project) {
+            $scope.selected.project = $project;
+            $scope.show.popups.project = true;
+        };
+
+        $scope.closePopup = function ($event, $popup) {
+            var $target = $event.target;
+            if ($target.className === 'popup-outer') {
+                $scope.show.popups[$popup] = false;
+            }
+        };
 		
 	}); //end controller
 

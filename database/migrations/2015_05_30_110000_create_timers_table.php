@@ -18,6 +18,8 @@ class CreateTimersTable extends Migration {
 			$table->integer('project_id')->unsigned()->index();
 			$table->timestamp('start');
 			$table->timestamp('finish');
+            $table->boolean('paid')->default(0)->nullable()->index();
+            $table->timestamp('time_of_payment')->nullable()->index();
 
 			$table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
 		});

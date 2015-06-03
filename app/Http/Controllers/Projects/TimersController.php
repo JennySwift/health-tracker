@@ -4,8 +4,20 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
+use Carbon\Carbon;
+
+use App\Models\Projects\Timer;
 
 class TimesController extends Controller {
+
+    public function startProjectTimer(Request $request)
+    {
+        Timer::create([
+            'project_id' => $request->get('project_id'),
+            'start' => Carbon::now()->format('Y-m-d');
+        ]);
+    }
+
 
 	/**
 	 * Display a listing of the resource.

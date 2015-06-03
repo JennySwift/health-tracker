@@ -30,17 +30,24 @@ class ProjectSeeder extends Seeder {
 			'payee_id' => $john_id,
 			'payer_id' => $jenny_id,
 			'description' => $faker->word,
-			'rate_per_hour' => 40,
-			'paid' => 0
+			'rate_per_hour' => 40
 		]);
 
 		foreach (range(0, 1) as $index) {
 			$finish = $faker->dateTimeBetween($startDate = '-1 days', $endDate = 'now');
 			$start = $faker->dateTimeBetween($startDate = '-1 days', $endDate = $finish);
 
+            if ($index === 1) {
+                $paid = 1;
+            }
+            else {
+                $paid = 0;
+            }
+
 			$timer = new Timer([
 				'start' => $start,
-				'finish' => $finish
+				'finish' => $finish,
+                'paid' => $paid
 			]);
 
 			$project->timers()->save($timer);
@@ -50,8 +57,7 @@ class ProjectSeeder extends Seeder {
 			'payee_id' => $john_id,
 			'payer_id' => $jenny_id,
 			'description' => $faker->word,
-			'rate_per_hour' => 40,
-			'paid' => 0
+			'rate_per_hour' => 40
 		]);
 
 		Project::create([
@@ -59,7 +65,6 @@ class ProjectSeeder extends Seeder {
 			'payer_id' => $jenny_id,
 			'description' => $faker->word,
 			'rate_per_hour' => 40,
-			'paid' => 1
 		]);
 
 		//Give the payee another payer
@@ -68,8 +73,7 @@ class ProjectSeeder extends Seeder {
 			'payee_id' => $john_id,
 			'payer_id' => $jane_id,
 			'description' => $faker->word,
-			'rate_per_hour' => 40,
-			'paid' => 0
+			'rate_per_hour' => 40
 		]);
 
 		//user is payer
@@ -78,16 +82,14 @@ class ProjectSeeder extends Seeder {
 			'payee_id' => $jenny_id,
 			'payer_id' => $john_id,
 			'description' => $faker->word,
-			'rate_per_hour' => 1,
-			'paid' => 1
+			'rate_per_hour' => 1
 		]);
 
 		Project::create([
 			'payee_id' => $jenny_id,
 			'payer_id' => $john_id,
 			'description' => $faker->word,
-			'rate_per_hour' => 2,
-			'paid' => 0
+			'rate_per_hour' => 2
 		]);
 	}
 

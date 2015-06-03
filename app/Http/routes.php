@@ -72,6 +72,12 @@ Route::resource('exercises', 'Exercises\ExercisesController', ['only' => ['index
  */
 
 /**
+ * Projects
+ */
+
+Route::post('insert/startProjectTimer', 'Projects\TimersController@startProjectTimer');
+
+/**
  * Exercises
  */
 

@@ -19,7 +19,6 @@ class CreateProjectsTable extends Migration {
 			$table->integer('payer_id')->unsigned()->nullable()->index();
 			$table->string('description');
 			$table->decimal('rate_per_hour', 10, 2)->nullable();
-			$table->boolean('paid')->default(0)->nullable()->index();
 			$table->timestamps();
 
 			$table->foreign('payer_id')->references('id')->on('users')->onDelete('cascade');
