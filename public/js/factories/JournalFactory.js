@@ -1,4 +1,4 @@
-app.factory('journal', function ($http) {
+app.factory('JournalFactory', function ($http) {
 	return {
 		/**
 		 * select

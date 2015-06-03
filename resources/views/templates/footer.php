@@ -35,10 +35,10 @@
 <script type="text/javascript" src="js/factories/quick-recipe.js"></script>
 <script type="text/javascript" src="js/factories/entries.js"></script>
 <script type="text/javascript" src="js/factories/exercises.js"></script>
-<script type="text/javascript" src="js/factories/foods.js"></script>
-<script type="text/javascript" src="js/factories/journal.js"></script>
+<script type="text/javascript" src="js/factories/FoodsFactory.js"></script>
+<script type="text/javascript" src="js/factories/JournalFactory.js"></script>
 <script type="text/javascript" src="js/factories/tags.js"></script>
-<script type="text/javascript" src="js/factories/units.js"></script>
+<script type="text/javascript" src="js/factories/UnitsFactory.js"></script>
 <script type="text/javascript" src="js/factories/weights.js"></script>
 <script type="text/javascript" src="js/factories/ProjectsFactory.js"></script>
 <script type="text/javascript" src="js/factories/autocomplete.js"></script>

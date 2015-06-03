@@ -1,4 +1,4 @@
-app.factory('units', function ($http) {
+app.factory('UnitsFactory', function ($http) {
 	return {
 		
 		/**

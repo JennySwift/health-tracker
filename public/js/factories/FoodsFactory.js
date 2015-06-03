@@ -1,4 +1,4 @@
-app.factory('foods', function ($http) {
+app.factory('FoodsFactory', function ($http) {
 	return {
 		/**
 		 * select
@@ -204,14 +204,11 @@ app.factory('foods', function ($http) {
 				return $http.post($url, $data);
 			}
 		},
-		deleteFood: function ($id) {
+		deleteFood: function ($food) {
 			if (confirm("Are you sure you want to delete this food?")) {
-				var $url = 'delete/food';
-				var $data = {
-					id: $id
-				};
-				
-				return $http.post($url, $data);
+				var $url = $food.path;
+
+                return $http.delete($url);
 			}
 		},
 		deleteUnitFromCalories: function ($food_id, $unit_id) {
