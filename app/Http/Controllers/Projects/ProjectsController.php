@@ -77,14 +77,28 @@ class ProjectsController extends Controller {
 	 */
 	public function destroy(Request $request, $id)
     {
-		Project::destroy($id);
+//		Project::destroy($id);
 
-		$projects = [
-			'payee' => $this->projectsRepository->getProjectsAsPayee(),
-			'payer' => $this->projectsRepository->getProjectsAsPayer()
-		];
+        $project = Project::find($id);
 
-		return response()->json($projects);
+        if(is_null($project)) {
+            return response([
+                'error' => 'Project not found.',
+                'status' => 404
+            ], 404);
+        }
+
+        $project->delete();
+
+        // throw NotFoundException
+        return response(null, 204);
+
+//		$projects = [
+//			'payee' => $this->projectsRepository->getProjectsAsPayee(),
+//			'payer' => $this->projectsRepository->getProjectsAsPayer()
+//		];
+//
+//		return response()->json($projects);
 	}
 
 	

@@ -32,6 +32,8 @@ app.factory('ProjectsFactory', function ($http) {
 
             // Update the scope with the collection without the project we are deleting
 
+            $scope.projects[$context] = _.without($scope.projects[$context], $project);
+
             // Take the context and delete the project from the javascript version of the collection
             // You can access the id of the object with $project.id
             //$scope.projects = the array without the project we deleted;

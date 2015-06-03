@@ -8,6 +8,7 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Auth;
 use App\Models\Exercises\Entry as ExerciseEntry;
 use App\Models\Exercises\Exercise;
+use Gravatar;
 
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract {
 
@@ -19,6 +20,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	 * @var string
 	 */
 	protected $table = 'users';
+    protected $appends = ['gravatar'];
 
 	/**
 	 * The attributes that are mass assignable.
@@ -99,4 +101,12 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	/**
 	 * End of defining relationships
 	 */
+
+    public function getGravatarAttribute()
+    {
+        $email = md5($this->email);
+        return "https://secure.gravatar.com/avatar/{$email}?s=37&r=g&default=mm";
+//        return Gravatar::src($this->email);
+        // return Gravatar::exists('cheezyspaghetti@gmail.com');
+    }
 }

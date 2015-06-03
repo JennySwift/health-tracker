@@ -36,5 +36,4 @@ class Project extends Model {
     {
         return route('projects.destroy', $this->id); // http://tracker.dev/projects/$id
     }
-
 }
