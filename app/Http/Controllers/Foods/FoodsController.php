@@ -126,12 +126,13 @@ class FoodsController extends Controller {
 	 * delete
 	 */
 
-	public function deleteFood(Request $request)
-	{
-		$id = $request->get('id');
-		Food::where('id', $id)->delete();
-		return Food::getAllFoodsWithUnits();
-	}
+    public function destroy(Request $request, $id)
+    {
+        $food = Food::find($id);
+        $food->delete();
+
+        return Food::getAllFoodsWithUnits();
+    }
 
 	public function deleteUnitFromCalories(Request $request)
 	{
@@ -200,17 +201,6 @@ class FoodsController extends Controller {
 	 * @return Response
 	 */
 	public function update($id)
-	{
-		//
-	}
-
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function destroy($id)
 	{
 		//
 	}

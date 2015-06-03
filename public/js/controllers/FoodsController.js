@@ -1,7 +1,7 @@
 var app = angular.module('tracker');
 
 (function () {
-	app.controller('foods', function ($scope, $http, foods, quickRecipe, tags, autocomplete) {
+	app.controller('foods', function ($scope, $http, FoodsFactory, quickRecipe, tags, autocomplete) {
 
 		/**
 		 * scope properties
@@ -73,7 +73,7 @@ var app = angular.module('tracker');
 		 */
 		
 		$scope.filterRecipes = function () {
-			foods.filterRecipes($scope.filter.recipes.tag_ids).then(function (response) {
+			FoodsFactory.filterRecipes($scope.filter.recipes.tag_ids).then(function (response) {
 				$scope.recipes.filtered = response.data;
 			});
 		};
@@ -89,7 +89,7 @@ var app = angular.module('tracker');
 			$scope.food_popup.id = $food_id;
 			$scope.food_popup.name = $food_name;
 			$scope.show.popups.food_info = true;
-			foods.getFoodInfo($food_id).then(function (response) {
+			FoodsFactory.getFoodInfo($food_id).then(function (response) {
 				$scope.food_popup = response.data;
 			});
 			
@@ -111,7 +111,7 @@ var app = angular.module('tracker');
 		$scope.insertTagsIntoRecipe = function () {
 			//deletes tags from the recipe then adds the correct ones
 			$scope.recipe_popup.notification = 'Saving tags...';
-			foods.insertTagsIntoRecipe($scope.recipe_popup.recipe.id, $scope.recipe_popup.tags).then(function (response) {
+			FoodsFactory.insertTagsIntoRecipe($scope.recipe_popup.recipe.id, $scope.recipe_popup.tags).then(function (response) {
 				$scope.recipe_popup.notification = 'Tags have been saved.';
 				$scope.recipes.filtered = response.data;
 			});
@@ -123,7 +123,7 @@ var app = angular.module('tracker');
 			if ($keycode !== 13) {
 				return;
 			}
-			foods.insertRecipe($scope.new_item.recipe.name).then(function (response) {
+			FoodsFactory.insertRecipe($scope.new_item.recipe.name).then(function (response) {
 				$scope.recipes.filtered = response.data;
 			});
 		};
@@ -139,13 +139,13 @@ var app = angular.module('tracker');
 			//Check if the checkbox is checked
 			if ($scope.food_popup.food_units.indexOf($unit_id) === -1) {
 				//It is now unchecked. Remove the unit from the food.
-				foods.deleteUnitFromCalories($scope.food_popup.food.id, $unit_id).then(function (response) {
+				FoodsFactory.deleteUnitFromCalories($scope.food_popup.food.id, $unit_id).then(function (response) {
 					$scope.food_popup = response.data;
 				});
 			}
 			else {
 				// It is now checked. Add the unit to the food.
-				foods.insertUnitInCalories($scope.food_popup.food.id, $unit_id).then(function (response) {
+				FoodsFactory.insertUnitInCalories($scope.food_popup.food.id, $unit_id).then(function (response) {
 					$scope.food_popup = response.data;
 				});
 			}
@@ -153,7 +153,7 @@ var app = angular.module('tracker');
 
 		$scope.insertFood = function ($keycode) {
 			if ($keycode === 13) {
-				foods.insertFood().then(function (response) {
+				FoodsFactory.insertFood().then(function (response) {
 					$scope.all_foods_with_units = response.data;
 				});
 			}
@@ -174,7 +174,7 @@ var app = angular.module('tracker');
 				$steps.push($line);
 			});
 
-			foods.updateRecipeMethod($scope.recipe_popup.recipe.id, $steps).then(function (response) {
+			FoodsFactory.updateRecipeMethod($scope.recipe_popup.recipe.id, $steps).then(function (response) {
 				$scope.recipe_popup = response.data;
 				$scope.recipe_popup.edit_method = false;
 			});	
@@ -182,14 +182,14 @@ var app = angular.module('tracker');
 
 		$scope.updateCalories = function ($keycode, $unit_id, $calories) {
 			if ($keycode === 13) {
-				foods.updateCalories($scope.food_popup.food.id, $unit_id, $calories).then(function (response) {
+				FoodsFactory.updateCalories($scope.food_popup.food.id, $unit_id, $calories).then(function (response) {
 					$scope.food_popup = response.data;
 				});
 			}
 		};
 
 		$scope.updateDefaultUnit = function ($food_id, $unit_id) {
-			foods.updateDefaultUnit($food_id, $unit_id).then(function (response) {
+			FoodsFactory.updateDefaultUnit($food_id, $unit_id).then(function (response) {
 				$scope.food_popup = response.data;
 			});
 		};
@@ -205,19 +205,19 @@ var app = angular.module('tracker');
 		};
 
 		$scope.deleteFoodFromRecipe = function ($food_id) {
-			foods.deleteFoodFromRecipe($food_id, $scope.recipe_popup.recipe.id).then(function (response) {
+			FoodsFactory.deleteFoodFromRecipe($food_id, $scope.recipe_popup.recipe.id).then(function (response) {
 				$scope.recipe_popup = response.data;
 			});
 		};
 
 		$scope.deleteRecipe = function ($id) {
-			foods.deleteRecipe($id).then(function (response) {
+			FoodsFactory.deleteRecipe($id).then(function (response) {
 				$scope.recipes.filtered = response.data;
 			});
 		};
 
-		$scope.deleteFood = function ($id) {
-			foods.deleteFood($id).then(function (response) {
+		$scope.deleteFood = function ($food) {
+			FoodsFactory.deleteFood($food).then(function (response) {
 				$scope.all_foods_with_units = response.data;
 			});
 		};
@@ -228,7 +228,7 @@ var app = angular.module('tracker');
 		
 		$scope.showRecipePopup = function ($recipe) {
 			// $scope.selected.recipe = $recipe;
-			foods.getRecipeContents($recipe.id).then(function (response) {
+			FoodsFactory.getRecipeContents($recipe.id).then(function (response) {
 				$scope.show.popups.recipe = true;
 				$scope.recipe_popup = response.data;
 			});
@@ -240,7 +240,7 @@ var app = angular.module('tracker');
 		
 		/**
 		 * End goal of the function:
-		 * Call foods.insertQuickRecipe, with $check_similar_names as true.
+		 * Call FoodsFactory.insertQuickRecipe, with $check_similar_names as true.
 		 * Send the contents, steps, and name of new recipe.
 		 * The PHP checks for similar names and returns similar names if found.
 		 * The JS checks for similar names in the response.
@@ -300,7 +300,7 @@ var app = angular.module('tracker');
 		};
 
 		$scope.quickRecipeAttemptInsert = function ($recipe) {
-			foods.insertQuickRecipe($recipe, true).then(function (response) {
+			FoodsFactory.insertQuickRecipe($recipe, true).then(function (response) {
 				if (response.data.similar_names) {
 					$scope.quick_recipe.similar_names = response.data.similar_names;
 					$scope.show.popups.similar_names = true;
@@ -314,7 +314,7 @@ var app = angular.module('tracker');
 
 		/**
 		 * This is for entering the recipe after the similar name check is done.
-		 * We call foods.insertQuickRecipe again, but this time with $check_similar_names parameter as false,
+		 * We call FoodsFactory.insertQuickRecipe again, but this time with $check_similar_names parameter as false,
 		 * so that the recipe gets entered.
 		 * @return {[type]} [description]
 		 */
@@ -347,7 +347,7 @@ var app = angular.module('tracker');
 				}
 			});
 
-			foods.insertQuickRecipe($scope.quick_recipe, false).then(function (response) {
+			FoodsFactory.insertQuickRecipe($scope.quick_recipe, false).then(function (response) {
 				$scope.recipes.filtered = response.data.recipes;
 				$scope.all_foods_with_units = response.data.foods_with_units;
 			});
@@ -415,7 +415,7 @@ var app = angular.module('tracker');
 				description: $scope.recipe_popup.food.description
 			};
 
-			foods.insertFoodIntoRecipe($data).then(function (response) {
+			FoodsFactory.insertFoodIntoRecipe($data).then(function (response) {
 				$scope.recipe_popup = response.data;
 			});
 			$("#recipe-popup-food-input").val("").focus();

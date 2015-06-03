@@ -1,28 +1,17 @@
 var app = angular.module('tracker');
 
 (function () {
-	app.controller('units', function ($scope, $http, units) {
+	app.controller('units', function ($scope, $http, UnitsFactory) {
 
 		/**
 		 * scope properties
 		 */
 		
-		$scope.units = {
-			food: [],
-			exercise: []
-		};
+		$scope.units = units;
 
 		/**
 		 * select
 		 */
-		
-		$scope.getAllUnits = function () {
-			units.getAllUnits().then(function (response) {
-				$scope.units = response.data;
-			});
-		};
-
-		$scope.getAllUnits();
 
 		/**
 		 * insert
@@ -30,7 +19,7 @@ var app = angular.module('tracker');
 		
 		$scope.insertFoodUnit = function ($keycode) {
 			if ($keycode === 13) {
-				units.insertFoodUnit().then(function (response) {
+				UnitsFactory.insertFoodUnit().then(function (response) {
 					$scope.units.food = response.data;
 				});
 			}
@@ -38,7 +27,7 @@ var app = angular.module('tracker');
 		
 		$scope.insertExerciseUnit = function ($keycode) {
 			if ($keycode === 13) {
-				units.insertExerciseUnit().then(function (response) {
+				UnitsFactory.insertExerciseUnit().then(function (response) {
 					$scope.units.exercise = response.data;
 				});
 			}
@@ -53,13 +42,13 @@ var app = angular.module('tracker');
 		 */
 		
 		$scope.deleteExerciseUnit = function ($id) {
-			units.deleteExerciseUnit($id).then(function (response) {
+			UnitsFactory.deleteExerciseUnit($id).then(function (response) {
 				$scope.units.exercise = response.data;
 			});
 		};
 
 		$scope.deleteFoodUnit = function ($id) {
-			units.deleteFoodUnit($id).then(function (response) {
+			UnitsFactory.deleteFoodUnit($id).then(function (response) {
 				$scope.units.food = response.data;
 			});
 		};

@@ -17,6 +17,8 @@ class Food extends Model {
 
 	protected $fillable = ['name', 'default_unit_id'];
 
+    protected $appends = ['path'];
+
 	/**
 	 * Define relationships
 	 */
@@ -343,5 +345,19 @@ class Food extends Model {
 	/**
 	 * delete
 	 */
+
+    /**
+     * other
+     */
+
+    /**
+     * Return the URL of the project
+     * it needs to be called getFieldAttribute
+     * @return string
+     */
+    public function getPathAttribute()
+    {
+        return route('foods.destroy', $this->id);
+    }
 
 }

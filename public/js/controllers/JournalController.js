@@ -1,7 +1,7 @@
 var app = angular.module('tracker');
 
 (function () {
-	app.controller('journal', function ($scope, $http, date, journal) {
+	app.controller('journal', function ($scope, $http, date, JournalFactory) {
 		/**
 		 * scope properties
 		 */
@@ -63,7 +63,7 @@ var app = angular.module('tracker');
 		 */
 		
 		$scope.getJournalEntry = function () {
-			journal.getJournalEntry($scope.date.sql).then(function (response) {
+			JournalFactory.getJournalEntry($scope.date.sql).then(function (response) {
 				$scope.journal_entry = response.data;
 			});
 		};
@@ -73,7 +73,7 @@ var app = angular.module('tracker');
 		 */
 		
 		$scope.insertOrUpdateJournalEntry = function () {
-			journal.insertJournalEntry($scope.date.sql, $scope.journal_entry.text).then(function (response) {
+			JournalFactory.insertJournalEntry($scope.date.sql, $scope.journal_entry.text).then(function (response) {
 				$scope.journal_entry = response.data;
 			});
 		};

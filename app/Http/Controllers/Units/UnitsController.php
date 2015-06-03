@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 use Auth;
+use JavaScript;
 
 use App\Models\Units\Unit;
 
@@ -26,7 +27,12 @@ class UnitsController extends Controller {
 
 	public function index()
 	{
-		return view('units');
+        JavaScript::put([
+            'units' => Unit::getAllUnits()
+        ]);
+
+//        return Unit::getAllUnits();
+        return view('units');
 	}
 
 	/**
@@ -45,11 +51,6 @@ class UnitsController extends Controller {
 	public function getFoodUnits()
 	{
 		return Unit::getFoodUnits();
-	}
-
-	public function getAllUnits()
-	{
-		return Unit::getAllUnits();
 	}
 
 	/**
