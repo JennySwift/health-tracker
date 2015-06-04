@@ -27,6 +27,14 @@ app.factory('ProjectsFactory', function ($http) {
 
             return $http.post($url, $data);
         },
+        stopProjectTimer: function ($project_id) {
+            var $url = 'update/stopProjectTimer';
+            var $data = {
+                project_id: $project_id
+            };
+
+            return $http.post($url, $data);
+        },
 
 		/**
 		 * update

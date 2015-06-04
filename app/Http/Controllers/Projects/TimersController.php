@@ -1,4 +1,4 @@
-<?php namespace App\Http\Controllers\Timers;
+<?php namespace App\Http\Controllers\Projects;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -7,16 +7,27 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 
 use App\Models\Projects\Timer;
+use App\Models\Projects\Project;
 
-class TimesController extends Controller {
+class TimersController extends Controller {
 
     public function startProjectTimer(Request $request)
     {
         Timer::create([
             'project_id' => $request->get('project_id'),
-            'start' => Carbon::now()->format('Y-m-d');
+            'start' => Carbon::now()->toDateTimeString()
         ]);
     }
+
+    public function stopProjectTimer(Request $request)
+    {
+        $project = Project::find($request->get('project_id'));
+        $last_timer_id = Timer::where('project_id', $project->id)->max('id');
+        $timer = Timer::find($last_timer_id);
+        $timer->finish = Carbon::now()->toDateTimeString();
+        $timer->save();
+    }
+
 
 
 	/**

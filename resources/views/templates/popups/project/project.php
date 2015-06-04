@@ -1,6 +1,6 @@
 <div ng-show="show.popups.project" ng-click="closePopup($event, 'project')" class="popup-outer">
 
-	<div class="popup-inner">
+	<div id="project-popup" class="popup-inner">
 
         <h1>Project</h1>
 
@@ -21,6 +21,12 @@
                 <td>[[selected.project.price]]</td>
             </tr>
         </table>
+
+        <div class="flex">
+            <button ng-click="startProjectTimer()" class="btn btn-success">Start</button>
+            <button ng-click="stopProjectTimer()" class="btn btn-danger">Stop</button>
+        </div>
+
         <h1>Timers</h1>
 
         <table class="table table-bordered">

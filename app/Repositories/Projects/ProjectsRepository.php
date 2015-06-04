@@ -64,6 +64,7 @@ class ProjectsRepository
 
         foreach ($timers as $timer) {
             $start = Carbon::createFromFormat('Y-m-d H:i:s', $timer->start);
+//            dd($start);
             $finish = Carbon::createFromFormat('Y-m-d H:i:s', $timer->finish);
             //This is the time spent for one time (one row in times table) that belongs to the timer    
             $diff = $finish->diff($start);

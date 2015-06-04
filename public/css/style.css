@@ -201,6 +201,13 @@ li {
 #exercise-popup input {
   background: #FEE6BE; }
 
+#project-popup .flex {
+  display: flex;
+  justify-content: center; }
+#project-popup button {
+  margin: 0px 20px;
+  padding: 10px 43px; }
+
 /*==============================font awesome==============================*/
 .fa-home {
   font-size: 35px; }

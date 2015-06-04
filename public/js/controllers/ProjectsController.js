@@ -29,7 +29,7 @@ var app = angular.module('tracker');
 		 };
 
         $scope.startProjectTimer = function () {
-            ProjectsFactory.startProjectTimer($project_id).then(function (response) {
+            ProjectsFactory.startProjectTimer($scope.selected.project.id).then(function (response) {
                 $scope.projects = response.data;
             });
         };
@@ -37,7 +37,13 @@ var app = angular.module('tracker');
 		/**
 		 * update
 		 */
-		
+
+        $scope.stopProjectTimer = function () {
+            ProjectsFactory.stopProjectTimer($scope.selected.project.id).then(function (response) {
+                $scope.projects = response.data;
+            });
+        };
+
 		/**
 		 * delete
 		 */

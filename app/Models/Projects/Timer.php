@@ -4,6 +4,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Timer extends Model {
 
+    protected $fillable = ['project_id', 'start'];
+
 	public $timestamps = false;
 
 	/**
