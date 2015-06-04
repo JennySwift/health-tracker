@@ -27,6 +27,10 @@
             <button ng-click="stopProjectTimer()" class="btn btn-danger">Stop</button>
         </div>
 
+        <div class="flex">
+            <h1>[[project_popup.timer_time.hours]]:[[project_popup.timer_time.minutes]]:[[project_popup.timer_time.seconds]]</h1>
+        </div>
+
         <h1>Timers</h1>
 
         <table class="table table-bordered">

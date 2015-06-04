@@ -1,7 +1,7 @@
 var app = angular.module('tracker');
 
 (function () {
-	app.controller('projects', function ($scope, $http, ProjectsFactory) {
+	app.controller('projects', function ($scope, $http, $interval, $timeout, ProjectsFactory) {
 
 		/**
 		 * scope properties
@@ -12,7 +12,16 @@ var app = angular.module('tracker');
         $scope.show = {
             popups: {}
         };
+        $scope.project_popup = {};
         $scope.selected = {};
+
+        /**
+         * watches
+         */
+
+        //$scope.$watch('project_popup.timer_time.seconds', function (newValue, oldValue) {
+        //
+        //});
 
 		/**
 		 * select
@@ -31,6 +40,20 @@ var app = angular.module('tracker');
         $scope.startProjectTimer = function () {
             ProjectsFactory.startProjectTimer($scope.selected.project.id).then(function (response) {
                 $scope.projects = response.data;
+                $scope.resetTimer();
+
+                $scope.counter = $interval(function () {
+                    if ($scope.project_popup.timer_time.seconds < 2) {
+                        $scope.project_popup.timer_time.seconds+= 1;
+                    }
+                    else if ($scope.project_popup.timer_time.minutes < 2) {
+                        $scope.newMinute();
+                    }
+                    else {
+                        $scope.newHour();
+                    }
+
+                }, 1000);
             });
         };
 
@@ -41,6 +64,9 @@ var app = angular.module('tracker');
         $scope.stopProjectTimer = function () {
             ProjectsFactory.stopProjectTimer($scope.selected.project.id).then(function (response) {
                 $scope.projects = response.data;
+                $interval.cancel($scope.counter);
+                //clearInterval($scope.counter);
+                //console.log($scope.project_popup.timer_time);
             });
         };
 
@@ -71,6 +97,31 @@ var app = angular.module('tracker');
                 $scope.show.popups[$popup] = false;
             }
         };
+
+        $scope.resetTimer = function () {
+            $scope.project_popup.timer_time = {
+                hours: 0,
+                minutes: 0,
+                seconds: 0
+            };
+        };
+
+        $scope.newMinute = function () {
+            $scope.project_popup.timer_time.seconds = 0;
+            $scope.project_popup.timer_time.minutes+= 1;
+        };
+
+        $scope.newHour = function () {
+            $scope.project_popup.timer_time.seconds = 0;
+            $scope.project_popup.timer_time.minutes = 0;
+            $scope.project_popup.timer_time.hours+= 1;
+        };
+
+        /**
+         * page load
+         */
+
+        $scope.resetTimer();
 		
 	}); //end controller
 
