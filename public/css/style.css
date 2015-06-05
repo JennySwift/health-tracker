@@ -204,9 +204,9 @@ li {
 #project-popup .flex {
   display: flex;
   justify-content: center; }
-#project-popup button {
-  margin: 0px 20px;
-  padding: 10px 43px; }
+  #project-popup .flex button {
+    margin: 0px 20px;
+    padding: 10px 43px; }
 
 /*==============================font awesome==============================*/
 .fa-home {

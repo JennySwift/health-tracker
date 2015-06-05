@@ -39,6 +39,7 @@
                 <th>Finish</th>
                 <th>Paid</th>
                 <th>Paid At</th>
+                <th></th>
             </tr>
             <tr ng-repeat="timer in selected.project.timers">
                 <td>[[timer.start]]</td>
@@ -48,6 +49,9 @@
                     <span ng-if="timer.paid" class="label label-success">paid</span>
                 </td>
                 <td>[[timer.time_of_payment]]</td>
+                <td>
+                    <button ng-click="deleteTimer(timer)" class="btn btn-default btn-xs">delete</button>
+                </td>
             </tr>
         </table>
 	</div>

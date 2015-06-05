@@ -99,9 +99,21 @@ class TimersController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id)
-	{
-		//
-	}
+    public function destroy(Request $request, $id)
+    {
+        $timer = Timer::find($id);
+
+        if(is_null($timer)) {
+            return response([
+                'error' => 'Timer not found.',
+                'status' => 404
+            ], 404);
+        }
+
+        $timer->delete();
+
+        // throw NotFoundException
+        return response(null, 204);
+    }
 
 }

@@ -1,24 +1,24 @@
 app.factory('ProjectsFactory', function ($http) {
-	return {
+    return {
 
-		/**
-		 * select
-		 */
-		
-		/**
-		 * insert
-		 */
+        /**
+         * select
+         */
 
-		insertProject: function ($payer_email, $description, $rate) {
-			var $url = '/projects';
-			var $data = {
-				payer_email: $payer_email,
-				description: $description,
-				rate: $rate
-			};
-			
-			return $http.post($url, $data);
-		},
+        /**
+         * insert
+         */
+
+        insertProject: function ($payer_email, $description, $rate) {
+            var $url = '/projects';
+            var $data = {
+                payer_email: $payer_email,
+                description: $description,
+                rate: $rate
+            };
+
+            return $http.post($url, $data);
+        },
         startProjectTimer: function ($project_id) {
             var $url = 'insert/startProjectTimer';
             var $data = {
@@ -36,14 +36,14 @@ app.factory('ProjectsFactory', function ($http) {
             return $http.post($url, $data);
         },
 
-		/**
-		 * update
-		 */
+        /**
+         * update
+         */
 
-		/**
-		 * delete
-		 */
-		deleteProject: function ($scope, $project, $context) {
+        /**
+         * delete
+         */
+        deleteProject: function ($scope, $project, $context) {
             var $url = $project.path;
 
             // Update the scope with the collection without the project we are deleting
@@ -54,7 +54,12 @@ app.factory('ProjectsFactory', function ($http) {
             // You can access the id of the object with $project.id
             //$scope.projects = the array without the project we deleted;
 
-			return $http.delete($url); // Return same thing here
-		}
-	};
+            return $http.delete($url); // Return same thing here
+        },
+        deleteTimer: function ($timer) {
+            var $url = $timer.path;
+
+            return $http.delete($url);
+        }
+    };
 });

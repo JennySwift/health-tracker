@@ -62,6 +62,7 @@ Route::controllers([
 
 Route::resource('weights', 'Weights\WeightsController');
 Route::resource('projects', 'Projects\ProjectsController', ['only' => ['index', 'store', 'destroy']]);
+Route::resource('timers', 'Projects\TimersController', ['only' => ['destroy']]);
 Route::resource('foods', 'Foods\FoodsController', ['only' => ['index', 'destroy']]);
 Route::resource('exercises', 'Exercises\ExercisesController', ['only' => ['index', 'store', 'destroy']]);
 

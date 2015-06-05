@@ -77,10 +77,17 @@ var app = angular.module('tracker');
 		$scope.deleteProject = function ($project, $context) {
 			ProjectsFactory.deleteProject($scope, $project, $context).then(function (response) {
 				//$scope.projects = response.data;
-                console.log($scope.projects);
+                $scope.projects[$context] = _.without($scope.projects[$context], $project);
 			});
-            // The then method should disapear or you could show a confirmation message
 		};
+
+        $scope.deleteTimer = function ($timer) {
+            ProjectsFactory.deleteTimer($timer).then(function (response) {
+                //$scope.projects = response.data;
+                //$scope.projects[$context] = _.without($scope.projects[$context], $project);
+                $scope.selected.project.timers = _.without($scope.selected.project.timers, $timer);
+            });
+        };
 
         /**
          * other
