@@ -39,7 +39,8 @@ var app = angular.module('tracker');
 
         $scope.startProjectTimer = function () {
             ProjectsFactory.startProjectTimer($scope.selected.project.id).then(function (response) {
-                $scope.projects = response.data;
+                $scope.projects = response.data.projects;
+                $scope.selected.project = response.data.project;
                 $scope.resetTimer();
 
                 $scope.counter = $interval(function () {
@@ -63,10 +64,9 @@ var app = angular.module('tracker');
 
         $scope.stopProjectTimer = function () {
             ProjectsFactory.stopProjectTimer($scope.selected.project.id).then(function (response) {
-                $scope.projects = response.data;
+                $scope.projects = response.data.projects;
+                $scope.selected.project = response.data.project;
                 $interval.cancel($scope.counter);
-                //clearInterval($scope.counter);
-                //console.log($scope.project_popup.timer_time);
             });
         };
 

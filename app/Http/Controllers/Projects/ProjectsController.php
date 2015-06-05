@@ -34,10 +34,10 @@ class ProjectsController extends Controller {
 	public function index()
 	{
 		JavaScript::put([
-			'projects' => $this->getProjects(),
+			'projects' => $this->projectsRepository->getProjects(),
 		]);
 
-		//return $this->getProjects()['payee']->first();
+		//return $this->projectsRepository->getProjects()['payee']->first();
 		return view('projects');
 	}
 
@@ -45,13 +45,6 @@ class ProjectsController extends Controller {
      * Fetch the projects in database
      * @return array
      */
-	public function getProjects()
-	{
-		return [
-			'payee' => $this->projectsRepository->getProjectsAsPayee(), // This is a Illuminate\Database\Eloquent\Object
-			'payer' => $this->projectsRepository->getProjectsAsPayer()
-		];	
-	}
 
 	public function store(Request $request)
 	{

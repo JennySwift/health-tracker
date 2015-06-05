@@ -17,6 +17,35 @@ class ProjectsRepository
     /**
      * select
      */
+
+    public function getProjects()
+    {
+        return [
+            'payee' => $this->getProjectsAsPayee(), // This is a Illuminate\Database\Eloquent\Object
+            'payer' => $this->getProjectsAsPayer()
+        ];
+    }
+
+    /**
+     * For updating the timers in the project popup,
+     * when the user starts and stops a timer.
+     * Get the project that the user has selected.
+     * @return mixed
+     */
+    public function getProject($project_id)
+    {
+        $project = Project::find($project_id)
+            ->with('payee')
+            ->with('payer')
+            ->first();
+
+        $project->timers = $this->getProjectTimers($project);
+        $project->total_time = $this->getProjectTotalTime($project);
+        $project->total_time_user_formatted = $this->formatTimeForUser($project->total_time);
+        $project->price = $this->getProjectPrice($project);
+
+        return $project;
+    }
     
     public function getProjectsAsPayee()
     {
@@ -64,13 +93,11 @@ class ProjectsRepository
 
         foreach ($timers as $timer) {
             $start = Carbon::createFromFormat('Y-m-d H:i:s', $timer->start);
-//            dd($start);
             $finish = Carbon::createFromFormat('Y-m-d H:i:s', $timer->finish);
-            //This is the time spent for one time (one row in times table) that belongs to the timer    
+            //This is the time spent for one time (one row in times table) that belongs to the timer
             $diff = $finish->diff($start);
             $timer->time = $diff;
         }
-
         return $timers;
     }
 
