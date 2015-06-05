@@ -23,8 +23,8 @@
         </table>
 
         <div class="flex">
-            <button ng-click="startProjectTimer()" class="btn btn-success">Start</button>
-            <button ng-click="stopProjectTimer()" class="btn btn-danger">Stop</button>
+            <button ng-show="!project_popup.is_timing" ng-click="startProjectTimer()" class="btn btn-success">Start</button>
+            <button ng-show="project_popup.is_timing" ng-click="stopProjectTimer()" class="btn btn-danger">Stop</button>
         </div>
 
         <div class="flex">

@@ -12,7 +12,9 @@ var app = angular.module('tracker');
         $scope.show = {
             popups: {}
         };
-        $scope.project_popup = {};
+        $scope.project_popup = {
+            is_timing: false
+        };
         $scope.selected = {};
 
         /**
@@ -42,6 +44,7 @@ var app = angular.module('tracker');
                 $scope.projects = response.data.projects;
                 $scope.selected.project = response.data.project;
                 $scope.resetTimer();
+                $scope.project_popup.is_timing = true;
 
                 $scope.counter = $interval(function () {
                     if ($scope.project_popup.timer_time.seconds < 2) {
@@ -67,6 +70,7 @@ var app = angular.module('tracker');
                 $scope.projects = response.data.projects;
                 $scope.selected.project = response.data.project;
                 $interval.cancel($scope.counter);
+                $scope.project_popup.is_timing = false;
             });
         };
 
