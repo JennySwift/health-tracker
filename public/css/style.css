@@ -46,7 +46,8 @@ p {
   text-align: center; }
 
 select {
-  padding-top: 4px; }
+  padding-top: 4px;
+  padding-right: 15px; }
 
 button {
   background: #fff;
@@ -554,10 +555,17 @@ li {
     width: 100%;
     max-width: 600px; }
 
-#timers h1 {
+#projects .flex {
+  display: flex;
+  justify-content: center; }
+  #projects .flex > * {
+    margin: 0px 20px; }
+#projects h1 {
   margin-bottom: 30px; }
-#timers img {
+#projects img {
   border-radius: 23px; }
+#projects input {
+  background: white; }
 
 body.browser-height {
   box-sizing: border-box; }

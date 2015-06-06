@@ -35,6 +35,15 @@ app.factory('ProjectsFactory', function ($http) {
 
             return $http.post($url, $data);
         },
+        addPayer: function () {
+            var $url = 'insert/payer';
+            var $payer_email = $("#new-payer-email").val();
+            var $data = {
+                payer_email: $payer_email
+            };
+
+            return $http.post($url, $data);
+        },
 
         /**
          * update

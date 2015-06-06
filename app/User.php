@@ -10,97 +10,121 @@ use App\Models\Exercises\Entry as ExerciseEntry;
 use App\Models\Exercises\Exercise;
 use Gravatar;
 
-class User extends Model implements AuthenticatableContract, CanResetPasswordContract {
+class User extends Model implements AuthenticatableContract, CanResetPasswordContract
+{
 
-	use Authenticatable, CanResetPassword;
+    use Authenticatable, CanResetPassword;
 
-	/**
-	 * The database table used by the model.
-	 *
-	 * @var string
-	 */
-	protected $table = 'users';
+    /**
+     * The database table used by the model.
+     *
+     * @var string
+     */
+    protected $table = 'users';
     protected $appends = ['gravatar'];
 
-	/**
-	 * The attributes that are mass assignable.
-	 *
-	 * @var array
-	 */
-	protected $fillable = ['name', 'email', 'password'];
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['name', 'email', 'password'];
 
-	/**
-	 * The attributes excluded from the model's JSON form.
-	 *
-	 * @var array
-	 */
-	protected $hidden = ['password', 'remember_token'];
+    /**
+     * The attributes excluded from the model's JSON form.
+     *
+     * @var array
+     */
+    protected $hidden = ['password', 'remember_token'];
 
-	/**
-	 * Define relationships
-	 * I didn't put tags here because the database schema may be changing for the tags.
-	 */
-	
-	//tags
-	public function recipeTags () {
-		return $this->hasMany('App\Models\Tags\Tag')->where('for', 'recipe');
-	}
+    /**
+     * Define relationships
+     */
 
-	public function exerciseTags () {
-		return $this->hasMany('App\Models\Tags\Tag')->where('for', 'exercise');
-	}
+    //projects
+    public function payers()
+    {
+        return $this->belongsToMany('App\User', 'payee_payer', 'payee_id', 'payer_id');
+    }
 
-	//exercises
-	public function exercises () {
-		return $this->hasMany('App\Models\Exercises\Exercise');
-	}
+    public function payees()
+    {
+        return $this->belongsToMany('App\User', 'payee_payer', 'payer_id', 'payee_id');
+    }
 
-	public function exerciseEntries () {
-		return $this->hasMany('App\Models\Exercises\Entry');
-	}
+    //tags
+    public function recipeTags()
+    {
+        return $this->hasMany('App\Models\Tags\Tag')->where('for', 'recipe');
+    }
 
-	public function exerciseSeries () {
-		return $this->hasMany('App\Models\Exercises\Series');
-	}
+    public function exerciseTags()
+    {
+        return $this->hasMany('App\Models\Tags\Tag')->where('for', 'exercise');
+    }
 
-	public function exerciseUnits () {
-		return $this->hasMany('App\Models\Units\Unit')->where('for', 'exercise');
-	}
+    //exercises
+    public function exercises()
+    {
+        return $this->hasMany('App\Models\Exercises\Exercise');
+    }
 
-	public function workouts () {
-		return $this->hasMany('App\Models\Exercises\Workout');
-	}
+    public function exerciseEntries()
+    {
+        return $this->hasMany('App\Models\Exercises\Entry');
+    }
 
-	//foods
-	public function foods () {
-		return $this->hasMany('App\Models\Foods\Food');
-	}
+    public function exerciseSeries()
+    {
+        return $this->hasMany('App\Models\Exercises\Series');
+    }
 
-	public function foodEntries () {
-		return $this->hasMany('App\Models\Foods\Entry');
-	}
+    public function exerciseUnits()
+    {
+        return $this->hasMany('App\Models\Units\Unit')->where('for', 'exercise');
+    }
 
-	public function foodUnits () {
-		return $this->hasMany('App\Models\Units\Unit')->where('for', 'food');
-	}
+    public function workouts()
+    {
+        return $this->hasMany('App\Models\Exercises\Workout');
+    }
 
-	public function recipes () {
-		return $this->hasMany('App\Models\Foods\Recipe');
-	}
+    //foods
+    public function foods()
+    {
+        return $this->hasMany('App\Models\Foods\Food');
+    }
 
-	//weight
-	public function weights () {
-		return $this->hasMany('App\Models\Weights\Weight');
-	}
+    public function foodEntries()
+    {
+        return $this->hasMany('App\Models\Foods\Entry');
+    }
 
-	//journal
-	public function journal () {
-		return $this->hasMany('App\Models\Journal\Journal');
-	}
+    public function foodUnits()
+    {
+        return $this->hasMany('App\Models\Units\Unit')->where('for', 'food');
+    }
 
-	/**
-	 * End of defining relationships
-	 */
+    public function recipes()
+    {
+        return $this->hasMany('App\Models\Foods\Recipe');
+    }
+
+    //weight
+    public function weights()
+    {
+        return $this->hasMany('App\Models\Weights\Weight');
+    }
+
+    //journal
+    public function journal()
+    {
+        return $this->hasMany('App\Models\Journal\Journal');
+    }
+
+    /**
+     * End of defining relationships
+     */
 
     /**
      * Return the gravatar URL for the user
@@ -110,6 +134,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     public function getGravatarAttribute()
     {
         $email = md5($this->email);
+
         return "https://secure.gravatar.com/avatar/{$email}?s=37&r=g&default=mm";
     }
 }

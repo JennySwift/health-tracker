@@ -7,7 +7,7 @@ class Timer extends Model {
 
     protected $fillable = ['project_id', 'start'];
 
-    protected $appends = ['path', 'time', 'formatted_hours', 'formatted_minutes', 'formatted_seconds'];
+    protected $appends = ['path', 'time', 'formatted_hours', 'formatted_minutes', 'formatted_seconds', 'price'];
 
 	public $timestamps = false;
 
@@ -19,6 +19,11 @@ class Timer extends Model {
 	{
 	    return $this->belongsTo('App\Models\Projects\Project');
 	}
+
+    public function ratePerHour()
+    {
+        return $this->project->rate_per_hour;
+    }
 
     /**
      * Return the URL of the project
@@ -54,5 +59,26 @@ class Timer extends Model {
     public function getFormattedSecondsAttribute()
     {
         return sprintf("%02d", $this->time->s);
+    }
+
+    /**
+     * Return the price for the project
+     * Much the same as the equivalent method on the project model?
+     * @return string
+     */
+    public function getPriceAttribute()
+    {
+//        dd($this->ratePerHour());
+//        $rate = $this->ratePerHour();
+//        var_dump($this->project);
+//        return $rate;
+        $time = $this->time;
+        $price = 0;
+
+//        $price+= $rate * $time->h;
+//        $price+= $rate / 60 * $time->i;
+//        $price+= $rate / 3600 * $time->s;
+//        var_dump($price);
+        return $price;
     }
 }

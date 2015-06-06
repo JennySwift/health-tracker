@@ -18,7 +18,7 @@
                 <td>[[selected.project.description]]</td>
                 <td>$[[selected.project.rate_per_hour]]</td>
                 <td>[[selected.project.total_time_user_formatted.hours]]:[[selected.project.total_time_user_formatted.minutes]]:[[selected.project.total_time_user_formatted.seconds]]</td>
-                <td>[[selected.project.price]]</td>
+                <td>[[selected.project.formatted_price]]</td>
             </tr>
         </table>
 

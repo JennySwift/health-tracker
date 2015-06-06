@@ -8,7 +8,7 @@ class Project extends Model {
 
 	protected $fillable = ['description', 'rate_per_hour'];
 
-    protected $appends = ['path', 'price', 'total_time'];
+    protected $appends = ['path', 'price', 'formatted_price', 'total_time'];
 
 	/**
 	 * Define relationships
@@ -55,6 +55,15 @@ class Project extends Model {
         $price+= $rate / 3600 * $time['seconds'];
 
         return $price;
+    }
+
+    /**
+     * Format price to two decimal places for displaying to the user
+     * @return float|int|mixed
+     */
+    public function getFormattedPriceAttribute()
+    {
+        return number_format($this->price, 2);
     }
 
     /**

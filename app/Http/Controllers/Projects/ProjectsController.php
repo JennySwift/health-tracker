@@ -4,6 +4,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Repositories\Projects\ProjectsRepository;
 
+use App\User;
 use Illuminate\Http\Request;
 use JavaScript;
 use Auth;
@@ -26,49 +27,71 @@ class ProjectsController extends Controller {
 		$this->projectsRepository = $projectsRepository;
 	}
 
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return Response
-	 */
-	public function index()
-	{
-		JavaScript::put([
-			'projects' => $this->projectsRepository->getProjects(),
-		]);
+    /**
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
+    public function index()
+    {
+        JavaScript::put([
+            'projects' => $this->projectsRepository->getProjects(),
+            'payers' => $this->projectsRepository->getPayers()
+        ]);
 
+//        return $this->projectsRepository->getPayers();
 //		return $this->projectsRepository->getProjects();
-		return view('projects');
-	}
+        return view('projects');
+    }
 
     /**
-     * Fetch the projects in database
-     * @return array
+     * select
      */
 
-	public function store(Request $request)
-	{
-		$payer_email = $request->get('payer_email');
-		$description = $request->get('description');
-		$rate = $request->get('rate');
 
-		$this->projectsRepository->createProject($payer_email, $description, $rate);
+    /**
+     * insert
+     */
 
-		$projects = [
-			'payee' => $this->projectsRepository->getProjectsAsPayee(),
-			'payer' => $this->projectsRepository->getProjectsAsPayer()
-		];
+    public function addPayer(Request $request)
+    {
+        $payer_email = $request->get('payer_email');
+        $user = User::find(Auth::user()->id);
+        $this->projectsRepository->addPayer($payer_email);
+        return $user->payers;
+    }
 
-		return response()->json($projects);
-	}
+    public function store(Request $request)
+    {
+        $payer_email = $request->get('payer_email');
+        $description = $request->get('description');
+        $rate = $request->get('rate');
 
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function destroy(Request $request, $id)
+        $this->projectsRepository->createProject($payer_email, $description, $rate);
+
+        $projects = [
+            'payee' => $this->projectsRepository->getProjectsAsPayee(),
+            'payer' => $this->projectsRepository->getProjectsAsPayer()
+        ];
+
+        return response()->json($projects);
+    }
+
+    /**
+     * update
+     */
+
+    /**
+     * delete
+     */
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function destroy(Request $request, $id)
     {
 //		Project::destroy($id);
 
@@ -92,7 +115,5 @@ class ProjectsController extends Controller {
 //		];
 //
 //		return response()->json($projects);
-	}
-
-	
+    }
 }

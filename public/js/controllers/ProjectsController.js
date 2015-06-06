@@ -8,6 +8,7 @@ var app = angular.module('tracker');
 		 */
 		
 		$scope.projects = projects;
+        $scope.payers = payers;
 		$scope.new_project = {};
         $scope.show = {
             popups: {}
@@ -58,6 +59,15 @@ var app = angular.module('tracker');
                     }
 
                 }, 1000);
+            });
+        };
+
+        $scope.addPayer = function ($keycode) {
+            if ($keycode !== 13) {
+                return false;
+            }
+            ProjectsFactory.addPayer().then(function (response) {
+                $scope.payers = response.data;
             });
         };
 

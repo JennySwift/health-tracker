@@ -18,6 +18,12 @@ class ProjectsRepository
      * select
      */
 
+    public function getPayers()
+    {
+        $user = User::find(Auth::user()->id);
+        return $user->payers;
+    }
+
     public function getProjects()
     {
         return [
@@ -88,6 +94,21 @@ class ProjectsRepository
     /**
      * insert
      */
+
+    /**
+     * Add a payer for the user
+     * Return the user's payers
+     * @param $payer_email
+     * @return mixed
+     */
+    public function addPayer($payer_email)
+    {
+        $user = User::find(Auth::user()->id);
+        $payer = User::whereEmail($payer_email)->firstOrFail();
+        $user->payers()->attach($payer->id);
+        $user->save();
+        return $user->payers;
+    }
     
     public function createProject($payer_email, $description, $rate)
     {
