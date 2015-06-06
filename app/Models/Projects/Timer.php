@@ -1,12 +1,13 @@
 <?php namespace App\Models\Projects;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Timer extends Model {
 
     protected $fillable = ['project_id', 'start'];
 
-    protected $appends = ['path'];
+    protected $appends = ['path', 'time', 'formatted_hours', 'formatted_minutes', 'formatted_seconds'];
 
 	public $timestamps = false;
 
@@ -29,4 +30,29 @@ class Timer extends Model {
         return route('timers.destroy', $this->id);
     }
 
+
+    public function getTimeAttribute()
+    {
+        $start = Carbon::createFromFormat('Y-m-d H:i:s', $this->start);
+        $finish = Carbon::createFromFormat('Y-m-d H:i:s', $this->finish);
+        $time = $finish->diff($start);
+        $this->time = $time;
+
+        return $time;
+    }
+
+    public function getFormattedHoursAttribute()
+    {
+        return sprintf("%02d", $this->time->h);
+    }
+
+    public function getFormattedMinutesAttribute()
+    {
+        return sprintf("%02d", $this->time->i);
+    }
+
+    public function getFormattedSecondsAttribute()
+    {
+        return sprintf("%02d", $this->time->s);
+    }
 }

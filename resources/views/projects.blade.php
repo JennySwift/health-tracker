@@ -41,7 +41,7 @@
 				<td ng-click="showProjectPopup(project)" class="pointer">[[project.payer.name]] <img ng-src="[[project.payer.gravatar]]" alt=""></td>
 				<td ng-click="showProjectPopup(project)" class="pointer">[[project.description]]</td>
 				<td ng-click="showProjectPopup(project)" class="pointer">$[[project.rate_per_hour]]</td>
-				<td ng-click="showProjectPopup(project)" class="pointer">[[project.total_time_user_formatted]]</td>
+				<td ng-click="showProjectPopup(project)" class="pointer">[[project.total_time_user_formatted.hours]]:[[project.total_time_user_formatted.minutes]]:[[project.total_time_user_formatted.seconds]]</td>
 				<td ng-click="showProjectPopup(project)" class="pointer">[[project.price]]</td>
 				{{--<td>--}}
 					{{--<span ng-if="!project.paid" class="label label-danger">unpaid</span>--}}
@@ -70,7 +70,7 @@
 				<td>[[project.payee.name]] <img ng-src="[[project.payee.gravatar]]"></td>
 				<td>[[project.description]]</td>
 				<td>$[[project.rate_per_hour]]</td>
-				<td>[[project.total_time_user_formatted]]</td>
+				<td>[[project.total_time_user_formatted.hours]]:[[project.total_time_user_formatted.minutes]]:[[project.total_time_user_formatted.seconds]]</td>
 				<td>[[project.price]]</td>
 				{{--<td>--}}
 					{{--<span ng-if="!project.paid" class="label label-danger">unpaid</span>--}}

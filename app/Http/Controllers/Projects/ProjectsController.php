@@ -37,7 +37,7 @@ class ProjectsController extends Controller {
 			'projects' => $this->projectsRepository->getProjects(),
 		]);
 
-		//return $this->projectsRepository->getProjects()['payee']->first();
+//		return $this->projectsRepository->getProjects();
 		return view('projects');
 	}
 

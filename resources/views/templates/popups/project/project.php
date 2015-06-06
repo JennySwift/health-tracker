@@ -17,7 +17,7 @@
                 <td>[[selected.project.payer.name]] <img ng-src="[[selected.project.payer.gravatar]]" alt=""></td>
                 <td>[[selected.project.description]]</td>
                 <td>$[[selected.project.rate_per_hour]]</td>
-                <td>[[selected.project.total_time_user_formatted]]</td>
+                <td>[[selected.project.total_time_user_formatted.hours]]:[[selected.project.total_time_user_formatted.minutes]]:[[selected.project.total_time_user_formatted.seconds]]</td>
                 <td>[[selected.project.price]]</td>
             </tr>
         </table>
@@ -37,6 +37,8 @@
             <tr>
                 <th>Start</th>
                 <th>Finish</th>
+                <th>Time</th>
+                <th>$</th>
                 <th>Paid</th>
                 <th>Paid At</th>
                 <th></th>
@@ -44,6 +46,8 @@
             <tr ng-repeat="timer in selected.project.timers">
                 <td>[[timer.start]]</td>
                 <td>[[timer.finish]]</td>
+                <td>[[timer.formatted_hours]]:[[timer.formatted_minutes]]:[[timer.formatted_seconds]]</td>
+                <th>[[timer.price]]</th>
                 <td>
                     <span ng-if="!timer.paid" class="label label-danger">unpaid</span>
                     <span ng-if="timer.paid" class="label label-success">paid</span>

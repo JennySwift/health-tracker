@@ -1,12 +1,14 @@
 <?php namespace App\Models\Projects;
 
+use App\Repositories\Projects\ProjectsRepository;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Response;
 
 class Project extends Model {
 
 	protected $fillable = ['description', 'rate_per_hour'];
 
-    protected $appends = ['path'];
+    protected $appends = ['path', 'price', 'total_time'];
 
 	/**
 	 * Define relationships
@@ -36,4 +38,69 @@ class Project extends Model {
     {
         return route('projects.destroy', $this->id); // http://tracker.dev/projects/$id
     }
+
+    /**
+     * Return the price for the project
+     * This method needs to be called getFieldAttribute
+     * @return string
+     */
+    public function getPriceAttribute()
+    {
+        $rate = $this->rate_per_hour;
+        $time = $this->total_time;
+        $price = 0;
+
+        $price+= $rate * $time['hours'];
+        $price+= $rate / 60 * $time['minutes'];
+        $price+= $rate / 3600 * $time['seconds'];
+
+        return $price;
+    }
+
+    /**
+     * Return the total time for the project
+     * This method needs to be called getFieldAttribute
+     * @return string
+     */
+    public function getTotalTimeAttribute()
+    {
+        $hours = 0;
+        $minutes = 0;
+        $seconds = 0;
+
+        foreach ($this->timers as $timer) {
+            //Calculate hours, minutes and seconds
+            $hours+= $timer->time->h;
+            $minutes+= $timer->time->i;
+            $seconds+= $timer->time->s;
+        }
+
+        $time = [
+            'hours' => $hours,
+            'minutes' => $minutes,
+            'seconds' => $seconds
+        ];
+
+//        $formatted = $this->formatTimeForUser($time);
+
+//        $formatted = [
+//            'hours' => sprintf("%02d", $time->hours),
+//            'minutes' => sprintf("%02d", $time->minutes),
+//            'seconds' => sprintf("%02d", $time->seconds)
+//        ];
+
+//        $formatted = $this->projectsRepository->formatTimeForUser($total_time);
+//        dd($formatted);
+
+        return $time;
+
+//        $array = [
+//            'time' => 'something',
+//            'formatted' => 'something'
+//        ];
+
+//        return response()->json($array);
+        return Response::json($array);
+    }
+
 }

@@ -102,11 +102,14 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	 * End of defining relationships
 	 */
 
+    /**
+     * Return the gravatar URL for the user
+     * This method needs to be called getFieldAttribute
+     * @return string
+     */
     public function getGravatarAttribute()
     {
         $email = md5($this->email);
         return "https://secure.gravatar.com/avatar/{$email}?s=37&r=g&default=mm";
-//        return Gravatar::src($this->email);
-        // return Gravatar::exists('cheezyspaghetti@gmail.com');
     }
 }
