@@ -16,12 +16,11 @@
 
     <?php include($templates . '/popups/project/index.php'); ?>
 
-        <div class="flex margin-bottom">
-            <input ng-keyup="addPayer($event.keyCode)" type="text" placeholder="enter payer's email" id="new-payer-email"/>
-            <button ng-click="addPayer(13)" class="btn btn-default">Add payer</button>
-        </div>
+    <div class="flex margin-bottom">
+        <input ng-keyup="addPayer($event.keyCode)" type="text" placeholder="enter payer's email" id="new-payer-email"/>
+        <button ng-click="addPayer(13)" class="btn btn-default">Add payer</button>
+    </div>
 
-    {{--<input ng-model="new_project.email" type="text" placeholder="payer email">--}}
     <div class="flex margin-bottom">
         <select ng-model="new_project.email">
             <option ng-repeat="payer in payers" ng-value="payer.email">[[payer.name]]</option>
@@ -44,8 +43,9 @@
                 <th></th>
             </tr>
             <tr ng-repeat="project in projects.payee">
-                <td ng-click="showProjectPopup(project)" class="pointer">[[project.payer.name]] <img
-                            ng-src="[[project.payer.gravatar]]" alt=""></td>
+                <td ng-click="showProjectPopup(project)" class="pointer">[[project.payer.name]]
+                    <img ng-src="[[project.payer.gravatar]]" alt="">
+                </td>
                 <td ng-click="showProjectPopup(project)" class="pointer">[[project.description]]</td>
                 <td ng-click="showProjectPopup(project)" class="pointer">$[[project.rate_per_hour]]</td>
                 <td ng-click="showProjectPopup(project)" class="pointer">

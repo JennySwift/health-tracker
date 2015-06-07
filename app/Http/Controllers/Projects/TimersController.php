@@ -23,6 +23,7 @@ class TimersController extends Controller {
     }
 
     /**
+     * Insert a new timer for a project.
      * Return all the projects,
      * as well as the project that is currently displaying in the project popup
      * @param Request $request
@@ -43,6 +44,7 @@ class TimersController extends Controller {
     }
 
     /**
+     * Stop the timer (update it).
      * Return all the projects,
      * as well as the project that is currently displaying in the project popup
      * @param Request $request
@@ -127,12 +129,12 @@ class TimersController extends Controller {
 		//
 	}
 
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
+    /**
+     * Delete a timer
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function destroy(Request $request, $id)
     {
         $timer = Timer::find($id);

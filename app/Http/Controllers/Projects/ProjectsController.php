@@ -53,6 +53,12 @@ class ProjectsController extends Controller {
      * insert
      */
 
+    /**
+     * Add a new payer for the user (payee)
+     * so that the user can create a project with that person as payer
+     * @param Request $request
+     * @return mixed
+     */
     public function addPayer(Request $request)
     {
         $payer_email = $request->get('payer_email');
@@ -61,6 +67,12 @@ class ProjectsController extends Controller {
         return $user->payers;
     }
 
+    /**
+     * Insert a new project
+     * Return projects
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function store(Request $request)
     {
         $payer_email = $request->get('payer_email');
@@ -86,10 +98,10 @@ class ProjectsController extends Controller {
      */
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return Response
+     * Delete a project
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
     public function destroy(Request $request, $id)
     {
