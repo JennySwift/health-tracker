@@ -30,6 +30,44 @@
         <button ng-click="insertProject()">Create project</button>
     </div>
 
+        <div class="flex">
+            <div>
+                <table class="table table-bordered margin-bottom">
+                    <caption>Your payers</caption>
+                    <tr>
+                        <th></th>
+                        <th>name</th>
+                        <th>owed</th>
+                    </tr>
+
+                    <tr ng-repeat="payer in payers">
+                        <td><img ng-src="[[payer.gravatar]]" alt=""></td>
+                        <td>[[payer.name]]</td>
+                        <td>[[payer.owed]]</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div>
+                <table class="table table-bordered margin-bottom">
+                    <caption>Your payees</caption>
+                    <tr>
+                        <th></th>
+                        <th>name</th>
+                        <th>owed</th>
+                    </tr>
+
+                    <tr ng-repeat="payee in payees">
+                        <td><img ng-src="[[payee.gravatar]]" alt=""></td>
+                        <td>[[payee.name]]</td>
+                        <td>[[payee.owed]]</td>
+                    </tr>
+                </table>
+            </div>
+
+        </div>
+
+
         <h1>User is payee</h1>
 
         <table class="table table-bordered margin-bottom-lg">

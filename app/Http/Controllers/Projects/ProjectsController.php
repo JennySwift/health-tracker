@@ -36,7 +36,8 @@ class ProjectsController extends Controller {
     {
         JavaScript::put([
             'projects' => $this->projectsRepository->getProjects(),
-            'payers' => $this->projectsRepository->getPayers()
+            'payers' => $this->projectsRepository->getPayers(),
+            'payees' => $this->projectsRepository->getPayees()
         ]);
 
 //        return $this->projectsRepository->getPayers();

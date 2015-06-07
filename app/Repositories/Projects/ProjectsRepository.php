@@ -24,6 +24,12 @@ class ProjectsRepository
         return $user->payers;
     }
 
+    public function getPayees()
+    {
+        $user = User::find(Auth::user()->id);
+        return $user->payees;
+    }
+
     public function getProjects()
     {
         return [

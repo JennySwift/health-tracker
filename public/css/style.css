@@ -557,7 +557,8 @@ li {
 
 #projects .flex {
   display: flex;
-  justify-content: center; }
+  justify-content: center;
+  flex-wrap: wrap; }
   #projects .flex > * {
     margin: 0px 20px; }
 #projects h1 {

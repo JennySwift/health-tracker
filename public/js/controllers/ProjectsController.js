@@ -9,6 +9,7 @@ var app = angular.module('tracker');
 		
 		$scope.projects = projects;
         $scope.payers = payers;
+        $scope.payees = payees;
 		$scope.new_project = {};
         $scope.show = {
             popups: {}
