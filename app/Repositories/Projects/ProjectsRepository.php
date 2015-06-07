@@ -6,6 +6,7 @@ use Gravatar;
 
 use App\User;
 use App\Models\Projects\Project;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class ProjectsRepository
@@ -21,7 +22,29 @@ class ProjectsRepository
     public function getPayers()
     {
         $user = User::find(Auth::user()->id);
-        return $user->payers;
+
+        $payers = $user->payers;
+
+        //Figure out how much the payer owes the payee
+        //Add this owed value to the $payer
+        //$timer->price has not been coded yet so this won't yet work
+        foreach ($payers as $payer) {
+            $payer->projects = $payer->projectsAsPayer;
+
+            $owed = 0;
+            foreach($payer->projects as $project) {
+
+                foreach($project->timers as $timer) {
+                    if (!$timer->paid) {
+                        $owed+= $timer->price;
+                    }
+                }
+
+            }
+            $payer->owed = $owed;
+        }
+
+        return $payers;
     }
 
     public function getPayees()
@@ -32,8 +55,10 @@ class ProjectsRepository
 
     public function getProjects()
     {
+        $user = User::find(Auth::user()->id);
+
         return [
-            'payee' => $this->getProjectsAsPayee(), // This is a Illuminate\Database\Eloquent\Object
+            'payee' => $user->getProjectsAsPayee(), // This is a Illuminate\Database\Eloquent\Object
             'payer' => $this->getProjectsAsPayer()
         ];
     }
@@ -54,21 +79,6 @@ class ProjectsRepository
         $project->total_time_user_formatted = $this->formatTimeForUser($project->total_time);
 
         return $project;
-    }
-    
-    public function getProjectsAsPayee()
-    {
-        $projects = Project::where('payee_id', Auth::user()->id)
-            ->with('payee')
-            ->with('payer')
-            ->with('timers')
-            ->get();
-
-        foreach ($projects as $project) {
-            $project->total_time_user_formatted = $this->formatTimeForUser($project->total_time);
-        }
-
-        return $projects;
     }
 
     public function getProjectsAsPayer()
