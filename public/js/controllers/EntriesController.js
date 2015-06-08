@@ -1,7 +1,7 @@
 var app = angular.module('tracker');
 
 (function () {
-	app.controller('entries', function ($scope, $http, date, entries, autocomplete, weights, foods) {
+	app.controller('entries', function ($scope, $http, date, entries, autocomplete, weights, FoodsFactory) {
 
 		/**
 		 * scope properties
@@ -466,7 +466,7 @@ var app = angular.module('tracker');
 
 		$scope.showTemporaryRecipePopup = function () {
 			$scope.show.popups.temporary_recipe = true;
-			foods.getRecipeContents($scope.selected.menu.id).then(function (response) {
+			FoodsFactory.getRecipeContents($scope.selected.menu.id).then(function (response) {
 				$scope.temporary_recipe_popup = response.data;
 
 				$($scope.temporary_recipe_popup.contents).each(function () {
