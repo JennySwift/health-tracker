@@ -65,15 +65,6 @@ class Timer extends Model {
     public function getPriceAttribute()
     {
         /**
-         * @VP:
-         * I tried to remember and repeat what you did when you set up the test route,
-         * but how did you do it? I get 'Trying to get property of non-object'
-         * when I do these two lines.
-         */
-//        $rate = $this->project->rate_per_hour;
-//        dd($rate);
-
-        /**
          * The following code calculates the correct price.
          * I have commented it out because of the error it was giving me
          * (see comment below).

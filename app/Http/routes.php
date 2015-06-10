@@ -9,7 +9,7 @@ use App\Models\Projects\Timer;
 
 Route::get('/test', function()
 {
-    $timer = new Timer;
+    $timer = Timer::first();
     dd($timer->price);
 });
 
