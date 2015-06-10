@@ -84,10 +84,15 @@ Route::post('update/stopProjectTimer', 'Projects\TimersController@stopProjectTim
  * Exercises
  */
 
+//this should be ExercisesController, index method
 Route::post('select/getExercises', 'Exercises\ExercisesController@getExercises');
+//this should be ExercisesController, show method
 Route::post('select/getExerciseInfo', 'Exercises\ExercisesController@getExerciseInfo');
+//this should be ExerciseSeriesController, show method
 Route::post('select/getExerciseSeriesInfo', 'Exercises\ExercisesController@getExerciseSeriesInfo');
+//this should be ExerciseSeriesHistoryController, index (if returns multiple series, show if returns one series) method
 Route::post('select/exerciseSeriesHistory', 'Exercises\ExercisesController@getExerciseSeriesHistory');
+//this one is more complicated
 Route::post('select/specificExerciseEntries', 'Exercises\ExerciseEntriesController@getSpecificExerciseEntries');
 Route::post('insert/exercise', 'Exercises\ExercisesController@insertExercise');
 Route::post('insert/deleteAndInsertSeriesIntoWorkouts', 'Exercises\ExercisesController@deleteAndInsertSeriesIntoWorkouts');
