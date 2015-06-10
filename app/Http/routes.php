@@ -4,6 +4,15 @@
  * Views
  */
 
+//test
+use App\Models\Projects\Timer;
+
+Route::get('/test', function()
+{
+    $timer = new Timer;
+    dd($timer->price);
+});
+
 //Homepage (entries)
 Route::get('/', 'EntriesController@index');
 

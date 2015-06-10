@@ -1,13 +1,14 @@
 <?php namespace App\Models\Projects;
 
 use Carbon\Carbon;
+use DateInterval;
 use Illuminate\Database\Eloquent\Model;
 
 class Timer extends Model {
 
     protected $fillable = ['project_id', 'start'];
 
-    protected $appends = ['path', 'time', 'formatted_hours', 'formatted_minutes', 'formatted_seconds', 'price'];
+    protected $appends = ['path', 'time', 'formatted_hours', 'formatted_minutes', 'formatted_seconds', 'price', 'formatted_price'];
 
 	public $timestamps = false;
 
@@ -19,11 +20,6 @@ class Timer extends Model {
 	{
 	    return $this->belongsTo('App\Models\Projects\Project');
 	}
-
-    public function ratePerHour()
-    {
-        return $this->project->rate_per_hour;
-    }
 
     /**
      * Return the URL of the project
@@ -68,17 +64,69 @@ class Timer extends Model {
      */
     public function getPriceAttribute()
     {
-//        dd($this->ratePerHour());
-//        $rate = $this->ratePerHour();
-//        var_dump($this->project);
-//        return $rate;
-        $time = $this->time;
+        /**
+         * @VP:
+         * I tried to remember and repeat what you did when you set up the test route,
+         * but how did you do it? I get 'Trying to get property of non-object'
+         * when I do these two lines.
+         */
+//        $rate = $this->project->rate_per_hour;
+//        dd($rate);
+
+        /**
+         * The following code calculates the correct price.
+         * I have commented it out because of the error it was giving me
+         * (see comment below).
+         */
+
         $price = 0;
+//        $rate = $this->project->rate_per_hour;
+//        $time = $this->time;
+
+        //For testing help:
+        //$time = new DateInterval('PT1H15M30S');
+        //$do_not_round_to_nearest_minute = true;
+
+        //TODO Add user preference for rounding to the nearest minute?
+//        if (isset($do_not_round_to_nearest_minute)) {
+//            //User prefers not to round to the nearest minute.
+//        }
+//        else {
+//            //Round to the nearest minute
+//            if ($time->s > 30) {
+//                $time->i = $time->i + 1;
+//            }
+//        }
 
 //        $price+= $rate * $time->h;
 //        $price+= $rate / 60 * $time->i;
-//        $price+= $rate / 3600 * $time->s;
+//
+//        if (isset($do_not_round_to_nearest_minute)) {
+//            //User prefers not to round to the nearest minute.
+//            //We need to therefore use seconds to calculate the price.
+//            $price+= $rate / 3600 * $time->s;
+//        }
+
+        /**
+         * @VP:
+         * So if I dd $price, it is correct, and I get no error.
+         * But when remove my dd and I try to return $price:
+         * FatalErrorException in Grammar.php line 146:
+         * Maximum function nesting level of '250' reached, aborting!
+         *
+         * Var_dumping $price for some reason shows price many times,
+         * even when there are only 3 timers in the table.
+         * I guess that explains the error, but why is it not just returning
+         * one $price per timer?
+         */
+
 //        var_dump($price);
+
         return $price;
+    }
+
+    public function getFormattedPriceAttribute()
+    {
+        return number_format($this->price);
     }
 }
