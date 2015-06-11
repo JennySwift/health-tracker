@@ -38,20 +38,13 @@ class ProjectsController extends Controller {
         $user = Auth::user();
 
         JavaScript::put([
-//            'projects' => $user->projects,
             'payee_projects' => $user->projectsAsPayee,
             'payer_projects' => $user->projectsAsPayer,
-
-//            'projects' => $this->projectsRepository->getProjectsArrayForCurrentUser(),
-            'payers' => $user->getPayersForCurrentUser(),
-            'payees' => $user->getPayeesForCurrentUser()
+            'payers' => $user->payers,
+            'payees' => $user->payees
         ]);
 
-//        return $user->getPayeesForCurrentUser();
-//        return $this->projectsRepository->getProjectsForCurrentUser();
-//        return $user->getPayersForCurrentUser();
-//        return $this->projectsRepository->getPayers();
-//		return $this->projectsRepository->getProjects();
+        return $user;
         return view('projects');
     }
 

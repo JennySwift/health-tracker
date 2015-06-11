@@ -10,7 +10,7 @@ class Timer extends Model {
 
 //    protected $with = ['project'];
 
-//    protected $appends = ['path', 'time', 'formatted_hours', 'formatted_minutes', 'formatted_seconds', 'formatted_price'];
+    protected $appends = ['path', 'time', 'formatted_hours', 'formatted_minutes', 'formatted_seconds', 'price', 'formatted_price'];
 
 	public $timestamps = false;
 

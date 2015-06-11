@@ -91,7 +91,7 @@
                 <td ng-click="showProjectPopup(project)" class="pointer">[[project.description]]</td>
                 <td ng-click="showProjectPopup(project)" class="pointer">$[[project.rate_per_hour]]</td>
                 <td ng-click="showProjectPopup(project)" class="pointer">
-                    [[project.total_time_user_formatted.hours]]:[[project.total_time_user_formatted.minutes]]:[[project.total_time_user_formatted.seconds]]
+                    [[project.total_time_formatted.hours]]:[[project.total_time_formatted.minutes]]:[[project.total_time_formatted.seconds]]
                 </td>
                 <td ng-click="showProjectPopup(project)" class="pointer">[[project.formatted_price]]</td>
                 {{--<td>--}}
@@ -124,7 +124,7 @@
                 <td ng-click="showProjectPopup(project)" class="pointer">[[project.description]]</td>
                 <td ng-click="showProjectPopup(project)" class="pointer">$[[project.rate_per_hour]]</td>
                 <td ng-click="showProjectPopup(project)" class="pointer">
-                    [[project.total_time_user_formatted.hours]]:[[project.total_time_user_formatted.minutes]]:[[project.total_time_user_formatted.seconds]]
+                    [[project.total_time_formatted.hours]]:[[project.total_time_formatted.minutes]]:[[project.total_time_formatted.seconds]]
                 </td>
                 <td ng-click="showProjectPopup(project)" class="pointer">[[project.formatted_price]]</td>
                 {{--<td>--}}

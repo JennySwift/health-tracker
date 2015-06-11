@@ -8,18 +8,14 @@ class Project extends Model {
 
 	protected $fillable = ['description', 'rate_per_hour'];
 
-    protected $appends = ['path', 'price', 'formatted_price', 'total_time'];
+    protected $appends = ['path', 'price', 'formatted_price', 'total_time', 'total_time_formatted'];
 
-    protected $with = ['payer', 'payee', 'timers'];
+    protected $with = ['payer', 'payee'];
 
 	/**
 	 * Define relationships
 	 */
 
-    /**
-     * @VP:
-     * Does it matter if I use App\User here or App\Models\Projects\Payer?
-     */
 	public function payer()
 	{
 	    return $this->belongsTo('App\User');
@@ -96,26 +92,18 @@ class Project extends Model {
             'seconds' => $seconds
         ];
 
-//        $formatted = $this->formatTimeForUser($time);
-
-//        $formatted = [
-//            'hours' => sprintf("%02d", $time->hours),
-//            'minutes' => sprintf("%02d", $time->minutes),
-//            'seconds' => sprintf("%02d", $time->seconds)
-//        ];
-
-//        $formatted = $this->projectsRepository->formatTimeForUser($total_time);
-//        dd($formatted);
-
         return $time;
+    }
 
-//        $array = [
-//            'time' => 'something',
-//            'formatted' => 'something'
-//        ];
+    public function getTotalTimeFormattedAttribute()
+    {
+        $formatted = [
+            'hours' => sprintf("%02d", $this->total_time['hours']),
+            'minutes' => sprintf("%02d", $this->total_time['minutes']),
+            'seconds' => sprintf("%02d", $this->total_time['seconds'])
+        ];
 
-//        return response()->json($array);
-        return Response::json($array);
+        return $formatted;
     }
 
 }

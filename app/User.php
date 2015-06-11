@@ -54,9 +54,9 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     {
         $payers = $this->payers;
 
-        //Figure out how much the payer owes the payee
-        //Add this owed value to the $payer
-        //$timer->price has not been coded yet so this won't yet work
+//        Figure out how much the payer owes the payee
+//        Add this owed value to the $payer
+//        $timer->price has not been coded yet so this won't yet work
 //        foreach ($payers as $payer) {
 //            $payer->projectsAsPayer = $payer->projectsAsPayer;
 ////            dd($payer->projectsAsPayer);
@@ -82,11 +82,6 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         return $this->belongsToMany('App\User', 'payee_payer', 'payer_id', 'payee_id');
     }
 
-    public function getPayeesForCurrentUser()
-    {
-        return $this->payees;
-    }
-
     /**
      * Get all the projects where the user is the payee
      */
@@ -103,38 +98,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     {
         return $this->hasMany('App\Models\Projects\Project', 'payer_id')
             ->with('payee')
-            ->with('payer')
-            ->with('timers');
-    }
-
-    public function getProjectsAsPayee($user)
-    {
-        $projects = Project::where('payee_id', $user->id)
-//            ->with('payee')
-//            ->with('payer')
-//            ->with('timers')
-            ->get();
-
-        foreach ($projects as $project) {
-            $project->total_time_user_formatted = $this->formatTimeForUser($project->total_time);
-        }
-
-        return $projects;
-    }
-
-    public function getProjectsAsPayer($user)
-    {
-        $projects = Project::where('payer_id', $user->id)
-            ->with('payee')
-            ->with('payer')
-            ->with('timers')
-            ->get();
-
-        foreach ($projects as $project) {
-            $project->total_time_user_formatted = $this->formatTimeForUser($project->total_time);
-        }
-
-        return $projects;
+            ->with('payer');
     }
 
     /**
@@ -233,14 +197,14 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      * @param $time
      * @return array
      */
-    public function formatTimeForUser($time)
-    {
-        $formatted = [
-            'hours' => sprintf("%02d", $time['hours']),
-            'minutes' => sprintf("%02d", $time['minutes']),
-            'seconds' => sprintf("%02d", $time['seconds'])
-        ];
-
-        return $formatted;
-    }
+//    public function formatTimeForUser($time)
+//    {
+//        $formatted = [
+//            'hours' => sprintf("%02d", $time['hours']),
+//            'minutes' => sprintf("%02d", $time['minutes']),
+//            'seconds' => sprintf("%02d", $time['seconds'])
+//        ];
+//
+//        return $formatted;
+//    }
 }
