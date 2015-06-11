@@ -2,14 +2,45 @@
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use JavaScript;
+use Auth;
 
+use App\Models\Projects\Payee;
 use Illuminate\Http\Request;
 
 class PayeeController extends Controller {
 
     /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+
+    /**
      * select
      */
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
+    public function index()
+    {
+        $payee = Payee::find(Auth::user()->id);
+
+        JavaScript::put([
+            'payee_projects' => $payee->projectsAsPayee,
+            'payers' => $payee->payers,
+        ]);
+
+        return view('payee');
+    }
 
     /**
      * insert

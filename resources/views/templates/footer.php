@@ -30,6 +30,8 @@
 <script type="text/javascript" src="js/controllers/FoodsController.js"></script>
 <script type="text/javascript" src="js/controllers/ExercisesController.js"></script>
 <script type="text/javascript" src="js/controllers/ProjectsController.js"></script>
+<script type="text/javascript" src="js/controllers/PayeeController.js"></script>
+<script type="text/javascript" src="js/controllers/PayerController.js"></script>
 
 <script type="text/javascript" src="js/factories/date.js"></script>
 <script type="text/javascript" src="js/factories/quick-recipe.js"></script>

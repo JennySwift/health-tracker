@@ -2,6 +2,8 @@
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Models\Projects\Payee;
+use App\Models\Projects\Payer;
 use App\Repositories\Projects\ProjectsRepository;
 
 use App\User;
@@ -34,17 +36,19 @@ class ProjectsController extends Controller {
      */
     public function index()
     {
-//        $user = new User;
         $user = Auth::user();
+        $payer = Payer::find($user->id);
+        $payee = Payee::find($user->id);
 
         JavaScript::put([
-            'payee_projects' => $user->projectsAsPayee,
-            'payer_projects' => $user->projectsAsPayer,
-            'payers' => $user->payers,
-            'payees' => $user->payees
+            'payee_projects' => $payee->projectsAsPayee,
+            'payer_projects' => $payer->projectsAsPayer,
+            'payers' => $payee->payers,
+            'payees' => $payer->payees
         ]);
 
-        return $user;
+//        return $user;
+//        return $payee->projectsAsPayee;
         return view('projects');
     }
 
@@ -70,7 +74,10 @@ class ProjectsController extends Controller {
 
         $this->projectsRepository->createProject($payer_email, $description, $rate);
 
-        return $this->projectsRepository->getProjectsArrayForCurrentUser();
+        $payee = Payee::find(Auth::user()->id);
+        return $payee->projectsAsPayee;
+
+//        return $this->projectsRepository->getProjectsArrayForCurrentUser();
     }
 
     /**

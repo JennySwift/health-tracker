@@ -22,16 +22,13 @@ class ProjectsRepository
     public function getProjectsArrayForCurrentUser()
     {
         $user = Auth::user();
-//        $user = new User;
+        $payer = $user;
+        $payee = $user;
 
         return [
             'payee' => $user->projectsAsPayee, // This is a Illuminate\Database\Eloquent\Object
             'payer' => $user->projectsAsPayer
         ];
-
-//        dd($user->projectsAsPayee);
-//        dd($user->projectsAsPayer);
-//        return $user->projectsAsPayee;
     }
 
     public function getProjectsResponseForCurrentUser()

@@ -5,12 +5,13 @@
  */
 
 //test
+use App\Models\Projects\Project;
 use App\Models\Projects\Timer;
 
 Route::get('/test', function()
 {
-    $timer = Timer::first();
-    dd($timer->price);
+    $project = Project::first();
+    dd($project);
 });
 
 //Homepage (entries)
@@ -28,8 +29,10 @@ Route::get('/exercises', 'Exercises\ExercisesController@index');
 //Journal
 Route::get('/journal', 'Journal\JournalController@index');
 
-//Timer
+//Projects
 Route::get('projects', ['as' => 'projects', 'uses' => 'Projects\ProjectsController@index']);
+Route::get('payee', ['as' => 'payee', 'uses' => 'Projects\PayeeController@index']);
+Route::get('payer', ['as' => 'payer', 'uses' => 'Projects\PayerController@index']);
 
 //Credits
 Route::get('/credits', function()
@@ -71,6 +74,8 @@ Route::controllers([
 
 Route::resource('weights', 'Weights\WeightsController');
 Route::resource('projects', 'Projects\ProjectsController', ['only' => ['index', 'store', 'destroy']]);
+Route::resource('payee', 'Projects\PayeeController', ['only' => ['index', 'store', 'destroy']]);
+Route::resource('payer', 'Projects\PayerController', ['only' => ['index', 'store', 'destroy']]);
 Route::resource('timers', 'Projects\TimersController', ['only' => ['destroy']]);
 Route::resource('foods', 'Foods\FoodsController', ['only' => ['index', 'destroy']]);
 Route::resource('exercises', 'Exercises\ExercisesController', ['only' => ['index', 'store', 'destroy']]);

@@ -45,10 +45,10 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
     //projects
 
-    public function payers()
-    {
-        return $this->belongsToMany('App\User', 'payee_payer', 'payee_id', 'payer_id');
-    }
+//    public function payers()
+//    {
+//        return $this->belongsToMany('App\User', 'payee_payer', 'payee_id', 'payer_id');
+//    }
 
     public function getPayersForCurrentUser()
     {
@@ -77,29 +77,29 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         return $payers;
     }
 
-    public function payees()
-    {
-        return $this->belongsToMany('App\User', 'payee_payer', 'payer_id', 'payee_id');
-    }
+//    public function payees()
+//    {
+//        return $this->belongsToMany('App\User', 'payee_payer', 'payer_id', 'payee_id');
+//    }
 
     /**
      * Get all the projects where the user is the payee
      */
-    public function projectsAsPayee()
-    {
-        return $this->hasMany('App\Models\Projects\Project', 'payee_id');
-    }
+//    public function projectsAsPayee()
+//    {
+//        return $this->hasMany('App\Models\Projects\Project', 'payee_id');
+//    }
 
-    /**
-     * Get all the projects where the user is the payer
-     * and the logged in user is payee
-     */
-    public function projectsAsPayer()
-    {
-        return $this->hasMany('App\Models\Projects\Project', 'payer_id')
-            ->with('payee')
-            ->with('payer');
-    }
+//    /**
+//     * Get all the projects where the user is the payer
+//     * and the logged in user is payee
+//     */
+//    public function projectsAsPayer()
+//    {
+//        return $this->hasMany('App\Models\Projects\Project', 'payer_id')
+//            ->with('payee')
+//            ->with('payer');
+//    }
 
     /**
      * End projects
