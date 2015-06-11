@@ -35,11 +35,16 @@ class ProjectsController extends Controller {
     public function index()
     {
 //        $user = new User;
+        $user = Auth::user();
 
         JavaScript::put([
-            'projects' => $this->projectsRepository->getProjectsForCurrentUser(),
-            'payers' => User::getPayersForCurrentUser(),
-            'payees' => User::getPayeesForCurrentUser()
+//            'projects' => $user->projects,
+            'payee_projects' => $user->projectsAsPayee,
+            'payer_projects' => $user->projectsAsPayer,
+
+//            'projects' => $this->projectsRepository->getProjectsArrayForCurrentUser(),
+            'payers' => $user->getPayersForCurrentUser(),
+            'payees' => $user->getPayeesForCurrentUser()
         ]);
 
 //        return $user->getPayeesForCurrentUser();
@@ -72,7 +77,7 @@ class ProjectsController extends Controller {
 
         $this->projectsRepository->createProject($payer_email, $description, $rate);
 
-        return $this->projectsRepository->getProjectsForCurrentUser();
+        return $this->projectsRepository->getProjectsArrayForCurrentUser();
     }
 
     /**

@@ -19,17 +19,24 @@ class ProjectsRepository
      * select
      */
 
-    public function getProjectsForCurrentUser()
+    public function getProjectsArrayForCurrentUser()
     {
-//        $user = User::find(Auth::user()->id);
-        $user = new User;
+        $user = Auth::user();
+//        $user = new User;
 
-        $projects = [
-            'payee' => $user->getProjectsAsPayee(), // This is a Illuminate\Database\Eloquent\Object
-            'payer' => $user->getProjectsAsPayer()
+        return [
+            'payee' => $user->projectsAsPayee, // This is a Illuminate\Database\Eloquent\Object
+            'payer' => $user->projectsAsPayer
         ];
 
-        return response()->json($projects);
+//        dd($user->projectsAsPayee);
+//        dd($user->projectsAsPayer);
+//        return $user->projectsAsPayee;
+    }
+
+    public function getProjectsResponseForCurrentUser()
+    {
+        return response()->json($this->getProjectsForCurrentUser());
     }
 
     /**

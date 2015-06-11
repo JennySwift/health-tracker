@@ -10,6 +10,8 @@ class Project extends Model {
 
     protected $appends = ['path', 'price', 'formatted_price', 'total_time'];
 
+    protected $with = ['payer', 'payee', 'timers'];
+
 	/**
 	 * Define relationships
 	 */

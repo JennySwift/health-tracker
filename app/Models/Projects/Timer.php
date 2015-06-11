@@ -8,7 +8,9 @@ class Timer extends Model {
 
     protected $fillable = ['project_id', 'start'];
 
-    protected $appends = ['path', 'time', 'formatted_hours', 'formatted_minutes', 'formatted_seconds', 'price', 'formatted_price'];
+//    protected $with = ['project'];
+
+//    protected $appends = ['path', 'time', 'formatted_hours', 'formatted_minutes', 'formatted_seconds', 'formatted_price'];
 
 	public $timestamps = false;
 
@@ -72,7 +74,9 @@ class Timer extends Model {
 
         $price = 0;
 //        $rate = $this->project->rate_per_hour;
-//        $time = $this->time;
+//        var_dump($this->project->rate_per_hour);
+//        dd('something');
+        $time = $this->time;
 
         //For testing help:
         //$time = new DateInterval('PT1H15M30S');

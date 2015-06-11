@@ -6,8 +6,12 @@ var app = angular.module('tracker');
 		/**
 		 * scope properties
 		 */
-		
-		$scope.projects = projects;
+
+        $scope.projects = {
+            payer: payer_projects,
+            payee: payee_projects
+        };
+
         $scope.payers = payers;
         $scope.payees = payees;
 		$scope.new_project = {};

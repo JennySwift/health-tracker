@@ -50,10 +50,9 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         return $this->belongsToMany('App\User', 'payee_payer', 'payee_id', 'payer_id');
     }
 
-    public static function getPayersForCurrentUser()
+    public function getPayersForCurrentUser()
     {
-        $user = User::find(Auth::user()->id);
-        $payers = $user->payers;
+        $payers = $this->payers;
 
         //Figure out how much the payer owes the payee
         //Add this owed value to the $payer
@@ -83,10 +82,9 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         return $this->belongsToMany('App\User', 'payee_payer', 'payer_id', 'payee_id');
     }
 
-    public static function getPayeesForCurrentUser()
+    public function getPayeesForCurrentUser()
     {
-        $user = User::find(Auth::user()->id);
-        return $user->payees;
+        return $this->payees;
     }
 
     /**
@@ -97,12 +95,24 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         return $this->hasMany('App\Models\Projects\Project', 'payee_id');
     }
 
-    public function getProjectsAsPayee()
+    /**
+     * Get all the projects where the user is the payer
+     * and the logged in user is payee
+     */
+    public function projectsAsPayer()
     {
-        $projects = Project::where('payee_id', Auth::user()->id)
+        return $this->hasMany('App\Models\Projects\Project', 'payer_id')
             ->with('payee')
             ->with('payer')
-            ->with('timers')
+            ->with('timers');
+    }
+
+    public function getProjectsAsPayee($user)
+    {
+        $projects = Project::where('payee_id', $user->id)
+//            ->with('payee')
+//            ->with('payer')
+//            ->with('timers')
             ->get();
 
         foreach ($projects as $project) {
@@ -112,18 +122,9 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         return $projects;
     }
 
-    /**
-     * Get all the projects where the user is the payer
-     * and the logged in user is payee
-     */
-    public function projectsAsPayer()
+    public function getProjectsAsPayer($user)
     {
-        return $this->hasMany('App\Models\Projects\Project', 'payer_id')->where('payee_id', Auth::user()->id);
-    }
-
-    public function getProjectsAsPayer()
-    {
-        $projects = Project::where('payer_id', Auth::user()->id)
+        $projects = Project::where('payer_id', $user->id)
             ->with('payee')
             ->with('payer')
             ->with('timers')
