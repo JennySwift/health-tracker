@@ -19,48 +19,17 @@ class ProjectsRepository
      * select
      */
 
-    public function getPayers()
+    public function getProjectsForCurrentUser()
     {
-        $user = User::find(Auth::user()->id);
+//        $user = User::find(Auth::user()->id);
+        $user = new User;
 
-        $payers = $user->payers;
-
-        //Figure out how much the payer owes the payee
-        //Add this owed value to the $payer
-        //$timer->price has not been coded yet so this won't yet work
-        foreach ($payers as $payer) {
-            $payer->projects = $payer->projectsAsPayer;
-
-            $owed = 0;
-            foreach($payer->projects as $project) {
-
-                foreach($project->timers as $timer) {
-                    if (!$timer->paid) {
-                        $owed+= $timer->price;
-                    }
-                }
-
-            }
-            $payer->owed = $owed;
-        }
-
-        return $payers;
-    }
-
-    public function getPayees()
-    {
-        $user = User::find(Auth::user()->id);
-        return $user->payees;
-    }
-
-    public function getProjects()
-    {
-        $user = User::find(Auth::user()->id);
-
-        return [
+        $projects = [
             'payee' => $user->getProjectsAsPayee(), // This is a Illuminate\Database\Eloquent\Object
-            'payer' => $this->getProjectsAsPayer()
+            'payer' => $user->getProjectsAsPayer()
         ];
+
+        return response()->json($projects);
     }
 
     /**
@@ -81,21 +50,6 @@ class ProjectsRepository
         return $project;
     }
 
-    public function getProjectsAsPayer()
-    {
-        $projects = Project::where('payer_id', Auth::user()->id)
-            ->with('payee')
-            ->with('payer')
-            ->with('timers')
-            ->get();
-
-        foreach ($projects as $project) {
-            $project->total_time_user_formatted = $this->formatTimeForUser($project->total_time);
-        }
-
-        return $projects;
-    }
-
     public function formatTimeForUser($time)
     {
         $formatted = [
@@ -110,21 +64,6 @@ class ProjectsRepository
     /**
      * insert
      */
-
-    /**
-     * Add a payer for the user
-     * Return the user's payers
-     * @param $payer_email
-     * @return mixed
-     */
-    public function addPayer($payer_email)
-    {
-        $user = User::find(Auth::user()->id);
-        $payer = User::whereEmail($payer_email)->firstOrFail();
-        $user->payers()->attach($payer->id);
-        $user->save();
-        return $user->payers;
-    }
     
     public function createProject($payer_email, $description, $rate)
     {

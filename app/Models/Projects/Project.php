@@ -13,7 +13,11 @@ class Project extends Model {
 	/**
 	 * Define relationships
 	 */
-	
+
+    /**
+     * @VP:
+     * Does it matter if I use App\User here or App\Models\Projects\Payer?
+     */
 	public function payer()
 	{
 	    return $this->belongsTo('App\User');

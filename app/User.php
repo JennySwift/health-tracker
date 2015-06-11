@@ -7,10 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
-use Auth;
 use App\Models\Exercises\Entry as ExerciseEntry;
 use App\Models\Exercises\Exercise;
 use Gravatar;
+use Auth;
 
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract
 {
@@ -44,14 +44,49 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      */
 
     //projects
+
     public function payers()
     {
         return $this->belongsToMany('App\User', 'payee_payer', 'payee_id', 'payer_id');
     }
 
+    public static function getPayersForCurrentUser()
+    {
+        $user = User::find(Auth::user()->id);
+        $payers = $user->payers;
+
+        //Figure out how much the payer owes the payee
+        //Add this owed value to the $payer
+        //$timer->price has not been coded yet so this won't yet work
+//        foreach ($payers as $payer) {
+//            $payer->projectsAsPayer = $payer->projectsAsPayer;
+////            dd($payer->projectsAsPayer);
+//
+//            $owed = 0;
+//            foreach($payer->projectsAsPayer as $project) {
+//
+//                foreach($project->timers as $timer) {
+//                    if (!$timer->paid) {
+//                        $owed+= $timer->price;
+//                    }
+//                }
+//
+//            }
+//            $payer->owed = $owed;
+//        }
+//        dd($payers);
+        return $payers;
+    }
+
     public function payees()
     {
         return $this->belongsToMany('App\User', 'payee_payer', 'payer_id', 'payee_id');
+    }
+
+    public static function getPayeesForCurrentUser()
+    {
+        $user = User::find(Auth::user()->id);
+        return $user->payees;
     }
 
     /**
@@ -60,16 +95,6 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     public function projectsAsPayee()
     {
         return $this->hasMany('App\Models\Projects\Project', 'payee_id');
-    }
-
-    /**
-     * Get all the projects where the user is the payer
-     * and the logged in user is payee
-     */
-    public function projectsAsPayer()
-    {
-//        return $this->hasMany('App\Models\Projects\Project', 'payer_id');
-        return $this->hasMany('App\Models\Projects\Project', 'payer_id')->where('payee_id', Auth::user()->id);
     }
 
     public function getProjectsAsPayee()
@@ -88,10 +113,32 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     }
 
     /**
-     * For when the user is payee, getting all the user's payers
-     * along with the projects the payee has done for the payer
+     * Get all the projects where the user is the payer
+     * and the logged in user is payee
      */
+    public function projectsAsPayer()
+    {
+        return $this->hasMany('App\Models\Projects\Project', 'payer_id')->where('payee_id', Auth::user()->id);
+    }
 
+    public function getProjectsAsPayer()
+    {
+        $projects = Project::where('payer_id', Auth::user()->id)
+            ->with('payee')
+            ->with('payer')
+            ->with('timers')
+            ->get();
+
+        foreach ($projects as $project) {
+            $project->total_time_user_formatted = $this->formatTimeForUser($project->total_time);
+        }
+
+        return $projects;
+    }
+
+    /**
+     * End projects
+     */
 
     //tags
     public function recipeTags()

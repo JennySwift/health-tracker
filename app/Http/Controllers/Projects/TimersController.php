@@ -38,7 +38,7 @@ class TimersController extends Controller {
         ]);
 
         return [
-            'projects' => $this->projectsRepository->getProjects(),
+            'projects' => $this->projectsRepository->getProjectsForCurrentUser(),
             'project' => $this->projectsRepository->getProject($project->id)
         ];
     }
@@ -59,7 +59,7 @@ class TimersController extends Controller {
         $timer->save();
 
         return [
-            'projects' => $this->projectsRepository->getProjects(),
+            'projects' => $this->projectsRepository->getProjectsForCurrentUser(),
             'project' => $this->projectsRepository->getProject($project->id)
         ];
     }

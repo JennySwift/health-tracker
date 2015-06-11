@@ -34,12 +34,17 @@ class ProjectsController extends Controller {
      */
     public function index()
     {
+//        $user = new User;
+
         JavaScript::put([
-            'projects' => $this->projectsRepository->getProjects(),
-            'payers' => $this->projectsRepository->getPayers(),
-            'payees' => $this->projectsRepository->getPayees()
+            'projects' => $this->projectsRepository->getProjectsForCurrentUser(),
+            'payers' => User::getPayersForCurrentUser(),
+            'payees' => User::getPayeesForCurrentUser()
         ]);
 
+//        return $user->getPayeesForCurrentUser();
+//        return $this->projectsRepository->getProjectsForCurrentUser();
+//        return $user->getPayersForCurrentUser();
 //        return $this->projectsRepository->getPayers();
 //		return $this->projectsRepository->getProjects();
         return view('projects');
@@ -49,24 +54,9 @@ class ProjectsController extends Controller {
      * select
      */
 
-
     /**
      * insert
      */
-
-    /**
-     * Add a new payer for the user (payee)
-     * so that the user can create a project with that person as payer
-     * @param Request $request
-     * @return mixed
-     */
-    public function addPayer(Request $request)
-    {
-        $payer_email = $request->get('payer_email');
-        $user = User::find(Auth::user()->id);
-        $this->projectsRepository->addPayer($payer_email);
-        return $user->payers;
-    }
 
     /**
      * Insert a new project
@@ -82,12 +72,7 @@ class ProjectsController extends Controller {
 
         $this->projectsRepository->createProject($payer_email, $description, $rate);
 
-        $projects = [
-            'payee' => $this->projectsRepository->getProjectsAsPayee(),
-            'payer' => $this->projectsRepository->getProjectsAsPayer()
-        ];
-
-        return response()->json($projects);
+        return $this->projectsRepository->getProjectsForCurrentUser();
     }
 
     /**
@@ -121,12 +106,5 @@ class ProjectsController extends Controller {
 
         // throw NotFoundException
         return response(null, 204);
-
-//		$projects = [
-//			'payee' => $this->projectsRepository->getProjectsAsPayee(),
-//			'payer' => $this->projectsRepository->getProjectsAsPayer()
-//		];
-//
-//		return response()->json($projects);
     }
 }
