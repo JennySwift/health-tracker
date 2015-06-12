@@ -1,4 +1,4 @@
-app.factory('tags', function ($http) {
+app.factory('TagsFactory', function ($http) {
 	return {
 		/**
 		 * select

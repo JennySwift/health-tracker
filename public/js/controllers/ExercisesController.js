@@ -1,7 +1,7 @@
 var app = angular.module('tracker');
 
 (function () {
-	app.controller('exercises', function ($scope, $http, exercises, tags) {
+	app.controller('exercises', function ($scope, $http, ExercisesFactory, TagsFactory) {
 
 		/**
 		 * scope properties
@@ -34,7 +34,7 @@ var app = angular.module('tracker');
 		 */
 		
 		$scope.getExerciseSeriesHistory = function ($series_id) {
-			exercises.getExerciseSeriesHistory($series_id).then(function (response) {
+			ExercisesFactory.getExerciseSeriesHistory($series_id).then(function (response) {
 				$scope.show.popups.exercise_series_history = true;
 				$scope.exercise_series_history = response.data;
 			});
@@ -48,7 +48,7 @@ var app = angular.module('tracker');
 			if ($keypress !== 13) {
 				return;
 			}
-			exercises.insertWorkout().then(function (response) {
+			ExercisesFactory.insertWorkout().then(function (response) {
 				$scope.workouts = response.data;
 			});
 		};
@@ -57,13 +57,13 @@ var app = angular.module('tracker');
 			if ($keypress !== 13) {
 				return;
 			}
-			exercises.insertExerciseSeries().then(function (response) {
+			ExercisesFactory.insertExerciseSeries().then(function (response) {
 				$scope.exercise_series = response.data;
 			});
 		};
 
 		$scope.insertSeriesIntoWorkout = function () {
-			exercises.insertSeriesIntoWorkout($workout_id, $series_id).then(function (response) {
+			ExercisesFactory.insertSeriesIntoWorkout($workout_id, $series_id).then(function (response) {
 				$scope.exercise_series = response.data;
 			});
 		};
@@ -72,14 +72,14 @@ var app = angular.module('tracker');
 			if ($keypress !== 13) {
 				return;
 			}
-			tags.insertExerciseTag().then(function (response) {
+			TagsFactory.insertExerciseTag().then(function (response) {
 				$scope.exercise_tags = response.data;
 			});
 		};
 
 		$scope.insertTagsInExercise = function () {
 			//deletes tags from the exercise then adds the correct ones
-			exercises.insertTagsInExercise($scope.selected.exercise.id, $scope.exercise_popup.tags).then(function (response) {
+			ExercisesFactory.insertTagsInExercise($scope.selected.exercise.id, $scope.exercise_popup.tags).then(function (response) {
 				$scope.exercises = response.data;
 				$scope.show.popups.exercise = false;
 			});
@@ -87,7 +87,7 @@ var app = angular.module('tracker');
 
 		$scope.insertExercise = function ($keycode) {
 			if ($keycode === 13) {
-				exercises.insertExercise().then(function (response) {
+				ExercisesFactory.insertExercise().then(function (response) {
 					$scope.exercises = response.data;
 				});
 			}
@@ -101,14 +101,14 @@ var app = angular.module('tracker');
 			if ($keycode !== 13) {
 				return;
 			}
-			exercises.updateDefaultExerciseQuantity($scope.selected.exercise.id).then(function (response) {
+			ExercisesFactory.updateDefaultExerciseQuantity($scope.selected.exercise.id).then(function (response) {
 				$scope.exercises = response.data;
 			});
 		};
 
 		$scope.updateExerciseSeries = function ($exercise_id, $series_id) {
 			//to assign a series to an exercise
-			exercises.updateExerciseSeries($exercise_id, $series_id).then(function (response) {
+			ExercisesFactory.updateExerciseSeries($exercise_id, $series_id).then(function (response) {
 				$scope.exercises = response.data;
 			});
 		};
@@ -117,13 +117,13 @@ var app = angular.module('tracker');
 			if ($keycode !== 13) {
 				return;
 			}
-			exercises.updateExerciseStepNumber($exercise_id).then(function (response) {
+			ExercisesFactory.updateExerciseStepNumber($exercise_id).then(function (response) {
 				$scope.exercises = response.data;
 			});
 		};
 
 		$scope.updateDefaultExerciseUnit = function ($unit_id) {
-			exercises.updateDefaultExerciseUnit($scope.selected.exercise.id, $unit_id).then(function (response) {
+			ExercisesFactory.updateDefaultExerciseUnit($scope.selected.exercise.id, $unit_id).then(function (response) {
 				$scope.exercises = response.data;
 			});
 		};
@@ -133,7 +133,7 @@ var app = angular.module('tracker');
 		 */
 		
 		$scope.deleteAndInsertSeriesIntoWorkouts = function () {
-			exercises.deleteAndInsertSeriesIntoWorkouts($scope.selected.exercise_series.id, $scope.exercise_series_popup.workouts).then(function (response) {
+			ExercisesFactory.deleteAndInsertSeriesIntoWorkouts($scope.selected.exercise_series.id, $scope.exercise_series_popup.workouts).then(function (response) {
 				// $scope.exercise_series = response.data;
 				$scope.workouts = response.data;
 				$scope.show.popups.exercise_series = false;
@@ -141,19 +141,19 @@ var app = angular.module('tracker');
 		};
 
 		$scope.deleteExerciseTag = function ($id) {
-			tags.deleteExerciseTag($id).then(function (response) {
+			TagsFactory.deleteExerciseTag($id).then(function (response) {
 				$scope.exercise_tags = response.data;
 			});
 		};
 
 		$scope.deleteExerciseSeries = function ($id) {
-			exercises.deleteExerciseSeries($id).then(function (response) {
+			ExercisesFactory.deleteExerciseSeries($id).then(function (response) {
 				$scope.exercise_series = response.data;
 			});
 		};
 
 		$scope.deleteExercise = function ($id) {
-			exercises.deleteExercise($id).then(function (response) {
+			ExercisesFactory.deleteExercise($id).then(function (response) {
 				$scope.exercises = response.data;
 			});
 		};
@@ -165,7 +165,7 @@ var app = angular.module('tracker');
 		$scope.showExercisePopup = function ($exercise) {
 			$scope.selected.exercise = $exercise;
 
-			exercises.getExerciseInfo($exercise.id).then(function (response) {
+			ExercisesFactory.getExerciseInfo($exercise.id).then(function (response) {
 				$scope.exercise_popup = response.data;
 				$scope.show.popups.exercise = true;
 			});
@@ -174,7 +174,7 @@ var app = angular.module('tracker');
 		$scope.showExerciseSeriesPopup = function ($series) {
 			$scope.selected.exercise_series = $series;
 
-			exercises.getExerciseSeriesInfo($series.id).then(function (response) {
+			ExercisesFactory.getExerciseSeriesInfo($series.id).then(function (response) {
 				$scope.exercise_series_popup = response.data;
 				$scope.show.popups.exercise_series = true;
 			});

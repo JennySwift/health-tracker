@@ -1,4 +1,4 @@
-app.factory('weights', function ($http) {
+app.factory('WeightsFactory', function ($http) {
 	return {
 		
 		/**

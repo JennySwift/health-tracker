@@ -33,14 +33,14 @@
 <script type="text/javascript" src="js/controllers/PayeeController.js"></script>
 <script type="text/javascript" src="js/controllers/PayerController.js"></script>
 
-<script type="text/javascript" src="js/factories/date.js"></script>
-<script type="text/javascript" src="js/factories/quick-recipe.js"></script>
-<script type="text/javascript" src="js/factories/entries.js"></script>
-<script type="text/javascript" src="js/factories/exercises.js"></script>
+<script type="text/javascript" src="js/factories/DatesFactory.js"></script>
+<script type="text/javascript" src="js/factories/QuickRecipeFactory.js"></script>
+<script type="text/javascript" src="js/factories/EntriesFactory.js"></script>
+<script type="text/javascript" src="js/factories/ExercisesFactory.js"></script>
 <script type="text/javascript" src="js/factories/FoodsFactory.js"></script>
 <script type="text/javascript" src="js/factories/JournalFactory.js"></script>
-<script type="text/javascript" src="js/factories/tags.js"></script>
+<script type="text/javascript" src="js/factories/TagsFactory.js"></script>
 <script type="text/javascript" src="js/factories/UnitsFactory.js"></script>
-<script type="text/javascript" src="js/factories/weights.js"></script>
+<script type="text/javascript" src="js/factories/WeightsFactory.js"></script>
 <script type="text/javascript" src="js/factories/ProjectsFactory.js"></script>
-<script type="text/javascript" src="js/factories/autocomplete.js"></script>
+<script type="text/javascript" src="js/factories/AutocompleteFactory.js"></script>

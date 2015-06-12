@@ -1,4 +1,4 @@
-app.factory('quickRecipe', function ($http) {
+app.factory('QuickRecipeFactory', function ($http) {
 	var $object = {};
 
 	$object.formatString = function ($string, $wysiwyg) {

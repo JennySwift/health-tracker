@@ -1,7 +1,7 @@
 var app = angular.module('tracker');
 
 (function () {
-	app.controller('entries', function ($scope, $http, date, entries, autocomplete, weights, FoodsFactory) {
+	app.controller('entries', function ($scope, $http, DatesFactory, EntriesFactory, AutocompleteFactory, WeightsFactory, FoodsFactory) {
 
 		/**
 		 * scope properties
@@ -71,7 +71,7 @@ var app = angular.module('tracker');
 		$scope.date.long = Date.parse($scope.date.typed).toString('dd MMM yyyy');
 
 		$scope.goToDate = function ($number) {
-			$scope.date.typed = date.goToDate($scope.date.typed, $number);
+			$scope.date.typed = DatesFactory.goToDate($scope.date.typed, $number);
 		};
 
 		$scope.today = function () {
@@ -79,7 +79,7 @@ var app = angular.module('tracker');
 		};
 		$scope.changeDate = function ($keycode) {
 			if ($keycode === 13) {
-				$scope.date.typed = date.changeDate($keycode, $("#date").val());
+				$scope.date.typed = DatesFactory.changeDate($keycode, $("#date").val());
 			}
 		};
 
@@ -117,7 +117,7 @@ var app = angular.module('tracker');
 		 * Get all the user's entries for the current date
 		 */
 		$scope.getEntries = function () {
-			entries.getEntries($scope.date.sql).then(function (response) {
+			EntriesFactory.getEntries($scope.date.sql).then(function (response) {
 				$scope.weight = response.data.weight;
 				$scope.entries.exercise = response.data.exercise_entries;
 
@@ -134,7 +134,7 @@ var app = angular.module('tracker');
 		 * @return {[type]}                   [description]
 		 */
 		$scope.getSpecificExerciseEntries = function ($exercise_id, $exercise_unit_id) {
-			entries.getSpecificExerciseEntries($scope.date.sql, $exercise_id, $exercise_unit_id).then(function (response) {
+			EntriesFactory.getSpecificExerciseEntries($scope.date.sql, $exercise_id, $exercise_unit_id).then(function (response) {
 				$scope.show.popups.exercise_entries = true;
 				$scope.exercise_entries_popup = response.data;
 			});
@@ -149,7 +149,7 @@ var app = angular.module('tracker');
 			$scope.new_entry.food.name = $scope.selected.food.name;
 			$scope.new_entry.food.unit_id = $("#food-unit").val();
 
-			entries.insertMenuEntry($scope.date.sql, $scope.new_entry.food).then(function (response) {
+			EntriesFactory.insertMenuEntry($scope.date.sql, $scope.new_entry.food).then(function (response) {
 				$scope.entries.menu = response.data.food_entries;
 				$scope.calories.day = response.data.calories_for_the_day;
 				$scope.calories.week_avg = response.data.calories_for_the_week;
@@ -162,7 +162,7 @@ var app = angular.module('tracker');
 		};
 
 		$scope.insertRecipeEntry = function () {
-			entries.insertRecipeEntry($scope.date.sql, $scope.selected.menu.id, $scope.temporary_recipe_popup.contents).then(function (response) {
+			EntriesFactory.insertRecipeEntry($scope.date.sql, $scope.selected.menu.id, $scope.temporary_recipe_popup.contents).then(function (response) {
 				$scope.entries.menu = response.data;
 				$scope.show.popups.temporary_recipe = false;
 			});
@@ -170,7 +170,7 @@ var app = angular.module('tracker');
 
 		$scope.insertOrUpdateWeight = function ($keycode) {
 			if ($keycode === 13) {
-				weights.insertWeight($scope.date.sql).then(function (response) {
+				WeightsFactory.insertWeight($scope.date.sql).then(function (response) {
 					$scope.weight = response.data;
 					$scope.edit_weight = false;
 					$("#weight").val("");
@@ -180,13 +180,13 @@ var app = angular.module('tracker');
 
 		$scope.insertExerciseEntry = function () {
 			$scope.new_entry.exercise.unit_id = $("#exercise-unit").val();
-			entries.insertExerciseEntry($scope.date.sql, $scope.new_entry.exercise).then(function (response) {
+			EntriesFactory.insertExerciseEntry($scope.date.sql, $scope.new_entry.exercise).then(function (response) {
 				$scope.entries.exercise = response.data;
 			});
 		};
 
 		$scope.insertExerciseSet = function ($exercise_id) {
-			entries.insertExerciseSet($scope.date.sql, $exercise_id).then(function (response) {
+			EntriesFactory.insertExerciseSet($scope.date.sql, $exercise_id).then(function (response) {
 				$scope.entries.exercise = response.data;
 			});
 		};
@@ -209,7 +209,7 @@ var app = angular.module('tracker');
 		$scope.deleteFoodEntry = function ($entry_id) {
 			$entry_id = $entry_id || $scope.selected.entry.id;
 
-			entries.deleteFoodEntry($entry_id, $scope.date.sql).then(function (response) {
+			EntriesFactory.deleteFoodEntry($entry_id, $scope.date.sql).then(function (response) {
 				$scope.entries.menu = response.data.food_entries;
 				$scope.calories.day = response.data.calories_for_the_day;
 				$scope.calories.week_avg = response.data.calories_for_the_week;
@@ -218,7 +218,7 @@ var app = angular.module('tracker');
 		};
 
 		$scope.deleteRecipeEntry = function () {
-			entries.deleteRecipeEntry($scope.date.sql, $scope.selected.recipe.id).then(function (response) {
+			EntriesFactory.deleteRecipeEntry($scope.date.sql, $scope.selected.recipe.id).then(function (response) {
 				$scope.entries.menu = response.data.food_entries;
 				$scope.calories.day = response.data.calories_for_the_day;
 				$scope.calories.week_avg = response.data.calories_for_the_week;
@@ -227,7 +227,7 @@ var app = angular.module('tracker');
 		};
 
 		$scope.deleteExerciseEntry = function ($id) {
-			entries.deleteExerciseEntry($id, $scope.date.sql, $scope.exercise_entries_popup.exercise.id, $scope.exercise_entries_popup.unit.id).then(function (response) {
+			EntriesFactory.deleteExerciseEntry($id, $scope.date.sql, $scope.exercise_entries_popup.exercise.id, $scope.exercise_entries_popup.unit.id).then(function (response) {
 				$scope.entries.exercise = response.data.entries_for_day;
 				$scope.exercise_entries_popup = response.data.entries_for_popup;
 			});
@@ -257,7 +257,7 @@ var app = angular.module('tracker');
 		$scope.autocompleteExercise = function ($keycode) {
 			if ($keycode !== 13 && $keycode !== 38 && $keycode !== 40) {
 				//not enter, up arrow or down arrow
-				autocomplete.exercise().then(function (response) {
+				AutocompleteFactory.exercise().then(function (response) {
 					//fill the dropdown
 					$scope.autocomplete_options.exercises = response.data;
 					//show the dropdown
@@ -268,12 +268,12 @@ var app = angular.module('tracker');
 			}
 			else if ($keycode === 38) {
 				//up arrow pressed
-				autocomplete.autocompleteUpArrow($scope.autocomplete_options.exercises);
+				AutocompleteFactory.autocompleteUpArrow($scope.autocomplete_options.exercises);
 				
 			}
 			else if ($keycode === 40) {
 				//down arrow pressed
-				autocomplete.autocompleteDownArrow($scope.autocomplete_options.exercises);
+				AutocompleteFactory.autocompleteDownArrow($scope.autocomplete_options.exercises);
 			}
 		};
 
@@ -321,7 +321,7 @@ var app = angular.module('tracker');
 		$scope.autocompleteMenu = function ($keycode) {
 			if ($keycode !== 13 && $keycode !== 38 && $keycode !== 40) {
 				//not enter, up arrow or down arrow
-				autocomplete.menu().then(function (response) {
+				AutocompleteFactory.menu().then(function (response) {
 					console.log(response);
 					//fill the dropdown
 					$scope.autocomplete_options.menu_items = response.data;
@@ -333,12 +333,12 @@ var app = angular.module('tracker');
 			}
 			else if ($keycode === 38) {
 				//up arrow pressed
-				autocomplete.autocompleteUpArrow($scope.autocomplete_options.menu_items);
+				AutocompleteFactory.autocompleteUpArrow($scope.autocomplete_options.menu_items);
 				
 			}
 			else if ($keycode === 40) {
 				//down arrow pressed
-				autocomplete.autocompleteDownArrow($scope.autocomplete_options.menu_items);
+				AutocompleteFactory.autocompleteDownArrow($scope.autocomplete_options.menu_items);
 			}
 		};
 
@@ -390,7 +390,7 @@ var app = angular.module('tracker');
 			if ($keycode !== 13 && $keycode !== 38 && $keycode !== 40) {
 				//not enter, up arrow or down arrow
 				//fill the dropdown
-				autocomplete.food($typing).then(function (response) {
+				AutocompleteFactory.food($typing).then(function (response) {
 					$scope.autocomplete_options.temporary_recipe_foods = response.data;
 					//show the dropdown
 					$scope.show.autocomplete_options.temporary_recipe_foods = true;
@@ -400,12 +400,12 @@ var app = angular.module('tracker');
 			}
 			else if ($keycode === 38) {
 				//up arrow pressed
-				autocomplete.autocompleteUpArrow($scope.autocomplete_options.temporary_recipe_foods);
+				AutocompleteFactory.autocompleteUpArrow($scope.autocomplete_options.temporary_recipe_foods);
 				
 			}
 			else if ($keycode === 40) {
 				//down arrow pressed
-				autocomplete.autocompleteDownArrow($scope.autocomplete_options.temporary_recipe_foods);
+				AutocompleteFactory.autocompleteDownArrow($scope.autocomplete_options.temporary_recipe_foods);
 			}
 		};
 

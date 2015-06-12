@@ -1,4 +1,4 @@
-app.factory('autocomplete', function ($http) {
+app.factory('AutocompleteFactory', function ($http) {
 	var $object = {};
 	$object.autocompleteUpArrow = function ($array) {
 		// if ($(".selected").prev(".autocomplete-dropdown-item").length > 0) {

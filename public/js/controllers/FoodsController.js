@@ -1,7 +1,7 @@
 var app = angular.module('tracker');
 
 (function () {
-	app.controller('foods', function ($scope, $http, FoodsFactory, quickRecipe, tags, autocomplete) {
+	app.controller('foods', function ($scope, $http, FoodsFactory, QuickRecipeFactory, TagsFactory, AutocompleteFactory) {
 
 		/**
 		 * scope properties
@@ -103,7 +103,7 @@ var app = angular.module('tracker');
 			if ($keycode !== 13) {
 				return;
 			}
-			tags.insertRecipeTag().then(function (response) {
+			TagsFactory.insertRecipeTag().then(function (response) {
 				$scope.recipe_tags = response.data;
 			});
 		};
@@ -166,7 +166,7 @@ var app = angular.module('tracker');
 		$scope.updateRecipeMethod = function () {
 			//this is some duplication of insertRecipeMethod
 			var $string = $("#edit-recipe-method").html();
-			var $lines = quickRecipe.formatString($string, $("#edit-recipe-method")).items;
+			var $lines = QuickRecipeFactory.formatString($string, $("#edit-recipe-method")).items;
 			var $steps = [];
 
 			$($lines).each(function () {
@@ -199,7 +199,7 @@ var app = angular.module('tracker');
 		 */
 		
 		$scope.deleteRecipeTag = function ($id) {
-			tags.deleteRecipeTag($id).then(function (response) {
+			TagsFactory.deleteRecipeTag($id).then(function (response) {
 				$scope.recipe_tags = response.data;
 			});
 		};
@@ -259,17 +259,17 @@ var app = angular.module('tracker');
 
 			var $string = $("#quick-recipe").html();
 			//Recipe is an object, with an array of items and an array of steps.
-			var $recipe = quickRecipe.formatString($string, $("#quick-recipe"));
+			var $recipe = QuickRecipeFactory.formatString($string, $("#quick-recipe"));
 			var $line;
 			var $items = [];
 			var $method = $recipe.method;
 
 			//Populate items array
-			$items = quickRecipe.populateItemsArray($recipe.items);
+			$items = QuickRecipeFactory.populateItemsArray($recipe.items);
 
 			//check item contains quantity, unit and food
 			//and convert quantities to decimals if necessary
-			$items_and_errors = quickRecipe.errorCheck($items);
+			$items_and_errors = QuickRecipeFactory.errorCheck($items);
 			$items = $items_and_errors.items;
 			$errors = $items_and_errors.errors;
 
@@ -362,7 +362,7 @@ var app = angular.module('tracker');
 			if ($keycode !== 13 && $keycode !== 38 && $keycode !== 40) {
 				//not enter, up arrow or down arrow
 				//fill the dropdown
-				autocomplete.food($typing).then(function (response) {
+				AutocompleteFactory.food($typing).then(function (response) {
 					$scope.recipe_popup.autocomplete_options = response.data;
 					//show the dropdown
 					$scope.show.autocomplete_options.foods = true;
@@ -372,12 +372,12 @@ var app = angular.module('tracker');
 			}
 			else if ($keycode === 38) {
 				//up arrow pressed
-				autocomplete.autocompleteUpArrow($scope.recipe_popup.autocomplete_options);
+				AutocompleteFactory.autocompleteUpArrow($scope.recipe_popup.autocomplete_options);
 				
 			}
 			else if ($keycode === 40) {
 				//down arrow pressed
-				autocomplete.autocompleteDownArrow($scope.recipe_popup.autocomplete_options);
+				AutocompleteFactory.autocompleteDownArrow($scope.recipe_popup.autocomplete_options);
 			}
 		};
 

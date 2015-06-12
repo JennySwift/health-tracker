@@ -1,4 +1,4 @@
-app.factory('entries', function ($http) {
+app.factory('EntriesFactory', function ($http) {
 	return {
 
 		/**

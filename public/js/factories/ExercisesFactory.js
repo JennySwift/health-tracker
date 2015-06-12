@@ -1,4 +1,4 @@
-app.factory('exercises', function ($http) {
+app.factory('ExercisesFactory', function ($http) {
 	return {
 		/**
 		 * select

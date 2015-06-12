@@ -1,7 +1,7 @@
 var app = angular.module('tracker');
 
 (function () {
-	app.controller('journal', function ($scope, $http, date, JournalFactory) {
+	app.controller('journal', function ($scope, $http, DatesFactory, JournalFactory) {
 		/**
 		 * scope properties
 		 */
@@ -31,7 +31,7 @@ var app = angular.module('tracker');
 		};
 		$scope.changeDate = function ($keycode) {
 			if ($keycode === 13) {
-				$scope.date.typed = date.changeDate($keycode, $("#date").val());
+				$scope.date.typed = DatesFactory.changeDate($keycode, $("#date").val());
 			}
 		};
 
