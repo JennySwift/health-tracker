@@ -25,9 +25,32 @@ var app = angular.module('tracker');
          * watches
          */
 
-        //$scope.$watch('project_popup.timer_time.seconds', function (newValue, oldValue) {
-        //
-        //});
+        $scope.$watch('project_popup.timer_time.seconds', function (newValue, oldValue) {
+            if (newValue < 10) {
+                $scope.project_popup.timer_time.formatted_seconds = '0' + newValue;
+            }
+            else {
+                $scope.project_popup.timer_time.formatted_seconds = newValue;
+            }
+        });
+
+        $scope.$watch('project_popup.timer_time.minutes', function (newValue, oldValue) {
+            if (newValue < 10) {
+                $scope.project_popup.timer_time.formatted_minutes = '0' + newValue;
+            }
+            else {
+                $scope.project_popup.timer_time.formatted_minutes = newValue;
+            }
+        });
+
+        $scope.$watch('project_popup.timer_time.hours', function (newValue, oldValue) {
+            if (newValue < 10) {
+                $scope.project_popup.timer_time.formatted_hours = '0' + newValue;
+            }
+            else {
+                $scope.project_popup.timer_time.formatted_hours = newValue;
+            }
+        });
 
         /**
          * select
@@ -55,10 +78,10 @@ var app = angular.module('tracker');
                 $scope.project_popup.is_timing = true;
 
                 $scope.counter = $interval(function () {
-                    if ($scope.project_popup.timer_time.seconds < 2) {
+                    if ($scope.project_popup.timer_time.seconds < 59) {
                         $scope.project_popup.timer_time.seconds+= 1;
                     }
-                    else if ($scope.project_popup.timer_time.minutes < 2) {
+                    else if ($scope.project_popup.timer_time.minutes < 59) {
                         $scope.newMinute();
                     }
                     else {
@@ -130,7 +153,10 @@ var app = angular.module('tracker');
             $scope.project_popup.timer_time = {
                 hours: 0,
                 minutes: 0,
-                seconds: 0
+                seconds: 0,
+                formatted_seconds: '00',
+                formatted_minutes: '00',
+                formatted_hours: '00'
             };
         };
 

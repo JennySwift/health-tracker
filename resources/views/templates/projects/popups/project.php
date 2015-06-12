@@ -28,7 +28,7 @@
         </div>
 
         <div class="flex">
-            <h1>[[project_popup.timer_time.hours]]:[[project_popup.timer_time.minutes]]:[[project_popup.timer_time.seconds]]</h1>
+            <h1>[[project_popup.timer_time.formatted_hours]]:[[project_popup.timer_time.formatted_minutes]]:[[project_popup.timer_time.formatted_seconds]]</h1>
         </div>
 
         <h1>Timers</h1>

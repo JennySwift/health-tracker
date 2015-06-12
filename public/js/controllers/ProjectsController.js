@@ -57,10 +57,10 @@ var app = angular.module('tracker');
                 $scope.project_popup.is_timing = true;
 
                 $scope.counter = $interval(function () {
-                    if ($scope.project_popup.timer_time.seconds < 2) {
+                    if ($scope.project_popup.timer_time.seconds < 59) {
                         $scope.project_popup.timer_time.seconds+= 1;
                     }
-                    else if ($scope.project_popup.timer_time.minutes < 2) {
+                    else if ($scope.project_popup.timer_time.minutes < 59) {
                         $scope.newMinute();
                     }
                     else {
