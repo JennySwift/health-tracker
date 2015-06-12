@@ -1,6 +1,7 @@
 <?php namespace App;
 
 use App\Models\Projects\Payee;
+use App\Models\Projects\Payer;
 use App\Models\Projects\Project;
 use App\Models\Projects\Timer;
 use App\Repositories\Projects\ProjectsRepository;
@@ -25,7 +26,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      * @var string
      */
     protected $table = 'users';
-    protected $appends = ['gravatar', 'owed'];
+    protected $appends = ['gravatar', 'owed_to_user', 'owed_by_user'];
 
     /**
      * The attributes that are mass assignable.
@@ -170,7 +171,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      * Get the total amount the user owes the current user
      * @return mixed
      */
-    public function getOwedAttribute()
+    public function getOwedToUserAttribute()
     {
         $payee = Payee::find(Auth::user()->id);
 
@@ -188,6 +189,32 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         //Find the amount owed
         $owed = Timer::whereIn('id', $timers_with_payer)
         ->sum('price');
+
+        return $owed;
+    }
+
+    /**
+     * Get the total amount the current user owes the user
+     * @return mixed
+     */
+    public function getOwedByUserAttribute()
+    {
+        $payer = Payer::find(Auth::user()->id);
+
+        //Find the projects belonging to the current user and $this user
+        $projects_with_payee = Project::where('payer_id', $payer->id)
+            ->where('payee_id', $this->id)
+            ->lists('id');
+
+        //Find the timers belonging to those projects,
+        //but only those that have not been paid for
+        $timers_with_payee = Timer::whereIn('project_id', $projects_with_payee)
+            ->where('paid', 0)
+            ->lists('id');
+
+        //Find the amount owed
+        $owed = Timer::whereIn('id', $timers_with_payee)
+            ->sum('price');
 
         return $owed;
     }

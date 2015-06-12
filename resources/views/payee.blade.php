@@ -47,7 +47,7 @@
                 <tr ng-repeat="payer in payers">
                     <td><img ng-src="[[payer.gravatar]]" alt=""></td>
                     <td>[[payer.name]]</td>
-                    <td>[[payer.owed]]</td>
+                    <td>[[payer.owed_to_user]]</td>
                 </tr>
             </table>
         </div>
