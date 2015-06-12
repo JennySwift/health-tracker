@@ -14,7 +14,7 @@
 	
 	<?php
 		// include($header);
-		include($templates . '/popups/entry/index.php');
+		include($templates . '/entries/index.php');
 	?>
 
 
@@ -26,8 +26,8 @@
 		
 		<div id="info-entries-wrapper">
 			<?php
-				include($templates . '/info.php');
-				include($templates . '/entry-inputs.php');
+				include($templates . '/entries/info.php');
+				include($templates . '/entries/entry-inputs.php');
 			?> 
 		</div>
 		

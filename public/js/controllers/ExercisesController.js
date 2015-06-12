@@ -152,8 +152,8 @@ var app = angular.module('tracker');
 			});
 		};
 
-		$scope.deleteExercise = function ($id) {
-			ExercisesFactory.deleteExercise($id).then(function (response) {
+		$scope.deleteExercise = function ($exercise) {
+			ExercisesFactory.deleteExercise($exercise).then(function (response) {
 				$scope.exercises = response.data;
 			});
 		};

@@ -16,7 +16,7 @@
 		
 		<?php
 			// include($header);
-			include($templates . '/popups/food/index.php');
+			include($templates . '/foods/index.php');
 		?>
 		
 		<!-- ==========================foods========================== -->
@@ -24,7 +24,7 @@
 		<div id="foods">
 
 			<div id="quick-recipe-container">
-				<?php include($templates . '/quick-recipe.php'); ?>
+				<?php include($templates . '/foods/quick-recipe.php'); ?>
 			</div>
 
 			<hr>	

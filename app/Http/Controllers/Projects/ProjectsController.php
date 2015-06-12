@@ -94,7 +94,7 @@ class ProjectsController extends Controller {
      * @param $id
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
-    public function destroy(Request $request, $id)
+    public function destroy($id)
     {
 //		Project::destroy($id);
 

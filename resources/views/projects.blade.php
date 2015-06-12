@@ -16,7 +16,7 @@
 
 
 {{--    @include($templates . '/popups/project/index.php')--}}
-    @include('templates.popups.project.index')
+    @include('templates.projects.index')
 
 
     <div class="flex margin-bottom">

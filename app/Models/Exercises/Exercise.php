@@ -17,6 +17,8 @@ class Exercise extends Model {
 
 	protected $fillable = ['name', 'default_exercise_unit_id', 'description', 'default_quantity', 'step_number', 'series_id'];
 
+    protected $appends = ['path'];
+
 	/**
 	 * Define relationships
 	 */
@@ -47,6 +49,16 @@ class Exercise extends Model {
 		return $this->belongsToMany('App\Models\Tags\Tag', 'taggables', 'taggable_id', 'tag_id')->where('taggable_type', 'exercise');
 	}
 
+    /**
+     * Return the URL of the project
+     * it needs to be called getFieldAttribute
+     * @return string
+     */
+    public function getPathAttribute()
+    {
+        return route('exercises.destroy', $this->id); // http://tracker.dev/exercises/$id
+    }
+
 	/**
 	 * select
 	 */
@@ -58,13 +70,6 @@ class Exercise extends Model {
 	 * @return [type] [description]
 	 */
 	public static function getExercises () {
-		// $exercises = static::forCurrentUser('exercises')
-		// 	->with('unit')
-		// 	->with('series')
-		// 	->with('tags')
-		// 	->orderBy('step_number')
-		// 	->get();
-
 		$exercises = static::forCurrentUser('exercises')
 			->leftJoin('exercise_series', 'series_id', '=', 'exercise_series.id')
 			->leftJoin('units', 'default_unit_id', '=', 'units.id')

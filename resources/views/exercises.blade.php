@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" ng-app="tracker">
 <head>
-	<meta charset="UTF-8">
-	<title>tracker</title>
+    <meta charset="UTF-8">
+    <title>tracker</title>
 	<?php
 		include(base_path().'/resources/views/templates/config.php');
 		include($head_links);
@@ -14,7 +14,7 @@
 	
 	<div ng-controller="exercises" id="exercises">
 
-		<?php include($templates . '/popups/exercise/index.php'); ?>
+		<?php include($templates . '/exercises/index.php'); ?>
 
 		<!-- exercises -->
 
@@ -46,10 +46,10 @@
 					<td ng-click="showExercisePopup(exercise)" class="pointer">
 						<span ng-repeat="tag in exercise.tags" class="badge">[[tag.name]]</span>
 					</td>
-					<td><i ng-click="deleteExercise(exercise.id)" class="delete-item fa fa-times"></i></td>
+					<td><i ng-click="deleteExercise(exercise)" class="delete-item fa fa-times"></i></td>
 				</tr>
 			</table>
-		</div>
+        </div>
 
 		<!-- exercise tags -->
 
