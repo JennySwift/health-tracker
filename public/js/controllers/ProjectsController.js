@@ -98,7 +98,7 @@ var app = angular.module('tracker');
 		 */
 		
 		$scope.deleteProject = function ($project, $context) {
-			ProjectsFactory.deleteProject($scope, $project, $context).then(function (response) {
+			ProjectsFactory.deleteProject($project, $context).then(function (response) {
 				//$scope.projects = response.data;
                 $scope.projects[$context] = _.without($scope.projects[$context], $project);
 			});

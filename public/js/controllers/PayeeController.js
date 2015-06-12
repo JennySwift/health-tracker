@@ -37,9 +37,13 @@ var app = angular.module('tracker');
          * insert
          */
 
-        $scope.insertProject = function () {
+        $scope.insertProject = function ($keycode) {
+            if ($keycode !== 13)
+            {
+                return false;
+            }
             ProjectsFactory.insertProject($scope.new_project.email, $scope.new_project.description, $scope.new_project.rate).then(function (response) {
-                $scope.projects = response.data;
+                $scope.projects.payee = response.data;
             });
         };
 
@@ -91,10 +95,10 @@ var app = angular.module('tracker');
          * delete
          */
 
-        $scope.deleteProject = function ($project, $context) {
-            ProjectsFactory.deleteProject($scope, $project, $context).then(function (response) {
+        $scope.deleteProject = function ($project) {
+            ProjectsFactory.deleteProject($project).then(function (response) {
                 //$scope.projects = response.data;
-                $scope.projects[$context] = _.without($scope.projects[$context], $project);
+                $scope.projects.payee = _.without($scope.projects.payee, $project);
             });
         };
 

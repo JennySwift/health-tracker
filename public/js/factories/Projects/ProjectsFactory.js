@@ -52,18 +52,10 @@ app.factory('ProjectsFactory', function ($http) {
         /**
          * delete
          */
-        deleteProject: function ($scope, $project, $context) {
+        deleteProject: function ($project) {
             var $url = $project.path;
 
-            // Update the scope with the collection without the project we are deleting
-
-            $scope.projects[$context] = _.without($scope.projects[$context], $project);
-
-            // Take the context and delete the project from the javascript version of the collection
-            // You can access the id of the object with $project.id
-            //$scope.projects = the array without the project we deleted;
-
-            return $http.delete($url); // Return same thing here
+            return $http.delete($url);
         },
         deleteTimer: function ($timer) {
             var $url = $timer.path;
