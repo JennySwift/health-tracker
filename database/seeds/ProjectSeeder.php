@@ -27,6 +27,9 @@ class ProjectSeeder extends Seeder {
 		$jenny = User::where('name', 'Jenny')->first();
 		$jane = User::where('name', 'Jane')->first();
 
+        $bob = User::where('name', 'Bob')->first();
+        $payee_bob = Payee::find($bob->id);
+
         /**
          * John is payee
          */
@@ -52,6 +55,21 @@ class ProjectSeeder extends Seeder {
                 'payer_id' => $john->id,
                 'description' => $faker->word,
                 'rate_per_hour' => 1
+            ]);
+
+            $this->createTimersForProject($project);
+        }
+
+        /**
+         * Bob is payee
+         */
+
+        foreach(range(0,2) as $index) {
+            $project = Project::create([
+                'payee_id' => $bob->id,
+                'payer_id' => $jenny->id,
+                'description' => $faker->word,
+                'rate_per_hour' => 40
             ]);
 
             $this->createTimersForProject($project);

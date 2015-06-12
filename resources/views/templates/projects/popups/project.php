@@ -47,7 +47,7 @@
                 <td>[[timer.start]]</td>
                 <td>[[timer.finish]]</td>
                 <td>[[timer.formatted_hours]]:[[timer.formatted_minutes]]:[[timer.formatted_seconds]]</td>
-                <th>[[timer.price]]</th>
+                <td>[[timer.price]]</td>
                 <td>
                     <span ng-if="!timer.paid" class="label label-danger">unpaid</span>
                     <span ng-if="timer.paid" class="label label-success">paid</span>

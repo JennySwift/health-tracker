@@ -40,16 +40,21 @@ class UserSeeder extends Seeder {
         ]);
 
         /**
-         * Create payers/payees for John
+         * Create payers for John
          */
         $payee_john = Payee::find($john->id);
-        $payer_john = Payer::find($john->id);
-
         $payee_john->payers()->attach($jenny->id);
         $payee_john->payers()->attach($jane->id);
-        $payer_john->payees()->attach($bob->id);
         $payee_john->save();
-        $payer_john->save();
+
+        /**
+         * Create payers for Bob
+         */
+
+        $payee_bob = Payee::find($bob->id);
+        $payee_bob->payers()->attach($jenny->id);
+        $payee_bob->payers()->attach($john->id);
+        $payee_bob->save();
 	}
 
 }

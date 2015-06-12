@@ -2,8 +2,26 @@
 
 use App\User;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Projects\Timer;
 
 class Payer extends User {
+
+    protected $appends = ['owed'];
+
+    /**
+     * Appends
+     */
+
+//    public function getOwedAttribute()
+//    {
+////        DB::table('projects')->where('payee_id', $payee_id)
+////            ->where('payer_id', $payer_id)
+//
+//        $owed = Timer::whereIn('id', [1,2,3])
+//            ->sum('price');
+//
+//        return $owed;
+//    }
 
 	/**
      * Define relationships

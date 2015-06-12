@@ -10,7 +10,7 @@ class Timer extends Model {
 
 //    protected $with = ['project'];
 
-    protected $appends = ['path', 'time', 'formatted_hours', 'formatted_minutes', 'formatted_seconds', 'price', 'formatted_price'];
+    protected $appends = ['path', 'time', 'formatted_hours', 'formatted_minutes', 'formatted_seconds'];
 
 	public $timestamps = false;
 
@@ -64,19 +64,19 @@ class Timer extends Model {
      * Much the same as the equivalent method on the project model?
      * @return string
      */
-    public function getPriceAttribute()
-    {
+//    public function getPriceAttribute()
+//    {
         /**
          * The following code calculates the correct price.
          * I have commented it out because of the error it was giving me
          * (see comment below).
          */
 
-        $price = 0;
+//        $price = 0;
 //        $rate = $this->project->rate_per_hour;
 //        var_dump($this->project->rate_per_hour);
 //        dd('something');
-        $time = $this->time;
+//        $time = $this->time;
 
         //For testing help:
         //$time = new DateInterval('PT1H15M30S');
@@ -117,11 +117,11 @@ class Timer extends Model {
 
 //        var_dump($price);
 
-        return $price;
-    }
+//        return $price;
+//    }
 
-    public function getFormattedPriceAttribute()
-    {
-        return number_format($this->price);
-    }
+//    public function getFormattedPriceAttribute()
+//    {
+//        return number_format($this->price);
+//    }
 }

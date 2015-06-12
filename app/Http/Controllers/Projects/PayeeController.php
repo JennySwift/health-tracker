@@ -2,6 +2,7 @@
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Models\Projects\Payer;
 use JavaScript;
 use Auth;
 
@@ -39,6 +40,11 @@ class PayeeController extends Controller {
             'payers' => $payee->payers,
         ]);
 
+//        return $payee->payers()->first()->owed;
+
+//        return $payee->payers->first()->owed;
+
+//        return $payee->getOwed();
         return view('payee');
     }
 

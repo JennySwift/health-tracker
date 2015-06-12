@@ -6,13 +6,14 @@
 
 //test
 use App\Models\Exercises\Exercise;
+use App\Models\Projects\Payer;
 use App\Models\Projects\Project;
 use App\Models\Projects\Timer;
 
 Route::get('/test', function()
 {
-    $exercise = Exercise::first();
-    dd($exercise);
+    $payer = Payer::first();
+    dd($payer->owed);
 });
 
 //Homepage (entries)

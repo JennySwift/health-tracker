@@ -1,6 +1,8 @@
 <?php namespace App;
 
+use App\Models\Projects\Payee;
 use App\Models\Projects\Project;
+use App\Models\Projects\Timer;
 use App\Repositories\Projects\ProjectsRepository;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
@@ -23,7 +25,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      * @var string
      */
     protected $table = 'users';
-    protected $appends = ['gravatar'];
+    protected $appends = ['gravatar', 'owed'];
 
     /**
      * The attributes that are mass assignable.
@@ -49,33 +51,6 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 //    {
 //        return $this->belongsToMany('App\User', 'payee_payer', 'payee_id', 'payer_id');
 //    }
-
-    public function getPayersForCurrentUser()
-    {
-        $payers = $this->payers;
-
-//        Figure out how much the payer owes the payee
-//        Add this owed value to the $payer
-//        $timer->price has not been coded yet so this won't yet work
-//        foreach ($payers as $payer) {
-//            $payer->projectsAsPayer = $payer->projectsAsPayer;
-////            dd($payer->projectsAsPayer);
-//
-//            $owed = 0;
-//            foreach($payer->projectsAsPayer as $project) {
-//
-//                foreach($project->timers as $timer) {
-//                    if (!$timer->paid) {
-//                        $owed+= $timer->price;
-//                    }
-//                }
-//
-//            }
-//            $payer->owed = $owed;
-//        }
-//        dd($payers);
-        return $payers;
-    }
 
 //    public function payees()
 //    {
@@ -176,7 +151,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     }
 
     /**
-     * End of defining relationships
+     * Appends
      */
 
     /**
@@ -191,6 +166,31 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         return "https://secure.gravatar.com/avatar/{$email}?s=37&r=g&default=mm";
     }
 
+    /**
+     * Get the total amount the user owes the current user
+     * @return mixed
+     */
+    public function getOwedAttribute()
+    {
+        $payee = Payee::find(Auth::user()->id);
+
+        //Find the projects belonging to the current user and $this user
+        $projects_with_payer = Project::where('payee_id', $payee->id)
+            ->where('payer_id', $this->id)
+            ->lists('id');
+
+        //Find the timers belonging to those projects,
+        //but only those that have not been paid for
+        $timers_with_payer = Timer::whereIn('project_id', $projects_with_payer)
+            ->where('paid', 0)
+            ->lists('id');
+
+        //Find the amount owed
+        $owed = Timer::whereIn('id', $timers_with_payer)
+        ->sum('price');
+
+        return $owed;
+    }
 
     /**
      * duplicate from projects repository
