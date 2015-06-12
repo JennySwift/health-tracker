@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Projects\Payee;
+use App\Models\Projects\Payer;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -20,6 +22,8 @@ class ProjectSeeder extends Seeder {
 		$faker = Faker::create();
 		
 		$john = User::where('name', 'John')->first();
+        $payee_john = Payee::find($john->id);
+        $payer_john = Payer::find($john->id);
 		$jenny = User::where('name', 'Jenny')->first();
 		$jane = User::where('name', 'Jane')->first();
 
@@ -30,7 +34,7 @@ class ProjectSeeder extends Seeder {
         foreach(range(0,2) as $index) {
             $project = Project::create([
                 'payee_id' => $john->id,
-                'payer_id' => $faker->randomElement($john->payers()->lists('id')),
+                'payer_id' => $faker->randomElement($payee_john->payers()->lists('id')),
                 'description' => $faker->word,
                 'rate_per_hour' => 40
             ]);
@@ -44,7 +48,7 @@ class ProjectSeeder extends Seeder {
 
         foreach(range(0,2) as $index) {
             $project = Project::create([
-                'payee_id' => $faker->randomElement($john->payees()->lists('id')),
+                'payee_id' => $faker->randomElement($payer_john->payees()->lists('id')),
                 'payer_id' => $john->id,
                 'description' => $faker->word,
                 'rate_per_hour' => 1

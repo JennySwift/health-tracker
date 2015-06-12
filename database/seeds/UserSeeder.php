@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Projects\Payee;
+use App\Models\Projects\Payer;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -40,11 +42,14 @@ class UserSeeder extends Seeder {
         /**
          * Create payers/payees for John
          */
+        $payee_john = Payee::find($john->id);
+        $payer_john = Payer::find($john->id);
 
-        $john->payers()->attach($jenny->id);
-        $john->payers()->attach($jane->id);
-        $john->payees()->attach($bob->id);
-        $john->save();
+        $payee_john->payers()->attach($jenny->id);
+        $payee_john->payers()->attach($jane->id);
+        $payer_john->payees()->attach($bob->id);
+        $payee_john->save();
+        $payer_john->save();
 	}
 
 }
