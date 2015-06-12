@@ -33,7 +33,7 @@ class ProjectsRepository
 
     public function getProjectsResponseForCurrentUser()
     {
-        return response()->json($this->getProjectsForCurrentUser());
+        return response()->json($this->getProjectsArrayForCurrentUser());
     }
 
     /**

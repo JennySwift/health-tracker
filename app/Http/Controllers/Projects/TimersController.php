@@ -6,6 +6,7 @@ use App\Repositories\Projects\ProjectsRepository;
 
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Debugbar;
 
 use App\Models\Projects\Timer;
 use App\Models\Projects\Project;
@@ -38,7 +39,7 @@ class TimersController extends Controller {
         ]);
 
         return [
-            'projects' => $this->projectsRepository->getProjectsForCurrentUser(),
+            'projects' => $this->projectsRepository->getProjectsResponseForCurrentUser(),
             'project' => $this->projectsRepository->getProject($project->id)
         ];
     }
@@ -56,12 +57,40 @@ class TimersController extends Controller {
         $last_timer_id = Timer::where('project_id', $project->id)->max('id');
         $timer = Timer::find($last_timer_id);
         $timer->finish = Carbon::now()->toDateTimeString();
+
+        //Calculate price
+        //Note for developing-price will be zero if time is less than 30 seconds
+        $time = $this->calculateTimerTime($timer->start, $timer->finish);
+        
+        $rate = $timer->project->rate_per_hour;
+        $timer->price = $this->getTimerPrice($time, $rate);
+
         $timer->save();
 
         return [
-            'projects' => $this->projectsRepository->getProjectsForCurrentUser(),
+            'projects' => $this->projectsRepository->getProjectsResponseForCurrentUser(),
             'project' => $this->projectsRepository->getProject($project->id)
         ];
+    }
+
+    private function calculateTimerTime($start, $finish)
+    {
+        $carbon_start = Carbon::createFromFormat('Y-m-d H:i:s', $start);
+        $carbon_finish = Carbon::createFromFormat('Y-m-d H:i:s', $finish);
+        $time = $carbon_finish->diff($carbon_start);
+        return $time;
+    }
+
+    private function getTimerPrice($time, $rate)
+    {
+        $price = 0;
+
+        if ($time->s > 30) {
+            $time->i = $time->i + 1;
+        }
+        $price+= $rate * $time->h;
+        $price+= $rate / 60 * $time->i;
+        return $price;
     }
 
     /**
