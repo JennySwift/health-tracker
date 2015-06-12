@@ -146,8 +146,8 @@ var app = angular.module('tracker');
 			});
 		};
 
-		$scope.deleteExerciseSeries = function ($id) {
-			ExercisesFactory.deleteExerciseSeries($id).then(function (response) {
+		$scope.deleteExerciseSeries = function ($series) {
+			ExercisesFactory.deleteExerciseSeries($series).then(function (response) {
 				$scope.exercise_series = response.data;
 			});
 		};
@@ -165,7 +165,7 @@ var app = angular.module('tracker');
 		$scope.showExercisePopup = function ($exercise) {
 			$scope.selected.exercise = $exercise;
 
-			ExercisesFactory.getExerciseInfo($exercise.id).then(function (response) {
+			ExercisesFactory.getExerciseInfo($exercise).then(function (response) {
 				$scope.exercise_popup = response.data;
 				$scope.show.popups.exercise = true;
 			});
@@ -174,7 +174,7 @@ var app = angular.module('tracker');
 		$scope.showExerciseSeriesPopup = function ($series) {
 			$scope.selected.exercise_series = $series;
 
-			ExercisesFactory.getExerciseSeriesInfo($series.id).then(function (response) {
+			ExercisesFactory.getExerciseSeriesInfo($series).then(function (response) {
 				$scope.exercise_series_popup = response.data;
 				$scope.show.popups.exercise_series = true;
 			});

@@ -55,7 +55,7 @@ app.factory('EntriesFactory', function ($http) {
 			return $http.post($url, $data);
 		},
 		insertExerciseEntry: function ($sql_date, $new_entry) {
-			var $url = 'insert/exerciseEntry';
+			var $url = '/ExerciseEntries';
 		
 			var $data = {
 				date: $sql_date,

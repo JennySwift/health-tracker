@@ -79,10 +79,11 @@ Route::resource('payee', 'Projects\PayeeController', ['only' => ['index', 'store
 Route::resource('payer', 'Projects\PayerController', ['only' => ['index', 'store', 'destroy']]);
 Route::resource('timers', 'Projects\TimersController', ['only' => ['destroy']]);
 Route::resource('foods', 'Foods\FoodsController', ['only' => ['index', 'destroy']]);
-Route::resource('exercises', 'Exercises\ExercisesController', ['only' => ['index', 'store', 'destroy']]);
-//Route::resource('ExerciseEntries', 'Exercises\ExerciseEntriesController', ['only' => ['destroy']]);
-
-//Route::resource('journal', 'Journal\JournalController', ['only' => ['index', 'store', 'destroy']]);
+Route::resource('exercises', 'Exercises\ExercisesController', ['only' => ['index', 'show', 'store', 'destroy']]);
+Route::resource('ExerciseEntries', 'Exercises\ExerciseEntriesController', ['only' => ['store']]);
+Route::resource('ExerciseSeries', 'Exercises\ExerciseSeriesController', ['only' => ['store', 'show', 'destroy']]);
+Route::resource('workouts', 'Exercises\WorkoutsController', ['only' => ['store']]);
+//Route::resource('journal', 'Journal\JournalController', ['only' => ['show', 'store']]);
 
 /**
  * Ajax
@@ -106,8 +107,6 @@ Route::post('update/stopProjectTimer', 'Projects\TimersController@stopProjectTim
 
 Route::post('insert/exerciseSet', 'Exercises\ExerciseEntriesController@insertExerciseSet');
 
-Route::post('insert/exerciseEntry', 'Exercises\ExerciseEntriesController@insertExerciseEntry');
-
 /**
  * @VP:
  * I send data with this one (so I can return stuff), so I'm not sure how I'm supposed to use delete instead of post.
@@ -121,11 +120,6 @@ Route::post('select/specificExerciseEntries', 'Exercises\ExerciseEntriesControll
  * ExercisesController
  */
 
-//show
-Route::post('select/getExerciseInfo', 'Exercises\ExercisesController@getExerciseInfo');
-
-Route::post('insert/exercise', 'Exercises\ExercisesController@insertExercise');
-
 Route::post('update/exerciseStepNumber', 'Exercises\ExercisesController@updateExerciseStepNumber');
 Route::post('update/defaultExerciseQuantity', 'Exercises\ExercisesController@updateDefaultExerciseQuantity');
 Route::post('update/defaultExerciseUnit', 'Exercises\ExercisesController@updateDefaultExerciseUnit');
@@ -134,14 +128,7 @@ Route::post('update/defaultExerciseUnit', 'Exercises\ExercisesController@updateD
  * ExerciseSeriesController
  */
 
-//show
-Route::post('select/getExerciseSeriesInfo', 'Exercises\ExercisesController@getExerciseSeriesInfo');
-
-Route::post('insert/exerciseSeries', 'Exercises\ExerciseSeriesController@insertExerciseSeries');
-
 Route::post('update/exerciseSeries', 'Exercises\ExercisesController@updateExerciseSeries');
-
-Route::post('delete/exerciseSeries', 'Exercises\ExerciseSeriesController@deleteExerciseSeries');
 
 //this should be ExerciseSeriesHistoryController, index (if returns multiple series, show if returns one series) method
 Route::post('select/exerciseSeriesHistory', 'Exercises\ExercisesController@getExerciseSeriesHistory');
@@ -149,8 +136,6 @@ Route::post('select/exerciseSeriesHistory', 'Exercises\ExercisesController@getEx
 /**
  * WorkoutsController
  */
-
-Route::post('insert/workout', 'Exercises\WorkoutsController@insertWorkout');
 
 Route::post('insert/deleteAndInsertSeriesIntoWorkouts', 'Exercises\ExercisesController@deleteAndInsertSeriesIntoWorkouts');
 

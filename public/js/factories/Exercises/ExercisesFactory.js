@@ -4,21 +4,15 @@ app.factory('ExercisesFactory', function ($http) {
 		 * select
 		 */
 
-		getExerciseInfo: function ($exercise_id) {
-			var $url = 'select/getExerciseInfo';
-			var $data = {
-				exercise_id: $exercise_id
-			};
-			
-			return $http.post($url, $data);
+		getExerciseInfo: function ($exercise) {
+            var $url = $exercise.path;
+
+            return $http.get($url);
 		},
-		getExerciseSeriesInfo: function ($series_id) {
-			var $url = 'select/getExerciseSeriesInfo';
-			var $data = {
-				series_id: $series_id
-			};
-			
-			return $http.post($url, $data);
+		getExerciseSeriesInfo: function ($series) {
+            var $url = $series.path;
+
+            return $http.get($url);
 		},
 		getExerciseSeriesHistory: function ($series_id) {
 			var $url = 'select/exerciseSeriesHistory';
@@ -43,7 +37,7 @@ app.factory('ExercisesFactory', function ($http) {
 			return $http.post($url, $data);
 		},
 		insertWorkout: function () {
-			var $url = 'insert/workout';
+			var $url = '/workouts';
 			var $name = $("#workout").val();
 			var $data = {
 				name: $name
@@ -54,7 +48,7 @@ app.factory('ExercisesFactory', function ($http) {
 			return $http.post($url, $data);
 		},
 		insertExercise: function () {
-			var $url = 'insert/exercise';
+			var $url = '/exercises';
 			var $name = $("#create-new-exercise").val();
 			var $description = $("#exercise-description").val();
 			
@@ -77,7 +71,7 @@ app.factory('ExercisesFactory', function ($http) {
 		},
 		insertExerciseSeries: function () {
 			var $name = $("#exercise-series").val();
-			var $url = 'insert/exerciseSeries';
+			var $url = '/ExerciseSeries';
 			var $data = {
 				name: $name
 			};
@@ -146,14 +140,11 @@ app.factory('ExercisesFactory', function ($http) {
 			return $http.post($url, $data);
 		},
 		
-		deleteExerciseSeries: function ($id) {
+		deleteExerciseSeries: function ($series) {
 			if (confirm("Are you sure you want to delete this series?")) {
-				var $url = 'delete/exerciseSeries';
-				var $data = {
-					id: $id
-				};
-				
-				return $http.post($url, $data);
+				var $url = $series.path;
+
+				return $http.delete($url);
 			}
 		},
 		deleteExercise: function ($exercise) {

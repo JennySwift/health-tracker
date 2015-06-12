@@ -18,7 +18,7 @@ class WorkoutsController extends Controller {
 	 * insert
 	 */
 	
-	public function insertWorkout(Request $request)
+	public function store(Request $request)
 	{
 		$name = $request->get('name');
 
@@ -54,16 +54,6 @@ class WorkoutsController extends Controller {
 	 * @return Response
 	 */
 	public function create()
-	{
-		//
-	}
-
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @return Response
-	 */
-	public function store()
 	{
 		//
 	}

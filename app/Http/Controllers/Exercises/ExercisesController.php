@@ -65,9 +65,9 @@ class ExercisesController extends Controller {
 	 * @param  Request $request [description]
 	 * @return [type]           [description]
 	 */
-	public function getExerciseInfo(Request $request)
+	public function show($id)
 	{
-		$exercise = Exercise::find($request->get('exercise_id'));
+		$exercise = Exercise::find($id);
 		$all_exercise_tags = Tag::getExerciseTags();
 		$exercise_tags = $exercise->tags()->lists('id');
 
@@ -75,24 +75,6 @@ class ExercisesController extends Controller {
 			"all_exercise_tags" => $all_exercise_tags,
 			"exercise" => $exercise,
 			"tags" => $exercise_tags
-		];
-	}
-	
-	/**
-	 * For the exercise series popup
-	 * @param  Request $request [description]
-	 * @return [type]           [description]
-	 */
-	public function getExerciseSeriesInfo(Request $request)
-	{
-		$series = Series::find($request->get('series_id'));
-		$all_workouts = Workout::getWorkouts();
-		$workouts = $series->workouts()->lists('workout_id');
-
-		return [
-			"all_workouts" => $all_workouts,
-			"series" => $series,
-			"workouts" => $workouts
 		];
 	}
 
@@ -150,15 +132,14 @@ class ExercisesController extends Controller {
 		return Exercise::getExercises();
 	}
 
-	public function insertExercise(Request $request)
+	public function store(Request $request)
 	{
 		//Build an Exercise object (without saving in database yet)
 		$exercise = new Exercise($request->only('name', 'description'));	
 				
 		//Attach the current user to the user relationship on the Exercise
 		$exercise->user()->associate(Auth::user());
-		// dd($exercise);
-				
+
 		//Save the exercise in the DB
 		$exercise->save();
 

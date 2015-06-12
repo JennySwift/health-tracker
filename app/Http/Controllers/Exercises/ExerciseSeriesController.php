@@ -3,6 +3,7 @@
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
+use App\Models\Exercises\Workout;
 use Illuminate\Http\Request;
 use Auth;
 
@@ -13,12 +14,30 @@ class ExerciseSeriesController extends Controller {
 	/**
 	 * select
 	 */
+
+    /**
+     * For the exercise series popup
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
+    public function show($id)
+    {
+        $series = Series::find($id);
+        $all_workouts = Workout::getWorkouts();
+        $workouts = $series->workouts()->lists('workout_id');
+
+        return [
+            "all_workouts" => $all_workouts,
+            "series" => $series,
+            "workouts" => $workouts
+        ];
+    }
 	
 	/**
 	 * insert
 	 */
 	
-	public function insertExerciseSeries(Request $request)
+	public function store(Request $request)
 	{
 		$name = $request->get('name');
 		
@@ -39,12 +58,10 @@ class ExerciseSeriesController extends Controller {
 	 * delete
 	 */
 	
-	public function deleteExerciseSeries(Request $request)
+	public function destroy($id)
 	{
-		$id = $request->get('id');
-		
+        //todo: notify user the series will not be deleted unless it has not been used, due to foreign key constraint
 		Series::where('id', $id)->delete();
-
 		return Series::getExerciseSeries();
 	}
 
@@ -64,27 +81,6 @@ class ExerciseSeriesController extends Controller {
 	 * @return Response
 	 */
 	public function create()
-	{
-		//
-	}
-
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @return Response
-	 */
-	public function store()
-	{
-		//
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
 	{
 		//
 	}
@@ -110,16 +106,4 @@ class ExerciseSeriesController extends Controller {
 	{
 		//
 	}
-
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function destroy($id)
-	{
-		//
-	}
-
 }

@@ -15,6 +15,8 @@ class Series extends Model {
 
     protected $table = "exercise_series";
 
+    protected $appends = ['path'];
+
     /**
      * Define relationships
      */
@@ -37,6 +39,20 @@ class Series extends Model {
     public function entries()
     {
         return $this->hasManyThrough('App\Models\Exercises\Entry','App\Models\Exercises\Exercise');
+    }
+
+    /**
+     * Appends
+     */
+
+    /**
+     * Return the URL of the project
+     * it needs to be called getFieldAttribute
+     * @return string
+     */
+    public function getPathAttribute()
+    {
+        return route('ExerciseSeries.destroy', $this->id); // http://tracker.dev:8000/ExerciseSeries/1
     }
 
     /**

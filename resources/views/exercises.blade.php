@@ -92,7 +92,7 @@
 					<td><button ng-click="getExerciseSeriesHistory(series.id)">show</button></td>
 					<td><span ng-repeat="workout in series.workouts">[[workout.name]]</span></td>
 					<td><button ng-click="showExerciseSeriesPopup(series)" class="btn-xs">edit</button></td>
-					<td><i ng-click="deleteExerciseSeries(series.id)" class="delete-item fa fa-times"></i></td>
+					<td><i ng-click="deleteExerciseSeries(series)" class="delete-item fa fa-times"></i></td>
 				</tr>
 			</table>
 		</div>

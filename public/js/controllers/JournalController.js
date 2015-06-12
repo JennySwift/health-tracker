@@ -23,7 +23,7 @@ var app = angular.module('tracker');
 		$scope.date.long = Date.parse($scope.date.typed).toString('dd MMM yyyy');
 
 		$scope.goToDate = function ($number) {
-			$scope.date.typed = date.goToDate($scope.date.typed, $number);
+			$scope.date.typed = DatesFactory.goToDate($scope.date.typed, $number);
 		};
 
 		$scope.today = function () {
