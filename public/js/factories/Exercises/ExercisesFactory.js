@@ -3,11 +3,7 @@ app.factory('ExercisesFactory', function ($http) {
 		/**
 		 * select
 		 */
-		
-		getExercises: function () {
-			var $url = 'select/getExercises';
-			return $http.post($url);
-		},
+
 		getExerciseInfo: function ($exercise_id) {
 			var $url = 'select/getExerciseInfo';
 			var $data = {
@@ -52,7 +48,7 @@ app.factory('ExercisesFactory', function ($http) {
 			var $data = {
 				name: $name
 			};
-			
+
 			$("#workout").val("");
 
 			return $http.post($url, $data);
@@ -160,14 +156,11 @@ app.factory('ExercisesFactory', function ($http) {
 				return $http.post($url, $data);
 			}
 		},
-		deleteExercise: function ($id) {
+		deleteExercise: function ($exercise) {
 			if (confirm("Are you sure you want to delete this exercise?")) {
-				var $url = 'delete/exercise';
-				var $data = {
-					id: $id
-				};
+                var $url = $exercise.path;
 				
-				return $http.post($url, $data);
+				return $http.delete($url);
 			}
 		},
 	};
