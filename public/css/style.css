@@ -206,7 +206,7 @@ li {
   display: flex;
   justify-content: center; }
   #project-popup .flex button {
-    margin: 0px 20px;
+    margin: 20px 20px 20px 20px;
     padding: 10px 43px; }
 
 /*==============================font awesome==============================*/
