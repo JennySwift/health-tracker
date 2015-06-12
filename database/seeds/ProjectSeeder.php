@@ -66,19 +66,44 @@ class ProjectSeeder extends Seeder {
 //            $finish = $faker->dateTimeBetween($startDate = '-1 days', $endDate = 'now');
 //            $start = $faker->dateTimeBetween($startDate = '-1 days', $endDate = $finish);
 
-            $minutes = $faker->randomElement([1, 2, 5, 10, 20]);
-
-            $finish = '2015-06-02 12:0' . $minutes . ':00';
+            $minutes = $faker->randomElement(['01', '02', '05', '10', '20']);
+            $finish = '2015-06-02 12:' . $minutes . ':00';
             $start = '2015-06-02 12:00:00';
+
+            $time = $this->calculateTimerTime($start, $finish);
+            $price = $this->getTimerPrice($time, $project->rate_per_hour);
 
             $timer = new Timer([
                 'start' => $start,
                 'finish' => $finish,
+                'price' => $price,
                 'paid' => $faker->boolean($chanceOfGettingTrue = 50)
             ]);
 
             $project->timers()->save($timer);
         }
+    }
+
+    private function calculateTimerTime($start, $finish)
+    {
+        $carbon_start = Carbon::createFromFormat('Y-m-d H:i:s', $start);
+        $carbon_finish = Carbon::createFromFormat('Y-m-d H:i:s', $finish);
+        $time = $carbon_finish->diff($carbon_start);
+        return $time;
+    }
+
+    private function getTimerPrice($time, $rate)
+    {
+        $price = 0;
+
+        if ($time->s > 30) {
+            $time->i = $time->i + 1;
+        }
+
+        $price+= $rate * $time->h;
+        $price+= $rate / 60 * $time->i;
+
+        return $price;
     }
 
 }
