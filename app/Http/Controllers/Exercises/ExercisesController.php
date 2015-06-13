@@ -149,7 +149,12 @@ class ExercisesController extends Controller {
 	/**
 	 * update
 	 */
-	
+	public function update(Request $request, $id)
+    {
+        $exercise = Exercise::find($id)->update($request->only(['step_number']));
+
+        return $exercise;
+    }
 	public function updateExerciseStepNumber(Request $request)
 	{
 		$exercise_id = $request->get('exercise_id');
