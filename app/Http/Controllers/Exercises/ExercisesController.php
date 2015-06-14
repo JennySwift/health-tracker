@@ -171,15 +171,25 @@ class ExercisesController extends Controller {
 	public function update(Request $request, $exercise)
     {
         // Create an array with the new fields merged
-        $data = array_merge($exercise->toArray(), $request->only([
+        // @TODO Watch User Mass Settings on Laracasts (warning, some advanced OOP concepts in there!)
+        // @TODO Fix this method to avoid setting unprovided fields to null
+        $data = array_merge($exercise->toArray(), array_filter($request->only([
             'step_number',
             'default_quantity',
             'description',
             'name'
-        ]));
+        ])));
 
         // Update the model with this array
         $exercise->update($data);
+
+        // Take care of the relationships!!
+        if($request->has('series_id'))
+        {
+            $series = Series::findOrFail($request->get('series_id'));
+            $exercise->series()->associate($series);
+            $exercise->save();
+        }
 
         // Return response
         return response([], 200);
@@ -211,22 +221,22 @@ class ExercisesController extends Controller {
      * @return mixed
      * @TODO Does not belong to the ExercisesController, but an ExercisesSeriesController
      */
-	public function updateExerciseSeries(Request $request)
-	{
-		$exercise_id = $request->get('exercise_id');
-		$series_id = $request->get('series_id');
-
-        $this->generateResponse();
-
-		//for assigning a series to an exercise
-		Exercise
-			::where('id', $exercise_id)
-			->update([
-				'series_id' => $series_id
-            ]);
-
-		return Exercise::getExercises();
-	}
+//	public function updateExerciseSeries(Request $request)
+//	{
+//		$exercise_id = $request->get('exercise_id');
+//		$series_id = $request->get('series_id');
+//
+//        $this->generateResponse();
+//
+//		//for assigning a series to an exercise
+//		Exercise
+//			::where('id', $exercise_id)
+//			->update([
+//				'series_id' => $series_id
+//            ]);
+//
+//		return Exercise::getExercises();
+//	}
 
     /**
      *
@@ -238,6 +248,7 @@ class ExercisesController extends Controller {
 //		$id = $request->get('id');
 //		$quantity = $request->get('quantity');
 //
+//      @TODO Be careful, this is a perfect case of a mass assignment! Bad practice!! :)
 //		Exercise
 //			::where('id', $id)
 //			->update([
