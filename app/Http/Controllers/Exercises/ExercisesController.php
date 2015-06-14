@@ -79,29 +79,52 @@ class ExercisesController extends Controller {
 	 * insert
 	 */
 
+    /**
+     * Deletes all workouts from the series then adds the correct workouts to the series
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     *
+     * @TODO Should be part of the update method on the SeriesController
+     * PUT /series/{id}
+     */
+    public function deleteAndInsertSeriesIntoWorkouts(Request $request)
+    {
+        // Fetch the series
+        $series = Series::find($request->get('series_id'));
+
+        // If you want to delete the current workouts no matter what, pass an empty array as default value
+        $workout_ids = $request->get('workout_ids', []);
+
+        // Synchronize workouts
+        $series->workouts()->sync($workout_ids);
+
+        // return Series::getExerciseSeries();
+        return Workout::getWorkouts();
+    }
+
 	/**
 	 * Deletes all workouts from the series then adds the correct workouts to the series
 	 * @param  Request $request [description]
 	 * @return [type]           [description]
 	 */
-	public function deleteAndInsertSeriesIntoWorkouts(Request $request)
-	{
-		$series = Series::find($request->get('series_id'));
-		$workout_ids = $request->get('workout_ids');
-		
-		//delete workouts from the series
-		//I wasn't sure if detach would work for this since I want to delete all tags that belong to the exercise.
-		DB::table('series_workout')->where('series_id', $series->id)->delete();
-
-		//add tags to the exercise
-		foreach ($workout_ids as $workout_id) {
-			//add tag to the exercise
-			$series->workouts()->attach($workout_id, ['user_id' => Auth::user()->id]);
-		}
-
-		// return Series::getExerciseSeries();
-		return Workout::getWorkouts();
-	}
+//	public function deleteAndInsertSeriesIntoWorkouts(Request $request)
+//	{
+//		$series = Series::find($request->get('series_id'));
+//		$workout_ids = $request->get('workout_ids');
+//
+//		//delete workouts from the series
+//		//I wasn't sure if detach would work for this since I want to delete all tags that belong to the exercise.
+//		DB::table('series_workout')->where('series_id', $series->id)->delete();
+//
+//		//add tags to the exercise
+//		foreach ($workout_ids as $workout_id) {
+//			//add tag to the exercise
+//			$series->workouts()->attach($workout_id, ['user_id' => Auth::user()->id]);
+//		}
+//
+//		// return Series::getExerciseSeries();
+//		return Workout::getWorkouts();
+//	}
 
     /**
      *
@@ -193,12 +216,14 @@ class ExercisesController extends Controller {
 		$exercise_id = $request->get('exercise_id');
 		$series_id = $request->get('series_id');
 
+        $this->generateResponse();
+
 		//for assigning a series to an exercise
 		Exercise
 			::where('id', $exercise_id)
 			->update([
 				'series_id' => $series_id
-			]);
+            ]);
 
 		return Exercise::getExercises();
 	}
@@ -252,5 +277,6 @@ class ExercisesController extends Controller {
 		Exercise::where('id', $id)->delete();
 		return Exercise::getExercises();
 	}
+
 }
 
