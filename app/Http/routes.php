@@ -11,11 +11,11 @@ use App\Models\Projects\Payer;
 use App\Models\Projects\Project;
 use App\Models\Projects\Timer;
 
-Route::get('/test', function()
-{
-    $payer = Payer::first();
-    dd($payer->owed);
-});
+//Route::get('/test', function()
+//{
+//    $payer = Payer::first();
+//    dd($payer->owed);
+//});
 
 //Homepage (entries)
 Route::get('/', 'EntriesController@index');
@@ -74,10 +74,13 @@ Route::controllers([
 /**
  * Bindings
  */
-
 Route::bind('journal', function($value)
 {
     return Journal::getJournalEntry($value);
+});
+Route::bind('exercises', function($value)
+{
+    return Exercise::findOrFail($value);
 });
 
 /**
@@ -90,7 +93,7 @@ Route::resource('payee', 'Projects\PayeeController', ['only' => ['index', 'store
 Route::resource('payer', 'Projects\PayerController', ['only' => ['index', 'store', 'destroy']]);
 Route::resource('timers', 'Projects\TimersController', ['only' => ['destroy']]);
 Route::resource('foods', 'Foods\FoodsController', ['only' => ['index', 'show', 'destroy']]);
-Route::resource('exercises', 'Exercises\ExercisesController', ['only' => ['show', 'store', 'update', 'destroy']]);
+Route::resource('exercises', 'Exercises\ExercisesController');
 Route::resource('ExerciseEntries', 'Exercises\ExerciseEntriesController', ['only' => ['store']]);
 Route::resource('ExerciseSeries', 'Exercises\ExerciseSeriesController', ['only' => ['store', 'show', 'destroy']]);
 Route::resource('workouts', 'Exercises\WorkoutsController', ['only' => ['store']]);
@@ -105,7 +108,8 @@ Route::resource('journal', 'Journal\JournalController', ['only' => ['show', 'sto
  */
 
 Route::post('insert/startProjectTimer', 'Projects\TimersController@startProjectTimer');
-Route::post('insert/payer', 'Projects\PayeesController@addPayerToPayee');
+// @TODO Controller does not exists!
+//Route::post('insert/payer', 'Projects\PayeesController@addPayerToPayee');
 Route::post('update/stopProjectTimer', 'Projects\TimersController@stopProjectTimer');
 
 /**

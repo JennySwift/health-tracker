@@ -142,16 +142,30 @@ class ExercisesController extends Controller {
     /**
      * Update exercise step number
      * @param Request $request
-     * @param $id
+     * @param $exercise
      * @return mixed
      */
-	public function update(Request $request, $id)
+	public function update(Request $request, $exercise)
     {
-        $exercise = Exercise::find($id)
-            ->update($request->only(['step_number']));
+        // Create an array with the new fields merged
+        $data = array_merge($exercise->toArray(), $request->only([
+            'step_number',
+            'default_quantity',
+            'description',
+            'name'
+        ]));
+
+        // Update the model with this array
+        $exercise->update($data);
+
+        // Return response
+        return response([], 200);
+
+        //$exercise = Exercise::find($id)
+            //->update($request->only(['step_number', 'default_quantity']));
 
         //Valentin says this method should return $exercise
-        return Exercise::getExercises();
+        //return Exercise::getExercises();
     }
 
 //	public function updateExerciseStepNumber(Request $request)
@@ -172,6 +186,7 @@ class ExercisesController extends Controller {
      * Change which series an exercise is in
      * @param Request $request
      * @return mixed
+     * @TODO Does not belong to the ExercisesController, but an ExercisesSeriesController
      */
 	public function updateExerciseSeries(Request $request)
 	{
@@ -193,19 +208,19 @@ class ExercisesController extends Controller {
      * @param Request $request
      * @return mixed
      */
-    public function updateDefaultExerciseQuantity(Request $request)
-	{
-		$id = $request->get('id');
-		$quantity = $request->get('quantity');
-		
-		Exercise
-			::where('id', $id)
-			->update([
-				'default_quantity' => $quantity
-			]);
-
-		return Exercise::getExercises();
-	}
+//    public function updateDefaultExerciseQuantity(Request $request)
+//	{
+//		$id = $request->get('id');
+//		$quantity = $request->get('quantity');
+//
+//		Exercise
+//			::where('id', $id)
+//			->update([
+//				'default_quantity' => $quantity
+//			]);
+//
+//		return Exercise::getExercises();
+//	}
 
     /**
      *
