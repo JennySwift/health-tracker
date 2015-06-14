@@ -27,7 +27,7 @@ Route::get('/units', 'Units\UnitsController@index');
 Route::get('/foods', 'Foods\FoodsController@index');
 
 //Exercises
-Route::get('/exercises', 'Exercises\ExercisesController@index');
+Route::get('exercises', 'PagesController@exercises');
 
 //Journal
 Route::get('/journal', 'Journal\JournalController@index');
@@ -90,7 +90,7 @@ Route::resource('payee', 'Projects\PayeeController', ['only' => ['index', 'store
 Route::resource('payer', 'Projects\PayerController', ['only' => ['index', 'store', 'destroy']]);
 Route::resource('timers', 'Projects\TimersController', ['only' => ['destroy']]);
 Route::resource('foods', 'Foods\FoodsController', ['only' => ['index', 'show', 'destroy']]);
-Route::resource('exercises', 'Exercises\ExercisesController', ['only' => ['index', 'show', 'store', 'update', 'destroy']]);
+Route::resource('exercises', 'Exercises\ExercisesController', ['only' => ['show', 'store', 'update', 'destroy']]);
 Route::resource('ExerciseEntries', 'Exercises\ExerciseEntriesController', ['only' => ['store']]);
 Route::resource('ExerciseSeries', 'Exercises\ExerciseSeriesController', ['only' => ['store', 'show', 'destroy']]);
 Route::resource('workouts', 'Exercises\WorkoutsController', ['only' => ['store']]);

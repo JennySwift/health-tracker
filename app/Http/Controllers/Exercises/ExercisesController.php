@@ -40,35 +40,6 @@ class ExercisesController extends Controller {
 	 * Index
 	 */
 
-	public function index()
-	{
-		JavaScript::put([
-			/**
-			 * @VP:
-			 * If I instead did:
-			 * 'exercises' => $this->getExercises()
-			 * it didn't work. Why wouldn't it let me call it 'exercises?'
-			 * The same thing happened when I tried to use 'tags' instead of 'exercise_tags.'
-			 */
-			'all_exercises' => $this->getExercises(),
-			'series' => $this->getExerciseSeries(),
-			'workouts' => Workout::getWorkouts(),
-			'exercise_tags' => Tag::where('user_id', Auth::user()->id)->where('for', 'exercise')->orderBy('name', 'asc')->get(),
-			'units' => Unit::getExerciseUnits()
-		]);
-
-		return view('exercises');
-	}
-
-    /**
-     *
-     * @return mixed
-     */
-    public function getExercises()
-    {
-        return Exercise::getExercises();
-    }
-
 	/**
 	 * select
 	 */
@@ -89,15 +60,6 @@ class ExercisesController extends Controller {
 			"exercise" => $exercise,
 			"tags" => $exercise_tags
 		];
-	}
-
-    /**
-     *
-     * @return mixed
-     */
-    public function getExerciseSeries()
-	{
-		return Series::getExerciseSeries();
 	}
 
     /**

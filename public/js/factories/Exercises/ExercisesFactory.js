@@ -103,18 +103,30 @@ app.factory('ExercisesFactory', function ($http) {
 			
 			return $http.post($url, $data);
 		},
-		updateExerciseStepNumber: function ($exercise) {
+		//updateExerciseStepNumber: function ($exercise) {
+         //   var $url = $exercise.path;
+         //   var $step_number = $("#exercise-step-number").val();
+        //
+         //   var $data = {
+         //       step_number: $step_number
+         //   };
+        //
+         //   $("#exercise-step-number").val("");
+        //
+         //   return $http.put($url, $data);
+		//},
+        updateExerciseStepNumber: function ($exercise) {
             var $url = $exercise.path;
             var $step_number = $("#exercise-step-number").val();
 
             var $data = {
-                step_number: $step_number
+                exercise: $exercise
             };
 
             $("#exercise-step-number").val("");
 
             return $http.put($url, $data);
-		},
+        },
 		updateDefaultExerciseQuantity: function ($id) {
 			var $quantity = $("#default-unit-quantity").val();
 			var $url = 'update/defaultExerciseQuantity';
