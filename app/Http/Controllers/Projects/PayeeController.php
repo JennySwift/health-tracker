@@ -40,6 +40,8 @@ class PayeeController extends Controller {
             'payers' => $payee->payers,
         ]);
 
+//        return $payee;
+
 //        return $payee->payers()->first()->owed;
 
 //        return $payee->payers->first()->owed;

@@ -45,7 +45,6 @@ class FoodsController extends Controller {
             'recipe_tags' => Tag::getRecipeTags()
         ]);
 
-        // return Food::getAllFoodsWithUnits();
         return view('foods');
     }
 
@@ -53,9 +52,9 @@ class FoodsController extends Controller {
 	 * select
 	 */
 
-	public function getFoodInfo(Request $request)
+	public function show($id)
 	{
-		$food = Food::find($request->get('food_id'));
+		$food = Food::find($id);
 		return Food::getFoodInfo($food);
 	}
 
@@ -132,68 +131,4 @@ class FoodsController extends Controller {
 		$food->units()->detach($unit_id);
 		return Food::getFoodInfo($food);
 	}
-
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return Response
-	 */
-	// public function index()
-	// {
-	// 	//
-	// }
-
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		//
-	}
-
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @return Response
-	 */
-	public function store()
-	{
-		//
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
-	{
-		//
-	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		//
-	}
-
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function update($id)
-	{
-		//
-	}
-
 }

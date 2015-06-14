@@ -27,7 +27,7 @@ var app = angular.module('tracker');
 		};
 
 		$scope.today = function () {
-			$scope.date.typed = date.today();
+			$scope.date.typed = DatesFactory.today();
 		};
 		$scope.changeDate = function ($keycode) {
 			if ($keycode === 13) {

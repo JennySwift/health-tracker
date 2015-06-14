@@ -6,6 +6,7 @@
 
 //test
 use App\Models\Exercises\Exercise;
+use App\Models\Journal\Journal;
 use App\Models\Projects\Payer;
 use App\Models\Projects\Project;
 use App\Models\Projects\Timer;
@@ -71,6 +72,15 @@ Route::controllers([
 ]);
 
 /**
+ * Bindings
+ */
+
+Route::bind('journal', function($value)
+{
+    return Journal::getJournalEntry($value);
+});
+
+/**
  * Resources
  */
 
@@ -79,12 +89,12 @@ Route::resource('projects', 'Projects\ProjectsController', ['only' => ['index', 
 Route::resource('payee', 'Projects\PayeeController', ['only' => ['index', 'store', 'destroy']]);
 Route::resource('payer', 'Projects\PayerController', ['only' => ['index', 'store', 'destroy']]);
 Route::resource('timers', 'Projects\TimersController', ['only' => ['destroy']]);
-Route::resource('foods', 'Foods\FoodsController', ['only' => ['index', 'destroy']]);
-Route::resource('exercises', 'Exercises\ExercisesController', ['only' => ['index', 'show', 'store', 'destroy']]);
+Route::resource('foods', 'Foods\FoodsController', ['only' => ['index', 'show', 'destroy']]);
+Route::resource('exercises', 'Exercises\ExercisesController', ['only' => ['index', 'show', 'store', 'update', 'destroy']]);
 Route::resource('ExerciseEntries', 'Exercises\ExerciseEntriesController', ['only' => ['store']]);
 Route::resource('ExerciseSeries', 'Exercises\ExerciseSeriesController', ['only' => ['store', 'show', 'destroy']]);
 Route::resource('workouts', 'Exercises\WorkoutsController', ['only' => ['store']]);
-//Route::resource('journal', 'Journal\JournalController', ['only' => ['show', 'store']]);
+Route::resource('journal', 'Journal\JournalController', ['only' => ['show', 'store']]);
 
 /**
  * Ajax
@@ -102,49 +112,21 @@ Route::post('update/stopProjectTimer', 'Projects\TimersController@stopProjectTim
  * Exercises
  */
 
-/**
- * ExerciseEntriesController
- */
-
 Route::post('insert/exerciseSet', 'Exercises\ExerciseEntriesController@insertExerciseSet');
-
-/**
- * @VP:
- * I send data with this one (so I can return stuff), so I'm not sure how I'm supposed to use delete instead of post.
- */
 Route::post('delete/exerciseEntry', 'Exercises\ExerciseEntriesController@deleteExerciseEntry');
-
 //this one is more complicated
 Route::post('select/specificExerciseEntries', 'Exercises\ExerciseEntriesController@getSpecificExerciseEntries');
-
-/**
- * ExercisesController
- */
-
-Route::post('update/exerciseStepNumber', 'Exercises\ExercisesController@updateExerciseStepNumber');
 Route::post('update/defaultExerciseQuantity', 'Exercises\ExercisesController@updateDefaultExerciseQuantity');
 Route::post('update/defaultExerciseUnit', 'Exercises\ExercisesController@updateDefaultExerciseUnit');
-
-/**
- * ExerciseSeriesController
- */
-
 Route::post('update/exerciseSeries', 'Exercises\ExercisesController@updateExerciseSeries');
-
 //this should be ExerciseSeriesHistoryController, index (if returns multiple series, show if returns one series) method
 Route::post('select/exerciseSeriesHistory', 'Exercises\ExercisesController@getExerciseSeriesHistory');
-
-/**
- * WorkoutsController
- */
-
 Route::post('insert/deleteAndInsertSeriesIntoWorkouts', 'Exercises\ExercisesController@deleteAndInsertSeriesIntoWorkouts');
 
 /**
  * Foods
  */
 
-Route::post('select/foodInfo', 'Foods\FoodsController@getFoodInfo');
 Route::post('select/allFoodsWithUnits', 'Foods\FoodsController@getAllFoodsWithUnits');
 Route::post('insert/menuEntry', 'Foods\FoodEntriesController@insertMenuEntry');
 Route::post('insert/food', 'Foods\FoodsController@insertFood');
@@ -158,7 +140,6 @@ Route::post('update/calories', 'Foods\FoodsController@updateCalories');
  * Journal
  */
 
-Route::post('select/getJournalEntry', 'Journal\JournalController@getJournalEntry');
 Route::post('insert/journalEntry', 'Journal\JournalController@insertOrUpdateJournalEntry');
 
 /**

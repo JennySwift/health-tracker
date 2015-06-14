@@ -7,7 +7,7 @@
 		<div class="flex">
 			<div>
 				<h5 class="center">step</h5>
-				<input ng-keyup="updateExerciseStepNumber($event.keyCode, selected.exercise.id)" type="text" placeholder="step number" id="exercise-step-number" class="form-control">
+				<input ng-keyup="updateExerciseStepNumber($event.keyCode, selected.exercise)" type="text" placeholder="step number" id="exercise-step-number" class="form-control">
 			</div>
 
 			<div>

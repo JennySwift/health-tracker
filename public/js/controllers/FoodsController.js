@@ -84,12 +84,12 @@ var app = angular.module('tracker');
 			}
 		};
 
-		$scope.getFoodInfo = function ($food_id, $food_name) {
+		$scope.getFoodInfo = function ($food) {
 			//for popup where user selects units for food and enters calories
-			$scope.food_popup.id = $food_id;
-			$scope.food_popup.name = $food_name;
+			$scope.food_popup.id = $food.id;
+			$scope.food_popup.name = $food.name;
 			$scope.show.popups.food_info = true;
-			FoodsFactory.getFoodInfo($food_id).then(function (response) {
+			FoodsFactory.getFoodInfo($food).then(function (response) {
 				$scope.food_popup = response.data;
 			});
 			

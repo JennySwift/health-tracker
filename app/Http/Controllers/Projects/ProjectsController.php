@@ -37,6 +37,7 @@ class ProjectsController extends Controller {
     public function index()
     {
         $user = Auth::user();
+        //create static methods on payee and payer for current user
         $payer = Payer::find($user->id);
         $payee = Payee::find($user->id);
 
@@ -47,8 +48,6 @@ class ProjectsController extends Controller {
             'payees' => $payer->payees
         ]);
 
-//        return $user;
-//        return $payee->projectsAsPayee;
         return view('projects');
     }
 
@@ -76,8 +75,6 @@ class ProjectsController extends Controller {
 
         $payee = Payee::find(Auth::user()->id);
         return $payee->projectsAsPayee;
-
-//        return $this->projectsRepository->getProjectsArrayForCurrentUser();
     }
 
     /**

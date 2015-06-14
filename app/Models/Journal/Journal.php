@@ -38,7 +38,7 @@ class Journal extends Model {
 		else {
 			$response = array();
 		}
-		
+
 		return $response;
 	}
 

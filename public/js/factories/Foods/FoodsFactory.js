@@ -58,14 +58,10 @@ app.factory('FoodsFactory', function ($http) {
 			}
 			return $scope_menu;
 		},
-		getFoodInfo: function ($id) {
-			var $url = 'select/foodInfo';
-			
-			var $data = {
-				food_id: $id
-			};
+		getFoodInfo: function ($food) {
+            var $url = $food.path;
 
-			return $http.post($url, $data);
+            return $http.get($url);
 		},
 		displayFoodEntries: function ($sql_date) {
 			var $url = 'select/foodEntries';

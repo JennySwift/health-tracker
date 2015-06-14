@@ -113,11 +113,11 @@ var app = angular.module('tracker');
 			});
 		};
 
-		$scope.updateExerciseStepNumber = function ($keycode, $exercise_id) {
+		$scope.updateExerciseStepNumber = function ($keycode, $exercise) {
 			if ($keycode !== 13) {
 				return;
 			}
-			ExercisesFactory.updateExerciseStepNumber($exercise_id).then(function (response) {
+			ExercisesFactory.updateExerciseStepNumber($exercise).then(function (response) {
 				$scope.exercises = response.data;
 			});
 		};

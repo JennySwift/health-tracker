@@ -20,6 +20,10 @@ use App\Models\Tags\Tag;
 use JavaScript;
 use App\User;
 
+/**
+ * Class ExercisesController
+ * @package App\Http\Controllers\Exercises
+ */
 class ExercisesController extends Controller {
 
 	/**
@@ -56,15 +60,24 @@ class ExercisesController extends Controller {
 		return view('exercises');
 	}
 
+    /**
+     *
+     * @return mixed
+     */
+    public function getExercises()
+    {
+        return Exercise::getExercises();
+    }
+
 	/**
 	 * select
 	 */
-	
-	/**
-	 * For the exercise popup
-	 * @param  Request $request [description]
-	 * @return [type]           [description]
-	 */
+
+    /**
+     * For the exercise popup
+     * @param $id
+     * @return array
+     */
 	public function show($id)
 	{
 		$exercise = Exercise::find($id);
@@ -78,17 +91,21 @@ class ExercisesController extends Controller {
 		];
 	}
 
-	public function getExercises()
-	{
-		return Exercise::getExercises();
-	}
-
-	public function getExerciseSeries()
+    /**
+     *
+     * @return mixed
+     */
+    public function getExerciseSeries()
 	{
 		return Series::getExerciseSeries();
 	}
-	
-	public function getExerciseSeriesHistory(Request $request)
+
+    /**
+     *
+     * @param Request $request
+     * @return array
+     */
+    public function getExerciseSeriesHistory(Request $request)
 	{
 		//Fetch the series (singular-the series that was clicked on)
 		$series = Series::find($request->get('series_id'));
@@ -124,7 +141,12 @@ class ExercisesController extends Controller {
 		return Workout::getWorkouts();
 	}
 
-	public function insertTagInExercise(Request $request)
+    /**
+     *
+     * @param Request $request
+     * @return mixed
+     */
+    public function insertTagInExercise(Request $request)
 	{
 		$exercise_id = $request->get('exercise_id');
 		$tag_id = $request->get('tag_id');
@@ -132,7 +154,12 @@ class ExercisesController extends Controller {
 		return Exercise::getExercises();
 	}
 
-	public function store(Request $request)
+    /**
+     *
+     * @param Request $request
+     * @return mixed
+     */
+    public function store(Request $request)
 	{
 		//Build an Exercise object (without saving in database yet)
 		$exercise = new Exercise($request->only('name', 'description'));	
@@ -149,26 +176,41 @@ class ExercisesController extends Controller {
 	/**
 	 * update
 	 */
+
+    /**
+     * Update exercise step number
+     * @param Request $request
+     * @param $id
+     * @return mixed
+     */
 	public function update(Request $request, $id)
     {
-        $exercise = Exercise::find($id)->update($request->only(['step_number']));
+        $exercise = Exercise::find($id)
+            ->update($request->only(['step_number']));
 
-        return $exercise;
+        //Valentin says this method should return $exercise
+        return Exercise::getExercises();
     }
-	public function updateExerciseStepNumber(Request $request)
-	{
-		$exercise_id = $request->get('exercise_id');
-		$step_number = $request->get('step_number');
-		
-		Exercise
-			::where('id', $exercise_id)
-			->update([
-				'step_number' => $step_number
-			]);
 
-		return Exercise::getExercises();
-	}
+//	public function updateExerciseStepNumber(Request $request)
+//	{
+//		$exercise_id = $request->get('exercise_id');
+//		$step_number = $request->get('step_number');
+//
+//		Exercise
+//			::where('id', $exercise_id)
+//			->update([
+//				'step_number' => $step_number
+//			]);
+//
+//		return Exercise::getExercises();
+//	}
 
+    /**
+     * Change which series an exercise is in
+     * @param Request $request
+     * @return mixed
+     */
 	public function updateExerciseSeries(Request $request)
 	{
 		$exercise_id = $request->get('exercise_id');
@@ -184,7 +226,12 @@ class ExercisesController extends Controller {
 		return Exercise::getExercises();
 	}
 
-	public function updateDefaultExerciseQuantity(Request $request)
+    /**
+     *
+     * @param Request $request
+     * @return mixed
+     */
+    public function updateDefaultExerciseQuantity(Request $request)
 	{
 		$id = $request->get('id');
 		$quantity = $request->get('quantity');
@@ -198,7 +245,12 @@ class ExercisesController extends Controller {
 		return Exercise::getExercises();
 	}
 
-	public function updateDefaultExerciseUnit(Request $request)
+    /**
+     *
+     * @param Request $request
+     * @return mixed
+     */
+    public function updateDefaultExerciseUnit(Request $request)
 	{
 		$exercise_id = $request->get('exercise_id');
 		$default_exercise_unit_id = $request->get('default_exercise_unit_id');
@@ -212,13 +264,16 @@ class ExercisesController extends Controller {
 		return Exercise::getExercises();
 	}
 
-	/**
-	 * delete
-	 */
-	
-	public function destroy($id)
+
+    /**
+     * Delete an exercise
+     * @param $id
+     * @return mixed
+     */
+    public function destroy($id)
 	{
 		Exercise::where('id', $id)->delete();
 		return Exercise::getExercises();
 	}
 }
+

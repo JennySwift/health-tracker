@@ -48,10 +48,6 @@ class EntriesController extends Controller {
 	{
 		$date = Carbon::today()->format('Y-m-d');
 
-		// return ExerciseEntry::getExerciseEntries($date);
-		// return Food::getCaloriesForTimePeriod($date, 'week');
-		// return Food::getCaloriesFor7Days($date);
-
 		JavaScript::put([
 			"weight" => $weightsRepository->getWeight($date),
 			"exercise_entries" => ExerciseEntry::getExerciseEntries($date),
@@ -69,9 +65,6 @@ class EntriesController extends Controller {
 	public function getEntries(Request $request, WeightsRepository $weightsRepository)
 	{
 		$date = $request->get('date');
-
-		// return Food::getCaloriesFor7Days($date);
-
 		
 		$response = array(
 			"weight" => $weightsRepository->getWeight($date),

@@ -103,13 +103,17 @@ class RecipesController extends Controller {
 	/**
 	 * update
 	 */
-	
+
+    /**
+     * Delete the existing method before adding the updated method
+     * @param Request $request
+     * @return array
+     */
 	public function updateRecipeMethod(Request $request)
 	{
 		$recipe = Recipe::find($request->get('recipe_id'));
 		$steps = $request->get('steps');
 
-		//delete the existing method before adding the updated method
 		RecipeMethod::deleteRecipeMethod($recipe);
 		RecipeMethod::insertRecipeMethod($recipe, $steps);
 		
@@ -131,9 +135,6 @@ class RecipesController extends Controller {
 	{
 		$food_id = $request->get('food_id');
 		$recipe = Recipe::find($request->get('recipe_id'));
-		// Debugbar::info('recipe', $recipe);
-		// Debugbar::info('recipe->id: ' . $recipe->id);
-		// Debugbar::info('food_recipe_id: ' . $food_recipe_id);
 
 		$recipe->foods()->detach($food_id);
 		return Recipe::getRecipeInfo($recipe);
@@ -152,79 +153,4 @@ class RecipesController extends Controller {
 		);
 		return $response;
 	}
-
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return Response
-	 */
-	public function index()
-	{
-		//
-	}
-
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		//
-	}
-
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @return Response
-	 */
-	public function store()
-	{
-		//
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
-	{
-		//
-	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		//
-	}
-
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function update($id)
-	{
-		//
-	}
-
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function destroy($id)
-	{
-		//
-	}
-
 }

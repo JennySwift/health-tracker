@@ -42,7 +42,7 @@
 								<th>calories</th>
 							</tr>
 							<tr ng-repeat="item in all_foods_with_units | filter:filter.foods" data-food-id="[[item.id]]">
-								<td ng-click="getFoodInfo(item.id, item.name)" class="pointer">[[item.name]]</td>
+								<td ng-click="getFoodInfo(item)" class="pointer">[[item.name]]</td>
 								<td>[[item.default_unit.name]]</td>
 								<td>[[item.default_unit_calories]]</td>
 								<td><i ng-click="deleteFood(item)" class="delete-item fa fa-times"></i></td>

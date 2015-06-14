@@ -103,17 +103,17 @@ app.factory('ExercisesFactory', function ($http) {
 			
 			return $http.post($url, $data);
 		},
-		updateExerciseStepNumber: function ($exercise_id) {
-			var $url = 'update/exerciseStepNumber';
-			var $step_number = $("#exercise-step-number").val();
-			var $data = {
-				exercise_id: $exercise_id,
-				step_number: $step_number
-			};
+		updateExerciseStepNumber: function ($exercise) {
+            var $url = $exercise.path;
+            var $step_number = $("#exercise-step-number").val();
 
-			$("#exercise-step-number").val("");
-			
-			return $http.post($url, $data);
+            var $data = {
+                step_number: $step_number
+            };
+
+            $("#exercise-step-number").val("");
+
+            return $http.put($url, $data);
 		},
 		updateDefaultExerciseQuantity: function ($id) {
 			var $quantity = $("#default-unit-quantity").val();

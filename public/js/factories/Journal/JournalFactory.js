@@ -5,12 +5,14 @@ app.factory('JournalFactory', function ($http) {
 		 */
 		
 		getJournalEntry: function ($sql_date) {
-			var $url = 'select/getJournalEntry';
-			var $data = {
-				date: $sql_date
-			};
-			
-			return $http.post($url, $data);
+			//var $url = 'select/getJournalEntry';
+			//var $data = {
+			//	date: $sql_date
+			//};
+			//
+			//return $http.post($url, $data);
+
+            return $http.get('/journal/' + $sql_date);
 		},
 		
 		/**
