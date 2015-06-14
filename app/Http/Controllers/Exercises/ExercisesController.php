@@ -173,12 +173,18 @@ class ExercisesController extends Controller {
         // Create an array with the new fields merged
         // @TODO Watch User Mass Settings on Laracasts (warning, some advanced OOP concepts in there!)
         // @TODO Fix this method to avoid setting unprovided fields to null
-        $data = array_merge($exercise->toArray(), array_filter($request->only([
+        $data = array_compare($exercise->toArray(), $request->only([
             'step_number',
             'default_quantity',
             'description',
             'name'
-        ])));
+        ]));
+//        $data = array_merge($exercise->toArray(), array_filter($request->only([
+//            'step_number',
+//            'default_quantity',
+//            'description',
+//            'name'
+//        ])));
 
         // Update the model with this array
         $exercise->update($data);
