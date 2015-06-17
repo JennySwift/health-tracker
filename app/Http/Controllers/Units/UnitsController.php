@@ -9,6 +9,10 @@ use JavaScript;
 
 use App\Models\Units\Unit;
 
+/**
+ * Class UnitsController
+ * @package App\Http\Controllers\Units
+ */
 class UnitsController extends Controller {
 
 	/**
@@ -21,29 +25,30 @@ class UnitsController extends Controller {
 		$this->middleware('auth');
 	}
 
-	/**
-	 * Exercise units
-	 */
-
-	/**
-	 * select
-	 */
-	
-	public function getExerciseUnits()
+    /**
+     *
+     * @return mixed
+     */
+    public function getExerciseUnits()
 	{
 		return Unit::getExerciseUnits();
 	}
 
-	public function getFoodUnits()
+    /**
+     *
+     * @return mixed
+     */
+    public function getFoodUnits()
 	{
 		return Unit::getFoodUnits();
 	}
 
-	/**
-	 * insert
-	 */
-	
-	public function insertfoodUnit(Request $request)
+    /**
+     *
+     * @param Request $request
+     * @return mixed
+     */
+    public function insertfoodUnit(Request $request)
 	{
 		$name = $request->get('name');
 		
@@ -55,8 +60,13 @@ class UnitsController extends Controller {
 
 		return Unit::getFoodUnits();
 	}
-	
-	public function insertExerciseUnit(Request $request)
+
+    /**
+     *
+     * @param Request $request
+     * @return mixed
+     */
+    public function insertExerciseUnit(Request $request)
 	{
 		$name = $request->get('name');
 		
@@ -69,15 +79,12 @@ class UnitsController extends Controller {
 		return Unit::getExerciseUnits();
 	}
 
-	/**
-	 * update
-	 */
-	
-	/**
-	 * delete
-	 */
-
-	public function deleteExerciseUnit(Request $request)
+    /**
+     *
+     * @param Request $request
+     * @return mixed
+     */
+    public function deleteExerciseUnit(Request $request)
 	{
 		$id = $request->get('id');
 
@@ -85,15 +92,12 @@ class UnitsController extends Controller {
 		return Unit::getExerciseUnits();
 	}
 
-	/**
-	 * Food units
-	 */
-	
-	/**
-	 * delete
-	 */
-	
-	public function deleteFoodUnit(Request $request)
+    /**
+     *
+     * @param Request $request
+     * @return mixed
+     */
+    public function deleteFoodUnit(Request $request)
 	{
 		$id = $request->get('id');
 		Unit::where('id', $id)->delete();

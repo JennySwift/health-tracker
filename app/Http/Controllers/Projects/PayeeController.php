@@ -9,6 +9,10 @@ use Auth;
 use App\Models\Projects\Payee;
 use Illuminate\Http\Request;
 
+/**
+ * Class PayeeController
+ * @package App\Http\Controllers\Projects
+ */
 class PayeeController extends Controller {
 
     /**
@@ -20,15 +24,6 @@ class PayeeController extends Controller {
     {
         $this->middleware('auth');
     }
-
-
-    /**
-     * select
-     */
-
-    /**
-     * insert
-     */
 
     /**
      * Add a new payer for the user (payee)
@@ -46,13 +41,4 @@ class PayeeController extends Controller {
         $user->save();
         return $user->payers;
     }
-
-    /**
-     * update
-     */
-
-    /**
-     * delete
-     */
-
 }

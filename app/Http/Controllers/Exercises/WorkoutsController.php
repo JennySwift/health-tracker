@@ -8,17 +8,18 @@ use Auth;
 
 use App\Models\Exercises\Workout;
 
+/**
+ * Class WorkoutsController
+ * @package App\Http\Controllers\Exercises
+ */
 class WorkoutsController extends Controller {
 
-	/**
-	 * select
-	 */
-	
-	/**
-	 * insert
-	 */
-	
-	public function store(Request $request)
+    /**
+     *
+     * @param Request $request
+     * @return mixed
+     */
+    public function store(Request $request)
 	{
 		$name = $request->get('name');
 
@@ -29,13 +30,4 @@ class WorkoutsController extends Controller {
 
 		return Workout::getWorkouts();
 	}
-
-	/**
-	 * update
-	 */
-	
-	/**
-	 * delete
-	 */
-
 }

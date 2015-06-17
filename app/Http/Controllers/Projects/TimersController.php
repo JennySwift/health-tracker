@@ -11,6 +11,10 @@ use Debugbar;
 use App\Models\Projects\Timer;
 use App\Models\Projects\Project;
 
+/**
+ * Class TimersController
+ * @package App\Http\Controllers\Projects
+ */
 class TimersController extends Controller {
 
     /**
@@ -73,6 +77,12 @@ class TimersController extends Controller {
         ];
     }
 
+    /**
+     *
+     * @param $start
+     * @param $finish
+     * @return bool|\DateInterval
+     */
     private function calculateTimerTime($start, $finish)
     {
         $carbon_start = Carbon::createFromFormat('Y-m-d H:i:s', $start);
@@ -81,6 +91,12 @@ class TimersController extends Controller {
         return $time;
     }
 
+    /**
+     *
+     * @param $time
+     * @param $rate
+     * @return float|int
+     */
     private function getTimerPrice($time, $rate)
     {
         $price = 0;
@@ -115,5 +131,4 @@ class TimersController extends Controller {
         // throw NotFoundException
         return response(null, 204);
     }
-
 }

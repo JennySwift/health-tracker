@@ -6,6 +6,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Auth;
 
+/**
+ * Class RecipeMethodsController
+ * @package App\Http\Controllers\Recipes
+ */
 class RecipeMethodsController extends Controller {
 
 }

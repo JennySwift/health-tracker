@@ -9,17 +9,18 @@ use Auth;
 use App\Models\Foods\Entry;
 use App\Models\Foods\Food;
 
+/**
+ * Class FoodEntriesController
+ * @package App\Http\Controllers\Foods
+ */
 class FoodEntriesController extends Controller {
 
-	/**
-	 * select
-	 */
-	
-	/**
-	 * insert
-	 */
-	
-	public function insertMenuEntry(Request $request)
+    /**
+     *
+     * @param Request $request
+     * @return array
+     */
+    public function insertMenuEntry(Request $request)
 	{
 		$data = $request->all();
 		$date = $data['date'];
@@ -34,11 +35,12 @@ class FoodEntriesController extends Controller {
 		return $response;
 	}
 
-	/**
-	 * update
-	 */
-	
-	public function deleteFoodEntry(Request $request)
+    /**
+     *
+     * @param Request $request
+     * @return array
+     */
+    public function deleteFoodEntry(Request $request)
 	{
 		$id = $request->get('id');
 		$date = $request->get('date');

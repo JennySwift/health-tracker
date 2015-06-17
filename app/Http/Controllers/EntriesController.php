@@ -16,18 +16,11 @@ use App\User;
 use App\Models\Journal\Journal;
 use App\Models\Foods\Food;
 
+/**
+ * Class EntriesController
+ * @package App\Http\Controllers
+ */
 class EntriesController extends Controller {
-
-	/*
-	|--------------------------------------------------------------------------
-	| Home Controller
-	|--------------------------------------------------------------------------
-	|
-	| This controller renders your application's "dashboard" for users that
-	| are authenticated. Of course, you are free to change or remove the
-	| controller as you wish. It is just here to get your app started!
-	|
-	*/
 
 	/**
 	 * Create a new controller instance.
@@ -39,7 +32,13 @@ class EntriesController extends Controller {
 		$this->middleware('auth');
 	}
 
-	public function getEntries(Request $request, WeightsRepository $weightsRepository)
+    /**
+     *
+     * @param Request $request
+     * @param WeightsRepository $weightsRepository
+     * @return array
+     */
+    public function getEntries(Request $request, WeightsRepository $weightsRepository)
 	{
 		$date = $request->get('date');
 		

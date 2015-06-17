@@ -9,11 +9,11 @@ use Auth;
 
 use App\Models\Exercises\Series;
 
+/**
+ * Class ExerciseSeriesController
+ * @package App\Http\Controllers\Exercises
+ */
 class ExerciseSeriesController extends Controller {
-
-	/**
-	 * select
-	 */
 
     /**
      * For the exercise series popup
@@ -32,12 +32,13 @@ class ExerciseSeriesController extends Controller {
             "workouts" => $workouts
         ];
     }
-	
-	/**
-	 * insert
-	 */
-	
-	public function store(Request $request)
+
+    /**
+     *
+     * @param Request $request
+     * @return mixed
+     */
+    public function store(Request $request)
 	{
 		$name = $request->get('name');
 		
@@ -50,15 +51,12 @@ class ExerciseSeriesController extends Controller {
 		return Series::getExerciseSeries();
 	}
 
-	/**
-	 * update
-	 */
-	
-	/**
-	 * delete
-	 */
-	
-	public function destroy($id)
+    /**
+     *
+     * @param $id
+     * @return mixed
+     */
+    public function destroy($id)
 	{
         //todo: notify user the series will not be deleted unless it has not been used, due to foreign key constraint
 		Series::where('id', $id)->delete();

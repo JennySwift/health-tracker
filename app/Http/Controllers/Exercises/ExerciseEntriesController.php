@@ -14,15 +14,20 @@ use Debugbar;
 use App\Models\Exercises\Exercise;
 use App\Models\Exercises\Entry;
 
+/**
+ * Class ExerciseEntriesController
+ * @package App\Http\Controllers\Exercises
+ */
 class ExerciseEntriesController extends Controller {
 
-	/**
-	 * select
-	 */
-	
+    /**
+     * Returns all entries for an exercise on a specific date
+     * where the exercise has the specified unit
+     * @param Request $request
+     * @return array
+     */
 	public function getSpecificExerciseEntries(Request $request)
 	{
-		//returns all entries for an exercise on a specific date where the exercise has the specified unit			
 		$date = $request->get('date');
 		$exercise = Exercise::find($request->get('exercise_id'));
 		$exercise_unit_id = $request->get('exercise_unit_id');
@@ -30,11 +35,12 @@ class ExerciseEntriesController extends Controller {
 		return Entry::getSpecificExerciseEntries($date, $exercise, $exercise_unit_id);
 	}
 
-	/**
-	 * insert
-	 */
-	
-	public function insertExerciseSet(Request $request)
+    /**
+     *
+     * @param Request $request
+     * @return array
+     */
+    public function insertExerciseSet(Request $request)
 	{
 		$date = $request->get('date');
 		$exercise_id = $request->get('exercise_id');
@@ -53,7 +59,12 @@ class ExerciseEntriesController extends Controller {
 		return Entry::getExerciseEntries($date);
 	}
 
-	public function store(Request $request)
+    /**
+     *
+     * @param Request $request
+     * @return array
+     */
+    public function store(Request $request)
 	{
 		$data = $request->all();
 		$date = $data['date'];
@@ -69,17 +80,10 @@ class ExerciseEntriesController extends Controller {
 
 		return Entry::getExerciseEntries($date);
 	}
-	
-	/**
-	 * update
-	 */
-	
-	/**
-	 * delete
-	 */
 
 	/**
-	 * Return the info to update the popup
+     * Delete exercise entry.
+	 * Return the info to update the popup.
 	 * @param  Request $request [description]
 	 * @return [type]           [description]
 	 */

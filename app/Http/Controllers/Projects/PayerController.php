@@ -8,6 +8,10 @@ use Auth;
 
 use Illuminate\Http\Request;
 
+/**
+ * Class PayerController
+ * @package App\Http\Controllers\Projects
+ */
 class PayerController extends Controller {
 
     /**
@@ -19,5 +23,4 @@ class PayerController extends Controller {
     {
         $this->middleware('auth');
     }
-
 }

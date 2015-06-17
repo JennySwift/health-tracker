@@ -36,14 +36,6 @@ class ExercisesController extends Controller {
 		$this->middleware('auth');
 	}
 
-	/**
-	 * Index
-	 */
-
-	/**
-	 * select
-	 */
-
     /**
      * For the exercise popup
      * @param $id
@@ -74,10 +66,6 @@ class ExercisesController extends Controller {
 
 		return Exercise::getExerciseSeriesHistory($series);
 	}
-
-	/**
-	 * insert
-	 */
 
     /**
      * Deletes all workouts from the series then adds the correct workouts to the series
@@ -157,10 +145,6 @@ class ExercisesController extends Controller {
 
 		return Exercise::getExercises();
 	}
-
-	/**
-	 * update
-	 */
 
     /**
      * Update exercise step number
@@ -294,6 +278,4 @@ class ExercisesController extends Controller {
 		Exercise::where('id', $id)->delete();
 		return Exercise::getExercises();
 	}
-
 }
-

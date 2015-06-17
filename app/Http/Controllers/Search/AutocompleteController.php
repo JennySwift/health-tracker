@@ -14,9 +14,17 @@ use App\Models\Foods\Food;
 use App\Models\Foods\Recipe;
 use App\Models\Exercises\Exercise;
 
+/**
+ * Class AutocompleteController
+ * @package App\Http\Controllers\Search
+ */
 class AutocompleteController extends Controller {
 
-    //Selects rows from both foods and recipes table.
+    /**
+     * Select rows from both foods and recipes table.
+     * @param Request $request
+     * @return mixed
+     */
     public function autocompleteMenu(Request $request)
     {
         $typing = '%' . $request->get('typing') . '%';
@@ -75,12 +83,22 @@ class AutocompleteController extends Controller {
         return $menu;
     }
 
+    /**
+     *
+     * @param Request $request
+     * @return mixed
+     */
     public function autocompleteFood(Request $request)
     {
         $typing = '%' . $request->get('typing') . '%';
         return $this->foods($typing);
     }
 
+    /**
+     *
+     * @param $typing
+     * @return mixed
+     */
     private function foods($typing)
     {
         $foods = Food::where('user_id', Auth::user()->id)
@@ -92,6 +110,11 @@ class AutocompleteController extends Controller {
         return $foods;
     }
 
+    /**
+     *
+     * @param $typing
+     * @return mixed
+     */
     private function recipes($typing)
     {
         $recipes = Recipe::where('user_id', Auth::user()->id)
@@ -101,6 +124,11 @@ class AutocompleteController extends Controller {
         return $recipes;
     }
 
+    /**
+     *
+     * @param Request $request
+     * @return mixed
+     */
     public function autocompleteExercise(Request $request)
     {
         $exercise = '%' . $request->get('exercise') . '%';
@@ -126,7 +154,6 @@ class AutocompleteController extends Controller {
      * @param FoodsAndRecipesAutocomplete $autocomplete
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    
     public function foodsAndRecipes(Request $request, FoodsAndRecipesAutocomplete $autocomplete)
     {
         // You can just use the Request object here and get rid of these two lines

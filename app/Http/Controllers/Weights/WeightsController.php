@@ -10,6 +10,10 @@ use Debugbar;
 
 use App\Models\Weights\Weight;
 
+/**
+ * Class WeightsController
+ * @package App\Http\Controllers\Weights
+ */
 class WeightsController extends Controller {
 
     /**

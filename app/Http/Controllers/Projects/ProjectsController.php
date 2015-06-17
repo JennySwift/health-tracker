@@ -14,9 +14,16 @@ use Carbon\Carbon;
 
 use App\Models\Projects\Project;
 
+/**
+ * Class ProjectsController
+ * @package App\Http\Controllers\Projects
+ */
 class ProjectsController extends Controller {
 
-	protected $projectsRepository;
+    /**
+     * @var ProjectsRepository
+     */
+    protected $projectsRepository;
 
 	/**
 	 * Create a new controller instance.
@@ -28,36 +35,6 @@ class ProjectsController extends Controller {
 		$this->middleware('auth');
 		$this->projectsRepository = $projectsRepository;
 	}
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return Response
-     */
-    public function index()
-    {
-        $user = Auth::user();
-        //create static methods on payee and payer for current user
-        $payer = Payer::find($user->id);
-        $payee = Payee::find($user->id);
-
-        JavaScript::put([
-            'payee_projects' => $payee->projectsAsPayee,
-            'payer_projects' => $payer->projectsAsPayer,
-            'payers' => $payee->payers,
-            'payees' => $payer->payees
-        ]);
-
-        return view('projects');
-    }
-
-    /**
-     * select
-     */
-
-    /**
-     * insert
-     */
 
     /**
      * Insert a new project
@@ -76,14 +53,6 @@ class ProjectsController extends Controller {
         $payee = Payee::find(Auth::user()->id);
         return $payee->projectsAsPayee;
     }
-
-    /**
-     * update
-     */
-
-    /**
-     * delete
-     */
 
     /**
      * Delete a project

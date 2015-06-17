@@ -18,13 +18,18 @@ use App\Models\Foods\Food;
 use App\Models\Units\Unit;
 use App\Models\Foods\Entry;
 
+/**
+ * Class RecipesController
+ * @package App\Http\Controllers\Recipes
+ */
 class RecipesController extends Controller {
 
-	/**
-	 * select
-	 */
-
-	public function filterRecipes(Request $request)
+    /**
+     *
+     * @param Request $request
+     * @return array
+     */
+    public function filterRecipes(Request $request)
 	{
 		$typing = $request->get('typing');
 		$tag_ids = $request->get('tag_ids');
@@ -41,10 +46,6 @@ class RecipesController extends Controller {
 		$recipe = Recipe::find($request->get('recipe_id'));
 		return Recipe::getRecipeInfo($recipe);
 	}
-
-	/**
-	 * insert
-	 */
 
 	/**
 	 * Delete all tags from the recipe then adds the correct tags to it
@@ -64,7 +65,12 @@ class RecipesController extends Controller {
 		return Recipe::filterRecipes('', []);
 	}
 
-	public function insertRecipeEntry(Request $request)
+    /**
+     *
+     * @param Request $request
+     * @return array
+     */
+    public function insertRecipeEntry(Request $request)
 	{
 		$date = $request->get('date');
 		$recipe_id = $request->get('recipe_id');
@@ -74,14 +80,24 @@ class RecipesController extends Controller {
 		return Entry::getFoodEntries($date);
 	}
 
-	public function insertRecipe(Request $request)
+    /**
+     *
+     * @param Request $request
+     * @return array
+     */
+    public function insertRecipe(Request $request)
 	{
 		$name = $request->get('name');
 		Recipe::insertRecipe($name);
 		return Recipe::filterRecipes('', []);
 	}
 
-	public function insertRecipeMethod(Request $request)
+    /**
+     *
+     * @param Request $request
+     * @return array
+     */
+    public function insertRecipeMethod(Request $request)
 	{
 		$recipe = Recipe::find($request->get('recipe_id'));
 		$steps = $request->get('steps');
@@ -91,7 +107,12 @@ class RecipesController extends Controller {
 		return Recipe::getRecipeInfo($recipe);
 	}
 
-	public function insertFoodIntoRecipe(Request $request)
+    /**
+     *
+     * @param Request $request
+     * @return array
+     */
+    public function insertFoodIntoRecipe(Request $request)
 	{
 		$data = $request->all();
 		$recipe = Recipe::find($data['recipe_id']);
@@ -99,10 +120,6 @@ class RecipesController extends Controller {
 		Recipe::insertFoodIntoRecipe($recipe, $data);
 		return Recipe::getRecipeInfo($recipe);
 	}
-
-	/**
-	 * update
-	 */
 
     /**
      * Delete the existing method before adding the updated method
@@ -120,18 +137,24 @@ class RecipesController extends Controller {
 		return Recipe::getRecipeInfo($recipe);
 	}
 
-	/**
-	 * delete
-	 */
-	
-	public function deleteRecipe(Request $request)
+    /**
+     *
+     * @param Request $request
+     * @return array
+     */
+    public function deleteRecipe(Request $request)
 	{
 		$id = $request->get('id');
 		Recipe::deleteRecipe($id);
 		return Recipe::filterRecipes('', []);
 	}
-	
-	public function deleteFoodFromRecipe(Request $request)
+
+    /**
+     *
+     * @param Request $request
+     * @return array
+     */
+    public function deleteFoodFromRecipe(Request $request)
 	{
 		$food_id = $request->get('food_id');
 		$recipe = Recipe::find($request->get('recipe_id'));
@@ -140,7 +163,12 @@ class RecipesController extends Controller {
 		return Recipe::getRecipeInfo($recipe);
 	}
 
-	public function deleteRecipeEntry(Request $request)
+    /**
+     *
+     * @param Request $request
+     * @return array
+     */
+    public function deleteRecipeEntry(Request $request)
 	{
 		$date = $request->get('date');
 		$recipe_id = $request->get('recipe_id');

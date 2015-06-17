@@ -16,13 +16,19 @@ use App\Models\Foods\Recipe;
 use App\Models\Foods\RecipeMethod;
 use App\Models\Units\Unit;
 
+/**
+ * Class QuickRecipesController
+ * @package App\Http\Controllers\Recipes
+ */
 class QuickRecipesController extends Controller {
 
-	/**
-	 * select
-	 */
-	
-	private function pluckName($name, $table)
+    /**
+     *
+     * @param $name
+     * @param $table
+     * @return mixed
+     */
+    private function pluckName($name, $table)
 	{
 		//for quick recipe
 		$name = DB::table($table)
@@ -32,10 +38,6 @@ class QuickRecipesController extends Controller {
 
 		return $name;
 	}
-
-	/**
-	 * insert
-	 */
 	
 	/**
 	 * This is the function that is called from the ajax request.
@@ -80,7 +82,12 @@ class QuickRecipesController extends Controller {
 		}
 	}
 
-	private function checkEntireRecipeForSimilarNames($contents)
+    /**
+     *
+     * @param $contents
+     * @return array
+     */
+    private function checkEntireRecipeForSimilarNames($contents)
 	{
 		//$index is so if a similar name is found,
 		//I know what index it is in the quick recipe array for the javascript.
@@ -117,7 +124,13 @@ class QuickRecipesController extends Controller {
 		return $similar_names;
 	}
 
-	private function populateSimilarUnitNames($unit_name, $index)
+    /**
+     *
+     * @param $unit_name
+     * @param $index
+     * @return array
+     */
+    private function populateSimilarUnitNames($unit_name, $index)
 	{
 		$similar_unit_names = [];
 		$found = $this->checkSimilarNames($unit_name, 'units');
@@ -134,7 +147,13 @@ class QuickRecipesController extends Controller {
 		return $similar_unit_names;
 	}
 
-	private function populateSimilarFoodNames($food_name, $index)
+    /**
+     *
+     * @param $food_name
+     * @param $index
+     * @return array
+     */
+    private function populateSimilarFoodNames($food_name, $index)
 	{
 		$similar_food_names = [];
 		$found = $this->checkSimilarNames($food_name, 'foods');
@@ -193,7 +212,14 @@ class QuickRecipesController extends Controller {
 		return $data_to_insert;
 	}
 
-	private function insertEverything($recipe_name, $steps, $data_to_insert)
+    /**
+     *
+     * @param $recipe_name
+     * @param $steps
+     * @param $data_to_insert
+     * @return array
+     */
+    private function insertEverything($recipe_name, $steps, $data_to_insert)
 	{
 		//insert recipe into recipes table
 		$recipe = Recipe::find($this->insertRecipe($recipe_name));
@@ -226,7 +252,12 @@ class QuickRecipesController extends Controller {
 		);
 	}
 
-	private function insertRecipe($name)
+    /**
+     *
+     * @param $name
+     * @return mixed
+     */
+    private function insertRecipe($name)
 	{
 		//insert recipe into recipes table and retrieve the id
 		$id = Recipe
@@ -238,19 +269,13 @@ class QuickRecipesController extends Controller {
 		return $id;
 	}
 
-	/**
-	 * update
-	 */
-	
-	/**
-	 * delete
-	 */
-	
-	/**
-	 * other
-	 */
-	
-	private function countItem($table, $name)
+    /**
+     *
+     * @param $table
+     * @param $name
+     * @return mixed
+     */
+    private function countItem($table, $name)
 	{
 		$count = DB::table($table)
 			->where('name', $name)

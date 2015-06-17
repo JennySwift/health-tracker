@@ -17,6 +17,10 @@ use App\Models\Foods\Recipe;
 use App\Models\Tags\Tag;
 use App\User;
 
+/**
+ * Class FoodsController
+ * @package App\Http\Controllers\Foods
+ */
 class FoodsController extends Controller {
 
 	/**
@@ -29,26 +33,33 @@ class FoodsController extends Controller {
 		$this->middleware('auth');
 	}
 
-	/**
-	 * select
-	 */
-
-	public function show($id)
+    /**
+     *
+     * @param $id
+     * @return array
+     */
+    public function show($id)
 	{
 		$food = Food::find($id);
 		return Food::getFoodInfo($food);
 	}
 
-	public function getAllFoodsWithUnits(Request $request)
+    /**
+     *
+     * @param Request $request
+     * @return mixed
+     */
+    public function getAllFoodsWithUnits(Request $request)
 	{
 		return Food::getAllFoodsWithUnits();
 	}
 
-	/**
-	 * insert
-	 */
-
-	public function insertFood(Request $request)
+    /**
+     *
+     * @param Request $request
+     * @return mixed
+     */
+    public function insertFood(Request $request)
 	{
 		$name = $request->get('name');
 		Food::insertFood($name);
@@ -56,18 +67,24 @@ class FoodsController extends Controller {
 		return Food::getAllFoodsWithUnits();
 	}
 
-	public function insertUnitInCalories(Request $request)
+    /**
+     *
+     * @param Request $request
+     * @return array
+     */
+    public function insertUnitInCalories(Request $request)
 	{
 		$food = Food::find($request->get('food_id'));
 		$unit_id = $request->get('unit_id');
 		return Food::insertUnitInCalories($food, $unit_id);
 	}
 
-	/**
-	 * update
-	 */
-	
-	public function updateCalories(Request $request)
+    /**
+     *
+     * @param Request $request
+     * @return array
+     */
+    public function updateCalories(Request $request)
 	{
 		$food = Food::find($request->get('food_id'));
 		$unit_id = $request->get('unit_id');
@@ -81,7 +98,12 @@ class FoodsController extends Controller {
 		return Food::getFoodInfo($food);
 	}
 
-	public function updateDefaultUnit(Request $request)
+    /**
+     *
+     * @param Request $request
+     * @return array
+     */
+    public function updateDefaultUnit(Request $request)
 	{
 		$food = Food::find($request->get('food_id'));
 		$unit_id = $request->get('unit_id');
@@ -93,10 +115,12 @@ class FoodsController extends Controller {
 		return Food::getFoodInfo($food);
 	}
 
-	/**
-	 * delete
-	 */
-
+    /**
+     *
+     * @param Request $request
+     * @param $id
+     * @return mixed
+     */
     public function destroy(Request $request, $id)
     {
         $food = Food::find($id);
@@ -105,7 +129,12 @@ class FoodsController extends Controller {
         return Food::getAllFoodsWithUnits();
     }
 
-	public function deleteUnitFromCalories(Request $request)
+    /**
+     *
+     * @param Request $request
+     * @return array
+     */
+    public function deleteUnitFromCalories(Request $request)
 	{
 		$food = Food::find($request->get('food_id'));
 		$unit_id = $request->get('unit_id');

@@ -20,6 +20,10 @@ use Auth;
 
 use Illuminate\Http\Request;
 
+/**
+ * Class PagesController
+ * @package App\Http\Controllers
+ */
 class PagesController extends Controller {
 
     /**
@@ -32,6 +36,11 @@ class PagesController extends Controller {
         $this->middleware('auth');
     }
 
+    /**
+     *
+     * @param WeightsRepository $weightsRepository
+     * @return \Illuminate\View\View
+     */
     public function entries(WeightsRepository $weightsRepository)
     {
         $date = Carbon::today()->format('Y-m-d');
@@ -51,6 +60,11 @@ class PagesController extends Controller {
     }
 
 
+    /**
+     *
+     * @param ExercisesRepository $exercisesRepository
+     * @return \Illuminate\View\View
+     */
     public function exercises(ExercisesRepository $exercisesRepository)
     {
         JavaScript::put([
@@ -86,6 +100,10 @@ class PagesController extends Controller {
         return view('foods');
     }
 
+    /**
+     *
+     * @return \Illuminate\View\View
+     */
     public function units()
     {
         JavaScript::put([
@@ -95,6 +113,10 @@ class PagesController extends Controller {
         return view('units');
     }
 
+    /**
+     *
+     * @return \Illuminate\View\View
+     */
     public function journal()
     {
         $date = Carbon::today()->format('Y-m-d');
@@ -106,6 +128,10 @@ class PagesController extends Controller {
         return view('journal');
     }
 
+    /**
+     *
+     * @return \Illuminate\View\View
+     */
     public function payee()
     {
         $payee = Payee::find(Auth::user()->id);
@@ -125,6 +151,10 @@ class PagesController extends Controller {
         return view('payee');
     }
 
+    /**
+     *
+     * @return \Illuminate\View\View
+     */
     public function payer()
     {
         $payer = Payer::find(Auth::user()->id);

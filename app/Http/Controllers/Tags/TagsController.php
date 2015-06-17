@@ -14,23 +14,19 @@ use Debugbar;
 use App\Models\Tags\Tag;
 use App\Models\Exercises\Exercise;
 
+/**
+ * Class TagsController
+ * @package App\Http\Controllers\Tags
+ */
 class TagsController extends Controller {
 
-	/**
-	 * Exercises
-	 */
-	
-	/**
-	 * select
-	 */
-	
-	/**
-	 * insert
-	 */
-	
+    /**
+     * Create a new exercise tag
+     * @param Request $request
+     * @return mixed
+     */
 	public function InsertExerciseTag(Request $request)
 	{
-		//creates a new exercise tag
 		$name = $request->get('name');
 		
 		Tag::insert([
@@ -41,16 +37,14 @@ class TagsController extends Controller {
 
 		return Tag::getExerciseTags();
 	}
-	
-	/**
-	 * update
-	 */
-	
-	/**
-	 * delete
-	 */
 
-	public function deleteExerciseTag(Request $request)
+    /**
+     *
+     * @param Request $request
+     * @return mixed
+     * @throws \Exception
+     */
+    public function deleteExerciseTag(Request $request)
 	{
 		$id = $request->get('id');
 		
@@ -70,18 +64,6 @@ class TagsController extends Controller {
 		Tag::deleteRecipeTag($id);
 		return Tag::getRecipeTags();
 	}
-
-	/**
-	 * From old ExerciseTagController
-	 */
-	
-	/**
-	 * select
-	 */
-	
-	/**
-	 * insert
-	 */
 	
 	/**
 	 * Deletes all tags from the exercise then adds the correct tags to the exercise
@@ -106,15 +88,12 @@ class TagsController extends Controller {
 		return Exercise::getExercises();
 	}
 
-	/**
-	 * update
-	 */
-	
-	/**
-	 * delete
-	 */
-
-	public function deleteTagFromExercise(Request $request)
+    /**
+     *
+     * @param Request $request
+     * @return mixed
+     */
+    public function deleteTagFromExercise(Request $request)
 	{
 		$exercise_id = $request->get('exercise_id');
 		$tag_id = $request->get('tag_id');
@@ -126,10 +105,6 @@ class TagsController extends Controller {
 
 		return Exercise::getExercises();
 	}
-
-	/**
-	 * Recipes
-	 */
 	
 	/**
 	 * Insert a new tag into the tags table, for recipes
