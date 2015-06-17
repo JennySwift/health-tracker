@@ -74,10 +74,12 @@ Route::controllers([
 /**
  * Bindings
  */
-Route::bind('journal', function($value)
-{
-    return Journal::getJournalEntry($value);
-});
+
+//Route::bind('journal', function($date)
+//{
+//    return Journal::where('date', $date);
+//});
+
 Route::bind('exercises', function($value)
 {
     return Exercise::findOrFail($value);
@@ -97,7 +99,7 @@ Route::resource('exercises', 'Exercises\ExercisesController', ['except' => ['ind
 Route::resource('ExerciseEntries', 'Exercises\ExerciseEntriesController', ['only' => ['store']]);
 Route::resource('ExerciseSeries', 'Exercises\ExerciseSeriesController', ['only' => ['store', 'show', 'destroy']]);
 Route::resource('workouts', 'Exercises\WorkoutsController', ['only' => ['store']]);
-Route::resource('journal', 'Journal\JournalController', ['only' => ['show', 'store']]);
+Route::resource('journal', 'Journal\JournalController', ['only' => ['show', 'store', 'update']]);
 
 /**
  * Ajax
@@ -144,7 +146,7 @@ Route::post('update/calories', 'Foods\FoodsController@updateCalories');
  * Journal
  */
 
-Route::post('insert/journalEntry', 'Journal\JournalController@insertOrUpdateJournalEntry');
+//Route::post('insert/journalEntry', 'Journal\JournalController@insertOrUpdateJournalEntry');
 
 /**
  * Recipes

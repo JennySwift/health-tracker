@@ -7,6 +7,10 @@ class Journal extends Model {
 
 	protected $table = 'journal_entries';
 
+    protected $fillable = ['date', 'text', 'user_id'];
+
+    protected $appends = ['path'];
+
 	/**
 	 * Define relationships
 	 */
@@ -15,6 +19,19 @@ class Journal extends Model {
 	{
 		return $this->belongsTo('App\User');
 	}
+
+    /**
+     * Appends
+     */
+
+    /**
+     * Return the URL of the resource
+     * @return string
+     */
+    public function getPathAttribute()
+    {
+        return route('journal.show', $this->id);
+    }
 
 	/**
 	 * select
@@ -25,54 +42,47 @@ class Journal extends Model {
 		$entry = static
 			::where('date', $date)
 			->where('user_id', Auth::user()->id)
-			->select('id', 'text')
 			->first();
 
-		//for some reason I would get an error if I didn't do this:
-		if (isset($entry)) {
-			$response = array(
-				'id' => $entry->id,
-				'text' => $entry->text
-			);
+		if (!isset($entry)) {
+			return [];
 		}
 		else {
-			$response = array();
+			return $entry;
 		}
-
-		return $response;
 	}
 
 	/**
 	 * insert
 	 */
 
-	public static function insertOrUpdateJournalEntry($date, $text)
-	{
-		//check if an entry already exists
-		$count = static
-			::where('date', $date)
-			->where('user_id', Auth::user()->id)
-			->count();
-
-		if ($count === 0) {
-			//create a new entry
-			static::insert([
-				'date' => $date,
-				'text' => $text,
-				'user_id' => Auth::user()->id
-			]);
-		}
-		else {
-			//update existing entry
-			static
-				::where('date', $date)
-				->where('user_id', Auth::user()->id)
-				->update([
-					'text' => $text
-				]);
-		}
-		
-	}
+//	public static function insertOrUpdateJournalEntry($date, $text)
+//	{
+//		//check if an entry already exists
+//		$count = static
+//			::where('date', $date)
+//			->where('user_id', Auth::user()->id)
+//			->count();
+//
+//		if ($count === 0) {
+//			//create a new entry
+//			static::insert([
+//				'date' => $date,
+//				'text' => $text,
+//				'user_id' => Auth::user()->id
+//			]);
+//		}
+//		else {
+//			//update existing entry
+//			static
+//				::where('date', $date)
+//				->where('user_id', Auth::user()->id)
+//				->update([
+//					'text' => $text
+//				]);
+//		}
+//
+//	}
 
 	/**
 	 * update

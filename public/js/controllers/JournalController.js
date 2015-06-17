@@ -71,11 +71,23 @@ var app = angular.module('tracker');
 		/**
 		 * insert
 		 */
-		
+
+        /**
+         * If the id of the journal entry exists, update the entry.
+         * If not, insert the entry.
+         */
 		$scope.insertOrUpdateJournalEntry = function () {
-			JournalFactory.insertJournalEntry($scope.date.sql, $scope.journal_entry.text).then(function (response) {
-				$scope.journal_entry = response.data;
-			});
+            if ($scope.journal_entry.id) {
+                JournalFactory.updateJournalEntry($scope.journal_entry).then(function (response) {
+                    $scope.journal_entry = response.data;
+                });
+            }
+            else {
+                JournalFactory.insertJournalEntry($scope.date.sql).then(function (response) {
+                    $scope.journal_entry = response.data;
+                });
+            }
+
 		};
 		
 		/**
