@@ -1,16 +1,16 @@
 <?php
 
-/**
- * Views
- */
-
-//test
 use App\Models\Exercises\Exercise;
 use App\Models\Journal\Journal;
 use App\Models\Projects\Payer;
 use App\Models\Projects\Project;
 use App\Models\Projects\Timer;
 
+/**
+ * Views
+ */
+
+//test
 //Route::get('/test', function()
 //{
 //    $payer = Payer::first();
@@ -18,24 +18,24 @@ use App\Models\Projects\Timer;
 //});
 
 //Homepage (entries)
-Route::get('/', 'EntriesController@index');
+Route::get('/', 'PagesController@entries');
 
 //Units
-Route::get('/units', 'Units\UnitsController@index');
+Route::get('/units', 'PagesController@units');
 
 //Foods
-Route::get('/foods', 'Foods\FoodsController@index');
+Route::get('/foods', 'PagesController@foods');
 
 //Exercises
 Route::get('exercises', 'PagesController@exercises');
 
 //Journal
-Route::get('/journal', 'Journal\JournalController@index');
+Route::get('/journal', 'PagesController@journal');
 
 //Projects
-Route::get('projects', ['as' => 'projects', 'uses' => 'Projects\ProjectsController@index']);
-Route::get('payee', ['as' => 'payee', 'uses' => 'Projects\PayeeController@index']);
-Route::get('payer', ['as' => 'payer', 'uses' => 'Projects\PayerController@index']);
+//Route::get('projects', ['as' => 'projects', 'uses' => 'PagesController@index']);
+Route::get('payee', ['as' => 'payee', 'uses' => 'PagesController@payee']);
+Route::get('payer', ['as' => 'payer', 'uses' => 'PagesController@payer']);
 
 //Credits
 Route::get('/credits', function()
@@ -88,12 +88,12 @@ Route::bind('exercises', function($value)
  */
 
 Route::resource('weights', 'Weights\WeightsController');
-Route::resource('projects', 'Projects\ProjectsController', ['only' => ['index', 'store', 'destroy']]);
-Route::resource('payee', 'Projects\PayeeController', ['only' => ['index', 'store', 'destroy']]);
-Route::resource('payer', 'Projects\PayerController', ['only' => ['index', 'store', 'destroy']]);
+//Route::resource('projects', 'Projects\ProjectsController', ['only' => ['index', 'store', 'destroy']]);
+Route::resource('payee', 'Projects\PayeeController', ['only' => ['store', 'destroy']]);
+Route::resource('payer', 'Projects\PayerController', ['only' => ['store', 'destroy']]);
 Route::resource('timers', 'Projects\TimersController', ['only' => ['destroy']]);
-Route::resource('foods', 'Foods\FoodsController', ['only' => ['index', 'show', 'destroy']]);
-Route::resource('exercises', 'Exercises\ExercisesController');
+Route::resource('foods', 'Foods\FoodsController', ['only' => ['show', 'destroy']]);
+Route::resource('exercises', 'Exercises\ExercisesController', ['except' => ['index']]);
 Route::resource('ExerciseEntries', 'Exercises\ExerciseEntriesController', ['only' => ['store']]);
 Route::resource('ExerciseSeries', 'Exercises\ExerciseSeriesController', ['only' => ['store', 'show', 'destroy']]);
 Route::resource('workouts', 'Exercises\WorkoutsController', ['only' => ['store']]);

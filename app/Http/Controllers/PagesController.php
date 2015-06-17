@@ -3,9 +3,18 @@
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\Exercises\Workout;
+use App\Models\Exercises\Entry as ExerciseEntry;
+use App\Models\Foods\Food;
+use App\Models\Foods\Recipe;
+use App\Models\Foods\Entry as FoodEntry;
+use App\Models\Journal\Journal;
+use App\Models\Projects\Payee;
+use App\Models\Projects\Payer;
 use App\Models\Tags\Tag;
 use App\Models\Units\Unit;
 use App\Repositories\Exercises\ExercisesRepository;
+use App\Repositories\Weights\WeightsRepository;
+use Carbon\Carbon;
 use JavaScript;
 use Auth;
 
@@ -13,10 +22,34 @@ use Illuminate\Http\Request;
 
 class PagesController extends Controller {
 
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
     public function __construct()
-{
-    $this->middleware('auth');
-}
+    {
+        $this->middleware('auth');
+    }
+
+    public function entries(WeightsRepository $weightsRepository)
+    {
+        $date = Carbon::today()->format('Y-m-d');
+
+        JavaScript::put([
+            "weight" => $weightsRepository->getWeight($date),
+            "exercise_entries" => ExerciseEntry::getExerciseEntries($date),
+            "food_units" => Unit::getFoodUnits(),
+            "exercise_units" => Unit::getExerciseUnits(),
+
+            "menu_entries" => FoodEntry::getFoodEntries($date),
+            "calories_for_the_day" => number_format(Food::getCaloriesForDay($date), 2),
+            "calories_for_the_week" => number_format(Food::getCaloriesFor7Days($date), 2)
+        ]);
+
+        return view('entries');
+    }
+
 
     public function exercises(ExercisesRepository $exercisesRepository)
     {
@@ -36,6 +69,72 @@ class PagesController extends Controller {
         ]);
 
         return view('exercises');
+    }
+
+    /**
+     *
+     * @return \Illuminate\View\View
+     */
+    public function foods()
+    {
+        JavaScript::put([
+            'foods_with_units' => Food::getAllFoodsWithUnits(),
+            'recipes' => Recipe::filterRecipes('', []),
+            'recipe_tags' => Tag::getRecipeTags()
+        ]);
+
+        return view('foods');
+    }
+
+    public function units()
+    {
+        JavaScript::put([
+            'units' => Unit::getAllUnits()
+        ]);
+
+        return view('units');
+    }
+
+    public function journal()
+    {
+        $date = Carbon::today()->format('Y-m-d');
+
+        JavaScript::put([
+            'entry' => Journal::getJournalEntry($date)
+        ]);
+
+        return view('journal');
+    }
+
+    public function payee()
+    {
+        $payee = Payee::find(Auth::user()->id);
+
+        JavaScript::put([
+            'payee_projects' => $payee->projectsAsPayee->toArray(),
+            'payers' => $payee->payers->toArray(),
+        ]);
+
+//        return $payee;
+
+//        return $payee->payers()->first()->owed;
+
+//        return $payee->payers->first()->owed;
+
+//        return $payee->getOwed();
+        return view('payee');
+    }
+
+    public function payer()
+    {
+        $payer = Payer::find(Auth::user()->id);
+
+        JavaScript::put([
+            'payer_projects' => $payer->projectsAsPayer,
+            'payees' => $payer->payees
+        ]);
+
+        return view('payer');
     }
 
 }

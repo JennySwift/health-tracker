@@ -31,17 +31,6 @@ class JournalController extends Controller {
 	 * Select
 	 */
 
-	public function index()
-	{
-		$date = Carbon::today()->format('Y-m-d');
-
-		JavaScript::put([
-			'entry' => Journal::getJournalEntry($date)
-		]);
-
-		return view('journal');
-	}
-
     //Todo: This should take the id, not the date (see binding thing in routes.php)
     public function show($journal)
     {

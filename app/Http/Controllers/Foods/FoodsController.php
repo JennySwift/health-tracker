@@ -30,25 +30,6 @@ class FoodsController extends Controller {
 	}
 
 	/**
-	 * Index
-	 */
-
-    /**
-     *
-     * @return \Illuminate\View\View
-     */
-    public function index()
-    {
-        JavaScript::put([
-            'foods_with_units' => Food::getAllFoodsWithUnits(),
-            'recipes' => Recipe::filterRecipes('', []),
-            'recipe_tags' => Tag::getRecipeTags()
-        ]);
-
-        return view('foods');
-    }
-
-	/**
 	 * select
 	 */
 

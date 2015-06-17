@@ -27,30 +27,6 @@ class PayeeController extends Controller {
      */
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return Response
-     */
-    public function index()
-    {
-        $payee = Payee::find(Auth::user()->id);
-
-        JavaScript::put([
-            'payee_projects' => $payee->projectsAsPayee,
-            'payers' => $payee->payers,
-        ]);
-
-//        return $payee;
-
-//        return $payee->payers()->first()->owed;
-
-//        return $payee->payers->first()->owed;
-
-//        return $payee->getOwed();
-        return view('payee');
-    }
-
-    /**
      * insert
      */
 

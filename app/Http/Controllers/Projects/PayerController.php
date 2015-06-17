@@ -20,21 +20,4 @@ class PayerController extends Controller {
         $this->middleware('auth');
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return Response
-     */
-    public function index()
-    {
-        $payer = Payer::find(Auth::user()->id);
-
-        JavaScript::put([
-            'payer_projects' => $payer->projectsAsPayer,
-            'payees' => $payer->payees
-        ]);
-
-        return view('payer');
-    }
-
 }

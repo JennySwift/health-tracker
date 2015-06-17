@@ -27,8 +27,8 @@
     <li id="menu-dropdown" class="dropdown">
         <a href="#" class="dropdown-toggle fa fa-clock-o" data-toggle="dropdown"><span class="caret"></span></a>
         <ul class="dropdown-menu" role="menu">
-            <li><a href="{{route('payee.index')}}">Payee</a></li>
-            <li><a href="{{route('payer.index')}}">Payer</a></li>
+            <li><a href="{{route('payee')}}">Payee</a></li>
+            <li><a href="{{route('payer')}}">Payer</a></li>
         </ul>
     </li>
 

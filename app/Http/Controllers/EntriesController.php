@@ -39,29 +39,6 @@ class EntriesController extends Controller {
 		$this->middleware('auth');
 	}
 
-	/**
-	 * Show the application dashboard to the user.
-	 *
-	 * @return Response
-	 */
-	public function index(WeightsRepository $weightsRepository)
-	{
-		$date = Carbon::today()->format('Y-m-d');
-
-		JavaScript::put([
-			"weight" => $weightsRepository->getWeight($date),
-			"exercise_entries" => ExerciseEntry::getExerciseEntries($date),
-			"food_units" => Unit::getFoodUnits(),
-			"exercise_units" => Unit::getExerciseUnits(),
-
-			"menu_entries" => FoodEntry::getFoodEntries($date),
-			"calories_for_the_day" => number_format(Food::getCaloriesForDay($date), 2),
-			"calories_for_the_week" => number_format(Food::getCaloriesFor7Days($date), 2)
-		]);
-
-		return view('entries');
-	}
-
 	public function getEntries(Request $request, WeightsRepository $weightsRepository)
 	{
 		$date = $request->get('date');

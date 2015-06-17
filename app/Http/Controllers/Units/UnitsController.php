@@ -20,20 +20,6 @@ class UnitsController extends Controller {
 	{
 		$this->middleware('auth');
 	}
-	
-	/**
-	 * Index
-	 */
-
-	public function index()
-	{
-        JavaScript::put([
-            'units' => Unit::getAllUnits()
-        ]);
-
-//        return Unit::getAllUnits();
-        return view('units');
-	}
 
 	/**
 	 * Exercise units
