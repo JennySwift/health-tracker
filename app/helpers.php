@@ -8,5 +8,6 @@
  */
 function array_compare(array $base, array $newItems)
 {
+//    dd($base);
     return array_merge($base, array_filter($newItems));
 }

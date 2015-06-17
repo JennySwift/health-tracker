@@ -26,14 +26,14 @@ app.factory('ExercisesFactory', function ($http) {
 		/**
 		 * insert
 		 */
-		
+
 		insertTagsInExercise: function ($exercise_id, $tags) {
 			var $url = 'insert/tagsInExercise';
 			var $data = {
 				exercise_id: $exercise_id,
 				tags: $tags
 			};
-			
+
 			return $http.post($url, $data);
 		},
 		insertWorkout: function () {
@@ -84,40 +84,9 @@ app.factory('ExercisesFactory', function ($http) {
 		/**
 		 * update
 		 */
-		
-		updateDefaultExerciseUnit: function ($exercise_id, $default_exercise_unit_id) {
-			var $url = 'update/defaultExerciseUnit';
-			var $data = {
-				exercise_id: $exercise_id,
-				default_exercise_unit_id: $default_exercise_unit_id
-			};
-			
-			return $http.post($url, $data);
-		},
-		updateExerciseSeries: function ($exercise_id, $series_id) {
-			var $url = 'update/exerciseSeries';
-			var $data = {
-				exercise_id: $exercise_id,
-				series_id: $series_id
-			};
-			
-			return $http.post($url, $data);
-		},
-		//updateExerciseStepNumber: function ($exercise) {
-         //   var $url = $exercise.path;
-         //   var $step_number = $("#exercise-step-number").val();
-        //
-         //   var $data = {
-         //       step_number: $step_number
-         //   };
-        //
-         //   $("#exercise-step-number").val("");
-        //
-         //   return $http.put($url, $data);
-		//},
-        updateExerciseStepNumber: function ($exercise) {
+
+        updateExercise: function ($exercise) {
             var $url = $exercise.path;
-            var $step_number = $("#exercise-step-number").val();
 
             var $data = {
                 exercise: $exercise
@@ -127,16 +96,6 @@ app.factory('ExercisesFactory', function ($http) {
 
             return $http.put($url, $data);
         },
-		updateDefaultExerciseQuantity: function ($id) {
-			var $quantity = $("#default-unit-quantity").val();
-			var $url = 'update/defaultExerciseQuantity';
-			var $data = {
-				id: $id,
-				quantity: $quantity
-			};
-			
-			return $http.post($url, $data);
-		},
 
 		/**
 		 * delete

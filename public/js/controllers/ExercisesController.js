@@ -77,14 +77,6 @@ var app = angular.module('tracker');
 			});
 		};
 
-		$scope.insertTagsInExercise = function () {
-			//deletes tags from the exercise then adds the correct ones
-			ExercisesFactory.insertTagsInExercise($scope.selected.exercise.id, $scope.exercise_popup.tags).then(function (response) {
-				$scope.exercises = response.data;
-				$scope.show.popups.exercise = false;
-			});
-		};
-
 		$scope.insertExercise = function ($keycode) {
 			if ($keycode === 13) {
 				ExercisesFactory.insertExercise().then(function (response) {
@@ -96,37 +88,49 @@ var app = angular.module('tracker');
 		/**
 		 * update
 		 */
-		
-		$scope.updateDefaultExerciseQuantity = function ($keycode) {
-			if ($keycode !== 13) {
-				return;
-			}
-			ExercisesFactory.updateDefaultExerciseQuantity($scope.selected.exercise.id).then(function (response) {
-				$scope.exercises = response.data;
-			});
-		};
 
-		$scope.updateExerciseSeries = function ($exercise_id, $series_id) {
-			//to assign a series to an exercise
-			ExercisesFactory.updateExerciseSeries($exercise_id, $series_id).then(function (response) {
-				$scope.exercises = response.data;
-			});
-		};
+        $scope.updateExercise = function () {
+            ExercisesFactory.updateExercise($scope.exercise_popup.exercise).then(function (response) {
+                //$scope.exercises = response.data;
 
-		$scope.updateExerciseStepNumber = function ($keycode, $exercise) {
-			if ($keycode !== 13) {
-				return;
-			}
-			ExercisesFactory.updateExerciseStepNumber($exercise).then(function (response) {
-				$scope.exercises = response.data;
-			});
-		};
+                //deletes tags from the exercise then adds the correct ones
+                ExercisesFactory.insertTagsInExercise($scope.selected.exercise.id, $scope.exercise_popup.tags).then(function (response) {
+                    $scope.exercises = response.data;
+                    $scope.show.popups.exercise = false;
+                });
+            });
+        };
 
-		$scope.updateDefaultExerciseUnit = function ($unit_id) {
-			ExercisesFactory.updateDefaultExerciseUnit($scope.selected.exercise.id, $unit_id).then(function (response) {
-				$scope.exercises = response.data;
-			});
-		};
+        //$scope.updateDefaultExerciseQuantity = function ($keycode) {
+		//	if ($keycode !== 13) {
+		//		return;
+		//	}
+		//	ExercisesFactory.updateDefaultExerciseQuantity($scope.selected.exercise.id).then(function (response) {
+		//		$scope.exercises = response.data;
+		//	});
+		//};
+
+		//$scope.updateExerciseSeries = function ($exercise_id, $series_id) {
+		//	//to assign a series to an exercise
+		//	ExercisesFactory.updateExerciseSeries($exercise_id, $series_id).then(function (response) {
+		//		$scope.exercises = response.data;
+		//	});
+		//};
+
+		//$scope.updateExerciseStepNumber = function ($keycode, $exercise) {
+		//	if ($keycode !== 13) {
+		//		return;
+		//	}
+		//	ExercisesFactory.updateExerciseStepNumber($exercise).then(function (response) {
+		//		$scope.exercises = response.data;
+		//	});
+		//};
+
+		//$scope.updateDefaultExerciseUnit = function ($unit_id) {
+		//	ExercisesFactory.updateDefaultExerciseUnit($scope.selected.exercise.id, $unit_id).then(function (response) {
+		//		$scope.exercises = response.data;
+		//	});
+		//};
 
 		/**
 		 * delete

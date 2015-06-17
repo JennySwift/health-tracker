@@ -28,7 +28,6 @@ class SeriesWorkoutSeeder extends Seeder {
 				DB::table('series_workout')->insert([
 					'workout_id' => $workout_id,
 					'series_id' => $faker->randomElement($series_ids),
-					'user_id' => 1
 				]);
 			}
 		}

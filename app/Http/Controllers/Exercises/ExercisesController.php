@@ -41,9 +41,8 @@ class ExercisesController extends Controller {
      * @param $id
      * @return array
      */
-	public function show($id)
+	public function show($exercise)
 	{
-		$exercise = Exercise::find($id);
 		$all_exercise_tags = Tag::getExerciseTags();
 		$exercise_tags = $exercise->tags()->lists('id');
 
@@ -66,53 +65,6 @@ class ExercisesController extends Controller {
 
 		return Exercise::getExerciseSeriesHistory($series);
 	}
-
-    /**
-     * Deletes all workouts from the series then adds the correct workouts to the series
-     * @param  Request $request [description]
-     * @return [type]           [description]
-     *
-     * @TODO Should be part of the update method on the SeriesController
-     * PUT /series/{id}
-     */
-    public function deleteAndInsertSeriesIntoWorkouts(Request $request)
-    {
-        // Fetch the series
-        $series = Series::find($request->get('series_id'));
-
-        // If you want to delete the current workouts no matter what, pass an empty array as default value
-        $workout_ids = $request->get('workout_ids', []);
-
-        // Synchronize workouts
-        $series->workouts()->sync($workout_ids);
-
-        // return Series::getExerciseSeries();
-        return Workout::getWorkouts();
-    }
-
-	/**
-	 * Deletes all workouts from the series then adds the correct workouts to the series
-	 * @param  Request $request [description]
-	 * @return [type]           [description]
-	 */
-//	public function deleteAndInsertSeriesIntoWorkouts(Request $request)
-//	{
-//		$series = Series::find($request->get('series_id'));
-//		$workout_ids = $request->get('workout_ids');
-//
-//		//delete workouts from the series
-//		//I wasn't sure if detach would work for this since I want to delete all tags that belong to the exercise.
-//		DB::table('series_workout')->where('series_id', $series->id)->delete();
-//
-//		//add tags to the exercise
-//		foreach ($workout_ids as $workout_id) {
-//			//add tag to the exercise
-//			$series->workouts()->attach($workout_id, ['user_id' => Auth::user()->id]);
-//		}
-//
-//		// return Series::getExerciseSeries();
-//		return Workout::getWorkouts();
-//	}
 
     /**
      *
@@ -156,19 +108,7 @@ class ExercisesController extends Controller {
     {
         // Create an array with the new fields merged
         // @TODO Watch User Mass Settings on Laracasts (warning, some advanced OOP concepts in there!)
-        // @TODO Fix this method to avoid setting unprovided fields to null
-        $data = array_compare($exercise->toArray(), $request->only([
-            'step_number',
-            'default_quantity',
-            'description',
-            'name'
-        ]));
-//        $data = array_merge($exercise->toArray(), array_filter($request->only([
-//            'step_number',
-//            'default_quantity',
-//            'description',
-//            'name'
-//        ])));
+        $data = array_compare($exercise->toArray(), $request->get('exercise'));
 
         // Update the model with this array
         $exercise->update($data);
@@ -184,89 +124,9 @@ class ExercisesController extends Controller {
         // Return response
         return response([], 200);
 
-        //$exercise = Exercise::find($id)
-            //->update($request->only(['step_number', 'default_quantity']));
-
         //Valentin says this method should return $exercise
         //return Exercise::getExercises();
     }
-
-//	public function updateExerciseStepNumber(Request $request)
-//	{
-//		$exercise_id = $request->get('exercise_id');
-//		$step_number = $request->get('step_number');
-//
-//		Exercise
-//			::where('id', $exercise_id)
-//			->update([
-//				'step_number' => $step_number
-//			]);
-//
-//		return Exercise::getExercises();
-//	}
-
-    /**
-     * Change which series an exercise is in
-     * @param Request $request
-     * @return mixed
-     * @TODO Does not belong to the ExercisesController, but an ExercisesSeriesController
-     */
-//	public function updateExerciseSeries(Request $request)
-//	{
-//		$exercise_id = $request->get('exercise_id');
-//		$series_id = $request->get('series_id');
-//
-//        $this->generateResponse();
-//
-//		//for assigning a series to an exercise
-//		Exercise
-//			::where('id', $exercise_id)
-//			->update([
-//				'series_id' => $series_id
-//            ]);
-//
-//		return Exercise::getExercises();
-//	}
-
-    /**
-     *
-     * @param Request $request
-     * @return mixed
-     */
-//    public function updateDefaultExerciseQuantity(Request $request)
-//	{
-//		$id = $request->get('id');
-//		$quantity = $request->get('quantity');
-//
-//      @TODO Be careful, this is a perfect case of a mass assignment! Bad practice!! :)
-//		Exercise
-//			::where('id', $id)
-//			->update([
-//				'default_quantity' => $quantity
-//			]);
-//
-//		return Exercise::getExercises();
-//	}
-
-    /**
-     *
-     * @param Request $request
-     * @return mixed
-     */
-    public function updateDefaultExerciseUnit(Request $request)
-	{
-		$exercise_id = $request->get('exercise_id');
-		$default_exercise_unit_id = $request->get('default_exercise_unit_id');
-
-		Exercise
-			::where('id', $exercise_id)
-			->update([
-				'default_unit_id' => $default_exercise_unit_id
-			]);
-
-		return Exercise::getExercises();
-	}
-
 
     /**
      * Delete an exercise

@@ -7,26 +7,26 @@
 		<div class="flex">
 			<div>
 				<h5 class="center">step</h5>
-				<input ng-keyup="updateExerciseStepNumber($event.keyCode, selected.exercise)" type="text" placeholder="step number" id="exercise-step-number" class="form-control">
+				<input ng-model="exercise_popup.exercise.step_number" type="text" placeholder="step number" class="form-control">
 			</div>
 
 			<div>
 				<h5 class="center">series</h5>
-				<li ng-repeat="series in exercise_series" class="list-group-item hover pointer" ng-click="updateExerciseSeries(selected.exercise.id, series.id)">
+				<li ng-repeat="series in exercise_series" class="list-group-item hover pointer" ng-class="{'selected': series.id === exercise_popup.exercise.series_id}" ng-click="exercise_popup.exercise.series_id = series.id">
 					[[series.name]]
 				</li>
 			</div>
 			
 			<div>
 				<h5 class="center">default unit</h5>
-				<li ng-repeat="unit in units" class="list-group-item hover pointer" ng-click="updateDefaultExerciseUnit(unit.id)">
+				<li ng-repeat="unit in units" class="list-group-item hover pointer" ng-class="{'selected': unit.id === exercise_popup.exercise.default_unit_id}" ng-click="exercise_popup.exercise.default_unit_id = unit.id">
 					[[unit.name]]
 				</li>
 			</div>
 			
 			<div>
 				<h5 class="center tooltipster" title="This figure will be used, along with the default unit, when using the feature to quickly log a set of your exercise">default quantity</h5>
-				<input ng-keyup="updateDefaultExerciseQuantity($event.keyCode)" type="number" placeholder="enter quantity" id="default-unit-quantity" class="form-control">
+				<input ng-model="exercise_popup.exercise.default_quantity" type="text" placeholder="enter quantity" class="form-control">
 			</div>
 
 			<div>
@@ -42,7 +42,7 @@
 			
 		</div>
 
-		<button ng-click="insertTagsInExercise()">done</button>
+		<button ng-click="updateExercise()">Save</button>
 
 	</div>
 	

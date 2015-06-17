@@ -15,7 +15,7 @@ class Exercise extends Model {
 
 	use OwnedByUser;
 
-	protected $fillable = ['name', 'default_exercise_unit_id', 'description', 'default_quantity', 'step_number'];
+	protected $fillable = ['name', 'default_unit_id', 'description', 'default_quantity', 'step_number', 'series_id'];
 
     protected $appends = ['path'];
 

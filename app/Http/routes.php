@@ -122,12 +122,10 @@ Route::post('insert/exerciseSet', 'Exercises\ExerciseEntriesController@insertExe
 Route::post('delete/exerciseEntry', 'Exercises\ExerciseEntriesController@deleteExerciseEntry');
 //this one is more complicated
 Route::post('select/specificExerciseEntries', 'Exercises\ExerciseEntriesController@getSpecificExerciseEntries');
-Route::post('update/defaultExerciseQuantity', 'Exercises\ExercisesController@updateDefaultExerciseQuantity');
-Route::post('update/defaultExerciseUnit', 'Exercises\ExercisesController@updateDefaultExerciseUnit');
-Route::post('update/exerciseSeries', 'Exercises\ExercisesController@updateExerciseSeries');
 //this should be ExerciseSeriesHistoryController, index (if returns multiple series, show if returns one series) method
+Route::post('insert/tagsInExercise', 'Tags\TagsController@insertTagsInExercise');
 Route::post('select/exerciseSeriesHistory', 'Exercises\ExercisesController@getExerciseSeriesHistory');
-Route::post('insert/deleteAndInsertSeriesIntoWorkouts', 'Exercises\ExercisesController@deleteAndInsertSeriesIntoWorkouts');
+Route::post('insert/deleteAndInsertSeriesIntoWorkouts', 'Exercises\ExerciseSeriesController@deleteAndInsertSeriesIntoWorkouts');
 
 /**
  * Foods
@@ -172,7 +170,6 @@ Route::post('insert/tagsIntoRecipe', 'Recipes\RecipesController@insertTagsIntoRe
 Route::post('insert/recipeTag', 'Tags\TagsController@insertRecipeTag');
 Route::post('insert/tagInExercise', 'Tags\TagsController@insertTagInExercise');
 Route::post('insert/exerciseTag', 'Tags\TagsController@insertExerciseTag');
-Route::post('insert/tagsInExercise', 'Tags\TagsController@insertTagsInExercise');
 Route::post('delete/exerciseTag', 'Tags\TagsController@deleteExerciseTag');
 Route::post('delete/recipeTag', 'Tags\TagsController@deleteRecipeTag');
 Route::post('delete/tagFromExercise', 'Tags\TagsController@deleteTagFromExercise');

@@ -52,6 +52,31 @@ class ExerciseSeriesController extends Controller {
 	}
 
     /**
+     * Deletes all workouts from the series
+     * then adds the correct workouts to the series
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     *
+     * @TODO Should be part of the update method on the SeriesController
+     * PUT /series/{id}
+     */
+    public function deleteAndInsertSeriesIntoWorkouts(Request $request)
+    {
+        // Fetch the series
+        $series = Series::find($request->get('series_id'));
+
+        // If you want to delete the current workouts no matter what,
+        // pass an empty array as default value
+        $workout_ids = $request->get('workout_ids', []);
+
+        // Synchronize workouts
+        $series->workouts()->sync($workout_ids);
+
+        // return Series::getExerciseSeries();
+        return Workout::getWorkouts();
+    }
+
+    /**
      *
      * @param $id
      * @return mixed
