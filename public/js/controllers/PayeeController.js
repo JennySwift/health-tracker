@@ -118,6 +118,14 @@ var app = angular.module('tracker');
          * delete
          */
 
+        $scope.removePayer = function ($payer_id) {
+            if (confirm("Are you sure? This will delete all data associated with this payer.")) {
+                ProjectsFactory.removePayer($payer_id).then(function (response) {
+                    $scope.payers = response.data;
+                });
+            }
+        };
+
         $scope.deleteProject = function ($project) {
             ProjectsFactory.deleteProject($project).then(function (response) {
                 //$scope.projects = response.data;

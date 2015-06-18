@@ -48,6 +48,7 @@
                     <td><img ng-src="[[payer.gravatar]]" alt=""></td>
                     <td>[[payer.name]]</td>
                     <td>[[payer.owed_to_user]]</td>
+                    <td><button ng-click="removePayer(payer.id)" class="btn btn-xs">delete</button></td>
                 </tr>
             </table>
         </div>

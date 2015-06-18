@@ -52,6 +52,15 @@ app.factory('ProjectsFactory', function ($http) {
         /**
          * delete
          */
+
+        removePayer: function ($payer_id) {
+            var $url = 'delete/payer';
+            var $data = {
+                payer_id: $payer_id
+            };
+
+            return $http.post($url, $data);
+        },
         deleteProject: function ($project) {
             var $url = $project.path;
 

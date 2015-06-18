@@ -110,8 +110,8 @@ Route::resource('journal', 'Journal\JournalController', ['only' => ['show', 'sto
  */
 
 Route::post('insert/startProjectTimer', 'Projects\TimersController@startProjectTimer');
-// @TODO Controller does not exists!
-//Route::post('insert/payer', 'Projects\PayeesController@addPayerToPayee');
+Route::post('insert/payer', 'Projects\PayeeController@addPayer');
+Route::post('delete/payer', 'Projects\PayeeController@removePayer');
 Route::post('update/stopProjectTimer', 'Projects\TimersController@stopProjectTimer');
 
 /**
@@ -123,9 +123,9 @@ Route::post('delete/exerciseEntry', 'Exercises\ExerciseEntriesController@deleteE
 //this one is more complicated
 Route::post('select/specificExerciseEntries', 'Exercises\ExerciseEntriesController@getSpecificExerciseEntries');
 //this should be ExerciseSeriesHistoryController, index (if returns multiple series, show if returns one series) method
-Route::post('insert/tagsInExercise', 'Tags\TagsController@insertTagsInExercise');
 Route::post('select/exerciseSeriesHistory', 'Exercises\ExercisesController@getExerciseSeriesHistory');
 Route::post('insert/deleteAndInsertSeriesIntoWorkouts', 'Exercises\ExerciseSeriesController@deleteAndInsertSeriesIntoWorkouts');
+Route::post('insert/tagsInExercise', 'Tags\TagsController@insertTagsInExercise');
 
 /**
  * Foods
@@ -139,12 +139,6 @@ Route::post('delete/unitFromCalories', 'Foods\FoodsController@deleteUnitFromCalo
 Route::post('delete/foodEntry', 'Foods\FoodEntriesController@deleteFoodEntry');
 Route::post('update/defaultUnit', 'Foods\FoodsController@updateDefaultUnit');
 Route::post('update/calories', 'Foods\FoodsController@updateCalories');
-
-/**
- * Journal
- */
-
-//Route::post('insert/journalEntry', 'Journal\JournalController@insertOrUpdateJournalEntry');
 
 /**
  * Recipes
