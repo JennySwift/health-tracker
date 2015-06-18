@@ -80,11 +80,11 @@ class ProjectSeeder extends Seeder {
     {
         $faker = Faker::create();
 
-        foreach (range(0, 1) as $index) {
+        foreach (range(0, 8) as $index) {
 //            $finish = $faker->dateTimeBetween($startDate = '-1 days', $endDate = 'now');
 //            $start = $faker->dateTimeBetween($startDate = '-1 days', $endDate = $finish);
 
-            $minutes = $faker->randomElement(['01', '02', '05', '10', '20']);
+            $minutes = $faker->randomElement(['01', '02', '05', '10', '20', '30', '45', '50']);
             $finish = '2015-06-02 12:' . $minutes . ':00';
             $start = '2015-06-02 12:00:00';
 

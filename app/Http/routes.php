@@ -11,11 +11,10 @@ use App\Models\Projects\Timer;
  */
 
 //test
-//Route::get('/test', function()
-//{
-//    $payer = Payer::first();
-//    dd($payer->owed);
-//});
+Route::get('/test', function()
+{
+    $project = Project::first();
+});
 
 //Homepage (entries)
 Route::get('/', 'PagesController@entries');
