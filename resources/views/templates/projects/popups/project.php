@@ -44,8 +44,8 @@
                 <th></th>
             </tr>
             <tr ng-repeat="timer in selected.project.timers">
-                <td>[[timer.start]]</td>
-                <td>[[timer.finish]]</td>
+                <td>[[timer.formatted_start]]</td>
+                <td>[[timer.formatted_finish]]</td>
                 <td>[[timer.formatted_hours]]:[[timer.formatted_minutes]]:[[timer.formatted_seconds]]</td>
                 <td>[[timer.price]]</td>
                 <td>

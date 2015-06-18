@@ -10,7 +10,7 @@ class Timer extends Model {
 
 //    protected $with = ['project'];
 
-    protected $appends = ['path', 'time', 'formatted_hours', 'formatted_minutes', 'formatted_seconds', 'formatted_paid_at'];
+    protected $appends = ['path', 'time', 'formatted_hours', 'formatted_minutes', 'formatted_seconds', 'formatted_paid_at', 'formatted_start', 'formatted_finish'];
 
 	public $timestamps = false;
 
@@ -47,6 +47,20 @@ class Timer extends Model {
         }
 
         return Carbon::createFromFormat('Y-m-d H:i:s', $this->time_of_payment)->format('d/m/y');
+    }
+
+    public function getFormattedStartAttribute()
+    {
+        return Carbon::createFromFormat('Y-m-d H:i:s', $this->start)->format('d/m/y H:i:s');
+    }
+
+    public function getFormattedFinishAttribute()
+    {
+        if (!$this->finish) {
+            return '';
+        }
+
+        return Carbon::createFromFormat('Y-m-d H:i:s', $this->finish)->format('d/m/y H:i:s');
     }
 
 
