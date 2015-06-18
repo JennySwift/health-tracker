@@ -61,13 +61,6 @@
                 [[project.total_time_formatted.hours]]:[[project.total_time_formatted.minutes]]:[[project.total_time_formatted.seconds]]
             </td>
             <td ng-click="showProjectPopup(project)" class="pointer">[[project.formatted_price]]</td>
-            {{--<td>--}}
-            {{--<span ng-if="!project.paid" class="label label-danger">unpaid</span>--}}
-            {{--<span ng-if="project.paid" class="label label-success">paid</span>--}}
-            {{--</td>--}}
-            <td>
-                <button ng-click="deleteProject(project, 'payer')" class="btn btn-xs">delete</button>
-            </td>
         </tr>
 
     </table>
