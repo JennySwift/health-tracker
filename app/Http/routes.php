@@ -13,7 +13,8 @@ use App\Models\Projects\Timer;
 //test
 Route::get('/test', function()
 {
-    $project = Project::first();
+    $timer = Timer::first();
+    dd($timer->formatted_paid_at);
 });
 
 //Homepage (entries)

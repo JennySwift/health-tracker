@@ -52,7 +52,7 @@
                     <span ng-if="!timer.paid" class="label label-danger">unpaid</span>
                     <span ng-if="timer.paid" class="label label-success">paid</span>
                 </td>
-                <td>[[timer.time_of_payment]]</td>
+                <td>[[timer.formatted_paid_at]]</td>
                 <td>
                     <button ng-click="deleteTimer(timer)" class="btn btn-default btn-xs">delete</button>
                 </td>

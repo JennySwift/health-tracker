@@ -30,6 +30,11 @@ class TimersController extends Controller {
         $this->projectsRepository = $projectsRepository;
     }
 
+    /**
+     * Mark all timers that belong to the user (payee),
+     * and are with a certain payer, as paid
+     * @param Request $request
+     */
     public function markAsPaid(Request $request)
     {
         $payer = Payer::find($request->get('payer_id'));

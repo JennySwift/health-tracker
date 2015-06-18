@@ -10,7 +10,7 @@ class Timer extends Model {
 
 //    protected $with = ['project'];
 
-    protected $appends = ['path', 'time', 'formatted_hours', 'formatted_minutes', 'formatted_seconds'];
+    protected $appends = ['path', 'time', 'formatted_hours', 'formatted_minutes', 'formatted_seconds', 'formatted_paid_at'];
 
 	public $timestamps = false;
 
@@ -31,6 +31,22 @@ class Timer extends Model {
     public function getPathAttribute()
     {
         return route('timers.destroy', $this->id);
+    }
+
+
+    public function getFormattedPaidAtAttribute()
+    {
+        /**
+         * @VP:
+         * How would I name this attribute the same as the database column?
+         * I tried it but it errored unless I gave it a different attribute name.
+         */
+
+        if (!$this->time_of_payment) {
+            return '';
+        }
+
+        return Carbon::createFromFormat('Y-m-d H:i:s', $this->time_of_payment)->format('d/m/y');
     }
 
 
