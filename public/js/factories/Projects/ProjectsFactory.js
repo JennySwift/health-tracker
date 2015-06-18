@@ -49,6 +49,15 @@ app.factory('ProjectsFactory', function ($http) {
          * update
          */
 
+        markAsPaid: function ($payer_id) {
+            var $url = 'update/markAsPaid';
+            var $data = {
+                payer_id: $payer_id
+            };
+
+            return $http.post($url, $data);
+        },
+
         /**
          * delete
          */

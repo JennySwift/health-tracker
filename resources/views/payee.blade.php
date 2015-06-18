@@ -42,12 +42,14 @@
                     <th></th>
                     <th>name</th>
                     <th>owed</th>
+                    <th></th>
                 </tr>
 
                 <tr ng-repeat="payer in payers">
                     <td><img ng-src="[[payer.gravatar]]" alt=""></td>
                     <td>[[payer.name]]</td>
                     <td>[[payer.owed_to_user]]</td>
+                    <td><button ng-click="markAsPaid(payer)" class="btn btn-xs">paid</button></td>
                     <td><button ng-click="removePayer(payer.id)" class="btn btn-xs">delete</button></td>
                 </tr>
             </table>

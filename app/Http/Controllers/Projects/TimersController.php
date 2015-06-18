@@ -2,7 +2,10 @@
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Models\Projects\Payee;
+use App\Models\Projects\Payer;
 use App\Repositories\Projects\ProjectsRepository;
+use Auth;
 
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -25,6 +28,29 @@ class TimersController extends Controller {
     public function __construct(ProjectsRepository $projectsRepository)
     {
         $this->projectsRepository = $projectsRepository;
+    }
+
+    public function markAsPaid(Request $request)
+    {
+        $payer = Payer::find($request->get('payer_id'));
+        $payee = Payee::find(Auth::user()->id);
+
+        $project_ids = $payee->projectsAsPayee()
+            ->where('payer_id', $payer->id)
+            ->lists('id');
+
+        /**
+         * @VP:
+         * Is this vulnerable to mass assignment? How would I fix that?
+         */
+        Timer::whereIn('project_id', $project_ids)
+            ->where('paid', 0)
+            ->update([
+                'paid' => 1,
+                'time_of_payment' => Carbon::now()
+            ]);
+
+        //Todo: return something useful here. Currently a page refresh is required to see the changes.
     }
 
     /**

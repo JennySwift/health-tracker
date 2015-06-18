@@ -95,7 +95,7 @@ class ProjectSeeder extends Seeder {
                 'start' => $start,
                 'finish' => $finish,
                 'price' => $price,
-                'paid' => $faker->boolean($chanceOfGettingTrue = 50)
+//                'paid' => $faker->boolean($chanceOfGettingTrue = 50)
             ]);
 
             $project->timers()->save($timer);

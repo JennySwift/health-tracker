@@ -114,6 +114,14 @@ var app = angular.module('tracker');
             });
         };
 
+        $scope.markAsPaid = function ($payer) {
+            if (confirm("Are you sure? " + $payer.name + " will no longer owe you any money.")) {
+                ProjectsFactory.markAsPaid($payer.id).then(function (response) {
+                    //$scope. = response.data;
+                });
+            }
+        };
+
         /**
          * delete
          */

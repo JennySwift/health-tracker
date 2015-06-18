@@ -112,6 +112,7 @@ Route::resource('journal', 'Journal\JournalController', ['only' => ['show', 'sto
 Route::post('insert/startProjectTimer', 'Projects\TimersController@startProjectTimer');
 Route::post('insert/payer', 'Projects\PayeeController@addPayer');
 Route::post('delete/payer', 'Projects\PayeeController@removePayer');
+Route::post('update/markAsPaid', 'Projects\TimersController@markAsPaid');
 Route::post('update/stopProjectTimer', 'Projects\TimersController@stopProjectTimer');
 
 /**
