@@ -7,34 +7,56 @@ use App\Models\Exercises\Exercise;
 use App\Models\Exercises\Entry as ExerciseEntry;
 use App\Models\Units\Unit;
 
+/**
+ * Class Entry
+ * @package App\Models\Exercises
+ */
 class Entry extends Model {
 
 	use OwnedByUser;
 
+    /**
+     * @var array
+     */
     protected $fillable = ['date', 'quantity'];
 
-	protected $table = 'exercise_entries';
+    /**
+     * @var string
+     */
+    protected $table = 'exercise_entries';
 
-	/**
-	 * Define relationships
-	 */
-
-	public function user()
+    /**
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
 	{
 	    return $this->belongsTo('App\User');
 	}
 
-	public function exercise()
+    /**
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function exercise()
 	{
 	    return $this->belongsTo('App\Models\Exercises\Exercise');
 	}
 
-	public function unit()
+    /**
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function unit()
 	{
 	    return $this->belongsTo('App\Models\Units\Unit', 'exercise_unit_id');
 	}
 
-	public function entries()
+    /**
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function entries()
 	{
 		return $this->hasMany('App\Models\Exercises\Entry');
 	}
@@ -132,7 +154,14 @@ class Entry extends Model {
 		];
 	}
 
-	public static function getExerciseSets($date, $exercise_id, $exercise_unit_id)
+    /**
+     *
+     * @param $date
+     * @param $exercise_id
+     * @param $exercise_unit_id
+     * @return mixed
+     */
+    public static function getExerciseSets($date, $exercise_id, $exercise_unit_id)
 	{
 		return static
 			::where('date', $date)
@@ -142,7 +171,14 @@ class Entry extends Model {
 			->count();
 	}
 
-	public static function getTotalExerciseReps($date, $exercise_id, $exercise_unit_id)
+    /**
+     *
+     * @param $date
+     * @param $exercise_id
+     * @param $exercise_unit_id
+     * @return mixed
+     */
+    public static function getTotalExerciseReps($date, $exercise_id, $exercise_unit_id)
 	{
 		return static
 			::where('date', $date)
@@ -151,24 +187,4 @@ class Entry extends Model {
 			->where('user_id', Auth::user()->id)
 			->sum('quantity');
 	}
-
-	/**
-	 * insert
-	 */
-	
-	/**
-	 * update
-	 */
-	
-	/**
-	 * delete
-	 */
-	
-	/**
-	 * other
-	 */
-
-	
-
-
 }

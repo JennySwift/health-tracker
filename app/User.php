@@ -15,6 +15,10 @@ use App\Models\Exercises\Exercise;
 use Gravatar;
 use Auth;
 
+/**
+ * Class User
+ * @package App
+ */
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract
 {
 
@@ -26,6 +30,10 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      * @var string
      */
     protected $table = 'users';
+
+    /**
+     * @var array
+     */
     protected $appends = ['gravatar', 'owed_to_user', 'owed_by_user'];
 
     /**
@@ -43,82 +51,121 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     protected $hidden = ['password', 'remember_token'];
 
     /**
-     * Define relationships
+     *
+     * @return mixed
      */
-
-    //tags
     public function recipeTags()
     {
         return $this->hasMany('App\Models\Tags\Tag')->where('for', 'recipe');
     }
 
+    /**
+     *
+     * @return mixed
+     */
     public function exerciseTags()
     {
         return $this->hasMany('App\Models\Tags\Tag')->where('for', 'exercise');
     }
 
-    //exercises
+    /**
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function exercises()
     {
         return $this->hasMany('App\Models\Exercises\Exercise');
     }
 
+    /**
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function exerciseEntries()
     {
         return $this->hasMany('App\Models\Exercises\Entry');
     }
 
+    /**
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function exerciseSeries()
     {
         return $this->hasMany('App\Models\Exercises\Series');
     }
 
+    /**
+     *
+     * @return mixed
+     */
     public function exerciseUnits()
     {
         return $this->hasMany('App\Models\Units\Unit')->where('for', 'exercise');
     }
 
+    /**
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function workouts()
     {
         return $this->hasMany('App\Models\Exercises\Workout');
     }
 
-    //foods
+    /**
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function foods()
     {
         return $this->hasMany('App\Models\Foods\Food');
     }
 
+    /**
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function foodEntries()
     {
         return $this->hasMany('App\Models\Foods\Entry');
     }
 
+    /**
+     *
+     * @return mixed
+     */
     public function foodUnits()
     {
         return $this->hasMany('App\Models\Units\Unit')->where('for', 'food');
     }
 
+    /**
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function recipes()
     {
         return $this->hasMany('App\Models\Foods\Recipe');
     }
 
-    //weight
+    /**
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function weights()
     {
         return $this->hasMany('App\Models\Weights\Weight');
     }
 
-    //journal
+    /**
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function journal()
     {
         return $this->hasMany('App\Models\Journal\Journal');
     }
-
-    /**
-     * Appends
-     */
 
     /**
      * Return the gravatar URL for the user

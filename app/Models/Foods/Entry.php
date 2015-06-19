@@ -5,29 +5,39 @@ use Auth;
 use Debugbar;
 use App\Models\Foods\Calories;
 
+/**
+ * Class Entry
+ * @package App\Models\Foods
+ */
 class Entry extends Model {
 
-	protected $table = 'food_entries';
+    /**
+     * @var string
+     */
+    protected $table = 'food_entries';
 
+    /**
+     * @var array
+     */
     protected $fillable = ['date', 'quantity'];
 
-	/**
-	 * Define relationships
-	 */
-
-	public function user()
+    /**
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
 	{
 		return $this->belongsTo('App\User');
 	}
 
-	public function food()
+    /**
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function food()
 	{
 		return $this->belongsTo('App\Models\Foods\Food');
 	}
-
-	/**
-	 * select
-	 */
 	
 	/**
 	 * Get a user's food entries for one day
@@ -78,11 +88,11 @@ class Entry extends Model {
 	    return $food_entries;
 	}
 
-	/**
-	 * insert
-	 */
-	
-	public static function insertMenuEntry($data)
+    /**
+     *
+     * @param $data
+     */
+    public static function insertMenuEntry($data)
 	{
 		$date = $data['date'];
 		$new_entry = $data['new_entry'];
@@ -96,7 +106,13 @@ class Entry extends Model {
 		]);
 	}
 
-	public static function insertRecipeEntry($date, $recipe_id, $recipe_contents)
+    /**
+     *
+     * @param $date
+     * @param $recipe_id
+     * @param $recipe_contents
+     */
+    public static function insertRecipeEntry($date, $recipe_id, $recipe_contents)
 	{
 		foreach ($recipe_contents as $item) {
 			$food_id = $item['food_id'];
@@ -114,15 +130,12 @@ class Entry extends Model {
 		}
 	}
 
-	/**
-	 * update
-	 */
-	
-	/**
-	 * delete
-	 */
-
-	public static function deleteRecipeEntry($date, $recipe_id)
+    /**
+     *
+     * @param $date
+     * @param $recipe_id
+     */
+    public static function deleteRecipeEntry($date, $recipe_id)
 	{
 		static
 			::where('date', $date)

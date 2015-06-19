@@ -4,34 +4,46 @@ use Illuminate\Database\Eloquent\Model;
 use App\Traits\Models\Relationships\OwnedByUser;
 use Auth;
 
+/**
+ * Class Tag
+ * @package App\Models\Tags
+ */
 class Tag extends Model {
 
 	use OwnedByUser;
 
-	/**
-	 * Define relationships
-	 */
-	
-	public function user()
+    /**
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
 	{
 		return $this->belongsTo('App\User');
 	}
 
-	public function recipes()
+    /**
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function recipes()
 	{
 		return $this->belongsToMany('App\Models\Foods\Recipe', 'recipe_tag', 'tag_id', 'taggable_id');
 	}
 
-	public function exercises()
+    /**
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function exercises()
 	{
 		return $this->belongsToMany('App\Models\Exercises\Exercise', 'taggables', 'tag_id', 'taggable_id');
 	}
 
-	/**
-	 * select
-	 */
-	
-	public static function getExerciseTags()
+    /**
+     *
+     * @return mixed
+     */
+    public static function getExerciseTags()
 	{
 		return static::forCurrentUser()->where('for', 'exercise')->get();
 	}
@@ -45,15 +57,10 @@ class Tag extends Model {
 		return static::forCurrentUser()->where('for', 'recipe')->get();
 	}
 
-	/**
-	 * insert
-	 */
-	
-	/**
-	 * Inserts a new tag (of type recipe) into the tags table
-	 * @param  [type] $name [description]
-	 * @return [type]       [description]
-	 */
+    /**
+     * Insert a new tag (of type recipe) into the tags table
+     * @param $name
+     */
 	public static function insertRecipeTag($name)
 	{
 		static
@@ -64,19 +71,10 @@ class Tag extends Model {
 			]);
 	}
 
-	/**
-	 * update
-	 */
-	
-	/**
-	 * delete
-	 */
-
-	/**
-	 * Deletes a recipe tag from the tags table
-	 * @param  [type] $id [description]
-	 * @return [type]     [description]
-	 */
+    /**
+     * Delete a recipe tag from the tags table
+     * @param $id
+     */
 	public static function deleteRecipeTag($id)
 	{
 		static

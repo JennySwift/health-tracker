@@ -6,27 +6,35 @@ use DB;
 
 use App\Models\Foods\Calories;
 
+/**
+ * Class Unit
+ * @package App\Models\Units
+ */
 class Unit extends Model {
 
-	/**
-	 * Define relationships
-	 */
-
-	public function user()
+    /**
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
 	{
 		return $this->belongsTo('App\User');
 	}
 
-	public function foods()
+    /**
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function foods()
 	{
 		return $this->belongsToMany('App\Models\Foods\Food');
 	}
 
-	/**
-	 * select
-	 */
-	
-	public static function getExerciseUnits()
+    /**
+     *
+     * @return mixed
+     */
+    public static function getExerciseUnits()
 	{
 		$units = static
 			::where('user_id', Auth::user()->id)
@@ -37,7 +45,11 @@ class Unit extends Model {
 		return $units;
 	}
 
-	public static function getFoodUnits()
+    /**
+     *
+     * @return mixed
+     */
+    public static function getFoodUnits()
 	{
 		$units = static
 			::where('user_id', Auth::user()->id)
@@ -48,7 +60,12 @@ class Unit extends Model {
 		return $units;
 	}
 
-	public static function getFoodUnitsWithCalories($food)
+    /**
+     *
+     * @param $food
+     * @return mixed
+     */
+    public static function getFoodUnitsWithCalories($food)
 	{
 		$units = static
 			::where('user_id', Auth::user()->id)
@@ -69,7 +86,11 @@ class Unit extends Model {
 		return $units;
 	}
 
-	public static function getAllUnits()
+    /**
+     *
+     * @return array
+     */
+    public static function getAllUnits()
 	{
 		$food_units = static::getFoodUnits();
 		$exercise_units = static::getExerciseUnits();
@@ -81,8 +102,14 @@ class Unit extends Model {
 
 		return $units;
 	}
-	
-	public static function getId($table, $name)
+
+    /**
+     *
+     * @param $table
+     * @param $name
+     * @return mixed
+     */
+    public static function getId($table, $name)
 	{
 		$id = DB::table($table)
 			->where('name', $name)
@@ -92,15 +119,11 @@ class Unit extends Model {
 		return $id;
 	}
 
-	/**
-	 * insert
-	 */
-	
-	/**
-	 * Insert a new food unit if it doesn't exist for the user
-	 * @param  [type] $unit_name [description]
-	 * @return [type]            [description]
-	 */
+    /**
+     * Insert a new food unit if it doesn't exist for the user
+     * @param $unit_name
+     * @return mixed
+     */
 	public static function insertUnitIfNotExists($unit_name)
 	{
 		//Check if the unit exists
@@ -125,13 +148,5 @@ class Unit extends Model {
 
 		return $unit_id;
 	}
-
-	/**
-	 * update
-	 */
-	
-	/**
-	 * delete
-	 */
 	
 }

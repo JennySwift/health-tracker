@@ -10,6 +10,12 @@ use Auth;
 class WeightsRepository
 {
 
+    /**
+     *
+     * @param $date
+     * @param $weight
+     * @return int
+     */
     public function insertOrUpdate($date, $weight)
     {
         if ($this->getWeight($date)) {
@@ -24,7 +30,9 @@ class WeightsRepository
     }
 
     /**
-     * select
+     *
+     * @param $date
+     * @return int
      */
     public function getWeight($date)
     {
@@ -40,9 +48,11 @@ class WeightsRepository
     }
 
     /**
-     * insert
+     *
+     * @param $date
+     * @param $weight
+     * @return mixed
      */
-
     public function insertWeight($date, $weight)
     {
         return Weight::insert([
@@ -53,7 +63,10 @@ class WeightsRepository
     }
 
     /**
-     * update
+     *
+     * @param $date
+     * @param $weight
+     * @return mixed
      */
     public function updateWeight($date, $weight)
     {

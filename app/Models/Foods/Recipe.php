@@ -5,58 +5,73 @@ use Auth;
 use DB;
 use Debugbar;
 
-/**
- * Models
- */
 use App\Models\Tags\Tag;
 use App\Models\Foods\RecipeMethod;
 use App\Models\Foods\Food;
 use App\Models\Units\Unit;
-use App\Models\Foods\Calories;
 
+/**
+ * Class Recipe
+ * @package App\Models\Foods
+ */
 class Recipe extends Model {
 
+    /**
+     * @var array
+     */
     protected $fillable = ['name'];
 
-	/**
-	 * Define relationships
-	 */
-
-	public function user()
+    /**
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
 	{
 		return $this->belongsTo('App\User');
 	}
 
-	public function steps()
+    /**
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function steps()
 	{
 		return $this->hasMany('App\Models\Foods\RecipeMethod');
 	}
 
-	public function foods()
+    /**
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function foods()
 	{
 		return $this->belongsToMany('App\Models\Foods\Food', 'food_recipe', 'recipe_id', 'food_id');
 	}
 
-	public function tags()
+    /**
+     *
+     * @return mixed
+     */
+    public function tags()
 	{
 		return $this->belongsToMany('App\Models\Tags\Tag', 'taggables', 'taggable_id', 'tag_id')->where('taggable_type', 'recipe');
 	}
 
-	public function entries()
+    /**
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function entries()
 	{
 		return $this->hasMany('App\Models\Foods\Entry');
 	}
 
-	/**
-	 * select
-	 */
-
-	/**
-	 * Get all recipes, along with their tags, for the user, and that match the $name filter
-	 * @param  [type] $name    [description]
-	 * @param  [type] $tag_ids [description]
-	 * @return [type]          [description]
-	 */
+    /**
+     * Get all recipes, along with their tags, for the user, and that match the $name filter
+     * @param $name
+     * @param $tag_ids
+     * @return array
+     */
 	public static function filterRecipes($name, $tag_ids)
 	{
 		$recipes = static::where('recipes.user_id', Auth::user()->id);
@@ -158,11 +173,11 @@ class Recipe extends Model {
 		return $tags;
 	}
 
-	/**
-	 * insert
-	 */
-	
-	public static function insertRecipe($name)
+    /**
+     *
+     * @param $name
+     */
+    public static function insertRecipe($name)
 	{
 		static
 			::insert([
@@ -171,7 +186,12 @@ class Recipe extends Model {
 			]);
 	}
 
-	public static function insertTagsIntoRecipe($recipe, $tag_ids)
+    /**
+     *
+     * @param $recipe
+     * @param $tag_ids
+     */
+    public static function insertTagsIntoRecipe($recipe, $tag_ids)
 	{
 		foreach ($tag_ids as $tag_id) {
 			static::insertTagIntoRecipe($recipe, $tag_id);
@@ -204,9 +224,6 @@ class Recipe extends Model {
 			$description = null;
 		}
 
-		Debugbar::info('recipeid: ' . $recipe->id);
-		Debugbar::info('data', $data);
-
 		DB::table('food_recipe')
 			->insert([
 				'recipe_id' => $recipe->id,
@@ -218,15 +235,11 @@ class Recipe extends Model {
 			]);
 	}
 
-	/**
-	 * update
-	 */
-	
-	/**
-	 * delete
-	 */
-
-	public static function deleteRecipe($id)
+    /**
+     *
+     * @param $id
+     */
+    public static function deleteRecipe($id)
 	{
 		static
 			::where('id', $id)

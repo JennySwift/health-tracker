@@ -4,13 +4,16 @@ use App\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Class Payee
+ * @package App\Models\Projects
+ */
 class Payee extends User
 {
-
     /**
-     * Define relationships
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-
     public function payers()
     {
         return $this->belongsToMany('App\User', 'payee_payer', 'payee_id', 'payer_id');

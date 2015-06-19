@@ -4,19 +4,32 @@ use Carbon\Carbon;
 use DateInterval;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class Timer
+ * @package App\Models\Projects
+ */
 class Timer extends Model {
 
+    /**
+     * @var array
+     */
     protected $fillable = ['project_id', 'start'];
 
+    /**
+     * @var array
+     */
     protected $appends = ['path', 'time', 'formatted_hours', 'formatted_minutes', 'formatted_seconds', 'formatted_paid_at', 'formatted_start', 'formatted_finish'];
 
-	public $timestamps = false;
+    /**
+     * @var bool
+     */
+    public $timestamps = false;
 
-	/**
-	 * Define relationships
-	 */
-	
-	public function project()
+    /**
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function project()
 	{
 	    return $this->belongsTo('App\Models\Projects\Project');
 	}
@@ -31,6 +44,10 @@ class Timer extends Model {
         return route('timers.destroy', $this->id);
     }
 
+    /**
+     *
+     * @return string
+     */
     public function getFormattedPaidAtAttribute()
     {
         /**
@@ -46,11 +63,19 @@ class Timer extends Model {
         return Carbon::createFromFormat('Y-m-d H:i:s', $this->time_of_payment)->format('d/m/y');
     }
 
+    /**
+     *
+     * @return string
+     */
     public function getFormattedStartAttribute()
     {
         return Carbon::createFromFormat('Y-m-d H:i:s', $this->start)->format('d/m/y H:i:s');
     }
 
+    /**
+     *
+     * @return string
+     */
     public function getFormattedFinishAttribute()
     {
         if (!$this->finish) {
@@ -61,6 +86,10 @@ class Timer extends Model {
     }
 
 
+    /**
+     *
+     * @return bool|DateInterval
+     */
     public function getTimeAttribute()
     {
         $start = Carbon::createFromFormat('Y-m-d H:i:s', $this->start);
@@ -71,16 +100,28 @@ class Timer extends Model {
         return $time;
     }
 
+    /**
+     *
+     * @return string
+     */
     public function getFormattedHoursAttribute()
     {
         return sprintf("%02d", $this->time->h);
     }
 
+    /**
+     *
+     * @return string
+     */
     public function getFormattedMinutesAttribute()
     {
         return sprintf("%02d", $this->time->i);
     }
 
+    /**
+     *
+     * @return string
+     */
     public function getFormattedSecondsAttribute()
     {
         return sprintf("%02d", $this->time->s);

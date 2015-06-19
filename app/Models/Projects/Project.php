@@ -4,29 +4,50 @@ use App\Repositories\Projects\ProjectsRepository;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Response;
 
+/**
+ * Class Project
+ * @package App\Models\Projects
+ */
 class Project extends Model {
 
-	protected $fillable = ['description', 'rate_per_hour'];
+    /**
+     * @var array
+     */
+    protected $fillable = ['description', 'rate_per_hour'];
 
+    /**
+     * @var array
+     */
     protected $appends = ['price', 'formatted_price', 'total_time', 'total_time_formatted', 'path'];
 
+    /**
+     * @var array
+     */
     protected $with = ['payer', 'payee'];
 
-	/**
-	 * Define relationships
-	 */
-
-	public function payer()
+    /**
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function payer()
 	{
 	    return $this->belongsTo('App\User');
 	}
 
-	public function payee()
+    /**
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function payee()
 	{
 	    return $this->belongsTo('App\User');
 	}
 
-	public function timers()
+    /**
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function timers()
 	{
 	    return $this->hasMany('App\Models\Projects\Timer');
 	}
@@ -101,6 +122,10 @@ class Project extends Model {
         return $time;
     }
 
+    /**
+     *
+     * @return array
+     */
     public function getTotalTimeFormattedAttribute()
     {
         $formatted = [

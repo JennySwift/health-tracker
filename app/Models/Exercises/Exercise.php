@@ -11,40 +11,66 @@ use App\Models\Tags\Tag;
 use App\Models\Exercises\Series;
 use App\Models\Exercises\Entry as ExerciseEntry;
 
+/**
+ * Class Exercise
+ * @package App\Models\Exercises
+ */
 class Exercise extends Model {
 
 	use OwnedByUser;
 
-	protected $fillable = ['name', 'default_unit_id', 'description', 'default_quantity', 'step_number', 'series_id'];
+    /**
+     * @var array
+     */
+    protected $fillable = ['name', 'default_unit_id', 'description', 'default_quantity', 'step_number', 'series_id'];
 
+    /**
+     * @var array
+     */
     protected $appends = ['path'];
 
-	/**
-	 * Define relationships
-	 */
-
-	public function user()
+    /**
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
 	{
 	    return $this->belongsTo('App\User');
 	}
 
-	public function unit()
+    /**
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function unit()
 	{
 		//the second argument is the name of the field, because if I don't specify it, it will look for unit_id.
 	    return $this->belongsTo('App\Models\Units\Unit', 'default_exercise_unit_id');
 	}
 
-	public function series()
+    /**
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function series()
 	{
 	    return $this->belongsTo('App\Models\Exercises\Series');
 	}
 
-	public function entries()
+    /**
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function entries()
 	{
 	    return $this->hasMany('App\Models\Exercises\Entry');
 	}
 
-	public function tags()
+    /**
+     *
+     * @return mixed
+     */
+    public function tags()
 	{
 		return $this->belongsToMany('App\Models\Tags\Tag', 'taggables', 'taggable_id', 'tag_id')->where('taggable_type', 'exercise');
 	}
@@ -58,10 +84,6 @@ class Exercise extends Model {
     {
         return route('exercises.destroy', $this->id); // http://tracker.dev/exercises/$id
     }
-
-	/**
-	 * select
-	 */
 	
 	/**
 	 * Get all exercises for the current user,
@@ -162,9 +184,14 @@ class Exercise extends Model {
 		}
 
 		return $array;
-	}	
+	}
 
-	public static function getDefaultExerciseQuantity($exercise_id)
+    /**
+     *
+     * @param $exercise_id
+     * @return mixed
+     */
+    public static function getDefaultExerciseQuantity($exercise_id)
 	{
 		$quantity = static
 			::where('id', $exercise_id)
@@ -173,7 +200,12 @@ class Exercise extends Model {
 		return $quantity;
 	}
 
-	public static function getDefaultExerciseUnitId($exercise_id)
+    /**
+     *
+     * @param $exercise_id
+     * @return mixed
+     */
+    public static function getDefaultExerciseUnitId($exercise_id)
 	{
 		$default = static
 			::where('id', $exercise_id)
@@ -181,24 +213,14 @@ class Exercise extends Model {
 
 		return $default;
 	}
-	
-	/**
-	 * insert
-	 */
-	
-	/**
-	 * update
-	 */
-	
-	/**
-	 * delete
-	 */
-	
-	/**
-	 * other
-	 */
-	
-	public static function convertDate($date, $for)
+
+    /**
+     *
+     * @param $date
+     * @param $for
+     * @return string|static
+     */
+    public static function convertDate($date, $for)
 	{
 		$date = Carbon::createFromFormat('Y-m-d', $date);
 

@@ -3,6 +3,10 @@
 use Illuminate\Database\Eloquent\Model;
 use Auth;
 
+/**
+ * Class RecipeMethod
+ * @package App\Models\Foods
+ */
 class RecipeMethod extends Model {
 
     /**
@@ -12,30 +16,32 @@ class RecipeMethod extends Model {
      */
     protected $fillable = ['recipe_id'];
 
-	/**
-	 * Define relationships
-	 */
-
-	public function recipe()
+    /**
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function recipe()
 	{
 		return $this->belongsTo('App\Models\Foods\Recipe');
 	}
 
-	/**
-	 * select
-	 */
-	
-	public static function getRecipeSteps($recipe)
+    /**
+     *
+     * @param $recipe
+     * @return mixed
+     */
+    public static function getRecipeSteps($recipe)
 	{
 		$steps = $recipe->steps;
 		return $steps;
 	}
 
-	/**
-	 * insert
-	 */
-	
-	public static function insertRecipeMethod($recipe, $steps)
+    /**
+     *
+     * @param $recipe
+     * @param $steps
+     */
+    public static function insertRecipeMethod($recipe, $steps)
 	{
 		$step_number = 0;
 		foreach ($steps as $step_text) {
@@ -51,15 +57,11 @@ class RecipeMethod extends Model {
 		}
 	}
 
-	/**
-	 * update
-	 */
-	
-	/**
-	 * delete
-	 */
-
-	public static function deleteRecipeMethod($recipe)
+    /**
+     *
+     * @param $recipe
+     */
+    public static function deleteRecipeMethod($recipe)
 	{
 		static
 			::where('recipe_id', $recipe->id)
