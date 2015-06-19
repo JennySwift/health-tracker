@@ -90,7 +90,7 @@ Route::bind('exercises', function($value)
  */
 
 Route::resource('weights', 'Weights\WeightsController');
-//Route::resource('projects', 'Projects\ProjectsController', ['only' => ['index', 'store', 'destroy']]);
+Route::resource('projects', 'Projects\ProjectsController', ['only' => ['show', 'destroy']]);
 Route::resource('payee', 'Projects\PayeeController', ['only' => ['store', 'destroy']]);
 Route::resource('payer', 'Projects\PayerController', ['only' => ['store', 'destroy']]);
 Route::resource('timers', 'Projects\TimersController', ['only' => ['destroy']]);

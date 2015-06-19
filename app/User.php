@@ -46,41 +46,6 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      * Define relationships
      */
 
-    //projects
-
-//    public function payers()
-//    {
-//        return $this->belongsToMany('App\User', 'payee_payer', 'payee_id', 'payer_id');
-//    }
-
-//    public function payees()
-//    {
-//        return $this->belongsToMany('App\User', 'payee_payer', 'payer_id', 'payee_id');
-//    }
-
-    /**
-     * Get all the projects where the user is the payee
-     */
-//    public function projectsAsPayee()
-//    {
-//        return $this->hasMany('App\Models\Projects\Project', 'payee_id');
-//    }
-
-//    /**
-//     * Get all the projects where the user is the payer
-//     * and the logged in user is payee
-//     */
-//    public function projectsAsPayer()
-//    {
-//        return $this->hasMany('App\Models\Projects\Project', 'payer_id')
-//            ->with('payee')
-//            ->with('payer');
-//    }
-
-    /**
-     * End projects
-     */
-
     //tags
     public function recipeTags()
     {
@@ -218,20 +183,4 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
         return $owed;
     }
-
-    /**
-     * duplicate from projects repository
-     * @param $time
-     * @return array
-     */
-//    public function formatTimeForUser($time)
-//    {
-//        $formatted = [
-//            'hours' => sprintf("%02d", $time['hours']),
-//            'minutes' => sprintf("%02d", $time['minutes']),
-//            'seconds' => sprintf("%02d", $time['seconds'])
-//        ];
-//
-//        return $formatted;
-//    }
 }

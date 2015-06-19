@@ -73,10 +73,10 @@ class TimersController extends Controller {
             'start' => Carbon::now()->toDateTimeString()
         ]);
 
-        return [
-            'projects' => $this->projectsRepository->getProjectsResponseForCurrentUser(),
-            'project' => $this->projectsRepository->getProject($project->id)
-        ];
+//        return [
+//            'projects' => $this->projectsRepository->getProjectsResponseForCurrentUser(),
+//            'project' => $this->projectsRepository->getProject($project->id)
+//        ];
     }
 
     /**
@@ -102,10 +102,10 @@ class TimersController extends Controller {
 
         $timer->save();
 
-        return [
-            'projects' => $this->projectsRepository->getProjectsResponseForCurrentUser(),
-            'project' => $this->projectsRepository->getProject($project->id)
-        ];
+//        return [
+//            'projects' => $this->projectsRepository->getProjectsResponseForCurrentUser(),
+//            'project' => $this->projectsRepository->getProject($project->id)
+//        ];
     }
 
     /**
@@ -159,7 +159,6 @@ class TimersController extends Controller {
 
         $timer->delete();
 
-        // throw NotFoundException
         return response(null, 204);
     }
 }

@@ -137,17 +137,10 @@ class PagesController extends Controller {
         $payee = Payee::find(Auth::user()->id);
 
         JavaScript::put([
-            'payee_projects' => $payee->projectsAsPayee->toArray(),
+            'payee_projects' => $payee->projects->toArray(),
             'payers' => $payee->payers->toArray(),
         ]);
 
-//        return $payee;
-
-//        return $payee->payers()->first()->owed;
-
-//        return $payee->payers->first()->owed;
-
-//        return $payee->getOwed();
         return view('payee');
     }
 
@@ -160,7 +153,7 @@ class PagesController extends Controller {
         $payer = Payer::find(Auth::user()->id);
 
         JavaScript::put([
-            'payer_projects' => $payer->projectsAsPayer,
+            'payer_projects' => $payer->projects,
             'payees' => $payer->payees
         ]);
 

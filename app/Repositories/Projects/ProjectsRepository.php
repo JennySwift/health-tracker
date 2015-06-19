@@ -14,27 +14,30 @@ use Illuminate\Support\Facades\DB;
  */
 class ProjectsRepository
 {
+    /**
+     *
+     * @return array
+     */
+//    public function getProjectsArrayForCurrentUser()
+//    {
+//        $user = Auth::user();
+//        $payer = $user;
+//        $payee = $user;
+//
+//        return [
+//            'payee' => $user->projectsAsPayee, // This is a Illuminate\Database\Eloquent\Object
+//            'payer' => $user->projectsAsPayer
+//        ];
+//    }
 
     /**
-     * select
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-
-    public function getProjectsArrayForCurrentUser()
-    {
-        $user = Auth::user();
-        $payer = $user;
-        $payee = $user;
-
-        return [
-            'payee' => $user->projectsAsPayee, // This is a Illuminate\Database\Eloquent\Object
-            'payer' => $user->projectsAsPayer
-        ];
-    }
-
-    public function getProjectsResponseForCurrentUser()
-    {
-        return response()->json($this->getProjectsArrayForCurrentUser());
-    }
+//    public function getProjectsResponseForCurrentUser()
+//    {
+//        return response()->json($this->getProjectsArrayForCurrentUser());
+//    }
 
     /**
      * For updating the timers in the project popup,
@@ -54,6 +57,11 @@ class ProjectsRepository
         return $project;
     }
 
+    /**
+     *
+     * @param $time
+     * @return array
+     */
     public function formatTimeForUser($time)
     {
         $formatted = [
@@ -66,9 +74,11 @@ class ProjectsRepository
     }
 
     /**
-     * insert
+     *
+     * @param $payer_email
+     * @param $description
+     * @param $rate
      */
-    
     public function createProject($payer_email, $description, $rate)
     {
         $project = new Project([
@@ -83,13 +93,4 @@ class ProjectsRepository
         $project->payee()->associate($payee);
         $project->save();
     }
-
-    /**
-     * update
-     */
-    
-    /**
-     * delete
-     */
-
 }

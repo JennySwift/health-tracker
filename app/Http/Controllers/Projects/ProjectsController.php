@@ -51,7 +51,7 @@ class ProjectsController extends Controller {
         $this->projectsRepository->createProject($payer_email, $description, $rate);
 
         $payee = Payee::find(Auth::user()->id);
-        return $payee->projectsAsPayee;
+        return $payee->projects;
     }
 
     /**
@@ -62,8 +62,6 @@ class ProjectsController extends Controller {
      */
     public function destroy($id)
     {
-//		Project::destroy($id);
-
         $project = Project::find($id);
 
         if(is_null($project)) {
@@ -75,7 +73,6 @@ class ProjectsController extends Controller {
 
         $project->delete();
 
-        // throw NotFoundException
         return response(null, 204);
     }
 }
