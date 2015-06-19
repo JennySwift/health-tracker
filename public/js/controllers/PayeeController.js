@@ -64,7 +64,7 @@ var app = angular.module('tracker');
                 return false;
             }
             ProjectsFactory.insertProject($scope.new_project.email, $scope.new_project.description, $scope.new_project.rate).then(function (response) {
-                //$scope.projects.payee = response.data;
+                $scope.projects = response.data;
             });
         };
 
