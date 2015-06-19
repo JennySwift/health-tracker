@@ -38,10 +38,6 @@ class Entry extends Model {
 	{
 		return $this->hasMany('App\Models\Exercises\Entry');
 	}
-
-	/**
-	 * select
-	 */
 	
 	/**
 	 * Get all exercise entries belonging to the user on a specific date
@@ -135,127 +131,6 @@ class Entry extends Model {
 			'unit' => $unit
 		];
 	}
-	
-	// public static function getSpecificExerciseEntries($date, $exercise, $exercise_unit_id) {
-	// 	// dd($exercise_unit_id);
-	// 	$entries = static::where('date', $date)
-	// 		->with([
-	// 			'exercise' => function($query) use ($exercise)
-	// 			{
-	// 				$query->whereId($exercise->id);
-	// 			}, 'unit' => function($query) use ($exercise_unit_id)
-	// 			{
-	// 				$query->whereId($exercise_unit_id);
-	// 			}
-	// 		])->get();
-
-	// 	return $entries;
-	// }
-
-	// public static function getSpecificExerciseEntries($date, $exercise, $exercise_unit_id) {
-	// 	$entries = ExerciseEntry
-	// 		::where('date', $date)
-	// 		->where('exercise_id', $exercise->id)
-	// 		->where('exercise_unit_id', $exercise_unit_id)
-	// 		->join('exercises', 'exercise_entries.exercise_id', '=', 'exercises.id')
-	// 		->join('units', 'exercise_entries.exercise_unit_id', '=', 'units.id')
-	// 		->select('exercise_id', 'quantity', 'exercises.name', 'units.name AS unit_name', 'exercise_entries.id AS entry_id')
-	// 		->orderBy('exercises.name', 'asc')
-	// 		->get();
-	// 	return $entries;
-	// }
-	
-	/**
-	 * Get all entries for one exercise with a particular unit on a particular date
-	 * @param  [type] $date             [description]
-	 * @param  [type] $exercise_id      [description]
-	 * @param  [type] $exercise_unit_id [description]
-	 * @return [type]                   [description]
-	 */
-	// public static function getSpecificExerciseEntries($date, $exercise, $exercise_unit_id)
-	// {
-	// 	dd($exercise);
-	// 	/**
-	// 	 * The following query works how I want it to 
-	// 	 */
-		
-	// 	// $entries = ExerciseEntry
-	// 	// 	::where('date', $date)
-	// 	// 	->where('exercise_id', $exercise->id)
-	// 	// 	->where('exercise_unit_id', $exercise_unit_id)
-	// 	// 	->join('exercises', 'exercise_entries.exercise_id', '=', 'exercises.id')
-	// 	// 	->join('units', 'exercise_entries.exercise_unit_id', '=', 'units.id')
-	// 	// 	->select('exercise_id', 'quantity', 'exercises.name', 'units.name AS unit_name', 'exercise_entries.id AS entry_id')
-	// 	// 	->orderBy('exercises.name', 'asc')
-	// 	// 	->get();
-		
-	// 	// $entries = $exercise::with('entries')->get();
-		
-	// 	/**
-	// 	 * @VP:
-	// 	 * The following query gets every exercise.
-	// 	 * I want it to only get one exercise, i.e., $exercise.
-	// 	 * The line above this comment get only the exercise I want,
-	// 	 * so why is the following getting every exercise?
-	// 	 *
-	// 	 * If you want to test the response in Postman,
-	// 	 * you can use my seeders and here is the info for Postman:
-	// 	 * route: select/specificExerciseEntries
-	// 	 * date: the current date
-	// 	 * exercise_id: 1
-	// 	 * exercise_unit_id: 1
-	// 	 */
-
-	// 	// $entries = $exercise::with(['entries' => function($query) use ($date, $exercise_unit_id)
-	// 	// {
-	// 	// 	$query
-	// 	// 		->where('date', $date)
-	// 	// 		->where('exercise_unit_id', $exercise_unit_id)
-	// 	// 		// ->with('unit')
-	// 	// 		*
-	// 	// 		 * @VP:
-	// 	// 		 * The above line worked but I only need the unit name.
-	// 	// 		 * Why does the following not work and how do I get only the unit name?
-				 		
-	// 	// 		// ->with(['unit' => function ($query) {
-	// 	// 		// 	$query->select('name');
-	// 	// 		// }]);
-	// 	// }])->get();
-
-	// 	return $entries;
-
-	// 	/**
-	// 	 * @VP:
-	// 	 * Could you also give me an example here please of how you would view the above query (in Postman?)?
-	// 	 * I tried replacing ->get() with ->toSql(), and all it said was:
-	// 	 * select * from `exercises`
-	// 	 * rather than the entire query
-	// 	 */
- //        /**
- //         * @JS: And this was correct, that is what you are doing apparently!! lol
- //         */
-		
-			
-	// 	/**
-	// 	 * When I try the following I get:
-	// 	 * Error: Missing argument 2 for Illuminate\Database\Query\Builder::whereDate()
-	// 	 */
- //        /**
- //         * You cannot use the shortcut whereField on a field named "date" simply because the
- //         * Illuminate\Database\Query\Builder already has a whereDate method, which is a little different. Try doing
- //         * it this way:
- //         *
- //         * whereDate('date', $date)
- //         *
- //         * or you can keep the where('date', $date) as well
- //         */
-		
-	// 	// $entries = ExerciseEntry::whereDate($date)->with(['exercise' => function($query) use ($exercise_id)
-	// 	// {
-	// 	//     $query->whereId($exercise_id);
-	// 	//     $query->orderBy('name');
-	// 	// }])->get();
-	// }
 
 	public static function getExerciseSets($date, $exercise_id, $exercise_unit_id)
 	{
