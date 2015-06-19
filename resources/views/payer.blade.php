@@ -51,7 +51,7 @@
             {{--<th>Paid</th>--}}
             <th></th>
         </tr>
-        <tr ng-repeat="project in projects.payer">
+        <tr ng-repeat="project in projects">
             <td ng-click="showProjectPopup(project)" class="pointer">[[project.payee.name]]
                 <img ng-src="[[project.payee.gravatar]]">
             </td>

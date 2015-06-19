@@ -34,7 +34,7 @@ class ProjectSeeder extends Seeder {
          * John is payee
          */
 
-        foreach(range(0,2) as $index) {
+        foreach(range(0,5) as $index) {
             $project = Project::create([
                 'payee_id' => $john->id,
                 'payer_id' => $faker->randomElement($payee_john->payers()->lists('id')),

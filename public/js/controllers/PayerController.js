@@ -7,9 +7,7 @@ var app = angular.module('tracker');
          * scope properties
          */
 
-        $scope.projects = {
-            payer: payer_projects,
-        };
+        $scope.projects = payer_projects;
 
         $scope.payees = payees;
         $scope.new_project = {};
@@ -25,10 +23,6 @@ var app = angular.module('tracker');
          * watches
          */
 
-        //$scope.$watch('project_popup.timer_time.seconds', function (newValue, oldValue) {
-        //
-        //});
-
         /**
          * select
          */
@@ -39,29 +33,7 @@ var app = angular.module('tracker');
 
         $scope.insertProject = function () {
             ProjectsFactory.insertProject($scope.new_project.email, $scope.new_project.description, $scope.new_project.rate).then(function (response) {
-                $scope.projects = response.data;
-            });
-        };
-
-        $scope.startProjectTimer = function () {
-            ProjectsFactory.startProjectTimer($scope.selected.project.id).then(function (response) {
-                $scope.projects = response.data.projects;
-                $scope.selected.project = response.data.project;
-                $scope.resetTimer();
-                $scope.project_popup.is_timing = true;
-
-                $scope.counter = $interval(function () {
-                    if ($scope.project_popup.timer_time.seconds < 2) {
-                        $scope.project_popup.timer_time.seconds+= 1;
-                    }
-                    else if ($scope.project_popup.timer_time.minutes < 2) {
-                        $scope.newMinute();
-                    }
-                    else {
-                        $scope.newHour();
-                    }
-
-                }, 1000);
+                //$scope.projects = response.data;
             });
         };
 
@@ -78,33 +50,9 @@ var app = angular.module('tracker');
          * update
          */
 
-        $scope.stopProjectTimer = function () {
-            ProjectsFactory.stopProjectTimer($scope.selected.project.id).then(function (response) {
-                $scope.projects = response.data.projects;
-                $scope.selected.project = response.data.project;
-                $interval.cancel($scope.counter);
-                $scope.project_popup.is_timing = false;
-            });
-        };
-
         /**
          * delete
          */
-
-        $scope.deleteProject = function ($project, $context) {
-            ProjectsFactory.deleteProject($scope, $project, $context).then(function (response) {
-                //$scope.projects = response.data;
-                $scope.projects[$context] = _.without($scope.projects[$context], $project);
-            });
-        };
-
-        $scope.deleteTimer = function ($timer) {
-            ProjectsFactory.deleteTimer($timer).then(function (response) {
-                //$scope.projects = response.data;
-                //$scope.projects[$context] = _.without($scope.projects[$context], $project);
-                $scope.selected.project.timers = _.without($scope.selected.project.timers, $timer);
-            });
-        };
 
         /**
          * other

@@ -66,10 +66,6 @@ class PayeeController extends Controller {
          * Is there some way I could do this instead in the migrations file,
          * like with cascade on delete?
          */
-        $payee->projectsAsPayee()->where('payer_id', $payer->id)->delete();
-
-        //Todo: The page needs refreshing to see that the associated projects
-        //Todo: have been deleted, since I am not returning the projects here.
-        return $payee->payers;
+        $payee->projects()->where('payer_id', $payer->id)->delete();
     }
 }

@@ -45,6 +45,7 @@ class UserSeeder extends Seeder {
         $payee_john = Payee::find($john->id);
         $payee_john->payers()->attach($jenny->id);
         $payee_john->payers()->attach($jane->id);
+        $payee_john->payers()->attach($bob->id);
         $payee_john->save();
 
         /**

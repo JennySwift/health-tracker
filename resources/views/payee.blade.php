@@ -50,7 +50,7 @@
                     <td>[[payer.name]]</td>
                     <td>[[payer.owed_to_user]]</td>
                     <td><button ng-click="markAsPaid(payer)" class="btn btn-xs">paid</button></td>
-                    <td><button ng-click="removePayer(payer.id)" class="btn btn-xs">delete</button></td>
+                    <td><button ng-click="removePayer(payer)" class="btn btn-xs">delete</button></td>
                 </tr>
             </table>
         </div>
@@ -70,7 +70,7 @@
             {{--<th>Paid</th>--}}
             <th></th>
         </tr>
-        <tr ng-repeat="project in projects.payee">
+        <tr ng-repeat="project in projects">
             <td ng-click="showProjectPopup(project)" class="pointer">[[project.payer.name]]
                 <img ng-src="[[project.payer.gravatar]]" alt="">
             </td>

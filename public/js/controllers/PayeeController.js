@@ -7,9 +7,7 @@ var app = angular.module('tracker');
          * scope properties
          */
 
-        $scope.projects = {
-            payee: payee_projects
-        };
+        $scope.projects = payee_projects;
 
         $scope.payers = payers;
         $scope.new_project = {};
@@ -66,7 +64,7 @@ var app = angular.module('tracker');
                 return false;
             }
             ProjectsFactory.insertProject($scope.new_project.email, $scope.new_project.description, $scope.new_project.rate).then(function (response) {
-                $scope.projects.payee = response.data;
+                //$scope.projects.payee = response.data;
             });
         };
 
@@ -126,10 +124,14 @@ var app = angular.module('tracker');
          * delete
          */
 
-        $scope.removePayer = function ($payer_id) {
+        $scope.removePayer = function ($payer) {
             if (confirm("Are you sure? This will delete all data associated with this payer.")) {
-                ProjectsFactory.removePayer($payer_id).then(function (response) {
-                    $scope.payers = response.data;
+                ProjectsFactory.removePayer($payer.id).then(function (response) {
+                    //Remove the payer from the payers
+                    $scope.payers = _.without($scope.payers, $payer);
+                    //Remove all the projects that were with the payer
+                    var $projects_with_payer = _.where($scope.projects, {payer_id: $payer.id});
+                    $scope.projects = _.difference($scope.projects, $projects_with_payer);
                 });
             }
         };
