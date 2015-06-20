@@ -5,6 +5,12 @@ app.factory('ProjectsFactory', function ($http) {
          * select
          */
 
+        showProject: function ($project) {
+            var $url = $project.path;
+
+            return $http.get($url);
+        },
+
         /**
          * insert
          */

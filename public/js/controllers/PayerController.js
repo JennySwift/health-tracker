@@ -59,8 +59,10 @@ var app = angular.module('tracker');
          */
 
         $scope.showProjectPopup = function ($project) {
-            $scope.selected.project = $project;
-            $scope.show.popups.project = true;
+            ProjectsFactory.showProject($project).then(function (response) {
+                $scope.selected.project = response.data;
+                $scope.show.popups.project = true;
+            });
         };
 
         $scope.closePopup = function ($event, $popup) {
@@ -74,7 +76,10 @@ var app = angular.module('tracker');
             $scope.project_popup.timer_time = {
                 hours: 0,
                 minutes: 0,
-                seconds: 0
+                seconds: 0,
+                formatted_seconds: '00',
+                formatted_minutes: '00',
+                formatted_hours: '00'
             };
         };
 

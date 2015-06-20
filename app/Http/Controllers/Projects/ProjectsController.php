@@ -36,6 +36,17 @@ class ProjectsController extends Controller {
 		$this->projectsRepository = $projectsRepository;
 	}
 
+    public function show($id)
+    {
+        $project = Project::find($id);
+        //This return the first project in the database, not the project with the $id.
+//        return $project->with('timers')->first();
+
+        return Project::where('id', $id)
+            ->with('timers')
+            ->first();
+    }
+
     /**
      * Insert a new project
      * Return projects
