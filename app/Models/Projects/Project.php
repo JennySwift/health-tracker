@@ -100,7 +100,9 @@ class Project extends Model {
         $minutes = 0;
         $seconds = 0;
 
-        foreach ($this->timers as $timer) {
+        //I am using ->timers()->get() instead of ->timers to prevent
+        //all the timers from being attached to the project (unnecessary data)
+        foreach ($this->timers()->get() as $timer) {
             //Calculate hours, minutes and seconds
             $hours+= $timer->time->h;
             $minutes+= $timer->time->i;
