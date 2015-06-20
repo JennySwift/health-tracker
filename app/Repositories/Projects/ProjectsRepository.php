@@ -25,8 +25,8 @@ class ProjectsRepository
 //        $payee = $user;
 //
 //        return [
-//            'payee' => $user->projectsAsPayee, // This is a Illuminate\Database\Eloquent\Object
-//            'payer' => $user->projectsAsPayer
+//            'payee' => $payee->projects, // This is a Illuminate\Database\Eloquent\Object
+//            'payer' => $payer->projects
 //        ];
 //    }
 

@@ -13,7 +13,7 @@ class Timer extends Model {
     /**
      * @var array
      */
-    protected $fillable = ['project_id', 'start'];
+    protected $fillable = ['project_id', 'start', 'finish'];
 
     /**
      * @var array
@@ -93,6 +93,33 @@ class Timer extends Model {
     public function getTimeAttribute()
     {
         $start = Carbon::createFromFormat('Y-m-d H:i:s', $this->start);
+//        dd($this->finish);
+
+        /**
+         * @VP:
+         * I was getting an error when I started a new timer, because the finish time
+         * was null. How would I return $time here with h, i, and s equal to 0?
+         * My attempts here didn't work.
+         */
+
+//        if (!$this->finish) {
+//            return [
+//                'h' => 0,
+//                'i' => 0,
+//                's' => 0
+//            ];
+//        }
+
+//        $this->time->h = 0;
+//        $this->time->i = 0;
+//        $this->time->s = 0;
+
+        if (!$this->finish) {
+            return false;
+        }
+
+//        dd($this->time);
+
         $finish = Carbon::createFromFormat('Y-m-d H:i:s', $this->finish);
         $time = $finish->diff($start);
         $this->time = $time;
@@ -106,6 +133,10 @@ class Timer extends Model {
      */
     public function getFormattedHoursAttribute()
     {
+        if (!$this->time) {
+            return '';
+        }
+
         return sprintf("%02d", $this->time->h);
     }
 
@@ -115,6 +146,9 @@ class Timer extends Model {
      */
     public function getFormattedMinutesAttribute()
     {
+        if (!$this->time) {
+            return '';
+        }
         return sprintf("%02d", $this->time->i);
     }
 
@@ -124,6 +158,9 @@ class Timer extends Model {
      */
     public function getFormattedSecondsAttribute()
     {
+        if (!$this->time) {
+            return '';
+        }
         return sprintf("%02d", $this->time->s);
     }
 }

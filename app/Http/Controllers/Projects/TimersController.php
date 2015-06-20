@@ -68,10 +68,12 @@ class TimersController extends Controller {
     public function startProjectTimer(Request $request)
     {
         $project = Project::find($request->get('project_id'));
-        Timer::create([
+        $timer = Timer::create([
             'project_id' => $project->id,
             'start' => Carbon::now()->toDateTimeString()
         ]);
+
+        return $timer;
 
 //        return [
 //            'projects' => $this->projectsRepository->getProjectsResponseForCurrentUser(),

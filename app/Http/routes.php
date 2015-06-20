@@ -11,10 +11,16 @@ use App\Models\Projects\Timer;
  */
 
 //test
+//Route::get('/test', function()
+//{
+//    $project = Project::first();
+//    return $project;
+//});
+
 Route::get('/test', function()
 {
-    $project = Project::first();
-    return $project;
+    $timer = Timer::first();
+    return $timer;
 });
 
 //Homepage (entries)
