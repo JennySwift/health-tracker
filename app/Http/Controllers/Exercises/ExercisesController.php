@@ -4,6 +4,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 use Auth;
 use Debugbar;
@@ -122,7 +123,7 @@ class ExercisesController extends Controller {
         }
 
         // Return response
-        return response([], 200);
+        return response([], Response::HTTP_OK); // = 200
 
         //Valentin says this method should return $exercise
         //return Exercise::getExercises();
@@ -130,12 +131,21 @@ class ExercisesController extends Controller {
 
     /**
      * Delete an exercise
-     * @param $id
+     * @param $exercise
      * @return mixed
      */
-    public function destroy($id)
+    public function destroy($exercise = null)
 	{
-		Exercise::where('id', $id)->delete();
+        if(is_null($exercise)) {
+            return response([
+                'error' => 'Exercise not found.',
+                'status' => Response::HTTP_NOT_FOUND // = 404
+            ], Response::HTTP_NOT_FOUND);
+        }
+
+        $exercise->delete();
+
+        // return response([], Response::HTTP_NO_CONTENT); // = 204
 		return Exercise::getExercises();
 	}
 }

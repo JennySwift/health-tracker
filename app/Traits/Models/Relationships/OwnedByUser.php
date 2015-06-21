@@ -36,12 +36,12 @@ trait OwnedByUser {
     public function scopeForCurrentUser($query, $table = null)
     {
         if(is_null($table)) {
-          
-          // Make sure the user is logged in, we never know. If so, modify the query by adding a whereUserId clause to
-          // it with the current user id
-          if (Auth::check()) {
-              return $query->whereUserId(Auth::user()->id);        
-          }
+            // Make sure the user is logged in, we never know. If so, modify the query by adding a whereUserId clause to
+            // it with the current user id
+            if (Auth::check()) {
+                return $query->whereUserId(Auth::user()->id);
+            }
+            return $query;
         }  
 
         return $query->where($table.'.user_id', Auth::user()->id);
