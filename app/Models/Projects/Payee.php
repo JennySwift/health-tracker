@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
  */
 class Payee extends User
 {
+
     /**
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany

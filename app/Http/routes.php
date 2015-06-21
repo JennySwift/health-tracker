@@ -116,7 +116,10 @@ Route::resource('journal', 'Journal\JournalController', ['only' => ['show', 'sto
  */
 
 Route::post('insert/startProjectTimer', 'Projects\TimersController@startProjectTimer');
+// @TODO Should be in a UserPayeeController (Route::resource('users.payees'))
+// http://laravel.com/docs/5.0/controllers#restful-resource-controllers
 Route::post('insert/payer', 'Projects\PayeeController@addPayer');
+// Same as insert/payer but destroy method this time :)
 Route::post('delete/payer', 'Projects\PayeeController@removePayer');
 Route::post('update/markAsPaid', 'Projects\TimersController@markAsPaid');
 Route::post('update/stopProjectTimer', 'Projects\TimersController@stopProjectTimer');

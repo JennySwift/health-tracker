@@ -1,52 +1,57 @@
 <?php namespace App\Http\Controllers\Projects;
 
-use Illuminate\Http\Response;
-use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Http\Requests;
+use App\Http\Requests\Projects\CreateProjectRequest;
 use App\Models\Projects\Payee;
-use App\Models\Projects\Payer;
-use App\Repositories\Projects\ProjectsRepository;
-
-use App\User;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Http\Request;
-use JavaScript;
-use Auth;
-use Carbon\Carbon;
-
 use App\Models\Projects\Project;
+use App\Repositories\Projects\ProjectsRepository;
+use Auth;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use JavaScript;
 
 /**
  * Class ProjectsController
+ * @TODO Model binding could make the show and destroy methods even simpler :)
  * @package App\Http\Controllers\Projects
  */
-class ProjectsController extends Controller {
+class ProjectsController extends Controller
+{
 
     /**
      * @var ProjectsRepository
      */
     protected $projectsRepository;
 
-	/**
-	 * Create a new controller instance.
-	 *
-	 * @return void
-	 */
-	public function __construct(ProjectsRepository $projectsRepository)
-	{
-		$this->middleware('auth');
-		$this->projectsRepository = $projectsRepository;
-	}
+    /**
+     * Create a new controller instance.
+     *
+     * @param ProjectsRepository $projectsRepository
+     * @return void
+     */
+    public function __construct(ProjectsRepository $projectsRepository)
+    {
+        $this->projectsRepository = $projectsRepository;
 
+        $this->middleware('auth');
+    }
+
+    /**
+     * Show a specific project
+     * @param $id
+     * @return mixed
+     */
     public function show($id)
     {
-        $project = Project::find($id);
-        //This return the first project in the database, not the project with the $id.
-//        return $project->with('timers')->first();
+        // $project = Project::with('timers')->findOrFail($id);
 
-        return Project::where('id', $id)
-            ->with('timers')
-            ->first();
+        // This return the first project in the database, not the project with the $id.
+        // Query methods (with, first, find, where, etc.) should be called from the facade (Project::)
+        // not on the object ($project)
+        // return $project->with('timers')->first();
+
+        return Project::with('timers')->findOrFail($id);
     }
 
     /**
@@ -55,21 +60,28 @@ class ProjectsController extends Controller {
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function store(Request $request)
+    public function store(CreateProjectRequest $request)
     {
-        $payer_email = $request->get('payer_email');
-        $description = $request->get('description');
-        $rate = $request->get('rate');
 
-        $this->projectsRepository->createProject($payer_email, $description, $rate);
+//        $payer_email = $request->get('payer_email');
+//        $description = $request->get('description');
+//        $rate = $request->get('rate');
 
-        $payee = Payee::find(Auth::user()->id);
-        return $payee->projects;
+        // @TODO Remember to update your Angular app to add the new project to the array of projects
+        // @TODO Fix the error handling in Angular now that you have validation (check for status code 422)
+        return $this->projectsRepository->createProject(
+            $request->get('payer_email'),
+            $request->get('description'),
+            $request->get('rate')
+        );
+
+//        $payee = Payee::find(Auth::user()->id);
+//
+//        return $payee->projects;
     }
 
     /**
      * Delete a project (only when user is the payee)
-     * @param Request $request
      * @param $id
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
@@ -79,7 +91,7 @@ class ProjectsController extends Controller {
         /**
          * @see http://laravel.com/docs/5.0/errors#handling-errors
          */
-            $project = Project::whereUserIsPayee()->findOrFail($id);
+        $project = Project::whereUserIsPayee()->findOrFail($id);
 //        }
 //        catch(ModelNotFoundException $e) {
 //            return response([

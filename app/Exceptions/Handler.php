@@ -1,6 +1,7 @@
 <?php namespace App\Exceptions;
 
 use Exception, Redirect;
+use Illuminate\Contracts\Validation\ValidationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Response;

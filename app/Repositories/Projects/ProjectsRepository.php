@@ -78,6 +78,7 @@ class ProjectsRepository
      * @param $payer_email
      * @param $description
      * @param $rate
+     * @return Project
      */
     public function createProject($payer_email, $description, $rate)
     {
@@ -86,11 +87,14 @@ class ProjectsRepository
             'rate_per_hour' => $rate
         ]);
 
+        // @TODO Check if the user was added as payer before!! :)
         $payer = User::whereEmail($payer_email)->firstOrFail();
         $payee = Auth::user();
 
         $project->payer()->associate($payer);
         $project->payee()->associate($payee);
         $project->save();
+
+        return $project;
     }
 }

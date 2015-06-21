@@ -13,6 +13,8 @@ use Illuminate\Http\Request;
 /**
  * Class PayeeController
  * @package App\Http\Controllers\Projects
+ * @TODO These methods shouldn't exist at all, these actions should be triggered automatically by
+ * @TODO another event (like first project or first contact)
  */
 class PayeeController extends Controller {
 
@@ -30,17 +32,24 @@ class PayeeController extends Controller {
      * Add a new payer for the user (payee)
      * so that the user can create a project with that person as payer.
      * Return the user's payers
+     *
+     * // @TODO Should be a PUT request to /users/{user}/payers/{payer} and return the payer object.
+     *
      * @param Request $request
      * @return mixed
      */
     public function addPayer(Request $request)
     {
         $payer_email = $request->get('payer_email');
-        $user = User::find(Auth::user()->id);
-        $payee = Payee::find($user->id);
-        $payer = User::whereEmail($payer_email)->firstOrFail();
+
+        // @TODO This step could be improved to remove the double-query effect
+        $user = Auth::user();
+        $payee = Payee::findOrFail($user->id);
+
+        $payer = Payer::whereEmail($payer_email)->firstOrFail();
+
         $payee->payers()->attach($payer->id);
-        $user->save();
+        $payee->save();
 
         return $payee->payers;
     }
@@ -48,12 +57,13 @@ class PayeeController extends Controller {
     /**
      * Remove a relationship between a payee and a payer,
      * and all associated projects
+     * @TODO Should be a DELETE method to /users/{user}/payers/{payer}
      * @param Request $request
      * @return mixed
      */
     public function removePayer(Request $request)
     {
-        $payer = Payer::find($request->get('payer_id'));
+        $payer = Payer::findOrFail($request->get('payer_id'));
         $payee = Payee::find(Auth::user()->id);
         //Remove the relationship between the payee and the payer
         //from the payee_payer table
@@ -65,6 +75,8 @@ class PayeeController extends Controller {
          * @VP:
          * Is there some way I could do this instead in the migrations file,
          * like with cascade on delete?
+         * @JS:
+         * Nope.
          */
         $payee->projects()->where('payer_id', $payer->id)->delete();
     }
