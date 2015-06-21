@@ -66,14 +66,14 @@ class ProjectsController extends Controller {
     }
 
     /**
-     * Delete a project
+     * Delete a project (only when user is the payee)
      * @param Request $request
      * @param $id
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
     public function destroy($id)
     {
-        $project = Project::find($id);
+        $project = Project::whereUserIsPayee()->find($id);
 
         if(is_null($project)) {
             return response([

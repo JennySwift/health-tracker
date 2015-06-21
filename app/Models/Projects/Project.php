@@ -1,5 +1,6 @@
 <?php namespace App\Models\Projects;
 
+use Auth;
 use App\Repositories\Projects\ProjectsRepository;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Response;
@@ -137,6 +138,29 @@ class Project extends Model {
         ];
 
         return $formatted;
+    }
+
+    /**
+     * Fetch only when current user is payee
+     * This method needs to start with "scope" and then the name of the
+     * method in CamelCase.
+     * The query parameter is passed automatically to the method by Laravel
+     * Any other parameter that you would create, you will have to pass them yourself to the method.
+     *
+     * @see http://laravel.com/docs/5.1/eloquent#query-scopes
+     * @param $query
+     * @return mixed
+     */
+    public function scopeWhereUserIsPayee($query)
+    {
+        // Get the current user
+        $user = Auth::user();
+
+        // Limit the query to records where the user is payee
+        $query->wherePayeeId($user->id);
+
+        // Return the query
+        return $query;
     }
 
 }
