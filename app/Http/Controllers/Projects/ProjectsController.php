@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers\Projects;
 
+use Illuminate\Http\Response;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\Projects\Payee;
@@ -7,6 +8,7 @@ use App\Models\Projects\Payer;
 use App\Repositories\Projects\ProjectsRepository;
 
 use App\User;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use JavaScript;
 use Auth;
@@ -73,17 +75,25 @@ class ProjectsController extends Controller {
      */
     public function destroy($id)
     {
-        $project = Project::whereUserIsPayee()->find($id);
+//        try{
+            $project = Project::whereUserIsPayee()->findOrFail($id);
+//        }
+//        catch(ModelNotFoundException $e) {
+//            return response([
+//                'error' => 'Model not found.',
+//                'status' => Response::HTTP_NOT_FOUND
+//            ], Response::HTTP_NOT_FOUND);
+//        }
 
-        if(is_null($project)) {
-            return response([
-                'error' => 'Project not found.',
-                'status' => 404
-            ], 404);
-        }
+//        if(is_null($project)) {
+//            return response([
+//                'error' => 'Project not found.',
+//                'status' => 404
+//            ], 404);
+//        }
 
         $project->delete();
 
-        return response(null, 204);
+        return response(null, Response::HTTP_NO_CONTENT);
     }
 }

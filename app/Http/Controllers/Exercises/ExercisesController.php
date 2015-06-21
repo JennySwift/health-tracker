@@ -136,12 +136,12 @@ class ExercisesController extends Controller {
      */
     public function destroy($exercise = null)
 	{
-        if(is_null($exercise)) {
-            return response([
-                'error' => 'Exercise not found.',
-                'status' => Response::HTTP_NOT_FOUND // = 404
-            ], Response::HTTP_NOT_FOUND);
-        }
+//        if(is_null($exercise)) {
+//            return response([
+//                'error' => 'Exercise not found.',
+//                'status' => Response::HTTP_NOT_FOUND // = 404
+//            ], Response::HTTP_NOT_FOUND);
+//        }
 
         $exercise->delete();
 

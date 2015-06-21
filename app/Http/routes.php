@@ -88,7 +88,7 @@ Route::controllers([
 
 Route::bind('exercises', function($value)
 {
-    return Exercise::forCurrentUser()->find($value);
+    return Exercise::forCurrentUser()->findOrFail($value);
 });
 
 /**
