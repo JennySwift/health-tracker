@@ -45,17 +45,17 @@ class ProjectsRepository
      * Get the project that the user has selected.
      * @return mixed
      */
-    public function getProject($project_id)
-    {
-        $project = Project::find($project_id)
-            ->with('payee')
-            ->with('payer')
-            ->with('timers')
-            ->first();
-        $project->total_time_user_formatted = $this->formatTimeForUser($project->total_time);
-
-        return $project;
-    }
+//    public function getProject($project_id)
+//    {
+//        $project = Project::find($project_id)
+//            ->with('payee')
+//            ->with('payer')
+//            ->with('timers')
+//            ->first();
+//        $project->total_time_user_formatted = $this->formatTimeForUser($project->total_time);
+//
+//        return $project;
+//    }
 
     /**
      *
