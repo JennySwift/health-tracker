@@ -64,6 +64,7 @@ var app = angular.module('tracker');
                 return false;
             }
             ProjectsFactory.insertProject($scope.new_project.email, $scope.new_project.description, $scope.new_project.rate).then(function (response) {
+                // @TODO Append the newly created project to the projects collection
                 $scope.projects = response.data;
             });
         };
@@ -140,7 +141,7 @@ var app = angular.module('tracker');
         $scope.deleteProject = function ($project) {
             ProjectsFactory.deleteProject($project).then(function (response) {
                 //$scope.projects = response.data;
-                $scope.projects.payee = _.without($scope.projects.payee, $project);
+                $scope.projects = _.without($scope.projects, $project);
             });
         };
 

@@ -124,6 +124,7 @@ class TimersController extends Controller
         $timer = Timer::find($last_timer_id);
 
         $timer->finish = Carbon::now()->toDateTimeString();
+        $timer->save();
 
         //Calculate price
         //Note for developing-price will be zero if time is less than 30 seconds

@@ -21,7 +21,7 @@ class Timer extends Model {
      * @var array
      * @TODO The front end should take care of formatting anything
      */
-    protected $appends = ['path', 'time', 'formatted_hours', 'formatted_minutes', 'formatted_seconds', 'formatted_paid_at', 'formatted_start', 'formatted_finish'];
+    protected $appends = ['path', 'time', 'totalTime', 'formatted_hours', 'formatted_minutes', 'formatted_seconds', 'formatted_paid_at', 'formatted_start', 'formatted_finish'];
 
     /**
      * @var bool
@@ -59,7 +59,6 @@ class Timer extends Model {
          * I tried it but it errored unless I gave it a different attribute name.
          *
          * You would have to call the method getTimeOfPayementAttribute() and use $this->attributes['time_of_payment']
-         * or pass a $value attribute to the method to get the value of the field
          */
 
         if (!$this->time_of_payment) {
@@ -108,7 +107,12 @@ class Timer extends Model {
      */
     public function getFinishAttribute($value)
     {
-        return Carbon::createFromFormat('Y-m-d H:i:s', $value);
+        if(!is_null($value))
+        {
+            return Carbon::createFromFormat('Y-m-d H:i:s', $this->attributes['finish']);
+        }
+
+        return $value;
     }
 
 
@@ -220,7 +224,7 @@ class Timer extends Model {
      */
     public function getRateAttribute()
     {
-        return $this->projects->rate_per_hour;
+        return $this->project->rate_per_hour;
     }
 
     /**
@@ -262,14 +266,15 @@ class Timer extends Model {
             throw new UncallableMethod;
         }
 
-        if ($this->totalTime->s > 30) {
-            $this->totalTime->i = $this->totalTime->i + 1;
-        }
+//        if ($this->totalTime->s > 30) {
+//            $this->totalTime->i = $this->totalTime->i + 1;
+//        }
 
         $price += $this->rate * $this->totalTime->h;
         $price += $this->rate / 60 * $this->totalTime->i;
+        //$price += $this->rate / 3600 * $this->totalTime->s;
 
-        $this->price = $price;
+        $this->attributes['price'] = $price;
     }
 
 }
