@@ -70,6 +70,7 @@ class Project extends Model {
      */
     public function getPriceAttribute()
     {
+        // @TODO Try to abstract this logic, since you are using it in multiple places
         $rate = $this->rate_per_hour;
         $time = $this->total_time;
         $price = 0;
