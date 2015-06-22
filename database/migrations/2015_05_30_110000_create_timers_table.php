@@ -17,7 +17,7 @@ class CreateTimersTable extends Migration {
 			$table->increments('id');
 			$table->integer('project_id')->unsigned()->index();
 			$table->timestamp('start');
-			$table->timestamp('finish')->default('0000-00-00 00:00:00');
+			$table->timestamp('finish')->nullable();
             $table->decimal('price', 10, 2)->index()->nullable();
             $table->boolean('paid')->default(0)->nullable()->index();
             $table->timestamp('time_of_payment')->nullable()->index();

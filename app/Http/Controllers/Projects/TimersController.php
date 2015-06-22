@@ -1,29 +1,28 @@
 <?php namespace App\Http\Controllers\Projects;
 
-use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Http\Requests;
 use App\Models\Projects\Payee;
 use App\Models\Projects\Payer;
+use App\Models\Projects\Project;
+use App\Models\Projects\Timer;
 use App\Repositories\Projects\ProjectsRepository;
 use Auth;
-
-use Illuminate\Http\Request;
 use Carbon\Carbon;
-use Debugbar;
-
-use App\Models\Projects\Timer;
-use App\Models\Projects\Project;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 /**
  * Class TimersController
  * @package App\Http\Controllers\Projects
  */
-class TimersController extends Controller {
+class TimersController extends Controller
+{
 
     /**
      * Create a new controller instance.
      *
-     * @return void
+     * @param ProjectsRepository $projectsRepository
      */
     public function __construct(ProjectsRepository $projectsRepository)
     {
@@ -33,35 +32,50 @@ class TimersController extends Controller {
     /**
      * Mark all timers that belong to the user (payee),
      * and are with a certain payer, as paid
+     *
+     * WARNING: Be careful, method not Restful!
+     *
      * @param Request $request
      */
     public function markAsPaid(Request $request)
     {
-        $payer = Payer::find($request->get('payer_id'));
+        $payer = Payer::findOrFail($request->get('payer_id'));
         $payee = Payee::find(Auth::user()->id);
 
         $project_ids = $payee->projectsAsPayee()
-            ->where('payer_id', $payer->id)
-            ->lists('id');
+                             ->where('payer_id', $payer->id)
+                             ->lists('id');
 
         /**
          * @VP:
          * Is this vulnerable to mass assignment? How would I fix that?
+         *
+         * You could filter the timers by projects using the relationship
+         * ->with(['projects' => function($query) use ($project_ids){
+         *     return $query->whereIn('id', $project_ids);
+         * }])
          */
         Timer::whereIn('project_id', $project_ids)
-            ->where('paid', 0)
-            ->update([
+             ->where('paid', 0)
+             ->update([
                 'paid' => 1,
                 'time_of_payment' => Carbon::now()
-            ]);
+             ]);
 
-        //Todo: return something useful here. Currently a page refresh is required to see the changes.
+        // @TODO return something useful here. Currently a page refresh is required to see the changes.
+        // @TODO Return collection of timers that have been modified
     }
 
     /**
      * Insert a new timer for a project.
      * Return all the projects,
      * as well as the project that is currently displaying in the project popup
+     *
+     * WARNING: Be careful, method not Restful! Should be a POST request to /projects/{project}/timers
+     * and return the timer newly created :) (So it should be in a ProjectTimersController not the TimersController,
+     * store method). You could also use Model Binding on projects to fetch the project model right away and pass
+     * it as a parameter.
+     *
      * @param Request $request
      * @return array
      */
@@ -73,7 +87,22 @@ class TimersController extends Controller {
             'start' => Carbon::now()->toDateTimeString()
         ]);
 
-        return $timer;
+//        Currently:
+//        {
+//            'project_id': 1,
+//            ...
+//        }
+//
+//        Ideal:
+//        {
+//            'project' => {
+//                'id' => 1,
+//                'path'
+//            }
+//        }
+
+        //return response($timer->toArray(), Response::HTTP_CREATED); // = 201 HTTP Created code
+        return $this->responseCreated($timer);
 
 //        return [
 //            'projects' => $this->projectsRepository->getProjectsResponseForCurrentUser(),
@@ -93,54 +122,59 @@ class TimersController extends Controller {
         $project = Project::find($request->get('project_id'));
         $last_timer_id = Timer::where('project_id', $project->id)->max('id');
         $timer = Timer::find($last_timer_id);
+
         $timer->finish = Carbon::now()->toDateTimeString();
 
         //Calculate price
         //Note for developing-price will be zero if time is less than 30 seconds
-        $time = $this->calculateTimerTime($timer->start, $timer->finish);
-        
-        $rate = $timer->project->rate_per_hour;
-        $timer->price = $this->getTimerPrice($time, $rate);
+        // $time = $this->calculateTimerTime($timer->start, $timer->finish);
+        //$timer->calculateTotalTime();
+
+        $timer->calculatePrice();
+        // $timer->calculatePrice();
 
         $timer->save();
 
+        return $this->responseOk($timer);
 //        return [
 //            'projects' => $this->projectsRepository->getProjectsResponseForCurrentUser(),
 //            'project' => $this->projectsRepository->getProject($project->id)
 //        ];
     }
 
-    /**
-     *
-     * @param $start
-     * @param $finish
-     * @return bool|\DateInterval
-     */
-    private function calculateTimerTime($start, $finish)
-    {
-        $carbon_start = Carbon::createFromFormat('Y-m-d H:i:s', $start);
-        $carbon_finish = Carbon::createFromFormat('Y-m-d H:i:s', $finish);
-        $time = $carbon_finish->diff($carbon_start);
-        return $time;
-    }
+//    /**
+//     *
+//     * @param $start
+//     * @param $finish
+//     * @return bool|\DateInterval
+//     */
+//    private function calculateTimerTime($start, $finish)
+//    {
+//        $carbon_start = Carbon::createFromFormat('Y-m-d H:i:s', $start);
+//        $carbon_finish = Carbon::createFromFormat('Y-m-d H:i:s', $finish);
+//        $time = $carbon_finish->diff($carbon_start);
+//
+//        return $time;
+//    }
 
-    /**
-     *
-     * @param $time
-     * @param $rate
-     * @return float|int
-     */
-    private function getTimerPrice($time, $rate)
-    {
-        $price = 0;
-
-        if ($time->s > 30) {
-            $time->i = $time->i + 1;
-        }
-        $price+= $rate * $time->h;
-        $price+= $rate / 60 * $time->i;
-        return $price;
-    }
+//    /**
+//     *
+//     * @param $time
+//     * @param $rate
+//     * @return float|int
+//     */
+//    private function getTimerPrice($time, $rate)
+//    {
+//        $price = 0;
+//
+//        if ($time->s > 30) {
+//            $time->i = $time->i + 1;
+//        }
+//        $price += $rate * $time->h;
+//        $price += $rate / 60 * $time->i;
+//
+//        return $price;
+//    }
 
     /**
      * Delete a timer
@@ -150,17 +184,10 @@ class TimersController extends Controller {
      */
     public function destroy(Request $request, $id)
     {
-        $timer = Timer::find($id);
-
-        if(is_null($timer)) {
-            return response([
-                'error' => 'Timer not found.',
-                'status' => 404
-            ], 404);
-        }
+        $timer = Timer::findOrFail($id);
 
         $timer->delete();
 
-        return response(null, 204);
+        return $this->responseNoContent();
     }
 }

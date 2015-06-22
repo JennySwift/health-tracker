@@ -1,5 +1,6 @@
 <?php namespace App\Models\Projects;
 
+use App\Exceptions\UncallableMethod;
 use Carbon\Carbon;
 use DateInterval;
 use Illuminate\Database\Eloquent\Model;
@@ -13,7 +14,7 @@ class Timer extends Model {
     /**
      * @var array
      */
-    protected $fillable = ['project_id', 'start', 'finish'];
+    protected $fillable = ['project_id', 'start', 'finish', 'paid', 'time_of_payment'];
 
     /**
      * @var array
@@ -162,5 +163,79 @@ class Timer extends Model {
             return '';
         }
         return sprintf("%02d", $this->time->s);
+    }
+
+    /**
+     * Calculate the total time span
+     * @return bool|DateInterval|null
+     */
+    public function getTotalTimeAttribute()
+    {
+        if( ! $this->hasFinishTime() ) {
+            return null;
+        }
+
+        $carbon_start = Carbon::createFromFormat('Y-m-d H:i:s', $this->start);
+        $carbon_finish = Carbon::createFromFormat('Y-m-d H:i:s', $this->finish);
+
+        return $carbon_finish->diff($carbon_start);
+    }
+
+    /**
+     * Calculate the price
+     * @return float
+     */
+    public function calculatePrice()
+    {
+        $price = 0;
+
+        if(!$this->hasTotalTime()) {
+            throw new UncallableMethod;
+        }
+
+        if ($this->totalTime->s > 30) {
+            $this->totalTime->i = $this->totalTime->i + 1;
+        }
+
+        $price += $this->rate * $this->totalTime->h;
+        $price += $this->rate / 60 * $this->totalTime->i;
+
+        $this->price = $price;
+    }
+
+    /**
+     * Is the timer finished?
+     * @return bool
+     */
+    public function hasFinishTime()
+    {
+        return ! is_null($this->finish);
+    }
+
+    /**
+     * Does the timer has a time property (=> does the calculateTotalTime method has been called?)
+     * @return bool
+     */
+    public function hasTotalTime()
+    {
+        return (boolean) $this->totalTime;
+    }
+
+    /**
+     * Does the timer project has a rate?
+     * @return bool
+     */
+    public function hasRate()
+    {
+        return (boolean) $this->rate;
+    }
+
+    /**
+     * Fetch the rate attribute on project and store it on the Timer
+     * @return mixed
+     */
+    public function getRateAttribute()
+    {
+        return $this->projects->rate_per_hour;
     }
 }
