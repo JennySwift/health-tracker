@@ -38,15 +38,15 @@ class QuickRecipesController extends Controller {
 
 		return $name;
 	}
-	
-	/**
-	 * This is the function that is called from the ajax request.
-	 * Check for similar names.
-	 * If they are found, return them.
-	 * If not, insert the recipe.
-	 * @param  Request $request [description]
-	 * @return [type]           [description]
-	 */
+
+    /**
+     * This is the function that is called from the ajax request.
+     * Check for similar names.
+     * If they are found, return them.
+     * If not, insert the recipe.
+     * @param Request $request
+     * @return array
+     */
 	public function quickRecipe(Request $request)
 	{	
 		$recipe = $request->get('recipe');
@@ -120,7 +120,7 @@ class QuickRecipesController extends Controller {
 			
 			
 		}
-		// dd($similar_names);
+
 		return $similar_names;
 	}
 
@@ -166,17 +166,16 @@ class QuickRecipesController extends Controller {
 				'index' => $index
 			];
 		}
-		// dd($similar_food_names);
+
 		return $similar_food_names;
 	}
 
-	/**
-	 * We can insert things now that no similar names were found,
-	 * or we have already checked for similar names previously.
-	 * @param  [type] $food_name [description]
-	 * @param  [type] $unit_name [description]
-	 * @return [type]            [description]
-	 */
+    /**
+     * We can insert things now that either no similar names were found,
+     * or we have already checked for similar names previously.
+     * @param $contents
+     * @return array
+     */
 	private function populateArrayBeforeInserting($contents)
 	{		
 		$data_to_insert = [];
@@ -193,13 +192,14 @@ class QuickRecipesController extends Controller {
 				$description = null;
 			}
 
-			//retrieve the id if the food exists,
-			//insert and retrieve the id if the food does not exist
+			//Retrieve the id if the food exists.
+			//Insert and retrieve the id if the food does not exist
 			$food_id = Food::insertFoodIfNotExists($food_name);
 			//same for the unit
 			$unit_id = Unit::insertUnitIfNotExists($unit_name);
 
-			//add the item to the array for inserting later, when all items have been added to the array
+			//Add the item to the array for inserting later,
+			//when all items have been added to the array
 			$data_to_insert[] = array(
 				'food_id' => $food_id,
 				'unit_id' => $unit_id,
@@ -232,7 +232,9 @@ class QuickRecipesController extends Controller {
 			//insert a row into food_recipe table
 			Recipe::insertFoodIntoRecipe($recipe, $item);
 
-			//insert food and unit ids into calories table (if the row doesn't exist already in the table) so that the unit is an associated unit of the food
+			//insert food and unit ids into calories table
+			//(if the row doesn't exist already in the table)
+			//so that the unit is an associated unit of the food
 			$count = DB::table('food_unit')
 				->where('food_id', $item['food_id'])
 				->where('unit_id', $item['unit_id'])
@@ -253,13 +255,12 @@ class QuickRecipesController extends Controller {
 	}
 
     /**
-     *
+     * Insert recipe into recipes table and retrieve the id
      * @param $name
      * @return mixed
      */
     private function insertRecipe($name)
 	{
-		//insert recipe into recipes table and retrieve the id
 		$id = Recipe
 			::insertGetId([
 				'name' => $name,
@@ -284,17 +285,16 @@ class QuickRecipesController extends Controller {
 
 		return $count;
 	}
-	
-	/**
-	 * Currently this checks the units table for similar names.
-	 * I should change it to find them only if the unit type is for food.
-	 * @param  [type] $name  [description]
-	 * @param  [type] $table [description]
-	 * @return [type]        [description]
-	 */
+
+    /**
+     * Currently this checks the units table for similar names.
+     * I should change it to find them only if the unit type is for food.
+     * @param $name
+     * @param $table
+     * @return mixed
+     */
 	private function checkSimilarNames($name, $table)
 	{
-		//for quick recipe
 		$count = $this->countItem($table, $name);
 
 		if ($count < 1) {
