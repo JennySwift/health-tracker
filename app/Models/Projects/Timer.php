@@ -13,11 +13,13 @@ class Timer extends Model {
 
     /**
      * @var array
+     * @TODO project_id shouldn't be fillable
      */
     protected $fillable = ['project_id', 'start', 'finish', 'paid', 'time_of_payment'];
 
     /**
      * @var array
+     * @TODO The front end should take care of formatting anything
      */
     protected $appends = ['path', 'time', 'formatted_hours', 'formatted_minutes', 'formatted_seconds', 'formatted_paid_at', 'formatted_start', 'formatted_finish'];
 
@@ -55,6 +57,9 @@ class Timer extends Model {
          * @VP:
          * How would I name this attribute the same as the database column?
          * I tried it but it errored unless I gave it a different attribute name.
+         *
+         * You would have to call the method getTimeOfPayementAttribute() and use $this->attributes['time_of_payment']
+         * or pass a $value attribute to the method to get the value of the field
          */
 
         if (!$this->time_of_payment) {
@@ -74,6 +79,16 @@ class Timer extends Model {
     }
 
     /**
+     * Get start attribute
+     * @param $value
+     * @return static
+     */
+    public function getStartAttribute($value)
+    {
+        return Carbon::createFromFormat('Y-m-d H:i:s', $value);
+    }
+
+    /**
      *
      * @return string
      */
@@ -86,14 +101,28 @@ class Timer extends Model {
         return Carbon::createFromFormat('Y-m-d H:i:s', $this->finish)->format('d/m/y H:i:s');
     }
 
+    /**
+     * Get finish attribute
+     * @param $value
+     * @return static
+     */
+    public function getFinishAttribute($value)
+    {
+        return Carbon::createFromFormat('Y-m-d H:i:s', $value);
+    }
+
 
     /**
      *
-     * @return bool|DateInterval
+     * @return DateInterval|null
      */
     public function getTimeAttribute()
     {
-        $start = Carbon::createFromFormat('Y-m-d H:i:s', $this->start);
+        if(! $this->hasFinishTime()) {
+            return null;
+        }
+
+        //$start = Carbon::createFromFormat('Y-m-d H:i:s', $this->start);
 //        dd($this->finish);
 
         /**
@@ -101,7 +130,10 @@ class Timer extends Model {
          * I was getting an error when I started a new timer, because the finish time
          * was null. How would I return $time here with h, i, and s equal to 0?
          * My attempts here didn't work.
+         *
+         * See condition at the beginning of the method
          */
+
 
 //        if (!$this->finish) {
 //            return [
@@ -114,18 +146,19 @@ class Timer extends Model {
 //        $this->time->h = 0;
 //        $this->time->i = 0;
 //        $this->time->s = 0;
-
-        if (!$this->finish) {
-            return false;
-        }
+//
+//        if (!$this->finish) {
+//            return false;
+//        }
 
 //        dd($this->time);
 
-        $finish = Carbon::createFromFormat('Y-m-d H:i:s', $this->finish);
-        $time = $finish->diff($start);
-        $this->time = $time;
+        //$finish = Carbon::createFromFormat('Y-m-d H:i:s', $this->finish);
+        //$time = $finish->diff($start);
+        // $this->time = $time; a get method shouldn't modify the model in any way
 
-        return $time;
+        //return $time;
+        return $this->finish->diff($this->start);
     }
 
     /**
@@ -182,25 +215,12 @@ class Timer extends Model {
     }
 
     /**
-     * Calculate the price
-     * @return float
+     * Fetch the rate attribute on project and store it on the Timer
+     * @return mixed
      */
-    public function calculatePrice()
+    public function getRateAttribute()
     {
-        $price = 0;
-
-        if(!$this->hasTotalTime()) {
-            throw new UncallableMethod;
-        }
-
-        if ($this->totalTime->s > 30) {
-            $this->totalTime->i = $this->totalTime->i + 1;
-        }
-
-        $price += $this->rate * $this->totalTime->h;
-        $price += $this->rate / 60 * $this->totalTime->i;
-
-        $this->price = $price;
+        return $this->projects->rate_per_hour;
     }
 
     /**
@@ -231,11 +251,25 @@ class Timer extends Model {
     }
 
     /**
-     * Fetch the rate attribute on project and store it on the Timer
-     * @return mixed
+     * Calculate the price
+     * @return float
      */
-    public function getRateAttribute()
+    public function calculatePrice()
     {
-        return $this->projects->rate_per_hour;
+        $price = 0;
+
+        if(!$this->hasTotalTime()) {
+            throw new UncallableMethod;
+        }
+
+        if ($this->totalTime->s > 30) {
+            $this->totalTime->i = $this->totalTime->i + 1;
+        }
+
+        $price += $this->rate * $this->totalTime->h;
+        $price += $this->rate / 60 * $this->totalTime->i;
+
+        $this->price = $price;
     }
+
 }
