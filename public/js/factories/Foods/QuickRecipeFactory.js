@@ -82,6 +82,7 @@ app.factory('QuickRecipeFactory', function ($http) {
 		}
 
 		//Then, the lowercase colon possibilities
+        //Todo: 'Steps' should also be acceptable
 		if ($lines.indexOf('method:') !== -1) {
 			$method_index = $lines.indexOf('method:');
 		}
