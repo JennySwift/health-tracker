@@ -74,9 +74,13 @@ class Project extends Model {
         $time = $this->total_time;
         $price = 0;
 
+        if ($time['seconds'] > 30) {
+            $time['minutes'] = $time['minutes'] + 1;
+        }
+
         $price+= $rate * $time['hours'];
         $price+= $rate / 60 * $time['minutes'];
-        $price+= $rate / 3600 * $time['seconds'];
+        //$price+= $rate / 3600 * $time['seconds'];
 
         return $price;
     }
@@ -87,6 +91,7 @@ class Project extends Model {
      */
     public function getFormattedPriceAttribute()
     {
+        //return $this->price;
         return number_format($this->price, 2);
     }
 

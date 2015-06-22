@@ -266,9 +266,9 @@ class Timer extends Model {
             throw new UncallableMethod;
         }
 
-//        if ($this->totalTime->s > 30) {
-//            $this->totalTime->i = $this->totalTime->i + 1;
-//        }
+        if ($this->totalTime->s > 30) {
+            $this->totalTime->i = $this->totalTime->i + 1;
+        }
 
         $price += $this->rate * $this->totalTime->h;
         $price += $this->rate / 60 * $this->totalTime->i;
