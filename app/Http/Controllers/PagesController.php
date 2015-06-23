@@ -150,12 +150,16 @@ class PagesController extends Controller {
      */
     public function payer()
     {
+        //I got an error with the package if
+        //I didn't put $pusher_public_key into a variable first
+        $pusher_public_key = env('PUSHER_PUBLIC_KEY');
         $payer = Payer::find(Auth::user()->id);
 
         JavaScript::put([
             'payer_projects' => $payer->projects,
             'payees' => $payer->payees,
-            'me' => Auth::user()
+            'me' => Auth::user(),
+            'pusher_public_key' => $pusher_public_key
         ]);
 
         return view('payer');

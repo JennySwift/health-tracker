@@ -24,8 +24,10 @@ var app = angular.module('tracker');
          * Pusher
          * @type {string}
          */
-        var $public_key = '0559aebf9ae96524872b';
-        var pusher = new Pusher($public_key);
+
+        $scope.pusher_public_key = pusher_public_key;
+
+        var pusher = new Pusher($scope.pusher_public_key);
 
         var channel = pusher.subscribe('testChannel');
 
