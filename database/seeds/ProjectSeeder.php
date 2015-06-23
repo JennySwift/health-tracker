@@ -74,6 +74,21 @@ class ProjectSeeder extends Seeder {
 
             $this->createTimersForProject($project);
         }
+
+        /**
+         * Jenny is payee
+         */
+
+        foreach(range(0,2) as $index) {
+            $project = Project::create([
+                'payee_id' => $jenny->id,
+                'payer_id' => $john->id,
+                'description' => $faker->word,
+                'rate_per_hour' => 10
+            ]);
+
+            $this->createTimersForProject($project);
+        }
 	}
 
     private function createTimersForProject($project)

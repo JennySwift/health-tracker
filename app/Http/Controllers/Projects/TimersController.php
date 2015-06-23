@@ -102,6 +102,9 @@ class TimersController extends Controller
 //            }
 //        }
 
+        //Flash
+        flash('some flash message');
+
         //Pusher
         $pusher = new Pusher(env('PUSHER_PUBLIC_KEY'), env('PUSHER_SECRET_KEY'), env('PUSHER_APP_ID'));
 

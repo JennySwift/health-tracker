@@ -18,6 +18,7 @@ var app = angular.module('tracker');
             is_timing: false
         };
         $scope.selected = {};
+        $scope.flash_messages = [];
 
         /**
          * Pusher
@@ -30,7 +31,9 @@ var app = angular.module('tracker');
 
         channel.bind('testEvent', function(data) {
             if ($scope.me.id === data.payer_id) {
-                alert(data.message);
+                $scope.flash_messages.push(data.message);
+                $scope.$apply();
+                //alert(data.message);
             }
         });
 

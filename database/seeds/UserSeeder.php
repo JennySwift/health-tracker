@@ -56,6 +56,14 @@ class UserSeeder extends Seeder {
         $payee_bob->payers()->attach($jenny->id);
         $payee_bob->payers()->attach($john->id);
         $payee_bob->save();
+
+        /**
+         * Create payers for Jenny
+         */
+
+        $payee_bob = Payee::find($bob->id);
+        $payee_bob->payers()->attach($john->id);
+        $payee_bob->save();
 	}
 
 }

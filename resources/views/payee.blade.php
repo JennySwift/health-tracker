@@ -12,11 +12,15 @@
 
 @include('templates.header')
 
+@include('flash::message')
+
 <div ng-controller="payee" id="projects" class="container">
 
 
     {{--    @include($templates . '/popups/project/index.php')--}}
     @include('templates.projects.index')
+
+    <div ng-show="flash_message" class="alert alert-success">[[flash_message]]</div>
 
 
     <div class="flex margin-bottom">
