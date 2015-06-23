@@ -8,7 +8,7 @@ var app = angular.module('tracker');
          */
 
         $scope.projects = payer_projects;
-
+        $scope.me = me;
         $scope.payees = payees;
         $scope.new_project = {};
         $scope.show = {
@@ -18,6 +18,21 @@ var app = angular.module('tracker');
             is_timing: false
         };
         $scope.selected = {};
+
+        /**
+         * Pusher
+         * @type {string}
+         */
+        var $public_key = '0559aebf9ae96524872b';
+        var pusher = new Pusher($public_key);
+
+        var channel = pusher.subscribe('testChannel');
+
+        channel.bind('testEvent', function(data) {
+            if ($scope.me.id === data.payer_id) {
+                alert(data.message);
+            }
+        });
 
         /**
          * watches

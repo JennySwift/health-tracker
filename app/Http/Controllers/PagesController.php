@@ -154,7 +154,8 @@ class PagesController extends Controller {
 
         JavaScript::put([
             'payer_projects' => $payer->projects,
-            'payees' => $payer->payees
+            'payees' => $payer->payees,
+            'me' => Auth::user()
         ]);
 
         return view('payer');

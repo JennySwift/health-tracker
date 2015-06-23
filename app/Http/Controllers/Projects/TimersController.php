@@ -11,6 +11,7 @@ use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Pusher;
 
 /**
  * Class TimersController
@@ -101,13 +102,20 @@ class TimersController extends Controller
 //            }
 //        }
 
+        //Pusher
+        $pusher = new Pusher(env('PUSHER_PUBLIC_KEY'), env('PUSHER_SECRET_KEY'), env('PUSHER_APP_ID'));
+
+        $channel = 'testChannel';
+        $event = 'testEvent';
+        $data = [
+            'payer_id' => $project->payer_id,
+            'message' => Auth::user()->name . ' has started a new timer on the project ' . $project->description
+        ];
+
+        $pusher->trigger($channel, $event, $data);
+
         //return response($timer->toArray(), Response::HTTP_CREATED); // = 201 HTTP Created code
         return $this->responseCreated($timer);
-
-//        return [
-//            'projects' => $this->projectsRepository->getProjectsResponseForCurrentUser(),
-//            'project' => $this->projectsRepository->getProject($project->id)
-//        ];
     }
 
     /**

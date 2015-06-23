@@ -4,21 +4,6 @@ var app = angular.module('tracker');
     app.controller('payee', function ($scope, $http, $interval, $timeout, ProjectsFactory) {
 
         /**
-         * Pusher
-         * @type {string}
-         */
-        var $public_key = '0559aebf9ae96524872b';
-        var pusher = new Pusher($public_key);
-
-        var channel = pusher.subscribe('testChannel');
-
-        channel.bind('testEvent', function(data) {
-            alert(data);
-        });
-
-
-
-        /**
          * scope properties
          */
 
