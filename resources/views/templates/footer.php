@@ -11,6 +11,7 @@
 <script type="text/javascript" src="tools/jquery.js"></script>
 <script type="text/javascript" src="tools/underscore-min.js"></script>
 <script type="text/javascript" src="tools/enquire.min.js"></script>
+<script src="//js.pusher.com/2.2/pusher.min.js"></script>
 
 
 <script type="text/javascript" src="tools/tooltipster.min.js"></script>

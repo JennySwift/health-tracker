@@ -11,16 +11,15 @@ use App\Models\Projects\Timer;
  */
 
 //test
-//Route::get('/test', function()
-//{
-//    $project = Project::first();
-//    return $project;
-//});
-
-Route::get('/test', function()
+Route::any('/test', function()
 {
-    $timer = Timer::first();
-    return $timer;
+    $pusher = new Pusher(env('PUSHER_PUBLIC_KEY'), env('PUSHER_SECRET_KEY'), env('PUSHER_APP_ID'));
+
+    $channel = 'testChannel';
+    $event = 'testEvent';
+    $data = ['It works!'];
+
+    $pusher->trigger($channel, $event, $data);
 });
 
 //Homepage (entries)
