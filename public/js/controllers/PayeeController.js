@@ -64,8 +64,7 @@ var app = angular.module('tracker');
                 return false;
             }
             ProjectsFactory.insertProject($scope.new_project.email, $scope.new_project.description, $scope.new_project.rate).then(function (response) {
-                // @TODO Append the newly created project to the projects collection
-                $scope.projects = response.data;
+                $scope.projects.push(response.data);
             });
         };
 
