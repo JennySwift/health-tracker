@@ -88,6 +88,11 @@ class Project extends Model {
         //Get the sum of all the timers that belong to the project
         $price = Timer::whereIn('id', $timer_ids)->sum('price');
 
+        /**
+         * @VP:
+         * Why is sum returning a string here? I want it to be a decimal.
+         */
+
         return $price;
     }
 

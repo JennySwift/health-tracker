@@ -50,6 +50,12 @@ var app = angular.module('tracker');
             }
         });
 
+        $scope.$watch('selected.project.price', function (newValue, oldValue) {
+            if (newValue) {
+                $scope.selected.project.formatted_price = parseFloat(newValue).toFixed(2);
+            }
+        });
+
         /**
          * select
          */
@@ -104,17 +110,31 @@ var app = angular.module('tracker');
          * update
          */
 
+        /**
+         * When timer is stopped, the timer is returned in the response update:
+         * Update the timer in the timers table.
+         * Update the amount owed.
+         * On both main page and in the popup, update the project time and project price.
+         */
         $scope.stopProjectTimer = function () {
             ProjectsFactory.stopProjectTimer($scope.selected.project.id).then(function (response) {
                 //$scope.projects = response.data.projects;
                 //$scope.selected.project = response.data.project;
 
-                //Find the timer in the JS array
+                //Find the timer in the JS array and update it
                 var $timer = _.findWhere($scope.selected.project.timers, {id: response.data.id});
                 var $index = _.indexOf($scope.selected.project.timers, $timer);
-
-                //Update the timer
                 $scope.selected.project.timers[$index] = response.data;
+
+                //Add the timer price to the project price in the popup
+                $scope.selected.project.price = parseFloat($scope.selected.project.price);
+                $scope.selected.project.price+= parseFloat(response.data.price);
+
+                //Add the timer price to the project price on the main page
+                var $project = _.findWhere($scope.projects, {id: $scope.selected.project.id});
+                var $index = _.indexOf($scope.projects, $project);
+                $scope.projects[$index].price = $scope.selected.project.price;
+                $scope.projects[$index].formatted_price = parseFloat($scope.projects[$index].price).toFixed(2);
 
                 //$scope.selected.project.timers.push(response.data);
                 $interval.cancel($scope.counter);

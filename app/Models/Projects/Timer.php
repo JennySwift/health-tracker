@@ -251,6 +251,11 @@ class Timer extends Model {
         $price = number_format($price, 2);
         $this->attributes['price'] = $price;
 
+        /**
+         * @VP:
+         * $price is a string. I want it to be a decimal.
+         */
+
         $this->save();
     }
 
