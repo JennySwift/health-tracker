@@ -126,42 +126,6 @@ class Timer extends Model {
             return null;
         }
 
-        //$start = Carbon::createFromFormat('Y-m-d H:i:s', $this->start);
-//        dd($this->finish);
-
-        /**
-         * @VP:
-         * I was getting an error when I started a new timer, because the finish time
-         * was null. How would I return $time here with h, i, and s equal to 0?
-         * My attempts here didn't work.
-         *
-         * See condition at the beginning of the method
-         */
-
-
-//        if (!$this->finish) {
-//            return [
-//                'h' => 0,
-//                'i' => 0,
-//                's' => 0
-//            ];
-//        }
-
-//        $this->time->h = 0;
-//        $this->time->i = 0;
-//        $this->time->s = 0;
-//
-//        if (!$this->finish) {
-//            return false;
-//        }
-
-//        dd($this->time);
-
-        //$finish = Carbon::createFromFormat('Y-m-d H:i:s', $this->finish);
-        //$time = $finish->diff($start);
-        // $this->time = $time; a get method shouldn't modify the model in any way
-
-        //return $time;
         return $this->finish->diff($this->start);
     }
 
@@ -237,7 +201,7 @@ class Timer extends Model {
     }
 
     /**
-     * Does the timer has a time property (=> does the calculateTotalTime method has been called?)
+     * Does the timer have a time property (=> has the calculateTotalTime method been called?)
      * @return bool
      */
     public function hasTotalTime()
@@ -246,7 +210,7 @@ class Timer extends Model {
     }
 
     /**
-     * Does the timer project has a rate?
+     * Does the timer project have a rate?
      * @return bool
      */
     public function hasRate()
