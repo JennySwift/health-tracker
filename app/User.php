@@ -202,6 +202,8 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         $owed = Timer::whereIn('id', $timers_with_payer)
         ->sum('price');
 
+        $owed = number_format($owed, 2);
+
         return $owed;
     }
 
@@ -227,6 +229,8 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         //Find the amount owed
         $owed = Timer::whereIn('id', $timers_with_payee)
             ->sum('price');
+
+        $owed = number_format($owed, 2);
 
         return $owed;
     }
