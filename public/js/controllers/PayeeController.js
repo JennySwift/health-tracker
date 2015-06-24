@@ -136,7 +136,8 @@ var app = angular.module('tracker');
                 $scope.projects[$index].price = $scope.selected.project.price;
                 $scope.projects[$index].formatted_price = parseFloat($scope.projects[$index].price).toFixed(2);
 
-                //$scope.selected.project.timers.push(response.data);
+                //Todo: update amount owed, as well as project time in both popup and on main page
+
                 $interval.cancel($scope.counter);
                 $scope.project_popup.is_timing = false;
             });
