@@ -143,9 +143,8 @@ class TimersController extends Controller
         //$timer->calculateTotalTime();
 
         $timer->calculatePrice();
-        // $timer->calculatePrice();
 
-        $timer->save();
+//        $timer->save();
 
         return $this->responseOk($timer);
 //        return [

@@ -34,7 +34,7 @@ class ProjectSeeder extends Seeder {
          * John is payee
          */
 
-        foreach(range(0,5) as $index) {
+        foreach(range(0,2) as $index) {
             $project = Project::create([
                 'payee_id' => $john->id,
                 'payer_id' => $faker->randomElement($payee_john->payers()->lists('id')),
@@ -64,7 +64,7 @@ class ProjectSeeder extends Seeder {
          * Bob is payee
          */
 
-        foreach(range(0,2) as $index) {
+        foreach(range(0,4) as $index) {
             $project = Project::create([
                 'payee_id' => $bob->id,
                 'payer_id' => $jenny->id,
@@ -95,7 +95,7 @@ class ProjectSeeder extends Seeder {
     {
         $faker = Faker::create();
 
-        foreach (range(0, 8) as $index) {
+        foreach (range(0, 2) as $index) {
 //            $finish = $faker->dateTimeBetween($startDate = '-1 days', $endDate = 'now');
 //            $start = $faker->dateTimeBetween($startDate = '-1 days', $endDate = $finish);
 

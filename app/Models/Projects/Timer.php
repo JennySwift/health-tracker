@@ -230,15 +230,28 @@ class Timer extends Model {
             throw new UncallableMethod;
         }
 
+        /**
+         * @VP:
+         * This is not changing $this->totalTime->i.
+         * The if check is working but the $this->totalTime->i is remaining 0.
+         */
+//        if ($this->totalTime->s > 30) {
+//            $this->totalTime->i = 10;
+//        }
+
+        $minutes = $this->totalTime->i;
+
         if ($this->totalTime->s > 30) {
-            $this->totalTime->i = $this->totalTime->i + 1;
+            $minutes+=1;
         }
 
         $price += $this->rate * $this->totalTime->h;
-        $price += $this->rate / 60 * $this->totalTime->i;
+        $price += $this->rate / 60 * $minutes;
         //$price += $this->rate / 3600 * $this->totalTime->s;
 
         $this->attributes['price'] = $price;
+
+        $this->save();
     }
 
 }

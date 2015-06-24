@@ -71,17 +71,22 @@ class Project extends Model {
     public function getPriceAttribute()
     {
         // @TODO Try to abstract this logic, since you are using it in multiple places
-        $rate = $this->rate_per_hour;
-        $time = $this->total_time;
-        $price = 0;
+//        $rate = $this->rate_per_hour;
+//        $time = $this->total_time;
+//        $price = 0;
+//
+//        if ($time['seconds'] > 30) {
+//            $time['minutes'] = $time['minutes'] + 1;
+//        }
+//
+//        $price+= $rate * $time['hours'];
+//        $price+= $rate / 60 * $time['minutes'];
 
-        if ($time['seconds'] > 30) {
-            $time['minutes'] = $time['minutes'] + 1;
-        }
+        //Get the ids of the timers that belong to the project
+        $timer_ids = Timer::where('project_id', $this->id)->lists('id');
 
-        $price+= $rate * $time['hours'];
-        $price+= $rate / 60 * $time['minutes'];
-        //$price+= $rate / 3600 * $time['seconds'];
+        //Get the sum of all the timers that belong to the project
+        $price = Timer::whereIn('id', $timer_ids)->sum('price');
 
         return $price;
     }
