@@ -24,8 +24,7 @@ use App\Models\Projects\Timer;
 
 Route::get('/test', function()
 {
-    $timer = Timer::find(44);
-    return $timer;
+    return Project::find(2);
 });
 
 //Homepage (entries)

@@ -121,6 +121,12 @@ class Project extends Model {
             $seconds+= $timer->time->s;
         }
 
+        //Stop total seconds from going above 59
+        if ($seconds > 59) {
+            $minutes+= floor($seconds / 60);
+            $seconds = $seconds % 60;
+        }
+
         //Stop total minutes from going above 59
         if ($minutes > 59) {
             $hours+= floor($minutes / 60);
