@@ -46,7 +46,9 @@
             <tr ng-repeat="timer in selected.project.timers">
                 <td>[[timer.formatted_start]]</td>
                 <td>[[timer.formatted_finish]]</td>
-                <td>[[timer.formatted_hours]]:[[timer.formatted_minutes]]:[[timer.formatted_seconds]]</td>
+                <td>
+                    <span ng-show="timer.formatted_hours">[[timer.formatted_hours]]:[[timer.formatted_minutes]]:[[timer.formatted_seconds]]</span>
+                </td>
                 <td>[[timer.price]]</td>
                 <td>
                     <span ng-if="!timer.paid" class="label label-danger">unpaid</span>
