@@ -73,8 +73,8 @@ class TimersController extends Controller
      * as well as the project that is currently displaying in the project popup
      *
      * WARNING: Be careful, method not Restful! Should be a POST request to /projects/{project}/timers
-     * and return the timer newly created :) (So it should be in a ProjectTimersController not the TimersController,
-     * store method). You could also use Model Binding on projects to fetch the project model right away and pass
+     * and return the timer newly created :) (So it should be in a ProjectTimersController,
+     * store method, not the TimersController). You could also use Model Binding on projects to fetch the project model right away and pass
      * it as a parameter.
      *
      * @param Request $request
