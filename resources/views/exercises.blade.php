@@ -12,7 +12,7 @@
 
 	@include('templates.header')
 	
-	<div ng-controller="exercises" id="exercises">
+	<div ng-controller="exercises" id="exercises" class="container">
 
 		<?php include($templates . '/exercises/index.php'); ?>
 
