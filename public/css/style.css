@@ -17,10 +17,11 @@ $expense_background: $light_blue; */
 html, body {
   max-width: 100%;
   overflow-x: hidden;
-  background: lightgray; }
+  background: #fff; }
 
 body {
-  padding-top: 63px; }
+  padding-top: 63px;
+  color: #777; }
   @media (max-width: 600px) {
     body {
       padding-top: 42px; } }
@@ -69,12 +70,18 @@ button {
     color: #333; }
 
 input {
-  padding: 0;
-  margin: 0;
-  border: 0;
-  overflow: scroll;
-  background: transparent;
-  text-align: center; }
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+  color: #555;
+  font-size: 14px;
+  height: 34px;
+  line-height: 1.42857;
+  padding: 6px 12px; }
+  input:focus {
+    border-color: #66afe9;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6); }
 
 input[type="checkbox"] {
   margin: 0; }
@@ -340,6 +347,9 @@ li {
 .margin-bottom {
   margin-bottom: 15px; }
 
+.margin-bottom-md {
+  margin-bottom: 39px; }
+
 .margin-bottom-lg {
   margin-bottom: 140px; }
 
@@ -348,21 +358,6 @@ li {
 
 .hover:hover {
   background: #b5b5b5; }
-
-.my-input {
-  width: 0%;
-  background: #fff;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
-  color: #555;
-  font-size: 14px;
-  height: 34px;
-  line-height: 1.42857;
-  padding: 6px 12px; }
-  .my-input:focus {
-    border-color: #66afe9;
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6); }
 
 .my-btn {
   background: #fff;
@@ -555,18 +550,24 @@ li {
     width: 100%;
     max-width: 600px; }
 
-#projects .flex {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap; }
-  #projects .flex > * {
-    margin: 0px 20px; }
-#projects h1 {
-  margin-bottom: 30px; }
-#projects img {
-  border-radius: 23px; }
-#projects input {
-  background: white; }
+#payee, #payer {
+  max-width: 630px; }
+  #payee .flex, #payer .flex {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap; }
+    #payee .flex > *, #payer .flex > * {
+      margin: 0px 20px; }
+  #payee h1, #payer h1 {
+    margin-bottom: 30px; }
+  #payee img, #payer img {
+    border-radius: 23px; }
+  #payee input, #payer input {
+    background: white; }
+  #payee .input-container, #payer .input-container {
+    background: #F5F1F2;
+    border-radius: 10px;
+    padding: 34px 0; }
 
 body.browser-height {
   box-sizing: border-box; }

@@ -14,7 +14,7 @@
 
 @include('flash::message')
 
-<div ng-controller="payee" id="projects" class="container">
+<div ng-controller="payee" id="payee" class="container">
 
 
     {{--    @include($templates . '/popups/project/index.php')--}}
@@ -22,30 +22,40 @@
 
     <div ng-show="flash_message" class="alert alert-success">[[flash_message]]</div>
 
+    <h1>Add a new payer</h1>
 
-    <div class="flex margin-bottom">
+    <div class="flex margin-bottom input-container">
         <input ng-keyup="addPayer($event.keyCode)" type="text" placeholder="enter payer's email" id="new-payer-email"/>
-        <button ng-click="addPayer(13)" class="btn btn-default">Add payer</button>
+        <button ng-click="addPayer(13)" class="btn btn-success">Add payer</button>
     </div>
 
+    <h1>Create a new project</h1>
 
-    <div class="flex margin-bottom">
-        <select ng-model="new_project.email" title="something">
-            <option ng-repeat="payer in payers" ng-value="payer.email">[[payer.name]]</option>
-        </select>
-        <input ng-model="new_project.description" type="text" placeholder="description">
-        <input ng-model="new_project.rate" ng-keyup="insertProject($event.keyCode)" type="text" placeholder="rate">
-        <button ng-click="insertProject(13)">Create project</button>
+    <div class="margin-bottom input-container">
+
+        <div class="flex margin-bottom-md">
+            <select ng-model="new_project.email" title="something">
+                <option ng-repeat="payer in payers" ng-value="payer.email">[[payer.name]]</option>
+            </select>
+            <input ng-model="new_project.description" type="text" placeholder="description">
+            <input ng-model="new_project.rate" ng-keyup="insertProject($event.keyCode)" type="text" placeholder="rate">
+        </div>
+
+        <div class="flex">
+            <button ng-click="insertProject(13)" class="btn btn-success">Create project</button>
+        </div>
+
     </div>
 
     <div class="flex">
         <div>
+            <h1>Payers</h1>
             <table class="table table-bordered margin-bottom">
-                <caption>Your payers</caption>
                 <tr>
                     <th></th>
                     <th>name</th>
                     <th>owed</th>
+                    <th></th>
                     <th></th>
                 </tr>
 
@@ -54,7 +64,7 @@
                     <td>[[payer.name]]</td>
                     <td>[[payer.owed_to_user]]</td>
                     <td><button ng-click="markAsPaid(payer)" class="btn btn-xs">paid</button></td>
-                    <td><button ng-click="removePayer(payer)" class="btn btn-xs">delete</button></td>
+                    <td><button ng-click="removePayer(payer)" class="btn btn-xs btn-danger">delete</button></td>
                 </tr>
             </table>
         </div>
@@ -62,7 +72,7 @@
     </div>
 
 
-    <h1>User is payee</h1>
+    <h1>Projects</h1>
 
     <table class="table table-bordered margin-bottom-lg">
         <tr>
@@ -89,7 +99,7 @@
             {{--<span ng-if="project.paid" class="label label-success">paid</span>--}}
             {{--</td>--}}
             <td>
-                <button ng-click="deleteProject(project)" class="btn btn-xs">delete</button>
+                <button ng-click="deleteProject(project)" class="btn btn-xs btn-danger">delete</button>
             </td>
         </tr>
 

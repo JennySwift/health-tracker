@@ -1,4 +1,5 @@
-#projects {
+#payee, #payer {
+    max-width: 630px;
     .flex {
       display: flex;
       justify-content: center;
@@ -15,5 +16,10 @@
 	}
     input {
       background: white;
+    }
+    .input-container {
+      background: #F5F1F2;
+      border-radius: 10px;
+      padding: 34px 0;
     }
 }

@@ -14,7 +14,7 @@
 
 @include('flash::message')
 
-<div ng-controller="payer" id="projects" class="container">
+<div ng-controller="payer" id="payer" class="container">
 
 
     {{--    @include($templates . '/popups/project/index.php')--}}
@@ -55,8 +55,6 @@
             <th>Rate/hour</th>
             <th>Time</th>
             <th>$</th>
-            {{--<th>Paid</th>--}}
-            <th></th>
         </tr>
         <tr ng-repeat="project in projects">
             <td ng-click="showProjectPopup(project)" class="pointer">[[project.payee.name]]
