@@ -43,7 +43,7 @@ class TimersController extends Controller
         $payer = Payer::findOrFail($request->get('payer_id'));
         $payee = Payee::find(Auth::user()->id);
 
-        $project_ids = $payee->projectsAsPayee()
+        $project_ids = $payee->projects()
                              ->where('payer_id', $payer->id)
                              ->lists('id');
 
@@ -63,8 +63,14 @@ class TimersController extends Controller
                 'time_of_payment' => Carbon::now()
              ]);
 
-        // @TODO return something useful here. Currently a page refresh is required to see the changes.
         // @TODO Return collection of timers that have been modified
+
+        /**
+         * Things that need to be updated on the page:
+         * Timers needs to be marked as paid.
+         * Timers need to display date of payment.
+         * Amount payer owes needs to change to 0.00.
+         */
     }
 
     /**
