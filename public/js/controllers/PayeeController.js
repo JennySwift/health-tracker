@@ -108,6 +108,15 @@ var app = angular.module('tracker');
             ProjectsFactory.stopProjectTimer($scope.selected.project.id).then(function (response) {
                 //$scope.projects = response.data.projects;
                 //$scope.selected.project = response.data.project;
+
+                //Find the timer in the JS array
+                var $timer = _.findWhere($scope.selected.project.timers, {id: response.data.id});
+                var $index = _.indexOf($scope.selected.project.timers, $timer);
+
+                //Update the timer
+                $scope.selected.project.timers[$index] = response.data;
+
+                //$scope.selected.project.timers.push(response.data);
                 $interval.cancel($scope.counter);
                 $scope.project_popup.is_timing = false;
             });

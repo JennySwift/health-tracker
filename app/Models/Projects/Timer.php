@@ -248,7 +248,7 @@ class Timer extends Model {
         $price += $this->rate * $this->totalTime->h;
         $price += $this->rate / 60 * $minutes;
         //$price += $this->rate / 3600 * $this->totalTime->s;
-
+        $price = number_format($price, 2);
         $this->attributes['price'] = $price;
 
         $this->save();
