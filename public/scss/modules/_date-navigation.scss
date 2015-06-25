@@ -1,6 +1,9 @@
 #date-navigation {
 	display: flex;
 	display: -webkit-flex;
+    max-width: 600px;
+    margin: auto;
+    margin-bottom: 23px;
 	> div, button {
 		flex-grow: 2
 	}

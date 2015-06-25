@@ -24,7 +24,9 @@ use App\Models\Projects\Timer;
 
 Route::get('/test', function()
 {
-    return Project::find(2);
+    $journal = Journal::first();
+    //dd($journal);
+    return $journal;
 });
 
 //Homepage (entries)
@@ -114,6 +116,12 @@ Route::resource('journal', 'Journal\JournalController', ['only' => ['show', 'sto
 /**
  * Ajax
  */
+
+/**
+ * Journal
+ */
+
+Route::post('select/filterJournalEntries', 'Journal\JournalController@filter');
 
 /**
  * Projects

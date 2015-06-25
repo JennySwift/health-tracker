@@ -29,10 +29,12 @@ var app = angular.module('tracker');
 		$scope.today = function () {
 			$scope.date.typed = DatesFactory.today();
 		};
-		$scope.changeDate = function ($keycode) {
-			if ($keycode === 13) {
-				$scope.date.typed = DatesFactory.changeDate($keycode, $("#date").val());
-			}
+		$scope.changeDate = function ($keycode, $date) {
+            if ($keycode !== 13) {
+                return false;
+            }
+            var $date = $date || $("#date").val();
+            $scope.date.typed = DatesFactory.changeDate($keycode, $date);
 		};
 
 		/**
@@ -67,6 +69,15 @@ var app = angular.module('tracker');
 				$scope.journal_entry = response.data;
 			});
 		};
+
+        $scope.filterJournalEntries = function ($keycode) {
+            if ($keycode !== 13) {
+                return false;
+            }
+            JournalFactory.filter().then(function (response) {
+                $scope.filter_results = response.data;
+            });
+        };
 		
 		/**
 		 * insert

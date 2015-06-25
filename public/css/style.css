@@ -523,7 +523,10 @@ li {
 
 #date-navigation {
   display: flex;
-  display: -webkit-flex; }
+  display: -webkit-flex;
+  max-width: 600px;
+  margin: auto;
+  margin-bottom: 23px; }
   #date-navigation > div, #date-navigation button {
     flex-grow: 2; }
   #date-navigation > input {
@@ -548,7 +551,15 @@ li {
   align-items: center; }
   #journal button {
     width: 100%;
-    max-width: 600px; }
+    max-width: 600px;
+    margin-bottom: 20px; }
+  #journal .wysiwyg {
+    max-width: 600px;
+    padding: 28px;
+    border: 13px solid #777; }
+  #journal #filter-results > div {
+    padding: 10px 0;
+    border-bottom: 1px dashed #777; }
 
 #payee, #payer {
   max-width: 630px; }

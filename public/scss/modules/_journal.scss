@@ -5,5 +5,17 @@
 	button {
 		width: 100%;
 		max-width: 600px;
+        margin-bottom: 20px;
 	}
+    .wysiwyg {
+      max-width: 600px;
+      padding: 28px;
+      border: 13px solid #777;
+    }
+    #filter-results {
+      > div {
+        padding: 10px 0;
+        border-bottom: 1px dashed #777;
+      }
+    }
 }

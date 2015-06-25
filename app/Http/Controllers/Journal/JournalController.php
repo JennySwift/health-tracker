@@ -31,6 +31,16 @@ class JournalController extends Controller {
 		$this->middleware('auth');
 	}
 
+    public function filter(Request $request)
+    {
+        $typing = '%' . $request->get('typing') . '%';
+        $matches = Journal::where('user_id', Auth::user()->id)
+            ->where('text', 'LIKE', $typing)
+            ->get();
+
+        return $matches;
+    }
+
 
     /**
      * @VP:

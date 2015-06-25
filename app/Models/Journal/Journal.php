@@ -1,5 +1,6 @@
 <?php namespace App\Models\Journal;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Auth;
 
@@ -22,7 +23,7 @@ class Journal extends Model {
     /**
      * @var array
      */
-    protected $appends = ['path'];
+    protected $appends = ['path', 'date'];
 
     /**
      *
@@ -40,6 +41,16 @@ class Journal extends Model {
     public function getPathAttribute()
     {
         return route('journal.show', $this->id);
+    }
+
+    /**
+     * Get date attribute
+     * @param $value
+     * @return static
+     */
+    public function getDateAttribute($value)
+    {
+        return Carbon::createFromFormat('Y-m-d', $this->attributes['date'])->format('d/m/y');
     }
 
     /**
