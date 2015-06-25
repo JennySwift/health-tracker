@@ -36,6 +36,7 @@ class JournalController extends Controller {
         $typing = '%' . $request->get('typing') . '%';
         $matches = Journal::where('user_id', Auth::user()->id)
             ->where('text', 'LIKE', $typing)
+            ->orderBy('date', 'desc')
             ->get();
 
         return $matches;
