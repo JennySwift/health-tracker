@@ -30,8 +30,6 @@
 <script type="text/javascript" src="js/controllers/JournalController.js"></script>
 <script type="text/javascript" src="js/controllers/FoodsController.js"></script>
 <script type="text/javascript" src="js/controllers/ExercisesController.js"></script>
-<script type="text/javascript" src="js/controllers/PayeeController.js"></script>
-<script type="text/javascript" src="js/controllers/PayerController.js"></script>
 
 <script type="text/javascript" src="js/factories/DatesFactory.js"></script>
 <script type="text/javascript" src="js/factories/Foods/QuickRecipeFactory.js"></script>
@@ -42,5 +40,4 @@
 <script type="text/javascript" src="js/factories/Tags/TagsFactory.js"></script>
 <script type="text/javascript" src="js/factories/Units/UnitsFactory.js"></script>
 <script type="text/javascript" src="js/factories/Weights/WeightsFactory.js"></script>
-<script type="text/javascript" src="js/factories/Projects/ProjectsFactory.js"></script>
 <script type="text/javascript" src="js/factories/AutocompleteFactory.js"></script>

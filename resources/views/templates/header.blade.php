@@ -24,14 +24,6 @@
     <li><a href="/exercises" class="fa fa-heart"></a></li>
     <li><a href="/journal" class="fa fa-pencil"></a></li>
 
-    <li id="menu-dropdown" class="dropdown">
-        <a href="#" class="dropdown-toggle fa fa-clock-o" data-toggle="dropdown"><span class="caret"></span></a>
-        <ul class="dropdown-menu" role="menu">
-            <li><a href="{{route('payee')}}">Payee</a></li>
-            <li><a href="{{route('payer')}}">Payer</a></li>
-        </ul>
-    </li>
-
     <li><a href="#" id="search_button" class="location_button fa fa-search"></a></li>
 </ul>
 

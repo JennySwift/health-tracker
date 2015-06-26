@@ -44,11 +44,6 @@ Route::get('exercises', 'PagesController@exercises');
 //Journal
 Route::get('/journal', 'PagesController@journal');
 
-//Projects
-//Route::get('projects', ['as' => 'projects', 'uses' => 'PagesController@index']);
-Route::get('payee', ['as' => 'payee', 'uses' => 'PagesController@payee']);
-Route::get('payer', ['as' => 'payer', 'uses' => 'PagesController@payer']);
-
 //Credits
 Route::get('/credits', function()
 {
@@ -102,9 +97,6 @@ Route::bind('exercises', function($value)
  */
 
 Route::resource('weights', 'Weights\WeightsController');
-Route::resource('projects', 'Projects\ProjectsController', ['only' => ['show', 'store', 'destroy']]);
-Route::resource('payee', 'Projects\PayeeController', ['only' => ['store', 'destroy']]);
-Route::resource('payer', 'Projects\PayerController', ['only' => ['store', 'destroy']]);
 Route::resource('timers', 'Projects\TimersController', ['only' => ['destroy']]);
 Route::resource('foods', 'Foods\FoodsController', ['only' => ['show', 'destroy']]);
 Route::resource('exercises', 'Exercises\ExercisesController', ['except' => ['index']]);
@@ -122,19 +114,6 @@ Route::resource('journal', 'Journal\JournalController', ['only' => ['show', 'sto
  */
 
 Route::post('select/filterJournalEntries', 'Journal\JournalController@filter');
-
-/**
- * Projects
- */
-
-Route::post('insert/startProjectTimer', 'Projects\TimersController@startProjectTimer');
-// @TODO Should be in a UserPayeeController (Route::resource('users.payees'))
-// http://laravel.com/docs/5.0/controllers#restful-resource-controllers
-Route::post('insert/payer', 'Projects\PayeeController@addPayer');
-// Same as insert/payer but destroy method this time :)
-Route::post('delete/payer', 'Projects\PayeeController@removePayer');
-Route::post('update/markAsPaid', 'Projects\TimersController@markAsPaid');
-Route::post('update/stopProjectTimer', 'Projects\TimersController@stopProjectTimer');
 
 /**
  * Exercises

@@ -34,7 +34,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     /**
      * @var array
      */
-    protected $appends = ['gravatar', 'owed_to_user', 'owed_by_user'];
+    protected $appends = ['gravatar'];
 
     /**
      * The attributes that are mass assignable.
@@ -179,59 +179,4 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         return "https://secure.gravatar.com/avatar/{$email}?s=37&r=g&default=mm";
     }
 
-    /**
-     * Get the total amount the user owes the current user
-     * @return mixed
-     */
-    public function getOwedToUserAttribute()
-    {
-        $payee = Payee::find(Auth::user()->id);
-
-        //Find the projects belonging to the current user and $this user
-        $projects_with_payer = Project::where('payee_id', $payee->id)
-            ->where('payer_id', $this->id)
-            ->lists('id');
-
-        //Find the timers belonging to those projects,
-        //but only those that have not been paid for
-        $timers_with_payer = Timer::whereIn('project_id', $projects_with_payer)
-            ->where('paid', 0)
-            ->lists('id');
-
-        //Find the amount owed
-        $owed = Timer::whereIn('id', $timers_with_payer)
-        ->sum('price');
-
-        $owed = number_format($owed, 2);
-
-        return $owed;
-    }
-
-    /**
-     * Get the total amount the current user owes the user
-     * @return mixed
-     */
-    public function getOwedByUserAttribute()
-    {
-        $payer = Payer::find(Auth::user()->id);
-
-        //Find the projects belonging to the current user and $this user
-        $projects_with_payee = Project::where('payer_id', $payer->id)
-            ->where('payee_id', $this->id)
-            ->lists('id');
-
-        //Find the timers belonging to those projects,
-        //but only those that have not been paid for
-        $timers_with_payee = Timer::whereIn('project_id', $projects_with_payee)
-            ->where('paid', 0)
-            ->lists('id');
-
-        //Find the amount owed
-        $owed = Timer::whereIn('id', $timers_with_payee)
-            ->sum('price');
-
-        $owed = number_format($owed, 2);
-
-        return $owed;
-    }
 }
