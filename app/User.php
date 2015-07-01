@@ -1,10 +1,5 @@
 <?php namespace App;
 
-use App\Models\Projects\Payee;
-use App\Models\Projects\Payer;
-use App\Models\Projects\Project;
-use App\Models\Projects\Timer;
-use App\Repositories\Projects\ProjectsRepository;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Passwords\CanResetPassword;

@@ -8,8 +8,6 @@ use App\Models\Foods\Food;
 use App\Models\Foods\Recipe;
 use App\Models\Foods\Entry as FoodEntry;
 use App\Models\Journal\Journal;
-use App\Models\Projects\Payee;
-use App\Models\Projects\Payer;
 use App\Models\Tags\Tag;
 use App\Models\Units\Unit;
 use App\Repositories\Exercises\ExercisesRepository;
@@ -127,42 +125,4 @@ class PagesController extends Controller {
 
         return view('journal');
     }
-
-    /**
-     *
-     * @return \Illuminate\View\View
-     */
-    public function payee()
-    {
-        $payee = Payee::find(Auth::user()->id);
-
-        JavaScript::put([
-            'payee_projects' => $payee->projects->toArray(),
-            'payers' => $payee->payers->toArray(),
-        ]);
-
-        return view('payee');
-    }
-
-    /**
-     *
-     * @return \Illuminate\View\View
-     */
-    public function payer()
-    {
-        //I got an error with the package if
-        //I didn't put $pusher_public_key into a variable first
-        $pusher_public_key = env('PUSHER_PUBLIC_KEY');
-        $payer = Payer::find(Auth::user()->id);
-
-        JavaScript::put([
-            'payer_projects' => $payer->projects,
-            'payees' => $payer->payees,
-            'me' => Auth::user(),
-            'pusher_public_key' => $pusher_public_key
-        ]);
-
-        return view('payer');
-    }
-
 }
