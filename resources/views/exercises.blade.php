@@ -23,6 +23,8 @@
 				<h2 class="center">Exercises</h2>
 				<input ng-keyup="insertExercise($event.keyCode)" type="text" placeholder="Add a new exercise" id="create-new-exercise" class="form-control">
 				<input ng-keyup="insertExercise($event.keyCode)" type="text" placeholder="description" id="exercise-description" class="form-control">
+                <input ng-model="filter.exercises.name" type="text" placeholder="filter exercises by name" class="form-control"/>
+                <input ng-model="filter.exercises.description" type="text" placeholder="filter exercises by description" class="form-control"/>
 			</div>
 			
 			<table class="table table-bordered">
@@ -36,7 +38,7 @@
 					<th>tags</th>
 					<th>x</th>
 				</tr>
-				<tr ng-repeat="exercise in exercises" class="hover">
+				<tr ng-repeat="exercise in exercises | filter:{name: filter.exercises.name, description: filter.exercises.description}" class="hover">
 					<td ng-click="showExercisePopup(exercise)" class="pointer">[[exercise.name]]</td>
 					<td ng-click="showExercisePopup(exercise)" class="pointer">[[exercise.description]]</td>
 					<td ng-click="showExercisePopup(exercise)" class="pointer">[[exercise.step_number]]</td>
