@@ -40,6 +40,9 @@ Route::get('/foods', 'PagesController@foods');
 
 //Exercises
 Route::get('exercises', 'PagesController@exercises');
+Route::get('series', 'PagesController@series');
+Route::get('workouts', 'PagesController@workouts');
+Route::get('exercise_tags', 'PagesController@exerciseTags');
 
 //Journal
 Route::get('/journal', 'PagesController@journal');

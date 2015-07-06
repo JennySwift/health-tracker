@@ -21,7 +21,17 @@
             <img src="img/apple.svg" alt="" width="14">
         </a>
     </li>
-    <li><a href="/exercises" class="fa fa-heart"></a></li>
+
+    <li id="menu-dropdown" class="dropdown">
+        <a href="#" class="dropdown-toggle fa fa-heart" data-toggle="dropdown"><span class="caret"></span></a>
+        <ul class="dropdown-menu" role="menu">
+            <li><a href="/exercises">Exercises</a></li>
+            <li><a href="/series">Series</a></li>
+            <li><a href="/workouts">Workouts</a></li>
+            <li><a href="/exercise_tags">Tags</a></li>
+        </ul>
+    </li>
+
     <li><a href="/journal" class="fa fa-pencil"></a></li>
 
     <li><a href="#" id="search_button" class="location_button fa fa-search"></a></li>

@@ -2,7 +2,7 @@
 
 	<div class="popup-inner">
 
-		<h5>[[exercise_series_popup.name]]</h5>
+		<h5>[[exercise_series_popup.series.name]]</h5>
 
 		<div ng-repeat="workout in workouts">
 			[[workout.name]]

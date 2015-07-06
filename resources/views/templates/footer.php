@@ -29,7 +29,11 @@
 <script type="text/javascript" src="js/controllers/EntriesController.js"></script>
 <script type="text/javascript" src="js/controllers/JournalController.js"></script>
 <script type="text/javascript" src="js/controllers/FoodsController.js"></script>
-<script type="text/javascript" src="js/controllers/ExercisesController.js"></script>
+
+<script type="text/javascript" src="js/controllers/Exercises/ExercisesController.js"></script>
+<script type="text/javascript" src="js/controllers/Exercises/SeriesController.js"></script>
+<script type="text/javascript" src="js/controllers/Exercises/WorkoutsController.js"></script>
+<script type="text/javascript" src="js/controllers/Exercises/TagsController.js"></script>
 
 <script type="text/javascript" src="js/factories/DatesFactory.js"></script>
 <script type="text/javascript" src="js/factories/Foods/QuickRecipeFactory.js"></script>

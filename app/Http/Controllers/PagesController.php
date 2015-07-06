@@ -84,6 +84,50 @@ class PagesController extends Controller {
     }
 
     /**
+     * Exercise series page
+     * @param ExercisesRepository $exercisesRepository
+     * @return \Illuminate\View\View
+     */
+    public function series(ExercisesRepository $exercisesRepository)
+    {
+        JavaScript::put([
+            'series' => $exercisesRepository->getExerciseSeries(),
+            'workouts' => Workout::getWorkouts()
+        ]);
+
+        return view('series');
+    }
+
+    /**
+     * Workouts page
+     * @param ExercisesRepository $exercisesRepository
+     * @return \Illuminate\View\View
+     */
+    public function workouts(ExercisesRepository $exercisesRepository)
+    {
+        JavaScript::put([
+            'workouts' => Workout::getWorkouts(),
+        ]);
+
+        return view('workouts');
+    }
+
+    /**
+     * Exercise tags page
+     * @param ExercisesRepository $exercisesRepository
+     * @return \Illuminate\View\View
+     */
+    public function exerciseTags(ExercisesRepository $exercisesRepository)
+    {
+        JavaScript::put([
+            'exercise_tags' => Tag::where('user_id', Auth::user()->id)->where('for', 'exercise')->orderBy('name', 'asc')->get(),
+
+        ]);
+
+        return view('exercise-tags');
+    }
+
+    /**
      *
      * @return \Illuminate\View\View
      */
