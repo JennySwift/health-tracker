@@ -17,7 +17,7 @@
 		<?php include($templates . '/exercises/index.php'); ?>
 
 		<div>
-            
+
             <div class="margin-bottom">
                 <input ng-model="filter.exercises.name" type="text" placeholder="filter exercises by name" class="form-control"/>
                 <input ng-model="filter.exercises.description" type="text" placeholder="filter exercises by description" class="form-control"/>

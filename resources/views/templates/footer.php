@@ -2,6 +2,7 @@
 
 <footer>
 	<a href="http://jennyswiftcreations.com/privacy-policy">Privacy Policy</a>
+	<a href="http://jennyswiftcreations.com/credits">Credits</a>
 </footer>
 
 <!-- plugins -->
