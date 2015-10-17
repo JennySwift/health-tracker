@@ -19,8 +19,8 @@ class ExerciseSeeder extends Seeder {
 		$pushup_series = ['kneeling pushups', 'pushups', 'one-arm pushups'];
 		$squat_series = ['assisted squats', 'squats', 'one-legged-squats'];
 
-		$exercise_unit_ids = Unit::where('for', 'exercise')->lists('id');
-		$series_ids = Series::lists('id');
+		$exercise_unit_ids = Unit::where('for', 'exercise')->lists('id')->all();
+		$series_ids = Series::lists('id')->all();
 
 		$index = 0;
 		foreach ($pushup_series as $exercise) {

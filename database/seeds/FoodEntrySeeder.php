@@ -26,7 +26,7 @@ class FoodEntrySeeder extends Seeder {
 			$today = Carbon::today();
 			$date = $today->subDays($days)->format('Y-m-d');
 			$number = $faker->numberBetween($min = 1, $max = 6);		
-			$food_ids = Food::lists('id');
+			$food_ids = Food::lists('id')->all();
 
 			foreach (range(0, $number) as $index) {
 				$unit_ids = [];
@@ -34,7 +34,7 @@ class FoodEntrySeeder extends Seeder {
 					$food_id = $faker->randomElement($food_ids);
 					$food = Food::find($food_id);
 					//So that the entry doesn't have a unit that doesn't belong to the food
-					$unit_ids = $food->units()->lists('unit_id');
+					$unit_ids = $food->units()->lists('unit_id')->all();
 				}
 
 				DB::table('food_entries')->insert([

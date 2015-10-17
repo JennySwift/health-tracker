@@ -15,7 +15,7 @@ class FoodRecipeSeeder extends Seeder {
 		DB::table('food_recipe')->truncate();
 		
 		$faker = Faker::create();
-		$food_ids = Food::lists('id');
+		$food_ids = Food::lists('id')->all();
 
 		//Insert some rows for recipe_id 1
 

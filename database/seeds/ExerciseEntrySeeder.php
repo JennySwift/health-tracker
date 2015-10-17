@@ -19,8 +19,8 @@ class ExerciseEntrySeeder extends Seeder {
 		
 		$faker = Faker::create();
 
-		$exercise_ids = Exercise::lists('id');
-		$unit_ids = Unit::where('for', 'exercise')->lists('id');
+		$exercise_ids = Exercise::lists('id')->all();
+		$unit_ids = Unit::where('for', 'exercise')->lists('id')->all();
 
 		/**
 		 * Create a few exercise entries for each of the last 50 days

@@ -20,8 +20,8 @@ class SeriesWorkoutSeeder extends Seeder {
 		 * No duplicate series for a workout. (Currently there are duplicates.)
 		 */
 
-		$workout_ids = Workout::lists('id');
-		$series_ids = ExerciseSeries::lists('id');
+		$workout_ids = Workout::lists('id')->all();
+		$series_ids = ExerciseSeries::lists('id')->all();
 
 		foreach ($workout_ids as $workout_id) {
 			foreach (range(1, 3) as $index) {
