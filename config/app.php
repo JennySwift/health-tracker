@@ -147,7 +147,7 @@ return [
 		'App\Providers\RouteServiceProvider',
 		'Barryvdh\Debugbar\ServiceProvider',
 		'Spatie\Backup\BackupServiceProvider',
-		'Laracasts\Utilities\JavaScript\JavascriptServiceProvider',
+		'Laracasts\Utilities\JavaScript\JavaScriptServiceProvider',
 		'Thomaswelton\LaravelGravatar\LaravelGravatarServiceProvider',
         'Laracasts\Flash\FlashServiceProvider'
 
