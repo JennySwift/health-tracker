@@ -34,7 +34,7 @@
             <li><a href="/exercises">Exercises</a></li>
             <li><a href="/series">Series</a></li>
             <li><a href="/workouts">Workouts</a></li>
-            <li><a href="/exercise_tags">Tags</a></li>
+            <li><a href="/exercise-tags">Tags</a></li>
             <li><a href="/exercise-units">Units</a></li>
         </ul>
     </li>

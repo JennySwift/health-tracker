@@ -17,7 +17,7 @@ Route::get('/food-units', 'PagesController@foodUnits');
 Route::get('exercises', 'PagesController@exercises');
 Route::get('series', 'PagesController@series');
 Route::get('workouts', 'PagesController@workouts');
-Route::get('exercise_tags', 'PagesController@exerciseTags');
+Route::get('exercise-tags', 'PagesController@exerciseTags');
 Route::get('/exercise-units', 'PagesController@exerciseUnits');
 
 //Journal
