@@ -93,18 +93,18 @@ class TagsController extends Controller
      * @param Request $request
      * @return mixed
      */
-    public function deleteTagFromExercise(Request $request)
-    {
-        $exercise_id = $request->get('exercise_id');
-        $tag_id = $request->get('tag_id');
-
-        Tag
-            ::where('exercise_id', $exercise_id)
-            ->where('tag_id', $tag_id)
-            ->delete();
-
-        return Exercise::getExercises();
-    }
+//    public function deleteTagFromExercise(Request $request)
+//    {
+//        $exercise_id = $request->get('exercise_id');
+//        $tag_id = $request->get('tag_id');
+//
+//        Tag
+//            ::where('exercise_id', $exercise_id)
+//            ->where('tag_id', $tag_id)
+//            ->delete();
+//
+//        return Exercise::getExercises();
+//    }
 
     /**
      * Insert a new tag into the tags table, for recipes

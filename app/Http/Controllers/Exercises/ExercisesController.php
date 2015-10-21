@@ -65,14 +65,14 @@ class ExercisesController extends Controller
      * @param Request $request
      * @return mixed
      */
-    public function insertTagInExercise(Request $request)
-    {
-        $exercise_id = $request->get('exercise_id');
-        $tag_id = $request->get('tag_id');
-        Tag::insertExerciseTag($exercise_id, $tag_id);
-
-        return Exercise::getExercises();
-    }
+//    public function insertTagInExercise(Request $request)
+//    {
+//        $exercise_id = $request->get('exercise_id');
+//        $tag_id = $request->get('tag_id');
+//        Tag::insertExerciseTag($exercise_id, $tag_id);
+//
+//        return Exercise::getExercises();
+//    }
 
     /**
      *

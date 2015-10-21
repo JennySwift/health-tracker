@@ -1,7 +1,7 @@
 var app = angular.module('tracker');
 
 (function () {
-	app.controller('exercises', function ($scope, $http, ExercisesFactory, TagsFactory) {
+	app.controller('exercises', function ($scope, $http, ExercisesFactory) {
 
 		/**
 		 * scope properties

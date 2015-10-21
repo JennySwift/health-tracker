@@ -113,6 +113,9 @@ var app = angular.module('tracker');
 		 * select
 		 */
 
+        $("#food").val("");
+        $("#weight").val("");
+
 		/**
 		 * Get all the user's entries for the current date
 		 */

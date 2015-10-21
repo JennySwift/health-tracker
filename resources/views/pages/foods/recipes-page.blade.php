@@ -9,7 +9,7 @@
 
     @include('templates.header')
 	
-	<div ng-controller="foods" class="container">
+	<div ng-controller="RecipesController" class="container">
 
 		@include('pages.foods.index')
 

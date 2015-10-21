@@ -9,7 +9,7 @@
 
 @include('templates.header')
 
-<div ng-controller="exerciseTags" id="exercises" class="container">
+<div ng-controller="ExerciseTagsController" id="exercises" class="container">
 
     <div>
         <div class="margin-bottom">

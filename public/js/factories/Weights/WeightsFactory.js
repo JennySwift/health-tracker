@@ -1,34 +1,18 @@
 app.factory('WeightsFactory', function ($http) {
-	return {
-		
-		/**
-		 * select
-		 */
-		
-		/**
-		 * insert
-		 */
-		
-		insertWeight: function ($sql_date) {
-			var $url = 'insert/weight';
-			var $weight = $("#weight").val();
+    return {
 
-			var $data = {
-				date: $sql_date,
-				weight: $weight
-			};
+        insertWeight: function ($sql_date) {
+            var $url = 'insert/weight';
+            var $weight = $("#weight").val();
 
-			return $http.post($url, $data);
-		},
+            var $data = {
+                date: $sql_date,
+                weight: $weight
+            };
 
-		/**
-		 * update
-		 */
-		
-		/**
-		 * delete
-		 */
+            return $http.post($url, $data);
+        },
 
-		
-	};
+
+    };
 });

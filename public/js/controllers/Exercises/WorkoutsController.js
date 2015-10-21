@@ -1,44 +1,24 @@
 var app = angular.module('tracker');
 
 (function () {
-    app.controller('workouts', function ($scope, $http, ExercisesFactory, TagsFactory) {
-
-        /**
-         * scope properties
-         */
+    app.controller('workouts', function ($scope, $http, ExercisesFactory, WorkoutsFactory) {
 
         $scope.workouts = workouts;
-
-        /**
-         * select
-         */
-
-        /**
-         * insert
-         */
 
         $scope.insertWorkout = function ($keypress) {
             if ($keypress !== 13) {
                 return;
             }
-            ExercisesFactory.insertWorkout().then(function (response) {
+            WorkoutsFactory.insertWorkout().then(function (response) {
                 $scope.workouts = response.data;
             });
         };
 
         $scope.insertSeriesIntoWorkout = function () {
-            ExercisesFactory.insertSeriesIntoWorkout($workout_id, $series_id).then(function (response) {
+            WorkoutsFactory.insertSeriesIntoWorkout($workout_id, $series_id).then(function (response) {
                 $scope.exercise_series = response.data;
             });
         };
-
-        /**
-         * update
-         */
-
-        /**
-         * delete
-         */
 
         /**
          * popups
@@ -51,6 +31,6 @@ var app = angular.module('tracker');
             }
         };
 
-    }); //end controller
+    });
 
 })();

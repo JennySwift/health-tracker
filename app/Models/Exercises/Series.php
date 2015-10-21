@@ -73,17 +73,7 @@ class Series extends Model {
      */
     public function getPathAttribute()
     {
-        return route('ExerciseSeries.destroy', $this->id); // http://tracker.dev:8000/ExerciseSeries/1
-    }
-    
-    /**
-     * Get all the exercise series that belong to the user
-     * @return [type] [description]
-     */
-    public static function getExerciseSeries () {
-        $series = static::forCurrentUser('exercise_series')->orderBy('name', 'asc')->get();
-
-        return $series;
+        return route('exerciseSeries.show', $this->id); // http://tracker.dev:8000/ExerciseSeries/1
     }
 
 }

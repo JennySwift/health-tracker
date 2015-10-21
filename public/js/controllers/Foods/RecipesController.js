@@ -1,11 +1,7 @@
 var app = angular.module('tracker');
 
 (function () {
-	app.controller('foods', function ($scope, $http, FoodsFactory, QuickRecipeFactory, TagsFactory, AutocompleteFactory) {
-
-		/**
-		 * scope properties
-		 */
+	app.controller('RecipesController', function ($scope, $http, FoodsFactory, FoodUnitsFactory, QuickRecipeFactory, AutocompleteFactory, RecipesFactory) {
 		
 		$scope.all_foods_with_units = foods_with_units;
 		$scope.recipes = {
@@ -73,7 +69,7 @@ var app = angular.module('tracker');
 		 */
 		
 		$scope.filterRecipes = function () {
-			FoodsFactory.filterRecipes($scope.filter.recipes.tag_ids).then(function (response) {
+			RecipesFactory.filterRecipes($scope.filter.recipes.tag_ids).then(function (response) {
 				$scope.recipes.filtered = response.data;
 			});
 		};
@@ -111,7 +107,7 @@ var app = angular.module('tracker');
 		$scope.insertTagsIntoRecipe = function () {
 			//deletes tags from the recipe then adds the correct ones
 			$scope.recipe_popup.notification = 'Saving tags...';
-			FoodsFactory.insertTagsIntoRecipe($scope.recipe_popup.recipe.id, $scope.recipe_popup.tags).then(function (response) {
+			RecipesFactory.insertTagsIntoRecipe($scope.recipe_popup.recipe.id, $scope.recipe_popup.tags).then(function (response) {
 				$scope.recipe_popup.notification = 'Tags have been saved.';
 				$scope.recipes.filtered = response.data;
 			});
@@ -123,7 +119,7 @@ var app = angular.module('tracker');
 			if ($keycode !== 13) {
 				return;
 			}
-			FoodsFactory.insertRecipe($scope.new_item.recipe.name).then(function (response) {
+			RecipesFactory.insertRecipe($scope.new_item.recipe.name).then(function (response) {
 				$scope.recipes.filtered = response.data;
 			});
 		};
@@ -151,14 +147,6 @@ var app = angular.module('tracker');
 			}
 		};
 
-		$scope.insertFood = function ($keycode) {
-			if ($keycode === 13) {
-				FoodsFactory.insertFood().then(function (response) {
-					$scope.all_foods_with_units = response.data;
-				});
-			}
-		};
-
 		/**
 		 * update
 		 */
@@ -174,7 +162,7 @@ var app = angular.module('tracker');
 				$steps.push($line);
 			});
 
-			FoodsFactory.updateRecipeMethod($scope.recipe_popup.recipe.id, $steps).then(function (response) {
+			RecipesFactory.updateRecipeMethod($scope.recipe_popup.recipe.id, $steps).then(function (response) {
 				$scope.recipe_popup = response.data;
 				$scope.recipe_popup.edit_method = false;
 			});	
@@ -189,7 +177,7 @@ var app = angular.module('tracker');
 		};
 
 		$scope.updateDefaultUnit = function ($food_id, $unit_id) {
-			FoodsFactory.updateDefaultUnit($food_id, $unit_id).then(function (response) {
+			FoodUnitsFactory.updateDefaultUnit($food_id, $unit_id).then(function (response) {
 				$scope.food_popup = response.data;
 			});
 		};
@@ -205,20 +193,14 @@ var app = angular.module('tracker');
 		};
 
 		$scope.deleteFoodFromRecipe = function ($food_id) {
-			FoodsFactory.deleteFoodFromRecipe($food_id, $scope.recipe_popup.recipe.id).then(function (response) {
+			RecipesFactory.deleteFoodFromRecipe($food_id, $scope.recipe_popup.recipe.id).then(function (response) {
 				$scope.recipe_popup = response.data;
 			});
 		};
 
 		$scope.deleteRecipe = function ($id) {
-			FoodsFactory.deleteRecipe($id).then(function (response) {
+			RecipesFactory.deleteRecipe($id).then(function (response) {
 				$scope.recipes.filtered = response.data;
-			});
-		};
-
-		$scope.deleteFood = function ($food) {
-			FoodsFactory.deleteFood($food).then(function (response) {
-				$scope.all_foods_with_units = response.data;
 			});
 		};
 		
@@ -228,7 +210,7 @@ var app = angular.module('tracker');
 		
 		$scope.showRecipePopup = function ($recipe) {
 			// $scope.selected.recipe = $recipe;
-			FoodsFactory.getRecipeContents($recipe.id).then(function (response) {
+			RecipesFactory.getRecipeContents($recipe.id).then(function (response) {
 				$scope.show.popups.recipe = true;
 				$scope.recipe_popup = response.data;
 			});
@@ -300,7 +282,7 @@ var app = angular.module('tracker');
 		};
 
 		$scope.quickRecipeAttemptInsert = function ($recipe) {
-			FoodsFactory.insertQuickRecipe($recipe, true).then(function (response) {
+			RecipesFactory.insertQuickRecipe($recipe, true).then(function (response) {
 				if (response.data.similar_names) {
 					$scope.quick_recipe.similar_names = response.data.similar_names;
 					$scope.show.popups.similar_names = true;
@@ -415,7 +397,7 @@ var app = angular.module('tracker');
 				description: $scope.recipe_popup.food.description
 			};
 
-			FoodsFactory.insertFoodIntoRecipe($data).then(function (response) {
+			RecipesFactory.insertFoodIntoRecipe($data).then(function (response) {
 				$scope.recipe_popup = response.data;
 			});
 			$("#recipe-popup-food-input").val("").focus();

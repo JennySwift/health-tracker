@@ -1,7 +1,7 @@
 var app = angular.module('tracker');
 
 (function () {
-    app.controller('SeriesController', function ($scope, $http, ExercisesFactory, TagsFactory) {
+    app.controller('SeriesController', function ($scope, $http, ExercisesFactory, WorkoutsFactory) {
 
         /**
          * scope properties
@@ -26,7 +26,7 @@ var app = angular.module('tracker');
          */
 
         $scope.getExerciseSeriesHistory = function ($series_id) {
-            ExercisesFactory.getExerciseSeriesHistory($series_id).then(function (response) {
+            ExercisesSeriesFactory.getExerciseSeriesHistory($series_id).then(function (response) {
                 $scope.show.popups.exercise_series_history = true;
                 $scope.exercise_series_history = response.data;
             });
@@ -40,34 +40,20 @@ var app = angular.module('tracker');
             if ($keypress !== 13) {
                 return;
             }
-            ExercisesFactory.insertExerciseSeries().then(function (response) {
+            ExercisesSeriesFactory.insertExerciseSeries().then(function (response) {
                 $scope.exercise_series = response.data;
             });
         };
 
-        //$scope.insertSeriesIntoWorkout = function () {
-        //    ExercisesFactory.insertSeriesIntoWorkout($workout_id, $series_id).then(function (response) {
-        //        $scope.exercise_series = response.data;
-        //    });
-        //};
-
-        /**
-         * update
-         */
-
-        /**
-         * delete
-         */
-
         $scope.deleteAndInsertSeriesIntoWorkouts = function () {
-            ExercisesFactory.deleteAndInsertSeriesIntoWorkouts($scope.selected.exercise_series.id, $scope.exercise_series_popup.workouts).then(function (response) {
+            WorkoutsFactory.deleteAndInsertSeriesIntoWorkouts($scope.selected.exercise_series.id, $scope.exercise_series_popup.workouts).then(function (response) {
                 $scope.workouts = response.data;
                 $scope.show.popups.exercise_series = false;
             });
         };
 
         $scope.deleteExerciseSeries = function ($series) {
-            ExercisesFactory.deleteExerciseSeries($series).then(function (response) {
+            ExercisesSeriesFactory.deleteExerciseSeries($series).then(function (response) {
                 $scope.exercise_series = response.data;
             });
         };
@@ -92,6 +78,6 @@ var app = angular.module('tracker');
             }
         };
 
-    }); //end controller
+    });
 
 })();

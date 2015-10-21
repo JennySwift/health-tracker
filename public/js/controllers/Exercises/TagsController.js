@@ -1,41 +1,21 @@
 var app = angular.module('tracker');
 
 (function () {
-    app.controller('exerciseTags', function ($scope, $http, ExercisesFactory, TagsFactory) {
-
-        /**
-         * scope properties
-         */
+    app.controller('ExerciseTagsController', function ($scope, ExerciseTagsFactory) {
 
         $scope.exercise_tags = exercise_tags;
-
-        /**
-         * select
-         */
-
-        /**
-         * insert
-         */
 
         $scope.insertExerciseTag = function ($keypress) {
             if ($keypress !== 13) {
                 return;
             }
-            TagsFactory.insertExerciseTag().then(function (response) {
+            ExerciseTagsFactory.insertExerciseTag().then(function (response) {
                 $scope.exercise_tags = response.data;
             });
         };
 
-        /**
-         * update
-         */
-
-        /**
-         * delete
-         */
-
         $scope.deleteExerciseTag = function ($id) {
-            TagsFactory.deleteExerciseTag($id).then(function (response) {
+            ExerciseTagsFactory.deleteExerciseTag($id).then(function (response) {
                 $scope.exercise_tags = response.data;
             });
         };
@@ -51,6 +31,6 @@ var app = angular.module('tracker');
             }
         };
 
-    }); //end controller
+    });
 
 })();

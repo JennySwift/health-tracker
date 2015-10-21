@@ -9,7 +9,7 @@
 
 @include('templates.header')
 
-<div ng-controller="units" class="container">
+<div ng-controller="ExerciseUnitsController" class="container">
 
     <div class="col col-sm-6 col-sm-offset-3">
         <input ng-keyup="insertExerciseUnit($event.keyCode)" type="text" placeholder="add a new exercise unit" id="create-new-exercise-unit" class="form-control">
