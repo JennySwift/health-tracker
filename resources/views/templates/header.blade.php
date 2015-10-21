@@ -3,10 +3,7 @@
     <li id="menu-dropdown" class="dropdown">
         <a href="#" class="dropdown-toggle fa fa-bars" data-toggle="dropdown"><span class="caret"></span></a>
         <ul class="dropdown-menu" role="menu">
-            <li><a href="/units">units</a></li>
-            <li><a href="/auth/logout">Logout <?php echo Auth::user()->name; ?></a></li>
-            <li><a href="#" style="cursor:default">branch:master</a></li>
-            <li><a href="/credits">credits</a></li>
+            <li><a href="/auth/logout">logout</a></li>
         </ul>
     </li>
     
@@ -14,25 +11,35 @@
     <li class="iphone"><a ng-click="changeTab('food_entries')" href="">food log</a></li>
     <li class="iphone"><a ng-click="changeTab('exercise_entries')" href="">exercise log</a></li> -->
 
-    <li><a href="/">home</a></li>
+    <li><a href="/">entries</a></li>
 
-    <li>
-        <a href="/foods">
-            <img src="img/apple.svg" alt="" width="14">
+    <li id="menu-dropdown" class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            <span>foods</span>
+            <span class="caret"></span>
         </a>
+        <ul class="dropdown-menu" role="menu">
+            <li><a href="/foods">Foods</a></li>
+            <li><a href="/recipes">Recipes</a></li>
+            <li><a href="/food-units">Units</a></li>
+        </ul>
     </li>
 
     <li id="menu-dropdown" class="dropdown">
-        <a href="#" class="dropdown-toggle fa fa-heart" data-toggle="dropdown"><span class="caret"></span></a>
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            <span>exercises</span>
+            <span class="caret"></span>
+        </a>
         <ul class="dropdown-menu" role="menu">
             <li><a href="/exercises">Exercises</a></li>
             <li><a href="/series">Series</a></li>
             <li><a href="/workouts">Workouts</a></li>
             <li><a href="/exercise_tags">Tags</a></li>
+            <li><a href="/exercise-units">Units</a></li>
         </ul>
     </li>
 
-    <li><a href="/journal" class="fa fa-pencil"></a></li>
+    <li><a href="/journal">journal</a></li>
 
     <li><a href="#" id="search_button" class="location_button fa fa-search"></a></li>
 </ul>

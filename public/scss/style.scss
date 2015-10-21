@@ -1,21 +1,15 @@
 
-@import "_colors.scss";
+@import "colors";
+@import "base";
+@import "helper-classes";
+@import "media-queries";
+@import "mixins";
 
-
-@import "utilities/index";
-
-@import "base/index";
-
-@import "layout/index";
-
+@import "entries/index";
+@import "exercises/index";
+@import "foods/index";
+@import "journal/index";
 @import "modules/index";
-
-@import "themes/index";
-
-@import "_home.scss";
-
-@import "states/index";
-
 
 
 

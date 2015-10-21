@@ -1,0 +1,28 @@
+#quick-recipe-container {
+    display: flex;
+    justify-content: center;
+    #quick-recipe-div {
+        width: 445px;
+        #quick-recipe {
+            border: 1px solid #777;
+        }
+        button {
+            width: 100%;
+        }
+        .transition {
+            opacity: 1;
+            height: 625px;
+        }
+
+        .transition.ng-hide-add.ng-hide-add-active,
+        .transition.ng-hide-remove.ng-hide-remove-active {
+            -webkit-transition: all linear .5s;
+            transition: all linear .5s;
+        }
+
+        .transition.ng-hide {
+            opacity: 0;
+            height: 0px;
+        }
+    }
+}

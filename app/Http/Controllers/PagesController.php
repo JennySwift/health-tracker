@@ -54,7 +54,7 @@ class PagesController extends Controller {
             "calories_for_the_week" => number_format(Food::getCaloriesFor7Days($date), 2)
         ]);
 
-        return view('entries');
+        return view('pages.entries.entries');
     }
 
 
@@ -80,7 +80,7 @@ class PagesController extends Controller {
             'units' => Unit::getExerciseUnits()
         ]);
 
-        return view('exercises');
+        return view('pages.exercises.exercises');
     }
 
     /**
@@ -95,7 +95,7 @@ class PagesController extends Controller {
             'workouts' => Workout::getWorkouts()
         ]);
 
-        return view('series');
+        return view('pages.exercises.series');
     }
 
     /**
@@ -109,7 +109,7 @@ class PagesController extends Controller {
             'workouts' => Workout::getWorkouts(),
         ]);
 
-        return view('workouts');
+        return view('pages.exercises.workouts');
     }
 
     /**
@@ -124,7 +124,7 @@ class PagesController extends Controller {
 
         ]);
 
-        return view('exercise-tags');
+        return view('pages.exercises.exercise-tags');
     }
 
     /**
@@ -139,20 +139,48 @@ class PagesController extends Controller {
             'recipe_tags' => Tag::getRecipeTags()
         ]);
 
-        return view('foods');
+        return view('pages.foods.foods-page');
     }
 
     /**
      *
      * @return \Illuminate\View\View
      */
-    public function units()
+    public function recipes()
+    {
+        JavaScript::put([
+            'foods_with_units' => Food::getAllFoodsWithUnits(),
+            'recipes' => Recipe::filterRecipes('', []),
+            'recipe_tags' => Tag::getRecipeTags()
+        ]);
+
+        return view('pages.foods.recipes-page');
+    }
+
+    /**
+     *
+     * @return \Illuminate\View\View
+     */
+    public function foodUnits()
     {
         JavaScript::put([
             'units' => Unit::getAllUnits()
         ]);
 
-        return view('units');
+        return view('pages.foods.food-units');
+    }
+
+    /**
+     *
+     * @return \Illuminate\View\View
+     */
+    public function exerciseUnits()
+    {
+        JavaScript::put([
+            'units' => Unit::getAllUnits()
+        ]);
+
+        return view('pages.exercises.exercise-units');
     }
 
     /**
@@ -167,6 +195,6 @@ class PagesController extends Controller {
             'entry' => Journal::getJournalEntry($date)
         ]);
 
-        return view('journal');
+        return view('pages.journal.journal');
     }
 }

@@ -22,27 +22,28 @@ use App\Models\Projects\Timer;
 //    $pusher->trigger($channel, $event, $data);
 //});
 
-Route::get('/test', function()
+Route::get('/colors', function()
 {
-    $journal = Journal::first();
-    //dd($journal);
-    return $journal;
+    return view('pages.colors');
 });
 
 //Homepage (entries)
 Route::get('/', 'PagesController@entries');
 
 //Units
-Route::get('/units', 'PagesController@units');
+//Route::get('/units', 'PagesController@units');
 
 //Foods
 Route::get('/foods', 'PagesController@foods');
+Route::get('/recipes', 'PagesController@recipes');
+Route::get('/food-units', 'PagesController@foodUnits');
 
 //Exercises
 Route::get('exercises', 'PagesController@exercises');
 Route::get('series', 'PagesController@series');
 Route::get('workouts', 'PagesController@workouts');
 Route::get('exercise_tags', 'PagesController@exerciseTags');
+Route::get('/exercise-units', 'PagesController@exerciseUnits');
 
 //Journal
 Route::get('/journal', 'PagesController@journal');

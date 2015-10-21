@@ -1,0 +1,15 @@
+.delete-item {
+	// position: absolute;
+	// right: 0;
+	font-size: 20px;
+	color: red;
+	cursor: pointer;
+}
+
+#foods {
+	.flex {
+		display: flex;
+		justify-content: space-around;
+		flex-wrap: wrap;
+	}
+}
