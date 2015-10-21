@@ -1,24 +1,22 @@
 <?php namespace App\Http\Controllers\Search;
 
-use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use App\Services\Autocomplete\FoodsAndRecipesAutocomplete;
-use Illuminate\Http\Request;
-use DB;
-use Auth;
-
-/**
- * Models
- */
+use App\Http\Requests;
+use App\Models\Exercises\Exercise;
 use App\Models\Foods\Food;
 use App\Models\Foods\Recipe;
-use App\Models\Exercises\Exercise;
+use App\Services\Autocomplete\FoodsAndRecipesAutocomplete;
+use Auth;
+use DB;
+use Illuminate\Http\Request;
+
 
 /**
  * Class AutocompleteController
  * @package App\Http\Controllers\Search
  */
-class AutocompleteController extends Controller {
+class AutocompleteController extends Controller
+{
 
     /**
      * Select rows from both foods and recipes table.
@@ -38,25 +36,24 @@ class AutocompleteController extends Controller {
         foreach ($recipes as $recipe) {
             $recipe->type = 'recipe';
         }
-        
+
         $menu = $foods->merge($recipes);
-        $menu = $menu->sortBy(function($item)
-        {
+        $menu = $menu->sortBy(function ($item) {
             return $item->name;
         })->reverse()->reverse();
 
-       // $menu = new Illuminate\Support\Collection([])
-               // $menu = collect([$food->toArray(), $recipe->toArray()]);
-               
-               // dd($menu->collapse()->toArray());
-               
-               // $menu->reverse()->reverse()->sortBy(function($item)
-               //  {
-               //      return $item->name;
-               //  });
-               
-               // $menu = new Collection();
-               // $menu->add();
+        // $menu = new Illuminate\Support\Collection([])
+        // $menu = collect([$food->toArray(), $recipe->toArray()]);
+
+        // dd($menu->collapse()->toArray());
+
+        // $menu->reverse()->reverse()->sortBy(function($item)
+        //  {
+        //      return $item->name;
+        //  });
+
+        // $menu = new Collection();
+        // $menu->add();
 
 
         /**
@@ -77,7 +74,7 @@ class AutocompleteController extends Controller {
         //     'foods' => $foods,
         //     'recipes' => $recipes
         // ];
-        
+
         // $menu = DB::select("select * from (select id, name, 'food' as type from foods where name LIKE '$typing' and user_id = " . Auth::user()->id . " UNION select id, name, 'recipe' as type from recipes where name LIKE '$typing' and user_id = " . Auth::user()->id . ") as table1 order by table1.name asc");
 
         return $menu;
@@ -91,6 +88,7 @@ class AutocompleteController extends Controller {
     public function autocompleteFood(Request $request)
     {
         $typing = '%' . $request->get('typing') . '%';
+
         return $this->foods($typing);
     }
 
@@ -106,7 +104,7 @@ class AutocompleteController extends Controller {
             ->with('defaultUnit')
             ->with('units')
             ->get();
-           
+
         return $foods;
     }
 
@@ -132,7 +130,7 @@ class AutocompleteController extends Controller {
     public function autocompleteExercise(Request $request)
     {
         $exercise = '%' . $request->get('exercise') . '%';
-    
+
         $exercises = Exercise
             ::where('name', 'LIKE', $exercise)
             ->where('user_id', Auth::user()->id)
@@ -150,7 +148,7 @@ class AutocompleteController extends Controller {
 
     /**
      * Selects rows from both foods and recipes table for autocomplete
-     * @param Request                   $request
+     * @param Request $request
      * @param FoodsAndRecipesAutocomplete $autocomplete
      * @return \Illuminate\Database\Eloquent\Collection
      */

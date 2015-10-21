@@ -1,28 +1,26 @@
 <?php namespace App\Http\Controllers;
 
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
-use App\Models\Exercises\Workout;
 use App\Models\Exercises\Entry as ExerciseEntry;
+use App\Models\Exercises\Workout;
+use App\Models\Foods\Entry as FoodEntry;
 use App\Models\Foods\Food;
 use App\Models\Foods\Recipe;
-use App\Models\Foods\Entry as FoodEntry;
 use App\Models\Journal\Journal;
 use App\Models\Tags\Tag;
 use App\Models\Units\Unit;
 use App\Repositories\Exercises\ExercisesRepository;
 use App\Repositories\Weights\WeightsRepository;
+use Auth;
 use Carbon\Carbon;
 use JavaScript;
-use Auth;
-
-use Illuminate\Http\Request;
 
 /**
  * Class PagesController
  * @package App\Http\Controllers
  */
-class PagesController extends Controller {
+class PagesController extends Controller
+{
 
     /**
      * Create a new controller instance.
@@ -48,7 +46,6 @@ class PagesController extends Controller {
             "exercise_entries" => ExerciseEntry::getExerciseEntries($date),
             "food_units" => Unit::getFoodUnits(),
             "exercise_units" => Unit::getExerciseUnits(),
-
             "menu_entries" => FoodEntry::getFoodEntries($date),
             "calories_for_the_day" => number_format(Food::getCaloriesForDay($date), 2),
             "calories_for_the_week" => number_format(Food::getCaloriesFor7Days($date), 2)
@@ -76,7 +73,8 @@ class PagesController extends Controller {
             'all_exercises' => $exercisesRepository->getExercises(),
             'series' => $exercisesRepository->getExerciseSeries(),
             'workouts' => Workout::getWorkouts(),
-            'exercise_tags' => Tag::where('user_id', Auth::user()->id)->where('for', 'exercise')->orderBy('name', 'asc')->get(),
+            'exercise_tags' => Tag::where('user_id', Auth::user()->id)->where('for', 'exercise')->orderBy('name',
+                'asc')->get(),
             'units' => Unit::getExerciseUnits()
         ]);
 
@@ -120,7 +118,8 @@ class PagesController extends Controller {
     public function exerciseTags(ExercisesRepository $exercisesRepository)
     {
         JavaScript::put([
-            'exercise_tags' => Tag::where('user_id', Auth::user()->id)->where('for', 'exercise')->orderBy('name', 'asc')->get(),
+            'exercise_tags' => Tag::where('user_id', Auth::user()->id)->where('for', 'exercise')->orderBy('name',
+                'asc')->get(),
 
         ]);
 

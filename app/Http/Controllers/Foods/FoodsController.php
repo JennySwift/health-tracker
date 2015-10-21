@@ -1,37 +1,30 @@
 <?php namespace App\Http\Controllers\Foods;
 
-use App\Http\Requests;
 use App\Http\Controllers\Controller;
-
-use Illuminate\Http\Request;
+use App\Http\Requests;
+use App\Models\Foods\Food;
 use Auth;
 use DB;
 use Debugbar;
+use Illuminate\Http\Request;
 use JavaScript;
-
-/**
- * Models
- */
-use App\Models\Foods\Food;
-use App\Models\Foods\Recipe;
-use App\Models\Tags\Tag;
-use App\User;
 
 /**
  * Class FoodsController
  * @package App\Http\Controllers\Foods
  */
-class FoodsController extends Controller {
+class FoodsController extends Controller
+{
 
-	/**
-	 * Create a new controller instance.
-	 *
-	 * @return void
-	 */
-	public function __construct()
-	{
-		$this->middleware('auth');
-	}
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
     /**
      *
@@ -39,10 +32,11 @@ class FoodsController extends Controller {
      * @return array
      */
     public function show($id)
-	{
-		$food = Food::find($id);
-		return Food::getFoodInfo($food);
-	}
+    {
+        $food = Food::find($id);
+
+        return Food::getFoodInfo($food);
+    }
 
     /**
      *
@@ -50,9 +44,9 @@ class FoodsController extends Controller {
      * @return mixed
      */
     public function getAllFoodsWithUnits(Request $request)
-	{
-		return Food::getAllFoodsWithUnits();
-	}
+    {
+        return Food::getAllFoodsWithUnits();
+    }
 
     /**
      *
@@ -60,12 +54,12 @@ class FoodsController extends Controller {
      * @return mixed
      */
     public function insertFood(Request $request)
-	{
-		$name = $request->get('name');
-		Food::insertFood($name);
+    {
+        $name = $request->get('name');
+        Food::insertFood($name);
 
-		return Food::getAllFoodsWithUnits();
-	}
+        return Food::getAllFoodsWithUnits();
+    }
 
     /**
      *
@@ -73,11 +67,12 @@ class FoodsController extends Controller {
      * @return array
      */
     public function insertUnitInCalories(Request $request)
-	{
-		$food = Food::find($request->get('food_id'));
-		$unit_id = $request->get('unit_id');
-		return Food::insertUnitInCalories($food, $unit_id);
-	}
+    {
+        $food = Food::find($request->get('food_id'));
+        $unit_id = $request->get('unit_id');
+
+        return Food::insertUnitInCalories($food, $unit_id);
+    }
 
     /**
      *
@@ -85,18 +80,18 @@ class FoodsController extends Controller {
      * @return array
      */
     public function updateCalories(Request $request)
-	{
-		$food = Food::find($request->get('food_id'));
-		$unit_id = $request->get('unit_id');
-		$calories = $request->get('calories');
+    {
+        $food = Food::find($request->get('food_id'));
+        $unit_id = $request->get('unit_id');
+        $calories = $request->get('calories');
 
-		DB::table('food_unit')
-			->where('food_id', $food->id)
-			->where('unit_id', $unit_id)
-			->update(['calories' => $calories]);
+        DB::table('food_unit')
+            ->where('food_id', $food->id)
+            ->where('unit_id', $unit_id)
+            ->update(['calories' => $calories]);
 
-		return Food::getFoodInfo($food);
-	}
+        return Food::getFoodInfo($food);
+    }
 
     /**
      *
@@ -104,16 +99,16 @@ class FoodsController extends Controller {
      * @return array
      */
     public function updateDefaultUnit(Request $request)
-	{
-		$food = Food::find($request->get('food_id'));
-		$unit_id = $request->get('unit_id');
+    {
+        $food = Food::find($request->get('food_id'));
+        $unit_id = $request->get('unit_id');
 
-		$food->update([
-			'default_unit_id' => $unit_id
-		]);
+        $food->update([
+            'default_unit_id' => $unit_id
+        ]);
 
-		return Food::getFoodInfo($food);
-	}
+        return Food::getFoodInfo($food);
+    }
 
     /**
      *
@@ -135,10 +130,11 @@ class FoodsController extends Controller {
      * @return array
      */
     public function deleteUnitFromCalories(Request $request)
-	{
-		$food = Food::find($request->get('food_id'));
-		$unit_id = $request->get('unit_id');
-		$food->units()->detach($unit_id);
-		return Food::getFoodInfo($food);
+    {
+        $food = Food::find($request->get('food_id'));
+        $unit_id = $request->get('unit_id');
+        $food->units()->detach($unit_id);
+
+        return Food::getFoodInfo($food);
 	}
 }

@@ -1,19 +1,18 @@
 <?php namespace App\Http\Controllers\Exercises;
 
-use App\Http\Requests;
 use App\Http\Controllers\Controller;
-
-use App\Models\Exercises\Workout;
-use Illuminate\Http\Request;
-use Auth;
-
+use App\Http\Requests;
 use App\Models\Exercises\Series;
+use App\Models\Exercises\Workout;
+use Auth;
+use Illuminate\Http\Request;
 
 /**
  * Class ExerciseSeriesController
  * @package App\Http\Controllers\Exercises
  */
-class ExerciseSeriesController extends Controller {
+class ExerciseSeriesController extends Controller
+{
 
     /**
      * For the exercise series popup
@@ -39,17 +38,17 @@ class ExerciseSeriesController extends Controller {
      * @return mixed
      */
     public function store(Request $request)
-	{
-		$name = $request->get('name');
-		
-		Series
-			::insert([
-				'name' => $name,
-				'user_id' => Auth::user()->id
-			]);
+    {
+        $name = $request->get('name');
 
-		return Series::getExerciseSeries();
-	}
+        Series
+            ::insert([
+                'name' => $name,
+                'user_id' => Auth::user()->id
+            ]);
+
+        return Series::getExerciseSeries();
+    }
 
     /**
      * Deletes all workouts from the series
@@ -82,9 +81,10 @@ class ExerciseSeriesController extends Controller {
      * @return mixed
      */
     public function destroy($id)
-	{
+    {
         //todo: notify user the series will not be deleted unless it has not been used, due to foreign key constraint
-		Series::where('id', $id)->delete();
-		return Series::getExerciseSeries();
-	}
+        Series::where('id', $id)->delete();
+
+        return Series::getExerciseSeries();
+    }
 }
