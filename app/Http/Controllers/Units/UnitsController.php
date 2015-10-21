@@ -47,7 +47,7 @@ class UnitsController extends Controller
      * @param Request $request
      * @return mixed
      */
-    public function insertfoodUnit(Request $request)
+    public function insertFoodUnit(Request $request)
     {
         $name = $request->get('name');
 
@@ -79,7 +79,7 @@ class UnitsController extends Controller
     }
 
     /**
-     *
+     * Todo: make sure it belongs to user
      * @param Request $request
      * @return mixed
      */
@@ -93,7 +93,7 @@ class UnitsController extends Controller
     }
 
     /**
-     *
+     * Todo: make sure it belongs to user
      * @param Request $request
      * @return mixed
      */

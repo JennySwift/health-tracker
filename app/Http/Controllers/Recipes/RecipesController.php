@@ -139,13 +139,13 @@ class RecipesController extends Controller
 
     /**
      *
-     * @param Request $request
+     * @param Recipe $recipe
      * @return array
+     * @throws \Exception
      */
-    public function deleteRecipe(Request $request)
+    public function deleteRecipe(Recipe $recipe)
     {
-        $id = $request->get('id');
-        Recipe::deleteRecipe($id);
+        $recipe->delete();
 
         return Recipe::filterRecipes('', []);
     }
@@ -157,16 +157,16 @@ class RecipesController extends Controller
      */
     public function deleteFoodFromRecipe(Request $request)
     {
-        $food_id = $request->get('food_id');
-        $recipe = Recipe::find($request->get('recipe_id'));
+        $food = Food::forCurrentUser()->findOrFail($request->get('food_id'));
+        $recipe = Recipe::forCurrentUser()->findOrFail($request->get('recipe_id'));
 
-        $recipe->foods()->detach($food_id);
+        $recipe->foods()->detach($food->id);
 
         return Recipe::getRecipeInfo($recipe);
     }
 
     /**
-     *
+     * Todo: only allow deletion of entry that belongs to user
      * @param Request $request
      * @return array
      */

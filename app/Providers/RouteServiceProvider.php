@@ -1,7 +1,13 @@
 <?php namespace App\Providers;
 
+use App\Models\Exercises\Exercise;
+use App\Models\Exercises\Series as ExerciseSeries;
+use App\Models\Foods\Food;
+use App\Models\Foods\Recipe;
 use Illuminate\Routing\Router;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
+use App\Models\Exercises\Entry as ExerciseEntry;
+use Illuminate\Support\Facades\Route;
 
 class RouteServiceProvider extends ServiceProvider {
 
@@ -24,7 +30,30 @@ class RouteServiceProvider extends ServiceProvider {
 	{
 		parent::boot($router);
 
-		//
+        Route::bind('exercises', function($id)
+        {
+            return Exercise::forCurrentUser()->findOrFail($id);
+        });
+
+        Route::bind('exerciseEntries', function($id)
+        {
+            return ExerciseEntry::forCurrentUser()->findOrFail($id);
+        });
+
+        Route::bind('exerciseSeries', function($id)
+        {
+            return ExerciseSeries::forCurrentUser()->findOrFail($id);
+        });
+
+        Route::bind('foods', function($id)
+        {
+            return Food::forCurrentUser()->findOrFail($id);
+        });
+
+        Route::bind('recipes', function($id)
+        {
+            return Recipe::forCurrentUser()->findOrFail($id);
+        });
 	}
 
 	/**

@@ -1,5 +1,6 @@
 <?php namespace App\Models\Foods;
 
+use App\Traits\Models\Relationships\OwnedByUser;
 use Illuminate\Database\Eloquent\Model;
 use Auth;
 use Debugbar;
@@ -10,6 +11,8 @@ use App\Models\Foods\Calories;
  * @package App\Models\Foods
  */
 class Entry extends Model {
+
+    use OwnedByUser;
 
     /**
      * @var string

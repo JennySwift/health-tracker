@@ -32,7 +32,7 @@ class ExercisesController extends Controller
 
     /**
      * For the exercise popup
-     * @param $id
+     * @param $exercise
      * @return array
      */
     public function show($exercise)
@@ -81,13 +81,8 @@ class ExercisesController extends Controller
      */
     public function store(Request $request)
     {
-        //Build an Exercise object (without saving in database yet)
         $exercise = new Exercise($request->only('name', 'description'));
-
-        //Attach the current user to the user relationship on the Exercise
         $exercise->user()->associate(Auth::user());
-
-        //Save the exercise in the DB
         $exercise->save();
 
         return Exercise::getExercises();
@@ -97,7 +92,7 @@ class ExercisesController extends Controller
      * Update exercise step number
      * @param Request $request
      * @param $exercise
-     * @return mixed
+     * @return Response
      */
     public function update(Request $request, $exercise)
     {
@@ -115,19 +110,16 @@ class ExercisesController extends Controller
             $exercise->save();
         }
 
-        // Return response
-        return response([], Response::HTTP_OK); // = 200
-
-        //Valentin says this method should return $exercise
-        //return Exercise::getExercises();
+        return response([], Response::HTTP_OK);
     }
 
     /**
-     * Delete an exercise
-     * @param $exercise
+     *
+     * @param Exercise $exercise
      * @return mixed
+     * @throws \Exception
      */
-    public function destroy($exercise = null)
+    public function destroy(Exercise $exercise = null)
     {
 //        if(is_null($exercise)) {
 //            return response([

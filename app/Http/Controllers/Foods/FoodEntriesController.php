@@ -41,9 +41,9 @@ class FoodEntriesController extends Controller
      */
     public function deleteFoodEntry(Request $request)
     {
-        $id = $request->get('id');
         $date = $request->get('date');
-        Entry::where('id', $id)->delete();
+        $entry = Entry::forCurrentUser()->findOrFail($request->get('id'));
+        $entry->delete();
 
         $response = array(
             "food_entries" => Entry::getFoodEntries($date),

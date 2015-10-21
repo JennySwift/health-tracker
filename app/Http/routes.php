@@ -1,204 +1,21 @@
 <?php
 
-use App\Models\Exercises\Exercise;
-use App\Models\Journal\Journal;
-use App\Models\Projects\Payer;
-use App\Models\Projects\Project;
-use App\Models\Projects\Timer;
+// Important application routes
+require app_path('Http/Routes/auth.php');
+require app_path('Http/Routes/pages.php');
 
-/**
- * Views
- */
+// API
+require app_path('Http/Routes/exercises.php');
+require app_path('Http/Routes/foods.php');
+require app_path('Http/Routes/recipes.php');
+require app_path('Http/Routes/tags.php');
+require app_path('Http/Routes/autocomplete.php');
+require app_path('Http/Routes/entries.php');
+require app_path('Http/Routes/journal.php');
+require app_path('Http/Routes/weights.php');
 
-//test
-//Route::any('/test', function()
-//{
-//    $pusher = new Pusher(env('PUSHER_PUBLIC_KEY'), env('PUSHER_SECRET_KEY'), env('PUSHER_APP_ID'));
-//
-//    $channel = 'testChannel';
-//    $event = 'testEvent';
-//    $data = ['It works!'];
-//
-//    $pusher->trigger($channel, $event, $data);
+//Route::group(['namespace' => 'API', 'prefix' => 'api'], function () {
+//    require app_path('Http/Routes/accounts.php');
+//    require app_path('Http/Routes/budgets.php');
 //});
 
-Route::get('/colors', function()
-{
-    return view('pages.colors');
-});
-
-//Homepage (entries)
-Route::get('/', 'PagesController@entries');
-
-//Units
-//Route::get('/units', 'PagesController@units');
-
-//Foods
-Route::get('/foods', 'PagesController@foods');
-Route::get('/recipes', 'PagesController@recipes');
-Route::get('/food-units', 'PagesController@foodUnits');
-
-//Exercises
-Route::get('exercises', 'PagesController@exercises');
-Route::get('series', 'PagesController@series');
-Route::get('workouts', 'PagesController@workouts');
-Route::get('exercise_tags', 'PagesController@exerciseTags');
-Route::get('/exercise-units', 'PagesController@exerciseUnits');
-
-//Journal
-Route::get('/journal', 'PagesController@journal');
-
-//Credits
-Route::get('/credits', function()
-{
-    return view('credits');
-});
-
-/**
- * Authentication
- */
-
-Route::group(['prefix' => 'auth', 'namespace' => 'Auth'], function(){
-
-    Route::group(['middleware' => 'guest'], function(){
-        // Login
-        Route::get('login', ['as' => 'auth.login', 'uses' => 'AuthController@getLogin']);
-        Route::post('login', ['as' => 'auth.login.store', 'before' => 'throttle:2,60', 'uses' => 'AuthController@postLogin']);
-
-        // Register
-        Route::get('register', ['as' => 'auth.register', 'uses' => 'AuthController@getRegister']);
-        Route::post('register', ['as' => 'auth.register.store', 'uses' => 'AuthController@postRegister']);
-    });
-
-    Route::group(['middleware' => 'auth'], function(){
-        // Logout
-        Route::get('logout', ['as' => 'auth.logout', 'uses' => 'AuthController@getLogout']);
-    });
-
-});
-
-Route::controllers([
-	// 'auth' => 'Auth\AuthController',
-	'password' => 'Auth\PasswordController',
-]);
-
-/**
- * Bindings
- */
-
-//Route::bind('journal', function($date)
-//{
-//    return Journal::where('date', $date);
-//});
-
-Route::bind('exercises', function($value)
-{
-    return Exercise::forCurrentUser()->findOrFail($value);
-});
-
-/**
- * Resources
- */
-
-Route::resource('weights', 'Weights\WeightsController');
-Route::resource('timers', 'Projects\TimersController', ['only' => ['destroy']]);
-Route::resource('foods', 'Foods\FoodsController', ['only' => ['show', 'destroy']]);
-Route::resource('exercises', 'Exercises\ExercisesController', ['except' => ['index']]);
-Route::resource('ExerciseEntries', 'Exercises\ExerciseEntriesController', ['only' => ['store']]);
-Route::resource('ExerciseSeries', 'Exercises\ExerciseSeriesController', ['only' => ['store', 'show', 'destroy']]);
-Route::resource('workouts', 'Exercises\WorkoutsController', ['only' => ['store']]);
-Route::resource('journal', 'Journal\JournalController', ['only' => ['show', 'store', 'update']]);
-
-/**
- * Ajax
- */
-
-/**
- * Journal
- */
-
-Route::post('select/filterJournalEntries', 'Journal\JournalController@filter');
-
-/**
- * Exercises
- */
-
-Route::post('insert/exerciseSet', 'Exercises\ExerciseEntriesController@insertExerciseSet');
-Route::post('delete/exerciseEntry', 'Exercises\ExerciseEntriesController@deleteExerciseEntry');
-//this one is more complicated
-Route::post('select/specificExerciseEntries', 'Exercises\ExerciseEntriesController@getSpecificExerciseEntries');
-//this should be ExerciseSeriesHistoryController, index (if returns multiple series, show if returns one series) method
-Route::post('select/exerciseSeriesHistory', 'Exercises\ExercisesController@getExerciseSeriesHistory');
-Route::post('insert/deleteAndInsertSeriesIntoWorkouts', 'Exercises\ExerciseSeriesController@deleteAndInsertSeriesIntoWorkouts');
-Route::post('insert/tagsInExercise', 'Tags\TagsController@insertTagsInExercise');
-
-/**
- * Foods
- */
-
-Route::post('select/allFoodsWithUnits', 'Foods\FoodsController@getAllFoodsWithUnits');
-Route::post('insert/menuEntry', 'Foods\FoodEntriesController@insertMenuEntry');
-Route::post('insert/food', 'Foods\FoodsController@insertFood');
-Route::post('insert/unitInCalories', 'Foods\FoodsController@insertUnitInCalories');
-Route::post('delete/unitFromCalories', 'Foods\FoodsController@deleteUnitFromCalories');
-Route::post('delete/foodEntry', 'Foods\FoodEntriesController@deleteFoodEntry');
-Route::post('update/defaultUnit', 'Foods\FoodsController@updateDefaultUnit');
-Route::post('update/calories', 'Foods\FoodsController@updateCalories');
-
-/**
- * Recipes
- */
-
-Route::post('select/filterRecipes', 'Recipes\RecipesController@filterRecipes');
-Route::post('select/recipeContents', 'Recipes\RecipesController@getRecipeContents');
-Route::post('insert/quickRecipe', 'Recipes\QuickRecipesController@quickRecipe');
-Route::post('insert/recipeMethod', 'Recipes\RecipesController@insertRecipeMethod');
-Route::post('insert/recipe', 'Recipes\RecipesController@insertRecipe');
-Route::post('insert/recipeEntry', 'Recipes\RecipesController@insertRecipeEntry');
-Route::post('insert/foodIntoRecipe', 'Recipes\RecipesController@insertFoodIntoRecipe');
-Route::post('delete/recipe', 'Recipes\RecipesController@deleteRecipe');
-Route::post('delete/foodFromRecipe', 'Recipes\RecipesController@deleteFoodFromRecipe');
-Route::post('delete/recipeEntry', 'Recipes\RecipesController@deleteRecipeEntry');
-Route::post('update/recipeMethod', 'Recipes\RecipesController@updateRecipeMethod');
-
-/**
- * Tags
- */
-
-Route::post('insert/tagsIntoRecipe', 'Recipes\RecipesController@insertTagsIntoRecipe');
-Route::post('insert/recipeTag', 'Tags\TagsController@insertRecipeTag');
-Route::post('insert/tagInExercise', 'Tags\TagsController@insertTagInExercise');
-Route::post('insert/exerciseTag', 'Tags\TagsController@insertExerciseTag');
-Route::post('delete/exerciseTag', 'Tags\TagsController@deleteExerciseTag');
-Route::post('delete/recipeTag', 'Tags\TagsController@deleteRecipeTag');
-Route::post('delete/tagFromExercise', 'Tags\TagsController@deleteTagFromExercise');
-
-/**
- * Units
- */
-
-Route::post('insert/exerciseUnit', 'Units\UnitsController@insertExerciseUnit');
-Route::post('insert/foodUnit', 'Units\UnitsController@insertFoodUnit');
-Route::post('delete/foodUnit', 'Units\UnitsController@deleteFoodUnit');
-Route::post('delete/exerciseUnit', 'Units\UnitsController@deleteExerciseUnit');
-
-/**
- * Entries
- */
-
-Route::post('select/entries', 'EntriesController@getEntries');
-
-/**
- * Weight
- */
-
-Route::post('insert/weight', 'Weights\WeightsController@insertOrUpdateWeight');
-
-/**
- * Autocomplete
- */
-
-//This selects rows from both foods and recipes table.
-Route::post('select/autocompleteMenu', 'Search\AutocompleteController@autocompleteMenu');
-Route::post('select/autocompleteExercise', 'Search\AutocompleteController@autocompleteExercise');
-Route::post('select/autocompleteFood', 'Search\AutocompleteController@autocompleteFood');

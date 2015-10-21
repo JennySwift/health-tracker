@@ -1,5 +1,6 @@
 <?php
 
+use App\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,20 +12,26 @@ class ExerciseSeriesSeeder extends Seeder {
 	{
 		Series::truncate();
 
-		DB::table('exercise_series')->insert([
-			'name' => 'pushup',
-			'user_id' => 1
-		]);
+        $users = User::all();
 
-		DB::table('exercise_series')->insert([
-			'name' => 'pullup',
-			'user_id' => 1
-		]);
+        foreach($users as $user) {
+            DB::table('exercise_series')->insert([
+                'name' => 'pushup',
+                'user_id' => $user->id
+            ]);
 
-		DB::table('exercise_series')->insert([
-			'name' => 'squat',
-			'user_id' => 1
-		]);
+            DB::table('exercise_series')->insert([
+                'name' => 'pullup',
+                'user_id' => $user->id
+            ]);
+
+            DB::table('exercise_series')->insert([
+                'name' => 'squat',
+                'user_id' => $user->id
+            ]);
+        }
+
+
 	}
 
 }

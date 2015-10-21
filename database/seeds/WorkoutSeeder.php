@@ -1,5 +1,6 @@
 <?php
 
+use App\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,16 +11,21 @@ class WorkoutSeeder extends Seeder {
 	public function run()
 	{
 		Workout::truncate();
-		
-		DB::table('workouts')->insert([
-			'name' => 'day one',
-			'user_id' => 1
-		]);
+        $users = User::all();
 
-		DB::table('workouts')->insert([
-			'name' => 'day two',
-			'user_id' => 1
-		]);
+        foreach($users as $user) {
+            DB::table('workouts')->insert([
+                'name' => 'day one',
+                'user_id' => $user->id
+            ]);
+
+            DB::table('workouts')->insert([
+                'name' => 'day two',
+                'user_id' => $user->id
+            ]);
+        }
+		
+
 	}
 
 }

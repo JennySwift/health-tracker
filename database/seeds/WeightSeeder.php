@@ -1,5 +1,6 @@
 <?php
 
+use App\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -29,40 +30,43 @@ class WeightSeeder extends Seeder {
 
 		Eloquent::unguard();
 		Weight::truncate();
+        $users = User::all();
 		
 		$faker = Faker::create();
 
-		/**
-		 * The goal:
-		 * I want to create an entry in the weights table for each of the last 50 days.
-		 */		
-		
-		foreach (range(0, 49) as $index) {
-			
-			/**
-			 * @JS:
-			 * By the way, no need for a $date variable here!
-			 */
-			
-			/**
-			 * @VP:
-			 * I used to not create so many variables.
-			 * But then I found it made debugging a lot easier when I did so,
-			 * because it gives me a variable to look at in my debugger.
-			 * Also, I think it makes the code easier to read.
-			 * And I think it makes it easier to code, too,
-			 * because it's like taking one step at a time rather than trying to do too many things at once.
-			 * What do you think? Is there a good reason I should change this habit?
-			 */
-			
-			$today = Carbon::today();
-			
-			Weight::create([
-				'date' => $today->subDays($index)->format('Y-m-d'),
-				'weight' => $faker->randomFloat($nbMaxDecimals = 1, $min = 30, $max = 90),
-				'user_id' => 1
-			]);
-		}		
+        foreach($users as $user) {
+            /**
+             * The goal:
+             * I want to create an entry in the weights table for each of the last 50 days.
+             */
+
+            foreach (range(0, 49) as $index) {
+
+                /**
+                 * @JS:
+                 * By the way, no need for a $date variable here!
+                 */
+
+                /**
+                 * @VP:
+                 * I used to not create so many variables.
+                 * But then I found it made debugging a lot easier when I did so,
+                 * because it gives me a variable to look at in my debugger.
+                 * Also, I think it makes the code easier to read.
+                 * And I think it makes it easier to code, too,
+                 * because it's like taking one step at a time rather than trying to do too many things at once.
+                 * What do you think? Is there a good reason I should change this habit?
+                 */
+
+                $today = Carbon::today();
+
+                Weight::create([
+                    'date' => $today->subDays($index)->format('Y-m-d'),
+                    'weight' => $faker->randomFloat($nbMaxDecimals = 1, $min = 30, $max = 90),
+                    'user_id' => $user->id
+                ]);
+            }
+        }
 		
 	}
 

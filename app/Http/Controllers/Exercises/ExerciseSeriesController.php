@@ -77,13 +77,14 @@ class ExerciseSeriesController extends Controller
 
     /**
      *
-     * @param $id
+     * @param Series $series
      * @return mixed
+     * @throws \Exception
      */
-    public function destroy($id)
+    public function destroy(Series $series)
     {
         //todo: notify user the series will not be deleted unless it has not been used, due to foreign key constraint
-        Series::where('id', $id)->delete();
+        $series->delete();
 
         return Series::getExerciseSeries();
     }

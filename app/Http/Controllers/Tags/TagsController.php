@@ -35,7 +35,7 @@ class TagsController extends Controller
     }
 
     /**
-     *
+     * Todo: make sure it belongs to user
      * @param Request $request
      * @return mixed
      * @throws \Exception
@@ -51,8 +51,9 @@ class TagsController extends Controller
 
     /**
      * Delete tag from tags table. The tag was for a recipe.
-     * @param  Request $request [description]
-     * @return [type]           [description]
+     * Todo: make sure it belongs to user
+     * @param Request $request
+     * @return mixed
      */
     public function deleteRecipeTag(Request $request)
     {
@@ -63,9 +64,11 @@ class TagsController extends Controller
     }
 
     /**
-     * Deletes all tags from the exercise then adds the correct tags to the exercise
-     * @param  Request $request [description]
-     * @return [type]           [description]
+     * Deletes all tags from the exercise then adds
+     * the correct tags to the exercise
+     * Todo: make sure it belongs to user
+     * @param Request $request
+     * @return mixed
      */
     public function insertTagsInExercise(Request $request)
     {
@@ -86,7 +89,7 @@ class TagsController extends Controller
     }
 
     /**
-     *
+     * Todo: make sure it belongs to user
      * @param Request $request
      * @return mixed
      */

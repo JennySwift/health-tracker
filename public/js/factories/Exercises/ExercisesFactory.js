@@ -71,7 +71,7 @@ app.factory('ExercisesFactory', function ($http) {
 		},
 		insertExerciseSeries: function () {
 			var $name = $("#exercise-series").val();
-			var $url = '/ExerciseSeries';
+			var $url = '/exerciseSeries';
 			var $data = {
 				name: $name
 			};

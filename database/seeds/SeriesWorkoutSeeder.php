@@ -1,5 +1,6 @@
 <?php
 
+use App\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Exercises\Workout;
@@ -13,24 +14,29 @@ class SeriesWorkoutSeeder extends Seeder {
 		DB::table('series_workout')->truncate();
 		
 		$faker = Faker::create();
+        $users = User::all();
 
-		/**
-		 * Objective:
-		 * Make a random number of exercise series belong to each workout.
-		 * No duplicate series for a workout. (Currently there are duplicates.)
-		 */
+        foreach($users as $user) {
+            /**
+             * Objective:
+             * Make a random number of exercise series belong to each workout.
+             * No duplicate series for a workout. (Currently there are duplicates.)
+             */
 
-		$workout_ids = Workout::lists('id')->all();
-		$series_ids = ExerciseSeries::lists('id')->all();
+            $workout_ids = Workout::where('user_id', $user->id)->lists('id')->all();
+            $series_ids = ExerciseSeries::where('user_id', $user->id)->lists('id')->all();
 
-		foreach ($workout_ids as $workout_id) {
-			foreach (range(1, 3) as $index) {
-				DB::table('series_workout')->insert([
-					'workout_id' => $workout_id,
-					'series_id' => $faker->randomElement($series_ids),
-				]);
-			}
-		}
+            foreach ($workout_ids as $workout_id) {
+                foreach (range(1, 3) as $index) {
+                    DB::table('series_workout')->insert([
+                        'workout_id' => $workout_id,
+                        'series_id' => $faker->randomElement($series_ids),
+                    ]);
+                }
+            }
+        }
+
+
 	}
 
 }

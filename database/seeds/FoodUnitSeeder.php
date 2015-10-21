@@ -1,5 +1,6 @@
 <?php
 
+use App\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,10 +19,18 @@ use Faker\Factory as Faker;
 
 class FoodUnitSeeder extends MasterSeeder {
 
-	public function run()
+    private $user;
+
+    public function run()
 	{
 		// Model::unguard();
 		DB::table('food_unit')->truncate();
+
+        $users = User::all();
+        foreach($users as $user) {
+            $this->user = $user;
+            $this->createPivotRows();
+        }
 
 		/**
 		 * Objective:
@@ -33,7 +42,7 @@ class FoodUnitSeeder extends MasterSeeder {
 		 * Also, for a food's default unit, is it better to have a 'default_unit_id' column in my foods table (with a foreign key),
 		 * or to have a 'default' column in my food_units table (with a boolean value)?
 		 */
-		 $this->createPivotRows();
+
 	}
 	
 	private function createPivotRows()
@@ -42,7 +51,7 @@ class FoodUnitSeeder extends MasterSeeder {
 		
 		foreach ($foods as $food) {
 			//Add a few units for each food	
-			$this->createPivotRow($food);	
+			$this->createPivotRow($food);
 		}
 	}
 
@@ -55,7 +64,7 @@ class FoodUnitSeeder extends MasterSeeder {
   			$data = [
 				'food_id' => $food->id,
 				'unit_id' => $unit->id,
-				'user_id' => 1
+				'user_id' => $this->user->id
   		  ];
   
   			$data['calories'] = $this->hasCalories();

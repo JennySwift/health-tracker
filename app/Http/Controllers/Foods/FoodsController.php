@@ -3,6 +3,7 @@
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
 use App\Models\Foods\Food;
+use App\Models\Units\Unit;
 use Auth;
 use DB;
 use Debugbar;
@@ -112,13 +113,12 @@ class FoodsController extends Controller
 
     /**
      *
-     * @param Request $request
-     * @param $id
+     * @param Food $food
      * @return mixed
+     * @throws \Exception
      */
-    public function destroy(Request $request, $id)
+    public function destroy(Food $food)
     {
-        $food = Food::find($id);
         $food->delete();
 
         return Food::getAllFoodsWithUnits();
@@ -131,9 +131,9 @@ class FoodsController extends Controller
      */
     public function deleteUnitFromCalories(Request $request)
     {
-        $food = Food::find($request->get('food_id'));
-        $unit_id = $request->get('unit_id');
-        $food->units()->detach($unit_id);
+        $food = Food::forCurrentUser()->findOrFail($request->get('food_id'));
+        $unit = Unit::forCurrentUser()->findOrFail($request->get('unit_id'));
+        $food->units()->detach($unit->id);
 
         return Food::getFoodInfo($food);
 	}

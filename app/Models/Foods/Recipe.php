@@ -234,16 +234,5 @@ class Recipe extends Model {
 				'user_id' => Auth::user()->id
 			]);
 	}
-
-    /**
-     *
-     * @param $id
-     */
-    public static function deleteRecipe($id)
-	{
-		static
-			::where('id', $id)
-			->delete();
-	}
 	
 }
