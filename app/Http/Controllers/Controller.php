@@ -50,4 +50,67 @@ abstract class Controller extends BaseController {
         return response([], Response::HTTP_NO_CONTENT);
     }
 
+    /**
+     * Create a 304 - No content response
+     * @return Response
+     */
+    public function responseNotModified()
+    {
+        return response([], Response::HTTP_NOT_MODIFIED);
+    }
+
+    /**
+     * @param Model               $model
+     * @param TransformerAbstract $transformer
+     * @param null                $key
+     * @return Item
+     */
+//    public function createItem($model, TransformerAbstract $transformer, $key = null)
+//    {
+//        return new Item($model, $transformer, $key);
+//    }
+
+    /**
+     * @param $resource
+     * @return mixed
+     */
+//    public function responseWithTransformer($resource, $code)
+//    {
+//        $manager = new Manager();
+//        $manager->setSerializer(new DataArraySerializer);
+//
+//        $manager->parseIncludes(request()->get('includes', []));
+//
+//        return response()->json(
+//            $manager->createData($resource)->toArray(),
+//            $code
+//        );
+//    }
+
+    /**
+     * Return response ok code with transformed resource
+     * @param $resource
+     * @return mixed
+     */
+//    public function responseOkWithTransformer($resource, $transformer)
+//    {
+//        //Transform
+//        $resource = createItem($resource, $transformer);
+//
+//        return response(transform($resource), Response::HTTP_OK);
+//    }
+
+    /**
+     * Return response created code with transformed resource
+     * @param $resource
+     * @return mixed
+     */
+//    public function responseCreatedWithTransformer($resource, $transformer)
+//    {
+//        //Transform
+//        $resource = createItem($resource, $transformer);
+//
+//        return response(transform($resource), Response::HTTP_CREATED);
+//    }
+
 }

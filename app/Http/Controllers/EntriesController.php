@@ -13,15 +13,20 @@ use JavaScript;
  */
 class EntriesController extends Controller
 {
+    /**
+     * @var WeightsRepository
+     */
+    private $weightsRepository;
 
     /**
      * Create a new controller instance.
      *
-     * @return void
+     * @param WeightsRepository $weightsRepository
      */
-    public function __construct()
+    public function __construct(WeightsRepository $weightsRepository)
     {
         $this->middleware('auth');
+        $this->weightsRepository = $weightsRepository;
     }
 
     /**
@@ -30,12 +35,12 @@ class EntriesController extends Controller
      * @param WeightsRepository $weightsRepository
      * @return array
      */
-    public function getEntries(Request $request, WeightsRepository $weightsRepository)
+    public function getEntries(Request $request)
     {
         $date = $request->get('date');
 
         $response = array(
-            "weight" => $weightsRepository->getWeight($date),
+            "weight" => $this->weightsRepository->getWeight($date),
             "exercise_entries" => ExerciseEntry::getExerciseEntries($date),
             "menu_entries" => FoodEntry::getFoodEntries($date),
             "calories_for_the_day" => number_format(Food::getCaloriesForDay($date), 2),
