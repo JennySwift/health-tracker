@@ -1,7 +1,7 @@
 var app = angular.module('tracker');
 
 (function () {
-	app.controller('entries', function ($scope, $http, DatesFactory, EntriesFactory, AutocompleteFactory, WeightsFactory, FoodsFactory) {
+	app.controller('entries', function ($scope, $http, DatesFactory, EntriesFactory, AutocompleteFactory, WeightsFactory, FoodsFactory, ExerciseEntriesFactory, RecipeEntriesFactory, FoodEntriesFactory) {
 
 		/**
 		 * scope properties
@@ -137,7 +137,7 @@ var app = angular.module('tracker');
 		 * @return {[type]}                   [description]
 		 */
 		$scope.getSpecificExerciseEntries = function ($exercise_id, $exercise_unit_id) {
-			EntriesFactory.getSpecificExerciseEntries($scope.date.sql, $exercise_id, $exercise_unit_id).then(function (response) {
+			ExerciseEntriesFactory.getSpecificExerciseEntries($scope.date.sql, $exercise_id, $exercise_unit_id).then(function (response) {
 				$scope.show.popups.exercise_entries = true;
 				$scope.exercise_entries_popup = response.data;
 			});
@@ -152,7 +152,7 @@ var app = angular.module('tracker');
 			$scope.new_entry.food.name = $scope.selected.food.name;
 			$scope.new_entry.food.unit_id = $("#food-unit").val();
 
-			EntriesFactory.insertMenuEntry($scope.date.sql, $scope.new_entry.food).then(function (response) {
+			FoodEntriesFactory.insertMenuEntry($scope.date.sql, $scope.new_entry.food).then(function (response) {
 				$scope.entries.menu = response.data.food_entries;
 				$scope.calories.day = response.data.calories_for_the_day;
 				$scope.calories.week_avg = response.data.calories_for_the_week;
@@ -165,7 +165,7 @@ var app = angular.module('tracker');
 		};
 
 		$scope.insertRecipeEntry = function () {
-			EntriesFactory.insertRecipeEntry($scope.date.sql, $scope.selected.menu.id, $scope.temporary_recipe_popup.contents).then(function (response) {
+			RecipeEntriesFactory.insertRecipeEntry($scope.date.sql, $scope.selected.menu.id, $scope.temporary_recipe_popup.contents).then(function (response) {
 				$scope.entries.menu = response.data;
 				$scope.show.popups.temporary_recipe = false;
 			});
@@ -183,13 +183,13 @@ var app = angular.module('tracker');
 
 		$scope.insertExerciseEntry = function () {
 			$scope.new_entry.exercise.unit_id = $("#exercise-unit").val();
-			EntriesFactory.insertExerciseEntry($scope.date.sql, $scope.new_entry.exercise).then(function (response) {
+			ExerciseEntriesFactory.insertExerciseEntry($scope.date.sql, $scope.new_entry.exercise).then(function (response) {
 				$scope.entries.exercise = response.data;
 			});
 		};
 
 		$scope.insertExerciseSet = function ($exercise_id) {
-			EntriesFactory.insertExerciseSet($scope.date.sql, $exercise_id).then(function (response) {
+			ExerciseEntriesFactory.insertExerciseSet($scope.date.sql, $exercise_id).then(function (response) {
 				$scope.entries.exercise = response.data;
 			});
 		};
@@ -212,7 +212,7 @@ var app = angular.module('tracker');
 		$scope.deleteFoodEntry = function ($entry_id) {
 			$entry_id = $entry_id || $scope.selected.entry.id;
 
-			EntriesFactory.deleteFoodEntry($entry_id, $scope.date.sql).then(function (response) {
+			FoodEntriesFactory.deleteFoodEntry($entry_id, $scope.date.sql).then(function (response) {
 				$scope.entries.menu = response.data.food_entries;
 				$scope.calories.day = response.data.calories_for_the_day;
 				$scope.calories.week_avg = response.data.calories_for_the_week;
@@ -221,7 +221,7 @@ var app = angular.module('tracker');
 		};
 
 		$scope.deleteRecipeEntry = function () {
-			EntriesFactory.deleteRecipeEntry($scope.date.sql, $scope.selected.recipe.id).then(function (response) {
+			RecipeEntriesFactory.deleteRecipeEntry($scope.date.sql, $scope.selected.recipe.id).then(function (response) {
 				$scope.entries.menu = response.data.food_entries;
 				$scope.calories.day = response.data.calories_for_the_day;
 				$scope.calories.week_avg = response.data.calories_for_the_week;
@@ -230,7 +230,7 @@ var app = angular.module('tracker');
 		};
 
 		$scope.deleteExerciseEntry = function ($id) {
-			EntriesFactory.deleteExerciseEntry($id, $scope.date.sql, $scope.exercise_entries_popup.exercise.id, $scope.exercise_entries_popup.unit.id).then(function (response) {
+			ExerciseEntriesFactory.deleteExerciseEntry($id, $scope.date.sql, $scope.exercise_entries_popup.exercise.id, $scope.exercise_entries_popup.unit.id).then(function (response) {
 				$scope.entries.exercise = response.data.entries_for_day;
 				$scope.exercise_entries_popup = response.data.entries_for_popup;
 			});
