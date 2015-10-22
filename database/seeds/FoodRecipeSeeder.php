@@ -1,30 +1,27 @@
 <?php
 
+use App\Models\Menu\Food;
 use App\User;
-use Illuminate\Database\Seeder;
-use Illuminate\Database\Eloquent\Model;
-
 use Faker\Factory as Faker;
+use Illuminate\Database\Seeder;
 
-use App\Models\Units\Unit;
-use App\Models\Foods\Food;
+class FoodRecipeSeeder extends Seeder
+{
 
-class FoodRecipeSeeder extends Seeder {
+    public function run()
+    {
+        DB::table('food_recipe')->truncate();
 
-	public function run()
-	{
-		DB::table('food_recipe')->truncate();
-		
-		$faker = Faker::create();
+        $faker = Faker::create();
 
         $users = User::all();
 
-        foreach($users as $user) {
+        foreach ($users as $user) {
             $food_ids = Food::where('user_id', $user->id)->lists('id')->all();
 
             //Insert some rows for recipe_id 1
 
-            foreach (range(0,2) as $number) {
+            foreach (range(0, 2) as $number) {
                 $unit_ids_owned_by_food = [];
                 while (count($unit_ids_owned_by_food) === 0) {
                     $food_id = $faker->randomElement($food_ids);
@@ -58,7 +55,7 @@ class FoodRecipeSeeder extends Seeder {
 
             //Insert some rows for recipe_id 2
 
-            foreach (range(0,2) as $number) {
+            foreach (range(0, 2) as $number) {
                 $unit_ids_owned_by_food = [];
                 while (count($unit_ids_owned_by_food) === 0) {
                     $food_id = $faker->randomElement($food_ids);
@@ -83,6 +80,6 @@ class FoodRecipeSeeder extends Seeder {
             }
         }
 
-	}
+    }
 
 }

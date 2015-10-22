@@ -16,7 +16,7 @@
         <hr>
 
         <div id="display-exercise-units">
-            <li ng-repeat="unit in units.exercise" class="list-group-item">
+            <li ng-repeat="unit in units" class="list-group-item">
                 [[unit.name]]
                 <i ng-click="deleteExerciseUnit(unit.id)" class="delete-item fa fa-times"></i>
             </li>

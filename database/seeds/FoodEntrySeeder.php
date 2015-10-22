@@ -1,26 +1,30 @@
 <?php
 
+use App\Models\Menu\Entry as FoodEntry;
+use App\Models\Menu\Food;
 use App\User;
-use Illuminate\Database\Seeder;
-use Illuminate\Database\Eloquent\Model;
-
-use App\Models\Foods\Entry as FoodEntry;
-use Faker\Factory as Faker;
 use Carbon\Carbon;
-use App\Models\Foods\Food;
-use App\Models\Units\Unit;
+use Faker\Factory as Faker;
+use Illuminate\Database\Seeder;
 
-class FoodEntrySeeder extends Seeder {
+/**
+ * Class FoodEntrySeeder
+ */
+class FoodEntrySeeder extends Seeder
+{
 
-	public function run()
-	{
-		FoodEntry::truncate();
-		
-		$faker = Faker::create();
+    /**
+     *
+     */
+    public function run()
+    {
+        FoodEntry::truncate();
+
+        $faker = Faker::create();
 
         $users = User::all();
 
-        foreach($users as $user) {
+        foreach ($users as $user) {
             /**
              * Objective: create a random number of food entries (no duplicates) for each of the last 50 days
              */
@@ -44,7 +48,7 @@ class FoodEntrySeeder extends Seeder {
                     DB::table('food_entries')->insert([
                         'date' => $date,
                         'food_id' => $food_id,
-                        'quantity' => $faker->numberBetween($min=1, $max=9),
+                        'quantity' => $faker->numberBetween($min = 1, $max = 9),
                         'unit_id' => $faker->randomElement($unit_ids),
                         'recipe_id' => '',
                         'user_id' => $user->id
@@ -54,6 +58,6 @@ class FoodEntrySeeder extends Seeder {
         }
 
 
-	}
+    }
 
 }

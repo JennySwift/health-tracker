@@ -30,6 +30,7 @@ class PagesTest extends TestCase {
     }
 
     /**
+     * //Todo: Check the entries are there
      * @test
      * @return void
      */
@@ -67,6 +68,7 @@ class PagesTest extends TestCase {
         $this->logInUser();
 
         $this->visit('/recipes')
+            ->see('delicious recipe')
             ->see('soup');
 
         $this->assertEquals(Response::HTTP_OK, $this->apiCall('GET', '/')->getStatusCode());
@@ -101,6 +103,7 @@ class PagesTest extends TestCase {
     }
 
     /**
+     * //Todo: Check the workout shows up in the table
      * @test
      * @return void
      */
@@ -138,7 +141,8 @@ class PagesTest extends TestCase {
         $this->logInUser();
 
         $this->visit('/exercise-units')
-            ->see('reps');
+            ->see('reps')
+            ->see('minutes');
 
         $this->assertEquals(Response::HTTP_OK, $this->apiCall('GET', '/')->getStatusCode());
     }
@@ -159,6 +163,7 @@ class PagesTest extends TestCase {
     }
 
     /**
+     * Todo: check the entry is there
      * @test
      * @return void
      */

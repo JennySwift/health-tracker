@@ -1,23 +1,22 @@
 <?php
 
+use App\Models\Menu\Recipe;
+use App\Models\Menu\RecipeMethod;
 use App\User;
-use Illuminate\Database\Seeder;
-use Illuminate\Database\Eloquent\Model;
-
-use App\Models\Foods\RecipeMethod;
-use App\Models\Foods\Recipe;
 use Faker\Factory as Faker;
+use Illuminate\Database\Seeder;
 
-class RecipeMethodSeeder extends Seeder {
+class RecipeMethodSeeder extends Seeder
+{
 
-	public function run()
-	{
-		RecipeMethod::truncate();
-		
-		$faker = Faker::create();
+    public function run()
+    {
+        RecipeMethod::truncate();
+
+        $faker = Faker::create();
         $users = User::all();
 
-        foreach($users as $user) {
+        foreach ($users as $user) {
             $recipe_ids = Recipe::where('user_id', $user->id)->lists('id');
 
             foreach ($recipe_ids as $recipe_id) {
@@ -35,6 +34,6 @@ class RecipeMethodSeeder extends Seeder {
         }
 
 
-	}
+    }
 
 }

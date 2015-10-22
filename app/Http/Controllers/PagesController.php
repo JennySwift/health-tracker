@@ -180,6 +180,7 @@ class PagesController extends Controller
      */
     public function foodUnits()
     {
+//        return $this->unitsRepository->getFoodUnits();
         JavaScript::put([
             'units' => $this->unitsRepository->getFoodUnits()
         ]);
