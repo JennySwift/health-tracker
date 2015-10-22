@@ -1,44 +1,42 @@
-<?php namespace App\Http\Controllers\API\Units;
+<?php namespace App\Http\Controllers\API\Menu;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
+use App\Http\Transformers\UnitTransformer;
 use App\Models\Units\Unit;
+use App\Repositories\UnitsRepository;
 use Auth;
 use Illuminate\Http\Request;
 
 /**
- * Class UnitsController
+ * Class FoodUnitsController
  * @package App\Http\Controllers\Units
  */
-class UnitsController extends Controller
+class FoodUnitsController extends Controller
 {
+    /**
+     * @var UnitsRepository
+     */
+    private $unitsRepository;
 
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(UnitsRepository $unitsRepository)
     {
         $this->middleware('auth');
+        $this->unitsRepository = $unitsRepository;
     }
 
     /**
      *
      * @return mixed
      */
-    public function getExerciseUnits()
+    public function index()
     {
-        return Unit::getExerciseUnits();
-    }
-
-    /**
-     *
-     * @return mixed
-     */
-    public function getFoodUnits()
-    {
-        return Unit::getFoodUnits();
+        return $this->unitsRepository->getFoodUnits();
     }
 
     /**
@@ -50,13 +48,27 @@ class UnitsController extends Controller
     {
         $unit = new Unit([
             'name' => $request->get('name'),
-            'for' => $request->get('for')
+            'for' => 'food'
         ]);
 
         $unit->user()->associate(Auth::user());
         $unit->save();
 
-        return $this->responseCreated($unit);
+        return $this->responseCreatedWithTransformer($unit, new UnitTransformer);
+    }
+
+    /**
+     *
+     * @param Unit $unit
+     * @param Request $request
+     * @return mixed
+     */
+    public function update(Unit $unit, Request $request)
+    {
+        $unit->name = $request->get('name');
+        $unit->save();
+
+        return $this->responseOkWithTransformer($unit, new UnitTransformer);
     }
 
     /**

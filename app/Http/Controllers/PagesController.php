@@ -11,6 +11,7 @@ use App\Models\Tags\Tag;
 use App\Models\Units\Unit;
 use App\Repositories\ExercisesRepository;
 use App\Repositories\FoodsRepository;
+use App\Repositories\UnitsRepository;
 use App\Repositories\WeightsRepository;
 use Auth;
 use Carbon\Carbon;
@@ -30,17 +31,24 @@ class PagesController extends Controller
      * @var FoodsRepository
      */
     private $foodsRepository;
+    /**
+     * @var UnitsRepository
+     */
+    private $unitsRepository;
 
     /**
      * Create a new controller instance.
      *
-     * @return void
+     * @param ExercisesRepository $exercisesRepository
+     * @param FoodsRepository $foodsRepository
+     * @param UnitsRepository $unitsRepository
      */
-    public function __construct(ExercisesRepository $exercisesRepository, FoodsRepository $foodsRepository)
+    public function __construct(ExercisesRepository $exercisesRepository, FoodsRepository $foodsRepository, UnitsRepository $unitsRepository)
     {
         $this->middleware('auth');
         $this->exercisesRepository = $exercisesRepository;
         $this->foodsRepository = $foodsRepository;
+        $this->unitsRepository = $unitsRepository;
     }
 
     /**
@@ -55,8 +63,8 @@ class PagesController extends Controller
         JavaScript::put([
             "weight" => $weightsRepository->getWeight($date),
             "exercise_entries" => ExerciseEntry::getExerciseEntries($date),
-            "food_units" => Unit::getFoodUnits(),
-            "exercise_units" => Unit::getExerciseUnits(),
+            "food_units" => $this->unitsRepository->getFoodUnits(),
+            "exercise_units" => $this->unitsRepository->getExerciseUnits(),
             "menu_entries" => FoodEntry::getFoodEntries($date),
             "calories_for_the_day" => Food::getCaloriesForDay($date),
             "calories_for_the_week" => Food::getCaloriesFor7Days($date)
@@ -86,7 +94,7 @@ class PagesController extends Controller
             'workouts' => Workout::getWorkouts(),
             'exercise_tags' => Tag::where('user_id', Auth::user()->id)->where('for', 'exercise')->orderBy('name',
                 'asc')->get(),
-            'units' => Unit::getExerciseUnits()
+            'units' => $this->unitsRepository->getExerciseUnits()
         ]);
 
         return view('pages.exercises.exercises');
@@ -173,7 +181,7 @@ class PagesController extends Controller
     public function foodUnits()
     {
         JavaScript::put([
-            'units' => Unit::getAllUnits()
+            'units' => $this->unitsRepository->getFoodUnits()
         ]);
 
         return view('pages.foods.food-units');
@@ -186,7 +194,7 @@ class PagesController extends Controller
     public function exerciseUnits()
     {
         JavaScript::put([
-            'units' => Unit::getAllUnits()
+            'units' => $this->unitsRepository->getExerciseUnits()
         ]);
 
         return view('pages.exercises.exercise-units');

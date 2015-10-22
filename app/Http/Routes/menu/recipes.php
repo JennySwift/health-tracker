@@ -1,10 +1,10 @@
 <?php
 
 //Select
-Route::post('select/filterRecipes', 'Recipes\RecipesController@filterRecipes');
-Route::post('select/recipeContents', 'Recipes\RecipesController@getRecipeContents');
+Route::post('select/filterRecipes', 'Menu\RecipesController@filterRecipes');
+Route::post('select/recipeContents', 'Menu\RecipesController@getRecipeContents');
 
 //Insert
-Route::post('insert/quickRecipe', 'Recipes\QuickRecipesController@quickRecipe');
+Route::post('insert/quickRecipe', 'Menu\QuickRecipesController@quickRecipe');
 
-Route::resource('recipes', 'Recipes\RecipesController', ['only' => ['store', 'destroy']]);
+Route::resource('recipes', 'Menu\RecipesController', ['only' => ['store', 'destroy']]);

@@ -1,4 +1,4 @@
-<?php namespace App\Http\Controllers\API\Recipes;
+<?php namespace App\Http\Controllers\API\Menu;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests;

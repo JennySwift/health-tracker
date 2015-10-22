@@ -7,6 +7,7 @@ use App\Models\Foods\Entry as MenuEntry;
 use App\Models\Foods\Recipe;
 use App\Models\Journal\Journal;
 use App\Models\Tags\Tag;
+use App\Models\Units\Unit;
 use Illuminate\Routing\Router;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use App\Models\Exercises\Entry as ExerciseEntry;
@@ -66,6 +67,16 @@ class RouteServiceProvider extends ServiceProvider {
         Route::bind('tags', function($id)
         {
             return Tag::forCurrentUser()->findOrFail($id);
+        });
+
+        Route::bind('foodUnits', function($id)
+        {
+            return Unit::forCurrentUser()->where('for', 'food')->findOrFail($id);
+        });
+
+        Route::bind('exerciseUnits', function($id)
+        {
+            return Unit::forCurrentUser()->where('for', 'exercise')->findOrFail($id);
         });
 
         Route::bind('journal', function($id)

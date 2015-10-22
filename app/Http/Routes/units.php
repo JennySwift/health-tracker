@@ -1,3 +1,4 @@
 <?php
 
-Route::resource('units', 'Units\UnitsController', ['only' => ['store', 'destroy']]);
+Route::resource('foodUnits', 'Menu\FoodUnitsController', ['only' => ['index', 'store', 'update', 'destroy']]);
+Route::resource('exerciseUnits', 'Exercises\ExerciseUnitsController', ['only' => ['index', 'store', 'update', 'destroy']]);

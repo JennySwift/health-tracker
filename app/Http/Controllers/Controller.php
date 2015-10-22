@@ -92,25 +92,26 @@ abstract class Controller extends BaseController {
      * @param $resource
      * @return mixed
      */
-//    public function responseOkWithTransformer($resource, $transformer)
-//    {
-//        //Transform
-//        $resource = createItem($resource, $transformer);
-//
-//        return response(transform($resource), Response::HTTP_OK);
-//    }
+    public function responseOkWithTransformer($resource, $transformer)
+    {
+        //Transform
+        $resource = createItem($resource, $transformer);
+
+        return response(transform($resource), Response::HTTP_OK);
+    }
 
     /**
      * Return response created code with transformed resource
      * @param $resource
+     * @param $transformer
      * @return mixed
      */
-//    public function responseCreatedWithTransformer($resource, $transformer)
-//    {
-//        //Transform
-//        $resource = createItem($resource, $transformer);
-//
-//        return response(transform($resource), Response::HTTP_CREATED);
-//    }
+    public function responseCreatedWithTransformer($resource, $transformer)
+    {
+        //Transform
+        $resource = createItem($resource, $transformer);
+
+        return response(transform($resource), Response::HTTP_CREATED);
+    }
 
 }
