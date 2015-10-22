@@ -40,7 +40,7 @@ class Journal extends Model {
      */
     public function getPathAttribute()
     {
-        return route('journal.show', $this->id);
+        return route('api.journal.show', $this->id);
     }
 
     /**

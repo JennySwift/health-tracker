@@ -73,7 +73,7 @@ class Series extends Model {
      */
     public function getPathAttribute()
     {
-        return route('exerciseSeries.show', $this->id); // http://tracker.dev:8000/ExerciseSeries/1
+        return route('api.exerciseSeries.show', $this->id); // http://tracker.dev:8000/ExerciseSeries/1
     }
 
 }

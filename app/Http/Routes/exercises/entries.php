@@ -1,7 +1,5 @@
 <?php
 
-Route::post('insert/exerciseSet', 'Exercises\ExerciseEntriesController@insertExerciseSet');
-
 //this one is more complicated
 Route::post('select/specificExerciseEntries', 'Exercises\ExerciseEntriesController@getSpecificExerciseEntries');
 

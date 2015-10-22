@@ -60,12 +60,12 @@ class Entry extends Model {
 	{
 		return $this->hasMany('App\Models\Exercises\Entry');
 	}
-	
-	/**
-	 * Get all exercise entries belonging to the user on a specific date
-	 * @param  [type] $date [description]
-	 * @return [type]       [description]
-	 */
+
+    /**
+     * Get all exercise entries belonging to the user on a specific date
+     * @param $date
+     * @return array
+     */
 	public static function getExerciseEntries ($date) {
 		$entries = static::forCurrentUser('exercise_entries')
 			->where('date', $date)
@@ -78,18 +78,18 @@ class Entry extends Model {
 		return $entries;
 	}
 
-	/**
-	 * For getExerciseEntries.
-	 * If entries share the same exercise and unit, compact them into one item.
-	 * Include the default unit id so I can show the 'add set' button only if the entry uses the default unit.
-	 *
-	 * @VP:
-	 * This method is much the same as Exercise::compactExerciseEntries, but slightly different.
-	 * Should I combine them into one method or keep them separate?
-	 * 
-	 * @param  [type] $entries [description]
-	 * @return [type]          [description]
-	 */
+    /**
+     * For getExerciseEntries.
+     * If entries share the same exercise and unit, compact them into one item.
+     * Include the default unit id so I can show the 'add set' button only if the entry uses the default unit.
+     *
+     * @VP:
+     * This method is much the same as Exercise::compactExerciseEntries, but slightly different.
+     * Should I combine them into one method or keep them separate?
+     * @param $entries
+     * @param $date
+     * @return array
+     */
 	public static function compactExerciseEntries($entries, $date)
 	{
 		// return $entries;
@@ -130,14 +130,14 @@ class Entry extends Model {
 		return $array;
 	}
 
-	/**
-	 * Get all entries for one exercise with a particular unit on a particular date.
-	 * Get exercise name, quantity, and entry id.
-	 * @param  [type] $date             [description]
-	 * @param  [type] $exercise_id      [description]
-	 * @param  [type] $exercise_unit_id [description]
-	 * @return [type]                   [description]
-	 */
+    /**
+     * Get all entries for one exercise with a particular unit on a particular date.
+     * Get exercise name, quantity, and entry id.
+     * @param $date
+     * @param $exercise
+     * @param $exercise_unit_id
+     * @return array
+     */
 	public static function getSpecificExerciseEntries($date, $exercise, $exercise_unit_id) {
 		$entries = static::where('exercise_id', $exercise->id)
 			->where('date', $date)

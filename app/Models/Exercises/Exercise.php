@@ -82,7 +82,7 @@ class Exercise extends Model {
      */
     public function getPathAttribute()
     {
-        return route('exercises.destroy', $this->id); // http://tracker.dev/exercises/$id
+        return route('api.exercises.show', $this->id); // http://tracker.dev/exercises/$id
     }
 	
 	/**
