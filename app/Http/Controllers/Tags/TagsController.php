@@ -17,53 +17,6 @@ class TagsController extends Controller
 {
 
     /**
-     * Create a new exercise tag
-     * @param Request $request
-     * @return mixed
-     */
-    public function InsertExerciseTag(Request $request)
-    {
-        $name = $request->get('name');
-
-        Tag::insert([
-            'name' => $name,
-            'for' => 'exercise',
-            'user_id' => Auth::user()->id
-        ]);
-
-        return Tag::getExerciseTags();
-    }
-
-    /**
-     * Todo: make sure it belongs to user
-     * @param Request $request
-     * @return mixed
-     * @throws \Exception
-     */
-    public function deleteExerciseTag(Request $request)
-    {
-        $id = $request->get('id');
-
-        Tag::find($id)->delete();
-
-        return Tag::getExerciseTags();
-    }
-
-    /**
-     * Delete tag from tags table. The tag was for a recipe.
-     * Todo: make sure it belongs to user
-     * @param Request $request
-     * @return mixed
-     */
-    public function deleteRecipeTag(Request $request)
-    {
-        $id = $request->get('id');
-        Tag::deleteRecipeTag($id);
-
-        return Tag::getRecipeTags();
-    }
-
-    /**
      * Deletes all tags from the exercise then adds
      * the correct tags to the exercise
      * Todo: make sure it belongs to user
@@ -89,33 +42,32 @@ class TagsController extends Controller
     }
 
     /**
-     * Todo: make sure it belongs to user
+     *
      * @param Request $request
-     * @return mixed
+     * @return \Illuminate\Http\Response
      */
-//    public function deleteTagFromExercise(Request $request)
-//    {
-//        $exercise_id = $request->get('exercise_id');
-//        $tag_id = $request->get('tag_id');
-//
-//        Tag
-//            ::where('exercise_id', $exercise_id)
-//            ->where('tag_id', $tag_id)
-//            ->delete();
-//
-//        return Exercise::getExercises();
-//    }
+    public function store(Request $request)
+    {
+        $tag = new Tag([
+            'name' => $request->get('name'),
+            'for' => $request->get('for')
+        ]);
+
+        $tag->user()->associate(Auth::user());
+        $tag->save();
+
+        return $this->responseCreated($tag);
+	}
 
     /**
-     * Insert a new tag into the tags table, for recipes
-     * @param  Request $request [description]
-     * @return [type]           [description]
+     *
+     * @param Tag $tag
+     * @return \Illuminate\Http\Response
+     * @throws \Exception
      */
-    public function insertRecipeTag(Request $request)
+    public function destroy(Tag $tag)
     {
-        $name = $request->get('name');
-        Tag::insertRecipeTag($name);
-
-        return Tag::getRecipeTags();
-	}
+        $tag->delete();
+        return $this->responseNoContent();
+    }
 }

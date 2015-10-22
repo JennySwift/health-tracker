@@ -13,7 +13,7 @@ use Carbon\Carbon;
 
 /**
  * Class Food
- * @package App\Models\Foods
+ * @package App\Models\Menu
  */
 class Food extends Model {
 
@@ -252,20 +252,6 @@ class Food extends Model {
 	{
 		$food->units()->attach($unit_id, ['user_id' => Auth::user()->id]);
 		return Food::getFoodInfo($food);
-	}
-
-    /**
-     *
-     * @param $name
-     * @return static
-     */
-    public static function insertFood($name)
-	{
-		$food = new static(['name' => $name]);
-		$food->user()->associate(Auth::user());
-		$food->save();
-
-		return $food;
 	}
 
     /**

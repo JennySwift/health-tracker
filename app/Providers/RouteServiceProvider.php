@@ -3,7 +3,10 @@
 use App\Models\Exercises\Exercise;
 use App\Models\Exercises\Series as ExerciseSeries;
 use App\Models\Foods\Food;
+use App\Models\Foods\Entry as MenuEntry;
 use App\Models\Foods\Recipe;
+use App\Models\Journal\Journal;
+use App\Models\Tags\Tag;
 use Illuminate\Routing\Router;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use App\Models\Exercises\Entry as ExerciseEntry;
@@ -40,6 +43,11 @@ class RouteServiceProvider extends ServiceProvider {
             return ExerciseEntry::forCurrentUser()->findOrFail($id);
         });
 
+        Route::bind('menuEntries', function($id)
+        {
+            return MenuEntry::forCurrentUser()->findOrFail($id);
+        });
+
         Route::bind('exerciseSeries', function($id)
         {
             return ExerciseSeries::forCurrentUser()->findOrFail($id);
@@ -53,6 +61,16 @@ class RouteServiceProvider extends ServiceProvider {
         Route::bind('recipes', function($id)
         {
             return Recipe::forCurrentUser()->findOrFail($id);
+        });
+
+        Route::bind('tags', function($id)
+        {
+            return Tag::forCurrentUser()->findOrFail($id);
+        });
+
+        Route::bind('journal', function($id)
+        {
+            return Journal::forCurrentUser()->findOrFail($id);
         });
 	}
 

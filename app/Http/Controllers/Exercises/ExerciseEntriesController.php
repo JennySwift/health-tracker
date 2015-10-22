@@ -4,6 +4,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests;
 use App\Models\Exercises\Entry;
 use App\Models\Exercises\Exercise;
+use App\Models\Units\Unit;
 use Auth;
 use Debugbar;
 use Illuminate\Http\Request;
@@ -34,67 +35,56 @@ class ExerciseEntriesController extends Controller
     /**
      *
      * @param Request $request
-     * @return array
+     * @return \Illuminate\Http\Response
      */
     public function insertExerciseSet(Request $request)
     {
-        $date = $request->get('date');
-        $exercise_id = $request->get('exercise_id');
+        $exercise = Exercise::find($request->get('exercise_id'));
 
-        $quantity = Exercise::getDefaultExerciseQuantity($exercise_id);
-        $unit_id = Exercise::getDefaultExerciseUnitId($exercise_id);
-
-        Entry::insert([
-            'date' => $date,
-            'exercise_id' => $exercise_id,
-            'quantity' => $quantity,
-            'exercise_unit_id' => $unit_id,
-            'user_id' => Auth::user()->id
+        $entry = new Entry([
+            'date' => $request->get('date'),
+            'quantity' => Exercise::getDefaultExerciseQuantity($exercise),
         ]);
 
-        return Entry::getExerciseEntries($date);
+        $entry->user()->associate(Auth::user());
+        $entry->exercise()->associate(Exercise::find($request->get('exercise_id')));
+        $entry->unit()->associate(Unit::find(Exercise::getDefaultExerciseUnitId($exercise)));
+
+        $entry->save();
+
+        return $this->responseCreated($entry);
     }
 
     /**
      *
      * @param Request $request
-     * @return array
+     * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        $data = $request->all();
-        $date = $data['date'];
-        $new_entry = $data['new_entry'];
-
-        Entry::insert([
-            'date' => $date,
-            'exercise_id' => $new_entry['id'],
-            'quantity' => $new_entry['quantity'],
-            'exercise_unit_id' => $new_entry['unit_id'],
-            'user_id' => Auth::user()->id
+        $entry = new Entry([
+            'date' => $request->get('date'),
+            'quantity' => $request->get('quantity'),
         ]);
 
-        return Entry::getExerciseEntries($date);
+        $entry->user()->associate(Auth::user());
+        $entry->exercise()->associate(Exercise::find($request->get('exercise_id')));
+        $entry->unit()->associate(Unit::find($request->get('unit_id')));
+
+        $entry->save();
+
+        return $this->responseCreated($entry);
     }
 
     /**
-     * Delete exercise entry.
-     * Return the info to update the popup.
-     * @param Request $request
-     * @return array
+     *
+     * @param Entry $entry
+     * @return \Illuminate\Http\Response
+     * @throws \Exception
      */
-//    public function deleteExerciseEntry(Request $request)
-//    {
-//        $date = $request->get('date');
-//        $exercise = Exercise::forCurrentUser()->findOrFail($request->get('exercise_id'));
-//        $exercise_unit_id = $request->get('exercise_unit_id');
-//
-//        $entry = Entry::forCurrentUser()->findOrFail($request->get('exercise_id'));
-//        $entry->delete();
-//
-//        return [
-//            'entries_for_day' => Entry::getExerciseEntries($date),
-//            'entries_for_popup' => Entry::getSpecificExerciseEntries($date, $exercise, $exercise_unit_id)
-//        ];
-//	}
+    public function destroy(Entry $entry)
+    {
+        $entry->delete();
+        return $this->responseNoContent();
+    }
 }

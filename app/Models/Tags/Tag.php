@@ -57,29 +57,4 @@ class Tag extends Model {
 		return static::forCurrentUser()->where('for', 'recipe')->get();
 	}
 
-    /**
-     * Insert a new tag (of type recipe) into the tags table
-     * @param $name
-     */
-	public static function insertRecipeTag($name)
-	{
-		static
-			::insert([
-				'name' => $name,
-				'for' => 'recipe',
-				'user_id' => Auth::user()->id
-			]);
-	}
-
-    /**
-     * Delete a recipe tag from the tags table
-     * @param $id
-     */
-	public static function deleteRecipeTag($id)
-	{
-		static
-			::where('id', $id)
-			->delete();
-	}
-
 }

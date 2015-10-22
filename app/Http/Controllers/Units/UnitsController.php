@@ -45,63 +45,30 @@ class UnitsController extends Controller
     /**
      *
      * @param Request $request
-     * @return mixed
+     * @return \Illuminate\Http\Response
      */
-    public function insertFoodUnit(Request $request)
+    public function store(Request $request)
     {
-        $name = $request->get('name');
-
-        Unit::insert([
-            'name' => $name,
-            'for' => 'food',
-            'user_id' => Auth::user()->id
+        $unit = new Unit([
+            'name' => $request->get('name'),
+            'for' => $request->get('for')
         ]);
 
-        return Unit::getFoodUnits();
+        $unit->user()->associate(Auth::user());
+        $unit->save();
+
+        return $this->responseCreated($unit);
     }
 
     /**
      *
-     * @param Request $request
-     * @return mixed
+     * @param Unit $unit
+     * @return \Illuminate\Http\Response
+     * @throws \Exception
      */
-    public function insertExerciseUnit(Request $request)
+    public function destroy(Unit $unit)
     {
-        $name = $request->get('name');
-
-        Unit::insert([
-            'name' => $name,
-            'for' => 'exercise',
-            'user_id' => Auth::user()->id
-        ]);
-
-        return Unit::getExerciseUnits();
+        $unit->delete();
+        return $this->responseNoContent();
     }
-
-    /**
-     * Todo: make sure it belongs to user
-     * @param Request $request
-     * @return mixed
-     */
-    public function deleteExerciseUnit(Request $request)
-    {
-        $id = $request->get('id');
-
-        Unit::where('id', $id)->delete();
-
-        return Unit::getExerciseUnits();
-    }
-
-    /**
-     * Todo: make sure it belongs to user
-     * @param Request $request
-     * @return mixed
-     */
-    public function deleteFoodUnit(Request $request)
-    {
-        $id = $request->get('id');
-        Unit::where('id', $id)->delete();
-
-        return Unit::getFoodUnits();
-	}
 }

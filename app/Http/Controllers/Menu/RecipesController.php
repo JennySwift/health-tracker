@@ -34,8 +34,8 @@ class RecipesController extends Controller
 
     /**
      * Get recipe contents and steps. Change name of method.
-     * @param  Request $request [description]
-     * @return [type]           [description]
+     * @param Request $request
+     * @return array
      */
     public function getRecipeContents(Request $request)
     {
@@ -81,14 +81,17 @@ class RecipesController extends Controller
     /**
      *
      * @param Request $request
-     * @return array
+     * @return \Illuminate\Http\Response
      */
-    public function insertRecipe(Request $request)
+    public function store(Request $request)
     {
-        $name = $request->get('name');
-        Recipe::insertRecipe($name);
+        $recipe = new Recipe([
+            'name' => $request->get('name')
+        ]);
+        $recipe->user()->associate(Auth::user());
+        $recipe->save();
 
-        return Recipe::filterRecipes('', []);
+        return $this->responseCreated($recipe);
     }
 
     /**
@@ -139,19 +142,6 @@ class RecipesController extends Controller
 
     /**
      *
-     * @param Recipe $recipe
-     * @return array
-     * @throws \Exception
-     */
-    public function deleteRecipe(Recipe $recipe)
-    {
-        $recipe->delete();
-
-        return Recipe::filterRecipes('', []);
-    }
-
-    /**
-     *
      * @param Request $request
      * @return array
      */
@@ -166,22 +156,15 @@ class RecipesController extends Controller
     }
 
     /**
-     * Todo: only allow deletion of entry that belongs to user
-     * @param Request $request
-     * @return array
+     *
+     * @param Recipe $recipe
+     * @return \Illuminate\Http\Response
+     * @throws \Exception
      */
-    public function deleteRecipeEntry(Request $request)
+    public function destroy(Recipe $recipe)
     {
-        $date = $request->get('date');
-        $recipe_id = $request->get('recipe_id');
-        Entry::deleteRecipeEntry($date, $recipe_id);
+        $recipe->delete();
 
-        $response = array(
-            "food_entries" => Entry::getFoodEntries($date),
-            "calories_for_the_day" => number_format(Food::getCaloriesForDay($date), 2),
-            "calories_for_the_week" => number_format(Food::getCaloriesFor7Days($date), 2)
-        );
-
-        return $response;
-	}
+        return $this->responseNoContent();
+    }
 }

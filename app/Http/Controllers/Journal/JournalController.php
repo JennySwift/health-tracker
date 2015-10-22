@@ -58,15 +58,15 @@ class JournalController extends Controller
      */
     public function store(Request $request)
     {
-        $journal = Journal::create([
+        $journal = new Journal([
             'date' => $request->get('date'),
             'text' => $request->get('text'),
-            'user_id' => Auth::user()->id
         ]);
 
+        $journal->user()->associate(Auth::user());
         $journal->save();
 
-        return $journal;
+        return $this->responseCreated($journal);
     }
 
     /**
@@ -75,9 +75,8 @@ class JournalController extends Controller
      * @param $id
      * @return \Illuminate\Support\Collection|null|static
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Journal $journal)
     {
-        $journal = Journal::find($id);
         $journal->text = $request->get('text');
         $journal->save();
 

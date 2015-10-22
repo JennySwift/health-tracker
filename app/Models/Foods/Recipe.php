@@ -12,7 +12,7 @@ use App\Models\Units\Unit;
 
 /**
  * Class Recipe
- * @package App\Models\Foods
+ * @package App\Models\Menu
  */
 class Recipe extends Model {
 
@@ -171,19 +171,6 @@ class Recipe extends Model {
 		$recipe = static::find($recipe_id);
 		$tags = $recipe->tags()->orderBy('name', 'asc')->get();
 		return $tags;
-	}
-
-    /**
-     *
-     * @param $name
-     */
-    public static function insertRecipe($name)
-	{
-		static
-			::insert([
-				'name' => $name,
-				'user_id' => Auth::user()->id
-			]);
 	}
 
     /**

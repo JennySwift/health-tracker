@@ -188,13 +188,13 @@ class Exercise extends Model {
 
     /**
      *
-     * @param $exercise_id
+     * @param $exercise
      * @return mixed
      */
-    public static function getDefaultExerciseQuantity($exercise_id)
+    public static function getDefaultExerciseQuantity($exercise)
 	{
 		$quantity = static
-			::where('id', $exercise_id)
+			::where('id', $exercise->id)
 			->pluck('default_quantity');
 
 		return $quantity;
@@ -202,13 +202,13 @@ class Exercise extends Model {
 
     /**
      *
-     * @param $exercise_id
+     * @param $exercise
      * @return mixed
      */
-    public static function getDefaultExerciseUnitId($exercise_id)
+    public static function getDefaultExerciseUnitId($exercise)
 	{
 		$default = static
-			::where('id', $exercise_id)
+			::where('id', $exercise->id)
 			->pluck('default_unit_id');
 
 		return $default;

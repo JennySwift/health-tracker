@@ -8,7 +8,7 @@ use App\Models\Foods\Calories;
 
 /**
  * Class Entry
- * @package App\Models\Foods
+ * @package App\Models\Menu
  */
 class Entry extends Model {
 
@@ -93,24 +93,6 @@ class Entry extends Model {
 
     /**
      *
-     * @param $data
-     */
-    public static function insertMenuEntry($data)
-	{
-		$date = $data['date'];
-		$new_entry = $data['new_entry'];
-
-		static::insert([
-			'date' => $date,
-			'food_id' => $new_entry['id'],
-			'quantity' => $new_entry['quantity'],
-			'unit_id' => $new_entry['unit_id'],
-			'user_id' => Auth::user()->id
-		]);
-	}
-
-    /**
-     *
      * @param $date
      * @param $recipe_id
      * @param $recipe_contents
@@ -131,19 +113,6 @@ class Entry extends Model {
 				'user_id' => Auth::user()->id
 			]);
 		}
-	}
-
-    /**
-     *
-     * @param $date
-     * @param $recipe_id
-     */
-    public static function deleteRecipeEntry($date, $recipe_id)
-	{
-		static
-			::where('date', $date)
-			->where('recipe_id', $recipe_id)
-			->delete();
 	}
 
 }

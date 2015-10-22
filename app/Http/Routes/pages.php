@@ -8,7 +8,7 @@ Route::get('/colors', function()
 //Homepage (entries)
 Route::get('/', 'PagesController@entries');
 
-//Foods
+//Menu
 Route::get('/foods', 'PagesController@foods');
 Route::get('/recipes', 'PagesController@recipes');
 Route::get('/food-units', 'PagesController@foodUnits');

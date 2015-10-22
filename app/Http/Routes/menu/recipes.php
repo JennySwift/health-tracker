@@ -6,7 +6,6 @@ Route::post('select/recipeContents', 'Recipes\RecipesController@getRecipeContent
 
 //Insert
 Route::post('insert/quickRecipe', 'Recipes\QuickRecipesController@quickRecipe');
-Route::post('insert/recipe', 'Recipes\RecipesController@insertRecipe');
 
 //Insert or update? It is a separate table.
 Route::post('insert/recipeMethod', 'Recipes\RecipesController@insertRecipeMethod');
@@ -17,5 +16,4 @@ Route::post('delete/foodFromRecipe', 'Recipes\RecipesController@deleteFoodFromRe
 Route::post('update/recipeMethod', 'Recipes\RecipesController@updateRecipeMethod');
 Route::post('insert/tagsIntoRecipe', 'Recipes\RecipesController@insertTagsIntoRecipe');
 
-//Delete
-Route::post('delete/recipe', 'Recipes\RecipesController@deleteRecipe');
+Route::resource('recipes', 'Recipes\RecipesController', ['only' => ['store', 'destroy']]);

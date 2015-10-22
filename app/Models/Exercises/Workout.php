@@ -35,11 +35,11 @@ class Workout extends Model {
 	{
 	  return $this->belongsToMany('App\Models\Exercises\Series');
 	}
-	
-	/**
-	 * Get all the user's workouts with the contents of each workout
-	 * @return [type] [description]
-	 */
+
+    /**
+     * Get all the user's workouts with the contents of each workout
+     * @return mixed
+     */
 	public static function getWorkouts () {
 		$workouts = static::forCurrentUser()->get();
 

@@ -20,13 +20,13 @@ class WorkoutsController extends Controller
      */
     public function store(Request $request)
     {
-        $name = $request->get('name');
-
-        Workout::insert([
-            'name' => $name,
-            'user_id' => Auth::user()->id
+        $workout = new Workout([
+            'name' => $request->get('name')
         ]);
 
-        return Workout::getWorkouts();
+        $workout->user()->associate(Auth::user());
+        $workout->save();
+
+        return $this->responseCreated($workout);
     }
 }

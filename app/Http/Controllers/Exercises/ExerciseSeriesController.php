@@ -35,19 +35,17 @@ class ExerciseSeriesController extends Controller
     /**
      *
      * @param Request $request
-     * @return mixed
+     * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        $name = $request->get('name');
+        $series = new Series([
+            'name' => $request->get('name')
+        ]);
+        $series->user()->associate(Auth::user());
+        $series->save();
 
-        Series
-            ::insert([
-                'name' => $name,
-                'user_id' => Auth::user()->id
-            ]);
-
-        return Series::getExerciseSeries();
+        return $this->responseCreated($series);
     }
 
     /**
@@ -78,7 +76,7 @@ class ExerciseSeriesController extends Controller
     /**
      *
      * @param Series $series
-     * @return mixed
+     * @return \Illuminate\Http\Response
      * @throws \Exception
      */
     public function destroy(Series $series)
@@ -86,6 +84,6 @@ class ExerciseSeriesController extends Controller
         //todo: notify user the series will not be deleted unless it has not been used, due to foreign key constraint
         $series->delete();
 
-        return Series::getExerciseSeries();
+        return $this->responseNoContent();
     }
 }

@@ -12,7 +12,7 @@ use JavaScript;
 
 /**
  * Class FoodsController
- * @package App\Http\Controllers\Foods
+ * @package App\Http\Controllers\Menu
  */
 class FoodsController extends Controller
 {
@@ -40,11 +40,11 @@ class FoodsController extends Controller
     }
 
     /**
-     *
+     * Get all foods with units
      * @param Request $request
      * @return mixed
      */
-    public function getAllFoodsWithUnits(Request $request)
+    public function index()
     {
         return Food::getAllFoodsWithUnits();
     }
@@ -54,12 +54,16 @@ class FoodsController extends Controller
      * @param Request $request
      * @return mixed
      */
-    public function insertFood(Request $request)
+    public function store(Request $request)
     {
-        $name = $request->get('name');
-        Food::insertFood($name);
+        $food = new Food([
+            'name' => $request->get('name')
+        ]);
 
-        return Food::getAllFoodsWithUnits();
+        $food->user()->associate(Auth::user());
+        $food->save();
+
+        return $this->responseCreated($food);
     }
 
     /**
@@ -96,32 +100,16 @@ class FoodsController extends Controller
 
     /**
      *
-     * @param Request $request
-     * @return array
-     */
-    public function updateDefaultUnit(Request $request)
-    {
-        $food = Food::find($request->get('food_id'));
-        $unit_id = $request->get('unit_id');
-
-        $food->update([
-            'default_unit_id' => $unit_id
-        ]);
-
-        return Food::getFoodInfo($food);
-    }
-
-    /**
-     *
      * @param Food $food
-     * @return mixed
-     * @throws \Exception
+     * @param Request $request
+     * @return \Illuminate\Http\Response
      */
-    public function destroy(Food $food)
+    public function update(Food $food, Request $request)
     {
-        $food->delete();
+        $food->defaultUnit()->associate(Unit::find($request->get('default_unit_id')));
+        $food->save();
 
-        return Food::getAllFoodsWithUnits();
+        return $this->responseOk($food);
     }
 
     /**
@@ -137,4 +125,17 @@ class FoodsController extends Controller
 
         return Food::getFoodInfo($food);
 	}
+
+    /**
+     *
+     * @param Food $food
+     * @return \Illuminate\Http\Response
+     * @throws \Exception
+     */
+    public function destroy(Food $food)
+    {
+        $food->delete();
+
+        return $this->responseNoContent();
+    }
 }

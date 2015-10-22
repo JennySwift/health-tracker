@@ -5,7 +5,7 @@ use Auth;
 
 /**
  * Class RecipeMethod
- * @package App\Models\Foods
+ * @package App\Models\Menu
  */
 class RecipeMethod extends Model {
 

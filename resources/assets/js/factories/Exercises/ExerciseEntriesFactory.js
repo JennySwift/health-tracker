@@ -32,24 +32,13 @@ angular.module('tracker')
 
                 return $http.post($url, $data);
             },
-            /**
-             * Sending $exercise_id and $exercise_unit_id so that in the response I can return the info to update the popup.
-             * @param  {[type]} $id       [description]
-             * @param  {[type]} $sql_date [description]
-             * @return {[type]}           [description]
-             */
-            deleteExerciseEntry: function ($id, $sql_date, $exercise_id, $exercise_unit_id) {
-                if (confirm("Are you sure you want to delete this entry?")) {
-                    var $url = 'delete/exerciseEntry';
-                    var $data = {
-                        id: $id,
-                        date: $sql_date,
-                        exercise_id: $exercise_id,
-                        exercise_unit_id: $exercise_unit_id
-                    };
 
-                    return $http.post($url, $data);
+            deleteExerciseEntry: function ($id) {
+                if (confirm("Are you sure you want to delete this entry?")) {
+                    var $url = 'exerciseEntries/' + $id;
+
+                    return $http.delete($url);
                 }
-            },
+            }
         }
     });

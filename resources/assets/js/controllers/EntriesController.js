@@ -220,6 +220,8 @@ var app = angular.module('tracker');
 			});
 		};
 
+        //Todo: get food entries, calories for the day and calories for the week
+        //after deleting
 		$scope.deleteRecipeEntry = function () {
 			RecipeEntriesFactory.deleteRecipeEntry($scope.date.sql, $scope.selected.recipe.id).then(function (response) {
 				$scope.entries.menu = response.data.food_entries;
@@ -229,10 +231,13 @@ var app = angular.module('tracker');
 			});
 		};
 
+        //Todo: get the entries for the day and for the popup after deleting
+        //the entry
 		$scope.deleteExerciseEntry = function ($id) {
-			ExerciseEntriesFactory.deleteExerciseEntry($id, $scope.date.sql, $scope.exercise_entries_popup.exercise.id, $scope.exercise_entries_popup.unit.id).then(function (response) {
-				$scope.entries.exercise = response.data.entries_for_day;
-				$scope.exercise_entries_popup = response.data.entries_for_popup;
+			ExerciseEntriesFactory.deleteExerciseEntry($id)
+                .then(function (response) {
+				//$scope.entries.exercise = response.data.entries_for_day;
+				//$scope.exercise_entries_popup = response.data.entries_for_popup;
 			});
 		};
 
