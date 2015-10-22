@@ -7,6 +7,7 @@ use App\Models\Units\Unit;
 use App\Repositories\UnitsRepository;
 use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 /**
  * Class FoodUnitsController
@@ -72,14 +73,31 @@ class FoodUnitsController extends Controller
     }
 
     /**
-     *
+     * @VP: Should the error handling go somewhere else?
+     * I tried doing it in Handler.php but I wanted the model name (unit),
+     * and there was no $e->getModel() method.
      * @param Unit $unit
-     * @return \Illuminate\Http\Response
-     * @throws \Exception
+     * @return Response
      */
     public function destroy(Unit $unit)
     {
-        $unit->delete();
-        return $this->responseNoContent();
+        try {
+            $unit->delete();
+            return $this->responseNoContent();
+        }
+        catch (\Exception $e) {
+            //Integrity constraint violation
+            if ($e->getCode() === '23000') {
+                $message = 'Unit could not be deleted. It is in use.';
+            }
+            else {
+                $message = 'There was an error';
+            }
+            return response([
+                'error' => $message,
+                'status' => Response::HTTP_BAD_REQUEST
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
     }
 }

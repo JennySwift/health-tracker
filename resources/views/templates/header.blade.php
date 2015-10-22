@@ -44,3 +44,5 @@
     <li><a href="#" id="search_button" class="location_button fa fa-search"></a></li>
 </ul>
 
+<feedback-directive></feedback-directive>
+

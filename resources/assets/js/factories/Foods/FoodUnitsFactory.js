@@ -1,8 +1,8 @@
 angular.module('tracker')
     .factory('FoodUnitsFactory', function ($http) {
         return {
-            insertFoodUnit: function () {
-                var $url = 'insert/foodUnit';
+            insert: function () {
+                var $url = 'api/foodUnits';
                 var $name = $("#create-new-food-unit").val();
 
                 var $data = {
@@ -12,25 +12,20 @@ angular.module('tracker')
                 $("#create-new-food-unit").val("");
                 return $http.post($url, $data);
             },
-            deleteFoodUnit: function ($id) {
-                if (confirm("Are you sure you want to delete this unit?")) {
-                    var $url = 'delete/foodUnit';
-                    var $data = {
-                        id: $id
-                    };
-
-                    return $http.post($url, $data);
-                }
-            },
-            updateDefaultUnit: function ($food_id, $unit_id) {
-                var $url = 'update/defaultUnit';
-
+            update: function ($unit) {
+                var $url = 'api/foodUnits/' + $unit.id;
                 var $data = {
-                    food_id: $food_id,
-                    unit_id: $unit_id
+                    unit: $unit
                 };
 
-                return $http.post($url, $data);
+                return $http.put($url, $data);
             },
+            destroy: function ($id) {
+                if (confirm("Are you sure you want to delete this unit?")) {
+                    var $url = 'api/foodUnits/' + $id;
+
+                    return $http.delete($url);
+                }
+            }
         }
     });

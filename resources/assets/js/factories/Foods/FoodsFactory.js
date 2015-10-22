@@ -75,6 +75,17 @@ app.factory('FoodsFactory', function ($http) {
             return $http.post($url, $data);
         },
 
+        updateDefaultUnit: function ($food_id, $unit_id) {
+            var $url = 'api/foods/' + $food_id;
+
+            var $data = {
+                food_id: $food_id,
+                unit_id: $unit_id
+            };
+
+            return $http.put($url, $data);
+        },
+
         updateCalories: function ($food_id, $unit_id, $calories) {
             var $url = 'update/calories';
 
