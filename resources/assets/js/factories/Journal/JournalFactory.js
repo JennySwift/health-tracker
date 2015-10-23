@@ -2,7 +2,7 @@ app.factory('JournalFactory', function ($http) {
     return {
 
         getJournalEntry: function ($sql_date) {
-            return $http.get('/journal/' + $sql_date);
+            return $http.get('api/journal/' + $sql_date);
         },
         filter: function () {
             var $typing = $("#filter-journal").val();

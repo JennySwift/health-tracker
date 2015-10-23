@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers;
 
 use App\Http\Requests;
+use App\Http\Transformers\JournalTransformer;
 use App\Models\Exercises\Entry as ExerciseEntry;
 use App\Models\Exercises\Workout;
 use App\Models\Menu\Entry as FoodEntry;
@@ -210,8 +211,10 @@ class PagesController extends Controller
     {
         $date = Carbon::today()->format('Y-m-d');
 
+        $journal = Journal::forCurrentUser()->where('date', $date)->first();
+
         JavaScript::put([
-            'entry' => Journal::getJournalEntry($date)
+            'entry' => transform(createItem($journal, new JournalTransformer))['data']
         ]);
 
         return view('pages.journal.journal');

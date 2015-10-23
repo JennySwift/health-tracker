@@ -13886,7 +13886,7 @@ var app = angular.module('tracker');
 		
 		$scope.getJournalEntry = function () {
 			JournalFactory.getJournalEntry($scope.date.sql).then(function (response) {
-				$scope.journal_entry = response.data;
+				$scope.journal_entry = response.data.data;
 			});
 		};
 
@@ -15226,24 +15226,6 @@ angular.module('tracker')
             },
         }
     });
-app.factory('WeightsFactory', function ($http) {
-    return {
-
-        insertWeight: function ($sql_date) {
-            var $url = 'insert/weight';
-            var $weight = $("#weight").val();
-
-            var $data = {
-                date: $sql_date,
-                weight: $weight
-            };
-
-            return $http.post($url, $data);
-        },
-
-
-    };
-});
 angular.module('tracker')
     .factory('FoodEntriesFactory', function ($http) {
         return {
@@ -15912,7 +15894,7 @@ app.factory('JournalFactory', function ($http) {
     return {
 
         getJournalEntry: function ($sql_date) {
-            return $http.get('/journal/' + $sql_date);
+            return $http.get('api/journal/' + $sql_date);
         },
         filter: function () {
             var $typing = $("#filter-journal").val();
@@ -15944,6 +15926,24 @@ app.factory('JournalFactory', function ($http) {
 
             return $http.put($url, $data);
         }
+    };
+});
+app.factory('WeightsFactory', function ($http) {
+    return {
+
+        insertWeight: function ($sql_date) {
+            var $url = 'insert/weight';
+            var $weight = $("#weight").val();
+
+            var $data = {
+                date: $sql_date,
+                weight: $weight
+            };
+
+            return $http.post($url, $data);
+        },
+
+
     };
 });
 angular.module('tracker')

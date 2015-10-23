@@ -66,7 +66,7 @@ var app = angular.module('tracker');
 		
 		$scope.getJournalEntry = function () {
 			JournalFactory.getJournalEntry($scope.date.sql).then(function (response) {
-				$scope.journal_entry = response.data;
+				$scope.journal_entry = response.data.data;
 			});
 		};
 

@@ -96,7 +96,7 @@ class RouteServiceProvider extends ServiceProvider {
                 //$parameter is the date of the entry
                 $journal = Journal::forCurrentUser()
                     ->where('date', $parameter)
-                    ->firstOrFail();
+                    ->first();
             }
             else {
                 //$parameter is the id of the entry

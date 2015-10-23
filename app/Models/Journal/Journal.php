@@ -53,7 +53,9 @@ class Journal extends Model {
      */
     public function getDateAttribute($value)
     {
-        return Carbon::createFromFormat('Y-m-d', $this->attributes['date'])->format('d/m/y');
+        if (isset($this->date)) {
+            return Carbon::createFromFormat('Y-m-d', $this->attributes['date'])->format('d/m/y');
+        }
     }
 
     /**
