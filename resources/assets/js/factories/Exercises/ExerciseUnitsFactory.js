@@ -1,8 +1,8 @@
 angular.module('tracker')
     .factory('ExerciseUnitsFactory', function ($http) {
         return {
-            insertExerciseUnit: function () {
-                var $url = 'insert/exerciseUnit';
+            insert: function () {
+                var $url = 'api/exerciseUnits';
                 var $name = $("#create-new-exercise-unit").val();
 
                 var $data = {
@@ -12,15 +12,12 @@ angular.module('tracker')
                 $("#create-new-exercise-unit").val("");
                 return $http.post($url, $data);
             },
-            deleteExerciseUnit: function ($id) {
+            destroy: function ($unit) {
                 if (confirm("Are you sure you want to delete this unit?")) {
-                    var $url = 'delete/exerciseUnit';
-                    var $data = {
-                        id: $id
-                    };
+                    var $url = 'api/exerciseUnits/' + $unit.id;
 
-                    return $http.post($url, $data);
+                    return $http.delete($url);
                 }
-            },
+            }
         }
     });

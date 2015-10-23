@@ -7,6 +7,7 @@ use App\Models\Units\Unit;
 use App\Repositories\UnitsRepository;
 use Illuminate\Http\Request;
 use Auth;
+use Illuminate\Http\Response;
 
 /**
  * @VP:
@@ -82,8 +83,23 @@ class ExerciseUnitsController extends Controller
      */
     public function destroy(Unit $unit)
     {
-        $unit->delete();
-        return $this->responseNoContent();
+        try {
+            $unit->delete();
+            return $this->responseNoContent();
+        }
+        catch (\Exception $e) {
+            //Integrity constraint violation
+            if ($e->getCode() === '23000') {
+                $message = 'Unit could not be deleted. It is in use.';
+            }
+            else {
+                $message = 'There was an error';
+            }
+            return response([
+                'error' => $message,
+                'status' => Response::HTTP_BAD_REQUEST
+            ], Response::HTTP_BAD_REQUEST);
+        }
     }
 
 }
