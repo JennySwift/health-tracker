@@ -1,3 +1,3 @@
 <?php
 
-Route::resource('exercises', 'Exercises\ExercisesController', ['except' => ['index']]);
+Route::resource('exercises', 'Exercises\ExercisesController', ['only' => ['index', 'show', 'store', 'update', 'destroy']]);

@@ -40,13 +40,12 @@ class Exercise extends Model {
 
     /**
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function unit()
-	{
-		//the second argument is the name of the field, because if I don't specify it, it will look for unit_id.
-	    return $this->belongsTo('App\Models\Units\Unit', 'default_exercise_unit_id');
-	}
+    public function defaultUnit()
+    {
+        return $this->belongsTo('App\Models\Units\Unit', 'default_unit_id', 'id');
+    }
 
     /**
      *
@@ -82,27 +81,8 @@ class Exercise extends Model {
      */
     public function getPathAttribute()
     {
-        return route('api.exercises.show', $this->id); // http://tracker.dev/exercises/$id
+        return route('api.exercises.show', $this->id);
     }
-	
-	/**
-	 * Get all exercises for the current user,
-	 * along with their tags, default unit name and the name of the series each exercise belongs to.
-	 * Order first by series name, then by step number.
-	 * @return [type] [description]
-	 */
-	public static function getExercises () {
-		$exercises = static::forCurrentUser('exercises')
-			->leftJoin('exercise_series', 'series_id', '=', 'exercise_series.id')
-			->leftJoin('units', 'default_unit_id', '=', 'units.id')
-			->select('exercises.id', 'exercises.name', 'step_number', 'default_quantity', 'series_id', 'description', 'default_unit_id', 'exercise_series.id as series_id', 'exercise_series.name as series_name', 'units.name as default_unit_name')
-			->orderBy('series_name')
-			->orderBy('step_number')
-			->with('tags')
-			->get();
-
-	    return $exercises;
-	}
 
 	/**
 	 * Get all exercise entries that belong to a series.

@@ -81,6 +81,7 @@ class PagesController extends Controller
      */
     public function exercises()
     {
+//        return $this->exercisesRepository->getExercises();
         JavaScript::put([
             /**
              * @VP:

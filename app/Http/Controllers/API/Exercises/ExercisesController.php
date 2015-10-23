@@ -5,6 +5,7 @@ use App\Http\Requests;
 use App\Models\Exercises\Exercise;
 use App\Models\Exercises\Series;
 use App\Models\Tags\Tag;
+use App\Repositories\ExercisesRepository;
 use Auth;
 use DB;
 use Debugbar;
@@ -19,15 +20,29 @@ use JavaScript;
  */
 class ExercisesController extends Controller
 {
+    /**
+     * @var ExercisesRepository
+     */
+    private $exercisesRepository;
 
     /**
      * Create a new controller instance.
      *
-     * @return void
+     * @param ExercisesRepository $exercisesRepository
      */
-    public function __construct()
+    public function __construct(ExercisesRepository $exercisesRepository)
     {
         $this->middleware('auth');
+        $this->exercisesRepository = $exercisesRepository;
+    }
+
+    /**
+     *
+     * @return mixed
+     */
+    public function index()
+    {
+        return $this->exercisesRepository->getExercises();
     }
 
     /**
