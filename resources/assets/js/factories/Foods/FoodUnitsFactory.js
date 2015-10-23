@@ -20,9 +20,9 @@ angular.module('tracker')
 
                 return $http.put($url, $data);
             },
-            destroy: function ($id) {
+            destroy: function ($unit) {
                 if (confirm("Are you sure you want to delete this unit?")) {
-                    var $url = 'api/foodUnits/' + $id;
+                    var $url = 'api/foodUnits/' + $unit.id;
 
                     return $http.delete($url);
                 }

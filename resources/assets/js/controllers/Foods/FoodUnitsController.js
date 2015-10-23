@@ -4,9 +4,16 @@ angular.module('tracker')
 
         $scope.insertFoodUnit = function ($keycode) {
             if ($keycode === 13) {
-                FoodUnitsFactory.insert().then(function (response) {
-                    $scope.units.food = response.data;
-                });
+                //$scope.showLoading();
+                FoodUnitsFactory.insert()
+                    .then(function (response) {
+                        $scope.units.push(response.data.data);
+                        $rootScope.$broadcast('provideFeedback', 'Unit created');
+                        //$scope.hideLoading();
+                    })
+                    .catch(function (response) {
+                        $rootScope.responseError(response);
+                    });
             }
         };
 
@@ -15,11 +22,11 @@ angular.module('tracker')
 
         };
 
-        $scope.deleteFoodUnit = function ($id) {
+        $scope.deleteFoodUnit = function ($unit) {
             //$scope.showLoading();
-            FoodUnitsFactory.destroy($id)
+            FoodUnitsFactory.destroy($unit)
                 .then(function (response) {
-                    //$scope.units.food = response.data;
+                    $scope.units = _.without($scope.units, $unit);
                     $rootScope.$broadcast('provideFeedback', 'Unit deleted');
                     //$scope.hideLoading();
                 })
