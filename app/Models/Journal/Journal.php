@@ -1,5 +1,6 @@
 <?php namespace App\Models\Journal;
 
+use App\Traits\Models\Relationships\OwnedByUser;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Auth;
@@ -9,6 +10,8 @@ use Auth;
  * @package App\Models\Journal
  */
 class Journal extends Model {
+
+    use OwnedByUser;
 
     /**
      * @var string

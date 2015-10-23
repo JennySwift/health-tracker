@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
+use App\Http\Transformers\JournalTransformer;
 use App\Models\Journal\Journal;
 use Auth;
 use Debugbar;
@@ -43,12 +44,12 @@ class JournalController extends Controller
      * You said I should find the entry by its id here, not its date.
      * But I'm not sure how this can be done since the method is called when the
      * user uses the date navigation, so the id is not known.
-     * @param $date
+     * @param Journal $journal
      * @return array
      */
-    public function show($date)
+    public function show(Journal $journal)
     {
-        return Journal::getJournalEntry($date);
+        return $this->responseOkWithTransformer($journal, new JournalTransformer);
     }
 
     /**

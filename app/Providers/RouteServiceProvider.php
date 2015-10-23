@@ -8,6 +8,7 @@ use App\Models\Menu\Recipe;
 use App\Models\Journal\Journal;
 use App\Models\Tags\Tag;
 use App\Models\Units\Unit;
+use Carbon\Carbon;
 use Illuminate\Routing\Router;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use App\Models\Exercises\Entry as ExerciseEntry;
@@ -79,9 +80,29 @@ class RouteServiceProvider extends ServiceProvider {
             return Unit::forCurrentUser()->where('for', 'exercise')->findOrFail($id);
         });
 
-        Route::bind('journal', function($id)
+        /**
+         * $parameter is either the id or the date
+         */
+        Route::bind('journal', function($parameter)
         {
-            return Journal::forCurrentUser()->findOrFail($id);
+            /**
+             * @VP:
+             * Is there a better way to check if the $parameter is an
+             * id or a date? When I tried using Carbon to create an object from
+             * the parameter, it threw an exception when the $parameter was the id,
+             * whereas I just wanted a boolean.
+             */
+            if (strrpos($parameter, '-')) {
+                //$parameter is the date of the entry
+                $journal = Journal::forCurrentUser()
+                    ->where('date', $parameter)
+                    ->firstOrFail();
+            }
+            else {
+                //$parameter is the id of the entry
+                $journal = Journal::forCurrentUser()->findOrFail($parameter);
+            }
+            return $journal;
         });
 	}
 
