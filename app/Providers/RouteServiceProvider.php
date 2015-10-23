@@ -2,9 +2,9 @@
 
 use App\Models\Exercises\Exercise;
 use App\Models\Exercises\Series as ExerciseSeries;
-use App\Models\Foods\Food;
-use App\Models\Foods\Entry as MenuEntry;
-use App\Models\Foods\Recipe;
+use App\Models\Menu\Food;
+use App\Models\Menu\Entry as MenuEntry;
+use App\Models\Menu\Recipe;
 use App\Models\Journal\Journal;
 use App\Models\Tags\Tag;
 use App\Models\Units\Unit;

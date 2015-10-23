@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Menu\Food;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Http\Response;
 
@@ -63,7 +64,7 @@ class FoodsTest extends TestCase {
 //        $this->assertArrayHasKey('defaultUnit', $content);
 
         $this->assertEquals('kangaroo', $content['name']);
-        
+
         $this->assertEquals(Response::HTTP_CREATED, $response->getStatusCode());
     }
 
@@ -95,27 +96,24 @@ class FoodsTest extends TestCase {
      * @test
      * @return void
      */
-//    public function it_can_delete_a_food()
-//    {
-//        $this->logInUser();
-//
-//        $name = 'echidna';
-//
-//        $unit = new Unit([
-//            'name' => 'echidna',
-//            'for' => 'food'
-//        ]);
-//        $unit->user()->associate($this->user);
-//        $unit->save();
-//
-//        $this->seeInDatabase('units', ['name' => 'echidna']);
-//
-//        $response = $this->call('DELETE', '/api/foodUnits/'.$unit->id);
-//        $this->assertEquals(204, $response->getStatusCode());
-//        $this->missingFromDatabase('units', ['name' => 'echidna']);
-//
-//        // @TODO Test the 404 for the other methods as well (show, update)
-//        $response = $this->call('DELETE', '/api/units/0');
-//        $this->assertEquals(404, $response->getStatusCode());
-//    }
+    public function it_can_delete_a_food()
+    {
+        $this->logInUser();
+
+        $food = new Food([
+            'name' => 'echidna'
+        ]);
+
+        $food->user()->associate($this->user);
+        $food->save();
+
+        $this->seeInDatabase('foods', ['name' => 'echidna']);
+
+        $response = $this->call('DELETE', '/api/foods/'.$food->id);
+        $this->assertEquals(204, $response->getStatusCode());
+        $this->missingFromDatabase('foods', ['name' => 'echidna']);
+
+        $response = $this->call('DELETE', '/api/units/0');
+        $this->assertEquals(404, $response->getStatusCode());
+    }
 }
