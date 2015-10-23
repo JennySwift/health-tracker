@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
+use App\Http\Transformers\FoodTransformer;
 use App\Models\Menu\Food;
 use App\Models\Units\Unit;
 use App\Repositories\FoodsRepository;
@@ -69,7 +70,7 @@ class FoodsController extends Controller
         $food->user()->associate(Auth::user());
         $food->save();
 
-        return $this->responseCreated($food);
+        return $this->responseCreatedWithTransformer($food, new FoodTransformer);
     }
 
     /**
