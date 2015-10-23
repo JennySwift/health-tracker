@@ -10,7 +10,7 @@
                 <th>calories</th>
                 <th></th>
             </tr>
-            <tr ng-repeat="food in foods | filter:filter.foods">
+            <tr ng-repeat="food in foods | filter:filter.foods | orderBy:'name'">
                 <td ng-click="getFoodInfo(food)" class="pointer">[[food.name]]</td>
                 <td>[[food.defaultUnit.name]]</td>
                 <td>[[food.defaultCalories]]</td>

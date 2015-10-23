@@ -1,7 +1,7 @@
 var app = angular.module('tracker');
 
 (function () {
-	app.controller('FoodsController', function ($scope, $http, FoodsFactory, QuickRecipeFactory, AutocompleteFactory) {
+	app.controller('FoodsController', function ($rootScope, $scope, $http, FoodsFactory, AutocompleteFactory) {
 		
 		$scope.foods = foods;
 		$scope.selected = {};
@@ -48,13 +48,11 @@ var app = angular.module('tracker');
 			
 		};
 
-		/**
-		 * Add a unit to a food or remove the unit from the food.
-		 * The method name is old and should probably be changed.
-		 * @param  {[type]} $unit_id            [description]
-		 * @param  {[type]} $checked_previously [description]
-		 * @return {[type]}                     [description]
-		 */
+        /**
+         * Add a unit to a food or remove the unit from the food.
+         * The method name is old and should probably be changed.
+         * @param $unit_id
+         */
 		$scope.insertOrDeleteUnitInCalories = function ($unit_id) {
 			//Check if the checkbox is checked
 			if ($scope.food_popup.food_units.indexOf($unit_id) === -1) {
@@ -73,9 +71,16 @@ var app = angular.module('tracker');
 
 		$scope.insertFood = function ($keycode) {
 			if ($keycode === 13) {
-				FoodsFactory.insertFood().then(function (response) {
-					$scope.all_foods_with_units = response.data;
-				});
+                //$rootScope.showLoading();
+                FoodsFactory.insertFood()
+                    .then(function (response) {
+                        $scope.foods.push(response.data.data);
+                        $rootScope.$broadcast('provideFeedback', 'Food created');
+                        //$rootScope.hideLoading();
+                    })
+                    .catch(function (response) {
+                        $rootScope.responseError(response);
+                    });
 			}
 		};
 
@@ -94,9 +99,16 @@ var app = angular.module('tracker');
 		};
 
 		$scope.deleteFood = function ($food) {
-			FoodsFactory.deleteFood($food).then(function (response) {
-				$scope.all_foods_with_units = response.data;
-			});
+            //$rootScope.showLoading();
+            FoodsFactory.destroy($food)
+                .then(function (response) {
+                    $scope.foods = _.without($scope.foods, $food);
+                    $rootScope.$broadcast('provideFeedback', 'Food deleted');
+                    //$rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
 		};
 
 		/**

@@ -2,10 +2,9 @@ app.factory('FoodsFactory', function ($http) {
 	return {
 
         getAllFoodsWithUnits: function () {
-            var $url = 'select/allFoodsWithUnits';
-            var $table = "all_foods_with_units";
+            var $url = 'api/foods';
 
-            return $http.post($url);
+            return $http.get($url);
         },
 
         getMenu: function ($foods, $recipes) {
@@ -53,7 +52,7 @@ app.factory('FoodsFactory', function ($http) {
         },
 
         insertFood: function () {
-            var $url = 'insert/food';
+            var $url = 'api/foods';
             var $name = $("#create-new-food").val();
 
             var $data = {
@@ -98,9 +97,9 @@ app.factory('FoodsFactory', function ($http) {
             return $http.post($url, $data);
         },
 
-        deleteFood: function ($food) {
+        destroy: function ($food) {
             if (confirm("Are you sure you want to delete this food?")) {
-                var $url = $food.path;
+                var $url = 'api/foods/' + $food.id;
 
                 return $http.delete($url);
             }
