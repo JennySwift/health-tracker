@@ -45,4 +45,5 @@
 </ul>
 
 <feedback-directive></feedback-directive>
+@include('templates.loading')
 

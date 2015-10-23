@@ -671,4 +671,43 @@ body.browser-height {
   #feedback .feedback-message.ng-enter.ng-enter-active {
     left: 0; }
 
+#loading {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  font-size: 40px;
+  color: #5bc0de;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 100%;
+  height: 60px;
+  z-index: 9999; }
+
+#page-loading {
+  background: white;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  z-index: 99;
+  font-size: 40px;
+  color: #5bc0de;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center; }
+
 /*# sourceMappingURL=style.css.map */

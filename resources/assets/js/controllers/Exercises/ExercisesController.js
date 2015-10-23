@@ -27,12 +27,12 @@ var app = angular.module('tracker');
 
         $scope.insertExercise = function ($keycode) {
             if ($keycode === 13) {
-                //$rootScope.showLoading();
+                $rootScope.showLoading();
                 ExercisesFactory.insert()
                     .then(function (response) {
                         $scope.exercises.push(response.data);
                         $rootScope.$broadcast('provideFeedback', 'Exercise created');
-                        //$rootScope.hideLoading();
+                        $rootScope.hideLoading();
                     })
                     .catch(function (response) {
                         $rootScope.responseError(response);
@@ -53,12 +53,12 @@ var app = angular.module('tracker');
         };
 
         $scope.deleteExercise = function ($exercise) {
-            //$rootScope.showLoading();
+            $rootScope.showLoading();
             ExercisesFactory.destroy($exercise)
                 .then(function (response) {
                     $scope.exercises = _.without($scope.exercises, $exercise);
                     $rootScope.$broadcast('provideFeedback', 'Execise deleted');
-                    //$rootScope.hideLoading();
+                    $rootScope.hideLoading();
                 })
                 .catch(function (response) {
                     $rootScope.responseError(response);

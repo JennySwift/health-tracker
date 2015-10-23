@@ -71,12 +71,12 @@ var app = angular.module('tracker');
 
 		$scope.insertFood = function ($keycode) {
 			if ($keycode === 13) {
-                //$rootScope.showLoading();
+                $rootScope.showLoading();
                 FoodsFactory.insertFood()
                     .then(function (response) {
                         $scope.foods.push(response.data.data);
                         $rootScope.$broadcast('provideFeedback', 'Food created');
-                        //$rootScope.hideLoading();
+                        $rootScope.hideLoading();
                     })
                     .catch(function (response) {
                         $rootScope.responseError(response);
@@ -99,12 +99,12 @@ var app = angular.module('tracker');
 		};
 
 		$scope.deleteFood = function ($food) {
-            //$rootScope.showLoading();
+            $rootScope.showLoading();
             FoodsFactory.destroy($food)
                 .then(function (response) {
                     $scope.foods = _.without($scope.foods, $food);
                     $rootScope.$broadcast('provideFeedback', 'Food deleted');
-                    //$rootScope.hideLoading();
+                    $rootScope.hideLoading();
                 })
                 .catch(function (response) {
                     $rootScope.responseError(response);
