@@ -9,7 +9,7 @@ class FoodUnitsTest extends TestCase {
     use DatabaseTransactions;
 
     /**
-     * It lists the foods for the user
+     * It lists the food units for the user
      * @test
      * @return void
      */

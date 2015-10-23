@@ -2,6 +2,7 @@
 
 
 use App\Models\Menu\Food;
+use App\Models\Units\Unit;
 use App\User;
 
 /**
@@ -9,97 +10,52 @@ use App\User;
  */
 class FoodSeeder extends MasterSeeder
 {
-
-    /**
-     * @var array
-     */
-    protected $user_one_foods = [
-        'apple',
-        'banana',
-        'orange',
-        'mango',
-        'watermelon',
-        'papaya',
-        'pear',
-        'peach',
-        'nectarine',
-        'plum',
-        'rockmelon',
-        'blueberry',
-        'strawberry',
-        'raspberry',
-        'blackberry',
-        'walnut',
-        'brazilnut',
-        'cashew',
-        'almond',
-        'sesame seeds',
-        'pumpkin seeds',
-        'sunflower seeds'
-    ];
-    /**
-     * @var array
-     */
-    protected $user_two_foods = [
-        'quinoa',
-        'rice',
-        'buckwheat'
-    ];
+    private $user;
 
     /**
      *
      */
     public function run()
     {
-        // DB::statement('SET FOREIGN_KEY_CHECKS=0');
-
         Food::truncate();
-        //$faker = Faker::create();
+        DB::table('food_unit')->truncate();
 
-        /**
-         * Objective:
-         * Give one user all foods in $user_one_foods.
-         * Give second user all foods in $user_two_foods.
-         * Add a default_unit_id to most foods, but not all of them, to make it more realistic.
-         *
-         * The default_unit_id must be a unit id that belongs to the food (in food_units table).
-         * The problem is the food_units table is not yet seeded, so we don't yet know what units belong to a food.
-         * But the food_units table needs the foods table to be seeded before it is seeded.
-         * I got this working by setting the default_unit_id in the FoodUnitSeeder. Could it be better?
-         *
-         * And I don't really see much benefit of using TestDummy yet. How does it help?
-         */
-        $this->createUserOne();
-        $this->createUserTwo();
+        foreach(User::all() as $user) {
+            $this->user = $user;
+            $unit_ids = Unit::where('user_id', $user->id)
+                ->where('for', 'food')
+                ->limit(2)
+                ->lists('id')
+                ->all();
 
-
-        // DB::statement('SET FOREIGN_KEY_CHECKS=1');
-    }
-
-    /**
-     *
-     */
-    private function createUserOne()
-    {
-        foreach ($this->user_one_foods as $food) {
-            Food::create([
-                'name' => $food,
-                'user_id' => 1
-            ]);
+            $this->insertFoods($unit_ids);
         }
     }
 
-    /**
-     *
-     */
-    private function createUserTwo()
+    private function insertFoods($unit_ids)
     {
-        foreach ($this->user_two_foods as $food) {
-            Food::create([
-                'name' => $food,
-                'user_id' => 2
+        foreach (Config::get('foods.userTwo') as $food) {
+            $food = new Food([
+                'name' => $food
             ]);
+
+            $food->user()->associate($this->user);
+            $food->save();
+
+            //Attach the units
+            foreach ($unit_ids as $unit_id) {
+                var_dump($unit_id);
+                $food->units()->attach($unit_id, ['calories' => 5]);
+            }
+
+            //Attach the default unit
+            $defaultUnit = Unit::find($unit_ids[0]);
+            $food->defaultUnit()->associate($defaultUnit);
+            $food->save();
+
         }
     }
+
+
 
 }

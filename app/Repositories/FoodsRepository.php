@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Http\Transformers\FoodTransformer;
 use App\Models\Menu\Food;
 
 /**
@@ -21,10 +22,10 @@ class FoodsRepository
     {
         $foods = Food::forCurrentUser()
             ->with('defaultUnit')
-            ->with('units')
+//            ->with('units')
             ->orderBy('foods.name', 'asc')->get();
 
-        return $foods;
+        return transform(createCollection($foods, new FoodTransformer));
     }
 
 }

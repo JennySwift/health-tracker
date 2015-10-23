@@ -4,11 +4,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests;
 use App\Models\Menu\Food;
 use App\Models\Units\Unit;
+use App\Repositories\FoodsRepository;
 use Auth;
 use DB;
 use Debugbar;
 use Illuminate\Http\Request;
-use JavaScript;
 
 /**
  * Class FoodsController
@@ -16,19 +16,24 @@ use JavaScript;
  */
 class FoodsController extends Controller
 {
+    /**
+     * @var FoodsRepository
+     */
+    private $foodsRepository;
 
     /**
      * Create a new controller instance.
      *
-     * @return void
+     * @param FoodsRepository $foodsRepository
      */
-    public function __construct()
+    public function __construct(FoodsRepository $foodsRepository)
     {
         $this->middleware('auth');
+        $this->foodsRepository = $foodsRepository;
     }
 
     /**
-     *
+     * GET api/foods/{foods}
      * @param $id
      * @return array
      */
@@ -41,16 +46,17 @@ class FoodsController extends Controller
 
     /**
      * Get all foods with units
+     * GET api/foods
      * @param Request $request
      * @return mixed
      */
     public function index()
     {
-        return Food::getAllFoodsWithUnits();
+        return $this->foodsRepository->getAllFoodsWithUnits();
     }
 
     /**
-     *
+     * POST api/foods
      * @param Request $request
      * @return mixed
      */
@@ -67,7 +73,7 @@ class FoodsController extends Controller
     }
 
     /**
-     *
+     * PUT api/foods/{foods}
      * @param Food $food
      * @param Request $request
      * @return \Illuminate\Http\Response
@@ -82,7 +88,7 @@ class FoodsController extends Controller
     }
 
     /**
-     *
+     * DELETE api/foods/{foods}
      * @param Food $food
      * @return \Illuminate\Http\Response
      * @throws \Exception

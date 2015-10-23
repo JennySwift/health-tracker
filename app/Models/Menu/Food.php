@@ -26,7 +26,7 @@ class Food extends Model {
     /**
      * @var array
      */
-    protected $appends = ['path', 'defaultCalories'];
+    protected $appends = ['path'];
 
     /**
      *
@@ -71,14 +71,14 @@ class Food extends Model {
      */
     public function defaultUnit()
 	{
-		return $this->hasOne('App\Models\Units\Unit', 'id', 'default_unit_id');
+		return $this->belongsTo('App\Models\Units\Unit', 'default_unit_id', 'id');
 	}
 
     /**
      *
      * @return mixed
      */
-    public function getDefaultCaloriesAttribute()
+    public function getDefaultCalories()
     {
         return DB::table('food_unit')
             ->where('food_id', $this->id)
