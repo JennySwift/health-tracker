@@ -44,7 +44,6 @@ class FoodSeeder extends MasterSeeder
 
             //Attach the units
             foreach ($unit_ids as $unit_id) {
-                var_dump($unit_id);
                 $food->units()->attach($unit_id, ['calories' => 5]);
             }
 

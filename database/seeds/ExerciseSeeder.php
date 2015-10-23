@@ -34,7 +34,7 @@ class ExerciseSeeder extends Seeder {
                     'name' => $exercise,
                     'default_unit_id' => $faker->randomElement($exercise_unit_ids),
                     'description' => $faker->word,
-                    'default_quantity' => $faker->numberBetween($min = 5, $max = 20),
+                    'default_quantity' => 5,
                     'step_number' => $index,
                     'series_id' => 1,
                     'user_id' => $user->id
@@ -48,7 +48,7 @@ class ExerciseSeeder extends Seeder {
                     'name' => $exercise,
                     'default_unit_id' => $faker->randomElement($exercise_unit_ids),
                     'description' => $faker->word,
-                    'default_quantity' => $faker->numberBetween($min = 5, $max = 20),
+                    'default_quantity' => 5,
                     'step_number' => $index,
                     'series_id' => 3,
                     'user_id' => $user->id
