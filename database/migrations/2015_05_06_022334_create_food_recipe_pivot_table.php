@@ -14,7 +14,6 @@ class CreateFoodRecipePivotTable extends Migration {
 	{
 		Schema::create('food_recipe', function(Blueprint $table)
 		{
-			$table->integer('user_id')->unsigned()->index();
 			$table->integer('recipe_id')->unsigned()->index();
 			$table->integer('food_id')->unsigned()->index();
 			$table->integer('unit_id')->unsigned()->index();
@@ -24,7 +23,6 @@ class CreateFoodRecipePivotTable extends Migration {
 			$table->foreign('recipe_id')->references('id')->on('recipes')->onDelete('cascade');
 			$table->foreign('food_id')->references('id')->on('foods')->onDelete('cascade');
 			$table->foreign('unit_id')->references('id')->on('units')->onDelete('cascade');
-			$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 		});
 	}
 
