@@ -3,26 +3,24 @@ var app = angular.module('tracker');
 (function () {
 	app.controller('FoodsController', function ($scope, $http, FoodsFactory, QuickRecipeFactory, AutocompleteFactory) {
 		
-		$scope.all_foods_with_units = foods_with_units;
+		$scope.foods = foods;
 		$scope.selected = {};
 
 		//show
 		$scope.show = {
 			autocomplete_options: {
 				menu_items: false,
-				foods: false,
+				foods: false
 			},
 			popups: {
 				recipe: false,
 				similar_names: false,
-				food_info: false,
-			},
+				food_info: false
+			}
 		};
 		
 		$scope.food_popup = {};
 
-		$scope.foods = {}; //all foods
-		$scope.menu = {};//all foods and all recipes
 		$scope.calories = {};
 
 		$scope.new_item = {};

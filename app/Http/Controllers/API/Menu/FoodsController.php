@@ -52,7 +52,7 @@ class FoodsController extends Controller
      */
     public function index()
     {
-        return $this->foodsRepository->getAllFoodsWithUnits();
+        return $this->foodsRepository->getFoods();
     }
 
     /**

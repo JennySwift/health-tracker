@@ -10,11 +10,11 @@
                 <th>calories</th>
                 <th></th>
             </tr>
-            <tr ng-repeat="item in all_foods_with_units | filter:filter.foods" data-food-id="[[item.id]]">
-                <td ng-click="getFoodInfo(item)" class="pointer">[[item.name]]</td>
-                <td>[[item.default_unit.name]]</td>
-                <td>[[item.default_unit_calories]]</td>
-                <td><i ng-click="deleteFood(item)" class="delete-item fa fa-times"></i></td>
+            <tr ng-repeat="food in foods | filter:filter.foods">
+                <td ng-click="getFoodInfo(food)" class="pointer">[[food.name]]</td>
+                <td>[[food.defaultUnit.name]]</td>
+                <td>[[food.defaultCalories]]</td>
+                <td><i ng-click="deleteFood(food)" class="delete-item fa fa-times"></i></td>
             </tr>
         </table>
     </div>

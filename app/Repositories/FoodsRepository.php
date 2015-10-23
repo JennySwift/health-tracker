@@ -18,14 +18,15 @@ class FoodsRepository
      * Also, add the calories for each food's units. Todo?
      * @return mixed
      */
-    public function getAllFoodsWithUnits()
+    public function getFoods()
     {
         $foods = Food::forCurrentUser()
             ->with('defaultUnit')
 //            ->with('units')
             ->orderBy('foods.name', 'asc')->get();
 
-        return transform(createCollection($foods, new FoodTransformer));
+        $foods = transform(createCollection($foods, new FoodTransformer));
+        return $foods['data'];
     }
 
 }

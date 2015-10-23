@@ -20,7 +20,7 @@ class FoodsTest extends TestCase {
         $this->logInUser();
 
         $response = $this->apiCall('GET', '/api/foods');
-        $content = json_decode($response->getContent(), true)['data'];
+        $content = json_decode($response->getContent(), true);
 
         $this->assertArrayHasKey('id', $content[0]);
         $this->assertArrayHasKey('name', $content[0]);

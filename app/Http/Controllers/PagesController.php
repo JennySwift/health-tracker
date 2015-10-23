@@ -151,7 +151,7 @@ class PagesController extends Controller
     public function foods()
     {
         JavaScript::put([
-            'foods_with_units' => $this->foodsRepository->getAllFoodsWithUnits(),
+            'foods' => $this->foodsRepository->getFoods(),
             'recipes' => Recipe::filterRecipes('', []),
             'recipe_tags' => Tag::getRecipeTags()
         ]);
@@ -166,7 +166,7 @@ class PagesController extends Controller
     public function recipes()
     {
         JavaScript::put([
-            'foods_with_units' => $this->foodsRepository->getAllFoodsWithUnits(),
+            'foods_with_units' => $this->foodsRepository->getFoods(),
             'recipes' => Recipe::filterRecipes('', []),
             'recipe_tags' => Tag::getRecipeTags()
         ]);
