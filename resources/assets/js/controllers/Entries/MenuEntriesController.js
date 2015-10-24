@@ -1,14 +1,14 @@
 angular.module('tracker')
     .controller('MenuEntriesController', function ($scope, FoodEntriesFactory, RecipeEntriesFactory) {
 
-        $scope.$watch('recipe.portion', function (newValue, oldValue) {
-            $($scope.temporary_recipe_popup.contents).each(function () {
-                if (this.original_quantity) {
-                    //making sure we don't alter the quantity of a food that has been added to the temporary recipe (by doing the if check)
-                    this.quantity = this.original_quantity * newValue;
-                }
-            });
-        });
+        //$scope.$watch('recipe.portion', function (newValue, oldValue) {
+        //    $($scope.temporary_recipe_popup.contents).each(function () {
+        //        if (this.original_quantity) {
+        //            //making sure we don't alter the quantity of a food that has been added to the temporary recipe (by doing the if check)
+        //            this.quantity = this.original_quantity * newValue;
+        //        }
+        //    });
+        //});
 
         $scope.insertMenuEntry = function () {
             $scope.new_entry.food.id = $scope.selected.food.id;

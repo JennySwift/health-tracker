@@ -9,7 +9,7 @@
             <th></th>
         </tr>
 
-        <tr ng-repeat="entry in entries.exercise" data-entry-id="[[entry.entry_id]]">
+        <tr ng-repeat="entry in exerciseEntries" data-entry-id="[[entry.entry_id]]">
             <td ng-click="getSpecificExerciseEntries(entry.exercise_id, entry.unit_id)" class="pointer">[[entry.name]]</td>
             <td ng-click="getSpecificExerciseEntries(entry.exercise_id, entry.unit_id)" class="pointer">[[entry.description]]</td>
             <td ng-click="getSpecificExerciseEntries(entry.exercise_id, entry.unit_id)" class="pointer">[[entry.sets]]</td>

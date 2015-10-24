@@ -10,6 +10,7 @@ use App\Models\Menu\Recipe;
 use App\Models\Journal\Journal;
 use App\Models\Tags\Tag;
 use App\Models\Units\Unit;
+use App\Repositories\ExerciseEntriesRepository;
 use App\Repositories\ExercisesRepository;
 use App\Repositories\FoodsRepository;
 use App\Repositories\UnitsRepository;
@@ -36,6 +37,10 @@ class PagesController extends Controller
      * @var UnitsRepository
      */
     private $unitsRepository;
+    /**
+     * @var ExerciseEntriesRepository
+     */
+    private $exerciseEntriesRepository;
 
     /**
      * Create a new controller instance.
@@ -43,13 +48,15 @@ class PagesController extends Controller
      * @param ExercisesRepository $exercisesRepository
      * @param FoodsRepository $foodsRepository
      * @param UnitsRepository $unitsRepository
+     * @param ExerciseEntriesRepository $exerciseEntriesRepository
      */
-    public function __construct(ExercisesRepository $exercisesRepository, FoodsRepository $foodsRepository, UnitsRepository $unitsRepository)
+    public function __construct(ExercisesRepository $exercisesRepository, FoodsRepository $foodsRepository, UnitsRepository $unitsRepository, ExerciseEntriesRepository $exerciseEntriesRepository)
     {
         $this->middleware('auth');
         $this->exercisesRepository = $exercisesRepository;
         $this->foodsRepository = $foodsRepository;
         $this->unitsRepository = $unitsRepository;
+        $this->exerciseEntriesRepository = $exerciseEntriesRepository;
     }
 
     /**
@@ -63,7 +70,7 @@ class PagesController extends Controller
 
         JavaScript::put([
             "weight" => $weightsRepository->getWeight($date),
-            "exercise_entries" => ExerciseEntry::getExerciseEntries($date),
+            "exerciseEntries" => $this->exerciseEntriesRepository->getEntriesForTheDay($date),
             "food_units" => $this->unitsRepository->getFoodUnits(),
             "exercise_units" => $this->unitsRepository->getExerciseUnits(),
             "menu_entries" => FoodEntry::getFoodEntries($date),

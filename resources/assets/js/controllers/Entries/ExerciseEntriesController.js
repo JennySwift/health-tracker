@@ -1,6 +1,8 @@
 angular.module('tracker')
     .controller('ExerciseEntriesController', function ($scope, ExerciseEntriesFactory) {
 
+        $scope.exerciseEntries = exerciseEntries;
+
         /**
          * Get all the the user's entries for a particular exercise
          * with a particular unit on a particular date.

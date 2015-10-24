@@ -9,6 +9,7 @@ use App\Repositories\ExerciseEntriesRepository;
 use Auth;
 use Debugbar;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 
 /**
@@ -87,7 +88,7 @@ class ExerciseEntriesController extends Controller
 
         $entry->save();
 
-        return $this->responseCreated($entry);
+        return response($this->exerciseEntriesRepository->getEntriesForTheDay($request->get('date')), Response::HTTP_CREATED);
     }
 
     /**
