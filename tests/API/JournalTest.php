@@ -38,50 +38,49 @@ class JournalTest extends TestCase {
      * @test
      * @return void
      */
-//    public function it_can_create_a_new_entry()
-//    {
-//        $this->logInUser();
-//
-//        $exercise = [
-//            'name' => 'kangaroo',
-//            'description' => 'koala'
-//        ];
-//
-//        $response = $this->call('POST', '/api/exercises', $exercise);
-//        $content = json_decode($response->getContent(), true);
-//
-//        $this->assertArrayHasKey('id', $content);
-//        $this->assertArrayHasKey('name', $content);
-////        $this->assertArrayHasKey('step_number', $content);
-//        $this->assertArrayHasKey('description', $content);
-//
-//        $this->assertEquals('kangaroo', $content['name']);
-//        $this->assertEquals('koala', $content['description']);
-//
-//        $this->assertEquals(Response::HTTP_CREATED, $response->getStatusCode());
-//    }
+    public function it_can_create_a_new_journal_entry()
+    {
+        $this->logInUser();
+
+        $entry = [
+            'date' => '2015-01-01',
+            'text' => 'koala'
+        ];
+
+        $response = $this->call('POST', '/api/journal', $entry);
+        $content = json_decode($response->getContent(), true)['data'];
+
+        $this->assertArrayHasKey('id', $content);
+        $this->assertArrayHasKey('date', $content);
+        $this->assertArrayHasKey('text', $content);
+
+        $this->assertEquals('01/01/15', $content['date']);
+        $this->assertEquals('koala', $content['text']);
+
+        $this->assertEquals(Response::HTTP_CREATED, $response->getStatusCode());
+    }
 
     /**
      * @test
      * @return void
      */
-//    public function it_can_update_an_entry()
-//    {
-//        $this->logInUser();
-//
-//        $unit = Unit::forCurrentUser()->where('for', 'food')->first();
-//
-//        $response = $this->call('PUT', '/api/foodUnits/'.$unit->id, [
-//            'name' => 'numbat'
-//        ]);
-//        $content = json_decode($response->getContent(), true)['data'];
-//
-//        $this->assertArrayHasKey('id', $content);
-//        $this->assertArrayHasKey('name', $content);
-//        $this->assertArrayHasKey('for', $content);
-//
-//        $this->assertEquals('numbat', $content['name']);
-//
-//        $this->assertEquals(200, $response->getStatusCode());
-//    }
+    public function it_can_update_a_journal_entry()
+    {
+        $this->logInUser();
+
+        $entry = Journal::forCurrentUser()->first();
+
+        $response = $this->call('PUT', '/api/journal/'.$entry->id, [
+            'text' => 'numbat'
+        ]);
+        $content = json_decode($response->getContent(), true)['data'];
+
+        $this->assertArrayHasKey('id', $content);
+        $this->assertArrayHasKey('date', $content);
+        $this->assertArrayHasKey('text', $content);
+
+        $this->assertEquals('numbat', $content['text']);
+
+        $this->assertEquals(200, $response->getStatusCode());
+    }
 }

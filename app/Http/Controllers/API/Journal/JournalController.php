@@ -27,6 +27,11 @@ class JournalController extends Controller
         $this->middleware('auth');
     }
 
+    /**
+     *
+     * @param Request $request
+     * @return mixed
+     */
     public function filter(Request $request)
     {
         $typing = '%' . $request->get('typing') . '%';
@@ -38,14 +43,13 @@ class JournalController extends Controller
         return $matches;
     }
 
-
     /**
      * @VP:
      * You said I should find the entry by its id here, not its date.
      * But I'm not sure how this can be done since the method is called when the
      * user uses the date navigation, so the id is not known.
      * @param Journal $journal
-     * @return array
+     * @return mixed
      */
     public function show(Journal $journal)
     {
@@ -55,7 +59,7 @@ class JournalController extends Controller
     /**
      *
      * @param Request $request
-     * @return static
+     * @return mixed
      */
     public function store(Request $request)
     {
@@ -67,20 +71,20 @@ class JournalController extends Controller
         $journal->user()->associate(Auth::user());
         $journal->save();
 
-        return $this->responseCreated($journal);
+        return $this->responseCreatedWithTransformer($journal, new JournalTransformer);
     }
 
     /**
      *
      * @param Request $request
-     * @param $id
-     * @return \Illuminate\Support\Collection|null|static
+     * @param Journal $journal
+     * @return mixed
      */
     public function update(Request $request, Journal $journal)
     {
         $journal->text = $request->get('text');
         $journal->save();
 
-        return $journal;
+        return $this->responseOkWithTransformer($journal, new JournalTransformer);
     }
 }
