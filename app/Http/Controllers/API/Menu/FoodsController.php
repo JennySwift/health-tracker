@@ -42,7 +42,7 @@ class FoodsController extends Controller
     {
         $food = Food::find($id);
 
-        return Food::getFoodInfo($food);
+        return $this->foodsRepository->getFoodInfo($food);
     }
 
     /**

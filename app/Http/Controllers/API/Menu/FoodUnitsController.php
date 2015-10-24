@@ -73,7 +73,8 @@ class FoodUnitsController extends Controller
     }
 
     /**
-     * @VP: Should the error handling go somewhere else?
+     * @VP:
+     * Should the error handling go somewhere else?
      * I tried doing it in Handler.php but I wanted the model name (unit),
      * and there was no $e->getModel() method.
      * @param Unit $unit

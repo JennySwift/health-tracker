@@ -48,34 +48,13 @@ class Journal extends Model {
 
     /**
      * Get date attribute
-     * @param $value
-     * @return static
+     * @return string
      */
-    public function getDateAttribute($value)
+    public function getDateAttribute()
     {
         if (isset($this->date)) {
             return Carbon::createFromFormat('Y-m-d', $this->attributes['date'])->format('d/m/y');
         }
     }
-
-    /**
-     *
-     * @param $date
-     * @return array
-     */
-    public static function getJournalEntry($date)
-	{
-		$entry = static
-			::where('date', $date)
-			->where('user_id', Auth::user()->id)
-			->first();
-
-		if (!isset($entry)) {
-			return [];
-		}
-		else {
-			return $entry;
-		}
-	}
 
 }

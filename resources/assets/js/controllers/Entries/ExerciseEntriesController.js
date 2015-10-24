@@ -109,7 +109,6 @@ angular.module('tracker')
             else {
                 // if enter is to add the entry
                 $scope.insertExerciseEntry();
-                console.log('something');
             }
         };
 

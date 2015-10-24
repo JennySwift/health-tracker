@@ -1,4 +1,5 @@
 <?php
+use Carbon\Carbon;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
@@ -16,6 +17,38 @@ function array_compare(array $base, array $newItems)
 //    dd($base);
     return array_merge($base, array_filter($newItems));
 }
+
+/**
+ * Find out how many days ago a date was
+ * @param $date
+ * @return mixed
+ */
+function getHowManyDaysAgo($date)
+{
+    $now = Carbon::now();
+    $date = Carbon::createFromFormat('Y-m-d', $date);
+    $diff = $now->diff($date);
+    $days_ago = $diff->days;
+    return $days_ago;
+}
+
+/**
+ *
+ * @param $date
+ * @param $for
+ * @return string
+ */
+//function convertDate(Carbon $date, $for = NULL)
+//{
+//    switch($for) {
+//        case "sql":
+//            return $date->format('Y-m-d');
+//            break;
+//        default:
+//            return $date->format('d/m/y');
+//            break;
+//    }
+//}
 
 /**
  *

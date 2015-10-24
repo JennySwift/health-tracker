@@ -16,6 +16,7 @@ class WeightsController extends Controller
 
     /**
      * This method is a good example of the S.O.L.I.D principles
+     * Todo: refactor into two separate methods
      * @param Request $request
      * @param WeightsRepository $weightsRepository
      */

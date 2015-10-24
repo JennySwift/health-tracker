@@ -33,10 +33,9 @@ class WorkoutsController extends Controller
     /**
      * Deletes all workouts from the series
      * then adds the correct workouts to the series
-     * @param  Request $request [description]
-     * @return [type]           [description]
      *
      * @TODO Should be part of the update method on the SeriesController
+     * Todo: refactor into two separate methods
      * PUT /series/{id}
      * @param Request $request
      * @return mixed

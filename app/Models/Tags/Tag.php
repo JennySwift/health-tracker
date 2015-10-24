@@ -39,22 +39,4 @@ class Tag extends Model {
 		return $this->belongsToMany('App\Models\Exercises\Exercise', 'taggables', 'tag_id', 'taggable_id');
 	}
 
-    /**
-     *
-     * @return mixed
-     */
-    public static function getExerciseTags()
-	{
-		return static::forCurrentUser()->where('for', 'exercise')->get();
-	}
-
-	/**
-	 * Get all the user's tags for recipes
-	 * @return [type] [description]
-	 */
-	public static function getRecipeTags()
-	{
-		return static::forCurrentUser()->where('for', 'recipe')->get();
-	}
-
 }

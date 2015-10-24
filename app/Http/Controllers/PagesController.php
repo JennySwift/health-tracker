@@ -2,19 +2,16 @@
 
 use App\Http\Requests;
 use App\Http\Transformers\JournalTransformer;
-use App\Models\Exercises\Entry as ExerciseEntry;
-use App\Models\Exercises\Workout;
-use App\Models\Menu\Entry as FoodEntry;
-use App\Models\Menu\Food;
-use App\Models\Menu\Recipe;
 use App\Models\Journal\Journal;
 use App\Models\Tags\Tag;
-use App\Models\Units\Unit;
 use App\Repositories\ExerciseEntriesRepository;
 use App\Repositories\ExercisesRepository;
 use App\Repositories\FoodsRepository;
+use App\Repositories\MenuEntriesRepository;
+use App\Repositories\RecipesRepository;
 use App\Repositories\UnitsRepository;
 use App\Repositories\WeightsRepository;
+use App\Repositories\WorkoutsRepository;
 use Auth;
 use Carbon\Carbon;
 use JavaScript;
@@ -41,6 +38,18 @@ class PagesController extends Controller
      * @var ExerciseEntriesRepository
      */
     private $exerciseEntriesRepository;
+    /**
+     * @var MenuEntriesRepository
+     */
+    private $menuEntriesRepository;
+    /**
+     * @var RecipesRepository
+     */
+    private $recipesRepository;
+    /**
+     * @var WorkoutsRepository
+     */
+    private $workoutsRepository;
 
     /**
      * Create a new controller instance.
@@ -49,14 +58,20 @@ class PagesController extends Controller
      * @param FoodsRepository $foodsRepository
      * @param UnitsRepository $unitsRepository
      * @param ExerciseEntriesRepository $exerciseEntriesRepository
+     * @param MenuEntriesRepository $menuEntriesRepository
+     * @param RecipesRepository $recipesRepository
+     * @param WorkoutsRepository $workoutsRepository
      */
-    public function __construct(ExercisesRepository $exercisesRepository, FoodsRepository $foodsRepository, UnitsRepository $unitsRepository, ExerciseEntriesRepository $exerciseEntriesRepository)
+    public function __construct(ExercisesRepository $exercisesRepository, FoodsRepository $foodsRepository, UnitsRepository $unitsRepository, ExerciseEntriesRepository $exerciseEntriesRepository, MenuEntriesRepository $menuEntriesRepository, RecipesRepository $recipesRepository, WorkoutsRepository $workoutsRepository)
     {
         $this->middleware('auth');
         $this->exercisesRepository = $exercisesRepository;
         $this->foodsRepository = $foodsRepository;
         $this->unitsRepository = $unitsRepository;
         $this->exerciseEntriesRepository = $exerciseEntriesRepository;
+        $this->menuEntriesRepository = $menuEntriesRepository;
+        $this->recipesRepository = $recipesRepository;
+        $this->workoutsRepository = $workoutsRepository;
     }
 
     /**
@@ -73,9 +88,9 @@ class PagesController extends Controller
             "exerciseEntries" => $this->exerciseEntriesRepository->getEntriesForTheDay($date),
             "foodUnits" => $this->unitsRepository->getFoodUnits(),
             "exerciseUnits" => $this->unitsRepository->getExerciseUnits(),
-            "menu_entries" => FoodEntry::getFoodEntries($date),
-            "calories_for_the_day" => Food::getCaloriesForDay($date),
-            "calories_for_the_week" => Food::getCaloriesFor7Days($date)
+            "menu_entries" => $this->menuEntriesRepository->getEntriesForTheDay($date),
+            "calories_for_the_day" => $this->menuEntriesRepository->getCaloriesForDay($date),
+            "calories_for_the_week" => $this->menuEntriesRepository->getCaloriesFor7Days($date)
         ]);
 
         return view('pages.entries.entries');
@@ -89,7 +104,6 @@ class PagesController extends Controller
      */
     public function exercises()
     {
-//        return $this->exercisesRepository->getExercises();
         JavaScript::put([
             /**
              * @VP:
@@ -100,10 +114,13 @@ class PagesController extends Controller
              */
             'all_exercises' => $this->exercisesRepository->getExercises(),
             'series' => $this->exercisesRepository->getExerciseSeries(),
-            'workouts' => Workout::getWorkouts(),
-            'exercise_tags' => Tag::where('user_id', Auth::user()->id)->where('for', 'exercise')->orderBy('name',
-                'asc')->get(),
-            'units' => $this->unitsRepository->getExerciseUnits()
+            'workouts' => $this->workoutsRepository->getWorkouts(),
+            'units' => $this->unitsRepository->getExerciseUnits(),
+            'exercise_tags' => Tag::forCurrentUser()
+                ->where('for', 'exercise')
+                ->orderBy('name', 'asc')
+                ->get()
+
         ]);
 
         return view('pages.exercises.exercises');
@@ -117,7 +134,7 @@ class PagesController extends Controller
     {
         JavaScript::put([
             'series' => $this->exercisesRepository->getExerciseSeries(),
-            'workouts' => Workout::getWorkouts()
+            'workouts' => $this->workoutsRepository->getWorkouts()
         ]);
 
         return view('pages.exercises.series');
@@ -130,7 +147,7 @@ class PagesController extends Controller
     public function workouts()
     {
         JavaScript::put([
-            'workouts' => Workout::getWorkouts(),
+            'workouts' => $this->workoutsRepository->getWorkouts(),
         ]);
 
         return view('pages.exercises.workouts');
@@ -161,8 +178,6 @@ class PagesController extends Controller
     {
         JavaScript::put([
             'foods' => $this->foodsRepository->getFoods(),
-            'recipes' => Recipe::filterRecipes('', []),
-            'recipe_tags' => Tag::getRecipeTags()
         ]);
 
         return view('pages.foods.foods-page');
@@ -176,8 +191,11 @@ class PagesController extends Controller
     {
         JavaScript::put([
             'foods_with_units' => $this->foodsRepository->getFoods(),
-            'recipes' => Recipe::filterRecipes('', []),
-            'recipe_tags' => Tag::getRecipeTags()
+            'recipes' => $this->recipesRepository->filterRecipes('', []),
+            'recipe_tags' => Tag::forCurrentUser()
+                ->where('for', 'recipe')
+                ->orderBy('name', 'asc')
+                ->get()
         ]);
 
         return view('pages.foods.recipes-page');
@@ -189,7 +207,6 @@ class PagesController extends Controller
      */
     public function foodUnits()
     {
-//        return $this->unitsRepository->getFoodUnits();
         JavaScript::put([
             'units' => $this->unitsRepository->getFoodUnits()
         ]);
