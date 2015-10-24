@@ -1,5 +1,5 @@
 angular.module('tracker')
-    .controller('ExerciseEntriesController', function ($scope, ExerciseEntriesFactory) {
+    .controller('ExerciseEntriesController', function ($rootScope, $scope, ExerciseEntriesFactory) {
 
         $scope.exerciseEntries = exerciseEntries;
 
@@ -24,9 +24,16 @@ angular.module('tracker')
         };
 
         $scope.insertExerciseSet = function ($exercise_id) {
-            ExerciseEntriesFactory.insertExerciseSet($scope.date.sql, $exercise_id).then(function (response) {
-                $scope.entries.exercise = response.data;
-            });
+            $rootScope.showLoading();
+            ExerciseEntriesFactory.insertExerciseSet($scope.date.sql, $exercise_id)
+                .then(function (response) {
+                    $scope.exerciseEntries = response.data;
+                    //$rootScope.$broadcast('provideFeedback', '');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
         };
 
         //Todo: get the entries for the day and for the popup after deleting

@@ -23,11 +23,12 @@ angular.module('tracker')
 
                 return $http.post($url, $data);
             },
-            insertExerciseSet: function ($sql_date, $exercise_id) {
-                var $url = 'insert/exerciseSet';
+            insertExerciseSet: function ($sqlDate, $exercise_id) {
+                var $url = 'api/exerciseEntries';
                 var $data = {
-                    date: $sql_date,
-                    exercise_id: $exercise_id
+                    date: $sqlDate,
+                    exercise_id: $exercise_id,
+                    exerciseSet: true
                 };
 
                 return $http.post($url, $data);

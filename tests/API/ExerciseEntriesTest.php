@@ -103,7 +103,7 @@ class ExerciseEntriesTest extends TestCase {
         $entry = [
             'date' => Carbon::today()->format('Y-m-d'),
             'exercise_id' => 1,
-            'set' => true
+            'exerciseSet' => true
         ];
 
         $response = $this->call('POST', '/api/exerciseEntries', $entry);

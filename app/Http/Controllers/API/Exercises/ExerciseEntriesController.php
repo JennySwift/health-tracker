@@ -67,7 +67,7 @@ class ExerciseEntriesController extends Controller
     {
         $exercise = Exercise::find($request->get('exercise_id'));
 
-        if ($request->get('set')) {
+        if ($request->get('exerciseSet')) {
             // We are inserting an exercise set
             $quantity = $exercise->default_quantity;
             $unit = Unit::find($exercise->default_unit_id);
