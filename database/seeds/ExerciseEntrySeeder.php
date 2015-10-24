@@ -47,7 +47,7 @@ class ExerciseEntrySeeder extends Seeder {
                         DB::table('exercise_entries')->insert([
                             'date' => $date,
                             'exercise_id' => 1,
-                            'quantity' => $faker->numberBetween($min = 4, $max = 30),
+                            'quantity' => 5,
                             'exercise_unit_id' => 1,
                             'user_id' => $user_id
                         ]);

@@ -168,34 +168,6 @@ class Exercise extends Model {
 
     /**
      *
-     * @param $exercise
-     * @return mixed
-     */
-    public static function getDefaultExerciseQuantity($exercise)
-	{
-		$quantity = static
-			::where('id', $exercise->id)
-			->pluck('default_quantity');
-
-		return $quantity;
-	}
-
-    /**
-     *
-     * @param $exercise
-     * @return mixed
-     */
-    public static function getDefaultExerciseUnitId($exercise)
-	{
-		$default = static
-			::where('id', $exercise->id)
-			->pluck('default_unit_id');
-
-		return $default;
-	}
-
-    /**
-     *
      * @param $date
      * @param $for
      * @return string|static
