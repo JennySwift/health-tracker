@@ -35,7 +35,7 @@ app.factory('AutocompleteFactory', function ($http) {
 
 	$object.exercise = function () {
 		var $typing = $("#exercise").val();
-		var $url = 'select/autocompleteExercise';
+		var $url = 'api/select/autocompleteExercise';
 		var $data = {
 			exercise: $typing
 		};
@@ -44,7 +44,7 @@ app.factory('AutocompleteFactory', function ($http) {
 	};
 
 	$object.food = function ($typing) {
-		var $url = 'select/autocompleteFood';
+		var $url = 'api/select/autocompleteFood';
 		var $data = {
 			typing: $typing
 		};
@@ -54,7 +54,7 @@ app.factory('AutocompleteFactory', function ($http) {
 
 	$object.menu = function () {
 		var $typing = $("#menu").val();
-		var $url = 'select/autocompleteMenu';
+		var $url = 'api/select/autocompleteMenu';
 		var $data = {
 			typing: $typing
 		};

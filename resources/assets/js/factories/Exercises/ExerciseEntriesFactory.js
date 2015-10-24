@@ -11,12 +11,14 @@ angular.module('tracker')
 
                 return $http.post($url, $data);
             },
-            insertExerciseEntry: function ($sql_date, $new_entry) {
-                var $url = '/ExerciseEntries';
+            insert: function ($sqlDate, $newEntry) {
+                var $url = 'api/exerciseEntries';
 
                 var $data = {
-                    date: $sql_date,
-                    new_entry: $new_entry,
+                    date: $sqlDate,
+                    exercise_id: $newEntry.id,
+                    quantity: $newEntry.quantity,
+                    unit_id: $newEntry.unit_id
                 };
 
                 $("#exercise").val("").focus();

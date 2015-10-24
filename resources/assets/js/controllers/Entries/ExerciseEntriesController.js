@@ -1,7 +1,10 @@
 angular.module('tracker')
-    .controller('ExerciseEntriesController', function ($rootScope, $scope, ExerciseEntriesFactory) {
+    .controller('ExerciseEntriesController', function ($rootScope, $scope, ExerciseEntriesFactory, AutocompleteFactory) {
 
         $scope.exerciseEntries = exerciseEntries;
+        $scope.exerciseUnits = exerciseUnits;
+
+        $scope.selectedExercise = {};
 
         /**
          * Get all the the user's entries for a particular exercise
@@ -18,9 +21,16 @@ angular.module('tracker')
 
         $scope.insertExerciseEntry = function () {
             $scope.new_entry.exercise.unit_id = $("#exercise-unit").val();
-            ExerciseEntriesFactory.insertExerciseEntry($scope.date.sql, $scope.new_entry.exercise).then(function (response) {
-                $scope.entries.exercise = response.data;
-            });
+            $rootScope.showLoading();
+            ExerciseEntriesFactory.insert($scope.date.sql, $scope.newEntry)
+                .then(function (response) {
+                    $scope.exerciseEntries = response.data;
+                    //$rootScope.$broadcast('provideFeedback', '');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
         };
 
         $scope.insertExerciseSet = function ($exercise_id) {
@@ -76,11 +86,11 @@ angular.module('tracker')
         $scope.finishExerciseAutocomplete = function ($array, $selected) {
             //array, input_to_focus, autocomplete_to_hide, input_to_fill, selected_property_to_define
             $selected = $selected || _.findWhere($array, {selected: true});
-            $scope.selected.exercise = $selected;
-            $scope.selected.exercise_unit.id = $scope.selected.exercise.default_exercise_unit_id;
-            $scope.new_entry.exercise = $selected;
-            $scope.new_entry.exercise.quantity = $scope.selected.exercise.default_quantity;
-            $scope.selected.exercise = $selected;
+            $scope.selectedExercise = $selected;
+            $scope.selectedExercise.unit_id = $scope.selectedExercise.default_unit_id;
+            $scope.newEntry = $selected;
+            $scope.newEntry.quantity = $scope.selectedExercise.default_quantity;
+            $scope.selectedExercise = $selected;
             $scope.show.autocomplete_options.exercises = false;
             setTimeout(function () {
                 $("#exercise-quantity").focus().select();

@@ -10,6 +10,12 @@ angular.module('tracker')
         //    });
         //});
 
+        $scope.selected = {
+            dropdown_item: {},
+            food: {},
+            unit: {}
+        };
+
         $scope.insertMenuEntry = function () {
             $scope.new_entry.food.id = $scope.selected.food.id;
             $scope.new_entry.food.name = $scope.selected.food.name;

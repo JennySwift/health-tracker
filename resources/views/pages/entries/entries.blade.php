@@ -16,13 +16,17 @@
 		
 		<div id="info-entries-wrapper">
             @include('pages.entries.info');
-            @include('pages.entries.entry-inputs');
 		</div>
 		
-		<div id="entries">
-			@include('pages.entries.menu-entries')
-			@include('pages.entries.exercise-entries')
-		</div>
+		{{--<div>--}}
+            {{--@include('pages.entries.menu-entry-inputs')--}}
+			{{--@include('pages.entries.menu-entries')--}}
+		{{--</div>--}}
+
+        <div ng-controller="ExerciseEntriesController">
+            @include('pages.entries.exercise-entry-inputs')
+            @include('pages.entries.exercise-entries')
+        </div>
 	</div>
 
 	@include('templates.footer')

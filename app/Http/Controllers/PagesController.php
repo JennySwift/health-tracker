@@ -71,8 +71,8 @@ class PagesController extends Controller
         JavaScript::put([
             "weight" => $weightsRepository->getWeight($date),
             "exerciseEntries" => $this->exerciseEntriesRepository->getEntriesForTheDay($date),
-            "food_units" => $this->unitsRepository->getFoodUnits(),
-            "exercise_units" => $this->unitsRepository->getExerciseUnits(),
+            "foodUnits" => $this->unitsRepository->getFoodUnits(),
+            "exerciseUnits" => $this->unitsRepository->getExerciseUnits(),
             "menu_entries" => FoodEntry::getFoodEntries($date),
             "calories_for_the_day" => Food::getCaloriesForDay($date),
             "calories_for_the_week" => Food::getCaloriesFor7Days($date)

@@ -15,17 +15,6 @@ var app = angular.module('tracker');
             popups: {}
         };
 
-        //selected
-        $scope.selected = {
-            exercise: {
-                unit: {}
-            },
-            dropdown_item: {},
-            food: {},
-            unit: {},
-            exercise_unit: {}
-        };
-
         //new entry
         $scope.new_entry = {
             exercise: {

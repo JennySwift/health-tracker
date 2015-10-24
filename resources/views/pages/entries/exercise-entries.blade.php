@@ -1,4 +1,4 @@
-<div ng-controller="ExerciseEntriesController">
+<div>
     <table class="table table-bordered">
         <caption>exercise entries</caption>
         <tr>
@@ -9,7 +9,7 @@
             <th></th>
         </tr>
 
-        <tr ng-repeat="entry in exerciseEntries" data-entry-id="[[entry.entry_id]]">
+        <tr ng-repeat="entry in exerciseEntries">
             <td ng-click="getSpecificExerciseEntries(entry.exercise_id, entry.unit_id)" class="pointer">[[entry.name]]</td>
             <td ng-click="getSpecificExerciseEntries(entry.exercise_id, entry.unit_id)" class="pointer">[[entry.description]]</td>
             <td ng-click="getSpecificExerciseEntries(entry.exercise_id, entry.unit_id)" class="pointer">[[entry.sets]]</td>
