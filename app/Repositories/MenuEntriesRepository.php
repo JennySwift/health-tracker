@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Http\Transformers\MenuEntryTransformer;
 use App\Models\Menu\Entry;
 use App\Models\Menu\Food;
 use Carbon\Carbon;
@@ -13,6 +14,23 @@ use Auth;
  */
 class MenuEntriesRepository
 {
+
+    /**
+     * Get a user's menu (food/recipe) entries for one day
+     * @param $date
+     * @return array
+     */
+    public function getEntriesForTheDay($date)
+    {
+        $entries = Entry::forCurrentUser()
+            ->where('date', $date)
+            ->get();
+
+        //            $calories_for_item = Food::getCalories($food_id, $unit_id);
+//            $calories_for_quantity = Food::getCaloriesForQuantity($calories_for_item, $quantity);
+
+        return transform(createCollection($entries, new MenuEntryTransformer))['data'];
+    }
 
     /**
      *
@@ -59,54 +77,5 @@ class MenuEntriesRepository
         }
 
         return $total / 7;
-    }
-
-
-    /**
-     * Get a user's food entries for one day
-     * @param $date
-     * @return array
-     */
-    public function getEntriesForTheDay($date)
-    {
-        $rows = Entry
-            ::join('foods', 'food_entries.food_id', '=', 'foods.id')
-            ->join('units', 'food_entries.unit_id', '=', 'units.id')
-            ->leftJoin('recipes', 'food_entries.recipe_id', '=', 'recipes.id')
-            ->where('date', $date)
-            ->where('food_entries.user_id', Auth::user()->id)
-            ->select('food_id', 'foods.name AS food_name', 'food_entries.id AS entry_id', 'units.id AS unit_id', 'units.name AS unit_name', 'quantity', 'recipes.name AS recipe_name', 'recipes.id AS recipe_id')
-            ->get();
-
-
-        $food_entries = array();
-
-        foreach ($rows as $row) {
-            $food_id = $row->food_id;
-            $food_name = $row->food_name;
-            $quantity = $row->quantity;
-            $entry_id = $row->entry_id;
-            $unit_id = $row->unit_id;
-            $unit_name = $row->unit_name;
-            $recipe_name = $row->recipe_name;
-            $recipe_id = $row->recipe_id;
-
-//            $calories_for_item = Food::getCalories($food_id, $unit_id);
-//            $calories_for_quantity = Food::getCaloriesForQuantity($calories_for_item, $quantity);
-
-            $food_entries[] = array(
-                "food_id" => $food_id,
-                "food_name" => $food_name,
-                "quantity" => $quantity,
-                "entry_id" => $entry_id,
-                "unit_id" => $unit_id,
-                "unit_name" => $unit_name,
-//                "calories" => $calories_for_quantity,
-                "recipe_name" => $recipe_name,
-                "recipe_id" => $recipe_id
-            );
-        }
-
-        return $food_entries;
     }
 }

@@ -237,6 +237,8 @@ li {
   -webkit-justify-content: space-around;
   -ms-flex-pack: distribute;
   justify-content: space-around; }
+  #entries .entry-inputs {
+    margin-bottom: 30px; }
   #entries caption {
     font-weight: 500; }
   #entries > * {

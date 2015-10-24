@@ -1,4 +1,4 @@
-<div>
+<div class="entry-inputs">
     <div>
         <input ng-model="new_entry.menu.name" ng-keyup="autocompleteMenu($event.keyCode); insertOrAutocompleteMenuEntry($event.keyCode)" ng-blur="autocomplete_options.menu_items = ''" type="text" placeholder="food" id="menu" class="form-control">
 

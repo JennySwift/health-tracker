@@ -1,9 +1,10 @@
-<?php namespace App\Http\Controllers\API\Foods;
+<?php namespace App\Http\Controllers\API\Menu;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
 use App\Models\Menu\Entry;
 use App\Models\Menu\Recipe;
+use App\Repositories\MenuEntriesRepository;
 use Auth;
 use Illuminate\Http\Request;
 
@@ -13,6 +14,28 @@ use Illuminate\Http\Request;
  */
 class MenuEntriesController extends Controller
 {
+    /**
+     * @var MenuEntriesRepository
+     */
+    private $menuEntriesRepository;
+
+    /**
+     * @param MenuEntriesRepository $menuEntriesRepository
+     */
+    public function __construct(MenuEntriesRepository $menuEntriesRepository)
+    {
+        $this->menuEntriesRepository = $menuEntriesRepository;
+    }
+
+    /**
+     * Get the user's menu (food, recipe) entries for the day
+     * @param $date
+     * @return mixed
+     */
+    public function index($date)
+    {
+        return $this->menuEntriesRepository->getEntriesForTheDay($date);
+    }
 
     /**
      *

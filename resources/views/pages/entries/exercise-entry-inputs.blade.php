@@ -1,4 +1,4 @@
-<div class="margin-bottom">
+<div class="entry-inputs">
     <div>
 
         <input

@@ -83,12 +83,16 @@ class PagesController extends Controller
     {
         $date = Carbon::today()->format('Y-m-d');
 
+//        dd($this->menuEntriesRepository->getEntriesForTheDay($date));
+
         JavaScript::put([
-            "weight" => $weightsRepository->getWeight($date),
             "exerciseEntries" => $this->exerciseEntriesRepository->getEntriesForTheDay($date),
-            "foodUnits" => $this->unitsRepository->getFoodUnits(),
             "exerciseUnits" => $this->unitsRepository->getExerciseUnits(),
-            "menu_entries" => $this->menuEntriesRepository->getEntriesForTheDay($date),
+
+            "menuEntries" => $this->menuEntriesRepository->getEntriesForTheDay($date),
+            "foodUnits" => $this->unitsRepository->getFoodUnits(),
+
+            "weight" => $weightsRepository->getWeight($date),
             "calories_for_the_day" => $this->menuEntriesRepository->getCaloriesForDay($date),
             "calories_for_the_week" => $this->menuEntriesRepository->getCaloriesFor7Days($date)
         ]);

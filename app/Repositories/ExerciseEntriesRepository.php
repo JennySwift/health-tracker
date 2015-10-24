@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\Exercises\Entry;
 use App\Models\Units\Unit;
 use Carbon\Carbon;
+use Auth;
 
 /**
  * Class ExerciseEntriesRepository

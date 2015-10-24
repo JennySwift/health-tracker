@@ -51,4 +51,13 @@ class Entry extends Model {
         return $this->belongsTo('App\Models\Menu\Recipe');
     }
 
+    /**
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function unit()
+    {
+        return $this->belongsTo('App\Models\Units\Unit', 'unit_id');
+    }
+
 }

@@ -13685,6 +13685,8 @@ angular.module('tracker')
 angular.module('tracker')
     .controller('MenuEntriesController', function ($scope, FoodEntriesFactory, RecipeEntriesFactory) {
 
+        $scope.menuEntries = menuEntries;
+
         //$scope.$watch('recipe.portion', function (newValue, oldValue) {
         //    $($scope.temporary_recipe_popup.contents).each(function () {
         //        if (this.original_quantity) {

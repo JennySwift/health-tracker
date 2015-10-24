@@ -13,6 +13,7 @@ Route::group(['namespace' => 'API', 'prefix' => 'api'], function () {
 
     require app_path('Http/Routes/menu/foods.php');
     require app_path('Http/Routes/menu/recipes.php');
+    require app_path('Http/Routes/menu/entries.php');
 
     require app_path('Http/Routes/tags.php');
     require app_path('Http/Routes/units.php');

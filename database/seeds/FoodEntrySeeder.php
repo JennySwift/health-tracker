@@ -1,7 +1,10 @@
 <?php
 
 use App\Models\Menu\Entry as FoodEntry;
+use App\Models\Menu\Entry;
 use App\Models\Menu\Food;
+use App\Models\Menu\Recipe;
+use App\Models\Units\Unit;
 use App\User;
 use Carbon\Carbon;
 use Faker\Factory as Faker;
@@ -12,6 +15,7 @@ use Illuminate\Database\Seeder;
  */
 class FoodEntrySeeder extends Seeder
 {
+    private $user;
 
     /**
      *
@@ -20,44 +24,54 @@ class FoodEntrySeeder extends Seeder
     {
         FoodEntry::truncate();
 
-        $faker = Faker::create();
+        foreach (User::all() as $user) {
+            $this->user = $user;
 
-        $users = User::all();
-
-        foreach ($users as $user) {
-            /**
-             * Objective: create a random number of food entries (no duplicates) for each of the last 50 days
-             */
-
-            foreach (range(0, 50) as $days) {
-                //Everything that happens in this loop is for one day
-                $today = Carbon::today();
-                $date = $today->subDays($days)->format('Y-m-d');
-                $number = $faker->numberBetween($min = 1, $max = 6);
-                $food_ids = Food::where('user_id', $user->id)->lists('id')->all();
-
-                foreach (range(0, $number) as $index) {
-                    $unit_ids = [];
-                    while (count($unit_ids) === 0) {
-                        $food_id = $faker->randomElement($food_ids);
-                        $food = Food::find($food_id);
-                        //So that the entry doesn't have a unit that doesn't belong to the food
-                        $unit_ids = $food->units()->lists('unit_id')->all();
-                    }
-
-                    DB::table('food_entries')->insert([
-                        'date' => $date,
-                        'food_id' => $food_id,
-                        'quantity' => $faker->numberBetween($min = 1, $max = 9),
-                        'unit_id' => $faker->randomElement($unit_ids),
-                        'recipe_id' => '',
-                        'user_id' => $user->id
-                    ]);
-                }
+            //Create menu entries for the last 5 days
+            foreach (range(0, 4) as $day) {
+                $date = Carbon::today()->subDays($day)->format('Y-m-d');
+                $this->createEntriesForOneDay($date);
             }
         }
 
 
+    }
+
+    /**
+     *
+     * @param $date
+     */
+    private function createEntriesForOneDay($date)
+    {
+        $faker = Faker::create();
+
+        //Create 2 entries for the day
+        foreach (range(0, 1) as $index) {
+            $entry = new Entry([
+                'date' => $date,
+                'quantity' => $faker->numberBetween($min = 1, $max = 9),
+                'recipe_id' => '',
+            ]);
+
+            $entry->user()->associate($this->user);
+
+            //Attach food
+            $food_ids = Food::where('user_id', $this->user->id)->lists('id')->all();
+            $entry->food()->associate(Food::find($food_ids[$index]));
+
+            //Attach unit
+            $unit_ids = collect($entry->food->units)->lists('id');
+            $entry->unit()->associate(Unit::find($unit_ids[$index]));
+
+            //Attach recipe for the last entry if the date is today
+            if ($date === Carbon::today()->format('Y-m-d') && $index === 1) {
+                $recipe_ids = Recipe::where('user_id', $this->user->id)->lists('id')->all();
+                $entry->recipe()->associate(Recipe::find($recipe_ids[0]));
+            }
+
+            $entry->save();
+
+        }
     }
 
 }

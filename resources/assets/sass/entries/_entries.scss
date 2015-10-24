@@ -6,6 +6,9 @@
 #entries {
 	display: flex;
 	justify-content: space-around;
+    .entry-inputs {
+        margin-bottom: 30px;
+    }
     caption {
         font-weight: 500;
     }

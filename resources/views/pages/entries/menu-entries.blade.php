@@ -11,18 +11,18 @@
             <th></th>
         </tr>
 
-        <tr ng-repeat="entry in entries.menu" data-entry-id="[[entry.entry_id]]">
-            <td>[[entry.food_name]]</td>
+        <tr ng-repeat="entry in menuEntries">
+            <td>[[entry.food.name]]</td>
             <td>[[entry.quantity]]</td>
-            <td>[[entry.unit_name]]</td>
+            <td>[[entry.unit.name]]</td>
             <td>[[entry.calories]]</td>
             <td>
-                <span ng-if="entry.recipe_name" class="badge">[[entry.recipe_name]]</span>
-                <span ng-if="!entry.recipe_name">N/A</span>
+                <span ng-if="entry.recipe" class="badge">[[entry.recipe.name]]</span>
+                <span ng-if="!entry.recipe">N/A</span>
             </td>
             <td>
-                <i ng-if="!entry.recipe_name" ng-click="deleteFoodEntry(entry.entry_id)" class="delete-item fa fa-times"></i>
-                <i ng-if="entry.recipe_name" ng-click="showDeleteFoodOrRecipeEntryPopup(entry.entry_id, entry.recipe_id)" class="delete-item fa fa-times"></i>
+                <i ng-if="!entry.recipe" ng-click="deleteFoodEntry(entry.id)" class="delete-item fa fa-times"></i>
+                <i ng-if="entry.recipe" ng-click="showDeleteFoodOrRecipeEntryPopup(entry.id, entry.recipe.id)" class="delete-item fa fa-times"></i>
             </td>
         </tr>
     </table>
