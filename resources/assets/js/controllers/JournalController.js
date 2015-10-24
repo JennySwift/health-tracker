@@ -1,7 +1,7 @@
 var app = angular.module('tracker');
 
 (function () {
-	app.controller('journal', function ($scope, $http, DatesFactory, JournalFactory) {
+	app.controller('journal', function ($rootScope, $scope, $http, DatesFactory, JournalFactory) {
 		/**
 		 * scope properties
 		 */
@@ -78,10 +78,6 @@ var app = angular.module('tracker');
                 $scope.filter_results = response.data;
             });
         };
-		
-		/**
-		 * insert
-		 */
 
         /**
          * If the id of the journal entry exists, update the entry.
@@ -89,26 +85,41 @@ var app = angular.module('tracker');
          */
 		$scope.insertOrUpdateJournalEntry = function () {
             if ($scope.journal_entry.id) {
-                JournalFactory.updateJournalEntry($scope.journal_entry).then(function (response) {
-                    $scope.journal_entry = response.data;
-                });
+                updateEntry();
             }
             else {
-                JournalFactory.insertJournalEntry($scope.date.sql).then(function (response) {
-                    $scope.journal_entry = response.data;
-                });
+                createEntry();
             }
 
 		};
+
+        function updateEntry () {
+            $rootScope.showLoading();
+            JournalFactory.update($scope.journal_entry)
+                .then(function (response) {
+                    $scope.journal_entry = response.data.data;
+                    $rootScope.$broadcast('provideFeedback', 'Entry updated');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        }
+
+        function createEntry () {
+            $rootScope.showLoading();
+            JournalFactory.insert($scope.date.sql)
+                .then(function (response) {
+                    $scope.journal_entry = response.data.data;
+                    $rootScope.$broadcast('provideFeedback', 'Entry created');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        }
+
 		
-		/**
-		 * update
-		 */
-		
-		/**
-		 * delete
-		 */
-		
-	}); //end controller
+	});
 
 })();

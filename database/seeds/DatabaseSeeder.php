@@ -41,8 +41,6 @@ class DatabaseSeeder extends Seeder {
 
 		$this->call('WorkoutSeeder');
 
-		$this->call('SeriesWorkoutSeeder');
-
 		//weight
 		$this->call('WeightSeeder');
 

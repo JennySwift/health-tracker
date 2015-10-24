@@ -211,10 +211,16 @@ class PagesController extends Controller
     {
         $date = Carbon::today()->format('Y-m-d');
 
-        $journal = Journal::forCurrentUser()->where('date', $date)->first();
+        $entry = Journal::forCurrentUser()->where('date', $date)->first();
+        if ($entry) {
+            $entry = transform(createItem($entry, new JournalTransformer))['data'];
+        }
+        else {
+            $entry = [];
+        }
 
         JavaScript::put([
-            'entry' => transform(createItem($journal, new JournalTransformer))['data']
+            'entry' => $entry
         ]);
 
         return view('pages.journal.journal');

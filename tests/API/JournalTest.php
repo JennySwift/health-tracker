@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Journal\Journal;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Http\Response;
 
@@ -28,7 +29,7 @@ class JournalTest extends TestCase {
         $this->assertArrayHasKey('text', $content);
 
         $this->assertEquals(1, $content['id']);
-        $this->assertEquals('23/10/15', $content['date']);
+        $this->assertEquals(Carbon::today()->format('d/m/y'), $content['date']);
 
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
 

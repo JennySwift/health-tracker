@@ -1,9 +1,10 @@
 app.factory('JournalFactory', function ($http) {
     return {
 
-        getJournalEntry: function ($sql_date) {
-            return $http.get('api/journal/' + $sql_date);
+        getJournalEntry: function ($sqlDate) {
+            return $http.get('api/journal/' + $sqlDate);
         },
+
         filter: function () {
             var $typing = $("#filter-journal").val();
             var $url = 'select/filterJournalEntries';
@@ -14,22 +15,22 @@ app.factory('JournalFactory', function ($http) {
             return $http.post($url, $data);
         },
 
-        insertJournalEntry: function ($sql_date) {
-            var $url = '/journal';
-            var $text = $("#journal-entry").html();
+        insert: function ($sqlDate) {
+            var $url = 'api/journal';
+
             var $data = {
-                date: $sql_date,
-                text: $text
+                date: $sqlDate,
+                text: $("#journal-entry").html()
             };
 
             return $http.post($url, $data);
         },
 
-        updateJournalEntry: function ($journal) {
-            var $url = $journal.path;
-            var $text = $("#journal-entry").html();
+        update: function ($entry) {
+            var $url = 'api/journal/' + $entry.id;
+
             var $data = {
-                text: $text
+                text: $("#journal-entry").html()
             };
 
             return $http.put($url, $data);
