@@ -5,6 +5,7 @@ use App\Http\Requests;
 use App\Models\Exercises\Entry;
 use App\Models\Exercises\Exercise;
 use App\Models\Units\Unit;
+use App\Repositories\ExerciseEntriesRepository;
 use Auth;
 use Debugbar;
 use Illuminate\Http\Request;
@@ -16,6 +17,29 @@ use Illuminate\Http\Request;
  */
 class ExerciseEntriesController extends Controller
 {
+
+    /**
+     * @var ExerciseEntriesRepository
+     */
+    private $exerciseEntriesRepository;
+
+    /**
+     * @param ExerciseEntriesRepository $exerciseEntriesRepository
+     */
+    public function __construct(ExerciseEntriesRepository $exerciseEntriesRepository)
+    {
+        $this->exerciseEntriesRepository = $exerciseEntriesRepository;
+    }
+
+    /**
+     * Get the user's exercise entries for the day
+     * @param $date
+     * @return mixed
+     */
+    public function index($date)
+    {
+        return $this->exerciseEntriesRepository->getEntriesForTheDay($date);
+    }
 
     /**
      * Returns all entries for an exercise on a specific date
