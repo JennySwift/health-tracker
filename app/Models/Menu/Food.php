@@ -96,30 +96,4 @@ class Food extends Model {
             ->pluck('calories');
     }
 
-    /**
-     *
-     * @param $food_name
-     * @return mixed
-     */
-    public function insertFoodIfNotExists($food_name)
-    {
-        //for quick recipe
-        $count = static::countItem('foods', $food_name);
-
-        if ($count < 1) {
-            //the food does not exist. create the new food.
-            $food_id = static
-                ::insertGetId([
-                    'name' => $food_name,
-                    'user_id' => Auth::user()->id
-                ]);
-        }
-        else {
-            //the food exists. retrieve the id of the food
-            $food_id = static::getId('foods', $food_name);
-        }
-
-        return $food_id;
-    }
-
 }

@@ -12,6 +12,18 @@ use App\Models\Units\Unit;
  */
 class FoodsRepository
 {
+    /**
+     * @var UnitsRepository
+     */
+    private $unitsRepository;
+
+    /**
+     * @param UnitsRepository $unitsRepository
+     */
+    public function __construct(UnitsRepository $unitsRepository)
+    {
+        $this->unitsRepository = $unitsRepository;
+    }
 
     /**
      * Get all food units that belong to the user,
@@ -25,7 +37,7 @@ class FoodsRepository
      */
     public function getFoodInfo($food)
     {
-        $all_food_units = Unit::getFoodUnitsWithCalories($food);
+        $all_food_units = $this->unitsRepository->getFoodUnitsWithCalories($food);
         $food_units = $food->units()->lists('unit_id');
 
         return [
@@ -50,6 +62,27 @@ class FoodsRepository
 
         $foods = transform(createCollection($foods, new FoodTransformer));
         return $foods['data'];
+    }
+
+    /**
+     * For quick recipe feature
+     * @param $food_name
+     * @return mixed
+     */
+    public function insertFoodIfNotExists($food_name)
+    {
+        $food = Food::forCurrentUser()->where('name', $food_name)->first();
+
+        if (!$food) {
+            $food = new Food([
+                'name' => $food_name
+            ]);
+
+            $food->user()->associate(Auth::user());
+            $food->save();
+        }
+
+        return $food;
     }
 
 }

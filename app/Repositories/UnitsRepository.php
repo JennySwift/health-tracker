@@ -5,6 +5,7 @@ namespace App\Repositories;
 
 use App\Models\Units\Unit;
 use DB;
+use Auth;
 
 /**
  * Class UnitsRepository
@@ -60,6 +61,27 @@ class UnitsRepository {
         }
 
         return $units;
+    }
+
+    /**
+     * For quick recipe feature
+     * @param $food_name
+     * @return mixed
+     */
+    public function insertUnitIfNotExists($unit_name)
+    {
+        $unit = Unit::forCurrentUser()->where('name', $unit_name)->first();
+
+        if (!$unit) {
+            $unit = new Unit([
+                'name' => $unit_name
+            ]);
+
+            $unit->user()->associate(Auth::user());
+            $unit->save();
+        }
+
+        return $unit;
     }
 
 }

@@ -6,6 +6,9 @@ use App\Models\Menu\Food;
 use App\Models\Menu\Recipe;
 use App\Models\Menu\RecipeMethod;
 use App\Models\Units\Unit;
+use App\Repositories\FoodsRepository;
+use App\Repositories\RecipesRepository;
+use App\Repositories\UnitsRepository;
 use Auth;
 use DB;
 use Debugbar;
@@ -18,22 +21,29 @@ use Illuminate\Http\Request;
  */
 class QuickRecipesController extends Controller
 {
+    /**
+     * @var RecipesRepository
+     */
+    private $recipesRepository;
+    /**
+     * @var UnitsRepository
+     */
+    private $unitsRepository;
+    /**
+     * @var FoodsRepository
+     */
+    private $foodsRepository;
 
     /**
-     *
-     * @param $name
-     * @param $table
-     * @return mixed
+     * @param RecipesRepository $recipesRepository
+     * @param UnitsRepository $unitsRepository
+     * @param FoodsRepository $foodsRepository
      */
-    private function pluckName($name, $table)
+    public function __construct(RecipesRepository $recipesRepository, UnitsRepository $unitsRepository, FoodsRepository $foodsRepository)
     {
-        //for quick recipe
-        $name = DB::table($table)
-            ->where('name', $name)
-            ->where('user_id', Auth::user()->id)
-            ->pluck('name');
-
-        return $name;
+        $this->recipesRepository = $recipesRepository;
+        $this->unitsRepository = $unitsRepository;
+        $this->foodsRepository = $foodsRepository;
     }
 
     /**
@@ -46,36 +56,28 @@ class QuickRecipesController extends Controller
      */
     public function quickRecipe(Request $request)
     {
-        $recipe = $request->get('recipe');
-        $recipe_name = $recipe['name'];
-        $steps = $recipe['steps'];
-        $contents = $recipe['items'];
+        $data = $request->get('recipe');
 
         if ($request->get('check_similar_names')) {
-            //We are checking for similar names
-            $similar_names = $this->checkEntireRecipeForSimilarNames($contents);
+            $similarNames = $this->checkEntireRecipeForSimilarNames($data['items']);
 
-            if (isset($similar_names['foods']) || isset($similar_names['units'])) {
-                //Similar names were found, so return them
-                return array(
-                    'similar_names' => $similar_names
-                );
+            if (isset($similarNames['foods']) || isset($similarNames['units'])) {
+                return [
+                    'similar_names' => $similarNames
+                ];
             }
             else {
-                //We have checked, but no similar names were found.
-                //So insert the recipe.
-                //Then return the recipes and foods and units.
-                $data_to_insert = $this->populateArrayBeforeInserting($contents);
-
-                return $this->insertEverything($recipe_name, $steps, $data_to_insert);
+                //No similar names were found.
+                //Insert the recipe.
+                $data['items'] = $this->populateArrayBeforeInserting($data['items']);
+                return $this->insertEverything($data);
             }
         }
         else {
-            //We are not checking for similar names,
-            //so we are inserting the recipe
-            $data_to_insert = $this->populateArrayBeforeInserting($contents);
-
-            return $this->insertEverything($recipe_name, $steps, $data_to_insert);
+            //We are not checking for similar names.
+            //Insert the recipe
+            $data['items'] = $this->populateArrayBeforeInserting($data['items']);
+            return $this->insertEverything($data);
         }
     }
 
@@ -89,87 +91,76 @@ class QuickRecipesController extends Controller
         //$index is so if a similar name is found,
         //I know what index it is in the quick recipe array for the javascript.
         $index = -1;
-        $similar_names = [];
+        $similarNames = [];
 
         foreach ($contents as $item) {
             $index++;
-            $food_name = $item['food'];
-            $unit_name = $item['unit'];
 
-            if (isset($item['description'])) {
-                $description = $item['description'];
-            }
-            else {
-                $description = null;
+            $similarFoodInfo = $this->populateSimilarFoodNames($item['food'], $index);
+
+            if (count($similarFoodInfo) > 0) {
+                $similarNames['foods'][] = $similarFoodInfo;
             }
 
-            $similar_food_info = $this->populateSimilarFoodNames($food_name, $index);
+            $similarUnitInfo = $this->populateSimilarUnitNames($item['unit'], $index);
 
-            if (count($similar_food_info) > 0) {
-                $similar_names['foods'][] = $similar_food_info;
+            if (count($similarUnitInfo) > 0) {
+                $similarNames['units'][] = $similarUnitInfo;
             }
-
-            $similar_unit_info = $this->populateSimilarUnitNames($unit_name, $index);
-
-            if (count($similar_unit_info) > 0) {
-                $similar_names['units'][] = $similar_unit_info;
-            }
-
-
         }
 
-        return $similar_names;
+        return $similarNames;
     }
 
     /**
      *
-     * @param $unit_name
+     * @param $unitName
      * @param $index
      * @return array
      */
-    private function populateSimilarUnitNames($unit_name, $index)
+    private function populateSimilarUnitNames($unitName, $index)
     {
-        $similar_unit_names = [];
-        $found = $this->checkSimilarNames($unit_name, 'units');
+        $foundUnit = $this->checkSimilarNames($unitName, 'units');
 
-        if ($found) {
-            $similar_unit_names = [
-                'specified_unit' => array('name' => $unit_name),
-                'existing_unit' => array('name' => $found),
-                'checked' => $found,
+        if ($foundUnit) {
+            return [
+                'specified_unit' => ['name' => $unitName],
+                'existing_unit' => ['name' => $foundUnit],
+                'checked' => $foundUnit,
                 'index' => $index
             ];
         }
 
-        return $similar_unit_names;
+        return [];
     }
 
     /**
      *
-     * @param $food_name
+     * @param $foodName
      * @param $index
      * @return array
      */
-    private function populateSimilarFoodNames($food_name, $index)
+    private function populateSimilarFoodNames($foodName, $index)
     {
-        $similar_food_names = [];
-        $found = $this->checkSimilarNames($food_name, 'foods');
+        $foundFood = $this->checkSimilarNames($foodName, 'foods');
 
-        if ($found) {
-            $similar_food_names = [
-                'specified_food' => array('name' => $food_name),
-                'existing_food' => array('name' => $found),
-                'checked' => $found,
+        if ($foundFood) {
+            return [
+                'specified_food' => ['name' => $foodName],
+                'existing_food' => ['name' => $foundFood],
+                'checked' => $foundFood,
                 'index' => $index
             ];
         }
 
-        return $similar_food_names;
+        return [];
     }
 
     /**
      * We can insert things now that either no similar names were found,
      * or we have already checked for similar names previously.
+     * Add the item to the array for inserting later,
+     * when all items have been added to the array
      * @param $contents
      * @return array
      */
@@ -178,32 +169,12 @@ class QuickRecipesController extends Controller
         $data_to_insert = [];
 
         foreach ($contents as $item) {
-            $food_name = $item['food'];
-            $unit_name = $item['unit'];
-            $quantity = $item['quantity'];
-
-            if (isset($item['description'])) {
-                $description = $item['description'];
-            }
-            else {
-                $description = null;
-            }
-
-            //Retrieve the id if the food exists.
-            //Insert and retrieve the id if the food does not exist
-            $food_id = Food::insertFoodIfNotExists($food_name);
-            //same for the unit
-            $unit_id = Unit::insertUnitIfNotExists($unit_name);
-
-            //Add the item to the array for inserting later,
-            //when all items have been added to the array
-            $data_to_insert[] = array(
-                'food_id' => $food_id,
-                'unit_id' => $unit_id,
-                'quantity' => $quantity,
-                'description' => $description
-            );
-
+            $data_to_insert[] = [
+                'food_id' => $this->foodsRepository->insertFoodIfNotExists($item['food'])->id,
+                'unit_id' => $this->unitsRepository->insertUnitIfNotExists($item['unit'])->id,
+                'quantity' => $item['quantity'],
+                'description' => $item['description']
+            ];
         }
 
         return $data_to_insert;
@@ -211,45 +182,46 @@ class QuickRecipesController extends Controller
 
     /**
      *
-     * @param $recipe_name
-     * @param $steps
-     * @param $data_to_insert
+     * @param $data
      * @return array
      */
-    private function insertEverything($recipe_name, $steps, $data_to_insert)
+    private function insertEverything($data)
     {
-        //insert recipe into recipes table
-        $recipe = Recipe::find($this->insertRecipe($recipe_name));
-
-        //insert the method for the recipe
-        RecipeMethod::insertRecipeMethod($recipe, $steps);
+        $recipe = $this->insertRecipe($data['name']);
+        $this->recipesRepository->insertRecipeMethod($recipe, $data['steps']);
 
         //insert the items into food_recipe table
-        foreach ($data_to_insert as $item) {
-            //insert a row into food_recipe table
-            Recipe::insertFoodIntoRecipe($recipe, $item);
+        foreach ($data['items'] as $item) {
+            $food = Food::find($item['food_id']);
+            $unit = Unit::find($item['unit_id']);
 
-            //insert food and unit ids into calories table
-            //(if the row doesn't exist already in the table)
-            //so that the unit is an associated unit of the food
-            $count = DB::table('food_unit')
-                ->where('food_id', $item['food_id'])
-                ->where('unit_id', $item['unit_id'])
-                ->where('user_id', Auth::user()->id)
-                ->count();
+            $this->insertFoodIntoRecipe($recipe, $item);
 
-            if ($count === 0) {
-                $food = Food::find($item['food_id']);
-                Food::insertUnitInCalories($food, $item['unit_id']);
+            //Attach the unit to the food if it doesn't already belong to the food
+            if ($food->units()->find($unit->id) === 0) {
+                $food->units()->attach($unit->id);
             }
         }
 
-        return array(
-            'recipes' => Recipe::filterRecipes('', []),
-            'foods_with_units' => Food::getAllFoodsWithUnits(),
-            'food_units' => Unit::getFoodUnits()
-        );
+        return $this->recipesRepository->filterRecipes('', []);
     }
+
+    /**
+     * @param $recipe
+     * @param $data
+     */
+    public function insertFoodIntoRecipe($recipe, $data)
+    {
+        $recipe->unit()->associate(Unit::find($data['unit_id']));
+
+        $recipe->foods()->attach($data['food_id'], [
+            'quantity' => $data['quantity'],
+            'description' => $data['description'],
+        ]);
+
+        $recipe->save();
+    }
+
 
     /**
      * Insert recipe into recipes table and retrieve the id
@@ -258,13 +230,14 @@ class QuickRecipesController extends Controller
      */
     private function insertRecipe($name)
     {
-        $id = Recipe
-            ::insertGetId([
-                'name' => $name,
-                'user_id' => Auth::user()->id
-            ]);
+        $recipe = new Recipe([
+            'name' => $name
+        ]);
 
-        return $id;
+        $recipe->user()->associate(Auth::user());
+        $recipe->save();
+
+        return $recipe;
     }
 
     /**
@@ -281,6 +254,22 @@ class QuickRecipesController extends Controller
             ->count();
 
         return $count;
+    }
+
+    /**
+     *
+     * @param $name
+     * @param $table
+     * @return mixed
+     */
+    private function pluckName($name, $table)
+    {
+        $name = DB::table($table)
+            ->where('name', $name)
+            ->where('user_id', Auth::user()->id)
+            ->pluck('name');
+
+        return $name;
     }
 
     /**
