@@ -1,7 +1,7 @@
 var app = angular.module('tracker');
 
 (function () {
-    app.controller('SeriesController', function ($scope, $http, ExercisesFactory, WorkoutsFactory) {
+    app.controller('SeriesController', function ($rootScope, $scope, $http, ExercisesFactory, WorkoutsFactory, ExerciseSeriesFactory) {
 
         /**
          * scope properties
@@ -26,10 +26,17 @@ var app = angular.module('tracker');
          */
 
         $scope.getExerciseSeriesHistory = function ($series_id) {
-            ExercisesSeriesFactory.getExerciseSeriesHistory($series_id).then(function (response) {
-                $scope.show.popups.exercise_series_history = true;
-                $scope.exercise_series_history = response.data;
-            });
+            $rootScope.showLoading();
+            ExerciseSeriesFactory.getExerciseSeriesHistory($series_id)
+                .then(function (response) {
+                    $scope.show.popups.exercise_series_history = true;
+                    $scope.exercise_series_history = response.data;
+                    //$rootScope.$broadcast('provideFeedback', '');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
         };
 
         /**

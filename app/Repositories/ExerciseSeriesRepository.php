@@ -11,6 +11,18 @@ use Carbon\Carbon;
  */
 class ExerciseSeriesRepository
 {
+    /**
+     * @var ExerciseEntriesRepository
+     */
+    private $exerciseEntriesRepository;
+
+    /**
+     * @param ExerciseEntriesRepository $exerciseEntriesRepository
+     */
+    public function __construct(ExerciseEntriesRepository $exerciseEntriesRepository)
+    {
+        $this->exerciseEntriesRepository = $exerciseEntriesRepository;
+    }
 
     /**
      * Get all the exercise series that belong to the user
@@ -49,9 +61,7 @@ class ExerciseSeriesRepository
             ->orderBy('date', 'desc')->get();
 
         //Populate an array to return
-//        return $this->compactExerciseEntriesForHistory($entries);
-
-        return $entries;
+        return $this->compactExerciseEntriesForHistory($entries);
     }
 
     /**
@@ -91,8 +101,8 @@ class ExerciseSeriesRepository
                     'description' => $entry->description,
                     'step_number' => $entry->step_number,
                     'unit_name' => $entry->unit->name,
-                    'sets' => $this->getExerciseSets($sql_date, $entry->exercise_id, $entry->exercise_unit_id),
-                    'total' => $this->getTotalExerciseReps($sql_date, $entry->exercise_id, $entry->exercise_unit_id),
+                    'sets' => $this->exerciseEntriesRepository->getExerciseSets($sql_date, $entry->exercise_id, $entry->exercise_unit_id),
+                    'total' => $this->exerciseEntriesRepository->getTotalExerciseReps($sql_date, $entry->exercise_id, $entry->exercise_unit_id),
                     'quantity' => $entry->quantity,
                 );
             }

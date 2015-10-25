@@ -2,7 +2,9 @@
 
 	<div class="popup-inner">
 
-		<table class="table table-bordered">
+        <div ng-if="exercise_series_history.length === 0">No entries to show</div>
+
+		<table ng-if="exercise_series_history.length > 0" class="table table-bordered">
 
 			<tr>
 				<th>date</th>
