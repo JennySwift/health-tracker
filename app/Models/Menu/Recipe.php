@@ -1,20 +1,18 @@
 <?php namespace App\Models\Menu;
 
+use App\Traits\Models\Relationships\OwnedByUser;
 use Illuminate\Database\Eloquent\Model;
 use Auth;
 use DB;
 use Debugbar;
-
-use App\Models\Tags\Tag;
-use App\Models\Menu\RecipeMethod;
-use App\Models\Menu\Food;
-use App\Models\Units\Unit;
 
 /**
  * Class Recipe
  * @package App\Models\Menu
  */
 class Recipe extends Model {
+
+    use OwnedByUser;
 
     /**
      * @var array

@@ -49,12 +49,12 @@ class RecipesRepository {
         foreach ($recipes as $recipe) {
             $id = $recipe->id;
             $name = $recipe->name;
-            $tags = $this->getRecipeTags($id);
+//            $tags = $this->getRecipeTags($id);
 
             $array[] = array(
                 "id" => $id,
                 "name" => $name,
-                "tags" => $tags
+//                "tags" => $tags
             );
         }
 

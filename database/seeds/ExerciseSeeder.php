@@ -12,50 +12,68 @@ use Illuminate\Support\Facades\Auth;
 
 class ExerciseSeeder extends Seeder {
 
-	public function run()
+    private $user;
+
+    public function run()
 	{
 		Exercise::truncate();
 
-		$faker = Faker::create();
-
-		$pushup_series = ['kneeling pushups', 'pushups', 'one-arm pushups'];
-		$squat_series = ['assisted squats', 'squats', 'one-legged-squats'];
+		$pushups = ['kneeling pushups', 'pushups', 'one-arm pushups'];
+		$squats = ['assisted squats', 'squats', 'one-legged-squats'];
 
         $users = User::all();
 
         foreach($users as $user) {
-            $index = 0;
-            $exercise_unit_ids = Unit::where('user_id', $user->id)->where('for', 'exercise')->lists('id')->all();
-            $series_ids = Series::where('user_id', $user->id)->lists('id')->all();
+            $this->user = $user;
 
-            foreach ($pushup_series as $exercise) {
-                $index++;
-                DB::table('exercises')->insert([
-                    'name' => $exercise,
-                    'default_unit_id' => $faker->randomElement($exercise_unit_ids),
-                    'description' => $faker->word,
-                    'default_quantity' => 5,
-                    'step_number' => $index,
-                    'series_id' => 1,
-                    'user_id' => $user->id
-                ]);
-            }
+            $exercise_unit_ids = Unit::where('user_id', $this->user->id)
+                ->where('for', 'exercise')
+                ->lists('id')
+                ->all();
 
-            $index = 0;
-            foreach ($squat_series as $exercise) {
-                $index++;
-                DB::table('exercises')->insert([
-                    'name' => $exercise,
-                    'default_unit_id' => $faker->randomElement($exercise_unit_ids),
-                    'description' => $faker->word,
-                    'default_quantity' => 5,
-                    'step_number' => $index,
-                    'series_id' => 3,
-                    'user_id' => $user->id
-                ]);
-            }
+            $this->insertExercisesInSeries(
+                $pushups,
+                Unit::find($exercise_unit_ids[0]),
+                Series::where('user_id', $this->user->id)->where('name', 'pushup')->first()
+            );
+
+            $this->insertExercisesInSeries(
+                $squats,
+                Unit::find($exercise_unit_ids[1]),
+                Series::where('user_id', $this->user->id)->where('name', 'squat')->first()
+            );
+
         }
 
 	}
+
+    /**
+     *
+     * @param $series
+     */
+    private function insertExercisesInSeries($exercises, $unit, $series)
+    {
+        $index = 0;
+        $faker = Faker::create();
+
+//        $series_ids = Series::where('user_id', $this->user->id)->lists('id')->all();
+
+        foreach ($exercises as $exercise) {
+            $index++;
+            $exercise = new Exercise([
+                'name' => $exercise,
+                'description' => $faker->word,
+                'default_quantity' => 5,
+                'step_number' => $index,
+            ]);
+
+            $exercise->user()->associate($this->user);
+            $exercise->defaultUnit()->associate($unit);
+
+            $exercise->series()->associate($series);
+            $exercise->save();
+
+        }
+    }
 
 }
