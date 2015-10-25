@@ -88,6 +88,19 @@ var app = angular.module('tracker');
             //Get calorie average for the week
         };
 
+        $rootScope.$on('getEntries', function () {
+            $rootScope.showLoading();
+            WeightsFactory.getEntriesForTheDay($scope.date.sql)
+                .then(function (response) {
+                    $scope.weight = response.data;
+                    //$rootScope.$broadcast('provideFeedback', '');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        });
+
         $scope.insertOrUpdateWeight = function ($keycode) {
             if ($keycode === 13) {
                 WeightsFactory.insertWeight($scope.date.sql).then(function (response) {

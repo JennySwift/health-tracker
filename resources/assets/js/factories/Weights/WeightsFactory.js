@@ -1,6 +1,11 @@
 app.factory('WeightsFactory', function ($http) {
     return {
 
+        getEntriesForTheDay: function ($date) {
+            var $url = 'api/weights/' + $date;
+            return $http.get($url);
+        },
+
         insertWeight: function ($sql_date) {
             var $url = 'insert/weight';
             var $weight = $("#weight").val();
