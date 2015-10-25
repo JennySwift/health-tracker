@@ -98,18 +98,6 @@ class Food extends Model {
 
     /**
      *
-     * @param $calories_for_item
-     * @param $quantity
-     * @return mixed
-     */
-    public static function getCaloriesForQuantity($calories_for_item, $quantity)
-	{
-		$calories_for_quantity = $calories_for_item * $quantity;
-		return $calories_for_quantity;
-	}
-
-    /**
-     *
      * @param $food_name
      * @return mixed
      */

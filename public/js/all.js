@@ -13448,7 +13448,7 @@ var app = angular.module('tracker');
 var app = angular.module('tracker');
 
 (function () {
-    app.controller('entries', function ($scope, $http, DatesFactory, AutocompleteFactory, WeightsFactory) {
+    app.controller('entries', function ($rootScope, $scope, $http, DatesFactory, AutocompleteFactory, WeightsFactory) {
 
         $scope.weight = weight;
 
@@ -13527,6 +13527,7 @@ var app = angular.module('tracker');
          * Get all the user's entries for the current date
          */
         $scope.getEntries = function () {
+            $rootScope.$emit('getEntries');
             //Get weight
             //Get exercise entries
             //Get menu entries
@@ -13574,6 +13575,19 @@ angular.module('tracker')
         $scope.exerciseUnits = exerciseUnits;
 
         $scope.selectedExercise = {};
+
+        $rootScope.$on('getEntries', function () {
+            $rootScope.showLoading();
+            ExerciseEntriesFactory.getEntriesForTheDay($scope.date.sql)
+                .then(function (response) {
+                    $scope.exerciseEntries = response.data;
+                    //$rootScope.$broadcast('provideFeedback', '');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        });
 
         /**
          * Get all the the user's entries for a particular exercise
@@ -13683,7 +13697,7 @@ angular.module('tracker')
 
     });
 angular.module('tracker')
-    .controller('MenuEntriesController', function ($scope, FoodEntriesFactory, RecipeEntriesFactory) {
+    .controller('MenuEntriesController', function ($rootScope, $scope, MenuEntriesFactory, RecipeEntriesFactory) {
 
         $scope.menuEntries = menuEntries;
 
@@ -13702,12 +13716,25 @@ angular.module('tracker')
             unit: {}
         };
 
+        $rootScope.$on('getEntries', function () {
+            $rootScope.showLoading();
+            MenuEntriesFactory.getEntriesForTheDay($scope.date.sql)
+                .then(function (response) {
+                    $scope.menuEntries = response.data;
+                    //$rootScope.$broadcast('provideFeedback', '');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        });
+
         $scope.insertMenuEntry = function () {
             $scope.new_entry.food.id = $scope.selected.food.id;
             $scope.new_entry.food.name = $scope.selected.food.name;
             $scope.new_entry.food.unit_id = $("#food-unit").val();
 
-            FoodEntriesFactory.insertMenuEntry($scope.date.sql, $scope.new_entry.food).then(function (response) {
+            MenuEntriesFactory.insertMenuEntry($scope.date.sql, $scope.new_entry.food).then(function (response) {
                 $scope.entries.menu = response.data.food_entries;
                 $scope.calories.day = response.data.calories_for_the_day;
                 $scope.calories.week_avg = response.data.calories_for_the_week;
@@ -13729,7 +13756,7 @@ angular.module('tracker')
         $scope.deleteFoodEntry = function ($entry_id) {
             $entry_id = $entry_id || $scope.selected.entry.id;
 
-            FoodEntriesFactory.deleteFoodEntry($entry_id, $scope.date.sql).then(function (response) {
+            MenuEntriesFactory.deleteFoodEntry($entry_id, $scope.date.sql).then(function (response) {
                 $scope.entries.menu = response.data.food_entries;
                 $scope.calories.day = response.data.calories_for_the_day;
                 $scope.calories.week_avg = response.data.calories_for_the_week;
@@ -13914,290 +13941,6 @@ angular.module('tracker')
         };
 
     });
-angular.module('tracker')
-    .controller('ExerciseUnitsController', function ($rootScope, $scope, ExerciseUnitsFactory) {
-
-        $scope.units = units;
-
-        $scope.insertExerciseUnit = function ($keycode) {
-            if ($keycode === 13) {
-                //$scope.showLoading();
-                ExerciseUnitsFactory.insert()
-                    .then(function (response) {
-                        $scope.units.push(response.data.data);
-                        $rootScope.$broadcast('provideFeedback', 'Unit created');
-                        //$scope.hideLoading();
-                    })
-                    .catch(function (response) {
-                        $rootScope.responseError(response);
-                    });
-            }
-        };
-
-        //Todo
-        $scope.updateExerciseUnit = function () {
-
-        };
-
-        $scope.deleteExerciseUnit = function ($unit) {
-            //$scope.showLoading();
-            ExerciseUnitsFactory.destroy($unit)
-                .then(function (response) {
-                    $scope.units = _.without($scope.units, $unit);
-                    $rootScope.$broadcast('provideFeedback', 'Unit deleted');
-                    //$scope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        };
-
-    });
-var app = angular.module('tracker');
-
-(function () {
-    app.controller('exercises', function ($rootScope, $scope, $http, ExercisesFactory) {
-
-        $scope.exercises = all_exercises;
-        $scope.exercise_entries = {};
-        $scope.exercise_series = series;
-        $scope.workouts = workouts;
-        $scope.exercise_tags = exercise_tags;
-        $scope.units = units;
-
-        //show
-        $scope.show = {
-            autocomplete_options: {
-                exercises: false,
-            },
-            popups: {
-                exercise: false,
-                exercise_entries: false,
-                exercise_series_history: false
-            }
-        };
-
-        //selected
-        $scope.selected = {};
-
-        $scope.insertExercise = function ($keycode) {
-            if ($keycode === 13) {
-                $rootScope.showLoading();
-                ExercisesFactory.insert()
-                    .then(function (response) {
-                        $scope.exercises.push(response.data);
-                        $rootScope.$broadcast('provideFeedback', 'Exercise created');
-                        $rootScope.hideLoading();
-                    })
-                    .catch(function (response) {
-                        $rootScope.responseError(response);
-                    });
-            }
-        };
-
-        $scope.updateExercise = function () {
-            ExercisesFactory.updateExercise($scope.exercise_popup.exercise).then(function (response) {
-                //$scope.exercises = response.data;
-
-                //deletes tags from the exercise then adds the correct ones
-                ExercisesFactory.insertTagsInExercise($scope.selected.exercise.id, $scope.exercise_popup.tags).then(function (response) {
-                    $scope.exercises = response.data;
-                    $scope.show.popups.exercise = false;
-                });
-            });
-        };
-
-        $scope.deleteExercise = function ($exercise) {
-            $rootScope.showLoading();
-            ExercisesFactory.destroy($exercise)
-                .then(function (response) {
-                    $scope.exercises = _.without($scope.exercises, $exercise);
-                    $rootScope.$broadcast('provideFeedback', 'Execise deleted');
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        };
-
-        /**
-         * popups
-         */
-
-        $scope.showExercisePopup = function ($exercise) {
-            $scope.selected.exercise = $exercise;
-
-            ExercisesFactory.getExerciseInfo($exercise).then(function (response) {
-                $scope.exercise_popup = response.data;
-                $scope.show.popups.exercise = true;
-            });
-        };
-
-        $scope.closePopup = function ($event, $popup) {
-            var $target = $event.target;
-            if ($target.className === 'popup-outer') {
-                $scope.show.popups[$popup] = false;
-            }
-        };
-
-    });
-
-})();
-var app = angular.module('tracker');
-
-(function () {
-    app.controller('SeriesController', function ($scope, $http, ExercisesFactory, WorkoutsFactory) {
-
-        /**
-         * scope properties
-         */
-
-        $scope.exercise_series = series;
-        $scope.workouts = workouts;
-
-        //show
-        $scope.show = {
-            popups: {
-                exercise_series_history: false
-            }
-        };
-
-        $scope.selected = {
-            exercise_series: {}
-        };
-
-        /**
-         * select
-         */
-
-        $scope.getExerciseSeriesHistory = function ($series_id) {
-            ExercisesSeriesFactory.getExerciseSeriesHistory($series_id).then(function (response) {
-                $scope.show.popups.exercise_series_history = true;
-                $scope.exercise_series_history = response.data;
-            });
-        };
-
-        /**
-         * insert
-         */
-
-        $scope.insertExerciseSeries = function ($keypress) {
-            if ($keypress !== 13) {
-                return;
-            }
-            ExercisesSeriesFactory.insertExerciseSeries().then(function (response) {
-                $scope.exercise_series = response.data;
-            });
-        };
-
-        $scope.deleteAndInsertSeriesIntoWorkouts = function () {
-            WorkoutsFactory.deleteAndInsertSeriesIntoWorkouts($scope.selected.exercise_series.id, $scope.exercise_series_popup.workouts).then(function (response) {
-                $scope.workouts = response.data;
-                $scope.show.popups.exercise_series = false;
-            });
-        };
-
-        $scope.deleteExerciseSeries = function ($series) {
-            ExercisesSeriesFactory.deleteExerciseSeries($series).then(function (response) {
-                $scope.exercise_series = response.data;
-            });
-        };
-
-        /**
-         * popups
-         */
-
-        $scope.showExerciseSeriesPopup = function ($series) {
-            $scope.selected.exercise_series = $series;
-
-            ExercisesFactory.getExerciseSeriesInfo($series).then(function (response) {
-                $scope.exercise_series_popup = response.data;
-                $scope.show.popups.exercise_series = true;
-            });
-        };
-
-        $scope.closePopup = function ($event, $popup) {
-            var $target = $event.target;
-            if ($target.className === 'popup-outer') {
-                $scope.show.popups[$popup] = false;
-            }
-        };
-
-    });
-
-})();
-var app = angular.module('tracker');
-
-(function () {
-    app.controller('ExerciseTagsController', function ($scope, ExerciseTagsFactory) {
-
-        $scope.exercise_tags = exercise_tags;
-
-        $scope.insertExerciseTag = function ($keypress) {
-            if ($keypress !== 13) {
-                return;
-            }
-            ExerciseTagsFactory.insertExerciseTag().then(function (response) {
-                $scope.exercise_tags = response.data;
-            });
-        };
-
-        $scope.deleteExerciseTag = function ($id) {
-            ExerciseTagsFactory.deleteExerciseTag($id).then(function (response) {
-                $scope.exercise_tags = response.data;
-            });
-        };
-
-        /**
-         * popups
-         */
-
-        $scope.closePopup = function ($event, $popup) {
-            var $target = $event.target;
-            if ($target.className === 'popup-outer') {
-                $scope.show.popups[$popup] = false;
-            }
-        };
-
-    });
-
-})();
-var app = angular.module('tracker');
-
-(function () {
-    app.controller('workouts', function ($scope, $http, ExercisesFactory, WorkoutsFactory) {
-
-        $scope.workouts = workouts;
-
-        $scope.insertWorkout = function ($keypress) {
-            if ($keypress !== 13) {
-                return;
-            }
-            WorkoutsFactory.insertWorkout().then(function (response) {
-                $scope.workouts = response.data;
-            });
-        };
-
-        $scope.insertSeriesIntoWorkout = function () {
-            WorkoutsFactory.insertSeriesIntoWorkout($workout_id, $series_id).then(function (response) {
-                $scope.exercise_series = response.data;
-            });
-        };
-
-        /**
-         * popups
-         */
-
-        $scope.closePopup = function ($event, $popup) {
-            var $target = $event.target;
-            if ($target.className === 'popup-outer') {
-                $scope.show.popups[$popup] = false;
-            }
-        };
-
-    });
-
-})();
 angular.module('tracker')
     .controller('FoodUnitsController', function ($scope, $rootScope, FoodUnitsFactory) {
         $scope.units = units;
@@ -14858,6 +14601,290 @@ var app = angular.module('tracker');
 	}); //end controller
 
 })();
+angular.module('tracker')
+    .controller('ExerciseUnitsController', function ($rootScope, $scope, ExerciseUnitsFactory) {
+
+        $scope.units = units;
+
+        $scope.insertExerciseUnit = function ($keycode) {
+            if ($keycode === 13) {
+                //$scope.showLoading();
+                ExerciseUnitsFactory.insert()
+                    .then(function (response) {
+                        $scope.units.push(response.data.data);
+                        $rootScope.$broadcast('provideFeedback', 'Unit created');
+                        //$scope.hideLoading();
+                    })
+                    .catch(function (response) {
+                        $rootScope.responseError(response);
+                    });
+            }
+        };
+
+        //Todo
+        $scope.updateExerciseUnit = function () {
+
+        };
+
+        $scope.deleteExerciseUnit = function ($unit) {
+            //$scope.showLoading();
+            ExerciseUnitsFactory.destroy($unit)
+                .then(function (response) {
+                    $scope.units = _.without($scope.units, $unit);
+                    $rootScope.$broadcast('provideFeedback', 'Unit deleted');
+                    //$scope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        };
+
+    });
+var app = angular.module('tracker');
+
+(function () {
+    app.controller('exercises', function ($rootScope, $scope, $http, ExercisesFactory) {
+
+        $scope.exercises = all_exercises;
+        $scope.exercise_entries = {};
+        $scope.exercise_series = series;
+        $scope.workouts = workouts;
+        $scope.exercise_tags = exercise_tags;
+        $scope.units = units;
+
+        //show
+        $scope.show = {
+            autocomplete_options: {
+                exercises: false,
+            },
+            popups: {
+                exercise: false,
+                exercise_entries: false,
+                exercise_series_history: false
+            }
+        };
+
+        //selected
+        $scope.selected = {};
+
+        $scope.insertExercise = function ($keycode) {
+            if ($keycode === 13) {
+                $rootScope.showLoading();
+                ExercisesFactory.insert()
+                    .then(function (response) {
+                        $scope.exercises.push(response.data);
+                        $rootScope.$broadcast('provideFeedback', 'Exercise created');
+                        $rootScope.hideLoading();
+                    })
+                    .catch(function (response) {
+                        $rootScope.responseError(response);
+                    });
+            }
+        };
+
+        $scope.updateExercise = function () {
+            ExercisesFactory.updateExercise($scope.exercise_popup.exercise).then(function (response) {
+                //$scope.exercises = response.data;
+
+                //deletes tags from the exercise then adds the correct ones
+                ExercisesFactory.insertTagsInExercise($scope.selected.exercise.id, $scope.exercise_popup.tags).then(function (response) {
+                    $scope.exercises = response.data;
+                    $scope.show.popups.exercise = false;
+                });
+            });
+        };
+
+        $scope.deleteExercise = function ($exercise) {
+            $rootScope.showLoading();
+            ExercisesFactory.destroy($exercise)
+                .then(function (response) {
+                    $scope.exercises = _.without($scope.exercises, $exercise);
+                    $rootScope.$broadcast('provideFeedback', 'Execise deleted');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        };
+
+        /**
+         * popups
+         */
+
+        $scope.showExercisePopup = function ($exercise) {
+            $scope.selected.exercise = $exercise;
+
+            ExercisesFactory.getExerciseInfo($exercise).then(function (response) {
+                $scope.exercise_popup = response.data;
+                $scope.show.popups.exercise = true;
+            });
+        };
+
+        $scope.closePopup = function ($event, $popup) {
+            var $target = $event.target;
+            if ($target.className === 'popup-outer') {
+                $scope.show.popups[$popup] = false;
+            }
+        };
+
+    });
+
+})();
+var app = angular.module('tracker');
+
+(function () {
+    app.controller('SeriesController', function ($scope, $http, ExercisesFactory, WorkoutsFactory) {
+
+        /**
+         * scope properties
+         */
+
+        $scope.exercise_series = series;
+        $scope.workouts = workouts;
+
+        //show
+        $scope.show = {
+            popups: {
+                exercise_series_history: false
+            }
+        };
+
+        $scope.selected = {
+            exercise_series: {}
+        };
+
+        /**
+         * select
+         */
+
+        $scope.getExerciseSeriesHistory = function ($series_id) {
+            ExercisesSeriesFactory.getExerciseSeriesHistory($series_id).then(function (response) {
+                $scope.show.popups.exercise_series_history = true;
+                $scope.exercise_series_history = response.data;
+            });
+        };
+
+        /**
+         * insert
+         */
+
+        $scope.insertExerciseSeries = function ($keypress) {
+            if ($keypress !== 13) {
+                return;
+            }
+            ExercisesSeriesFactory.insertExerciseSeries().then(function (response) {
+                $scope.exercise_series = response.data;
+            });
+        };
+
+        $scope.deleteAndInsertSeriesIntoWorkouts = function () {
+            WorkoutsFactory.deleteAndInsertSeriesIntoWorkouts($scope.selected.exercise_series.id, $scope.exercise_series_popup.workouts).then(function (response) {
+                $scope.workouts = response.data;
+                $scope.show.popups.exercise_series = false;
+            });
+        };
+
+        $scope.deleteExerciseSeries = function ($series) {
+            ExercisesSeriesFactory.deleteExerciseSeries($series).then(function (response) {
+                $scope.exercise_series = response.data;
+            });
+        };
+
+        /**
+         * popups
+         */
+
+        $scope.showExerciseSeriesPopup = function ($series) {
+            $scope.selected.exercise_series = $series;
+
+            ExercisesFactory.getExerciseSeriesInfo($series).then(function (response) {
+                $scope.exercise_series_popup = response.data;
+                $scope.show.popups.exercise_series = true;
+            });
+        };
+
+        $scope.closePopup = function ($event, $popup) {
+            var $target = $event.target;
+            if ($target.className === 'popup-outer') {
+                $scope.show.popups[$popup] = false;
+            }
+        };
+
+    });
+
+})();
+var app = angular.module('tracker');
+
+(function () {
+    app.controller('ExerciseTagsController', function ($scope, ExerciseTagsFactory) {
+
+        $scope.exercise_tags = exercise_tags;
+
+        $scope.insertExerciseTag = function ($keypress) {
+            if ($keypress !== 13) {
+                return;
+            }
+            ExerciseTagsFactory.insertExerciseTag().then(function (response) {
+                $scope.exercise_tags = response.data;
+            });
+        };
+
+        $scope.deleteExerciseTag = function ($id) {
+            ExerciseTagsFactory.deleteExerciseTag($id).then(function (response) {
+                $scope.exercise_tags = response.data;
+            });
+        };
+
+        /**
+         * popups
+         */
+
+        $scope.closePopup = function ($event, $popup) {
+            var $target = $event.target;
+            if ($target.className === 'popup-outer') {
+                $scope.show.popups[$popup] = false;
+            }
+        };
+
+    });
+
+})();
+var app = angular.module('tracker');
+
+(function () {
+    app.controller('workouts', function ($scope, $http, ExercisesFactory, WorkoutsFactory) {
+
+        $scope.workouts = workouts;
+
+        $scope.insertWorkout = function ($keypress) {
+            if ($keypress !== 13) {
+                return;
+            }
+            WorkoutsFactory.insertWorkout().then(function (response) {
+                $scope.workouts = response.data;
+            });
+        };
+
+        $scope.insertSeriesIntoWorkout = function () {
+            WorkoutsFactory.insertSeriesIntoWorkout($workout_id, $series_id).then(function (response) {
+                $scope.exercise_series = response.data;
+            });
+        };
+
+        /**
+         * popups
+         */
+
+        $scope.closePopup = function ($event, $popup) {
+            var $target = $event.target;
+            if ($target.className === 'popup-outer') {
+                $scope.show.popups[$popup] = false;
+            }
+        };
+
+    });
+
+})();
 app.factory('AutocompleteFactory', function ($http) {
 	var $object = {};
 	$object.autocompleteUpArrow = function ($array) {
@@ -15000,6 +15027,10 @@ angular.module('tracker')
                 };
 
                 return $http.post($url, $data);
+            },
+            getEntriesForTheDay: function ($date) {
+                var $url = 'api/exerciseEntries/' + $date;
+                return $http.get($url);
             },
             insert: function ($sqlDate, $newEntry) {
                 var $url = 'api/exerciseEntries';
@@ -15211,36 +15242,63 @@ angular.module('tracker')
             },
         }
     });
-angular.module('tracker')
-    .factory('FoodEntriesFactory', function ($http) {
-        return {
-            insertMenuEntry: function ($sql_date, $new_entry) {
-                //for logging a food. there is a separate function if we are logging a recipe.
-                var $url = 'insert/menuEntry';
+app.factory('WeightsFactory', function ($http) {
+    return {
 
-                var $data = {
-                    date: $sql_date,
-                    new_entry: $new_entry,
-                };
+        insertWeight: function ($sql_date) {
+            var $url = 'insert/weight';
+            var $weight = $("#weight").val();
 
-                $("#menu").val("").focus();
+            var $data = {
+                date: $sql_date,
+                weight: $weight
+            };
 
-                return $http.post($url, $data);
-            },
+            return $http.post($url, $data);
+        },
 
-            deleteFoodEntry: function ($id, $sql_date) {
-                if (confirm("Are you sure you want to delete this entry?")) {
-                    var $url = 'delete/foodEntry';
-                    var $data = {
-                        id: $id,
-                        date: $sql_date
-                    };
 
-                    return $http.post($url, $data);
-                }
-            }
+    };
+});
+app.factory('JournalFactory', function ($http) {
+    return {
+
+        getJournalEntry: function ($sqlDate) {
+            return $http.get('api/journal/' + $sqlDate);
+        },
+
+        filter: function () {
+            var $typing = $("#filter-journal").val();
+            var $url = 'select/filterJournalEntries';
+            var $data = {
+                typing: $typing
+            };
+
+            return $http.post($url, $data);
+        },
+
+        insert: function ($sqlDate) {
+            var $url = 'api/journal';
+
+            var $data = {
+                date: $sqlDate,
+                text: $("#journal-entry").html()
+            };
+
+            return $http.post($url, $data);
+        },
+
+        update: function ($entry) {
+            var $url = 'api/journal/' + $entry.id;
+
+            var $data = {
+                text: $("#journal-entry").html()
+            };
+
+            return $http.put($url, $data);
         }
-    });
+    };
+});
 angular.module('tracker')
     .factory('FoodUnitsFactory', function ($http) {
         return {
@@ -15391,6 +15449,40 @@ app.factory('FoodsFactory', function ($http) {
 
 	};
 });
+angular.module('tracker')
+    .factory('MenuEntriesFactory', function ($http) {
+        return {
+            getEntriesForTheDay: function ($date) {
+                var $url = 'api/menuEntries/' + $date;
+                return $http.get($url);
+            },
+            insertMenuEntry: function ($sql_date, $new_entry) {
+                //for logging a food. there is a separate function if we are logging a recipe.
+                var $url = 'insert/menuEntry';
+
+                var $data = {
+                    date: $sql_date,
+                    new_entry: $new_entry,
+                };
+
+                $("#menu").val("").focus();
+
+                return $http.post($url, $data);
+            },
+
+            deleteFoodEntry: function ($id, $sql_date) {
+                if (confirm("Are you sure you want to delete this entry?")) {
+                    var $url = 'delete/foodEntry';
+                    var $data = {
+                        id: $id,
+                        date: $sql_date
+                    };
+
+                    return $http.post($url, $data);
+                }
+            }
+        }
+    });
 app.factory('QuickRecipeFactory', function ($http) {
 	var $object = {};
 
@@ -15875,63 +15967,6 @@ angular.module('tracker')
             },
         }
     });
-app.factory('JournalFactory', function ($http) {
-    return {
-
-        getJournalEntry: function ($sqlDate) {
-            return $http.get('api/journal/' + $sqlDate);
-        },
-
-        filter: function () {
-            var $typing = $("#filter-journal").val();
-            var $url = 'select/filterJournalEntries';
-            var $data = {
-                typing: $typing
-            };
-
-            return $http.post($url, $data);
-        },
-
-        insert: function ($sqlDate) {
-            var $url = 'api/journal';
-
-            var $data = {
-                date: $sqlDate,
-                text: $("#journal-entry").html()
-            };
-
-            return $http.post($url, $data);
-        },
-
-        update: function ($entry) {
-            var $url = 'api/journal/' + $entry.id;
-
-            var $data = {
-                text: $("#journal-entry").html()
-            };
-
-            return $http.put($url, $data);
-        }
-    };
-});
-app.factory('WeightsFactory', function ($http) {
-    return {
-
-        insertWeight: function ($sql_date) {
-            var $url = 'insert/weight';
-            var $weight = $("#weight").val();
-
-            var $data = {
-                date: $sql_date,
-                weight: $weight
-            };
-
-            return $http.post($url, $data);
-        },
-
-
-    };
-});
 angular.module('tracker')
     .directive('feedbackDirective', function ($sce, $timeout) {
         return {

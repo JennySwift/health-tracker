@@ -11,6 +11,10 @@ angular.module('tracker')
 
                 return $http.post($url, $data);
             },
+            getEntriesForTheDay: function ($date) {
+                var $url = 'api/exerciseEntries/' + $date;
+                return $http.get($url);
+            },
             insert: function ($sqlDate, $newEntry) {
                 var $url = 'api/exerciseEntries';
 

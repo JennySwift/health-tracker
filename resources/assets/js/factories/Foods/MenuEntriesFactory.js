@@ -1,6 +1,10 @@
 angular.module('tracker')
-    .factory('FoodEntriesFactory', function ($http) {
+    .factory('MenuEntriesFactory', function ($http) {
         return {
+            getEntriesForTheDay: function ($date) {
+                var $url = 'api/menuEntries/' + $date;
+                return $http.get($url);
+            },
             insertMenuEntry: function ($sql_date, $new_entry) {
                 //for logging a food. there is a separate function if we are logging a recipe.
                 var $url = 'insert/menuEntry';

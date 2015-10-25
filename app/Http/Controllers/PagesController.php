@@ -4,6 +4,7 @@ use App\Http\Requests;
 use App\Http\Transformers\JournalTransformer;
 use App\Models\Journal\Journal;
 use App\Models\Tags\Tag;
+use App\Repositories\CaloriesRepository;
 use App\Repositories\ExerciseEntriesRepository;
 use App\Repositories\ExercisesRepository;
 use App\Repositories\FoodsRepository;
@@ -50,6 +51,10 @@ class PagesController extends Controller
      * @var WorkoutsRepository
      */
     private $workoutsRepository;
+    /**
+     * @var CaloriesRepository
+     */
+    private $caloriesRepository;
 
     /**
      * Create a new controller instance.
@@ -61,8 +66,9 @@ class PagesController extends Controller
      * @param MenuEntriesRepository $menuEntriesRepository
      * @param RecipesRepository $recipesRepository
      * @param WorkoutsRepository $workoutsRepository
+     * @param CaloriesRepository $caloriesRepository
      */
-    public function __construct(ExercisesRepository $exercisesRepository, FoodsRepository $foodsRepository, UnitsRepository $unitsRepository, ExerciseEntriesRepository $exerciseEntriesRepository, MenuEntriesRepository $menuEntriesRepository, RecipesRepository $recipesRepository, WorkoutsRepository $workoutsRepository)
+    public function __construct(ExercisesRepository $exercisesRepository, FoodsRepository $foodsRepository, UnitsRepository $unitsRepository, ExerciseEntriesRepository $exerciseEntriesRepository, MenuEntriesRepository $menuEntriesRepository, RecipesRepository $recipesRepository, WorkoutsRepository $workoutsRepository, CaloriesRepository $caloriesRepository)
     {
         $this->middleware('auth');
         $this->exercisesRepository = $exercisesRepository;
@@ -72,6 +78,7 @@ class PagesController extends Controller
         $this->menuEntriesRepository = $menuEntriesRepository;
         $this->recipesRepository = $recipesRepository;
         $this->workoutsRepository = $workoutsRepository;
+        $this->caloriesRepository = $caloriesRepository;
     }
 
     /**
@@ -93,8 +100,8 @@ class PagesController extends Controller
             "foodUnits" => $this->unitsRepository->getFoodUnits(),
 
             "weight" => $weightsRepository->getWeightForTheDay($date),
-            "calories_for_the_day" => $this->menuEntriesRepository->getCaloriesForDay($date),
-            "calories_for_the_week" => $this->menuEntriesRepository->getCaloriesFor7Days($date)
+            "calories_for_the_day" => $this->caloriesRepository->getCaloriesForDay($date),
+            "calories_for_the_week" => $this->caloriesRepository->getCaloriesFor7Days($date)
         ]);
 
         return view('pages.entries.entries');

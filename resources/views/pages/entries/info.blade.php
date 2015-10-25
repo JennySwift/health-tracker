@@ -12,7 +12,7 @@
 
 		<li ng-show="edit_weight !== true" ng-click="editWeight()" class="list-group-item pointer">
 			<span>Today's weight: </span>
-			<span class="badge">[[weight | number:2]]</span>
+			<span class="badge">[[weight.weight | number:2]]</span>
 		</li>
 
 		<li ng-show="edit_weight === true" class="list-group-item">

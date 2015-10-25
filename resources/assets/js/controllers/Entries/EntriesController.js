@@ -1,7 +1,7 @@
 var app = angular.module('tracker');
 
 (function () {
-    app.controller('entries', function ($scope, $http, DatesFactory, AutocompleteFactory, WeightsFactory) {
+    app.controller('entries', function ($rootScope, $scope, $http, DatesFactory, AutocompleteFactory, WeightsFactory) {
 
         $scope.weight = weight;
 
@@ -80,6 +80,7 @@ var app = angular.module('tracker');
          * Get all the user's entries for the current date
          */
         $scope.getEntries = function () {
+            $rootScope.$emit('getEntries');
             //Get weight
             //Get exercise entries
             //Get menu entries

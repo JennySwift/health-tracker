@@ -1,5 +1,5 @@
 angular.module('tracker')
-    .controller('MenuEntriesController', function ($scope, FoodEntriesFactory, RecipeEntriesFactory) {
+    .controller('MenuEntriesController', function ($rootScope, $scope, MenuEntriesFactory, RecipeEntriesFactory) {
 
         $scope.menuEntries = menuEntries;
 
@@ -18,12 +18,25 @@ angular.module('tracker')
             unit: {}
         };
 
+        $rootScope.$on('getEntries', function () {
+            $rootScope.showLoading();
+            MenuEntriesFactory.getEntriesForTheDay($scope.date.sql)
+                .then(function (response) {
+                    $scope.menuEntries = response.data;
+                    //$rootScope.$broadcast('provideFeedback', '');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        });
+
         $scope.insertMenuEntry = function () {
             $scope.new_entry.food.id = $scope.selected.food.id;
             $scope.new_entry.food.name = $scope.selected.food.name;
             $scope.new_entry.food.unit_id = $("#food-unit").val();
 
-            FoodEntriesFactory.insertMenuEntry($scope.date.sql, $scope.new_entry.food).then(function (response) {
+            MenuEntriesFactory.insertMenuEntry($scope.date.sql, $scope.new_entry.food).then(function (response) {
                 $scope.entries.menu = response.data.food_entries;
                 $scope.calories.day = response.data.calories_for_the_day;
                 $scope.calories.week_avg = response.data.calories_for_the_week;
@@ -45,7 +58,7 @@ angular.module('tracker')
         $scope.deleteFoodEntry = function ($entry_id) {
             $entry_id = $entry_id || $scope.selected.entry.id;
 
-            FoodEntriesFactory.deleteFoodEntry($entry_id, $scope.date.sql).then(function (response) {
+            MenuEntriesFactory.deleteFoodEntry($entry_id, $scope.date.sql).then(function (response) {
                 $scope.entries.menu = response.data.food_entries;
                 $scope.calories.day = response.data.calories_for_the_day;
                 $scope.calories.week_avg = response.data.calories_for_the_week;

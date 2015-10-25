@@ -6,6 +6,19 @@ angular.module('tracker')
 
         $scope.selectedExercise = {};
 
+        $rootScope.$on('getEntries', function () {
+            $rootScope.showLoading();
+            ExerciseEntriesFactory.getEntriesForTheDay($scope.date.sql)
+                .then(function (response) {
+                    $scope.exerciseEntries = response.data;
+                    //$rootScope.$broadcast('provideFeedback', '');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        });
+
         /**
          * Get all the the user's entries for a particular exercise
          * with a particular unit on a particular date.
