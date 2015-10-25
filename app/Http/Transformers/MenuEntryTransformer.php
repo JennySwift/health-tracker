@@ -18,6 +18,7 @@ class MenuEntryTransformer extends TransformerAbstract
             'id' => $entry->id,
             'date' => $entry->date,
             'quantity' => $entry->quantity,
+            'calories' => $entry->getCalories(),
             'food' => [
                 'id' => $entry->food->id,
                 'name' => $entry->food->name

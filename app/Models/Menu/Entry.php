@@ -4,7 +4,7 @@ use App\Traits\Models\Relationships\OwnedByUser;
 use Illuminate\Database\Eloquent\Model;
 use Auth;
 use Debugbar;
-use App\Models\Foods\Calories;
+use DB;
 
 /**
  * Class Entry
@@ -58,6 +58,22 @@ class Entry extends Model {
     public function unit()
     {
         return $this->belongsTo('App\Models\Units\Unit', 'unit_id');
+    }
+
+    /**
+     * Get the calories for the entry
+     * @VP:
+     * Is there a better way of getting the calories?
+     * With some sort of relationship?
+     * @return mixed
+     */
+    public function getCalories()
+    {
+        $caloriesForOneUnit = DB::table('food_unit')->where('food_id', $this->food->id)
+            ->where('unit_id', $this->unit->id)
+            ->pluck('calories');
+
+        return $caloriesForOneUnit * $this->quantity;
     }
 
 }

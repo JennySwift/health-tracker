@@ -23,39 +23,36 @@ class MenuEntriesTest extends TestCase {
 
         $response = $this->apiCall('GET', '/api/menuEntries/' . $date);
         $content = json_decode($response->getContent(), true);
-        dd($content);
+//        dd($content);
 
-        /**
-         * food_id
-         * food_name
-         * quantity
-         * entry_id
-         * unit_id
-         * unit_name
-         * recipe_id
-         * recipe_name
-         */
-
-        $this->assertArrayHasKey('exercise_id', $content[0]);
-        $this->assertArrayHasKey('name', $content[0]);
-        $this->assertArrayHasKey('description', $content[0]);
-        $this->assertArrayHasKey('step_number', $content[0]);
-        $this->assertArrayHasKey('unit_id', $content[0]);
-        $this->assertArrayHasKey('unit_name', $content[0]);
-        $this->assertArrayHasKey('default_unit_id', $content[0]);
-        $this->assertArrayHasKey('sets', $content[0]);
-        $this->assertArrayHasKey('total', $content[0]);
+        $this->assertArrayHasKey('id', $content[0]);
+        $this->assertArrayHasKey('date', $content[0]);
         $this->assertArrayHasKey('quantity', $content[0]);
+        $this->assertArrayHasKey('calories', $content[0]);
+        $this->assertArrayHasKey('food', $content[0]);
+        $this->assertArrayHasKey('unit', $content[0]);
 
-        $this->assertEquals(1, $content[0]['exercise_id']);
-        $this->assertEquals('kneeling pushups', $content[0]['name']);
-        $this->assertEquals('1.00', $content[0]['step_number']);
-        $this->assertEquals(1, $content[0]['unit_id']);
-        $this->assertEquals('reps', $content[0]['unit_name']);
-        $this->assertEquals(1, $content[0]['default_unit_id']);
-        $this->assertEquals(3, $content[0]['sets']);
-        $this->assertEquals(15, $content[0]['total']);
-        $this->assertEquals(5, $content[0]['quantity']);
+
+        $this->assertEquals(1, $content[0]['id']);
+        $this->assertEquals($date, $content[0]['date']);
+        $this->assertEquals('5.00', $content[0]['quantity']);
+        $this->assertEquals(25, $content[0]['calories']);
+
+        $this->assertEquals([
+            'id' => 1,
+            'name' => 'quinoa'
+        ], $content[0]['food']);
+
+        $this->assertEquals([
+            'id' => 3,
+            'name' => 'small'
+        ], $content[0]['unit']);
+
+        $this->assertEquals([
+            'id' => 1,
+            'name' => 'delicious recipe'
+        ], $content[1]['recipe']);
+
         $this->assertCount(2, $content);
 
         $this->assertEquals(200, $response->getStatusCode());

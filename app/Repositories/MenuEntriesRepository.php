@@ -26,9 +26,6 @@ class MenuEntriesRepository
             ->where('date', $date)
             ->get();
 
-        //            $calories_for_item = Food::getCalories($food_id, $unit_id);
-//            $calories_for_quantity = Food::getCaloriesForQuantity($calories_for_item, $quantity);
-
         return transform(createCollection($entries, new MenuEntryTransformer))['data'];
     }
 

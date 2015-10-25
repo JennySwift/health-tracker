@@ -1,10 +1,11 @@
 <?php
 
+use App\Models\Menu\Entry;
 use App\Models\Menu\Food;
 
 Route::get('/test', function()
 {
-    $food = Food::first();
-    //dd($food);
-    return $food;
+    $entry = Entry::first();
+    //dd($entry);
+    return $entry->getCalories();
 });

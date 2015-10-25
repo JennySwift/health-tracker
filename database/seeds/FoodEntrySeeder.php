@@ -28,9 +28,9 @@ class FoodEntrySeeder extends Seeder
             $this->user = $user;
 
             //Create menu entries for the last 5 days
-            foreach (range(0, 4) as $day) {
-                $date = Carbon::today()->subDays($day)->format('Y-m-d');
-                $this->createEntriesForOneDay($date);
+            foreach (range(0, 4) as $index) {
+                $date = Carbon::today()->subDays($index)->format('Y-m-d');
+                $this->createEntriesForOneDay($date, $index + 5);
             }
         }
 
@@ -41,7 +41,7 @@ class FoodEntrySeeder extends Seeder
      *
      * @param $date
      */
-    private function createEntriesForOneDay($date)
+    private function createEntriesForOneDay($date, $quantity)
     {
         $faker = Faker::create();
 
@@ -49,7 +49,7 @@ class FoodEntrySeeder extends Seeder
         foreach (range(0, 1) as $index) {
             $entry = new Entry([
                 'date' => $date,
-                'quantity' => $faker->numberBetween($min = 1, $max = 9),
+                'quantity' => $quantity,
                 'recipe_id' => '',
             ]);
 
