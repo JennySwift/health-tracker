@@ -1,5 +1,6 @@
 <?php namespace App\Repositories;
 
+use App\Http\Transformers\WeightTransformer;
 use App\Models\Weights\Weight;
 use Auth;
 
@@ -34,17 +35,13 @@ class WeightsRepository
      * @param $date
      * @return int
      */
-    public function getWeight($date)
+    public function getWeightForTheDay($date)
     {
-        $weight = Weight::where('date', $date)
-            ->where('user_id', Auth::user()->id)
-            ->pluck('weight');
+        $weight = Weight::forCurrentUser()
+            ->where('date', $date)
+            ->first();
 
-        if (!$weight) {
-            $weight = 0;
-        }
-
-        return $weight;
+        return transform(createItem($weight, new WeightTransformer))['data'];
     }
 
     /**

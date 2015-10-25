@@ -92,7 +92,7 @@ class PagesController extends Controller
             "menuEntries" => $this->menuEntriesRepository->getEntriesForTheDay($date),
             "foodUnits" => $this->unitsRepository->getFoodUnits(),
 
-            "weight" => $weightsRepository->getWeight($date),
+            "weight" => $weightsRepository->getWeightForTheDay($date),
             "calories_for_the_day" => $this->menuEntriesRepository->getCaloriesForDay($date),
             "calories_for_the_week" => $this->menuEntriesRepository->getCaloriesFor7Days($date)
         ]);

@@ -1,5 +1,6 @@
 <?php namespace App\Models\Weights;
 
+use App\Traits\Models\Relationships\OwnedByUser;
 use Illuminate\Database\Eloquent\Model;
 use Auth;
 
@@ -8,6 +9,8 @@ use Auth;
  * @package App\Models\Weights
  */
 class Weight extends Model {
+
+    use OwnedByUser;
 
     /**
      *

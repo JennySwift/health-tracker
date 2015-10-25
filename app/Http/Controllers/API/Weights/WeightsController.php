@@ -13,6 +13,27 @@ use Illuminate\Http\Request;
  */
 class WeightsController extends Controller
 {
+    /**
+     * @var WeightsRepository
+     */
+    private $weightsRepository;
+
+    /**
+     * @param WeightsRepository $weightsRepository
+     */
+    public function __construct(WeightsRepository $weightsRepository)
+    {
+        $this->weightsRepository = $weightsRepository;
+    }
+    /**
+     * Get the user's weight for the day
+     * @param $date
+     * @return mixed
+     */
+    public function show($date)
+    {
+        return $this->weightsRepository->getWeightForTheDay($date);
+    }
 
     /**
      * This method is a good example of the S.O.L.I.D principles
