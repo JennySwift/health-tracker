@@ -6,6 +6,7 @@ use App\Models\Journal\Journal;
 use App\Models\Tags\Tag;
 use App\Repositories\CaloriesRepository;
 use App\Repositories\ExerciseEntriesRepository;
+use App\Repositories\ExerciseSeriesRepository;
 use App\Repositories\ExercisesRepository;
 use App\Repositories\FoodsRepository;
 use App\Repositories\MenuEntriesRepository;
@@ -55,6 +56,10 @@ class PagesController extends Controller
      * @var CaloriesRepository
      */
     private $caloriesRepository;
+    /**
+     * @var ExerciseSeriesRepository
+     */
+    private $exerciseSeriesRepository;
 
     /**
      * Create a new controller instance.
@@ -67,8 +72,9 @@ class PagesController extends Controller
      * @param RecipesRepository $recipesRepository
      * @param WorkoutsRepository $workoutsRepository
      * @param CaloriesRepository $caloriesRepository
+     * @param ExerciseSeriesRepository $exerciseSeriesRepository
      */
-    public function __construct(ExercisesRepository $exercisesRepository, FoodsRepository $foodsRepository, UnitsRepository $unitsRepository, ExerciseEntriesRepository $exerciseEntriesRepository, MenuEntriesRepository $menuEntriesRepository, RecipesRepository $recipesRepository, WorkoutsRepository $workoutsRepository, CaloriesRepository $caloriesRepository)
+    public function __construct(ExercisesRepository $exercisesRepository, FoodsRepository $foodsRepository, UnitsRepository $unitsRepository, ExerciseEntriesRepository $exerciseEntriesRepository, MenuEntriesRepository $menuEntriesRepository, RecipesRepository $recipesRepository, WorkoutsRepository $workoutsRepository, CaloriesRepository $caloriesRepository, ExerciseSeriesRepository $exerciseSeriesRepository)
     {
         $this->middleware('auth');
         $this->exercisesRepository = $exercisesRepository;
@@ -79,6 +85,7 @@ class PagesController extends Controller
         $this->recipesRepository = $recipesRepository;
         $this->workoutsRepository = $workoutsRepository;
         $this->caloriesRepository = $caloriesRepository;
+        $this->exerciseSeriesRepository = $exerciseSeriesRepository;
     }
 
     /**
@@ -124,7 +131,7 @@ class PagesController extends Controller
              * The same thing happened when I tried to use 'tags' instead of 'exercise_tags.'
              */
             'all_exercises' => $this->exercisesRepository->getExercises(),
-            'series' => $this->exercisesRepository->getExerciseSeries(),
+            'series' => $this->exerciseSeriesRepository->getExerciseSeries(),
             'workouts' => $this->workoutsRepository->getWorkouts(),
             'units' => $this->unitsRepository->getExerciseUnits(),
             'exercise_tags' => Tag::forCurrentUser()
@@ -144,7 +151,7 @@ class PagesController extends Controller
     public function series()
     {
         JavaScript::put([
-            'series' => $this->exercisesRepository->getExerciseSeries(),
+            'series' => $this->exerciseSeriesRepository->getExerciseSeries(),
             'workouts' => $this->workoutsRepository->getWorkouts()
         ]);
 

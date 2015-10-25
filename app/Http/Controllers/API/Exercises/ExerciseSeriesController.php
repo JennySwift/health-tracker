@@ -5,6 +5,7 @@ use App\Http\Requests;
 use App\Models\Exercises\Exercise;
 use App\Models\Exercises\Series;
 use App\Models\Exercises\Workout;
+use App\Repositories\ExerciseSeriesRepository;
 use Auth;
 use Illuminate\Http\Request;
 
@@ -14,6 +15,18 @@ use Illuminate\Http\Request;
  */
 class ExerciseSeriesController extends Controller
 {
+    /**
+     * @var ExerciseSeriesRepository
+     */
+    private $exerciseSeriesRepository;
+
+    /**
+     * @param ExerciseSeriesRepository $exerciseSeriesRepository
+     */
+    public function __construct(ExerciseSeriesRepository $exerciseSeriesRepository)
+    {
+        $this->exerciseSeriesRepository = $exerciseSeriesRepository;
+    }
 
     /**
      * For the exercise series popup
@@ -31,19 +44,6 @@ class ExerciseSeriesController extends Controller
             "series" => $series,
             "workouts" => $workouts
         ];
-    }
-
-    /**
-     *
-     * @param Request $request
-     * @return array
-     */
-    public function getExerciseSeriesHistory(Request $request)
-    {
-        //Fetch the series (singular-the series that was clicked on)
-        $series = Series::find($request->get('series_id'));
-
-        return Exercise::getExerciseSeriesHistory($series);
     }
 
     /**

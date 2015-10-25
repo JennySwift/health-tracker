@@ -15,7 +15,7 @@
         @include('templates.date-navigation')
 		
 		<div id="info-entries-wrapper">
-            @include('pages.entries.info');
+            @include('pages.entries.info')
 		</div>
 
         <div id="entries">

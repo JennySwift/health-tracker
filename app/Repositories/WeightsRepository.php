@@ -41,7 +41,11 @@ class WeightsRepository
             ->where('date', $date)
             ->first();
 
-        return transform(createItem($weight, new WeightTransformer))['data'];
+        if ($weight) {
+            return transform(createItem($weight, new WeightTransformer))['data'];
+        }
+
+        return null;
     }
 
     /**

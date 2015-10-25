@@ -77,15 +77,15 @@ var app = angular.module('tracker');
         $("#weight").val("");
 
         /**
-         * Get all the user's entries for the current date
+         * Get all the user's entries for the current date:
+         * exercise entries
+         * menu entries
+         * weight
+         * calories for the day
+         * calorie average for the week
          */
         $scope.getEntries = function () {
             $rootScope.$emit('getEntries');
-            //Get weight
-            //Get exercise entries
-            //Get menu entries
-            //Get calories for the day
-            //Get calorie average for the week
         };
 
         $rootScope.$on('getEntries', function () {

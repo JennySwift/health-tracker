@@ -41,8 +41,8 @@ class ExerciseEntriesTest extends TestCase {
         $this->assertEquals(1, $content[0]['unit_id']);
         $this->assertEquals('reps', $content[0]['unit_name']);
         $this->assertEquals(1, $content[0]['default_unit_id']);
-        $this->assertEquals(3, $content[0]['sets']);
-        $this->assertEquals(15, $content[0]['total']);
+        $this->assertEquals(2, $content[0]['sets']);
+        $this->assertEquals(10, $content[0]['total']);
         $this->assertEquals(5, $content[0]['quantity']);
         $this->assertCount(2, $content);
 
@@ -84,8 +84,8 @@ class ExerciseEntriesTest extends TestCase {
         $this->assertEquals(1, $content[0]['unit_id']);
         $this->assertEquals('reps', $content[0]['unit_name']);
         $this->assertEquals(1, $content[0]['default_unit_id']);
-        $this->assertEquals(4, $content[0]['sets']);
-        $this->assertEquals(20, $content[0]['total']);
+        $this->assertEquals(3, $content[0]['sets']);
+        $this->assertEquals(15, $content[0]['total']);
         $this->assertEquals(5, $content[0]['quantity']);
         $this->assertCount(2, $content);
 
@@ -126,8 +126,8 @@ class ExerciseEntriesTest extends TestCase {
         $this->assertEquals(1, $content[0]['unit_id']);
         $this->assertEquals('reps', $content[0]['unit_name']);
         $this->assertEquals(1, $content[0]['default_unit_id']);
-        $this->assertEquals(4, $content[0]['sets']);
-        $this->assertEquals(20, $content[0]['total']);
+        $this->assertEquals(3, $content[0]['sets']);
+        $this->assertEquals(15, $content[0]['total']);
         $this->assertEquals(5, $content[0]['quantity']);
         $this->assertCount(2, $content);
 

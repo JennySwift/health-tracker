@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Exercises\Entry;
 use App\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
@@ -9,92 +10,127 @@ use App\Models\Exercises\Exercise;
 use App\Models\Units\Unit;
 use Faker\Factory as Faker;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
 
 class ExerciseEntrySeeder extends Seeder {
 
-	public function run()
+    private $user;
+    private $exercise_ids;
+    private $date;
+    private $faker;
+
+    public function run()
 	{
-		// DB::statement('SET FOREIGN_KEY_CHECKS=0');
-
-		ExerciseEntry::truncate();
-		
-		$faker = Faker::create();
-
+        ExerciseEntry::truncate();
+        $this->faker = Faker::create();
         $users = User::all();
 
         foreach ($users as $user) {
-            $exercise_ids = Exercise::where('user_id', $user->id)->lists('id')->all();
-            $unit_ids = Unit::where('user_id', $user->id)->where('for', 'exercise')->lists('id')->all();
+            $this->user = $user;
 
-            /**
-             * Create a few exercise entries for each of the last 50 days
-             */
+            $this->unit_ids = Unit::where('user_id', $this->user->id)
+                ->where('for', 'exercise')
+                ->lists('id')
+                ->all();
 
-            foreach (range(0, 49) as $index) {
-                $today = Carbon::today();
-                $date = $today->subDays($index)->format('Y-m-d');
-                $exercise_id = $faker->randomElement($exercise_ids);
-                $unit_id = $faker->randomElement($unit_ids);
-                $user_id = $user->id;
+            $this->exercise_ids = Exercise::where('user_id', $this->user->id)
+                ->lists('id')
+                ->all();
 
-                //Create the entries for the same exercise but with different units
-                //for today, so that I can test out the getSpecificExerciseEntries
-                //for a day where the exercise is entered with different units
-                if ($date === Carbon::today()->format('Y-m-d')) {
-                    // dd('if' . $date);
-                    foreach (range(0, 2) as $index) {
-                        DB::table('exercise_entries')->insert([
-                            'date' => $date,
-                            'exercise_id' => 1,
-                            'quantity' => 5,
-                            'exercise_unit_id' => 1,
-                            'user_id' => $user_id
-                        ]);
-                    }
-                    foreach (range(0, 1) as $index) {
-                        DB::table('exercise_entries')->insert([
-                            'date' => $date,
-                            'exercise_id' => 1,
-                            'quantity' => $faker->numberBetween($min = 4, $max = 30),
-                            'exercise_unit_id' => 2,
-                            'user_id' => $user_id
-                        ]);
-                    }
-                }
+            $this->createEntriesForTheLastFiveDays();
+        }
+    }
 
-                else {
-                    /**
-                     * Create a few entries for each of a few different exercises (no duplicates).
-                     * Ideally, a random number of different exercises.
-                     */
+    /**
+     * Create a few exercise entries for each of the last 5 days
+     */
+    private function createEntriesForTheLastFiveDays()
+    {
+        foreach (range(0, 4) as $index) {
+            $today = Carbon::today();
+            $this->date = $today->subDays($index)->format('Y-m-d');
 
-                    $number = $faker->numberBetween($min = 1, $max = 6);
-                    $random_exercise_ids = $faker->randomElements($exercise_ids, $count = $number);
+            if ($this->date === Carbon::today()->format('Y-m-d')) {
+                $this->createEntriesForToday();
+            }
 
-                    //Insert a few sets for each $random_exercise_id
-                    foreach ($random_exercise_ids as $random_exercise_id) {
-                        //Reset the unit id for each different exercise
-                        $random_unit_id = $faker->randomElement($unit_ids);
-                        //Set the number of sets that will be done for the exercise
-                        $range_limit = $faker->numberBetween($min = 1, $max = 7);
-                        //Insert the same exercise with the same unit a few times so we have exercise sets.
-                        foreach (range(0, $range_limit) as $index) {
-                            DB::table('exercise_entries')->insert([
-                                'date' => $date,
-                                'exercise_id' => $random_exercise_id,
-                                'quantity' => $faker->numberBetween($min = 4, $max = 30),
-                                'exercise_unit_id' => $random_unit_id,
-                                'user_id' => $user->id
-                            ]);
-                        }
-                    }
-                }
+            else {
+                $this->createEntriesForOneDay();
             }
         }
+    }
 
+    /**
+     * Create a few entries for each of a few different exercises (no duplicates).
+     * Ideally, a random number of different exercises.
+     * @param $date
+     */
+    private function createEntriesForOneDay()
+    {
+        $random_exercise_ids = $this->faker->randomElements($this->exercise_ids, $count = 3);
 
-		
-		// DB::statement('SET FOREIGN_KEY_CHECKS=1');		
-	}
+        //Insert a few sets for each $random_exercise_id
+        foreach ($random_exercise_ids as $exercise_id) {
+            $this->insertExerciseSet($exercise_id);
+        }
+    }
+
+    /**
+     * Insert the same exercise with the same unit a
+     * few times so we have exercise sets.
+     * @param $exercise_id
+     */
+    private function insertExerciseSet($exercise_id)
+    {
+        $unit = Unit::find($this->unit_ids[0]);
+        $exercise = Exercise::find($exercise_id);
+
+        $this->createEntry(
+            $this->faker->numberBetween($min = 4, $max = 30),
+            $exercise,
+            $unit,
+            $this->date
+        );
+
+        $this->createEntry(
+            $this->faker->numberBetween($min = 4, $max = 30),
+            $exercise,
+            $unit,
+            $this->date
+        );
+    }
+
+    /**
+     * Create the entries for the same exercise but with different units
+     * for today, so that I can test out the getSpecificExerciseEntries
+     * for a day where the exercise is entered with different units
+     */
+    private function createEntriesForToday()
+    {
+        $exercise = Exercise::where('user_id', $this->user->id)->first();
+        $date = Carbon::today()->format('Y-m-d');
+
+        $this->createEntry(5, $exercise, Unit::find($this->unit_ids[0]), $date);
+        $this->createEntry(5, $exercise, Unit::find($this->unit_ids[0]), $date);
+        $this->createEntry(10, $exercise, Unit::find($this->unit_ids[1]), $date);
+    }
+
+    /**
+     *
+     * @param $quantity
+     * @param $exercise
+     * @param $unit
+     * @param $date
+     */
+    private function createEntry($quantity, $exercise, $unit, $date)
+    {
+        $entry = new Entry([
+            'date' => $date,
+            'quantity' => $quantity,
+        ]);
+
+        $entry->user()->associate($this->user);
+        $entry->unit()->associate($unit);
+        $entry->exercise()->associate($exercise);
+        $entry->save();
+    }
 }

@@ -31,14 +31,4 @@ class ExercisesRepository
 
         return $exercises;
     }
-
-    /**
-     * Get all the exercise series that belong to the user
-     * @return mixed
-     */
-    public function getExerciseSeries()
-    {
-        $series = Series::forCurrentUser('exercise_series')->orderBy('name', 'asc')->get();
-        return $series;
-    }
 }
