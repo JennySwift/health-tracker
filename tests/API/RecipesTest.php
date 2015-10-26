@@ -1,43 +1,39 @@
 <?php
 
-use App\Models\Menu\Food;
+use App\Models\Menu\Recipe;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Http\Response;
 
 /**
- * Class FoodsTest
+ * Class RecipesTest
  */
-class FoodsTest extends TestCase {
+class RecipesTest extends TestCase {
 
     use DatabaseTransactions;
 
     /**
-     * It lists the foods for the user
+     * It lists the recipes for the user
      * @test
      * @return void
      */
-    public function it_lists_all_foods()
+    public function it_lists_all_recipes()
     {
         $this->logInUser();
 
-        $response = $this->apiCall('GET', '/api/foods');
+        $response = $this->apiCall('GET', '/api/recipes');
         $content = json_decode($response->getContent(), true);
+//        dd($content);
 
         $this->assertArrayHasKey('id', $content[0]);
         $this->assertArrayHasKey('name', $content[0]);
-        $this->assertArrayHasKey('path', $content[0]);
-        $this->assertArrayHasKey('defaultCalories', $content[0]);
-        $this->assertArrayHasKey('defaultUnit', $content[0]);
+        $this->assertArrayHasKey('tags', $content[0]);
 
-        $this->assertEquals(3, $content[0]['id']);
-        $this->assertEquals('buckwheat', $content[0]['name']);
-        $this->assertEquals('http://localhost/api/foods/3', $content[0]['path']);
-        $this->assertEquals('5.00', $content[0]['defaultCalories']);
-
-        $this->assertEquals([
-            'id' => 3,
-            'name' => 'small'
-        ], $content[0]['defaultUnit']);
+        $this->assertEquals(1, $content[0]['id']);
+        $this->assertEquals('delicious recipe', $content[0]['name']);
+        $this->assertEquals(1, $content[0]['tags'][0]['id']);
+        $this->assertEquals('main meal', $content[0]['tags'][0]['name']);
+        $this->assertCount(2, $content);
+        $this->assertCount(2, $content[0]['tags']);
 
         $this->assertEquals(200, $response->getStatusCode());
     }
@@ -46,22 +42,20 @@ class FoodsTest extends TestCase {
      * @test
      * @return void
      */
-    public function it_can_add_a_new_food()
+    public function it_can_add_a_new_recipe()
     {
         $this->logInUser();
 
-        $food = [
+        $recipe = [
             'name' => 'kangaroo'
         ];
 
-        $response = $this->call('POST', '/api/foods', $food);
+        $response = $this->call('POST', '/api/recipes', $recipe);
         $content = json_decode($response->getContent(), true)['data'];
+//        dd($content);
 
         $this->assertArrayHasKey('id', $content);
         $this->assertArrayHasKey('name', $content);
-        $this->assertArrayHasKey('path', $content);
-        $this->assertArrayHasKey('defaultCalories', $content);
-//        $this->assertArrayHasKey('defaultUnit', $content);
 
         $this->assertEquals('kangaroo', $content['name']);
 
@@ -72,7 +66,7 @@ class FoodsTest extends TestCase {
      * @test
      * @return void
      */
-//    public function it_can_update_a_food()
+//    public function it_can_update_a_recipe()
 //    {
 //        $this->logInUser();
 //
@@ -96,24 +90,24 @@ class FoodsTest extends TestCase {
      * @test
      * @return void
      */
-    public function it_can_delete_a_food()
+    public function it_can_delete_a_recipe()
     {
         $this->logInUser();
 
-        $food = new Food([
+        $recipe = new Recipe([
             'name' => 'echidna'
         ]);
 
-        $food->user()->associate($this->user);
-        $food->save();
+        $recipe->user()->associate($this->user);
+        $recipe->save();
 
-        $this->seeInDatabase('foods', ['name' => 'echidna']);
+        $this->seeInDatabase('recipes', ['name' => 'echidna']);
 
-        $response = $this->call('DELETE', '/api/foods/'.$food->id);
+        $response = $this->call('DELETE', '/api/recipes/'.$recipe->id);
         $this->assertEquals(204, $response->getStatusCode());
-        $this->missingFromDatabase('foods', ['name' => 'echidna']);
+        $this->missingFromDatabase('recipes', ['name' => 'echidna']);
 
-        $response = $this->call('DELETE', '/api/foods/' . $food->id);
+        $response = $this->call('DELETE', '/api/recipes/' . $recipe->id);
         $this->assertEquals(404, $response->getStatusCode());
     }
 }

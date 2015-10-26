@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
+use App\Http\Transformers\RecipeTransformer;
 use App\Models\Menu\Recipe;
+use App\Repositories\RecipesRepository;
 use Auth;
 use DB;
 use Debugbar;
@@ -15,6 +17,27 @@ use Illuminate\Http\Request;
  */
 class RecipesController extends Controller
 {
+    /**
+     * @var RecipesRepository
+     */
+    private $recipesRepository;
+
+    /**
+     * @param RecipesRepository $recipesRepository
+     */
+    public function __construct(RecipesRepository $recipesRepository)
+    {
+        $this->recipesRepository = $recipesRepository;
+    }
+
+    /**
+     *
+     * @return array
+     */
+    public function index()
+    {
+        return $this->recipesRepository->filterRecipes('', []);
+    }
 
     /**
      *
@@ -23,10 +46,7 @@ class RecipesController extends Controller
      */
     public function filterRecipes(Request $request)
     {
-        $typing = $request->get('typing');
-        $tag_ids = $request->get('tag_ids');
-
-        return Recipe::filterRecipes($typing, $tag_ids);
+        return $this->recipesRepository->filterRecipes($request->get('typing'), $request->get('tag_ids'));
     }
 
     /**
@@ -54,7 +74,7 @@ class RecipesController extends Controller
         $recipe->user()->associate(Auth::user());
         $recipe->save();
 
-        return $this->responseCreated($recipe);
+        return $this->responseCreatedWithTransformer($recipe, new RecipeTransformer);
     }
 
     /**

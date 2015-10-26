@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Http\Transformers\RecipeTransformer;
 use App\Models\Menu\Recipe;
 use App\Models\Menu\RecipeMethod;
 use Auth;
@@ -39,26 +40,11 @@ class RecipesRepository {
             }
         }
 
-        $recipes = $recipes
-            ->with('tags')
-            ->select('id', 'name')
+        $recipes = $recipes->with('tags')
             ->orderBy('name', 'asc')
             ->get();
 
-        $array = array();
-        foreach ($recipes as $recipe) {
-            $id = $recipe->id;
-            $name = $recipe->name;
-//            $tags = $this->getRecipeTags($id);
-
-            $array[] = array(
-                "id" => $id,
-                "name" => $name,
-//                "tags" => $tags
-            );
-        }
-
-        return $array;
+        return transform(createCollection($recipes, new RecipeTransformer))['data'];
     }
 
     /**

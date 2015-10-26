@@ -7,4 +7,4 @@ Route::post('select/recipeContents', 'Menu\RecipesController@getRecipeContents')
 //Insert
 Route::post('insert/quickRecipe', 'Menu\QuickRecipesController@quickRecipe');
 
-Route::resource('recipes', 'Menu\RecipesController', ['only' => ['store', 'destroy']]);
+Route::resource('recipes', 'Menu\RecipesController', ['only' => ['index', 'store', 'destroy']]);
