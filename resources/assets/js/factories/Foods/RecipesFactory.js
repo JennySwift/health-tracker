@@ -13,8 +13,8 @@ angular.module('tracker')
 
                 return $http.post($url, $data);
             },
-            insertRecipe: function ($name) {
-                var $url = 'insert/recipe';
+            insert: function ($name) {
+                var $url = 'api/recipes';
                 var $data = {
                     name: $name
                 };
@@ -79,15 +79,12 @@ angular.module('tracker')
                     return $http.post($url, $data);
                 }
             },
-            deleteRecipe: function ($id) {
+            destroy: function ($recipe) {
                 if (confirm("Are you sure you want to delete this recipe?")) {
-                    var $url = 'delete/recipe';
-                    var $data = {
-                        id: $id
-                    };
+                    var $url = 'api/recipes/' + $recipe.id;
 
-                    return $http.post($url, $data);
+                    return $http.delete($url);
                 }
-            },
+            }
         }
     });
