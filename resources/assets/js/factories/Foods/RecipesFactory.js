@@ -30,14 +30,10 @@ angular.module('tracker')
 
                 return $http.post($url, $data);
             },
-            getRecipeContents: function ($recipe_id) {
-                var $url = 'select/recipeContents';
+            show: function ($recipe) {
+                var $url = 'api/recipes/' + $recipe.id;
 
-                var $data = {
-                    recipe_id: $recipe_id
-                };
-
-                return $http.post($url, $data);
+                return $http.get($url);
             },
             insertFoodIntoRecipe: function ($data) {
                 var $url = 'insert/foodIntoRecipe';

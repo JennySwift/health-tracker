@@ -34,7 +34,7 @@ class Recipe extends Model {
      */
     public function steps()
 	{
-		return $this->hasMany('App\Models\Foods\RecipeMethod');
+		return $this->hasMany('App\Models\Menu\RecipeMethod')->select('id', 'step', 'text');
 	}
 
     /**
@@ -43,7 +43,7 @@ class Recipe extends Model {
      */
     public function foods()
 	{
-		return $this->belongsToMany('App\Models\Foods\Food', 'food_recipe', 'recipe_id', 'food_id');
+		return $this->belongsToMany('App\Models\Menu\Food', 'food_recipe', 'recipe_id', 'food_id');
 	}
 
     /**
@@ -61,7 +61,7 @@ class Recipe extends Model {
      */
     public function entries()
 	{
-		return $this->hasMany('App\Models\Foods\Entry');
+		return $this->hasMany('App\Models\Menu\Entry');
 	}
 
 }

@@ -54,11 +54,14 @@ class ExerciseSeriesRepository
                 'exercises.description',
                 'exercises.step_number',
                 'quantity',
-                'exercise_unit_id')
+                'exercise_unit_id'
+            )
             ->with(['unit' => function($query) {
                 $query->select('name', 'id');
             }])
-            ->orderBy('date', 'desc')->get();
+            ->orderBy('date', 'desc')
+            ->orderBy('exercise_id', 'desc')
+            ->get();
 
         //Populate an array to return
         return $this->compactExerciseEntriesForHistory($entries);

@@ -50,15 +50,13 @@ class RecipesController extends Controller
     }
 
     /**
-     * Get recipe contents and steps. Change name of method.
-     * @param Request $request
+     * Get recipe contents and steps, for the recipe popup
+     * @param Recipe $recipe
      * @return array
      */
-    public function getRecipeContents(Request $request)
+    public function show(Recipe $recipe)
     {
-        $recipe = Recipe::find($request->get('recipe_id'));
-
-        return Recipe::getRecipeInfo($recipe);
+        return $this->recipesRepository->getRecipeInfo($recipe);
     }
 
     /**

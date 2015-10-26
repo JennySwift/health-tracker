@@ -11,20 +11,21 @@
 	
 	<div ng-controller="RecipesController" class="container">
 
-		@include('pages.foods.index')
+        @include('pages.menu.recipes.popups.recipe-popup.recipe')
+        @include('pages.menu.recipes.popups.similar-names')
 
 		<div id="foods">
 
 			<div id="quick-recipe-container">
-				@include('pages.foods.quick-recipe')
+				@include('pages.menu.recipes.quick-recipe')
 			</div>
 
 			<hr>	
 
 			<div class="flex">
 
-                @include('pages.foods.recipes')
-                @include('pages.foods.recipe-tags')
+                @include('pages.menu.recipes.recipes')
+                @include('pages.menu.recipes.recipe-tags')
 
 			</div>
 		</div>

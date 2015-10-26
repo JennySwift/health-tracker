@@ -213,10 +213,17 @@ var app = angular.module('tracker');
 
         $scope.showRecipePopup = function ($recipe) {
             // $scope.selected.recipe = $recipe;
-            RecipesFactory.getRecipeContents($recipe.id).then(function (response) {
-                $scope.show.popups.recipe = true;
-                $scope.recipe_popup = response.data;
-            });
+            $rootScope.showLoading();
+            RecipesFactory.show($recipe)
+                .then(function (response) {
+                    $scope.show.popups.recipe = true;
+                    $scope.recipe_popup = response.data;
+                    //$rootScope.$broadcast('provideFeedback', '');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
         };
 
         /**

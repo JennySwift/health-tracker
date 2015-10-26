@@ -198,7 +198,7 @@ class PagesController extends Controller
             'foods' => $this->foodsRepository->getFoods(),
         ]);
 
-        return view('pages.foods.foods-page');
+        return view('pages.menu.foods.foods-page');
     }
 
     /**
@@ -216,7 +216,7 @@ class PagesController extends Controller
                 ->get()
         ]);
 
-        return view('pages.foods.recipes-page');
+        return view('pages.menu.recipes.recipes-page');
     }
 
     /**
@@ -229,7 +229,7 @@ class PagesController extends Controller
             'units' => $this->unitsRepository->getFoodUnits()
         ]);
 
-        return view('pages.foods.food-units');
+        return view('pages.menu.foods.food-units');
     }
 
     /**

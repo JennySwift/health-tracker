@@ -11,13 +11,13 @@
 	
 	<div ng-controller="FoodsController" class="container">
 
-		@include('pages.foods.index')
+		@include('pages.menu.foods.popups/food-info')
 
 		<div id="foods">
 
 			<div class="flex">
 
-                @include('pages.foods.foods')
+                @include('pages.menu.foods.foods')
 
 			</div>
 		</div>

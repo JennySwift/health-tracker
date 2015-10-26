@@ -3,9 +3,11 @@
 namespace App\Repositories;
 
 use App\Http\Transformers\RecipeTransformer;
+use App\Models\Menu\Food;
 use App\Models\Menu\Recipe;
 use App\Models\Menu\RecipeMethod;
 use Auth;
+use DB;
 
 /**
  * Class RecipesRepository
@@ -50,7 +52,8 @@ class RecipesRepository {
     /**
      * Get recipe contents and steps.
      * Contents should include the foods that belong to the recipe,
-     * along with the description, quantity, and unit for the food when used in the recipe (from food_recipe table),
+     * along with the description, quantity, and unit
+     * for the food when used in the recipe (from food_recipe table),
      * and with the tags for the recipe.
      * Redoing after refactor. Still need description, quantity, unit.
      * @param $recipe
@@ -58,17 +61,6 @@ class RecipesRepository {
      */
     public function getRecipeInfo($recipe)
     {
-        /**
-         * @VP:
-         * Why can't I do:
-         * $recipe_info = static::where('id', $recipe->id)
-         * ->with('foods')
-         * ->with('steps')
-         * ->get();
-         * and then dd($recipe_info->foods)?
-         * It gives an error.
-         */
-
         $contents = DB::table('food_recipe')
             ->where('recipe_id', $recipe->id)
             ->join('foods', 'food_id', '=', 'foods.id')
@@ -79,16 +71,16 @@ class RecipesRepository {
         //Add the units to all the foods in $contents, for the temporary recipe popup
         $contents_with_units = [];
         foreach ($contents as $ingredient) {
-            $food_id = $ingredient->food_id;
-            $food = Food::find($food_id);
+            $food = Food::find($ingredient->food_id);
             $ingredient->units = $food->units;
             $contents_with_units[] = $ingredient;
         }
 
+        $recipe->steps;
+
         return [
             'recipe' => $recipe,
             'contents' => $contents_with_units,
-            'steps' => $recipe->steps,
             'tags' => $recipe->tags->lists('id')
         ];
     }

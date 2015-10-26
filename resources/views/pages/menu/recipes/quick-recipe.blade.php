@@ -1,6 +1,6 @@
 <div id="quick-recipe-div" class="margin-bottom">
 
-	@include('pages.foods.quick-recipe-help')
+	@include('pages.menu.recipes.quick-recipe-help')
 
 	<!-- wysiwyg -->
 

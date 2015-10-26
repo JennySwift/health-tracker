@@ -11,7 +11,7 @@ class RecipeTransformer extends TransformerAbstract
     /**
      * @return array
      */
-    public function transform(Recipe $recipe)
+    public function transform(Recipe $recipe, $withContents = false)
     {
         $array = [
             'id' => $recipe->id,
@@ -19,6 +19,10 @@ class RecipeTransformer extends TransformerAbstract
             //Todo: I don't need all the tag attributes here
             'tags' => $recipe->tags
         ];
+
+        if ($withContents) {
+
+        }
 
         return $array;
     }
