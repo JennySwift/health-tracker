@@ -10,7 +10,7 @@
                 <th>description</th>
                 <th>x</th>
             </tr>
-            <tr ng-repeat="item in recipe_popup.contents">
+            <tr ng-repeat="item in recipe_popup.recipe.ingredients">
                 <td>[[item.name]]</td>
                 <td>[[item.unit_name]]</td>
                 <td>[[item.quantity]]</td>

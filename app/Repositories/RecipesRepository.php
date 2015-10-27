@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Http\Transformers\RecipeTransformer;
+use App\Http\Transformers\RecipeWithIngredientsTransformer;
 use App\Models\Menu\Food;
 use App\Models\Menu\Recipe;
 use App\Models\Menu\RecipeMethod;
@@ -61,28 +62,7 @@ class RecipesRepository {
      */
     public function getRecipeInfo($recipe)
     {
-        $contents = DB::table('food_recipe')
-            ->where('recipe_id', $recipe->id)
-            ->join('foods', 'food_id', '=', 'foods.id')
-            ->join('units', 'unit_id', '=', 'units.id')
-            ->select('foods.id as food_id', 'foods.name', 'units.name as unit_name', 'units.id as unit_id', 'quantity', 'description')
-            ->get();
-
-        //Add the units to all the foods in $contents, for the temporary recipe popup
-        $contents_with_units = [];
-        foreach ($contents as $ingredient) {
-            $food = Food::find($ingredient->food_id);
-            $ingredient->units = $food->units;
-            $contents_with_units[] = $ingredient;
-        }
-
-        $recipe->steps;
-
-        return [
-            'recipe' => $recipe,
-            'contents' => $contents_with_units,
-            'tags' => $recipe->tags->lists('id')
-        ];
+        return transform(createItem($recipe, new RecipeWithIngredientsTransformer))['data'];
     }
 
     /**

@@ -8,24 +8,35 @@ use League\Fractal\TransformerAbstract;
  */
 class RecipeTransformer extends TransformerAbstract
 {
+    protected $defaultIncludes = ['tags'];
+
     /**
+     *
+     * @param Recipe $recipe
      * @return array
      */
-    public function transform(Recipe $recipe, $withContents = false)
+    public function transform(Recipe $recipe)
     {
         $array = [
             'id' => $recipe->id,
-            'name' => $recipe->name,
-            //Todo: I don't need all the tag attributes here
-            'tags' => $recipe->tags
+            'name' => $recipe->name
         ];
-
-        if ($withContents) {
-
-        }
 
         return $array;
     }
+
+    /**
+     *
+     * @param Recipe $recipe
+     * @return \League\Fractal\Resource\Collection
+     */
+    public function includeTags(Recipe $recipe)
+    {
+        $tags = $recipe->tags;
+
+        return createCollection($tags, new TagTransformer);
+    }
+
 
 }
 

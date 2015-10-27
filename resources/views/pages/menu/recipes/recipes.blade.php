@@ -16,7 +16,7 @@
                 <td ng-click="showRecipePopup(recipe)" class="pointer">[[recipe.name]]</td>
                 <td>calories</td>
                 <td>
-                    <span ng-repeat="tag in recipe.tags" class="badge">[[tag.name]]</span>
+                    <span ng-repeat="tag in recipe.tags.data" class="badge">[[tag.name]]</span>
                 </td>
                 <td><i ng-click="deleteRecipe(recipe)" class="delete-item fa fa-times"></i></td>
             </tr>

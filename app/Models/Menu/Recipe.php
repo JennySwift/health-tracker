@@ -47,12 +47,44 @@ class Recipe extends Model {
 	}
 
     /**
+     * For the recipe popup.
+     * Each ingredient should consist of food, unit, quantity and description.
+     * And each food should have its units attached to it.
+     *
+     * @VP:
+     * Is there a better way of doing this?
+     * My food_recipe table actually has three foreign keys-
+     * recipe_id, food_id, and unit_id.
+     * So I'm not sure how to get both the food and the unit for each ingredient,
+     * i.e., each row in the food_recipe table,
+     * by using relationships instead of DB::table('food_recipe').
+     * @return mixed
+     */
+    public function getIngredients()
+    {
+        $ingredients = DB::table('food_recipe')
+            ->where('recipe_id', $this->id)
+            ->join('foods', 'food_id', '=', 'foods.id')
+            ->join('units', 'unit_id', '=', 'units.id')
+            ->select('foods.id as food_id', 'foods.name', 'units.name as unit_name', 'units.id as unit_id', 'quantity', 'description')
+            ->get();
+
+        //Add the units to all the foods in $ingredients
+        foreach ($ingredients as $ingredient) {
+            $ingredient->units = Food::find($ingredient->food_id)->units;
+        }
+
+        return $ingredients;
+    }
+
+    /**
      *
      * @return mixed
      */
     public function tags()
 	{
-		return $this->belongsToMany('App\Models\Tags\Tag', 'taggables', 'taggable_id', 'tag_id')->where('taggable_type', 'recipe');
+		return $this->belongsToMany('App\Models\Tags\Tag', 'taggables', 'taggable_id', 'tag_id')
+            ->where('taggable_type', 'recipe');
 	}
 
     /**

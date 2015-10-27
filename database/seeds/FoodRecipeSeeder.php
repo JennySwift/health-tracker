@@ -48,7 +48,7 @@ class FoodRecipeSeeder extends Seeder
                     'food_id' => $food_id,
                     'unit_id' => $faker->randomElement($unit_ids_owned_by_food),
                     'quantity' => 3,
-                    'description' => ''
+                    'description' => $faker->word
                 ]);
             }
 
@@ -73,7 +73,7 @@ class FoodRecipeSeeder extends Seeder
                     'food_id' => $food_id,
                     'unit_id' => $faker->randomElement($unit_ids_owned_by_food),
                     'quantity' => 3,
-                    'description' => ''
+                    'description' => $faker->word
                 ]);
             }
         }

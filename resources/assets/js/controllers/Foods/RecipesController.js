@@ -8,7 +8,7 @@ var app = angular.module('tracker');
             all: recipes,
             filtered: recipes
         };
-        $scope.recipe_tags = recipe_tags;
+        $scope.tags = recipe_tags;
 
         $scope.selected = {};
         $scope.errors = {};
@@ -89,7 +89,7 @@ var app = angular.module('tracker');
                 return;
             }
             TagsFactory.insertRecipeTag().then(function (response) {
-                $scope.recipe_tags = response.data;
+                $scope.tags = response.data;
             });
         };
 
@@ -184,7 +184,7 @@ var app = angular.module('tracker');
 
         $scope.deleteRecipeTag = function ($id) {
             TagsFactory.deleteRecipeTag($id).then(function (response) {
-                $scope.recipe_tags = response.data;
+                $scope.tags = response.data;
             });
         };
 
@@ -217,7 +217,7 @@ var app = angular.module('tracker');
             RecipesFactory.show($recipe)
                 .then(function (response) {
                     $scope.show.popups.recipe = true;
-                    $scope.recipe_popup = response.data;
+                    $scope.recipe_popup.recipe = response.data;
                     //$rootScope.$broadcast('provideFeedback', '');
                     $rootScope.hideLoading();
                 })

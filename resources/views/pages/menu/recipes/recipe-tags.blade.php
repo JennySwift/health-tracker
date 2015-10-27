@@ -11,7 +11,7 @@
                 <th class="tooltipster" title="check to filter recipes by the tag">filter</th>
                 <th></th>
             </tr>
-            <tr ng-repeat="tag in recipe_tags | filter:filter.recipe_tags">
+            <tr ng-repeat="tag in tags | filter:filter.recipe_tags">
                 <td>[[tag.name]]</td>
                 <td>
                     <input checklist-model="filter.recipes.tag_ids" checklist-value="tag.id" type="checkbox">
