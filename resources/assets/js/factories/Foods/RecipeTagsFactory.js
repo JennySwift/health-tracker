@@ -1,8 +1,8 @@
 app.factory('RecipeTagsFactory', function ($http) {
     return {
-        insertRecipeTag: function () {
+        insert: function () {
             var $name = $("#create-new-recipe-tag").val();
-            var $url = 'insert/recipeTag';
+            var $url = 'api/recipeTags';
             var $data = {
                 name: $name
             };
@@ -12,14 +12,11 @@ app.factory('RecipeTagsFactory', function ($http) {
             return $http.post($url, $data);
         },
 
-        deleteRecipeTag: function ($id) {
+        destroy: function ($tag) {
             if (confirm("Are you sure you want to delete this tag?")) {
-                var $url = 'delete/recipeTag';
-                var $data = {
-                    id: $id
-                };
+                var $url = 'api/recipeTags/' + $tag.id;
 
-                return $http.post($url, $data);
+                return $http.delete($url);
             }
         },
     };

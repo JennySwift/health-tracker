@@ -2,9 +2,9 @@ angular.module('tracker')
     .factory('ExerciseTagsFactory', function ($http) {
         return {
 
-            insertExerciseTag: function () {
+            insert: function () {
                 var $name = $("#create-exercise-tag").val();
-                var $url = 'insert/exerciseTag';
+                var $url = 'api/exerciseTags';
                 var $data = {
                     name: $name
                 };
@@ -14,14 +14,11 @@ angular.module('tracker')
                 return $http.post($url, $data);
             },
 
-            deleteExerciseTag: function ($id) {
+            destroy: function ($tag) {
                 if (confirm("Are you sure you want to delete this tag?")) {
-                    var $url = 'delete/exerciseTag';
-                    var $data = {
-                        id: $id
-                    };
+                    var $url = 'api/exerciseTags/' + $tag.id;
 
-                    return $http.post($url, $data);
+                    return $http.delete($url);
                 }
             },
         }

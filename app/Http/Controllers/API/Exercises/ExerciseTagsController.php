@@ -47,7 +47,7 @@ class ExerciseTagsController extends Controller
     {
         $tag = new Tag([
             'name' => $request->get('name'),
-            'for' => $request->get('for')
+            'for' => 'exercise'
         ]);
 
         $tag->user()->associate(Auth::user());

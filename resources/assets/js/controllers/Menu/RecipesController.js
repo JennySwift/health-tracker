@@ -80,18 +80,6 @@ var app = angular.module('tracker');
             }
         };
 
-        /**
-         * insert
-         */
-
-        $scope.insertRecipeTag = function ($keycode) {
-            if ($keycode !== 13) {
-                return;
-            }
-            TagsFactory.insertRecipeTag().then(function (response) {
-                $scope.tags = response.data;
-            });
-        };
 
         /**
          * Deletes tags from the recipe then adds the correct ones
@@ -181,12 +169,6 @@ var app = angular.module('tracker');
         /**
          * delete
          */
-
-        $scope.deleteRecipeTag = function ($id) {
-            TagsFactory.deleteRecipeTag($id).then(function (response) {
-                $scope.tags = response.data;
-            });
-        };
 
         $scope.deleteFoodFromRecipe = function ($food_id) {
             RecipesFactory.deleteFoodFromRecipe($food_id, $scope.recipe_popup.recipe.id).then(function (response) {

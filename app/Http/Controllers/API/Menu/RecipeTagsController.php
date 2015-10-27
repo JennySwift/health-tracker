@@ -51,7 +51,7 @@ class RecipeTagsController extends Controller
     {
         $tag = new Tag([
             'name' => $request->get('name'),
-            'for' => $request->get('for')
+            'for' => 'recipe'
         ]);
 
         $tag->user()->associate(Auth::user());

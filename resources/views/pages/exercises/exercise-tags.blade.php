@@ -22,9 +22,9 @@
                 <th>tag</th>
                 <th>x</th>
             </tr>
-            <tr ng-repeat="tag in exercise_tags">
+            <tr ng-repeat="tag in tags | orderBy: 'name'">
                 <td>[[tag.name]]</td>
-                <td><i ng-click="deleteExerciseTag(tag.id)" class="delete-item fa fa-times"></i></td>
+                <td><i ng-click="deleteExerciseTag(tag)" class="delete-item fa fa-times"></i></td>
             </tr>
         </table>
     </div>
