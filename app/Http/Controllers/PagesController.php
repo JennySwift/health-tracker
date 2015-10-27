@@ -8,9 +8,11 @@ use App\Repositories\CaloriesRepository;
 use App\Repositories\ExerciseEntriesRepository;
 use App\Repositories\ExerciseSeriesRepository;
 use App\Repositories\ExercisesRepository;
+use App\Repositories\ExerciseTagsRepository;
 use App\Repositories\FoodsRepository;
 use App\Repositories\MenuEntriesRepository;
 use App\Repositories\RecipesRepository;
+use App\Repositories\RecipeTagsRepository;
 use App\Repositories\UnitsRepository;
 use App\Repositories\WeightsRepository;
 use App\Repositories\WorkoutsRepository;
@@ -60,6 +62,14 @@ class PagesController extends Controller
      * @var ExerciseSeriesRepository
      */
     private $exerciseSeriesRepository;
+    /**
+     * @var ExerciseTagsRepository
+     */
+    private $exerciseTagsRepository;
+    /**
+     * @var RecipeTagsRepository
+     */
+    private $recipeTagsRepository;
 
     /**
      * Create a new controller instance.
@@ -73,8 +83,22 @@ class PagesController extends Controller
      * @param WorkoutsRepository $workoutsRepository
      * @param CaloriesRepository $caloriesRepository
      * @param ExerciseSeriesRepository $exerciseSeriesRepository
+     * @param ExerciseTagsRepository $exerciseTagsRepository
+     * @param RecipeTagsRepository $recipeTagsRepository
      */
-    public function __construct(ExercisesRepository $exercisesRepository, FoodsRepository $foodsRepository, UnitsRepository $unitsRepository, ExerciseEntriesRepository $exerciseEntriesRepository, MenuEntriesRepository $menuEntriesRepository, RecipesRepository $recipesRepository, WorkoutsRepository $workoutsRepository, CaloriesRepository $caloriesRepository, ExerciseSeriesRepository $exerciseSeriesRepository)
+    public function __construct(
+        ExercisesRepository $exercisesRepository,
+        FoodsRepository $foodsRepository,
+        UnitsRepository $unitsRepository,
+        ExerciseEntriesRepository $exerciseEntriesRepository,
+        MenuEntriesRepository $menuEntriesRepository,
+        RecipesRepository $recipesRepository,
+        WorkoutsRepository $workoutsRepository,
+        CaloriesRepository $caloriesRepository,
+        ExerciseSeriesRepository $exerciseSeriesRepository,
+        ExerciseTagsRepository $exerciseTagsRepository,
+        RecipeTagsRepository $recipeTagsRepository
+    )
     {
         $this->middleware('auth');
         $this->exercisesRepository = $exercisesRepository;
@@ -86,6 +110,8 @@ class PagesController extends Controller
         $this->workoutsRepository = $workoutsRepository;
         $this->caloriesRepository = $caloriesRepository;
         $this->exerciseSeriesRepository = $exerciseSeriesRepository;
+        $this->exerciseTagsRepository = $exerciseTagsRepository;
+        $this->recipeTagsRepository = $recipeTagsRepository;
     }
 
     /**
@@ -178,11 +204,7 @@ class PagesController extends Controller
     public function exerciseTags()
     {
         JavaScript::put([
-            'exercise_tags' => Tag::forCurrentUser()
-                ->where('for', 'exercise')
-                ->orderBy('name', 'asc')
-                ->get(),
-
+            'exercise_tags' => $this->exerciseTagsRepository->getExerciseTags()
         ]);
 
         return view('pages.exercises.exercise-tags');
@@ -210,10 +232,7 @@ class PagesController extends Controller
         JavaScript::put([
             'foods_with_units' => $this->foodsRepository->getFoods(),
             'recipes' => $this->recipesRepository->filterRecipes('', []),
-            'recipe_tags' => Tag::forCurrentUser()
-                ->where('for', 'recipe')
-                ->orderBy('name', 'asc')
-                ->get()
+            'recipe_tags' => $this->recipeTagsRepository->getRecipeTags()
         ]);
 
         return view('pages.menu.recipes.recipes-page');

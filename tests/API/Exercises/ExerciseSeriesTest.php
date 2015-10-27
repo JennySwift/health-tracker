@@ -16,8 +16,8 @@ class ExerciseSeriesTest extends TestCase {
      * @test
      * @return void
      */
-//    public function it_lists_a_series()
-//    {
+    public function it_lists_a_series()
+    {
 //        $this->logInUser();
 //
 //        $response = $this->apiCall('GET', '/api/exercises');
@@ -33,7 +33,7 @@ class ExerciseSeriesTest extends TestCase {
 //        $this->assertEquals('5.00', $content[0]['default_quantity']);
 //
 //        $this->assertEquals(200, $response->getStatusCode());
-//    }
+    }
 
     /**
      * @test

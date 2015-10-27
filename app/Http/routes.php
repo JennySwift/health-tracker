@@ -11,12 +11,13 @@ Route::group(['namespace' => 'API', 'prefix' => 'api'], function () {
     require app_path('Http/Routes/exercises/series.php');
     require app_path('Http/Routes/exercises/series.entries.php');
     require app_path('Http/Routes/exercises/workouts.php');
+    require app_path('Http/Routes/exercises/tags.php');
 
     require app_path('Http/Routes/menu/foods.php');
     require app_path('Http/Routes/menu/recipes.php');
     require app_path('Http/Routes/menu/entries.php');
+    require app_path('Http/Routes/menu/tags.php');
 
-    require app_path('Http/Routes/tags.php');
     require app_path('Http/Routes/units.php');
 
     require app_path('Http/Routes/autocomplete.php');

@@ -13,6 +13,11 @@ class Tag extends Model {
 	use OwnedByUser;
 
     /**
+     * @var array
+     */
+    protected $fillable = ['name', 'for'];
+
+    /**
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */

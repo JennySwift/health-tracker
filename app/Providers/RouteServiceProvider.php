@@ -65,9 +65,18 @@ class RouteServiceProvider extends ServiceProvider {
             return Recipe::forCurrentUser()->findOrFail($id);
         });
 
-        Route::bind('tags', function($id)
+        Route::bind('exerciseTags', function($id)
         {
-            return Tag::forCurrentUser()->findOrFail($id);
+            return Tag::forCurrentUser()
+                ->where('for', 'exercise')
+                ->findOrFail($id);
+        });
+
+        Route::bind('recipeTags', function($id)
+        {
+            return Tag::forCurrentUser()
+                ->where('for', 'recipe')
+                ->findOrFail($id);
         });
 
         Route::bind('foodUnits', function($id)

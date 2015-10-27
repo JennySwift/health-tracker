@@ -1,19 +1,42 @@
-<?php namespace App\Http\Controllers\API\Tags;
+<?php namespace App\Http\Controllers\API\Exercises;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
+use App\Http\Transformers\TagTransformer;
 use App\Models\Tags\Tag;
+use App\Repositories\ExerciseTagsRepository;
 use Auth;
 use DB;
 use Debugbar;
 use Illuminate\Http\Request;
 
 /**
- * Class TagsController
+ * Class ExerciseTagsController
  * @package App\Http\Controllers\Tags
  */
-class TagsController extends Controller
+class ExerciseTagsController extends Controller
 {
+    /**
+     * @var ExerciseTagsRepository
+     */
+    private $exerciseTagsRepository;
+
+    /**
+     * @param ExerciseTagsRepository $exerciseTagsRepository
+     */
+    public function __construct(ExerciseTagsRepository $exerciseTagsRepository)
+    {
+        $this->exerciseTagsRepository = $exerciseTagsRepository;
+    }
+
+    /**
+     *
+     * @return mixed
+     */
+    public function index()
+    {
+        return $this->exerciseTagsRepository->getExerciseTags();
+    }
 
     /**
      *
@@ -30,7 +53,7 @@ class TagsController extends Controller
         $tag->user()->associate(Auth::user());
         $tag->save();
 
-        return $this->responseCreated($tag);
+        return $this->responseCreatedWithTransformer($tag, new TagTransformer);
 	}
 
     /**
