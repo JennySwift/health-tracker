@@ -30,10 +30,10 @@ class RecipesTest extends TestCase {
 
         $this->assertEquals(1, $content[0]['id']);
         $this->assertEquals('delicious recipe', $content[0]['name']);
-        $this->assertEquals(1, $content[0]['tags'][0]['id']);
-        $this->assertEquals('main meal', $content[0]['tags'][0]['name']);
+        $this->assertEquals(1, $content[0]['tags']['data'][0]['id']);
+        $this->assertEquals('main meal', $content[0]['tags']['data'][0]['name']);
         $this->assertCount(2, $content);
-        $this->assertCount(2, $content[0]['tags']);
+        $this->assertCount(2, $content[0]['tags']['data']);
 
         $this->assertEquals(200, $response->getStatusCode());
     }
