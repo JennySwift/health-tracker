@@ -3,7 +3,6 @@ var app = angular.module('tracker');
 (function () {
     app.controller('RecipesController', function ($rootScope, $scope, $http, FoodsFactory, FoodUnitsFactory, QuickRecipeFactory, AutocompleteFactory, RecipesFactory) {
 
-        $scope.all_foods_with_units = foods_with_units;
         $scope.recipes = {
             all: recipes,
             filtered: recipes
@@ -21,8 +20,7 @@ var app = angular.module('tracker');
             },
             popups: {
                 recipe: false,
-                similar_names: false,
-                food_info: false,
+                similar_names: false
             },
             help: {
                 quick_recipe: false
@@ -36,7 +34,6 @@ var app = angular.module('tracker');
             }
         };
 
-        $scope.food_popup = {};
         $scope.recipe_popup = {};
 
         $scope.foods = {}; //all foods
@@ -48,25 +45,13 @@ var app = angular.module('tracker');
             recipe: {}
         };
 
-        /**
-         * watches
-         */
-
         $scope.$watchCollection('filter.recipes.tag_ids', function (newValue, oldValue) {
             if (newValue !== oldValue) {
                 $scope.filterRecipes();
             }
         });
 
-        /**
-         * plugins
-         */
-
         $(".wysiwyg").wysiwyg();
-
-        /**
-         * select
-         */
 
         $scope.filterRecipes = function () {
             RecipesFactory.filterRecipes($scope.filter.recipes.tag_ids).then(function (response) {
@@ -209,125 +194,6 @@ var app = angular.module('tracker');
         };
 
         /**
-         * quick recipe
-         */
-
-        /**
-         * End goal of the function:
-         * Call FoodsFactory.insertQuickRecipe, with $check_similar_names as true.
-         * Send the contents, steps, and name of new recipe.
-         * The PHP checks for similar names and returns similar names if found.
-         * The JS checks for similar names in the response.
-         * If they exist, a popup shows. From there, the user can click a button which fires $scope.quickRecipeFinish,
-         * sending the recipe info again but this time without the similar name check.
-         * If none exist, the recipe should have been entered with the PHP and things should update accordingly on the page.
-         * @return {[type]} [description]
-         */
-        $scope.quickRecipe = function () {
-            //remove any previous error styling so it doesn't wreck up the html
-            $("#quick-recipe > *").removeAttr("style");
-            //Empty the errors array from any previous attempts
-            $scope.errors.quick_recipe = [];
-            //Hide the errors div because even with emptying the scope property, the display is slow to update.
-            $("#quick-recipe-errors").hide();
-
-            var $string = $("#quick-recipe").html();
-            //Recipe is an object, with an array of items and an array of steps.
-            var $recipe = QuickRecipeFactory.formatString($string, $("#quick-recipe"));
-            var $line;
-            var $items = [];
-            var $method = $recipe.method;
-
-            //Populate items array
-            $items = QuickRecipeFactory.populateItemsArray($recipe.items);
-
-            //check item contains quantity, unit and food
-            //and convert quantities to decimals if necessary
-            $items_and_errors = QuickRecipeFactory.errorCheck($items);
-            $items = $items_and_errors.items;
-            $errors = $items_and_errors.errors;
-
-            if ($errors.length > 0) {
-                $scope.errors.quick_recipe = $errors;
-                $("#quick-recipe-errors").show();
-                return;
-            }
-
-            //Prompt the user for the recipe name
-            var $recipe_name = prompt('name your recipe');
-
-            //If the user changes their mind and cancels
-            if (!$recipe_name) {
-                return;
-            }
-
-            $recipe = {
-                name: $recipe_name,
-                items: $items,
-                steps: $method,
-            };
-
-            $scope.quick_recipe = $recipe;
-
-            //Attempt to insert the recipe. It won't be inserted if similar names are found.
-            $scope.quickRecipeAttemptInsert($recipe);
-        };
-
-        $scope.quickRecipeAttemptInsert = function ($recipe) {
-            RecipesFactory.insertQuickRecipe($recipe, true).then(function (response) {
-                if (response.data.similar_names) {
-                    $scope.quick_recipe.similar_names = response.data.similar_names;
-                    $scope.show.popups.similar_names = true;
-                }
-                else {
-                    $scope.recipes.filtered = response.data.recipes;
-                    $scope.all_foods_with_units = response.data.foods_with_units;
-                }
-            });
-        };
-
-        /**
-         * This is for entering the recipe after the similar name check is done.
-         * We call FoodsFactory.insertQuickRecipe again, but this time with $check_similar_names parameter as false,
-         * so that the recipe gets entered.
-         * @return {[type]} [description]
-         */
-        $scope.quickRecipeFinish = function () {
-            $scope.show.popups.similar_names = false;
-
-            //first do the foods
-            $($scope.quick_recipe.similar_names.foods).each(function () {
-                var $specified_food = this.specified_food.name;
-                var $existing_food = this.existing_food.name;
-                var $checked = this.checked;
-                var $index = this.index;
-
-                if ($checked === $existing_food) {
-                    //we are using the existing food rather than creating a new food. therefore, change $scope.quick_recipe.contents to use the correct food name.
-                    $scope.quick_recipe.items[$index].food = $existing_food;
-                }
-            });
-
-            //do the same for the units
-            $($scope.quick_recipe.similar_names.units).each(function () {
-                var $specified_unit = this.specified_unit.name;
-                var $existing_unit = this.existing_unit.name;
-                var $checked = this.checked;
-                var $index = this.index;
-
-                if ($checked === $existing_unit) {
-                    //we are using the existing unit rather than creating a new unit. therefore, change $scope.quick_recipe.contents to use the correct unit name.
-                    $scope.quick_recipe.items[$index].unit = $existing_unit;
-                }
-            });
-
-            FoodsFactory.insertQuickRecipe($scope.quick_recipe, false).then(function (response) {
-                $scope.recipes.filtered = response.data.recipes;
-                $scope.all_foods_with_units = response.data.foods_with_units;
-            });
-        };
-
-        /**
          * autocomplete food (for adding food to a recipe in the recipe popup)
          */
 
@@ -399,13 +265,6 @@ var app = angular.module('tracker');
         /**
          * other
          */
-
-        $scope.closePopup = function ($event, $popup) {
-            var $target = $event.target;
-            if ($target.className === 'popup-outer') {
-                $scope.show.popups[$popup] = false;
-            }
-        };
 
         $scope.toggleQuickRecipeHelp = function () {
             $scope.show.help.quick_recipe = !$scope.show.help.quick_recipe;

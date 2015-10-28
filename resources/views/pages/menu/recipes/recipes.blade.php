@@ -1,6 +1,21 @@
 <div>
-    <input ng-model="new_item.recipe.name" ng-keyup="insertRecipe($event.keyCode)" type="text" placeholder="add a new recipe" id="create-new-recipe" class="form-control">
-    <input ng-model="filter.recipes.name" ng-keyup="filterRecipes()" type="text" placeholder="filter recipes by name" id="filter-recipes" class="form-control">
+
+    <input
+        ng-model="new_item.recipe.name"
+        ng-keyup="insertRecipe($event.keyCode)"
+        type="text"
+        placeholder="add a new recipe"
+        id="create-new-recipe"
+        class="form-control">
+
+    <input
+        ng-model="filter.recipes.name"
+        ng-keyup="filterRecipes()"
+        type="text"
+        placeholder="filter recipes by name"
+        id="filter-recipes"
+        class="form-control">
+
     <hr>
 
     <div>
