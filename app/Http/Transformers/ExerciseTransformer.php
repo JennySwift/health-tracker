@@ -21,17 +21,23 @@ class ExerciseTransformer extends TransformerAbstract
             'name' => $exercise->name,
             'description' => $exercise->description,
             'stepNumber' => $exercise->step_number,
-            'series' => [
-                'id' => $exercise->series->id,
-                'name' => $exercise->series->name
-            ],
             'defaultQuantity' => $exercise->default_quantity,
-            'defaultUnit' => [
-                'id' => $exercise->defaultUnit->id,
-                'name' => $exercise->defaultUnit->name
-            ],
             'tag_ids' => $exercise->tags()->lists('id')
         ];
+
+        if ($exercise->series) {
+            $array['series'] = [
+                'id' => $exercise->series->id,
+                'name' => $exercise->series->name
+            ];
+        }
+
+        if ($exercise->defaultUnit) {
+            $array['defaultUnit'] = [
+                'id' => $exercise->defaultUnit->id,
+                'name' => $exercise->defaultUnit->name
+            ];
+        }
 
         return $array;
     }
