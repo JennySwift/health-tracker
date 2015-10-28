@@ -66,11 +66,7 @@ class RecipesController extends Controller
      */
     public function store(Request $request)
     {
-        $recipe = new Recipe([
-            'name' => $request->get('name')
-        ]);
-        $recipe->user()->associate(Auth::user());
-        $recipe->save();
+        $recipe = $this->recipesRepository->insert($request->get('name'));
 
         return $this->responseCreatedWithTransformer($recipe, new RecipeTransformer);
     }

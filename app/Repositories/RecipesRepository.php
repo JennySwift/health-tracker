@@ -17,6 +17,23 @@ use DB;
 class RecipesRepository {
 
     /**
+     *
+     * @param $name
+     * @return Recipe
+     */
+    public function insert($name)
+    {
+        $recipe = new Recipe([
+            'name' => $name
+        ]);
+        $recipe->user()->associate(Auth::user());
+        $recipe->save();
+
+        return $recipe;
+    }
+
+
+    /**
      * Get all recipes, along with their tags, for the user, and that match the $name filter
      * @param $name
      * @param $tag_ids

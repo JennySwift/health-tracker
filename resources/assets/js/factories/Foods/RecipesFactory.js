@@ -2,12 +2,10 @@ angular.module('tracker')
     .factory('RecipesFactory', function ($http) {
         return {
             filterRecipes: function ($tag_ids) {
-                var $typing = $("#filter-recipes").val();
                 var $url = 'select/filterRecipes';
-                var $table = "recipes";
 
                 var $data = {
-                    typing: $typing,
+                    typing: $("#filter-recipes").val(),
                     tag_ids: $tag_ids
                 };
 
@@ -22,10 +20,10 @@ angular.module('tracker')
                 return $http.post($url, $data);
             },
             insertQuickRecipe: function ($recipe, $check_similar_names) {
-                var $url = 'insert/quickRecipe';
+                var $url = 'api/quickRecipes';
                 var $data = {
                     recipe: $recipe,
-                    check_similar_names: $check_similar_names
+                    check_for_similar_names: $check_similar_names
                 };
 
                 return $http.post($url, $data);
