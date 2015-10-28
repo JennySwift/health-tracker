@@ -6,6 +6,7 @@ use App\Http\Transformers\ExerciseTransformer;
 use App\Models\Exercises\Exercise;
 use App\Models\Exercises\Series;
 use App\Models\Tags\Tag;
+use App\Models\Units\Unit;
 use App\Repositories\ExercisesRepository;
 use Auth;
 use DB;
@@ -73,26 +74,31 @@ class ExercisesController extends Controller
     /**
      *
      * @param Request $request
-     * @param $exercise
-     * @return Response
+     * @param Exercise $exercise
+     * @return mixed
      */
-    public function update(Request $request, $exercise)
+    public function update(Request $request, Exercise $exercise)
     {
         // Create an array with the new fields merged
-        // @TODO Watch User Mass Settings on Laracasts (warning, some advanced OOP concepts in there!)
-        $data = array_compare($exercise->toArray(), $request->get('exercise'));
+        $data = array_compare($exercise->toArray(), $request->only([
+            'name', 'step_number', 'default_quantity', 'description'
+        ]));
 
-        // Update the model with this array
         $exercise->update($data);
 
-        // Take care of the relationships!!
         if ($request->has('series_id')) {
             $series = Series::findOrFail($request->get('series_id'));
             $exercise->series()->associate($series);
             $exercise->save();
         }
 
-        return $this->responseOk($exercise);
+        if ($request->has('default_unit_id')) {
+            $unit = Unit::where('for', 'exercise')->findOrFail($request->get('default_unit_id'));
+            $exercise->defaultUnit()->associate($unit);
+            $exercise->save();
+        }
+
+        return $this->responseOkWithTransformer($exercise, new ExerciseTransformer);
     }
 
     /**

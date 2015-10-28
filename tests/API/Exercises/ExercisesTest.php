@@ -110,25 +110,91 @@ class ExercisesTest extends TestCase {
      * @test
      * @return void
      */
-//    public function it_can_update_an_exercise()
-//    {
-//        $this->logInUser();
-//
-//        $unit = Unit::forCurrentUser()->where('for', 'food')->first();
-//
-//        $response = $this->call('PUT', '/api/foodUnits/'.$unit->id, [
-//            'name' => 'numbat'
-//        ]);
-//        $content = json_decode($response->getContent(), true)['data'];
-//
-//        $this->assertArrayHasKey('id', $content);
-//        $this->assertArrayHasKey('name', $content);
-//        $this->assertArrayHasKey('for', $content);
-//
-//        $this->assertEquals('numbat', $content['name']);
-//
-//        $this->assertEquals(200, $response->getStatusCode());
-//    }
+    public function it_can_update_an_exercise()
+    {
+        $this->logInUser();
+
+        $exercise = Exercise::forCurrentUser()->first();
+
+        $response = $this->call('PUT', '/api/exercises/'.$exercise->id, [
+            'name' => 'numbat',
+            'step_number' => 2,
+            'default_quantity' => 6,
+            //I'm not actually returning this in the response
+            'description' => 'hi there',
+            'series_id' => 2,
+            'default_unit_id' => 2
+        ]);
+        $content = json_decode($response->getContent(), true)['data'];
+//        dd($content);
+
+        $this->assertArrayHasKey('id', $content);
+        $this->assertArrayHasKey('name', $content);
+        $this->assertArrayHasKey('stepNumber', $content);
+        $this->assertArrayHasKey('series', $content);
+        $this->assertArrayHasKey('defaultUnit', $content);
+        $this->assertArrayHasKey('defaultQuantity', $content);
+        $this->assertArrayHasKey('tag_ids', $content);
+
+        $this->assertEquals(1, $content['id']);
+        $this->assertEquals('numbat', $content['name']);
+        $this->assertEquals(2, $content['stepNumber']);
+        $this->assertEquals(6, $content['defaultQuantity']);
+
+        $this->assertEquals([
+            'id' => 2,
+            'name' => 'pullup'
+        ], $content['series']);
+
+        $this->assertEquals([
+            'id' => 2,
+            'name' => 'minutes'
+        ], $content['defaultUnit']);
+
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    /**
+     * @test
+     * @return void
+     */
+    public function it_can_update_an_exercise_default_quantity()
+    {
+        $this->logInUser();
+
+        $exercise = Exercise::forCurrentUser()->first();
+
+        $response = $this->call('PUT', '/api/exercises/'.$exercise->id, [
+            'default_quantity' => 7,
+        ]);
+        $content = json_decode($response->getContent(), true)['data'];
+//        dd($content);
+
+        $this->assertArrayHasKey('id', $content);
+        $this->assertArrayHasKey('name', $content);
+        $this->assertArrayHasKey('stepNumber', $content);
+        $this->assertArrayHasKey('series', $content);
+        $this->assertArrayHasKey('defaultUnit', $content);
+        $this->assertArrayHasKey('defaultQuantity', $content);
+        $this->assertArrayHasKey('tag_ids', $content);
+
+        $this->assertEquals(1, $content['id']);
+        $this->assertEquals('kneeling pushups', $content['name']);
+        $this->assertEquals(1, $content['stepNumber']);
+        $this->assertEquals(7, $content['defaultQuantity']);
+
+        $this->assertEquals([
+            'id' => 1,
+            'name' => 'pushup'
+        ], $content['series']);
+
+        $this->assertEquals([
+            'id' => 1,
+            'name' => 'reps'
+        ], $content['defaultUnit']);
+
+        $this->assertEquals(200, $response->getStatusCode());
+    }
 
     /**
      * @test

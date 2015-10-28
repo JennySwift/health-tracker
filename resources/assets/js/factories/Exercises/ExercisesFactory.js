@@ -32,10 +32,15 @@ app.factory('ExercisesFactory', function ($http) {
         },
 
         updateExercise: function ($exercise) {
-            var $url = $exercise.path;
+            var $url = 'api/exercises/' + $exercise.id;
 
             var $data = {
-                exercise: $exercise
+                name: $exercise.name,
+                step_number: $exercise.stepNumber,
+                series_id: $exercise.series.id,
+                default_quantity: $exercise.defaultQuantity,
+                description: $exercise.description,
+                default_unit_id: $exercise.defaultUnit.id
             };
 
             $("#exercise-step-number").val("");
