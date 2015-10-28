@@ -1,7 +1,7 @@
 app.factory('ExercisesFactory', function ($http) {
     return {
 
-        getExerciseInfo: function ($exercise) {
+        show: function ($exercise) {
             var $url = $exercise.path;
 
             return $http.get($url);

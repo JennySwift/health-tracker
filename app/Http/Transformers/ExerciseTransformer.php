@@ -14,28 +14,23 @@ class ExerciseTransformer extends TransformerAbstract
      */
     public function transform(Exercise $exercise)
     {
-//        $array = [
-//            'id' => $exercise->id,
-//            'name' => $exercise->name,
-//            'path' => $exercise->path,
-//            'stepNumer' => $exercise,
-//            'series_id' => $exercise,
-//            'description' => $exercise,
-//            'default_unit_id' => $exercise,
-//            'default_unit_name' => $exercise,
-//            'series_name' => $exercise,
-//            'defaultQuantity' => $exercise,
-//            'defaultCalories' => $exercise,
-//            'tags' => $exercise,
-//        ];
+        $array = [
+            'id' => $exercise->id,
+            'name' => $exercise->name,
+            'stepNumber' => $exercise->step_number,
+            'series' => [
+                'id' => $exercise->series->id,
+                'name' => $exercise->series->name
+            ],
+            'defaultQuantity' => $exercise->default_quantity,
+            'defaultUnit' => [
+                'id' => $exercise->defaultUnit->id,
+                'name' => $exercise->defaultUnit->name
+            ],
+            'tag_ids' => $exercise->tags()->lists('id')
+        ];
 
-//        if ($exercise->default_unit_id) {
-//            $array['defaultUnit'] = [
-//                'id' => $food->defaultUnit->id,
-//                'name' => $food->defaultUnit->name
-//            ];
-//        }
-//        return $array;
+        return $array;
     }
 
 }

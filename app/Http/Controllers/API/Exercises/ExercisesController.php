@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
+use App\Http\Transformers\ExerciseTransformer;
 use App\Models\Exercises\Exercise;
 use App\Models\Exercises\Series;
 use App\Models\Tags\Tag;
@@ -52,14 +53,7 @@ class ExercisesController extends Controller
      */
     public function show($exercise)
     {
-        $all_exercise_tags = Tag::getExerciseTags();
-        $exercise_tags = $exercise->tags()->lists('id');
-
-        return [
-            "all_exercise_tags" => $all_exercise_tags,
-            "exercise" => $exercise,
-            "tags" => $exercise_tags
-        ];
+        return transform(createItem($exercise, new ExerciseTransformer))['data'];
     }
 
     /**

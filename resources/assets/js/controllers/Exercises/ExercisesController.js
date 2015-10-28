@@ -41,7 +41,7 @@ var app = angular.module('tracker');
         };
 
         $scope.updateExercise = function () {
-            ExercisesFactory.updateExercise($scope.exercise_popup.exercise).then(function (response) {
+            ExercisesFactory.updateExercise($scope.exercise_popup).then(function (response) {
                 //$scope.exercises = response.data;
 
                 //deletes tags from the exercise then adds the correct ones
@@ -57,7 +57,7 @@ var app = angular.module('tracker');
             ExercisesFactory.destroy($exercise)
                 .then(function (response) {
                     $scope.exercises = _.without($scope.exercises, $exercise);
-                    $rootScope.$broadcast('provideFeedback', 'Execise deleted');
+                    $rootScope.$broadcast('provideFeedback', 'Exercise deleted');
                     $rootScope.hideLoading();
                 })
                 .catch(function (response) {
@@ -72,10 +72,17 @@ var app = angular.module('tracker');
         $scope.showExercisePopup = function ($exercise) {
             $scope.selected.exercise = $exercise;
 
-            ExercisesFactory.getExerciseInfo($exercise).then(function (response) {
-                $scope.exercise_popup = response.data;
-                $scope.show.popups.exercise = true;
-            });
+            $rootScope.showLoading();
+            ExercisesFactory.show($exercise)
+                .then(function (response) {
+                    $scope.exercise_popup = response.data;
+                    $scope.show.popups.exercise = true;
+                    //$rootScope.$broadcast('provideFeedback', '');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
         };
 
         $scope.closePopup = function ($event, $popup) {

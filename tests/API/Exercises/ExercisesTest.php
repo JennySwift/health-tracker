@@ -66,6 +66,48 @@ class ExercisesTest extends TestCase {
 
     /**
      * @test
+     */
+    public function it_can_show_an_exercise()
+    {
+        $this->logInUser();
+
+        $exercise = Exercise::forCurrentUser()->first();
+
+        $response = $this->call('GET', '/api/exercises/' . $exercise->id);
+        $content = json_decode($response->getContent(), true);
+
+        $this->assertArrayHasKey('id', $content);
+        $this->assertArrayHasKey('name', $content);
+        $this->assertArrayHasKey('stepNumber', $content);
+        $this->assertArrayHasKey('series', $content);
+        $this->assertArrayHasKey('defaultUnit', $content);
+        $this->assertArrayHasKey('defaultQuantity', $content);
+        $this->assertArrayHasKey('tag_ids', $content);
+
+        $this->assertEquals(1, $content['id']);
+        $this->assertEquals('kneeling pushups', $content['name']);
+        $this->assertEquals(1, $content['stepNumber']);
+        $this->assertEquals(5, $content['defaultQuantity']);
+
+        $this->assertEquals([
+            'id' => 1,
+            'name' => 'pushup'
+        ], $content['series']);
+
+        $this->assertEquals([
+            'id' => 1,
+            'name' => 'reps'
+        ], $content['defaultUnit']);
+
+        //Todo: make seeder static for this
+//        $this->assertEquals('kneeling pushups', $content['tag_ids']);
+
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+
+    }
+
+    /**
+     * @test
      * @return void
      */
 //    public function it_can_update_an_exercise()
