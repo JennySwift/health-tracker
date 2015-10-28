@@ -31,10 +31,10 @@
 				<tr ng-repeat="exercise in exercises | filter:{name: filter.exercises.name, description: filter.exercises.description}" class="hover">
 					<td ng-click="showExercisePopup(exercise)" class="pointer">[[exercise.name]]</td>
 					<td ng-click="showExercisePopup(exercise)" class="pointer">[[exercise.description]]</td>
-					<td ng-click="showExercisePopup(exercise)" class="pointer">[[exercise.step_number]]</td>
-					<td ng-click="showExercisePopup(exercise)" class="pointer">[[exercise.series_name]]</td>
-					<td ng-click="showExercisePopup(exercise)" class="pointer">[[exercise.default_quantity]]</td>
-					<td ng-click="showExercisePopup(exercise)" class="pointer">[[exercise.default_unit_name]]</td>
+					<td ng-click="showExercisePopup(exercise)" class="pointer">[[exercise.stepNumber]]</td>
+					<td ng-click="showExercisePopup(exercise)" class="pointer">[[exercise.series.name]]</td>
+					<td ng-click="showExercisePopup(exercise)" class="pointer">[[exercise.defaultQuantity]]</td>
+					<td ng-click="showExercisePopup(exercise)" class="pointer">[[exercise.defaultUnit.name]]</td>
 					<td ng-click="showExercisePopup(exercise)" class="pointer">
 						<span ng-repeat="tag in exercise.tags" class="badge">[[tag.name]]</span>
 					</td>

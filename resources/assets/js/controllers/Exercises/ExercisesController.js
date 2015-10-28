@@ -41,15 +41,19 @@ var app = angular.module('tracker');
         };
 
         $scope.updateExercise = function () {
-            ExercisesFactory.updateExercise($scope.exercise_popup).then(function (response) {
-                //$scope.exercises = response.data;
-
-                //deletes tags from the exercise then adds the correct ones
-                ExercisesFactory.insertTagsInExercise($scope.selected.exercise.id, $scope.exercise_popup.tags).then(function (response) {
-                    $scope.exercises = response.data;
+            $rootScope.showLoading();
+            ExercisesFactory.update($scope.exercise_popup)
+                .then(function (response) {
+                    $scope.exercise_popup = response.data.data;
+                    $rootScope.$broadcast('provideFeedback', 'Exercise updated');
+                    var $index = _.indexOf($scope.exercises, _.findWhere($scope.exercises, {id: $scope.exercise_popup.id}));
+                    $scope.exercises[$index] = response.data.data;
                     $scope.show.popups.exercise = false;
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
                 });
-            });
         };
 
         $scope.deleteExercise = function ($exercise) {

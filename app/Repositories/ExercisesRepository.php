@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Http\Transformers\ExerciseTransformer;
 use App\Models\Exercises\Exercise;
 use App\Models\Exercises\Series;
 
@@ -29,6 +30,6 @@ class ExercisesRepository
             ->with('tags')
             ->get();
 
-        return $exercises;
+        return transform(createCollection($exercises, new ExerciseTransformer))['data'];
     }
 }

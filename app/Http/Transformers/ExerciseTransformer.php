@@ -8,6 +8,8 @@ use League\Fractal\TransformerAbstract;
  */
 class ExerciseTransformer extends TransformerAbstract
 {
+    protected $defaultIncludes = ['tags'];
+
     /**
      * @param Exercise $exercise
      * @return array
@@ -17,6 +19,7 @@ class ExerciseTransformer extends TransformerAbstract
         $array = [
             'id' => $exercise->id,
             'name' => $exercise->name,
+            'description' => $exercise->description,
             'stepNumber' => $exercise->step_number,
             'series' => [
                 'id' => $exercise->series->id,
@@ -31,6 +34,18 @@ class ExerciseTransformer extends TransformerAbstract
         ];
 
         return $array;
+    }
+
+    /**
+     *
+     * @param Exercise $exercise
+     * @return \League\Fractal\Resource\Collection
+     */
+    public function includeTags(Exercise $exercise)
+    {
+        $tags = $exercise->tags;
+
+        return createCollection($tags, new TagTransformer);
     }
 
 }

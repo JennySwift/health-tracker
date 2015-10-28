@@ -26,12 +26,26 @@ class ExercisesTest extends TestCase {
 
         $this->assertArrayHasKey('id', $content[0]);
         $this->assertArrayHasKey('name', $content[0]);
-        $this->assertArrayHasKey('step_number', $content[0]);
-        $this->assertArrayHasKey('description', $content[0]);
+        $this->assertArrayHasKey('stepNumber', $content[0]);
+        $this->assertArrayHasKey('series', $content[0]);
+        $this->assertArrayHasKey('defaultUnit', $content[0]);
+        $this->assertArrayHasKey('defaultQuantity', $content[0]);
+        $this->assertArrayHasKey('tag_ids', $content[0]);
 
+        $this->assertEquals(1, $content[0]['id']);
         $this->assertEquals('kneeling pushups', $content[0]['name']);
-        $this->assertEquals('http://localhost/api/exercises/1', $content[0]['path']);
-        $this->assertEquals('5.00', $content[0]['default_quantity']);
+        $this->assertEquals(1, $content[0]['stepNumber']);
+        $this->assertEquals(5, $content[0]['defaultQuantity']);
+
+        $this->assertEquals([
+            'id' => 1,
+            'name' => 'pushup'
+        ], $content[0]['series']);
+
+        $this->assertEquals([
+            'id' => 1,
+            'name' => 'reps'
+        ], $content[0]['defaultUnit']);
 
         $this->assertEquals(200, $response->getStatusCode());
     }
@@ -120,8 +134,7 @@ class ExercisesTest extends TestCase {
             'name' => 'numbat',
             'step_number' => 2,
             'default_quantity' => 6,
-            //I'm not actually returning this in the response
-            'description' => 'hi there',
+            'description' => 'frog',
             'series_id' => 2,
             'default_unit_id' => 2
         ]);
@@ -130,14 +143,17 @@ class ExercisesTest extends TestCase {
 
         $this->assertArrayHasKey('id', $content);
         $this->assertArrayHasKey('name', $content);
+        $this->assertArrayHasKey('description', $content);
         $this->assertArrayHasKey('stepNumber', $content);
         $this->assertArrayHasKey('series', $content);
         $this->assertArrayHasKey('defaultUnit', $content);
         $this->assertArrayHasKey('defaultQuantity', $content);
+        $this->assertArrayHasKey('tags', $content);
         $this->assertArrayHasKey('tag_ids', $content);
 
         $this->assertEquals(1, $content['id']);
         $this->assertEquals('numbat', $content['name']);
+        $this->assertEquals('frog', $content['description']);
         $this->assertEquals(2, $content['stepNumber']);
         $this->assertEquals(6, $content['defaultQuantity']);
 
@@ -150,6 +166,8 @@ class ExercisesTest extends TestCase {
             'id' => 2,
             'name' => 'minutes'
         ], $content['defaultUnit']);
+
+        //Todo: check tags
 
         $this->assertEquals(200, $response->getStatusCode());
     }
@@ -176,6 +194,7 @@ class ExercisesTest extends TestCase {
         $this->assertArrayHasKey('series', $content);
         $this->assertArrayHasKey('defaultUnit', $content);
         $this->assertArrayHasKey('defaultQuantity', $content);
+        $this->assertArrayHasKey('tags', $content);
         $this->assertArrayHasKey('tag_ids', $content);
 
         $this->assertEquals(1, $content['id']);

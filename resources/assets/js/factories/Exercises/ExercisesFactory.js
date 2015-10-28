@@ -2,7 +2,7 @@ app.factory('ExercisesFactory', function ($http) {
     return {
 
         show: function ($exercise) {
-            var $url = $exercise.path;
+            var $url = 'api/exercises/' + $exercise.id;
 
             return $http.get($url);
         },
@@ -31,7 +31,7 @@ app.factory('ExercisesFactory', function ($http) {
             return $http.post($url, $data);
         },
 
-        updateExercise: function ($exercise) {
+        update: function ($exercise) {
             var $url = 'api/exercises/' + $exercise.id;
 
             var $data = {
