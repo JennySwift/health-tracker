@@ -66,8 +66,11 @@ class FoodEntrySeeder extends Seeder
             //Attach recipe for the last entry if the date is today
             if ($date === Carbon::today()->format('Y-m-d') && $index === 1) {
                 $recipe_ids = Recipe::where('user_id', $this->user->id)->lists('id')->all();
+//                dd($recipe_ids);
                 $entry->recipe()->associate(Recipe::find($recipe_ids[0]));
             }
+
+
 
             $entry->save();
 

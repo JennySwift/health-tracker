@@ -24,11 +24,11 @@ class DatabaseSeeder extends Seeder {
 
 		$this->call('FoodSeeder');
 
-		$this->call('FoodEntrySeeder');
+        $this->call('RecipeSeeder');
 
-		$this->call('RecipeSeeder');
+        $this->call('FoodEntrySeeder');
 
-		$this->call('FoodRecipeSeeder');
+        $this->call('FoodRecipeSeeder');
 
 		$this->call('RecipeMethodSeeder');
 
