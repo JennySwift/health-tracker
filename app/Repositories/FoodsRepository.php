@@ -4,7 +4,7 @@ namespace App\Repositories;
 
 use App\Http\Transformers\FoodTransformer;
 use App\Models\Menu\Food;
-use App\Models\Units\Unit;
+use Auth;
 
 /**
  * Class FoodsRepository
@@ -65,22 +65,17 @@ class FoodsRepository
     }
 
     /**
-     * For quick recipe feature
-     * @param $food_name
-     * @return mixed
+     *
+     * @param $name
+     * @return Food
      */
-    public function insertFoodIfNotExists($food_name)
+    public function insert($name)
     {
-        $food = Food::forCurrentUser()->where('name', $food_name)->first();
-
-        if (!$food) {
-            $food = new Food([
-                'name' => $food_name
-            ]);
-
-            $food->user()->associate(Auth::user());
-            $food->save();
-        }
+        $food = new Food([
+            'name' => $name
+        ]);
+        $food->user()->associate(Auth::user());
+        $food->save();
 
         return $food;
     }

@@ -13323,816 +13323,6 @@ function runBlock ($rootScope, ErrorsFactory) {
 var app = angular.module('tracker');
 
 (function () {
-	app.controller('journal', function ($rootScope, $scope, $http, DatesFactory, JournalFactory) {
-		/**
-		 * scope properties
-		 */
-		
-		//journal
-		$scope.journal_entry = entry;
-
-		//date
-		/**
-		 * There is a lot of date stuff here that is duplication of the date stuff in EntriesController.js.
-		 * Any way of making it dry?
-		 */
-
-		$scope.date = {};
-		
-		if ($scope.date.typed === undefined) {
-			$scope.date.typed = Date.parse('today').toString('dd/MM/yyyy');
-		}
-		$scope.date.long = Date.parse($scope.date.typed).toString('dd MMM yyyy');
-
-		$scope.goToDate = function ($number) {
-			$scope.date.typed = DatesFactory.goToDate($scope.date.typed, $number);
-		};
-
-		$scope.today = function () {
-			$scope.date.typed = DatesFactory.today();
-		};
-		$scope.changeDate = function ($keycode, $date) {
-            if ($keycode !== 13) {
-                return false;
-            }
-            var $date = $date || $("#date").val();
-            $scope.date.typed = DatesFactory.changeDate($keycode, $date);
-		};
-
-		/**
-		 * plugins
-		 */
-		
-		$(".wysiwyg").wysiwyg();
-
-		/**
-		 * watches
-		 */
-		
-		$scope.$watch('date.typed', function (newValue, oldValue) {
-			$scope.date.sql = Date.parse($scope.date.typed).toString('yyyy-MM-dd');
-			$scope.date.long = Date.parse($scope.date.typed).toString('ddd dd MMM yyyy');
-			$("#date").val(newValue);
-
-			if (newValue === oldValue) {
-				// $scope.pageLoad();
-			}
-			else {
-				$scope.getJournalEntry();
-			}
-		});
-		
-		/**
-		 * select
-		 */
-		
-		$scope.getJournalEntry = function () {
-			JournalFactory.getJournalEntry($scope.date.sql).then(function (response) {
-				$scope.journal_entry = response.data.data;
-			});
-		};
-
-        $scope.filterJournalEntries = function ($keycode) {
-            if ($keycode !== 13) {
-                return false;
-            }
-            JournalFactory.filter().then(function (response) {
-                $scope.filter_results = response.data;
-            });
-        };
-
-        /**
-         * If the id of the journal entry exists, update the entry.
-         * If not, insert the entry.
-         */
-		$scope.insertOrUpdateJournalEntry = function () {
-            if ($scope.journal_entry.id) {
-                updateEntry();
-            }
-            else {
-                createEntry();
-            }
-
-		};
-
-        function updateEntry () {
-            $rootScope.showLoading();
-            JournalFactory.update($scope.journal_entry)
-                .then(function (response) {
-                    $scope.journal_entry = response.data.data;
-                    $rootScope.$broadcast('provideFeedback', 'Entry updated');
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        }
-
-        function createEntry () {
-            $rootScope.showLoading();
-            JournalFactory.insert($scope.date.sql)
-                .then(function (response) {
-                    $scope.journal_entry = response.data.data;
-                    $rootScope.$broadcast('provideFeedback', 'Entry created');
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        }
-
-		
-	});
-
-})();
-angular.module('tracker')
-    .controller('FoodUnitsController', function ($scope, $rootScope, FoodUnitsFactory) {
-        $scope.units = units;
-
-        $scope.insertFoodUnit = function ($keycode) {
-            if ($keycode === 13) {
-                //$scope.showLoading();
-                FoodUnitsFactory.insert()
-                    .then(function (response) {
-                        $scope.units.push(response.data.data);
-                        $rootScope.$broadcast('provideFeedback', 'Unit created');
-                        //$scope.hideLoading();
-                    })
-                    .catch(function (response) {
-                        $rootScope.responseError(response);
-                    });
-            }
-        };
-
-        //Todo
-        $scope.updateFoodUnit = function () {
-
-        };
-
-        $scope.deleteFoodUnit = function ($unit) {
-            //$scope.showLoading();
-            FoodUnitsFactory.destroy($unit)
-                .then(function (response) {
-                    $scope.units = _.without($scope.units, $unit);
-                    $rootScope.$broadcast('provideFeedback', 'Unit deleted');
-                    //$scope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        };
-    });
-var app = angular.module('tracker');
-
-(function () {
-	app.controller('FoodsController', function ($rootScope, $scope, $http, FoodsFactory, AutocompleteFactory) {
-		
-		$scope.foods = foods;
-		$scope.selected = {};
-
-		//show
-		$scope.show = {
-			autocomplete_options: {
-				menu_items: false,
-				foods: false
-			},
-			popups: {
-				recipe: false,
-				similar_names: false,
-				food_info: false
-			}
-		};
-		
-		$scope.food_popup = {};
-
-		$scope.calories = {};
-
-		$scope.new_item = {};
-
-		/**
-		 * plugins
-		 */
-		
-		$(".wysiwyg").wysiwyg();
-
-		$scope.getMenu = function () {
-			if ($scope.foods.length > 0 && $scope.recipes.length > 0) {
-				$scope.menu = select.getMenu($scope.foods, $scope.recipes);
-			}
-		};
-
-		$scope.getFoodInfo = function ($food) {
-			//for popup where user selects units for food and enters calories
-			$scope.food_popup.id = $food.id;
-			$scope.food_popup.name = $food.name;
-			$scope.show.popups.food_info = true;
-			FoodsFactory.getFoodInfo($food).then(function (response) {
-				$scope.food_popup = response.data;
-			});
-			
-		};
-
-        /**
-         * Add a unit to a food or remove the unit from the food.
-         * The method name is old and should probably be changed.
-         * @param $unit_id
-         */
-		$scope.insertOrDeleteUnitInCalories = function ($unit_id) {
-			//Check if the checkbox is checked
-			if ($scope.food_popup.food_units.indexOf($unit_id) === -1) {
-				//It is now unchecked. Remove the unit from the food.
-				FoodsFactory.deleteUnitFromCalories($scope.food_popup.food.id, $unit_id).then(function (response) {
-					$scope.food_popup = response.data;
-				});
-			}
-			else {
-				// It is now checked. Add the unit to the food.
-				FoodsFactory.insertUnitInCalories($scope.food_popup.food.id, $unit_id).then(function (response) {
-					$scope.food_popup = response.data;
-				});
-			}
-		};
-
-		$scope.insertFood = function ($keycode) {
-			if ($keycode === 13) {
-                $rootScope.showLoading();
-                FoodsFactory.insertFood()
-                    .then(function (response) {
-                        $scope.foods.push(response.data.data);
-                        $rootScope.$broadcast('provideFeedback', 'Food created');
-                        $rootScope.hideLoading();
-                    })
-                    .catch(function (response) {
-                        $rootScope.responseError(response);
-                    });
-			}
-		};
-
-		$scope.updateCalories = function ($keycode, $unit_id, $calories) {
-			if ($keycode === 13) {
-				FoodsFactory.updateCalories($scope.food_popup.food.id, $unit_id, $calories).then(function (response) {
-					$scope.food_popup = response.data;
-				});
-			}
-		};
-
-		$scope.updateDefaultUnit = function ($food_id, $unit_id) {
-			FoodsFactory.updateDefaultUnit($food_id, $unit_id).then(function (response) {
-				$scope.food_popup = response.data;
-			});
-		};
-
-		$scope.deleteFood = function ($food) {
-            $rootScope.showLoading();
-            FoodsFactory.destroy($food)
-                .then(function (response) {
-                    $scope.foods = _.without($scope.foods, $food);
-                    $rootScope.$broadcast('provideFeedback', 'Food deleted');
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-		};
-
-		/**
-		 * autocomplete food (for adding food to a recipe in the recipe popup)
-		 */
-
-		$scope.autocompleteFood = function ($keycode) {
-			var $typing = $("#recipe-popup-food-input").val();
-			if ($keycode !== 13 && $keycode !== 38 && $keycode !== 40) {
-				//not enter, up arrow or down arrow
-				//fill the dropdown
-				AutocompleteFactory.food($typing).then(function (response) {
-					$scope.recipe_popup.autocomplete_options = response.data;
-					//show the dropdown
-					$scope.show.autocomplete_options.foods = true;
-					//select the first item
-					$scope.recipe_popup.autocomplete_options[0].selected = true;
-				});
-			}
-			else if ($keycode === 38) {
-				//up arrow pressed
-				AutocompleteFactory.autocompleteUpArrow($scope.recipe_popup.autocomplete_options);
-				
-			}
-			else if ($keycode === 40) {
-				//down arrow pressed
-				AutocompleteFactory.autocompleteDownArrow($scope.recipe_popup.autocomplete_options);
-			}
-		};
-
-		$scope.finishFoodAutocomplete = function ($array, $set_focus) {
-			//array, input_to_focus, autocomplete_to_hide, input_to_fill, selected_property_to_define
-			var $selected = _.findWhere($array, {selected: true});
-			$scope.recipe_popup.food = $selected;
-			$scope.selected.food = $selected;
-			$scope.show.autocomplete_options.foods = false;
-			$($set_focus).val("").focus();
-		};
-
-		$scope.insertOrAutocompleteFoodEntry = function ($keycode) {
-			if ($keycode !== 13) {
-				return;
-			}
-			//enter is pressed
-			if ($scope.show.autocomplete_options.foods) {
-				//enter is for the autocomplete
-				$scope.finishFoodAutocomplete($scope.recipe_popup.autocomplete_options, $("#recipe-popup-food-quantity"));
-			}
-			else {
-				// if enter is to add the entry
-				$scope.insertFoodIntoRecipe();
-			}
-		};
-
-		/**
-		 * other
-		 */
-		
-		$scope.closePopup = function ($event, $popup) {
-			var $target = $event.target;
-			if ($target.className === 'popup-outer') {
-				$scope.show.popups[$popup] = false;
-			}
-		};
-		
-	});
-
-})();
-angular.module('tracker')
-    .controller('RecipeTagsController', function ($rootScope, $scope, RecipeTagsFactory) {
-
-        $scope.insertRecipeTag = function ($keycode) {
-            if ($keycode !== 13) {
-                return;
-            }
-            $rootScope.showLoading();
-            RecipeTagsFactory.insert()
-                .then(function (response) {
-                    $scope.tags.push(response.data.data);
-                    $rootScope.$broadcast('provideFeedback', 'Tag created');
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        };
-
-        $scope.deleteRecipeTag = function ($tag) {
-            $rootScope.showLoading();
-            RecipeTagsFactory.destroy($tag)
-                .then(function (response) {
-                    $scope.tags = _.without($scope.tags, $tag);
-                    $rootScope.$broadcast('provideFeedback', 'Tag deleted');
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        };
-
-    });
-var app = angular.module('tracker');
-
-(function () {
-    app.controller('RecipesController', function ($rootScope, $scope, $http, FoodsFactory, FoodUnitsFactory, QuickRecipeFactory, AutocompleteFactory, RecipesFactory) {
-
-        $scope.all_foods_with_units = foods_with_units;
-        $scope.recipes = {
-            all: recipes,
-            filtered: recipes
-        };
-        $scope.tags = recipe_tags;
-
-        $scope.selected = {};
-        $scope.errors = {};
-
-        //show
-        $scope.show = {
-            autocomplete_options: {
-                menu_items: false,
-                foods: false,
-            },
-            popups: {
-                recipe: false,
-                similar_names: false,
-                food_info: false,
-            },
-            help: {
-                quick_recipe: false
-            }
-        };
-
-        //filter
-        $scope.filter = {
-            recipes: {
-                tag_ids: []
-            }
-        };
-
-        $scope.food_popup = {};
-        $scope.recipe_popup = {};
-
-        $scope.foods = {}; //all foods
-        $scope.menu = {};//all foods and all recipes
-        $scope.calories = {};
-        $scope.quick_recipe = {};
-
-        $scope.new_item = {
-            recipe: {}
-        };
-
-        /**
-         * watches
-         */
-
-        $scope.$watchCollection('filter.recipes.tag_ids', function (newValue, oldValue) {
-            if (newValue !== oldValue) {
-                $scope.filterRecipes();
-            }
-        });
-
-        /**
-         * plugins
-         */
-
-        $(".wysiwyg").wysiwyg();
-
-        /**
-         * select
-         */
-
-        $scope.filterRecipes = function () {
-            RecipesFactory.filterRecipes($scope.filter.recipes.tag_ids).then(function (response) {
-                $scope.recipes.filtered = response.data;
-            });
-        };
-
-        $scope.getMenu = function () {
-            if ($scope.foods.length > 0 && $scope.recipes.length > 0) {
-                $scope.menu = select.getMenu($scope.foods, $scope.recipes);
-            }
-        };
-
-
-        /**
-         * Deletes tags from the recipe then adds the correct ones
-         */
-        $scope.insertTagsIntoRecipe = function () {
-            $scope.recipe_popup.notification = 'Saving tags...';
-            RecipesFactory.insertTagsIntoRecipe($scope.recipe_popup.recipe.id, $scope.recipe_popup.tags).then(function (response) {
-                $scope.recipe_popup.notification = 'Tags have been saved.';
-                $scope.recipes.filtered = response.data;
-            });
-        };
-
-        $scope.insertRecipe = function ($keycode) {
-            if ($keycode !== 13) {
-                return;
-            }
-
-            $rootScope.showLoading();
-            RecipesFactory.insert($scope.new_item.recipe.name)
-                .then(function (response) {
-                    $scope.recipes.filtered.push(response.data.data);
-                    $rootScope.$broadcast('provideFeedback', 'Recipe created');
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        };
-
-
-        /**
-         * Add a unit to a food or remove the unit from the food.
-         * The method name is old and should probably be changed.
-         * @param $unit_id
-         */
-        $scope.insertOrDeleteUnitInCalories = function ($unit_id) {
-            //Check if the checkbox is checked
-            if ($scope.food_popup.food_units.indexOf($unit_id) === -1) {
-                //It is now unchecked. Remove the unit from the food.
-                FoodsFactory.deleteUnitFromCalories($scope.food_popup.food.id, $unit_id).then(function (response) {
-                    $scope.food_popup = response.data;
-                });
-            }
-            else {
-                // It is now checked. Add the unit to the food.
-                FoodsFactory.insertUnitInCalories($scope.food_popup.food.id, $unit_id).then(function (response) {
-                    $scope.food_popup = response.data;
-                });
-            }
-        };
-
-        /**
-         * update
-         */
-
-        $scope.updateRecipeMethod = function () {
-            //this is some duplication of insertRecipeMethod
-            var $string = $("#edit-recipe-method").html();
-            var $lines = QuickRecipeFactory.formatString($string, $("#edit-recipe-method")).items;
-            var $steps = [];
-
-            $($lines).each(function () {
-                var $line = this;
-                $steps.push($line);
-            });
-
-            RecipesFactory.updateRecipeMethod($scope.recipe_popup.recipe.id, $steps).then(function (response) {
-                $scope.recipe_popup = response.data;
-                $scope.recipe_popup.edit_method = false;
-            });
-        };
-
-        $scope.updateCalories = function ($keycode, $unit_id, $calories) {
-            if ($keycode === 13) {
-                FoodsFactory.updateCalories($scope.food_popup.food.id, $unit_id, $calories).then(function (response) {
-                    $scope.food_popup = response.data;
-                });
-            }
-        };
-
-        $scope.updateDefaultUnit = function ($food_id, $unit_id) {
-            FoodUnitsFactory.updateDefaultUnit($food_id, $unit_id).then(function (response) {
-                $scope.food_popup = response.data;
-            });
-        };
-
-        /**
-         * delete
-         */
-
-        $scope.deleteFoodFromRecipe = function ($food_id) {
-            RecipesFactory.deleteFoodFromRecipe($food_id, $scope.recipe_popup.recipe.id).then(function (response) {
-                $scope.recipe_popup = response.data;
-            });
-        };
-
-        $scope.deleteRecipe = function ($recipe) {
-            $rootScope.showLoading();
-            RecipesFactory.destroy($recipe)
-                .then(function (response) {
-                    $scope.recipes.filtered = _.without($scope.recipes.filtered, $recipe);
-                    $rootScope.$broadcast('provideFeedback', 'Recipe deleted');
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        };
-
-        /**
-         * popups
-         */
-
-        $scope.showRecipePopup = function ($recipe) {
-            // $scope.selected.recipe = $recipe;
-            $rootScope.showLoading();
-            RecipesFactory.show($recipe)
-                .then(function (response) {
-                    $scope.show.popups.recipe = true;
-                    $scope.recipe_popup.recipe = response.data;
-                    //$rootScope.$broadcast('provideFeedback', '');
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        };
-
-        /**
-         * quick recipe
-         */
-
-        /**
-         * End goal of the function:
-         * Call FoodsFactory.insertQuickRecipe, with $check_similar_names as true.
-         * Send the contents, steps, and name of new recipe.
-         * The PHP checks for similar names and returns similar names if found.
-         * The JS checks for similar names in the response.
-         * If they exist, a popup shows. From there, the user can click a button which fires $scope.quickRecipeFinish,
-         * sending the recipe info again but this time without the similar name check.
-         * If none exist, the recipe should have been entered with the PHP and things should update accordingly on the page.
-         * @return {[type]} [description]
-         */
-        $scope.quickRecipe = function () {
-            //remove any previous error styling so it doesn't wreck up the html
-            $("#quick-recipe > *").removeAttr("style");
-            //Empty the errors array from any previous attempts
-            $scope.errors.quick_recipe = [];
-            //Hide the errors div because even with emptying the scope property, the display is slow to update.
-            $("#quick-recipe-errors").hide();
-
-            var $string = $("#quick-recipe").html();
-            //Recipe is an object, with an array of items and an array of steps.
-            var $recipe = QuickRecipeFactory.formatString($string, $("#quick-recipe"));
-            var $line;
-            var $items = [];
-            var $method = $recipe.method;
-
-            //Populate items array
-            $items = QuickRecipeFactory.populateItemsArray($recipe.items);
-
-            //check item contains quantity, unit and food
-            //and convert quantities to decimals if necessary
-            $items_and_errors = QuickRecipeFactory.errorCheck($items);
-            $items = $items_and_errors.items;
-            $errors = $items_and_errors.errors;
-
-            if ($errors.length > 0) {
-                $scope.errors.quick_recipe = $errors;
-                $("#quick-recipe-errors").show();
-                return;
-            }
-
-            //Prompt the user for the recipe name
-            var $recipe_name = prompt('name your recipe');
-
-            //If the user changes their mind and cancels
-            if (!$recipe_name) {
-                return;
-            }
-
-            $recipe = {
-                name: $recipe_name,
-                items: $items,
-                steps: $method,
-            };
-
-            $scope.quick_recipe = $recipe;
-
-            //Attempt to insert the recipe. It won't be inserted if similar names are found.
-            $scope.quickRecipeAttemptInsert($recipe);
-        };
-
-        $scope.quickRecipeAttemptInsert = function ($recipe) {
-            RecipesFactory.insertQuickRecipe($recipe, true).then(function (response) {
-                if (response.data.similar_names) {
-                    $scope.quick_recipe.similar_names = response.data.similar_names;
-                    $scope.show.popups.similar_names = true;
-                }
-                else {
-                    $scope.recipes.filtered = response.data.recipes;
-                    $scope.all_foods_with_units = response.data.foods_with_units;
-                }
-            });
-        };
-
-        /**
-         * This is for entering the recipe after the similar name check is done.
-         * We call FoodsFactory.insertQuickRecipe again, but this time with $check_similar_names parameter as false,
-         * so that the recipe gets entered.
-         * @return {[type]} [description]
-         */
-        $scope.quickRecipeFinish = function () {
-            $scope.show.popups.similar_names = false;
-
-            //first do the foods
-            $($scope.quick_recipe.similar_names.foods).each(function () {
-                var $specified_food = this.specified_food.name;
-                var $existing_food = this.existing_food.name;
-                var $checked = this.checked;
-                var $index = this.index;
-
-                if ($checked === $existing_food) {
-                    //we are using the existing food rather than creating a new food. therefore, change $scope.quick_recipe.contents to use the correct food name.
-                    $scope.quick_recipe.items[$index].food = $existing_food;
-                }
-            });
-
-            //do the same for the units
-            $($scope.quick_recipe.similar_names.units).each(function () {
-                var $specified_unit = this.specified_unit.name;
-                var $existing_unit = this.existing_unit.name;
-                var $checked = this.checked;
-                var $index = this.index;
-
-                if ($checked === $existing_unit) {
-                    //we are using the existing unit rather than creating a new unit. therefore, change $scope.quick_recipe.contents to use the correct unit name.
-                    $scope.quick_recipe.items[$index].unit = $existing_unit;
-                }
-            });
-
-            FoodsFactory.insertQuickRecipe($scope.quick_recipe, false).then(function (response) {
-                $scope.recipes.filtered = response.data.recipes;
-                $scope.all_foods_with_units = response.data.foods_with_units;
-            });
-        };
-
-        /**
-         * autocomplete food (for adding food to a recipe in the recipe popup)
-         */
-
-        $scope.autocompleteFood = function ($keycode) {
-            var $typing = $("#recipe-popup-food-input").val();
-            if ($keycode !== 13 && $keycode !== 38 && $keycode !== 40) {
-                //not enter, up arrow or down arrow
-                //fill the dropdown
-                AutocompleteFactory.food($typing).then(function (response) {
-                    $scope.recipe_popup.autocomplete_options = response.data;
-                    //show the dropdown
-                    $scope.show.autocomplete_options.foods = true;
-                    //select the first item
-                    $scope.recipe_popup.autocomplete_options[0].selected = true;
-                });
-            }
-            else if ($keycode === 38) {
-                //up arrow pressed
-                AutocompleteFactory.autocompleteUpArrow($scope.recipe_popup.autocomplete_options);
-
-            }
-            else if ($keycode === 40) {
-                //down arrow pressed
-                AutocompleteFactory.autocompleteDownArrow($scope.recipe_popup.autocomplete_options);
-            }
-        };
-
-        $scope.finishFoodAutocomplete = function ($array, $set_focus) {
-            //array, input_to_focus, autocomplete_to_hide, input_to_fill, selected_property_to_define
-            var $selected = _.findWhere($array, {selected: true});
-            $scope.recipe_popup.food = $selected;
-            $scope.selected.food = $selected;
-            $scope.show.autocomplete_options.foods = false;
-            $($set_focus).val("").focus();
-        };
-
-        $scope.insertOrAutocompleteFoodEntry = function ($keycode) {
-            if ($keycode !== 13) {
-                return;
-            }
-            //enter is pressed
-            if ($scope.show.autocomplete_options.foods) {
-                //enter is for the autocomplete
-                $scope.finishFoodAutocomplete($scope.recipe_popup.autocomplete_options, $("#recipe-popup-food-quantity"));
-            }
-            else {
-                // if enter is to add the entry
-                $scope.insertFoodIntoRecipe();
-            }
-        };
-
-        $scope.insertFoodIntoRecipe = function () {
-            //we are adding a food to a permanent recipe
-            var $data = {
-                recipe_id: $scope.recipe_popup.recipe.id,
-                food_id: $scope.selected.food.id,
-                unit_id: $("#recipe-popup-unit").val(),
-                quantity: $scope.recipe_popup.food.quantity,
-                description: $scope.recipe_popup.food.description
-            };
-
-            RecipesFactory.insertFoodIntoRecipe($data).then(function (response) {
-                $scope.recipe_popup = response.data;
-            });
-            $("#recipe-popup-food-input").val("").focus();
-            $scope.recipe_popup.food.description = "";
-        };
-
-        /**
-         * other
-         */
-
-        $scope.closePopup = function ($event, $popup) {
-            var $target = $event.target;
-            if ($target.className === 'popup-outer') {
-                $scope.show.popups[$popup] = false;
-            }
-        };
-
-        $scope.toggleQuickRecipeHelp = function () {
-            $scope.show.help.quick_recipe = !$scope.show.help.quick_recipe;
-        };
-
-        $scope.toggleEditMethod = function () {
-            //Toggle the visibility of the wysywig
-            $scope.recipe_popup.edit_method = !$scope.recipe_popup.edit_method;
-
-            //If we are editing the recipe, prepare the html of the wysiwyg
-            if ($scope.recipe_popup.edit_method) {
-                var $text;
-                var $string = "";
-
-                //convert the array into a string so I can make the wysiwyg display the steps
-                $($scope.recipe_popup.steps).each(function () {
-                    $text = this.text;
-                    $text = $text + '<br>';
-                    // $text = '<div>' + $text + '</div>';
-                    $string+= $text;
-                });
-                $("#edit-recipe-method").html($string);
-            }
-        };
-
-    });
-
-})();
-var app = angular.module('tracker');
-
-(function () {
     app.controller('entries', function ($rootScope, $scope, $http, DatesFactory, AutocompleteFactory, WeightsFactory) {
 
         $scope.weight = weight;
@@ -14639,6 +13829,695 @@ angular.module('tracker')
         };
 
     });
+angular.module('tracker')
+    .controller('FoodUnitsController', function ($scope, $rootScope, FoodUnitsFactory) {
+        $scope.units = units;
+
+        $scope.insertFoodUnit = function ($keycode) {
+            if ($keycode === 13) {
+                //$scope.showLoading();
+                FoodUnitsFactory.insert()
+                    .then(function (response) {
+                        $scope.units.push(response.data.data);
+                        $rootScope.$broadcast('provideFeedback', 'Unit created');
+                        //$scope.hideLoading();
+                    })
+                    .catch(function (response) {
+                        $rootScope.responseError(response);
+                    });
+            }
+        };
+
+        //Todo
+        $scope.updateFoodUnit = function () {
+
+        };
+
+        $scope.deleteFoodUnit = function ($unit) {
+            //$scope.showLoading();
+            FoodUnitsFactory.destroy($unit)
+                .then(function (response) {
+                    $scope.units = _.without($scope.units, $unit);
+                    $rootScope.$broadcast('provideFeedback', 'Unit deleted');
+                    //$scope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        };
+    });
+var app = angular.module('tracker');
+
+(function () {
+	app.controller('FoodsController', function ($rootScope, $scope, $http, FoodsFactory, AutocompleteFactory) {
+		
+		$scope.foods = foods;
+		$scope.selected = {};
+
+		//show
+		$scope.show = {
+			autocomplete_options: {
+				menu_items: false,
+				foods: false
+			},
+			popups: {
+				recipe: false,
+				similar_names: false,
+				food_info: false
+			}
+		};
+		
+		$scope.food_popup = {};
+
+		$scope.calories = {};
+
+		$scope.new_item = {};
+
+		/**
+		 * plugins
+		 */
+		
+		$(".wysiwyg").wysiwyg();
+
+		$scope.getMenu = function () {
+			if ($scope.foods.length > 0 && $scope.recipes.length > 0) {
+				$scope.menu = select.getMenu($scope.foods, $scope.recipes);
+			}
+		};
+
+		$scope.getFoodInfo = function ($food) {
+			//for popup where user selects units for food and enters calories
+			$scope.food_popup.id = $food.id;
+			$scope.food_popup.name = $food.name;
+			$scope.show.popups.food_info = true;
+			FoodsFactory.getFoodInfo($food).then(function (response) {
+				$scope.food_popup = response.data;
+			});
+			
+		};
+
+        /**
+         * Add a unit to a food or remove the unit from the food.
+         * The method name is old and should probably be changed.
+         * @param $unit_id
+         */
+		$scope.insertOrDeleteUnitInCalories = function ($unit_id) {
+			//Check if the checkbox is checked
+			if ($scope.food_popup.food_units.indexOf($unit_id) === -1) {
+				//It is now unchecked. Remove the unit from the food.
+				FoodsFactory.deleteUnitFromCalories($scope.food_popup.food.id, $unit_id).then(function (response) {
+					$scope.food_popup = response.data;
+				});
+			}
+			else {
+				// It is now checked. Add the unit to the food.
+				FoodsFactory.insertUnitInCalories($scope.food_popup.food.id, $unit_id).then(function (response) {
+					$scope.food_popup = response.data;
+				});
+			}
+		};
+
+		$scope.insertFood = function ($keycode) {
+			if ($keycode === 13) {
+                $rootScope.showLoading();
+                FoodsFactory.insertFood()
+                    .then(function (response) {
+                        $scope.foods.push(response.data.data);
+                        $rootScope.$broadcast('provideFeedback', 'Food created');
+                        $rootScope.hideLoading();
+                    })
+                    .catch(function (response) {
+                        $rootScope.responseError(response);
+                    });
+			}
+		};
+
+		$scope.updateCalories = function ($keycode, $unit_id, $calories) {
+			if ($keycode === 13) {
+				FoodsFactory.updateCalories($scope.food_popup.food.id, $unit_id, $calories).then(function (response) {
+					$scope.food_popup = response.data;
+				});
+			}
+		};
+
+		$scope.updateDefaultUnit = function ($food_id, $unit_id) {
+			FoodsFactory.updateDefaultUnit($food_id, $unit_id).then(function (response) {
+				$scope.food_popup = response.data;
+			});
+		};
+
+		$scope.deleteFood = function ($food) {
+            $rootScope.showLoading();
+            FoodsFactory.destroy($food)
+                .then(function (response) {
+                    $scope.foods = _.without($scope.foods, $food);
+                    $rootScope.$broadcast('provideFeedback', 'Food deleted');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+		};
+
+		/**
+		 * autocomplete food (for adding food to a recipe in the recipe popup)
+		 */
+
+		$scope.autocompleteFood = function ($keycode) {
+			var $typing = $("#recipe-popup-food-input").val();
+			if ($keycode !== 13 && $keycode !== 38 && $keycode !== 40) {
+				//not enter, up arrow or down arrow
+				//fill the dropdown
+				AutocompleteFactory.food($typing).then(function (response) {
+					$scope.recipe_popup.autocomplete_options = response.data;
+					//show the dropdown
+					$scope.show.autocomplete_options.foods = true;
+					//select the first item
+					$scope.recipe_popup.autocomplete_options[0].selected = true;
+				});
+			}
+			else if ($keycode === 38) {
+				//up arrow pressed
+				AutocompleteFactory.autocompleteUpArrow($scope.recipe_popup.autocomplete_options);
+				
+			}
+			else if ($keycode === 40) {
+				//down arrow pressed
+				AutocompleteFactory.autocompleteDownArrow($scope.recipe_popup.autocomplete_options);
+			}
+		};
+
+		$scope.finishFoodAutocomplete = function ($array, $set_focus) {
+			//array, input_to_focus, autocomplete_to_hide, input_to_fill, selected_property_to_define
+			var $selected = _.findWhere($array, {selected: true});
+			$scope.recipe_popup.food = $selected;
+			$scope.selected.food = $selected;
+			$scope.show.autocomplete_options.foods = false;
+			$($set_focus).val("").focus();
+		};
+
+		$scope.insertOrAutocompleteFoodEntry = function ($keycode) {
+			if ($keycode !== 13) {
+				return;
+			}
+			//enter is pressed
+			if ($scope.show.autocomplete_options.foods) {
+				//enter is for the autocomplete
+				$scope.finishFoodAutocomplete($scope.recipe_popup.autocomplete_options, $("#recipe-popup-food-quantity"));
+			}
+			else {
+				// if enter is to add the entry
+				$scope.insertFoodIntoRecipe();
+			}
+		};
+
+		/**
+		 * other
+		 */
+		
+		$scope.closePopup = function ($event, $popup) {
+			var $target = $event.target;
+			if ($target.className === 'popup-outer') {
+				$scope.show.popups[$popup] = false;
+			}
+		};
+		
+	});
+
+})();
+angular.module('tracker')
+    .controller('QuickRecipeController', function ($rootScope, $scope, QuickRecipeFactory, RecipesFactory) {
+
+        /**
+         * End goal of the function:
+         * Call RecipesFactory.insertQuickRecipe, with $check_similar_names as true.
+         * Send the contents, steps, and name of new recipe.
+         *
+         * The PHP checks for similar names and returns similar names if found.
+         * The JS checks for similar names in the response.
+         *
+         * If they exist, a popup shows.
+         * From there, the user can click a button
+         * which fires quickRecipeFinish,
+         * sending the recipe info again
+         * but this time without the similar name check.
+         *
+         * If none exist, the recipe should have been entered with the PHP
+         * and things should update accordingly on the page.
+         */
+        $scope.quickRecipe = function () {
+            //remove any previous error styling so it doesn't wreck up the html
+            $("#quick-recipe > *").removeAttr("style");
+
+            //Empty the errors array from any previous attempts
+            $scope.errors.quick_recipe = [];
+
+            //Hide the errors div because even with emptying the scope property,
+            // the display is slow to update.
+            $("#quick-recipe-errors").hide();
+
+            var $string = $("#quick-recipe").html();
+
+            //Recipe is an object, with an array of items and an array of steps.
+            var $recipe = QuickRecipeFactory.formatString($string, $("#quick-recipe"));
+
+            $recipe.items = QuickRecipeFactory.populateItemsArray($recipe.items);
+
+            //check item contains quantity, unit and food
+            //and convert quantities to decimals if necessary
+            var $items_and_errors = QuickRecipeFactory.errorCheck($recipe.items);
+
+            if ($items_and_errors.errors.length > 0) {
+                $scope.errors.quick_recipe = $items_and_errors.errors;
+                $("#quick-recipe-errors").show();
+                return;
+            }
+
+            //Prompt the user for the recipe name
+            var $recipe_name = prompt('name your recipe');
+
+            //If the user changes their mind and cancels
+            if (!$recipe_name) {
+                return;
+            }
+
+            $recipe = {
+                name: $recipe_name,
+                ingredients: $items_and_errors.items,
+                steps: $recipe.method
+            };
+
+            $scope.quick_recipe = $recipe;
+
+            quickRecipeAttemptInsert($recipe);
+        };
+
+        /**
+         * Attempt to insert the recipe.
+         * It won't be inserted if similar names are found.
+         * @param $recipe
+         */
+        function quickRecipeAttemptInsert ($recipe) {
+            $rootScope.showLoading();
+            RecipesFactory.insertQuickRecipe($recipe, true)
+                .then(function (response) {
+                    if (response.data.similar_names) {
+                        $rootScope.$broadcast('provideFeedback', 'Similar names were found');
+                        $scope.quick_recipe.similar_names = response.data.similar_names;
+                        $scope.show.popups.similar_names = true;
+                    }
+                    else {
+                        $rootScope.$broadcast('provideFeedback', 'Recipe created');
+                        $scope.recipes.filtered = response.data.recipes;
+                        $scope.all_foods_with_units = response.data.foods_with_units;
+                    }
+
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        }
+
+
+        /**
+         * This is for entering the recipe after the similar name check is done.
+         * We call RecipesFactory.insertQuickRecipe again,
+         * but this time with $check_similar_names parameter as false,
+         * so that the recipe gets entered.
+         */
+        $scope.quickRecipeFinish = function () {
+            $scope.show.popups.similar_names = false;
+
+            doTheFoods();
+            doTheUnits();
+            insertQuickRecipe();
+        };
+
+        function doTheFoods () {
+            $($scope.quick_recipe.similar_names.foods).each(function () {
+                if (this.checked === this.existing_food.name) {
+                    // We are using the existing food rather than creating a new food.
+                    // Therefore, change $scope.quick_recipe.contents
+                    // to use the correct food name.
+                    $scope.quick_recipe.items[this.index].food = this.existing_food.name;
+                }
+            });
+        }
+
+        function doTheUnits () {
+            $($scope.quick_recipe.similar_names.units).each(function () {
+                if (this.checked === this.existing_unit.name) {
+                    //we are using the existing unit rather than creating
+                    //a new unit. therefore, change $scope.quick_recipe.contents
+                    // to use the correct unit name.
+                    $scope.quick_recipe.items[this.index].unit = this.existing_unit.name;
+                }
+            });
+        }
+
+        function insertQuickRecipe () {
+            $rootScope.showLoading();
+            RecipesFactory.insertQuickRecipe($scope.quick_recipe, false)
+                .then(function (response) {
+                    $scope.recipes.filtered = response.data.recipes;
+                    $rootScope.$broadcast('provideFeedback', 'Recipe created');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        }
+
+    });
+angular.module('tracker')
+    .controller('RecipeTagsController', function ($rootScope, $scope, RecipeTagsFactory) {
+
+        $scope.insertRecipeTag = function ($keycode) {
+            if ($keycode !== 13) {
+                return;
+            }
+            $rootScope.showLoading();
+            RecipeTagsFactory.insert()
+                .then(function (response) {
+                    $scope.tags.push(response.data.data);
+                    $rootScope.$broadcast('provideFeedback', 'Tag created');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        };
+
+        $scope.deleteRecipeTag = function ($tag) {
+            $rootScope.showLoading();
+            RecipeTagsFactory.destroy($tag)
+                .then(function (response) {
+                    $scope.tags = _.without($scope.tags, $tag);
+                    $rootScope.$broadcast('provideFeedback', 'Tag deleted');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        };
+
+    });
+var app = angular.module('tracker');
+
+(function () {
+    app.controller('RecipesController', function ($rootScope, $scope, $http, FoodsFactory, FoodUnitsFactory, QuickRecipeFactory, AutocompleteFactory, RecipesFactory) {
+
+        $scope.recipes = {
+            all: recipes,
+            filtered: recipes
+        };
+        $scope.tags = recipe_tags;
+
+        $scope.selected = {};
+        $scope.errors = {};
+
+        //show
+        $scope.show = {
+            autocomplete_options: {
+                menu_items: false,
+                foods: false,
+            },
+            popups: {
+                recipe: false,
+                similar_names: false
+            },
+            help: {
+                quick_recipe: false
+            }
+        };
+
+        //filter
+        $scope.filter = {
+            recipes: {
+                tag_ids: []
+            }
+        };
+
+        $scope.recipe_popup = {};
+
+        $scope.foods = {}; //all foods
+        $scope.menu = {};//all foods and all recipes
+        $scope.calories = {};
+        $scope.quick_recipe = {};
+
+        $scope.new_item = {
+            recipe: {}
+        };
+
+        $scope.$watchCollection('filter.recipes.tag_ids', function (newValue, oldValue) {
+            if (newValue !== oldValue) {
+                $scope.filterRecipes();
+            }
+        });
+
+        $(".wysiwyg").wysiwyg();
+
+        $scope.filterRecipes = function () {
+            RecipesFactory.filterRecipes($scope.filter.recipes.tag_ids).then(function (response) {
+                $scope.recipes.filtered = response.data;
+            });
+        };
+
+        $scope.getMenu = function () {
+            if ($scope.foods.length > 0 && $scope.recipes.length > 0) {
+                $scope.menu = select.getMenu($scope.foods, $scope.recipes);
+            }
+        };
+
+
+        /**
+         * Deletes tags from the recipe then adds the correct ones
+         */
+        $scope.insertTagsIntoRecipe = function () {
+            $scope.recipe_popup.notification = 'Saving tags...';
+            RecipesFactory.insertTagsIntoRecipe($scope.recipe_popup.recipe.id, $scope.recipe_popup.tags).then(function (response) {
+                $scope.recipe_popup.notification = 'Tags have been saved.';
+                $scope.recipes.filtered = response.data;
+            });
+        };
+
+        $scope.insertRecipe = function ($keycode) {
+            if ($keycode !== 13) {
+                return;
+            }
+
+            $rootScope.showLoading();
+            RecipesFactory.insert($scope.new_item.recipe.name)
+                .then(function (response) {
+                    $scope.recipes.filtered.push(response.data.data);
+                    $rootScope.$broadcast('provideFeedback', 'Recipe created');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        };
+
+
+        /**
+         * Add a unit to a food or remove the unit from the food.
+         * The method name is old and should probably be changed.
+         * @param $unit_id
+         */
+        $scope.insertOrDeleteUnitInCalories = function ($unit_id) {
+            //Check if the checkbox is checked
+            if ($scope.food_popup.food_units.indexOf($unit_id) === -1) {
+                //It is now unchecked. Remove the unit from the food.
+                FoodsFactory.deleteUnitFromCalories($scope.food_popup.food.id, $unit_id).then(function (response) {
+                    $scope.food_popup = response.data;
+                });
+            }
+            else {
+                // It is now checked. Add the unit to the food.
+                FoodsFactory.insertUnitInCalories($scope.food_popup.food.id, $unit_id).then(function (response) {
+                    $scope.food_popup = response.data;
+                });
+            }
+        };
+
+        /**
+         * update
+         */
+
+        $scope.updateRecipeMethod = function () {
+            //this is some duplication of insertRecipeMethod
+            var $string = $("#edit-recipe-method").html();
+            var $lines = QuickRecipeFactory.formatString($string, $("#edit-recipe-method")).items;
+            var $steps = [];
+
+            $($lines).each(function () {
+                var $line = this;
+                $steps.push($line);
+            });
+
+            RecipesFactory.updateRecipeMethod($scope.recipe_popup.recipe.id, $steps).then(function (response) {
+                $scope.recipe_popup = response.data;
+                $scope.recipe_popup.edit_method = false;
+            });
+        };
+
+        $scope.updateCalories = function ($keycode, $unit_id, $calories) {
+            if ($keycode === 13) {
+                FoodsFactory.updateCalories($scope.food_popup.food.id, $unit_id, $calories).then(function (response) {
+                    $scope.food_popup = response.data;
+                });
+            }
+        };
+
+        $scope.updateDefaultUnit = function ($food_id, $unit_id) {
+            FoodUnitsFactory.updateDefaultUnit($food_id, $unit_id).then(function (response) {
+                $scope.food_popup = response.data;
+            });
+        };
+
+        /**
+         * delete
+         */
+
+        $scope.deleteFoodFromRecipe = function ($food_id) {
+            RecipesFactory.deleteFoodFromRecipe($food_id, $scope.recipe_popup.recipe.id).then(function (response) {
+                $scope.recipe_popup = response.data;
+            });
+        };
+
+        $scope.deleteRecipe = function ($recipe) {
+            $rootScope.showLoading();
+            RecipesFactory.destroy($recipe)
+                .then(function (response) {
+                    $scope.recipes.filtered = _.without($scope.recipes.filtered, $recipe);
+                    $rootScope.$broadcast('provideFeedback', 'Recipe deleted');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        };
+
+        /**
+         * popups
+         */
+
+        $scope.showRecipePopup = function ($recipe) {
+            // $scope.selected.recipe = $recipe;
+            $rootScope.showLoading();
+            RecipesFactory.show($recipe)
+                .then(function (response) {
+                    $scope.show.popups.recipe = true;
+                    $scope.recipe_popup.recipe = response.data;
+                    //$rootScope.$broadcast('provideFeedback', '');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        };
+
+        /**
+         * autocomplete food (for adding food to a recipe in the recipe popup)
+         */
+
+        $scope.autocompleteFood = function ($keycode) {
+            var $typing = $("#recipe-popup-food-input").val();
+            if ($keycode !== 13 && $keycode !== 38 && $keycode !== 40) {
+                //not enter, up arrow or down arrow
+                //fill the dropdown
+                AutocompleteFactory.food($typing).then(function (response) {
+                    $scope.recipe_popup.autocomplete_options = response.data;
+                    //show the dropdown
+                    $scope.show.autocomplete_options.foods = true;
+                    //select the first item
+                    $scope.recipe_popup.autocomplete_options[0].selected = true;
+                });
+            }
+            else if ($keycode === 38) {
+                //up arrow pressed
+                AutocompleteFactory.autocompleteUpArrow($scope.recipe_popup.autocomplete_options);
+
+            }
+            else if ($keycode === 40) {
+                //down arrow pressed
+                AutocompleteFactory.autocompleteDownArrow($scope.recipe_popup.autocomplete_options);
+            }
+        };
+
+        $scope.finishFoodAutocomplete = function ($array, $set_focus) {
+            //array, input_to_focus, autocomplete_to_hide, input_to_fill, selected_property_to_define
+            var $selected = _.findWhere($array, {selected: true});
+            $scope.recipe_popup.food = $selected;
+            $scope.selected.food = $selected;
+            $scope.show.autocomplete_options.foods = false;
+            $($set_focus).val("").focus();
+        };
+
+        $scope.insertOrAutocompleteFoodEntry = function ($keycode) {
+            if ($keycode !== 13) {
+                return;
+            }
+            //enter is pressed
+            if ($scope.show.autocomplete_options.foods) {
+                //enter is for the autocomplete
+                $scope.finishFoodAutocomplete($scope.recipe_popup.autocomplete_options, $("#recipe-popup-food-quantity"));
+            }
+            else {
+                // if enter is to add the entry
+                $scope.insertFoodIntoRecipe();
+            }
+        };
+
+        $scope.insertFoodIntoRecipe = function () {
+            //we are adding a food to a permanent recipe
+            var $data = {
+                recipe_id: $scope.recipe_popup.recipe.id,
+                food_id: $scope.selected.food.id,
+                unit_id: $("#recipe-popup-unit").val(),
+                quantity: $scope.recipe_popup.food.quantity,
+                description: $scope.recipe_popup.food.description
+            };
+
+            RecipesFactory.insertFoodIntoRecipe($data).then(function (response) {
+                $scope.recipe_popup = response.data;
+            });
+            $("#recipe-popup-food-input").val("").focus();
+            $scope.recipe_popup.food.description = "";
+        };
+
+        /**
+         * other
+         */
+
+        $scope.toggleQuickRecipeHelp = function () {
+            $scope.show.help.quick_recipe = !$scope.show.help.quick_recipe;
+        };
+
+        $scope.toggleEditMethod = function () {
+            //Toggle the visibility of the wysywig
+            $scope.recipe_popup.edit_method = !$scope.recipe_popup.edit_method;
+
+            //If we are editing the recipe, prepare the html of the wysiwyg
+            if ($scope.recipe_popup.edit_method) {
+                var $text;
+                var $string = "";
+
+                //convert the array into a string so I can make the wysiwyg display the steps
+                $($scope.recipe_popup.steps).each(function () {
+                    $text = this.text;
+                    $text = $text + '<br>';
+                    // $text = '<div>' + $text + '</div>';
+                    $string+= $text;
+                });
+                $("#edit-recipe-method").html($string);
+            }
+        };
+
+    });
+
+})();
 var app = angular.module('tracker');
 
 (function () {
@@ -14953,6 +14832,131 @@ var app = angular.module('tracker');
         };
 
     });
+
+})();
+var app = angular.module('tracker');
+
+(function () {
+	app.controller('journal', function ($rootScope, $scope, $http, DatesFactory, JournalFactory) {
+		/**
+		 * scope properties
+		 */
+		
+		//journal
+		$scope.journal_entry = entry;
+
+		//date
+		/**
+		 * There is a lot of date stuff here that is duplication of the date stuff in EntriesController.js.
+		 * Any way of making it dry?
+		 */
+
+		$scope.date = {};
+		
+		if ($scope.date.typed === undefined) {
+			$scope.date.typed = Date.parse('today').toString('dd/MM/yyyy');
+		}
+		$scope.date.long = Date.parse($scope.date.typed).toString('dd MMM yyyy');
+
+		$scope.goToDate = function ($number) {
+			$scope.date.typed = DatesFactory.goToDate($scope.date.typed, $number);
+		};
+
+		$scope.today = function () {
+			$scope.date.typed = DatesFactory.today();
+		};
+		$scope.changeDate = function ($keycode, $date) {
+            if ($keycode !== 13) {
+                return false;
+            }
+            var $date = $date || $("#date").val();
+            $scope.date.typed = DatesFactory.changeDate($keycode, $date);
+		};
+
+		/**
+		 * plugins
+		 */
+		
+		$(".wysiwyg").wysiwyg();
+
+		/**
+		 * watches
+		 */
+		
+		$scope.$watch('date.typed', function (newValue, oldValue) {
+			$scope.date.sql = Date.parse($scope.date.typed).toString('yyyy-MM-dd');
+			$scope.date.long = Date.parse($scope.date.typed).toString('ddd dd MMM yyyy');
+			$("#date").val(newValue);
+
+			if (newValue === oldValue) {
+				// $scope.pageLoad();
+			}
+			else {
+				$scope.getJournalEntry();
+			}
+		});
+		
+		/**
+		 * select
+		 */
+		
+		$scope.getJournalEntry = function () {
+			JournalFactory.getJournalEntry($scope.date.sql).then(function (response) {
+				$scope.journal_entry = response.data.data;
+			});
+		};
+
+        $scope.filterJournalEntries = function ($keycode) {
+            if ($keycode !== 13) {
+                return false;
+            }
+            JournalFactory.filter().then(function (response) {
+                $scope.filter_results = response.data;
+            });
+        };
+
+        /**
+         * If the id of the journal entry exists, update the entry.
+         * If not, insert the entry.
+         */
+		$scope.insertOrUpdateJournalEntry = function () {
+            if ($scope.journal_entry.id) {
+                updateEntry();
+            }
+            else {
+                createEntry();
+            }
+
+		};
+
+        function updateEntry () {
+            $rootScope.showLoading();
+            JournalFactory.update($scope.journal_entry)
+                .then(function (response) {
+                    $scope.journal_entry = response.data.data;
+                    $rootScope.$broadcast('provideFeedback', 'Entry updated');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        }
+
+        function createEntry () {
+            $rootScope.showLoading();
+            JournalFactory.insert($scope.date.sql)
+                .then(function (response) {
+                    $scope.journal_entry = response.data.data;
+                    $rootScope.$broadcast('provideFeedback', 'Entry created');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        }
+
+		
+	});
 
 })();
 app.factory('AutocompleteFactory', function ($http) {
@@ -15496,341 +15500,265 @@ angular.module('tracker')
         }
     });
 app.factory('QuickRecipeFactory', function ($http) {
-	var $object = {};
+    var $object = {};
 
-	$object.formatString = function ($string, $wysiwyg) {
-		var $lines = [];
-		var $divs;
+    $object.formatString = function ($string, $wysiwyg) {
+        //Format for any browser (hopefully)
+        var $string_and_array = $object.formatForAnyBrowser($string, $wysiwyg);
 
-		//Format for any browser (hopefully)
-		var $string_and_array = $object.formatForAnyBrowser($string, $wysiwyg);
-		$string = $string_and_array.string;
-		var $array = $string_and_array.array;
+        //trim the items in the array
+        $($string_and_array.array).each(function () {
+            this.trim();
+        });
 
-		//trim the items in the array
-		$($array).each(function () {
-			this.trim();
-		});
+        //separate the method from the recipe
+        return $object.separateMethod($string_and_array.array);
+    };
 
-		//separate the method from the recipe
-		$recipe = $object.separateMethod($array);
+    /**
+     * $lines is an array of all the lines in the wysywig.
+     * We want to return an object containing the item lines,
+     * and the method lines, separate from each other.
+     * @param $lines
+     * @returns {*}
+     */
+    $object.separateMethod = function ($lines) {
+        var $items;
+        var $method;
+        var $recipe;
+        var $method_index;
 
-		return $recipe;
+        /**
+         * @VP:
+         * Surely there's a way to do these checks with less code?
+         */
 
-		//format for Firefox
-		// if ($string.indexOf('<br>') !== -1) {
-		// 	$string = $object.formatForFirefox($string, $wysiwyg);
-		// }
+        //Check for the method trigger possibilities
+        //First, the lowercase possibilities
+        if ($lines.indexOf('method') !== -1) {
+            $method_index = $lines.indexOf('method');
+        }
+        else if ($lines.indexOf('preparation') !== -1) {
+            $method_index = $lines.indexOf('preparation');
+        }
+        else if ($lines.indexOf('directions') !== -1) {
+            $method_index = $lines.indexOf('directions');
+        }
 
-		//Format for Chrome
-		// else if ($string.indexOf('<div>') !== -1) {
-		// 	$string = $object.formatForChrome($string, $wysiwyg);
-		// }
+        //Then, the uppercase possibilities
+        if ($lines.indexOf('Method') !== -1) {
+            $method_index = $lines.indexOf('Method');
+        }
+        else if ($lines.indexOf('Preparation') !== -1) {
+            $method_index = $lines.indexOf('Preparation');
+        }
+        else if ($lines.indexOf('Directions') !== -1) {
+            $method_index = $lines.indexOf('Directions');
+        }
 
-		//turn the string into an array of lines
-		// $divs = $($wysiwyg).children();
-		// $($divs).each(function () {
-		// 	var $line = $(this).html();
-		// 	$line = $line.trim();
-		// 	if ($line !== "") {
-		// 		$lines.push($line);
-		// 	}	
-		// });
-	};
-
-	/**
-	 * $lines is an array of all the lines in the wysywig.
-	 * We want to return an object containing the item lines, and the method lines, separate from each other.
-	 * @param  {[type]} $lines [description]
-	 * @return {[type]}        [description]
-	 */
-	$object.separateMethod = function ($lines) {
-		var $items;
-		var $method;
-		var $recipe;
-		var $method_index;
-
-		/**
-		 * @VP:
-		 * Surely there's a way to do these checks with less code?
-		 */
-
-		//Check for the method trigger possibilities
-		//First, the lowercase possibilities
-		if ($lines.indexOf('method') !== -1) {
-			$method_index = $lines.indexOf('method');
-		}
-		else if ($lines.indexOf('preparation') !== -1) {
-			$method_index = $lines.indexOf('preparation');
-		}
-		else if ($lines.indexOf('directions') !== -1) {
-			$method_index = $lines.indexOf('directions');
-		}
-
-		//Then, the uppercase possibilities
-		if ($lines.indexOf('Method') !== -1) {
-			$method_index = $lines.indexOf('Method');
-		}
-		else if ($lines.indexOf('Preparation') !== -1) {
-			$method_index = $lines.indexOf('Preparation');
-		}
-		else if ($lines.indexOf('Directions') !== -1) {
-			$method_index = $lines.indexOf('Directions');
-		}
-
-		//Then, the lowercase colon possibilities
+        //Then, the lowercase colon possibilities
         //Todo: 'Steps' should also be acceptable
-		if ($lines.indexOf('method:') !== -1) {
-			$method_index = $lines.indexOf('method:');
-		}
-		else if ($lines.indexOf('preparation') !== -1) {
-			$method_index = $lines.indexOf('preparation:');
-		}
-		else if ($lines.indexOf('directions:') !== -1) {
-			$method_index = $lines.indexOf('directions:');
-		}
-		
-		//Then, the uppercase colon possibilities
-		if ($lines.indexOf('Method:') !== -1) {
-			$method_index = $lines.indexOf('Method:');
-		}
-		else if ($lines.indexOf('Preparation:') !== -1) {
-			$method_index = $lines.indexOf('Preparation:');
-		}
-		else if ($lines.indexOf('Directions:') !== -1) {
-			$method_index = $lines.indexOf('Directions:');
-		}
+        if ($lines.indexOf('method:') !== -1) {
+            $method_index = $lines.indexOf('method:');
+        }
+        else if ($lines.indexOf('preparation') !== -1) {
+            $method_index = $lines.indexOf('preparation:');
+        }
+        else if ($lines.indexOf('directions:') !== -1) {
+            $method_index = $lines.indexOf('directions:');
+        }
 
-		//If $method_index, there is a method.
-		//If not, there is no method.
-		//Populate the object to return.
-		if ($method_index) {
-			$items = $lines.slice(0, $method_index);
-			$method = $lines.slice($method_index+1);
+        //Then, the uppercase colon possibilities
+        if ($lines.indexOf('Method:') !== -1) {
+            $method_index = $lines.indexOf('Method:');
+        }
+        else if ($lines.indexOf('Preparation:') !== -1) {
+            $method_index = $lines.indexOf('Preparation:');
+        }
+        else if ($lines.indexOf('Directions:') !== -1) {
+            $method_index = $lines.indexOf('Directions:');
+        }
 
-			$recipe = {
-				items: $items,
-				method: $method
-			};
-		}
-		else {
-			//There is no method
-			$recipe = {
-				items: $lines
-			};
-		}
-		
-		return $recipe;
-	};
+        //If $method_index, there is a method.
+        //If not, there is no method.
+        //Populate the object to return.
+        if ($method_index) {
+            $items = $lines.slice(0, $method_index);
+            $method = $lines.slice($method_index+1);
 
-	/**
-	 * The $string may contain unwanted br tags and both opening and closing div tags.
-	 * Format the string so into a string of div tags to populate the html of the wysiwyg.
-	 * And create an array from the $string.
-	 * Return both the formatted string and the array.
-	 * @param  {[type]} $string  [description]
-	 * @param  {[type]} $wysiwyg [description]
-	 * @return {[type]}          [description]
-	 */
-	$object.formatForAnyBrowser = function ($string, $wysiwyg) {
-		//Remove any closing div tags and replace any opening div tags with a br tag.
-		while ($string.indexOf('<div>') !== -1 || $string.indexOf('</div>') !== -1) {
-			$string = $string.replace('<div>', '<br>').replace('</div>', '');
-		}
+            $recipe = {
+                items: $items,
+                method: $method
+            };
+        }
+        else {
+            //There is no method
+            $recipe = {
+                items: $lines
+            };
+        }
 
-		//turn the string into an array of divs by first splitting at the br tags
-		var $array = $string.split('<br>');
+        return $recipe;
+    };
 
-		//remove any empty elements from the array
-		$array = _.without($array, '');
+    /**
+     * The $string may contain unwanted br tags and
+     * both opening and closing div tags.
+     * Format the string so into a string of div tags to
+     * populate the html of the wysiwyg.
+     * And create an array from the $string.
+     * Return both the formatted string and the array.
+     * @param $string
+     * @param $wysiwyg
+     * @returns {{string: string, array: *}}
+     */
+    $object.formatForAnyBrowser = function ($string, $wysiwyg) {
+        //Remove any closing div tags and replace any opening div tags with a br tag.
+        while ($string.indexOf('<div>') !== -1 || $string.indexOf('</div>') !== -1) {
+            $string = $string.replace('<div>', '<br>').replace('</div>', '');
+        }
 
-		var $formatted_string = "";
+        //turn the string into an array of divs by first splitting at the br tags
+        var $array = $string.split('<br>');
 
-		//make $formatted_string a string with div tags
-		for (var j = 0; j < $array.length; j++) {
-			$formatted_string += '<div>' + $array[j] + '</div>';
-		}
-		
-		$string = $formatted_string;
-		$($wysiwyg).html($string);
+        //remove any empty elements from the array
+        $array = _.without($array, '');
 
-		return {
-			string: $string,
-			array: $array
-		};
-	};
+        var $formatted_string = "";
 
-	// $object.formatForFirefox = function ($string, $wysiwyg) {
-	// 	//remove the final and pointless br tag/tags
-	// 	while ($string.substr($string.length - 4, 4) === '<br>') {
-	// 		//there is a br tag at the end. remove it.
-	// 		$string = $string.substring(0, $string.length - 4);
-	// 	}
+        //make $formatted_string a string with div tags
+        for (var j = 0; j < $array.length; j++) {
+            $formatted_string += '<div>' + $array[j] + '</div>';
+        }
 
-	// 	//change br tags to divs
-	// 	var $split = $string.split('<br>');
-	// 	var $formatted_string = "";
-	// 	for (var i = 0; i < $split.length; i++) {
-	// 		//First check there aren't any divs. When I tried editing a recipe in Chrome, the html of the existing method contained br tags, but when I added a new line it made it a div tag, messing up my code.
-	// 		if ($split[i].indexOf('<div>' !== -1)) {
-	// 			//There is an opening div tag. Get rid of it.
-	// 			$split[i] = $split[i].replace('<div>', '');
-	// 		}
-	// 		if ($split[i].indexOf('</div>' !== -1)) {
-	// 			//There is an closing div tag. Get rid of it.
-	// 			$split[i] = $split[i].replace('</div>', '');
-	// 		}
+        $string = $formatted_string;
+        $($wysiwyg).html($string);
 
-	// 		$formatted_string += '<div>' + $split[i] + '</div>';
-	// 	}
-	// 	$string = $formatted_string;
-	// 	$($wysiwyg).html($string);
+        return {
+            string: $string,
+            array: $array
+        };
+    };
 
-	// 	return $string;
-	// };
+    /**
+     * $items is an array of strings.
+     * The string should include the quantity, unit, food, and description,
+     * providing the user has entered them.
+     * We want to take each string and turn it into an object with
+     * food, unit, quantity and description properties.
+     * Then return the new array of objects.
+     * @param $items
+     * @returns {Array}
+     */
+    $object.populateItemsArray = function ($items) {
+        var $formatted_items = [];
+        $($items).each(function () {
+            $line = this;
+            var $item = {};
 
-	// $object.formatForChrome = function ($string, $wysiwyg) {
-	// 	//remove any closing div tags
-	// 	while ($string.indexOf('</div>') !== -1) {
-	// 		$string = $string.replace('</div>', '');
-	// 	}
+            //if there is a description, separate the description from the quantity, unit and food
+            if ($line.indexOf(',') !== -1) {
+                $line = $line.split(',');
+                //grab the description, add it to the item so I can remove it from the line
+                //so it doesn't get in the way
+                $item.description = $line[1].trim();
+                $line = $line[0];
+            }
 
-	// 	//split the string
-	// 	$split = $string.split('<div>');
+            //$line is now just the quantity, unit and food, without the description
+            //split $line into an array with quantity, unit and food
+            $line = $line.split(' ');
+            //Add the quantity, unit and food to the $item
+            $item.quantity = $line[0];
+            $item.unit = $line[1];
+            $item.food = $line[2];
 
-	// 	//turn the string into an array of divs
-	// 	$formatted_string = "";	
-	// 	for (var j = 0; j < $split.length; j++) {
-	// 		//This if check is because when I would run the function a second time, $split had an '' value,
-	// 		//causing this next code to create an empty div.
-	// 		if ($split[j] !== '') {
-	// 			$formatted_string += '<div>' + $split[j] + '</div>';
-	// 		}
-	// 	}
+            //Add the item object to the items array
+            $formatted_items.push($item);
+        });
 
-	// 	$string = $formatted_string;
-	// 	$($wysiwyg).html($string);
+        return $formatted_items;
+    };
 
-	// 	return $string;
-	// };
+    /**
+     * Return an array of errors for each line that does not
+     * have a quantity, unit and food
+     * @param $items
+     * @returns {{items: *, errors: Array}}
+     */
+    $object.errorCheck = function ($items) {
+        var $line_number = 0;
+        var $errors = [];
+        var $checked_quantity;
 
-	/**
-	 * $items is an array of strings.
-	 * The string should include the quantity, unit, food, and description, providing the user has entered them.
-	 * We want to take each string and turn it into an object with food, unit, quantity and description properties.
-	 * Then return the new array of objects.
-	 * @param  {[type]} $items [description]
-	 * @return {[type]}        [description]
-	 */
-	$object.populateItemsArray = function ($items) {
-		var $formatted_items = [];
-		$($items).each(function () {
-			$line = this;
-			var $item = {};
+        $($items).each(function () {
+            var $item = this;
+            $line_number++;
 
-			//if there is a description, separate the description from the quantity, unit and food
-			if ($line.indexOf(',') !== -1) {
-				$line = $line.split(',');
-				//grab the description, add it to the item so I can remove it from the line
-				//so it doesn't get in the way
-				$item.description = $line[1].trim();
-				$line = $line[0];
-			}
+            if (!$item.quantity || !$item.unit || !$item.food) {
+                $errors.push('Quantity, unit, and food have not all been included on line ' + $line_number);
+                $("#quick-recipe > div").eq($line_number-1).css('background', 'red');
+            }
+            //The line contains quantity, unit and food.
+            //Check the quantity is valid.
+            else {
+                $checked_quantity = $object.validQuantityCheck($item.quantity);
+                if (!$checked_quantity) {
+                    //Quantity is invalid
+                    $errors.push('Quantity is invalid on line ' + $line_number);
+                    $("#quick-recipe > div").eq($line_number-1).css('background', 'red');
+                }
+                else {
+                    // Quantity is valid and if it was a fraction, it has now been converted to a decimal.
+                    $item.quantity = $checked_quantity;
+                }
+            }
+        });
 
-			//$line is now just the quantity, unit and food, without the description
-			//split $line into an array with quantity, unit and food
-			$line = $line.split(' ');
-			//Add the quantity, unit and food to the $item
-			$item.quantity = $line[0];
-			$item.unit = $line[1];
-			$item.food = $line[2];
+        return {
+            items: $items,
+            errors: $errors
+        };
+    };
 
-			//Add the item object to the items array
-			$formatted_items.push($item);
-		});
+    /**
+     * Check the quantity for any invalid characters.
+     * If the quantity is a fraction, convert it to a decimal.
+     * @param $quantity
+     * @returns {*}
+     */
+    $object.validQuantityCheck = function ($quantity) {
+        for (var i = 0; i < $quantity.length; i++) {
+            var $character = $quantity[i];
 
-		return $formatted_items;
-	};
+            if (isNaN($character) && $character !== '.' && $character !== '/') {
+                //$character is not a number, '.', or '/'. The quantity is invalid.
+                $quantity = false;
+            }
+            else {
+                $quantity = $object.convertQuantityToDecimal($quantity);
+            }
+        }
 
-	/**
-	 * Return an array of errors for each line that does not have a quantity, unit and food
-	 * @param  {[type]} $items [description]
-	 * @return {[type]}        [description]
-	 */
-	$object.errorCheck = function ($items) {
-		var $line_number = 0;
-		var $errors = [];
-		var $checked_quantity;
+        return $quantity;
+    };
 
-		$($items).each(function () {
-			var $item = this;
-			$line_number++;
+    /**
+     * Check if $quantity is a fraction, and if so, convert to decimal
+     * @param $quantity
+     * @returns {*}
+     */
+    $object.convertQuantityToDecimal = function ($quantity) {
+        if ($quantity.indexOf('/') !== -1) {
+            //it is a fraction
+            var $parts = $quantity.split('/');
+            $quantity = parseInt($parts[0], 10) / parseInt($parts[1], 10);
+        }
 
-			if (!$item.quantity || !$item.unit || !$item.food) {
-				$errors.push('Quantity, unit, and food have not all been included on line ' + $line_number);
-				$("#quick-recipe > div").eq($line_number-1).css('background', 'red');
-			}
-			//The line contains quantity, unit and food.
-			//Check the quantity is valid.
-			else {
-				$checked_quantity = $object.validQuantityCheck($item.quantity);
-				if (!$checked_quantity) {
-					//Quantity is invalid
-					$errors.push('Quantity is invalid on line ' + $line_number);
-					$("#quick-recipe > div").eq($line_number-1).css('background', 'red');
-				}
-				else {
-					// Quantity is valid and if it was a fraction, it has now been converted to a decimal.
-					$item.quantity = $checked_quantity;
-				}
-			}
-		});
+        return $quantity;
+    };
 
-		return {
-			items: $items,
-			errors: $errors
-		};
-	};
-
-	/**
-	 * Check the quantity for any invalid characters.
-	 * If the quantity is a fraction, convert it to a decimal.
-	 * @param  {[type]} $quantity [description]
-	 * @return {[type]}           [description]
-	 */
-	$object.validQuantityCheck = function ($quantity) {
-		for (var i = 0; i < $quantity.length; i++) {
-			var $character = $quantity[i];
-
-			if (isNaN($character) && $character !== '.' && $character !== '/') {
-				//$character is not a number, '.', or '/'. The quantity is invalid.
-				$quantity = false;
-			}
-			else {
-				$quantity = $object.convertQuantityToDecimal($quantity);
-			}
-		}
-
-		return $quantity;
-	};
-
-	/**
-	 * Check if $quantity is a fraction, and if so, convert to decimal
-	 * @param  {[type]} $quantity [description]
-	 * @return {[type]}           [description]
-	 */
-	$object.convertQuantityToDecimal = function ($quantity) {
-		if ($quantity.indexOf('/') !== -1) {
-			//it is a fraction
-			var $parts = $quantity.split('/');
-			var $decimal = parseInt($parts[0], 10) / parseInt($parts[1], 10);
-			$quantity = $decimal;
-		}
-
-		return $quantity;
-	};
-	
-	return $object;
+    return $object;
 });
 angular.module('tracker')
     .factory('RecipeEntriesFactory', function ($http) {
@@ -15887,12 +15815,10 @@ angular.module('tracker')
     .factory('RecipesFactory', function ($http) {
         return {
             filterRecipes: function ($tag_ids) {
-                var $typing = $("#filter-recipes").val();
                 var $url = 'select/filterRecipes';
-                var $table = "recipes";
 
                 var $data = {
-                    typing: $typing,
+                    typing: $("#filter-recipes").val(),
                     tag_ids: $tag_ids
                 };
 
@@ -15907,10 +15833,12 @@ angular.module('tracker')
                 return $http.post($url, $data);
             },
             insertQuickRecipe: function ($recipe, $check_similar_names) {
-                var $url = 'insert/quickRecipe';
+                var $url = 'api/quickRecipes';
                 var $data = {
-                    recipe: $recipe,
-                    check_similar_names: $check_similar_names
+                    name: $recipe.name,
+                    ingredients: $recipe.ingredients,
+                    steps: $recipe.steps,
+                    check_for_similar_names: $check_similar_names
                 };
 
                 return $http.post($url, $data);
@@ -15969,6 +15897,29 @@ angular.module('tracker')
             }
         }
     });
+app.factory('WeightsFactory', function ($http) {
+    return {
+
+        getEntriesForTheDay: function ($date) {
+            var $url = 'api/weights/' + $date;
+            return $http.get($url);
+        },
+
+        insertWeight: function ($sql_date) {
+            var $url = 'insert/weight';
+            var $weight = $("#weight").val();
+
+            var $data = {
+                date: $sql_date,
+                weight: $weight
+            };
+
+            return $http.post($url, $data);
+        },
+
+
+    };
+});
 app.factory('JournalFactory', function ($http) {
     return {
 
@@ -16006,29 +15957,6 @@ app.factory('JournalFactory', function ($http) {
 
             return $http.put($url, $data);
         }
-    };
-});
-app.factory('WeightsFactory', function ($http) {
-    return {
-
-        getEntriesForTheDay: function ($date) {
-            var $url = 'api/weights/' + $date;
-            return $http.get($url);
-        },
-
-        insertWeight: function ($sql_date) {
-            var $url = 'insert/weight';
-            var $weight = $("#weight").val();
-
-            var $data = {
-                date: $sql_date,
-                weight: $weight
-            };
-
-            return $http.post($url, $data);
-        },
-
-
     };
 });
 angular.module('tracker')

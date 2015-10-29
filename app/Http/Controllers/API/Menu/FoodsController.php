@@ -63,12 +63,7 @@ class FoodsController extends Controller
      */
     public function store(Request $request)
     {
-        $food = new Food([
-            'name' => $request->get('name')
-        ]);
-
-        $food->user()->associate(Auth::user());
-        $food->save();
+        $food = $this->foodsRepository->insert($request->get('name'));
 
         return $this->responseCreatedWithTransformer($food, new FoodTransformer);
     }

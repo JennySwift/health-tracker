@@ -47,6 +47,17 @@ class Recipe extends Model {
 	}
 
     /**
+     * Not sure how to how to do the unit relationship because there
+     * are three foreign keys in the food_recipe pivot table
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+//    public function units()
+//    {
+//        return $this->belongsToMany('App\Models\Units\Unit', 'food_recipe', 'recipe_id', 'unit_id');
+//    }
+
+
+    /**
      * For the recipe popup.
      * Each ingredient should consist of food, unit, quantity and description.
      * And each food should have its units attached to it.

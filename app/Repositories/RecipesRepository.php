@@ -7,6 +7,7 @@ use App\Http\Transformers\RecipeWithIngredientsTransformer;
 use App\Models\Menu\Food;
 use App\Models\Menu\Recipe;
 use App\Models\Menu\RecipeMethod;
+use App\Models\Units\Unit;
 use Auth;
 use DB;
 
@@ -15,13 +16,32 @@ use DB;
  * @package App\Repositories
  */
 class RecipesRepository {
+    /**
+     * @var FoodsRepository
+     */
+    private $foodsRepository;
+    /**
+     * @var UnitsRepository
+     */
+    private $unitsRepository;
 
+    /**
+     * @param FoodsRepository $foodsRepository
+     * @param UnitsRepository $unitsRepository
+     */
+    public function __construct(FoodsRepository $foodsRepository, UnitsRepository $unitsRepository)
+    {
+        $this->foodsRepository = $foodsRepository;
+        $this->unitsRepository = $unitsRepository;
+    }
     /**
      *
      * @param $name
+     * @param bool $ingredients
+     * @param bool $steps
      * @return Recipe
      */
-    public function insert($name)
+    public function insert($name, $ingredients = false, $steps = false)
     {
         $recipe = new Recipe([
             'name' => $name
@@ -29,7 +49,110 @@ class RecipesRepository {
         $recipe->user()->associate(Auth::user());
         $recipe->save();
 
+        if ($steps) {
+            $recipe = $this->insertRecipeMethod($recipe, $steps);
+        }
+
+        if ($ingredients) {
+            $ingredients = $this->insertFoodAndUnitIfNotExist($ingredients);
+            $recipe = $this->insertFoodsIntoRecipe($recipe, $ingredients);
+        }
+
         return $recipe;
+    }
+
+    /**
+     * @VP:
+     * Is this how I'm supposed to modify an array within a foreach loop?
+     * @param $ingredients
+     * @return mixed
+     */
+    private function insertFoodAndUnitIfNotExist($ingredients)
+    {
+        foreach ($ingredients as $key => $ingredient) {
+            $ingredients[$key]['food'] = $this->findOrInsertFoodIfNotExists($ingredient['food']);
+            $ingredients[$key]['unit'] = $this->findOrInsertUnitIfNotExists($ingredient['unit']);
+        }
+        return $ingredients;
+    }
+
+    /**
+     *
+     * @param $name
+     * @return Food
+     */
+    public function findOrInsertFoodIfNotExists($name)
+    {
+        $food = Food::forCurrentUser()
+            ->where('name', $name)
+            ->first();
+
+        if (!$food) {
+            $food = $this->foodsRepository->insert($name);
+        }
+
+        return $food;
+    }
+
+    /**
+     *
+     * @param $name
+     * @return Unit
+     */
+    public function findOrInsertUnitIfNotExists($name)
+    {
+        $unit = Unit::forCurrentUser()
+            ->where('name', $name)
+            ->first();
+
+        if (!$unit) {
+            $unit = $this->unitsRepository->insert($name);
+        }
+
+        return $unit;
+    }
+
+    /**
+     *
+     * @param $recipe
+     * @param $ingredients
+     * @return mixed
+     */
+    private function insertFoodsIntoRecipe($recipe, $ingredients)
+    {
+        foreach ($ingredients as $ingredient) {
+            $food = $ingredient['food'];
+            $unit = $ingredient['unit'];
+
+            $this->insertFoodIntoRecipe($recipe, $ingredient);
+
+            //Attach the unit to the food if it doesn't already belong to the food
+            if ($food->units()->find($unit->id) === 0) {
+                $food->units()->attach($unit->id);
+            }
+        }
+
+        return $recipe;
+    }
+
+    /**
+     * @VP:
+     * How do I attach the unit properly here, since there are three
+     * foreign keys in the food_recipe pivot table?
+     * @param $recipe
+     * @param $data
+     */
+    public function insertFoodIntoRecipe($recipe, $data)
+    {
+        $description = isset($data['description']) ? $data['description'] : '';
+
+        $recipe->foods()->attach($data['food']->id, [
+            'quantity' => $data['quantity'],
+            'description' => $description,
+            'unit_id' => $data['unit']->id
+        ]);
+
+        $recipe->save();
     }
 
 
@@ -102,6 +225,8 @@ class RecipesRepository {
             $method->recipe()->associate($recipe);
             $method->save();
         }
+
+        return $recipe;
     }
 
 

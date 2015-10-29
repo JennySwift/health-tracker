@@ -1,5 +1,5 @@
 angular.module('tracker')
-    .controller('QuickRecipeController', function ($scope, QuickRecipeFactory) {
+    .controller('QuickRecipeController', function ($rootScope, $scope, QuickRecipeFactory, RecipesFactory) {
 
         /**
          * End goal of the function:
@@ -34,11 +34,11 @@ angular.module('tracker')
             //Recipe is an object, with an array of items and an array of steps.
             var $recipe = QuickRecipeFactory.formatString($string, $("#quick-recipe"));
 
-            var $ingredients = QuickRecipeFactory.populateItemsArray($recipe.items);
+            $recipe.items = QuickRecipeFactory.populateItemsArray($recipe.items);
 
             //check item contains quantity, unit and food
             //and convert quantities to decimals if necessary
-            var $items_and_errors = QuickRecipeFactory.errorCheck($items_and_errors.items);
+            var $items_and_errors = QuickRecipeFactory.errorCheck($recipe.items);
 
             if ($items_and_errors.errors.length > 0) {
                 $scope.errors.quick_recipe = $items_and_errors.errors;
@@ -56,7 +56,7 @@ angular.module('tracker')
 
             $recipe = {
                 name: $recipe_name,
-                items: $items_and_errors.items,
+                ingredients: $items_and_errors.items,
                 steps: $recipe.method
             };
 

@@ -67,6 +67,47 @@ class RecipesTest extends TestCase {
      * @test
      * @return void
      */
+    public function it_can_insert_a_quick_recipe()
+    {
+        $this->logInUser();
+
+        $data = [
+            'check_for_similar_names' => true,
+            'name' => 'super recipe',
+            'ingredients' => [
+                [
+                    'description' => 'chopped',
+                    'food' => 'apple',
+                    'quantity' => 1,
+                    'unit' => 'small'
+                ],
+                [
+//                    'description' => 'chopped',
+                    'food' => 'bananas',
+                    'quantity' => 2,
+                    'unit' => 'large'
+                ]
+            ],
+            'steps' => ['Blend', 'Eat']
+        ];
+
+        $response = $this->call('POST', '/api/quickRecipes', $data);
+        dd($response);
+        $content = json_decode($response->getContent(), true)['data'];
+        dd($content);
+
+        $this->assertArrayHasKey('id', $content);
+        $this->assertArrayHasKey('name', $content);
+
+        $this->assertEquals('kangaroo', $content['name']);
+
+        $this->assertEquals(Response::HTTP_CREATED, $response->getStatusCode());
+    }
+
+    /**
+     * @test
+     * @return void
+     */
 //    public function it_can_update_a_recipe()
 //    {
 //        $this->logInUser();

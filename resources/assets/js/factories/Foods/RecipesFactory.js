@@ -22,7 +22,9 @@ angular.module('tracker')
             insertQuickRecipe: function ($recipe, $check_similar_names) {
                 var $url = 'api/quickRecipes';
                 var $data = {
-                    recipe: $recipe,
+                    name: $recipe.name,
+                    ingredients: $recipe.ingredients,
+                    steps: $recipe.steps,
                     check_for_similar_names: $check_similar_names
                 };
 

@@ -2,7 +2,10 @@
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
+use App\Http\Transformers\RecipeTransformer;
+use App\Http\Transformers\RecipeWithIngredientsTransformer;
 use App\Repositories\QuickRecipesRepository;
+use App\Repositories\RecipesRepository;
 use Auth;
 use DB;
 use Debugbar;
@@ -19,13 +22,19 @@ class QuickRecipesController extends Controller
      * @var QuickRecipesRepository
      */
     private $quickRecipesRepository;
+    /**
+     * @var RecipesRepository
+     */
+    private $recipesRepository;
 
     /**
      * @param QuickRecipesRepository $quickRecipesRepository
+     * @param RecipesRepository $recipesRepository
      */
-    public function __construct(QuickRecipesRepository $quickRecipesRepository)
+    public function __construct(QuickRecipesRepository $quickRecipesRepository, RecipesRepository $recipesRepository)
     {
         $this->quickRecipesRepository = $quickRecipesRepository;
+        $this->recipesRepository = $recipesRepository;
     }
 
     /**
@@ -37,10 +46,10 @@ class QuickRecipesController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->get('recipe');
+        $ingredients = $request->get('ingredients');
 
         if ($request->get('check_for_similar_names')) {
-            $similarNames = $this->quickRecipesRepository->checkEntireRecipeForSimilarNames($data['items']);
+            $similarNames = $this->quickRecipesRepository->checkEntireRecipeForSimilarNames($ingredients);
 
             if (isset($similarNames['foods']) || isset($similarNames['units'])) {
                 return [
@@ -50,16 +59,15 @@ class QuickRecipesController extends Controller
             else {
                 //No similar names were found.
                 //Insert the recipe.
-                $data['items'] = $this->quickRecipesRepository->populateArrayBeforeInserting($data['items']);
-                return $this->quickRecipesRepository->insertEverything($data);
+                $recipe = $this->recipesRepository->insert($request->get('name'), $ingredients, $request->get('steps'));
             }
         }
         else {
             //We are not checking for similar names.
             //Insert the recipe
-            $data['items'] = $this->quickRecipesRepository->populateArrayBeforeInserting($data['items']);
-            return $this->quickRecipesRepository->insertEverything($data);
+            $recipe = $this->recipesRepository->insert($request->get('name'), $ingredients, $request->get('steps'));
         }
+        return $this->responseCreatedWithTransformer($recipe, new RecipeWithIngredientsTransformer);
     }
 
 

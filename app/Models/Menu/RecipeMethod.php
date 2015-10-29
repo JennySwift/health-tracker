@@ -9,13 +9,24 @@ use Auth;
  */
 class RecipeMethod extends Model {
 
+    protected $fillable = ['step', 'text'];
+
+    /**
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo('App\User');
+    }
+
     /**
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function recipe()
 	{
-		return $this->belongsTo('App\Models\Foods\Recipe');
+		return $this->belongsTo('App\Models\Menu\Recipe');
 	}
 
 }
