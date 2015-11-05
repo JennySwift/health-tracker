@@ -57,8 +57,7 @@ class AutocompleteController extends Controller
 
 
         /**
-         * @VP:
-         * Why won't this sort by name in ascending order?
+         * This wouldn't sort by name in ascending order
          */
         // $menu = $foods->merge($recipes)
         //     ->sortBy(function($item)

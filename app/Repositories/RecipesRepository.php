@@ -136,9 +136,15 @@ class RecipesRepository {
     }
 
     /**
-     * @VP:
      * How do I attach the unit properly here, since there are three
      * foreign keys in the food_recipe pivot table?
+     *
+     * Use sync and pass the unit id in there, as if it was just a field and not
+     * a relationship.
+     * $user->roles()->sync(array($food_id => array('unit_id' => 1)));
+     *
+     * But what I have done is fine for just inserting one food at a time
+     * rather than all of them at once.
      * @param $recipe
      * @param $data
      */

@@ -32,7 +32,6 @@ class ExerciseEntriesRepository
      * If entries share the same exercise and unit, compact them into one item.
      * Include the default unit id so I can show the 'add set' button only if the entry uses the default unit.
      *
-     * @VP:
      * This method is much the same as Exercise::compactExerciseEntries, but slightly different.
      * Should I combine them into one method or keep them separate?
      * @param $entries
