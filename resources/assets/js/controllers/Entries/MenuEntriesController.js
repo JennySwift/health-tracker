@@ -95,7 +95,7 @@ angular.module('tracker')
                     //fill the dropdown
                     $scope.autocomplete_options.menu_items = response.data;
                     //show the dropdown
-                    $scope.show.autocomplete_options.menu_items = true;
+                    $scope.showAutocompleteOptions.menu_items = true;
                     //select the first item
                     $scope.autocomplete_options.menu_items[0].selected = true;
                 });
@@ -123,7 +123,7 @@ angular.module('tracker')
             }
 
             //enter is pressed
-            if ($scope.show.autocomplete_options.menu_items) {
+            if ($scope.showAutocompleteOptions.menu_items) {
                 //if enter is for the autocomplete
                 $scope.finishMenuAutocomplete($scope.autocomplete_options.menu_items, $("#food-quantity"));
 
@@ -144,7 +144,7 @@ angular.module('tracker')
             $scope.selected.food = $selected;
             $scope.new_entry.menu = $selected;
             $scope.selected.menu = $selected;
-            $scope.show.autocomplete_options.menu_items = false;
+            $scope.showAutocompleteOptions.menu_items = false;
             $($set_focus).val("").focus();
         };
 
@@ -161,7 +161,7 @@ angular.module('tracker')
                 AutocompleteFactory.food($typing).then(function (response) {
                     $scope.autocomplete_options.temporary_recipe_foods = response.data;
                     //show the dropdown
-                    $scope.show.autocomplete_options.temporary_recipe_foods = true;
+                    $scope.showAutocompleteOptions.temporary_recipe_foods = true;
                     //select the first item
                     $scope.autocomplete_options.temporary_recipe_foods[0].selected = true;
                 });
@@ -182,7 +182,7 @@ angular.module('tracker')
             var $selected = _.findWhere($array, {selected: true});
             $scope.temporary_recipe_popup.food = $selected;
             $scope.selected.food = $selected;
-            $scope.show.autocomplete_options.temporary_recipe_foods = false;
+            $scope.showAutocompleteOptions.temporary_recipe_foods = false;
             $($set_focus).val("").focus();
         };
 
@@ -191,7 +191,7 @@ angular.module('tracker')
                 return;
             }
             //enter is pressed
-            if ($scope.show.autocomplete_options.temporary_recipe_foods) {
+            if ($scope.showAutocompleteOptions.temporary_recipe_foods) {
                 //enter is for the autocomplete
                 $scope.finishTemporaryRecipeFoodAutocomplete($scope.autocomplete_options.temporary_recipe_foods, $("#temporary-recipe-popup-food-quantity"));
                 // $scope.displayAssocUnitOptions();

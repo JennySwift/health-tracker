@@ -2,7 +2,7 @@ angular.module('tracker')
     .factory('ExerciseEntriesFactory', function ($http) {
         return {
             getSpecificExerciseEntries: function ($sql_date, $entry) {
-                var $url = 'select/specificExerciseEntries';
+                var $url = 'api/select/specificExerciseEntries';
                 var $data = {
                     date: $sql_date,
                     exercise_id: $entry.exercise.id,
@@ -40,9 +40,9 @@ angular.module('tracker')
                 return $http.post($url, $data);
             },
 
-            deleteExerciseEntry: function ($id) {
+            deleteExerciseEntry: function ($entry) {
                 if (confirm("Are you sure you want to delete this entry?")) {
-                    var $url = 'exerciseEntries/' + $id;
+                    var $url = 'api/exerciseEntries/' + $entry.id;
 
                     return $http.delete($url);
                 }

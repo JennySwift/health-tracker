@@ -65,13 +65,13 @@ angular.module('tracker')
                 });
         };
 
-        //Todo: get the entries for the day and for the popup after deleting
-        //the entry
-        $scope.deleteExerciseEntry = function ($id) {
-            ExerciseEntriesFactory.deleteExerciseEntry($id)
+        //Todo: get the entries for the day after deleting the entry
+        $scope.deleteExerciseEntry = function ($entry) {
+            ExerciseEntriesFactory.deleteExerciseEntry($entry)
                 .then(function (response) {
                     //$scope.entries.exercise = response.data.entries_for_day;
-                    //$scope.exercise_entries_popup = response.data.entries_for_popup;
+                    $scope.exercise_entries_popup.entries = _.without($scope.exercise_entries_popup.entries, $entry);
+                    $rootScope.$broadcast('provideFeedback', 'Entry deleted');
                 });
         };
 
@@ -86,7 +86,7 @@ angular.module('tracker')
                     //fill the dropdown
                     $scope.autocomplete_options.exercises = response.data;
                     //show the dropdown
-                    $scope.show.autocomplete_options.exercises = true;
+                    $scope.showAutocompleteOptions.exercises = true;
                     //select the first item
                     $scope.autocomplete_options.exercises[0].selected = true;
                 });
@@ -110,7 +110,7 @@ angular.module('tracker')
             $scope.newEntry = $selected;
             $scope.newEntry.quantity = $scope.selectedExercise.default_quantity;
             $scope.selectedExercise = $selected;
-            $scope.show.autocomplete_options.exercises = false;
+            $scope.showAutocompleteOptions.exercises = false;
             setTimeout(function () {
                 $("#exercise-quantity").focus().select();
             }, 500);
@@ -121,7 +121,7 @@ angular.module('tracker')
                 return;
             }
             //enter is pressed
-            if ($scope.show.autocomplete_options.exercises) {
+            if ($scope.showAutocompleteOptions.exercises) {
                 //if enter is for the autocomplete
                 $scope.finishExerciseAutocomplete($scope.autocomplete_options.exercises);
             }

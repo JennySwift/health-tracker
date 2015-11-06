@@ -10,10 +10,7 @@ var app = angular.module('tracker');
             week_avg: calories_for_the_week
         };
 
-        $scope.show = {
-            autocomplete_options: {},
-            popups: {}
-        };
+        $scope.showAutocompleteOptions = {};
 
         //new entry
         $scope.new_entry = {

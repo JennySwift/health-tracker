@@ -14,6 +14,10 @@ app.run(runBlock);
 
 function runBlock ($rootScope, ErrorsFactory) {
 
+    $rootScope.show = {
+        popups: {}
+    };
+
     $rootScope.responseError = function (response) {
         $rootScope.$broadcast('provideFeedback', ErrorsFactory.responseError(response), 'error');
         $rootScope.hideLoading();

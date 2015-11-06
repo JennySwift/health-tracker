@@ -13,7 +13,7 @@
 					
 					<input ng-model="temporary_recipe_popup.food.name" ng-keyup="autocompleteTemporaryRecipeFood($event.keyCode); insertOrAutocompleteTemporaryRecipeFood($event.keyCode)" ng-blur="show.autocomplete_options.temporary_recipe_foods = false" type="text" placeholder="add food to recipe" id="temporary-recipe-food-input" class="form-control">
 					
-					<div ng-show="show.autocomplete_options.temporary_recipe_foods" class="autocomplete-dropdown">
+					<div ng-show="showAutocompleteOptions.temporary_recipe_foods" class="autocomplete-dropdown">
 						<div ng-repeat="food in autocomplete_options.temporary_recipe_foods" ng-class="{'selected': food.selected}" class="autocomplete-dropdown-item">[[food.name]]</div>
 					</div>
 					

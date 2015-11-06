@@ -106,7 +106,7 @@ class ExerciseEntriesController extends Controller
      */
     public function destroy(Entry $entry)
     {
-        $entry->delete();
+//        $entry->delete();
         return $this->responseNoContent();
     }
 }

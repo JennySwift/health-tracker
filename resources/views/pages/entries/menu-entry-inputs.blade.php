@@ -2,7 +2,7 @@
     <div>
         <input ng-model="new_entry.menu.name" ng-keyup="autocompleteMenu($event.keyCode); insertOrAutocompleteMenuEntry($event.keyCode)" ng-blur="autocomplete_options.menu_items = ''" type="text" placeholder="food" id="menu" class="form-control">
 
-        <div ng-show="show.autocomplete_options.menu_items">
+        <div ng-show="showAutocompleteOptions.menu_items">
             <div ng-repeat="item in autocomplete_options.menu_items" ng-class="{'selected': item.selected}" data-id="[[item.id]]" data-type="[[item.type]]" class="autocomplete-dropdown-item">[[item.name]]</div>
         </div>
 

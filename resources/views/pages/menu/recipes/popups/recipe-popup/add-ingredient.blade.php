@@ -6,7 +6,7 @@
     <div>
         <input ng-model="recipe_popup.food.name" ng-keyup="autocompleteFood($event.keyCode); insertOrAutocompleteFoodEntry($event.keyCode)" ng-blur="show.autocomplete_options.foods = false" type="text" placeholder="add food to [[recipe_popup.recipe.name]]" id="recipe-popup-food-input" class="form-control">
 
-        <div ng-show="show.autocomplete_options.foods" class="autocomplete-dropdown">
+        <div ng-show="showAutocompleteOptions.foods" class="autocomplete-dropdown">
             <div ng-repeat="food in recipe_popup.autocomplete_options" ng-class="{'selected': food.selected}" class="autocomplete-dropdown-item">[[food.name]]</div>
         </div>
 

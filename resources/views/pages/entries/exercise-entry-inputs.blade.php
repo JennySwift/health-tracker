@@ -4,13 +4,13 @@
         <input
             ng-model="newEntry.name"
             ng-keyup="autocompleteExercise($event.keyCode); insertOrAutocompleteExerciseEntry($event.keyCode, 'exercise')"
-            ng-blur="show.autocomplete_options.exercises = false"
+            ng-blur="showAutocompleteOptions.exercises = false"
             type="text"
             placeholder="exercise"
             id="exercise"
             class="form-control">
 
-        <div ng-show="show.autocomplete_options.exercises">
+        <div ng-show="showAutocompleteOptions.exercises">
             <div
                 ng-repeat="item in autocomplete_options.exercises"
                 ng-class="{'selected': item.selected}"

@@ -13,7 +13,7 @@
 			<tr ng-repeat="entry in exercise_entries_popup.entries">
 				<td>[[entry.exercise.name]]</td>
 				<td>[[entry.quantity]]</td>
-				<td><i ng-click="deleteExerciseEntry(entry.id)" class="delete-item fa fa-times"></i></td>
+				<td><i ng-click="deleteExerciseEntry(entry)" class="delete-item fa fa-times"></i></td>
 			</tr>
 		</table>
 

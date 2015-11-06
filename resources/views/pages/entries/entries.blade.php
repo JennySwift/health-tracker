@@ -25,6 +25,7 @@
             </div>
 
             <div ng-controller="ExerciseEntriesController">
+                @include('pages.entries.popups.exercise-entries')
                 @include('pages.entries.exercise-entry-inputs')
                 @include('pages.entries.exercise-entries')
             </div>
