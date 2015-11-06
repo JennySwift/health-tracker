@@ -64,53 +64,6 @@ class ExerciseSeriesRepository
             ->get();
 
         //Populate an array to return
-        return $this->compactExerciseEntriesForHistory($entries);
-    }
-
-    /**
-     * For getExerciseSeriesHistory.
-     * If entries share the same exercise, date, and unit, compact them into one item.
-     * @param $entries
-     * @return array
-     */
-    public function compactExerciseEntriesForHistory($entries)
-    {
-        //create an array to return
-        $array = [];
-
-        //populate the array
-        foreach ($entries as $entry) {
-            $sql_date = $entry->date;
-            $date = Carbon::createFromFormat('Y-m-d', $sql_date)->format('d/m/y');
-            $counter = 0;
-
-            //check to see if the array already has the exercise entry
-            //so it doesn't appear as a new entry for each set of exercises
-            if (count($array) > 0) {
-                foreach ($array as $item) {
-                    if ($item['date'] === $date && $item['name'] === $entry->name && $item['unit_name'] === $entry->unit->name) {
-                        //the exercise with unit already exists in the array
-                        //so we don't want to add it again
-                        $counter++;
-                    }
-                }
-            }
-            if ($counter === 0) {
-                $array[] = array(
-                    'date' => $date,
-                    'days_ago' => getHowManyDaysAgo($sql_date),
-                    'id' => $entry->exercise_id,
-                    'name' => $entry->name,
-                    'description' => $entry->description,
-                    'step_number' => $entry->step_number,
-                    'unit_name' => $entry->unit->name,
-                    'sets' => $this->exerciseEntriesRepository->getExerciseSets($sql_date, $entry->exercise_id, $entry->exercise_unit_id),
-                    'total' => $this->exerciseEntriesRepository->getTotalExerciseReps($sql_date, $entry->exercise_id, $entry->exercise_unit_id),
-                    'quantity' => $entry->quantity,
-                );
-            }
-        }
-
-        return $array;
+        return $this->exerciseEntriesRepository->compactExerciseEntries($entries);
     }
 }

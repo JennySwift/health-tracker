@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
+use App\Http\Transformers\SeriesEntriesTransformer;
+use App\Http\Transformers\SeriesEntryTransformer;
 use App\Models\Exercises\Series;
 use App\Repositories\ExerciseSeriesRepository;
 use Illuminate\Http\Request;
@@ -38,6 +40,9 @@ class SeriesEntriesController extends Controller
         //Fetch the series (singular-the series that was clicked on)
         $series = Series::find($series_id);
 
-        return $this->exerciseSeriesRepository->getExerciseSeriesHistory($series);
+        return transform(createCollection(
+            $this->exerciseSeriesRepository->getExerciseSeriesHistory($series),
+            new SeriesEntryTransformer
+        ))['data'];
     }
 }

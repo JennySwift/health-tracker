@@ -60,4 +60,32 @@ class Entry extends Model {
 	{
 		return $this->hasMany('App\Models\Exercises\Entry');
 	}
+
+    /**
+     *
+     * @param $date
+     * @return mixed
+     */
+    public function calculateSets($date)
+    {
+        return $this->sets = Entry::forCurrentUser()
+            ->where('date', $date)
+            ->where('exercise_id', $this->exercise->id)
+            ->where('exercise_unit_id', $this->unit->id)
+            ->count();
+    }
+
+    /**
+     *
+     * @param $date
+     * @return mixed
+     */
+    public function calculateTotal($date)
+    {
+        return $this->total = Entry::forCurrentUser()
+            ->where('date', $date)
+            ->where('exercise_id', $this->exercise->id)
+            ->where('exercise_unit_id', $this->unit->id)
+            ->sum('quantity');
+    }
 }

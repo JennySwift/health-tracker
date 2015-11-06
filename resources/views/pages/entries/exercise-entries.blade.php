@@ -10,14 +10,14 @@
         </tr>
 
         <tr ng-repeat="entry in exerciseEntries">
-            <td ng-click="getSpecificExerciseEntries(entry.exercise_id, entry.unit_id)" class="pointer">[[entry.name]]</td>
-            <td ng-click="getSpecificExerciseEntries(entry.exercise_id, entry.unit_id)" class="pointer">[[entry.description]]</td>
-            <td ng-click="getSpecificExerciseEntries(entry.exercise_id, entry.unit_id)" class="pointer">[[entry.sets]]</td>
-            <td ng-click="getSpecificExerciseEntries(entry.exercise_id, entry.unit_id)" class="pointer">[[entry.total]] [[entry.unit_name]]</td>
+            <td ng-click="getSpecificExerciseEntries(entry)" class="pointer">[[entry.exercise.name]]</td>
+            <td ng-click="getSpecificExerciseEntries(entry)" class="pointer">[[entry.exercise.description]]</td>
+            <td ng-click="getSpecificExerciseEntries(entry)" class="pointer">[[entry.sets]]</td>
+            <td ng-click="getSpecificExerciseEntries(entry)" class="pointer">[[entry.total]] [[entry.unit.name]]</td>
             <td>
                 <button
-                    ng-if="entry.unit_id === entry.default_unit_id"
-                    ng-click="insertExerciseSet(entry.exercise_id)"
+                    ng-if="entry.unit.id === entry.default_unit_id"
+                    ng-click="insertExerciseSet(entry.exercise)"
                     class="btn-xs">
                     add set
                 </button>

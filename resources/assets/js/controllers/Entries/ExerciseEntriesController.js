@@ -22,14 +22,20 @@ angular.module('tracker')
         /**
          * Get all the the user's entries for a particular exercise
          * with a particular unit on a particular date.
-         * @param $exercise_id
-         * @param $exercise_unit_id
+         * @param $entry
          */
-        $scope.getSpecificExerciseEntries = function ($exercise_id, $exercise_unit_id) {
-            ExerciseEntriesFactory.getSpecificExerciseEntries($scope.date.sql, $exercise_id, $exercise_unit_id).then(function (response) {
-                $scope.show.popups.exercise_entries = true;
-                $scope.exercise_entries_popup = response.data;
-            });
+        $scope.getSpecificExerciseEntries = function ($entry) {
+            $rootScope.showLoading();
+            ExerciseEntriesFactory.getSpecificExerciseEntries($scope.date.sql, $entry)
+                .then(function (response) {
+                    $scope.show.popups.exercise_entries = true;
+                    $scope.exercise_entries_popup = response.data;
+                    //$rootScope.$broadcast('provideFeedback', '');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
         };
 
         $scope.insertExerciseEntry = function () {
@@ -46,9 +52,9 @@ angular.module('tracker')
                 });
         };
 
-        $scope.insertExerciseSet = function ($exercise_id) {
+        $scope.insertExerciseSet = function ($exercise) {
             $rootScope.showLoading();
-            ExerciseEntriesFactory.insertExerciseSet($scope.date.sql, $exercise_id)
+            ExerciseEntriesFactory.insertExerciseSet($scope.date.sql, $exercise)
                 .then(function (response) {
                     $scope.exerciseEntries = response.data;
                     //$rootScope.$broadcast('provideFeedback', '');

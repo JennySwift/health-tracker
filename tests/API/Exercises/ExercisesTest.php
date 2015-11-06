@@ -138,6 +138,7 @@ class ExercisesTest extends TestCase {
             'series_id' => 2,
             'default_unit_id' => 2
         ]);
+//        dd($response);
         $content = json_decode($response->getContent(), true)['data'];
 //        dd($content);
 

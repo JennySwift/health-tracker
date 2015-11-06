@@ -83,7 +83,8 @@ function pluckName($name, $table)
 //}
 
 /**
- *
+ * @VP:
+ * I'm trying to pass a second parameter to my transformer but don't know how.
  * @param $resource
  */
 function transform($resource)
@@ -93,7 +94,6 @@ function transform($resource)
 
     $manager->parseIncludes(request()->get('includes', []));
 
-//    return $manager->createData($resource);
     return $manager->createData($resource)->toArray();
 }
 

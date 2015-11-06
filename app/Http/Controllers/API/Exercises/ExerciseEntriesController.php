@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
+use App\Http\Transformers\ExerciseEntryTransformer;
 use App\Models\Exercises\Entry;
 use App\Models\Exercises\Exercise;
 use App\Models\Units\Unit;
@@ -39,7 +40,13 @@ class ExerciseEntriesController extends Controller
      */
     public function index($date)
     {
-        return $this->exerciseEntriesRepository->getEntriesForTheDay($date);
+        return transform(
+            createCollection(
+                $this->exerciseEntriesRepository->getEntriesForTheDay($date),
+                new ExerciseEntryTransformer
+            ),
+            [$date]
+        )['data'];
     }
 
     /**
@@ -50,11 +57,11 @@ class ExerciseEntriesController extends Controller
      */
     public function getSpecificExerciseEntries(Request $request)
     {
-        $date = $request->get('date');
-        $exercise = Exercise::find($request->get('exercise_id'));
-        $exercise_unit_id = $request->get('exercise_unit_id');
-
-        return Entry::getSpecificExerciseEntries($date, $exercise, $exercise_unit_id);
+        return $this->exerciseEntriesRepository->getSpecificExerciseEntries(
+            $request->get('date'),
+            Exercise::find($request->get('exercise_id')),
+            $request->get('exercise_unit_id')
+        );
     }
 
     /**
