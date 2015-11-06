@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\Exercises\Entry;
+use App\Models\Exercises\Exercise;
+use App\Models\Units\Unit;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Http\Response;
@@ -197,24 +200,39 @@ class ExerciseEntriesTest extends TestCase {
      * @test
      * @return void
      */
-//    public function it_can_delete_an_exercise_entry()
-//    {
-//        $this->logInUser();
-//
-//        $exercise = new Exercise([
-//            'name' => 'echidna'
-//        ]);
-//
-//        $exercise->user()->associate($this->user);
-//        $exercise->save();
-//
-//        $this->seeInDatabase('exercises', ['name' => 'echidna']);
-//
-//        $response = $this->call('DELETE', '/api/exercises/'.$exercise->id);
-//        $this->assertEquals(204, $response->getStatusCode());
-//        $this->missingFromDatabase('exercises', ['name' => 'echidna']);
-//
-//        $response = $this->call('DELETE', '/api/units/0');
-//        $this->assertEquals(404, $response->getStatusCode());
-//    }
+    public function it_can_delete_an_exercise_entry()
+    {
+        $this->logInUser();
+
+        $date = Carbon::today()->format('Y-m-d');
+
+        $entry = new Entry([
+            'date' => $date,
+            'quantity' => 501,
+        ]);
+
+        $entry->user()->associate($this->user);
+        $entry->exercise()->associate(Exercise::find(1));
+        $entry->unit()->associate(Unit::find(1));
+        $entry->save();
+
+        $this->seeInDatabase('exercise_entries', [
+            'date' => $date,
+            'exercise_id' => 1,
+            'quantity' => 501,
+            'exercise_unit_id' => 1
+        ]);
+
+        $response = $this->call('DELETE', '/api/exerciseEntries/'.$entry->id);
+        $this->assertEquals(204, $response->getStatusCode());
+        $this->missingFromDatabase('exercise_entries', [
+            'date' => $date,
+            'exercise_id' => 1,
+            'quantity' => 501,
+            'exercise_unit_id' => 1
+        ]);
+
+        $response = $this->call('DELETE', '/api/exerciseEntries/' . $entry->id);
+        $this->assertEquals(404, $response->getStatusCode());
+    }
 }
