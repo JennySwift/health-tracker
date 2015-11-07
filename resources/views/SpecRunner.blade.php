@@ -1,23 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <title>Jasmine Spec Runner v2.3.4</title>
+    <meta charset="utf-8">
+    <title>Jasmine Spec Runner v2.3.4</title>
 
-  <link rel="shortcut icon" type="image/png" href="/jasmine/lib/jasmine-2.3.4/jasmine_favicon.png">
-  <link rel="stylesheet" href="/jasmine/lib/jasmine-2.3.4/jasmine.css">
+    <link rel="shortcut icon" type="image/png" href="/jasmine/lib/jasmine-2.3.4/jasmine_favicon.png">
+    <link rel="stylesheet" href="/jasmine/lib/jasmine-2.3.4/jasmine.css">
 
-  <script src="/jasmine/lib/jasmine-2.3.4/jasmine.js"></script>
-  <script src="/jasmine/lib/jasmine-2.3.4/jasmine-html.js"></script>
-  <script src="/jasmine/lib/jasmine-2.3.4/boot.js"></script>
+    <script src="/jasmine/lib/jasmine-2.3.4/jasmine.js"></script>
+    <script src="/jasmine/lib/jasmine-2.3.4/jasmine-html.js"></script>
+    <script src="/jasmine/lib/jasmine-2.3.4/boot.js"></script>
 
-  <!-- include source files here... -->
-  <script src="/jasmine/src/Player.js"></script>
-  <script src="/jasmine/src/Song.js"></script>
-
-  <!-- include spec files here... -->
-  <script src="/jasmine/spec/SpecHelper.js"></script>
-  <script src="/jasmine/spec/PlayerSpec.js"></script>
+    {{--Jasmine src files--}}
+    <script type="text/javascript" src="/js/jasmine/src.js"></script>
+    {{--Jasmine specs--}}
+    <script type="text/javascript" src="/js/jasmine/specs.js"></script>
 
 </head>
 
