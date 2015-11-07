@@ -39,7 +39,6 @@ var app = angular.module('tracker');
         $scope.foods = {}; //all foods
         $scope.menu = {};//all foods and all recipes
         $scope.calories = {};
-        $scope.quick_recipe = {};
 
         $scope.new_item = {
             recipe: {}

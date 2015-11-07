@@ -1,4 +1,4 @@
-<div ng-controller="QuickRecipeController" id="quick-recipe-div" class="margin-bottom">
+<div id="quick-recipe-div" class="margin-bottom">
 
 	@include('pages.menu.recipes.quick-recipe-help')
 

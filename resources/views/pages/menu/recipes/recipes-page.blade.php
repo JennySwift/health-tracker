@@ -1,38 +1,38 @@
 <!DOCTYPE html>
 <html lang="en" ng-app="tracker">
 <head>
-	<meta charset="UTF-8">
-	<title>tracker</title>
-	@include('templates.head-links')
+    <meta charset="UTF-8">
+    <title>tracker</title>
+    @include('templates.head-links')
 </head>
 <body>
 
-    @include('templates.header')
-	
-	<div ng-controller="RecipesController" class="container">
+@include('templates.header')
 
-        @include('pages.menu.recipes.popups.recipe-popup.recipe')
-        @include('pages.menu.recipes.popups.similar-names')
+<div ng-controller="RecipesController" class="container">
 
-		<div id="foods">
+    @include('pages.menu.recipes.popups.recipe-popup.recipe')
 
-			<div id="quick-recipe-container">
-				@include('pages.menu.recipes.quick-recipe')
-			</div>
+    <div id="foods">
 
-			<hr>	
+        <div ng-controller="QuickRecipeController" id="quick-recipe-container">
+            @include('pages.menu.recipes.popups.similar-names')
+            @include('pages.menu.recipes.quick-recipe')
+        </div>
 
-			<div class="flex">
+        <hr>
 
-                @include('pages.menu.recipes.recipes')
-                @include('pages.menu.recipes.recipe-tags')
+        <div class="flex">
 
-			</div>
-		</div>
+            @include('pages.menu.recipes.recipes')
+            @include('pages.menu.recipes.recipe-tags')
 
-	</div>
+        </div>
+    </div>
 
-	@include('templates.footer')
+</div>
+
+@include('templates.footer')
 
 </body>
 </html>

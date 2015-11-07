@@ -112,7 +112,7 @@ angular.module('tracker')
                     // We are using the existing food rather than creating a new food.
                     // Therefore, change $scope.quick_recipe.contents
                     // to use the correct food name.
-                    $scope.quick_recipe.items[this.index].food = this.existing_food.name;
+                    $scope.quick_recipe.ingredients[this.index].food = this.existing_food.name;
                 }
             });
         }
@@ -123,7 +123,7 @@ angular.module('tracker')
                     //we are using the existing unit rather than creating
                     //a new unit. therefore, change $scope.quick_recipe.contents
                     // to use the correct unit name.
-                    $scope.quick_recipe.items[this.index].unit = this.existing_unit.name;
+                    $scope.quick_recipe.ingredients[this.index].unit = this.existing_unit.name;
                 }
             });
         }
@@ -132,7 +132,7 @@ angular.module('tracker')
             $rootScope.showLoading();
             RecipesFactory.insertQuickRecipe($scope.quick_recipe, false)
                 .then(function (response) {
-                    $scope.recipes.filtered = response.data.recipes;
+                    $scope.recipes.filtered.push(response.data.data);
                     $rootScope.$broadcast('provideFeedback', 'Recipe created');
                     $rootScope.hideLoading();
                 })

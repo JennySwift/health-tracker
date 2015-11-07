@@ -93,6 +93,42 @@ class RecipesTest extends TestCase {
     }
 
     /**
+     * Todo: check for other things
+     * @test
+     */
+    public function it_finds_similar_names()
+    {
+        $this->logInUser();
+
+        $data = [
+            'check_for_similar_names' => true,
+            'name' => 'super recipe',
+            'ingredients' => [
+                [
+                    'description' => 'chopped',
+                    'food' => 'rices',
+                    'quantity' => 1,
+                    'unit' => 'small'
+                ],
+                [
+                    'food' => 'bananas',
+                    'quantity' => 2,
+                    'unit' => 'large'
+                ]
+            ],
+            'steps' => ['Blend', 'Eat']
+        ];
+
+        $response = $this->call('POST', '/api/quickRecipes', $data);
+        $content = json_decode($response->getContent(), true);
+//        dd($content);
+
+        $this->assertArrayHasKey('similar_names', $content);
+        $this->assertArrayHasKey('foods', $content['similar_names']);
+//        $this->assertArrayHasKey('foods', $content['similar_names']['foods']);
+    }
+
+    /**
      * @test
      * @return void
      */
