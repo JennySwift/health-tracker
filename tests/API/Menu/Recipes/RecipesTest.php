@@ -40,6 +40,35 @@ class RecipesTest extends TestCase {
     }
 
     /**
+     * Todo: check for more things
+     * @test
+     */
+    public function it_can_show_a_recipe()
+    {
+        $this->logInUser();
+
+        $recipe = Recipe::forCurrentUser()->first();
+
+        $response = $this->call('GET', '/api/recipes/' . $recipe->id);
+        $content = json_decode($response->getContent(), true);
+//        dd($content);
+
+        $this->assertArrayHasKey('id', $content);
+        $this->assertArrayHasKey('name', $content);
+        $this->assertArrayHasKey('steps', $content);
+        $this->assertArrayHasKey('tag_ids', $content);
+        $this->assertArrayHasKey('ingredients', $content);
+        $this->assertArrayHasKey('tags', $content);
+
+        $this->assertEquals(1, $content['id']);
+        $this->assertEquals('delicious recipe', $content['name']);
+        $this->assertCount(5, $content['steps']);
+
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+
+    }
+
+    /**
      * @test
      * @return void
      */
@@ -96,6 +125,19 @@ class RecipesTest extends TestCase {
         $content = json_decode($response->getContent(), true)['data'];
 //        dd($content);
 
+        //Check the response is correct
+        $this->assertArrayHasKey('id', $content);
+        $this->assertArrayHasKey('name', $content);
+        $this->assertArrayHasKey('tags', $content);
+
+        $this->assertEquals('super recipe', $content['name']);
+
+        $this->assertEquals(Response::HTTP_CREATED, $response->getStatusCode());
+
+        //Check the recipe was inserted correctly
+        $response = $this->call('GET', '/api/recipes/' . $content['id']);
+        $content = json_decode($response->getContent(), true);
+
         $this->assertArrayHasKey('id', $content);
         $this->assertArrayHasKey('name', $content);
         $this->assertArrayHasKey('steps', $content);
@@ -125,7 +167,7 @@ class RecipesTest extends TestCase {
         $this->assertEquals('', $content['ingredients'][1]['description']);
         $this->assertEquals([], $content['ingredients'][1]['units']);
 
-        $this->assertEquals(Response::HTTP_CREATED, $response->getStatusCode());
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
     }
 
     /**

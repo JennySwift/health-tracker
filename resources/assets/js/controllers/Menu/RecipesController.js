@@ -13,19 +13,19 @@ var app = angular.module('tracker');
         $scope.errors = {};
 
         //show
-        $scope.show = {
-            autocomplete_options: {
-                menu_items: false,
-                foods: false,
-            },
-            popups: {
-                recipe: false,
-                similar_names: false
-            },
-            help: {
-                quick_recipe: false
-            }
-        };
+        //$scope.show = {
+        //    autocomplete_options: {
+        //        menu_items: false,
+        //        foods: false,
+        //    },
+        //    popups: {
+        //        recipe: false,
+        //        similar_names: false
+        //    },
+        //    help: {
+        //        quick_recipe: false
+        //    }
+        //};
 
         //filter
         $scope.filter = {
@@ -267,7 +267,7 @@ var app = angular.module('tracker');
          */
 
         $scope.toggleQuickRecipeHelp = function () {
-            $scope.show.help.quick_recipe = !$scope.show.help.quick_recipe;
+            $scope.showHelp = !$scope.showHelp;
         };
 
         $scope.toggleEditMethod = function () {

@@ -67,7 +67,7 @@ class QuickRecipesController extends Controller
             //Insert the recipe
             $recipe = $this->recipesRepository->insert($request->get('name'), $ingredients, $request->get('steps'));
         }
-        return $this->responseCreatedWithTransformer($recipe, new RecipeWithIngredientsTransformer);
+        return $this->responseCreatedWithTransformer($recipe, new RecipeTransformer);
     }
 
 

@@ -81,8 +81,7 @@ angular.module('tracker')
                     }
                     else {
                         $rootScope.$broadcast('provideFeedback', 'Recipe created');
-                        $scope.recipes.filtered = response.data.recipes;
-                        $scope.all_foods_with_units = response.data.foods_with_units;
+                        $scope.recipes.filtered.push(response.data.data);
                     }
 
                     $rootScope.hideLoading();
