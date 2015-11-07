@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
+use App\Http\Transformers\WorkoutTransformer;
 use App\Models\Exercises\Workout;
 use Auth;
 use Illuminate\Http\Request;
@@ -27,7 +28,7 @@ class WorkoutsController extends Controller
         $workout->user()->associate(Auth::user());
         $workout->save();
 
-        return $this->responseCreated($workout);
+        return $this->responseCreatedWithTransformer($workout, new WorkoutTransformer);
     }
 
     /**

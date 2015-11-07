@@ -39,28 +39,25 @@ class WorkoutTest extends TestCase {
      * @test
      * @return void
      */
-//    public function it_can_add_a_new_series()
-//    {
-//        $this->logInUser();
-//
-//        $exercise = [
-//            'name' => 'kangaroo',
-//            'description' => 'koala'
-//        ];
-//
-//        $response = $this->call('POST', '/api/exercises', $exercise);
-//        $content = json_decode($response->getContent(), true);
-//
-//        $this->assertArrayHasKey('id', $content);
-//        $this->assertArrayHasKey('name', $content);
-////        $this->assertArrayHasKey('step_number', $content);
-//        $this->assertArrayHasKey('description', $content);
-//
-//        $this->assertEquals('kangaroo', $content['name']);
-//        $this->assertEquals('koala', $content['description']);
-//
-//        $this->assertEquals(Response::HTTP_CREATED, $response->getStatusCode());
-//    }
+    public function it_can_add_a_new_workout()
+    {
+        $this->logInUser();
+
+        $workout = [
+            'name' => 'kangaroo',
+        ];
+
+        $response = $this->call('POST', '/api/workouts', $workout);
+        $content = json_decode($response->getContent(), true)['data'];
+//        dd($content);
+
+        $this->assertArrayHasKey('id', $content);
+        $this->assertArrayHasKey('name', $content);
+
+        $this->assertEquals('kangaroo', $content['name']);
+
+        $this->assertEquals(Response::HTTP_CREATED, $response->getStatusCode());
+    }
 
     /**
      * @test

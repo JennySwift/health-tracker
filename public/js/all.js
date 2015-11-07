@@ -13449,518 +13449,6 @@ var app = angular.module('tracker');
 	});
 
 })();
-var app = angular.module('tracker');
-
-(function () {
-    app.controller('entries', function ($rootScope, $scope, $http, DatesFactory, AutocompleteFactory, WeightsFactory) {
-
-        $scope.weight = weight;
-
-        $scope.calories = {
-            day: calories_for_the_day,
-            week_avg: calories_for_the_week
-        };
-
-        $scope.showAutocompleteOptions = {};
-
-        //new entry
-        $scope.new_entry = {
-            exercise: {
-                unit: {}
-            },
-            exercise_unit: {},
-            menu: {},
-            food: {},
-        };
-
-        //autocomplete
-        $scope.autocomplete_options = {
-            exercises: {},
-            menu_items: {},
-            foods: {},
-            temporary_recipe_foods: {}
-        };
-
-
-        $scope.edit_weight = false;
-
-        $scope.date = {};
-
-        if ($scope.date.typed === undefined) {
-            $scope.date.typed = Date.parse('today').toString('dd/MM/yyyy');
-        }
-        $scope.date.long = Date.parse($scope.date.typed).toString('dd MMM yyyy');
-
-        $scope.goToDate = function ($number) {
-            $scope.date.typed = DatesFactory.goToDate($scope.date.typed, $number);
-        };
-
-        $scope.today = function () {
-            $scope.date.typed = DatesFactory.today();
-        };
-        $scope.changeDate = function ($keycode) {
-            if ($keycode === 13) {
-                $scope.date.typed = DatesFactory.changeDate($keycode, $("#date").val());
-            }
-        };
-
-        /**
-         * watches
-         */
-
-        $scope.$watch('date.typed', function (newValue, oldValue) {
-            $scope.date.sql = Date.parse($scope.date.typed).toString('yyyy-MM-dd');
-            $scope.date.long = Date.parse($scope.date.typed).toString('ddd dd MMM yyyy');
-            $("#date").val(newValue);
-
-            if (newValue === oldValue) {
-                // $scope.pageLoad();
-            }
-            else {
-                $scope.getEntries();
-            }
-        });
-
-        $("#food").val("");
-        $("#weight").val("");
-
-        /**
-         * Get all the user's entries for the current date:
-         * exercise entries
-         * menu entries
-         * weight
-         * calories for the day
-         * calorie average for the week
-         */
-        $scope.getEntries = function () {
-            $rootScope.$emit('getEntries');
-        };
-
-        $rootScope.$on('getEntries', function () {
-            $rootScope.showLoading();
-            WeightsFactory.getEntriesForTheDay($scope.date.sql)
-                .then(function (response) {
-                    $scope.weight = response.data;
-                    //$rootScope.$broadcast('provideFeedback', '');
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        });
-
-        $scope.insertOrUpdateWeight = function ($keycode) {
-            if ($keycode === 13) {
-                WeightsFactory.insertWeight($scope.date.sql).then(function (response) {
-                    $scope.weight = response.data;
-                    $scope.edit_weight = false;
-                    $("#weight").val("");
-                });
-            }
-        };
-
-        $scope.editWeight = function () {
-            $scope.edit_weight = true;
-            setTimeout(function () {
-                $("#weight").focus();
-            }, 500);
-        };
-
-        /**
-         * media queries
-         */
-
-        enquire.register("screen and (max-width: 890px", {
-            match: function () {
-                $("#avg-calories-for-the-week-text").text('Avg: ');
-            },
-            unmatch: function () {
-                $("#avg-calories-for-the-week-text").text('Avg calories (last 7 days): ');
-            }
-        });
-
-    });
-
-})();
-angular.module('tracker')
-    .controller('ExerciseEntriesController', function ($rootScope, $scope, ExerciseEntriesFactory, AutocompleteFactory) {
-
-        $scope.exerciseEntries = exerciseEntries;
-        $scope.exerciseUnits = exerciseUnits;
-
-        $scope.selectedExercise = {};
-
-        $rootScope.$on('getEntries', function () {
-            $rootScope.showLoading();
-            ExerciseEntriesFactory.getEntriesForTheDay($scope.date.sql)
-                .then(function (response) {
-                    $scope.exerciseEntries = response.data;
-                    //$rootScope.$broadcast('provideFeedback', '');
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        });
-
-        /**
-         * Get all the the user's entries for a particular exercise
-         * with a particular unit on a particular date.
-         * @param $entry
-         */
-        $scope.getSpecificExerciseEntries = function ($entry) {
-            $rootScope.showLoading();
-            ExerciseEntriesFactory.getSpecificExerciseEntries($scope.date.sql, $entry)
-                .then(function (response) {
-                    $scope.show.popups.exercise_entries = true;
-                    $scope.exercise_entries_popup = response.data;
-                    //$rootScope.$broadcast('provideFeedback', '');
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        };
-
-        $scope.insertExerciseEntry = function () {
-            $scope.new_entry.exercise.unit_id = $("#exercise-unit").val();
-            $rootScope.showLoading();
-            ExerciseEntriesFactory.insert($scope.date.sql, $scope.newEntry)
-                .then(function (response) {
-                    $scope.exerciseEntries = response.data;
-                    //$rootScope.$broadcast('provideFeedback', '');
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        };
-
-        $scope.insertExerciseSet = function ($exercise) {
-            $rootScope.showLoading();
-            ExerciseEntriesFactory.insertExerciseSet($scope.date.sql, $exercise)
-                .then(function (response) {
-                    $scope.exerciseEntries = response.data;
-                    //$rootScope.$broadcast('provideFeedback', '');
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        };
-
-        //Todo: get the entries for the day after deleting the entry
-        $scope.deleteExerciseEntry = function ($entry) {
-            ExerciseEntriesFactory.deleteExerciseEntry($entry)
-                .then(function (response) {
-                    //$scope.entries.exercise = response.data.entries_for_day;
-                    $scope.exercise_entries_popup.entries = _.without($scope.exercise_entries_popup.entries, $entry);
-                    $rootScope.$broadcast('provideFeedback', 'Entry deleted');
-                });
-        };
-
-        /**
-         * Autocomplete
-         */
-
-        $scope.autocompleteExercise = function ($keycode) {
-            if ($keycode !== 13 && $keycode !== 38 && $keycode !== 40) {
-                //not enter, up arrow or down arrow
-                AutocompleteFactory.exercise().then(function (response) {
-                    //fill the dropdown
-                    $scope.autocomplete_options.exercises = response.data;
-                    //show the dropdown
-                    $scope.showAutocompleteOptions.exercises = true;
-                    //select the first item
-                    $scope.autocomplete_options.exercises[0].selected = true;
-                });
-            }
-            else if ($keycode === 38) {
-                //up arrow pressed
-                AutocompleteFactory.autocompleteUpArrow($scope.autocomplete_options.exercises);
-
-            }
-            else if ($keycode === 40) {
-                //down arrow pressed
-                AutocompleteFactory.autocompleteDownArrow($scope.autocomplete_options.exercises);
-            }
-        };
-
-        $scope.finishExerciseAutocomplete = function ($array, $selected) {
-            //array, input_to_focus, autocomplete_to_hide, input_to_fill, selected_property_to_define
-            $selected = $selected || _.findWhere($array, {selected: true});
-            $scope.selectedExercise = $selected;
-            $scope.selectedExercise.unit_id = $scope.selectedExercise.default_unit_id;
-            $scope.newEntry = $selected;
-            $scope.newEntry.quantity = $scope.selectedExercise.default_quantity;
-            $scope.selectedExercise = $selected;
-            $scope.showAutocompleteOptions.exercises = false;
-            setTimeout(function () {
-                $("#exercise-quantity").focus().select();
-            }, 500);
-        };
-
-        $scope.insertOrAutocompleteExerciseEntry = function ($keycode) {
-            if ($keycode !== 13) {
-                return;
-            }
-            //enter is pressed
-            if ($scope.showAutocompleteOptions.exercises) {
-                //if enter is for the autocomplete
-                $scope.finishExerciseAutocomplete($scope.autocomplete_options.exercises);
-            }
-            else {
-                // if enter is to add the entry
-                $scope.insertExerciseEntry();
-            }
-        };
-
-    });
-angular.module('tracker')
-    .controller('MenuEntriesController', function ($rootScope, $scope, MenuEntriesFactory, RecipeEntriesFactory) {
-
-        $scope.menuEntries = menuEntries;
-
-        //$scope.$watch('recipe.portion', function (newValue, oldValue) {
-        //    $($scope.temporary_recipe_popup.contents).each(function () {
-        //        if (this.original_quantity) {
-        //            //making sure we don't alter the quantity of a food that has been added to the temporary recipe (by doing the if check)
-        //            this.quantity = this.original_quantity * newValue;
-        //        }
-        //    });
-        //});
-
-        $scope.selected = {
-            dropdown_item: {},
-            food: {},
-            unit: {}
-        };
-
-        $rootScope.$on('getEntries', function () {
-            $rootScope.showLoading();
-            MenuEntriesFactory.getEntriesForTheDay($scope.date.sql)
-                .then(function (response) {
-                    $scope.menuEntries = response.data;
-                    //$rootScope.$broadcast('provideFeedback', '');
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        });
-
-        $scope.insertMenuEntry = function () {
-            $scope.new_entry.food.id = $scope.selected.food.id;
-            $scope.new_entry.food.name = $scope.selected.food.name;
-            $scope.new_entry.food.unit_id = $("#food-unit").val();
-
-            MenuEntriesFactory.insertMenuEntry($scope.date.sql, $scope.new_entry.food).then(function (response) {
-                $scope.entries.menu = response.data.food_entries;
-                $scope.calories.day = response.data.calories_for_the_day;
-                $scope.calories.week_avg = response.data.calories_for_the_week;
-
-                if ($scope.temporary_recipe_popup.contents) {
-                    $scope.temporary_recipe_popup.contents.length = 0;
-                }
-                $scope.loading = false;
-            });
-        };
-
-        $scope.insertRecipeEntry = function () {
-            RecipeEntriesFactory.insertRecipeEntry($scope.date.sql, $scope.selected.menu.id, $scope.temporary_recipe_popup.contents).then(function (response) {
-                $scope.entries.menu = response.data;
-                $scope.show.popups.temporary_recipe = false;
-            });
-        };
-
-        $scope.deleteFoodEntry = function ($entry_id) {
-            $entry_id = $entry_id || $scope.selected.entry.id;
-
-            MenuEntriesFactory.deleteFoodEntry($entry_id, $scope.date.sql).then(function (response) {
-                $scope.entries.menu = response.data.food_entries;
-                $scope.calories.day = response.data.calories_for_the_day;
-                $scope.calories.week_avg = response.data.calories_for_the_week;
-                $scope.show.popups.delete_food_or_recipe_entry = false;
-            });
-        };
-
-        //Todo: get food entries, calories for the day and calories for the week
-        //after deleting
-        $scope.deleteRecipeEntry = function () {
-            RecipeEntriesFactory.deleteRecipeEntry($scope.date.sql, $scope.selected.recipe.id).then(function (response) {
-                $scope.entries.menu = response.data.food_entries;
-                $scope.calories.day = response.data.calories_for_the_day;
-                $scope.calories.week_avg = response.data.calories_for_the_week;
-                $scope.show.popups.delete_food_or_recipe_entry = false;
-            });
-        };
-
-        /**
-         * autocomplete
-         */
-
-        /**
-         * As user types in the input, populate the dropdown.
-         * If user presses arrows, select the appropriate item in the dropdown.
-         * If user presses enter, that is taken care of in $scope.insertOrAutocompleteMenuEntry.
-         * @param $keycode
-         */
-        $scope.autocompleteMenu = function ($keycode) {
-            if ($keycode !== 13 && $keycode !== 38 && $keycode !== 40) {
-                //not enter, up arrow or down arrow
-                AutocompleteFactory.menu().then(function (response) {
-                    console.log(response);
-                    //fill the dropdown
-                    $scope.autocomplete_options.menu_items = response.data;
-                    //show the dropdown
-                    $scope.showAutocompleteOptions.menu_items = true;
-                    //select the first item
-                    $scope.autocomplete_options.menu_items[0].selected = true;
-                });
-            }
-            else if ($keycode === 38) {
-                //up arrow pressed
-                AutocompleteFactory.autocompleteUpArrow($scope.autocomplete_options.menu_items);
-
-            }
-            else if ($keycode === 40) {
-                //down arrow pressed
-                AutocompleteFactory.autocompleteDownArrow($scope.autocomplete_options.menu_items);
-            }
-        };
-
-        /**
-         * For when the user presses enter from any of the relevant input fields.
-         * If enter is to complete the autocomplete, call appropriate functions.
-         * If enter is to add an entry, call the appropriate function.
-         * @param $keycode
-         */
-        $scope.insertOrAutocompleteMenuEntry = function ($keycode) {
-            if ($keycode !== 13) {
-                return;
-            }
-
-            //enter is pressed
-            if ($scope.showAutocompleteOptions.menu_items) {
-                //if enter is for the autocomplete
-                $scope.finishMenuAutocomplete($scope.autocomplete_options.menu_items, $("#food-quantity"));
-
-                if ($scope.selected.menu.type === 'recipe') {
-                    $scope.showTemporaryRecipePopup();
-                }
-            }
-
-            // enter is to add the entry
-            else {
-                $scope.insertMenuEntry();
-            }
-        };
-
-        $scope.finishMenuAutocomplete = function ($array, $set_focus) {
-            //array, input_to_focus, autocomplete_to_hide, input_to_fill, selected_property_to_define
-            var $selected = _.findWhere($array, {selected: true});
-            $scope.selected.food = $selected;
-            $scope.new_entry.menu = $selected;
-            $scope.selected.menu = $selected;
-            $scope.showAutocompleteOptions.menu_items = false;
-            $($set_focus).val("").focus();
-        };
-
-        /**
-         * autocomplete temporary recipe food
-         */
-
-        $scope.autocompleteTemporaryRecipeFood = function ($keycode) {
-            var $typing = $("#temporary-recipe-food-input").val();
-
-            if ($keycode !== 13 && $keycode !== 38 && $keycode !== 40) {
-                //not enter, up arrow or down arrow
-                //fill the dropdown
-                AutocompleteFactory.food($typing).then(function (response) {
-                    $scope.autocomplete_options.temporary_recipe_foods = response.data;
-                    //show the dropdown
-                    $scope.showAutocompleteOptions.temporary_recipe_foods = true;
-                    //select the first item
-                    $scope.autocomplete_options.temporary_recipe_foods[0].selected = true;
-                });
-            }
-            else if ($keycode === 38) {
-                //up arrow pressed
-                AutocompleteFactory.autocompleteUpArrow($scope.autocomplete_options.temporary_recipe_foods);
-
-            }
-            else if ($keycode === 40) {
-                //down arrow pressed
-                AutocompleteFactory.autocompleteDownArrow($scope.autocomplete_options.temporary_recipe_foods);
-            }
-        };
-
-        $scope.finishTemporaryRecipeFoodAutocomplete = function ($array, $set_focus) {
-            //array, input_to_focus, autocomplete_to_hide, input_to_fill, selected_property_to_define
-            var $selected = _.findWhere($array, {selected: true});
-            $scope.temporary_recipe_popup.food = $selected;
-            $scope.selected.food = $selected;
-            $scope.showAutocompleteOptions.temporary_recipe_foods = false;
-            $($set_focus).val("").focus();
-        };
-
-        $scope.insertOrAutocompleteTemporaryRecipeFood = function ($keycode) {
-            if ($keycode !== 13) {
-                return;
-            }
-            //enter is pressed
-            if ($scope.showAutocompleteOptions.temporary_recipe_foods) {
-                //enter is for the autocomplete
-                $scope.finishTemporaryRecipeFoodAutocomplete($scope.autocomplete_options.temporary_recipe_foods, $("#temporary-recipe-popup-food-quantity"));
-                // $scope.displayAssocUnitOptions();
-            }
-            else {
-                // if enter is to add the entry
-                $scope.insertFoodIntoTemporaryRecipe();
-            }
-        };
-
-        $scope.insertFoodIntoTemporaryRecipe = function () {
-            //we are adding a food to a temporary recipe
-            var $unit_name = $("#temporary-recipe-popup-unit option:selected").text();
-            $scope.temporary_recipe_popup.contents.push({
-                "food_id": $scope.temporary_recipe_popup.food.id,
-                "name": $scope.temporary_recipe_popup.food.name,
-                "quantity": $scope.temporary_recipe_popup.quantity,
-                "unit_id": $("#temporary-recipe-popup-unit").val(),
-                "unit_name": $unit_name,
-                "units": $scope.temporary_recipe_popup.food.units
-            });
-
-            $("#temporary-recipe-food-input").val("").focus();
-        };
-
-        $scope.deleteFromTemporaryRecipe = function ($item) {
-            $scope.temporary_recipe_popup.contents = _.without($scope.temporary_recipe_popup.contents, $item);
-        };
-
-        $scope.showTemporaryRecipePopup = function () {
-            $scope.show.popups.temporary_recipe = true;
-            FoodsFactory.getRecipeContents($scope.selected.menu.id).then(function (response) {
-                $scope.temporary_recipe_popup = response.data;
-
-                $($scope.temporary_recipe_popup.contents).each(function () {
-                    this.original_quantity = this.quantity;
-                });
-            });
-        };
-
-        $scope.showDeleteFoodOrRecipeEntryPopup = function ($entry_id, $recipe_id) {
-            $scope.show.popups.delete_food_or_recipe_entry = true;
-            $scope.selected.entry = {
-                id: $entry_id
-            };
-            $scope.selected.recipe = {
-                id: $recipe_id
-            };
-        };
-
-    });
 angular.module('tracker')
     .controller('FoodUnitsController', function ($scope, $rootScope, FoodUnitsFactory) {
         $scope.units = units;
@@ -14653,6 +14141,518 @@ var app = angular.module('tracker');
 var app = angular.module('tracker');
 
 (function () {
+    app.controller('entries', function ($rootScope, $scope, $http, DatesFactory, AutocompleteFactory, WeightsFactory) {
+
+        $scope.weight = weight;
+
+        $scope.calories = {
+            day: calories_for_the_day,
+            week_avg: calories_for_the_week
+        };
+
+        $scope.showAutocompleteOptions = {};
+
+        //new entry
+        $scope.new_entry = {
+            exercise: {
+                unit: {}
+            },
+            exercise_unit: {},
+            menu: {},
+            food: {},
+        };
+
+        //autocomplete
+        $scope.autocomplete_options = {
+            exercises: {},
+            menu_items: {},
+            foods: {},
+            temporary_recipe_foods: {}
+        };
+
+
+        $scope.edit_weight = false;
+
+        $scope.date = {};
+
+        if ($scope.date.typed === undefined) {
+            $scope.date.typed = Date.parse('today').toString('dd/MM/yyyy');
+        }
+        $scope.date.long = Date.parse($scope.date.typed).toString('dd MMM yyyy');
+
+        $scope.goToDate = function ($number) {
+            $scope.date.typed = DatesFactory.goToDate($scope.date.typed, $number);
+        };
+
+        $scope.today = function () {
+            $scope.date.typed = DatesFactory.today();
+        };
+        $scope.changeDate = function ($keycode) {
+            if ($keycode === 13) {
+                $scope.date.typed = DatesFactory.changeDate($keycode, $("#date").val());
+            }
+        };
+
+        /**
+         * watches
+         */
+
+        $scope.$watch('date.typed', function (newValue, oldValue) {
+            $scope.date.sql = Date.parse($scope.date.typed).toString('yyyy-MM-dd');
+            $scope.date.long = Date.parse($scope.date.typed).toString('ddd dd MMM yyyy');
+            $("#date").val(newValue);
+
+            if (newValue === oldValue) {
+                // $scope.pageLoad();
+            }
+            else {
+                $scope.getEntries();
+            }
+        });
+
+        $("#food").val("");
+        $("#weight").val("");
+
+        /**
+         * Get all the user's entries for the current date:
+         * exercise entries
+         * menu entries
+         * weight
+         * calories for the day
+         * calorie average for the week
+         */
+        $scope.getEntries = function () {
+            $rootScope.$emit('getEntries');
+        };
+
+        $rootScope.$on('getEntries', function () {
+            $rootScope.showLoading();
+            WeightsFactory.getEntriesForTheDay($scope.date.sql)
+                .then(function (response) {
+                    $scope.weight = response.data;
+                    //$rootScope.$broadcast('provideFeedback', '');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        });
+
+        $scope.insertOrUpdateWeight = function ($keycode) {
+            if ($keycode === 13) {
+                WeightsFactory.insertWeight($scope.date.sql).then(function (response) {
+                    $scope.weight = response.data;
+                    $scope.edit_weight = false;
+                    $("#weight").val("");
+                });
+            }
+        };
+
+        $scope.editWeight = function () {
+            $scope.edit_weight = true;
+            setTimeout(function () {
+                $("#weight").focus();
+            }, 500);
+        };
+
+        /**
+         * media queries
+         */
+
+        enquire.register("screen and (max-width: 890px", {
+            match: function () {
+                $("#avg-calories-for-the-week-text").text('Avg: ');
+            },
+            unmatch: function () {
+                $("#avg-calories-for-the-week-text").text('Avg calories (last 7 days): ');
+            }
+        });
+
+    });
+
+})();
+angular.module('tracker')
+    .controller('ExerciseEntriesController', function ($rootScope, $scope, ExerciseEntriesFactory, AutocompleteFactory) {
+
+        $scope.exerciseEntries = exerciseEntries;
+        $scope.exerciseUnits = exerciseUnits;
+
+        $scope.selectedExercise = {};
+
+        $rootScope.$on('getEntries', function () {
+            $rootScope.showLoading();
+            ExerciseEntriesFactory.getEntriesForTheDay($scope.date.sql)
+                .then(function (response) {
+                    $scope.exerciseEntries = response.data;
+                    //$rootScope.$broadcast('provideFeedback', '');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        });
+
+        /**
+         * Get all the the user's entries for a particular exercise
+         * with a particular unit on a particular date.
+         * @param $entry
+         */
+        $scope.getSpecificExerciseEntries = function ($entry) {
+            $rootScope.showLoading();
+            ExerciseEntriesFactory.getSpecificExerciseEntries($scope.date.sql, $entry)
+                .then(function (response) {
+                    $scope.show.popups.exercise_entries = true;
+                    $scope.exercise_entries_popup = response.data;
+                    //$rootScope.$broadcast('provideFeedback', '');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        };
+
+        $scope.insertExerciseEntry = function () {
+            $scope.new_entry.exercise.unit_id = $("#exercise-unit").val();
+            $rootScope.showLoading();
+            ExerciseEntriesFactory.insert($scope.date.sql, $scope.newEntry)
+                .then(function (response) {
+                    $scope.exerciseEntries = response.data;
+                    //$rootScope.$broadcast('provideFeedback', '');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        };
+
+        $scope.insertExerciseSet = function ($exercise) {
+            $rootScope.showLoading();
+            ExerciseEntriesFactory.insertExerciseSet($scope.date.sql, $exercise)
+                .then(function (response) {
+                    $scope.exerciseEntries = response.data;
+                    //$rootScope.$broadcast('provideFeedback', '');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        };
+
+        //Todo: get the entries for the day after deleting the entry
+        $scope.deleteExerciseEntry = function ($entry) {
+            ExerciseEntriesFactory.deleteExerciseEntry($entry)
+                .then(function (response) {
+                    //$scope.entries.exercise = response.data.entries_for_day;
+                    $scope.exercise_entries_popup.entries = _.without($scope.exercise_entries_popup.entries, $entry);
+                    $rootScope.$broadcast('provideFeedback', 'Entry deleted');
+                });
+        };
+
+        /**
+         * Autocomplete
+         */
+
+        $scope.autocompleteExercise = function ($keycode) {
+            if ($keycode !== 13 && $keycode !== 38 && $keycode !== 40) {
+                //not enter, up arrow or down arrow
+                AutocompleteFactory.exercise().then(function (response) {
+                    //fill the dropdown
+                    $scope.autocomplete_options.exercises = response.data;
+                    //show the dropdown
+                    $scope.showAutocompleteOptions.exercises = true;
+                    //select the first item
+                    $scope.autocomplete_options.exercises[0].selected = true;
+                });
+            }
+            else if ($keycode === 38) {
+                //up arrow pressed
+                AutocompleteFactory.autocompleteUpArrow($scope.autocomplete_options.exercises);
+
+            }
+            else if ($keycode === 40) {
+                //down arrow pressed
+                AutocompleteFactory.autocompleteDownArrow($scope.autocomplete_options.exercises);
+            }
+        };
+
+        $scope.finishExerciseAutocomplete = function ($array, $selected) {
+            //array, input_to_focus, autocomplete_to_hide, input_to_fill, selected_property_to_define
+            $selected = $selected || _.findWhere($array, {selected: true});
+            $scope.selectedExercise = $selected;
+            $scope.selectedExercise.unit_id = $scope.selectedExercise.default_unit_id;
+            $scope.newEntry = $selected;
+            $scope.newEntry.quantity = $scope.selectedExercise.default_quantity;
+            $scope.selectedExercise = $selected;
+            $scope.showAutocompleteOptions.exercises = false;
+            setTimeout(function () {
+                $("#exercise-quantity").focus().select();
+            }, 500);
+        };
+
+        $scope.insertOrAutocompleteExerciseEntry = function ($keycode) {
+            if ($keycode !== 13) {
+                return;
+            }
+            //enter is pressed
+            if ($scope.showAutocompleteOptions.exercises) {
+                //if enter is for the autocomplete
+                $scope.finishExerciseAutocomplete($scope.autocomplete_options.exercises);
+            }
+            else {
+                // if enter is to add the entry
+                $scope.insertExerciseEntry();
+            }
+        };
+
+    });
+angular.module('tracker')
+    .controller('MenuEntriesController', function ($rootScope, $scope, MenuEntriesFactory, RecipeEntriesFactory) {
+
+        $scope.menuEntries = menuEntries;
+
+        //$scope.$watch('recipe.portion', function (newValue, oldValue) {
+        //    $($scope.temporary_recipe_popup.contents).each(function () {
+        //        if (this.original_quantity) {
+        //            //making sure we don't alter the quantity of a food that has been added to the temporary recipe (by doing the if check)
+        //            this.quantity = this.original_quantity * newValue;
+        //        }
+        //    });
+        //});
+
+        $scope.selected = {
+            dropdown_item: {},
+            food: {},
+            unit: {}
+        };
+
+        $rootScope.$on('getEntries', function () {
+            $rootScope.showLoading();
+            MenuEntriesFactory.getEntriesForTheDay($scope.date.sql)
+                .then(function (response) {
+                    $scope.menuEntries = response.data;
+                    //$rootScope.$broadcast('provideFeedback', '');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        });
+
+        $scope.insertMenuEntry = function () {
+            $scope.new_entry.food.id = $scope.selected.food.id;
+            $scope.new_entry.food.name = $scope.selected.food.name;
+            $scope.new_entry.food.unit_id = $("#food-unit").val();
+
+            MenuEntriesFactory.insertMenuEntry($scope.date.sql, $scope.new_entry.food).then(function (response) {
+                $scope.entries.menu = response.data.food_entries;
+                $scope.calories.day = response.data.calories_for_the_day;
+                $scope.calories.week_avg = response.data.calories_for_the_week;
+
+                if ($scope.temporary_recipe_popup.contents) {
+                    $scope.temporary_recipe_popup.contents.length = 0;
+                }
+                $scope.loading = false;
+            });
+        };
+
+        $scope.insertRecipeEntry = function () {
+            RecipeEntriesFactory.insertRecipeEntry($scope.date.sql, $scope.selected.menu.id, $scope.temporary_recipe_popup.contents).then(function (response) {
+                $scope.entries.menu = response.data;
+                $scope.show.popups.temporary_recipe = false;
+            });
+        };
+
+        $scope.deleteFoodEntry = function ($entry_id) {
+            $entry_id = $entry_id || $scope.selected.entry.id;
+
+            MenuEntriesFactory.deleteFoodEntry($entry_id, $scope.date.sql).then(function (response) {
+                $scope.entries.menu = response.data.food_entries;
+                $scope.calories.day = response.data.calories_for_the_day;
+                $scope.calories.week_avg = response.data.calories_for_the_week;
+                $scope.show.popups.delete_food_or_recipe_entry = false;
+            });
+        };
+
+        //Todo: get food entries, calories for the day and calories for the week
+        //after deleting
+        $scope.deleteRecipeEntry = function () {
+            RecipeEntriesFactory.deleteRecipeEntry($scope.date.sql, $scope.selected.recipe.id).then(function (response) {
+                $scope.entries.menu = response.data.food_entries;
+                $scope.calories.day = response.data.calories_for_the_day;
+                $scope.calories.week_avg = response.data.calories_for_the_week;
+                $scope.show.popups.delete_food_or_recipe_entry = false;
+            });
+        };
+
+        /**
+         * autocomplete
+         */
+
+        /**
+         * As user types in the input, populate the dropdown.
+         * If user presses arrows, select the appropriate item in the dropdown.
+         * If user presses enter, that is taken care of in $scope.insertOrAutocompleteMenuEntry.
+         * @param $keycode
+         */
+        $scope.autocompleteMenu = function ($keycode) {
+            if ($keycode !== 13 && $keycode !== 38 && $keycode !== 40) {
+                //not enter, up arrow or down arrow
+                AutocompleteFactory.menu().then(function (response) {
+                    console.log(response);
+                    //fill the dropdown
+                    $scope.autocomplete_options.menu_items = response.data;
+                    //show the dropdown
+                    $scope.showAutocompleteOptions.menu_items = true;
+                    //select the first item
+                    $scope.autocomplete_options.menu_items[0].selected = true;
+                });
+            }
+            else if ($keycode === 38) {
+                //up arrow pressed
+                AutocompleteFactory.autocompleteUpArrow($scope.autocomplete_options.menu_items);
+
+            }
+            else if ($keycode === 40) {
+                //down arrow pressed
+                AutocompleteFactory.autocompleteDownArrow($scope.autocomplete_options.menu_items);
+            }
+        };
+
+        /**
+         * For when the user presses enter from any of the relevant input fields.
+         * If enter is to complete the autocomplete, call appropriate functions.
+         * If enter is to add an entry, call the appropriate function.
+         * @param $keycode
+         */
+        $scope.insertOrAutocompleteMenuEntry = function ($keycode) {
+            if ($keycode !== 13) {
+                return;
+            }
+
+            //enter is pressed
+            if ($scope.showAutocompleteOptions.menu_items) {
+                //if enter is for the autocomplete
+                $scope.finishMenuAutocomplete($scope.autocomplete_options.menu_items, $("#food-quantity"));
+
+                if ($scope.selected.menu.type === 'recipe') {
+                    $scope.showTemporaryRecipePopup();
+                }
+            }
+
+            // enter is to add the entry
+            else {
+                $scope.insertMenuEntry();
+            }
+        };
+
+        $scope.finishMenuAutocomplete = function ($array, $set_focus) {
+            //array, input_to_focus, autocomplete_to_hide, input_to_fill, selected_property_to_define
+            var $selected = _.findWhere($array, {selected: true});
+            $scope.selected.food = $selected;
+            $scope.new_entry.menu = $selected;
+            $scope.selected.menu = $selected;
+            $scope.showAutocompleteOptions.menu_items = false;
+            $($set_focus).val("").focus();
+        };
+
+        /**
+         * autocomplete temporary recipe food
+         */
+
+        $scope.autocompleteTemporaryRecipeFood = function ($keycode) {
+            var $typing = $("#temporary-recipe-food-input").val();
+
+            if ($keycode !== 13 && $keycode !== 38 && $keycode !== 40) {
+                //not enter, up arrow or down arrow
+                //fill the dropdown
+                AutocompleteFactory.food($typing).then(function (response) {
+                    $scope.autocomplete_options.temporary_recipe_foods = response.data;
+                    //show the dropdown
+                    $scope.showAutocompleteOptions.temporary_recipe_foods = true;
+                    //select the first item
+                    $scope.autocomplete_options.temporary_recipe_foods[0].selected = true;
+                });
+            }
+            else if ($keycode === 38) {
+                //up arrow pressed
+                AutocompleteFactory.autocompleteUpArrow($scope.autocomplete_options.temporary_recipe_foods);
+
+            }
+            else if ($keycode === 40) {
+                //down arrow pressed
+                AutocompleteFactory.autocompleteDownArrow($scope.autocomplete_options.temporary_recipe_foods);
+            }
+        };
+
+        $scope.finishTemporaryRecipeFoodAutocomplete = function ($array, $set_focus) {
+            //array, input_to_focus, autocomplete_to_hide, input_to_fill, selected_property_to_define
+            var $selected = _.findWhere($array, {selected: true});
+            $scope.temporary_recipe_popup.food = $selected;
+            $scope.selected.food = $selected;
+            $scope.showAutocompleteOptions.temporary_recipe_foods = false;
+            $($set_focus).val("").focus();
+        };
+
+        $scope.insertOrAutocompleteTemporaryRecipeFood = function ($keycode) {
+            if ($keycode !== 13) {
+                return;
+            }
+            //enter is pressed
+            if ($scope.showAutocompleteOptions.temporary_recipe_foods) {
+                //enter is for the autocomplete
+                $scope.finishTemporaryRecipeFoodAutocomplete($scope.autocomplete_options.temporary_recipe_foods, $("#temporary-recipe-popup-food-quantity"));
+                // $scope.displayAssocUnitOptions();
+            }
+            else {
+                // if enter is to add the entry
+                $scope.insertFoodIntoTemporaryRecipe();
+            }
+        };
+
+        $scope.insertFoodIntoTemporaryRecipe = function () {
+            //we are adding a food to a temporary recipe
+            var $unit_name = $("#temporary-recipe-popup-unit option:selected").text();
+            $scope.temporary_recipe_popup.contents.push({
+                "food_id": $scope.temporary_recipe_popup.food.id,
+                "name": $scope.temporary_recipe_popup.food.name,
+                "quantity": $scope.temporary_recipe_popup.quantity,
+                "unit_id": $("#temporary-recipe-popup-unit").val(),
+                "unit_name": $unit_name,
+                "units": $scope.temporary_recipe_popup.food.units
+            });
+
+            $("#temporary-recipe-food-input").val("").focus();
+        };
+
+        $scope.deleteFromTemporaryRecipe = function ($item) {
+            $scope.temporary_recipe_popup.contents = _.without($scope.temporary_recipe_popup.contents, $item);
+        };
+
+        $scope.showTemporaryRecipePopup = function () {
+            $scope.show.popups.temporary_recipe = true;
+            FoodsFactory.getRecipeContents($scope.selected.menu.id).then(function (response) {
+                $scope.temporary_recipe_popup = response.data;
+
+                $($scope.temporary_recipe_popup.contents).each(function () {
+                    this.original_quantity = this.quantity;
+                });
+            });
+        };
+
+        $scope.showDeleteFoodOrRecipeEntryPopup = function ($entry_id, $recipe_id) {
+            $scope.show.popups.delete_food_or_recipe_entry = true;
+            $scope.selected.entry = {
+                id: $entry_id
+            };
+            $scope.selected.recipe = {
+                id: $recipe_id
+            };
+        };
+
+    });
+var app = angular.module('tracker');
+
+(function () {
     app.controller('ExerciseTagsController', function ($rootScope, $scope, ExerciseTagsFactory) {
 
         $scope.tags = exercise_tags;
@@ -14935,7 +14935,7 @@ var app = angular.module('tracker');
 var app = angular.module('tracker');
 
 (function () {
-    app.controller('workouts', function ($scope, $http, ExercisesFactory, WorkoutsFactory) {
+    app.controller('workouts', function ($rootScope, $scope, $http, ExercisesFactory, WorkoutsFactory) {
 
         $scope.workouts = workouts;
 
@@ -14943,9 +14943,16 @@ var app = angular.module('tracker');
             if ($keypress !== 13) {
                 return;
             }
-            WorkoutsFactory.insertWorkout().then(function (response) {
-                $scope.workouts = response.data;
-            });
+            $rootScope.showLoading();
+            WorkoutsFactory.insertWorkout()
+                .then(function (response) {
+                    $scope.workouts.push(response.data.data);
+                    $rootScope.$broadcast('provideFeedback', 'Workout created');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
         };
 
         $scope.insertSeriesIntoWorkout = function () {
@@ -15098,255 +15105,6 @@ app.factory('ErrorsFactory', function ($q) {
 
     };
 });
-app.factory('WeightsFactory', function ($http) {
-    return {
-
-        getEntriesForTheDay: function ($date) {
-            var $url = 'api/weights/' + $date;
-            return $http.get($url);
-        },
-
-        insertWeight: function ($sql_date) {
-            var $url = 'insert/weight';
-            var $weight = $("#weight").val();
-
-            var $data = {
-                date: $sql_date,
-                weight: $weight
-            };
-
-            return $http.post($url, $data);
-        },
-
-
-    };
-});
-angular.module('tracker')
-    .factory('ExerciseEntriesFactory', function ($http) {
-        return {
-            getSpecificExerciseEntries: function ($sql_date, $entry) {
-                var $url = 'api/select/specificExerciseEntries';
-                var $data = {
-                    date: $sql_date,
-                    exercise_id: $entry.exercise.id,
-                    exercise_unit_id: $entry.unit.id
-                };
-
-                return $http.post($url, $data);
-            },
-            getEntriesForTheDay: function ($date) {
-                var $url = 'api/exerciseEntries/' + $date;
-                return $http.get($url);
-            },
-            insert: function ($sqlDate, $newEntry) {
-                var $url = 'api/exerciseEntries';
-
-                var $data = {
-                    date: $sqlDate,
-                    exercise_id: $newEntry.id,
-                    quantity: $newEntry.quantity,
-                    unit_id: $newEntry.unit_id
-                };
-
-                $("#exercise").val("").focus();
-
-                return $http.post($url, $data);
-            },
-            insertExerciseSet: function ($sqlDate, $exercise) {
-                var $url = 'api/exerciseEntries';
-                var $data = {
-                    date: $sqlDate,
-                    exercise_id: $exercise.id,
-                    exerciseSet: true
-                };
-
-                return $http.post($url, $data);
-            },
-
-            deleteExerciseEntry: function ($entry) {
-                if (confirm("Are you sure you want to delete this entry?")) {
-                    var $url = 'api/exerciseEntries/' + $entry.id;
-
-                    return $http.delete($url);
-                }
-            }
-        }
-    });
-angular.module('tracker')
-    .factory('ExerciseSeriesFactory', function ($http) {
-        return {
-
-            getExerciseSeriesInfo: function ($series) {
-                var $url = $series.path;
-
-                return $http.get($url);
-            },
-            getExerciseSeriesHistory: function ($series) {
-                var $url = 'api/seriesEntries/' + $series.id;
-
-                return $http.get($url);
-            },
-            insertExerciseSeries: function () {
-                var $name = $("#exercise-series").val();
-                var $url = '/exerciseSeries';
-                var $data = {
-                    name: $name
-                };
-
-                $("#exercise-series").val("");
-
-                return $http.post($url, $data);
-            },
-            deleteExerciseSeries: function ($series) {
-                if (confirm("Are you sure you want to delete this series?")) {
-                    var $url = $series.path;
-
-                    return $http.delete($url);
-                }
-            }
-        }
-    });
-angular.module('tracker')
-    .factory('ExerciseTagsFactory', function ($http) {
-        return {
-
-            insert: function () {
-                var $name = $("#create-exercise-tag").val();
-                var $url = 'api/exerciseTags';
-                var $data = {
-                    name: $name
-                };
-
-                $("#create-exercise-tag").val("");
-
-                return $http.post($url, $data);
-            },
-
-            destroy: function ($tag) {
-                if (confirm("Are you sure you want to delete this tag?")) {
-                    var $url = 'api/exerciseTags/' + $tag.id;
-
-                    return $http.delete($url);
-                }
-            },
-        }
-    });
-angular.module('tracker')
-    .factory('ExerciseUnitsFactory', function ($http) {
-        return {
-            insert: function () {
-                var $url = 'api/exerciseUnits';
-                var $name = $("#create-new-exercise-unit").val();
-
-                var $data = {
-                    name: $name
-                };
-
-                $("#create-new-exercise-unit").val("");
-                return $http.post($url, $data);
-            },
-            destroy: function ($unit) {
-                if (confirm("Are you sure you want to delete this unit?")) {
-                    var $url = 'api/exerciseUnits/' + $unit.id;
-
-                    return $http.delete($url);
-                }
-            }
-        }
-    });
-app.factory('ExercisesFactory', function ($http) {
-    return {
-
-        show: function ($exercise) {
-            var $url = 'api/exercises/' + $exercise.id;
-
-            return $http.get($url);
-        },
-
-        insertTagsInExercise: function ($exercise_id, $tags) {
-            var $url = 'insert/tagsInExercise';
-            var $data = {
-                exercise_id: $exercise_id,
-                tags: $tags
-            };
-
-            return $http.post($url, $data);
-        },
-
-        insert: function () {
-            var $url = 'api/exercises';
-            var $name = $("#create-new-exercise").val();
-            var $description = $("#exercise-description").val();
-
-            var $data = {
-                name: $name,
-                description: $description
-            };
-
-            $("#create-new-exercise, #exercise-description").val("");
-            return $http.post($url, $data);
-        },
-
-        update: function ($exercise) {
-            var $url = 'api/exercises/' + $exercise.id;
-
-            var $data = {
-                name: $exercise.name,
-                step_number: $exercise.stepNumber,
-                series_id: $exercise.series.id,
-                default_quantity: $exercise.defaultQuantity,
-                description: $exercise.description,
-                default_unit_id: $exercise.defaultUnit.id
-            };
-
-            $("#exercise-step-number").val("");
-
-            return $http.put($url, $data);
-        },
-
-        destroy: function ($exercise) {
-            if (confirm("Are you sure you want to delete this exercise?")) {
-                var $url = 'api/exercises/' + $exercise.id;
-
-                return $http.delete($url);
-            }
-        },
-    };
-});
-angular.module('tracker')
-    .factory('WorkoutsFactory', function ($http) {
-        return {
-            insertWorkout: function () {
-                var $url = '/workouts';
-                var $name = $("#workout").val();
-                var $data = {
-                    name: $name
-                };
-
-                $("#workout").val("");
-
-                return $http.post($url, $data);
-            },
-            insertSeriesIntoWorkout: function ($workout_id, $series_id) {
-                var $url = 'insert/seriesIntoWorkout';
-                var $data = {
-                    workout_id: $workout_id,
-                    series_id: $series_id
-                };
-
-                return $http.post($url, $data);
-            },
-            deleteAndInsertSeriesIntoWorkouts: function ($series_id, $workouts) {
-                var $url = 'insert/deleteAndInsertSeriesIntoWorkouts';
-                var $data = {
-                    series_id: $series_id,
-                    workout_ids: $workouts
-                };
-
-                return $http.post($url, $data);
-            },
-        }
-    });
 angular.module('tracker')
     .factory('FoodUnitsFactory', function ($http) {
         return {
@@ -15929,6 +15687,255 @@ angular.module('tracker')
             }
         }
     });
+angular.module('tracker')
+    .factory('ExerciseEntriesFactory', function ($http) {
+        return {
+            getSpecificExerciseEntries: function ($sql_date, $entry) {
+                var $url = 'api/select/specificExerciseEntries';
+                var $data = {
+                    date: $sql_date,
+                    exercise_id: $entry.exercise.id,
+                    exercise_unit_id: $entry.unit.id
+                };
+
+                return $http.post($url, $data);
+            },
+            getEntriesForTheDay: function ($date) {
+                var $url = 'api/exerciseEntries/' + $date;
+                return $http.get($url);
+            },
+            insert: function ($sqlDate, $newEntry) {
+                var $url = 'api/exerciseEntries';
+
+                var $data = {
+                    date: $sqlDate,
+                    exercise_id: $newEntry.id,
+                    quantity: $newEntry.quantity,
+                    unit_id: $newEntry.unit_id
+                };
+
+                $("#exercise").val("").focus();
+
+                return $http.post($url, $data);
+            },
+            insertExerciseSet: function ($sqlDate, $exercise) {
+                var $url = 'api/exerciseEntries';
+                var $data = {
+                    date: $sqlDate,
+                    exercise_id: $exercise.id,
+                    exerciseSet: true
+                };
+
+                return $http.post($url, $data);
+            },
+
+            deleteExerciseEntry: function ($entry) {
+                if (confirm("Are you sure you want to delete this entry?")) {
+                    var $url = 'api/exerciseEntries/' + $entry.id;
+
+                    return $http.delete($url);
+                }
+            }
+        }
+    });
+angular.module('tracker')
+    .factory('ExerciseSeriesFactory', function ($http) {
+        return {
+
+            getExerciseSeriesInfo: function ($series) {
+                var $url = $series.path;
+
+                return $http.get($url);
+            },
+            getExerciseSeriesHistory: function ($series) {
+                var $url = 'api/seriesEntries/' + $series.id;
+
+                return $http.get($url);
+            },
+            insertExerciseSeries: function () {
+                var $name = $("#exercise-series").val();
+                var $url = '/exerciseSeries';
+                var $data = {
+                    name: $name
+                };
+
+                $("#exercise-series").val("");
+
+                return $http.post($url, $data);
+            },
+            deleteExerciseSeries: function ($series) {
+                if (confirm("Are you sure you want to delete this series?")) {
+                    var $url = $series.path;
+
+                    return $http.delete($url);
+                }
+            }
+        }
+    });
+angular.module('tracker')
+    .factory('ExerciseTagsFactory', function ($http) {
+        return {
+
+            insert: function () {
+                var $name = $("#create-exercise-tag").val();
+                var $url = 'api/exerciseTags';
+                var $data = {
+                    name: $name
+                };
+
+                $("#create-exercise-tag").val("");
+
+                return $http.post($url, $data);
+            },
+
+            destroy: function ($tag) {
+                if (confirm("Are you sure you want to delete this tag?")) {
+                    var $url = 'api/exerciseTags/' + $tag.id;
+
+                    return $http.delete($url);
+                }
+            },
+        }
+    });
+angular.module('tracker')
+    .factory('ExerciseUnitsFactory', function ($http) {
+        return {
+            insert: function () {
+                var $url = 'api/exerciseUnits';
+                var $name = $("#create-new-exercise-unit").val();
+
+                var $data = {
+                    name: $name
+                };
+
+                $("#create-new-exercise-unit").val("");
+                return $http.post($url, $data);
+            },
+            destroy: function ($unit) {
+                if (confirm("Are you sure you want to delete this unit?")) {
+                    var $url = 'api/exerciseUnits/' + $unit.id;
+
+                    return $http.delete($url);
+                }
+            }
+        }
+    });
+app.factory('ExercisesFactory', function ($http) {
+    return {
+
+        show: function ($exercise) {
+            var $url = 'api/exercises/' + $exercise.id;
+
+            return $http.get($url);
+        },
+
+        insertTagsInExercise: function ($exercise_id, $tags) {
+            var $url = 'insert/tagsInExercise';
+            var $data = {
+                exercise_id: $exercise_id,
+                tags: $tags
+            };
+
+            return $http.post($url, $data);
+        },
+
+        insert: function () {
+            var $url = 'api/exercises';
+            var $name = $("#create-new-exercise").val();
+            var $description = $("#exercise-description").val();
+
+            var $data = {
+                name: $name,
+                description: $description
+            };
+
+            $("#create-new-exercise, #exercise-description").val("");
+            return $http.post($url, $data);
+        },
+
+        update: function ($exercise) {
+            var $url = 'api/exercises/' + $exercise.id;
+
+            var $data = {
+                name: $exercise.name,
+                step_number: $exercise.stepNumber,
+                series_id: $exercise.series.id,
+                default_quantity: $exercise.defaultQuantity,
+                description: $exercise.description,
+                default_unit_id: $exercise.defaultUnit.id
+            };
+
+            $("#exercise-step-number").val("");
+
+            return $http.put($url, $data);
+        },
+
+        destroy: function ($exercise) {
+            if (confirm("Are you sure you want to delete this exercise?")) {
+                var $url = 'api/exercises/' + $exercise.id;
+
+                return $http.delete($url);
+            }
+        },
+    };
+});
+angular.module('tracker')
+    .factory('WorkoutsFactory', function ($http) {
+        return {
+            insertWorkout: function () {
+                var $url = '/api/workouts';
+                var $name = $("#workout").val();
+                var $data = {
+                    name: $name
+                };
+
+                $("#workout").val("");
+
+                return $http.post($url, $data);
+            },
+            insertSeriesIntoWorkout: function ($workout_id, $series_id) {
+                var $url = 'insert/seriesIntoWorkout';
+                var $data = {
+                    workout_id: $workout_id,
+                    series_id: $series_id
+                };
+
+                return $http.post($url, $data);
+            },
+            deleteAndInsertSeriesIntoWorkouts: function ($series_id, $workouts) {
+                var $url = 'insert/deleteAndInsertSeriesIntoWorkouts';
+                var $data = {
+                    series_id: $series_id,
+                    workout_ids: $workouts
+                };
+
+                return $http.post($url, $data);
+            },
+        }
+    });
+app.factory('WeightsFactory', function ($http) {
+    return {
+
+        getEntriesForTheDay: function ($date) {
+            var $url = 'api/weights/' + $date;
+            return $http.get($url);
+        },
+
+        insertWeight: function ($sql_date) {
+            var $url = 'insert/weight';
+            var $weight = $("#weight").val();
+
+            var $data = {
+                date: $sql_date,
+                weight: $weight
+            };
+
+            return $http.post($url, $data);
+        },
+
+
+    };
+});
 app.factory('JournalFactory', function ($http) {
     return {
 

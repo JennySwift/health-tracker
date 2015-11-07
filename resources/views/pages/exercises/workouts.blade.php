@@ -9,7 +9,7 @@
 
 @include('templates.header')
 
-<div ng-controller="workouts" id="exercises" class="container">
+<div ng-controller="workouts" class="container">
 
     <div id="workouts">
         <h2 class="center">Workouts</h2>

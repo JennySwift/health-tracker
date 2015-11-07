@@ -1,7 +1,7 @@
 var app = angular.module('tracker');
 
 (function () {
-    app.controller('workouts', function ($scope, $http, ExercisesFactory, WorkoutsFactory) {
+    app.controller('workouts', function ($rootScope, $scope, $http, ExercisesFactory, WorkoutsFactory) {
 
         $scope.workouts = workouts;
 
@@ -9,9 +9,16 @@ var app = angular.module('tracker');
             if ($keypress !== 13) {
                 return;
             }
-            WorkoutsFactory.insertWorkout().then(function (response) {
-                $scope.workouts = response.data;
-            });
+            $rootScope.showLoading();
+            WorkoutsFactory.insertWorkout()
+                .then(function (response) {
+                    $scope.workouts.push(response.data.data);
+                    $rootScope.$broadcast('provideFeedback', 'Workout created');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
         };
 
         $scope.insertSeriesIntoWorkout = function () {

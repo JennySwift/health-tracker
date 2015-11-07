@@ -295,14 +295,6 @@ body.browser-height {
   #default-exercise-unit-popup-checkboxes label {
     padding: 2px 8px; }
 
-#workouts .flex {
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-wrap: wrap;
-  -ms-flex-wrap: wrap;
-  flex-wrap: wrap; }
-
 #exercise-popup h3:first-child {
   margin-top: 0;
   margin-bottom: 25px; }
@@ -323,6 +315,19 @@ body.browser-height {
 
 #series-history-popup h3 {
   margin: 0 0 17px 0; }
+
+#workouts .flex {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center; }
+  #workouts .flex > * {
+    margin: 50px; }
 
 .delete-item {
   font-size: 20px;
