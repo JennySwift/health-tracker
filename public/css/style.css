@@ -321,6 +321,9 @@ body.browser-height {
 #exercise-popup input {
   background: #FEE6BE; }
 
+#series-history-popup h3 {
+  margin: 0 0 17px 0; }
+
 .delete-item {
   font-size: 20px;
   color: red;

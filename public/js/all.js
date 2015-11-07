@@ -13327,6 +13327,131 @@ function runBlock ($rootScope, ErrorsFactory) {
 var app = angular.module('tracker');
 
 (function () {
+	app.controller('journal', function ($rootScope, $scope, $http, DatesFactory, JournalFactory) {
+		/**
+		 * scope properties
+		 */
+		
+		//journal
+		$scope.journal_entry = entry;
+
+		//date
+		/**
+		 * There is a lot of date stuff here that is duplication of the date stuff in EntriesController.js.
+		 * Any way of making it dry?
+		 */
+
+		$scope.date = {};
+		
+		if ($scope.date.typed === undefined) {
+			$scope.date.typed = Date.parse('today').toString('dd/MM/yyyy');
+		}
+		$scope.date.long = Date.parse($scope.date.typed).toString('dd MMM yyyy');
+
+		$scope.goToDate = function ($number) {
+			$scope.date.typed = DatesFactory.goToDate($scope.date.typed, $number);
+		};
+
+		$scope.today = function () {
+			$scope.date.typed = DatesFactory.today();
+		};
+		$scope.changeDate = function ($keycode, $date) {
+            if ($keycode !== 13) {
+                return false;
+            }
+            var $date = $date || $("#date").val();
+            $scope.date.typed = DatesFactory.changeDate($keycode, $date);
+		};
+
+		/**
+		 * plugins
+		 */
+		
+		$(".wysiwyg").wysiwyg();
+
+		/**
+		 * watches
+		 */
+		
+		$scope.$watch('date.typed', function (newValue, oldValue) {
+			$scope.date.sql = Date.parse($scope.date.typed).toString('yyyy-MM-dd');
+			$scope.date.long = Date.parse($scope.date.typed).toString('ddd dd MMM yyyy');
+			$("#date").val(newValue);
+
+			if (newValue === oldValue) {
+				// $scope.pageLoad();
+			}
+			else {
+				$scope.getJournalEntry();
+			}
+		});
+		
+		/**
+		 * select
+		 */
+		
+		$scope.getJournalEntry = function () {
+			JournalFactory.getJournalEntry($scope.date.sql).then(function (response) {
+				$scope.journal_entry = response.data.data;
+			});
+		};
+
+        $scope.filterJournalEntries = function ($keycode) {
+            if ($keycode !== 13) {
+                return false;
+            }
+            JournalFactory.filter().then(function (response) {
+                $scope.filter_results = response.data;
+            });
+        };
+
+        /**
+         * If the id of the journal entry exists, update the entry.
+         * If not, insert the entry.
+         */
+		$scope.insertOrUpdateJournalEntry = function () {
+            if ($scope.journal_entry.id) {
+                updateEntry();
+            }
+            else {
+                createEntry();
+            }
+
+		};
+
+        function updateEntry () {
+            $rootScope.showLoading();
+            JournalFactory.update($scope.journal_entry)
+                .then(function (response) {
+                    $scope.journal_entry = response.data.data;
+                    $rootScope.$broadcast('provideFeedback', 'Entry updated');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        }
+
+        function createEntry () {
+            $rootScope.showLoading();
+            JournalFactory.insert($scope.date.sql)
+                .then(function (response) {
+                    $scope.journal_entry = response.data.data;
+                    $rootScope.$broadcast('provideFeedback', 'Entry created');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        }
+
+		
+	});
+
+})();
+var app = angular.module('tracker');
+
+(function () {
     app.controller('entries', function ($rootScope, $scope, $http, DatesFactory, AutocompleteFactory, WeightsFactory) {
 
         $scope.weight = weight;
@@ -14742,11 +14867,13 @@ var app = angular.module('tracker');
          * select
          */
 
-        $scope.getExerciseSeriesHistory = function ($series_id) {
+        $scope.getExerciseSeriesHistory = function ($series) {
             $rootScope.showLoading();
-            ExerciseSeriesFactory.getExerciseSeriesHistory($series_id)
+            ExerciseSeriesFactory.getExerciseSeriesHistory($series)
                 .then(function (response) {
                     $scope.show.popups.exercise_series_history = true;
+                    //For displaying the name of the series in the popup
+                    $scope.selectedSeries = $series;
                     $scope.exercise_series_history = response.data;
                     //$rootScope.$broadcast('provideFeedback', '');
                     $rootScope.hideLoading();
@@ -14839,131 +14966,6 @@ var app = angular.module('tracker');
         };
 
     });
-
-})();
-var app = angular.module('tracker');
-
-(function () {
-	app.controller('journal', function ($rootScope, $scope, $http, DatesFactory, JournalFactory) {
-		/**
-		 * scope properties
-		 */
-		
-		//journal
-		$scope.journal_entry = entry;
-
-		//date
-		/**
-		 * There is a lot of date stuff here that is duplication of the date stuff in EntriesController.js.
-		 * Any way of making it dry?
-		 */
-
-		$scope.date = {};
-		
-		if ($scope.date.typed === undefined) {
-			$scope.date.typed = Date.parse('today').toString('dd/MM/yyyy');
-		}
-		$scope.date.long = Date.parse($scope.date.typed).toString('dd MMM yyyy');
-
-		$scope.goToDate = function ($number) {
-			$scope.date.typed = DatesFactory.goToDate($scope.date.typed, $number);
-		};
-
-		$scope.today = function () {
-			$scope.date.typed = DatesFactory.today();
-		};
-		$scope.changeDate = function ($keycode, $date) {
-            if ($keycode !== 13) {
-                return false;
-            }
-            var $date = $date || $("#date").val();
-            $scope.date.typed = DatesFactory.changeDate($keycode, $date);
-		};
-
-		/**
-		 * plugins
-		 */
-		
-		$(".wysiwyg").wysiwyg();
-
-		/**
-		 * watches
-		 */
-		
-		$scope.$watch('date.typed', function (newValue, oldValue) {
-			$scope.date.sql = Date.parse($scope.date.typed).toString('yyyy-MM-dd');
-			$scope.date.long = Date.parse($scope.date.typed).toString('ddd dd MMM yyyy');
-			$("#date").val(newValue);
-
-			if (newValue === oldValue) {
-				// $scope.pageLoad();
-			}
-			else {
-				$scope.getJournalEntry();
-			}
-		});
-		
-		/**
-		 * select
-		 */
-		
-		$scope.getJournalEntry = function () {
-			JournalFactory.getJournalEntry($scope.date.sql).then(function (response) {
-				$scope.journal_entry = response.data.data;
-			});
-		};
-
-        $scope.filterJournalEntries = function ($keycode) {
-            if ($keycode !== 13) {
-                return false;
-            }
-            JournalFactory.filter().then(function (response) {
-                $scope.filter_results = response.data;
-            });
-        };
-
-        /**
-         * If the id of the journal entry exists, update the entry.
-         * If not, insert the entry.
-         */
-		$scope.insertOrUpdateJournalEntry = function () {
-            if ($scope.journal_entry.id) {
-                updateEntry();
-            }
-            else {
-                createEntry();
-            }
-
-		};
-
-        function updateEntry () {
-            $rootScope.showLoading();
-            JournalFactory.update($scope.journal_entry)
-                .then(function (response) {
-                    $scope.journal_entry = response.data.data;
-                    $rootScope.$broadcast('provideFeedback', 'Entry updated');
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        }
-
-        function createEntry () {
-            $rootScope.showLoading();
-            JournalFactory.insert($scope.date.sql)
-                .then(function (response) {
-                    $scope.journal_entry = response.data.data;
-                    $rootScope.$broadcast('provideFeedback', 'Entry created');
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        }
-
-		
-	});
 
 })();
 app.factory('AutocompleteFactory', function ($http) {
@@ -15096,6 +15098,29 @@ app.factory('ErrorsFactory', function ($q) {
 
     };
 });
+app.factory('WeightsFactory', function ($http) {
+    return {
+
+        getEntriesForTheDay: function ($date) {
+            var $url = 'api/weights/' + $date;
+            return $http.get($url);
+        },
+
+        insertWeight: function ($sql_date) {
+            var $url = 'insert/weight';
+            var $weight = $("#weight").val();
+
+            var $data = {
+                date: $sql_date,
+                weight: $weight
+            };
+
+            return $http.post($url, $data);
+        },
+
+
+    };
+});
 angular.module('tracker')
     .factory('ExerciseEntriesFactory', function ($http) {
         return {
@@ -15156,8 +15181,8 @@ angular.module('tracker')
 
                 return $http.get($url);
             },
-            getExerciseSeriesHistory: function ($series_id) {
-                var $url = 'api/seriesEntries/' + $series_id;
+            getExerciseSeriesHistory: function ($series) {
+                var $url = 'api/seriesEntries/' + $series.id;
 
                 return $http.get($url);
             },
@@ -15904,29 +15929,6 @@ angular.module('tracker')
             }
         }
     });
-app.factory('WeightsFactory', function ($http) {
-    return {
-
-        getEntriesForTheDay: function ($date) {
-            var $url = 'api/weights/' + $date;
-            return $http.get($url);
-        },
-
-        insertWeight: function ($sql_date) {
-            var $url = 'insert/weight';
-            var $weight = $("#weight").val();
-
-            var $data = {
-                date: $sql_date,
-                weight: $weight
-            };
-
-            return $http.post($url, $data);
-        },
-
-
-    };
-});
 app.factory('JournalFactory', function ($http) {
     return {
 

@@ -29,7 +29,7 @@
             </tr>
             <tr ng-repeat="series in exercise_series">
                 <td>[[series.name]]</td>
-                <td><button ng-click="getExerciseSeriesHistory(series.id)">show</button></td>
+                <td><button ng-click="getExerciseSeriesHistory(series)">show</button></td>
                 <td><span ng-repeat="workout in series.workouts">[[workout.name]]</span></td>
                 <td><button ng-click="showExerciseSeriesPopup(series)" class="btn-xs">edit</button></td>
                 <td><i ng-click="deleteExerciseSeries(series)" class="delete-item fa fa-times"></i></td>

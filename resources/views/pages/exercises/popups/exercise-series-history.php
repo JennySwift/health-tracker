@@ -1,6 +1,8 @@
 <div ng-show="show.popups.exercise_series_history" ng-click="closePopup($event, 'exercise_series_history')" class="popup-outer">
 
-	<div class="popup-inner">
+	<div id="series-history-popup" class="popup-inner">
+
+        <h3>History of entries in the [[selectedSeries.name]] series</h3>
 
         <div ng-if="exercise_series_history.length === 0">No entries to show</div>
 

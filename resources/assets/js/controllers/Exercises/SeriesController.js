@@ -25,11 +25,13 @@ var app = angular.module('tracker');
          * select
          */
 
-        $scope.getExerciseSeriesHistory = function ($series_id) {
+        $scope.getExerciseSeriesHistory = function ($series) {
             $rootScope.showLoading();
-            ExerciseSeriesFactory.getExerciseSeriesHistory($series_id)
+            ExerciseSeriesFactory.getExerciseSeriesHistory($series)
                 .then(function (response) {
                     $scope.show.popups.exercise_series_history = true;
+                    //For displaying the name of the series in the popup
+                    $scope.selectedSeries = $series;
                     $scope.exercise_series_history = response.data;
                     //$rootScope.$broadcast('provideFeedback', '');
                     $rootScope.hideLoading();

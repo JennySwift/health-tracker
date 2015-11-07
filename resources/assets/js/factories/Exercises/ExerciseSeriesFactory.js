@@ -7,8 +7,8 @@ angular.module('tracker')
 
                 return $http.get($url);
             },
-            getExerciseSeriesHistory: function ($series_id) {
-                var $url = 'api/seriesEntries/' + $series_id;
+            getExerciseSeriesHistory: function ($series) {
+                var $url = 'api/seriesEntries/' + $series.id;
 
                 return $http.get($url);
             },
