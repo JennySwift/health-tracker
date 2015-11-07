@@ -75,7 +75,7 @@ var app = angular.module('tracker');
                 return false;
             }
             JournalFactory.filter().then(function (response) {
-                $scope.filter_results = response.data;
+                $scope.filter_results = response.data.data;
             });
         };
 
