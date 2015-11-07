@@ -40,7 +40,7 @@ class JournalController extends Controller
             ->orderBy('date', 'desc')
             ->get();
 
-        return $matches;
+        return transform(createCollection($matches, new JournalTransformer));
     }
 
     /**

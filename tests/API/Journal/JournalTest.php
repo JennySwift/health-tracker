@@ -37,6 +37,29 @@ class JournalTest extends TestCase {
 
     /**
      * @test
+     */
+    public function it_can_filter_journal_entries()
+    {
+        $this->logInUser();
+
+        $data = [
+            'typing' => 'aut'
+        ];
+
+        $response = $this->call('POST', '/api/filterJournalEntries', $data);
+        $content = json_decode($response->getContent(), true)['data'];
+//        dd($content);
+
+        $this->assertArrayHasKey('id', $content[0]);
+        $this->assertArrayHasKey('date', $content[0]);
+        $this->assertArrayHasKey('text', $content[0]);
+
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+
+    }
+
+    /**
+     * @test
      * @return void
      */
     public function it_can_create_a_new_journal_entry()
