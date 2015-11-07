@@ -16,14 +16,14 @@
 				<th>total</th>
 			</tr>
 
-			<tr ng-repeat="exercise in exercise_series_history">
-				<td>[[exercise.date]]</td>
-				<td>[[exercise.days_ago]]</td>
-				<td>[[exercise.name]]</td>
+			<tr ng-repeat="entriesForDay in exercise_series_history">
+				<td>[[entriesForDay.date]]</td>
+				<td>[[entriesForDay.days_ago]]</td>
+				<td>[[entriesForDay.exercise.name]]</td>
 				<!-- <td>[[exercise.description]]</td> -->
-				<td>[[exercise.step_number]]</td>
-				<td>[[exercise.sets]]</td>
-				<td>[[exercise.total]] [[exercise.unit_name]]</td>
+				<td>[[entriesForDay.exercise.step_number]]</td>
+				<td>[[entriesForDay.sets]]</td>
+				<td>[[entriesForDay.total]] [[entriesForDay.unit_name]]</td>
 			</tr>
 		</table>
 
