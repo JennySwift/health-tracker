@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers;
 
 use App\Http\Requests;
+use App\Http\Transformers\ExerciseEntryTransformer;
 use App\Http\Transformers\JournalTransformer;
 use App\Models\Journal\Journal;
 use App\Models\Tags\Tag;
@@ -126,7 +127,13 @@ class PagesController extends Controller
 //        dd($this->menuEntriesRepository->getEntriesForTheDay($date));
 
         JavaScript::put([
-            "exerciseEntries" => $this->exerciseEntriesRepository->getEntriesForTheDay($date),
+//            "exerciseEntries" => $this->exerciseEntriesRepository->getEntriesForTheDay($date),
+            "exerciseEntries" => transform(
+                createCollection(
+                    $this->exerciseEntriesRepository->getEntriesForTheDay($date),
+                    new ExerciseEntryTransformer
+                )
+            )['data'],
             "exerciseUnits" => $this->unitsRepository->getExerciseUnits(),
 
             "menuEntries" => $this->menuEntriesRepository->getEntriesForTheDay($date),

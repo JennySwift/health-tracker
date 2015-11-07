@@ -33,12 +33,12 @@ class ExerciseEntriesTest extends TestCase {
         $this->assertArrayHasKey('id', $content[0]['exercise']);
         $this->assertArrayHasKey('description', $content[0]['exercise']);
         $this->assertArrayHasKey('step_number', $content[0]['exercise']);
+        $this->assertArrayHasKey('default_unit_id', $content[0]['exercise']);
 
         $this->assertArrayHasKey('unit', $content[0]);
         $this->assertArrayHasKey('id', $content[0]['unit']);
         $this->assertArrayHasKey('name', $content[0]['unit']);
 
-        $this->assertArrayHasKey('default_unit_id', $content[0]);
         $this->assertArrayHasKey('sets', $content[0]);
         $this->assertArrayHasKey('total', $content[0]);
         $this->assertArrayHasKey('quantity', $content[0]);
@@ -46,6 +46,7 @@ class ExerciseEntriesTest extends TestCase {
         $this->assertEquals(1, $content[0]['exercise']['id']);
         $this->assertEquals('kneeling pushups', $content[0]['exercise']['name']);
         $this->assertEquals('1.00', $content[0]['exercise']['step_number']);
+        $this->assertEquals(1, $content[0]['exercise']['default_unit_id']);
 
         /**
          * @VP:
@@ -63,7 +64,6 @@ class ExerciseEntriesTest extends TestCase {
             'name' => 'reps'
         ], $content[0]['unit']);
 
-        $this->assertEquals(1, $content[0]['default_unit_id']);
         $this->assertEquals(2, $content[0]['sets']);
         $this->assertEquals(10, $content[0]['total']);
         $this->assertEquals(5, $content[0]['quantity']);
@@ -90,7 +90,7 @@ class ExerciseEntriesTest extends TestCase {
         $response = $this->call('POST', '/api/exerciseEntries', $entry);
 //        dd($response);
         $content = json_decode($response->getContent(), true);
-//        dd($content[0]);
+//        dd($content);
 
         $this->assertArrayHasKey('exercise', $content[0]);
         $this->assertArrayHasKey('id', $content[0]['exercise']);

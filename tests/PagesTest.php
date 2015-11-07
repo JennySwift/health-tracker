@@ -34,13 +34,19 @@ class PagesTest extends TestCase {
      * @test
      * @return void
      */
-    public function it_can_display_the_homepage()
+    public function it_can_display_the_entries_page()
     {
         $this->logInUser();
 
         $this->visit('/')
             ->see($this->user->name)
-            ->see('today');
+            ->see('today')
+            /**
+             * @VP:
+             * This line passes even when 'add set' is not on the page.
+             * It is in the HTML though.
+             */
+            ->see('add set');
 
         $this->assertEquals(Response::HTTP_OK, $this->apiCall('GET', '/')->getStatusCode());
     }

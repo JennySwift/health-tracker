@@ -44,8 +44,7 @@ class ExerciseEntriesController extends Controller
             createCollection(
                 $this->exerciseEntriesRepository->getEntriesForTheDay($date),
                 new ExerciseEntryTransformer
-            ),
-            [$date]
+            )
         )['data'];
     }
 
@@ -95,7 +94,15 @@ class ExerciseEntriesController extends Controller
 
         $entry->save();
 
-        return response($this->exerciseEntriesRepository->getEntriesForTheDay($request->get('date')), Response::HTTP_CREATED);
+        //Return the entries for the day
+        $entries = transform(
+            createCollection(
+                $this->exerciseEntriesRepository->getEntriesForTheDay($request->get('date')),
+                new ExerciseEntryTransformer
+            )
+        )['data'];
+
+        return response($entries, Response::HTTP_CREATED);
     }
 
     /**

@@ -22,12 +22,12 @@ class ExerciseEntryTransformer extends TransformerAbstract
                 'name' => $entry->exercise->name,
                 'description' => $entry->exercise->description,
                 'step_number' => $entry->exercise->step_number,
+                'default_unit_id' => $entry->exercise->default_unit_id,
             ],
             'unit' => [
                 'id' => $entry->unit->id,
                 'name' => $entry->unit->name
             ],
-            'default_unit_id' => $entry->exercise->default_unit_id,
             'sets' => $entry->sets,
             'total' => $entry->total,
             'quantity' => $entry->quantity,

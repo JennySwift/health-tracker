@@ -16,7 +16,7 @@
             <td ng-click="getSpecificExerciseEntries(entry)" class="pointer">[[entry.total]] [[entry.unit.name]]</td>
             <td>
                 <button
-                    ng-if="entry.unit.id === entry.default_unit_id"
+                    ng-if="entry.unit.id === entry.exercise.default_unit_id"
                     ng-click="insertExerciseSet(entry.exercise)"
                     class="btn-xs">
                     add set
