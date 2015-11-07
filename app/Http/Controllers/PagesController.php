@@ -293,4 +293,13 @@ class PagesController extends Controller
 
         return view('pages.journal.journal');
     }
+
+    /**
+     * Jasmine testing page
+     * @return \Illuminate\View\View
+     */
+    public function jasmine()
+    {
+        return view('SpecRunner');
+    }
 }
