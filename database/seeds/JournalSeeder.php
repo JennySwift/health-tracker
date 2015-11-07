@@ -23,9 +23,11 @@ class JournalSeeder extends Seeder {
             foreach (range(0, 49) as $index) {
                 $today = Carbon::today();
 
+                $text = $faker->word . '<div>' . $faker->sentence . '</div><div>'. $faker->sentence . '</div>';
+
                 Journal::create([
                     'date' => $today->subDays($index)->format('Y-m-d'),
-                    'text' => $faker->paragraph(),
+                    'text' => $text,
                     'user_id' => $user->id
                 ]);
             }

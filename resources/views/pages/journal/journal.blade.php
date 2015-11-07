@@ -20,7 +20,7 @@
             <div id="filter-results">
                 <div ng-repeat="entry in filter_results" ng-click="changeDate(13, entry.date)" class="hover pointer">
                     <span class="badge">[[entry.date]]</span>
-                    [[entry.text]]
+                    <div ng-bind-html="entry.text"></div>
                 </div>
             </div>
 
