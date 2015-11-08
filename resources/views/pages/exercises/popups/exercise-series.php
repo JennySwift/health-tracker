@@ -2,14 +2,14 @@
 
 	<div class="popup-inner">
 
-		<h5>[[exercise_series_popup.name]]</h5>
+		<h5>Check the workouts which should include the [[exercise_series_popup.name]] series</h5>
 
 		<div ng-repeat="workout in workouts">
 			[[workout.name]]
 			<input checklist-model="exercise_series_popup.workout_ids" checklist-value="workout.id" type="checkbox">
 		</div>
 
-		<button ng-click="deleteAndInsertSeriesIntoWorkouts()">save</button>
+		<button ng-click="deleteAndInsertSeriesIntoWorkouts()" class="btn btn-success save">save</button>
 		
 	</div>
 	

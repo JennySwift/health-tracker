@@ -18,6 +18,11 @@
 		overflow: scroll;
 		height: 500px;
 		padding: 25px;
+        .save {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+        }
 	}
 }
 

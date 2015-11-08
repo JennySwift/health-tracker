@@ -512,6 +512,10 @@ body.browser-height {
     overflow: scroll;
     height: 500px;
     padding: 25px; }
+    .popup-outer .popup-inner .save {
+      position: absolute;
+      bottom: 10px;
+      right: 10px; }
 
 #recipe-method, #edit-recipe-method {
   background: lightgrey; }
