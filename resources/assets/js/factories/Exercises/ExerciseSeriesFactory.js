@@ -12,11 +12,10 @@ angular.module('tracker')
 
                 return $http.get($url);
             },
-            insertExerciseSeries: function () {
-                var $name = $("#exercise-series").val();
-                var $url = '/exerciseSeries';
+            insert: function () {
+                var $url = 'api/exerciseSeries';
                 var $data = {
-                    name: $name
+                    name: $("#exercise-series").val()
                 };
 
                 $("#exercise-series").val("");
@@ -32,9 +31,9 @@ angular.module('tracker')
 
                 return $http.put($url, $data);
             },
-            deleteExerciseSeries: function ($series) {
+            destroy: function ($series) {
                 if (confirm("Are you sure you want to delete this series?")) {
-                    var $url = $series.path;
+                    var $url = 'api/exerciseSeries/' + $series.id;
 
                     return $http.delete($url);
                 }

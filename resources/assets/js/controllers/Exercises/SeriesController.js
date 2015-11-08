@@ -41,17 +41,20 @@ var app = angular.module('tracker');
                 });
         };
 
-        /**
-         * insert
-         */
-
         $scope.insertExerciseSeries = function ($keypress) {
             if ($keypress !== 13) {
                 return;
             }
-            ExercisesSeriesFactory.insertExerciseSeries().then(function (response) {
-                $scope.exercise_series = response.data;
-            });
+            $rootScope.showLoading();
+            ExerciseSeriesFactory.insert()
+                .then(function (response) {
+                    $scope.exercise_series.push(response.data.data);
+                    $rootScope.$broadcast('provideFeedback', 'Series created');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
         };
 
         $scope.updateSeries = function () {
@@ -70,9 +73,16 @@ var app = angular.module('tracker');
         };
 
         $scope.deleteExerciseSeries = function ($series) {
-            ExercisesSeriesFactory.deleteExerciseSeries($series).then(function (response) {
-                $scope.exercise_series = response.data;
-            });
+            $rootScope.showLoading();
+            ExerciseSeriesFactory.destroy($series)
+                .then(function (response) {
+                    $scope.exercise_series = _.without($scope.exercise_series, $series);
+                    $rootScope.$broadcast('provideFeedback', 'Series deleted');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
         };
 
         /**

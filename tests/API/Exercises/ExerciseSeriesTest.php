@@ -198,75 +198,75 @@ class ExerciseSeriesTest extends TestCase {
      * @test
      * @return void
      */
-//    public function it_can_add_a_new_series()
-//    {
-//        $this->logInUser();
-//
-//        $exercise = [
-//            'name' => 'kangaroo',
-//            'description' => 'koala'
-//        ];
-//
-//        $response = $this->call('POST', '/api/exercises', $exercise);
-//        $content = json_decode($response->getContent(), true);
-//
-//        $this->assertArrayHasKey('id', $content);
-//        $this->assertArrayHasKey('name', $content);
-////        $this->assertArrayHasKey('step_number', $content);
-//        $this->assertArrayHasKey('description', $content);
-//
-//        $this->assertEquals('kangaroo', $content['name']);
-//        $this->assertEquals('koala', $content['description']);
-//
-//        $this->assertEquals(Response::HTTP_CREATED, $response->getStatusCode());
-//    }
+    public function it_can_add_a_new_series()
+    {
+        $this->logInUser();
+
+        $series = [
+            'name' => 'kangaroo'
+        ];
+
+        $response = $this->call('POST', '/api/exerciseSeries', $series);
+        $content = json_decode($response->getContent(), true)['data'];
+//        dd($content);
+
+        $this->assertArrayHasKey('id', $content);
+        $this->assertArrayHasKey('name', $content);
+        $this->assertArrayHasKey('workout_ids', $content);
+
+        $this->assertEquals('kangaroo', $content['name']);
+
+        $this->assertEquals(Response::HTTP_CREATED, $response->getStatusCode());
+    }
 
     /**
      * @test
      * @return void
      */
-//    public function it_can_update_an_exercise()
-//    {
-//        $this->logInUser();
-//
-//        $unit = Unit::forCurrentUser()->where('for', 'food')->first();
-//
-//        $response = $this->call('PUT', '/api/foodUnits/'.$unit->id, [
-//            'name' => 'numbat'
-//        ]);
-//        $content = json_decode($response->getContent(), true)['data'];
-//
-//        $this->assertArrayHasKey('id', $content);
-//        $this->assertArrayHasKey('name', $content);
-//        $this->assertArrayHasKey('for', $content);
-//
-//        $this->assertEquals('numbat', $content['name']);
-//
-//        $this->assertEquals(200, $response->getStatusCode());
-//    }
+    public function it_can_delete_a_series()
+    {
+        $this->logInUser();
+
+        $series = new Series([
+            'name' => 'echidna'
+        ]);
+
+        $series->user()->associate($this->user);
+        $series->save();
+        $series->workouts()->sync([1,2]);
+
+        $this->seeInDatabase('exercise_series', ['name' => 'echidna']);
+        $this->seeInDatabase('series_workout', ['series_id' => $series->id, 'workout_id' => 1]);
+        $this->seeInDatabase('series_workout', ['series_id' => $series->id, 'workout_id' => 2]);
+
+        $response = $this->call('DELETE', '/api/exerciseSeries/'.$series->id);
+        $this->assertEquals(204, $response->getStatusCode());
+        $this->missingFromDatabase('exercise_series', ['name' => 'echidna']);
+
+        //Check the rows were deleted in the series_workout pivot table
+        $this->missingFromDatabase('series_workout', ['series_id' => $series->id, 'workout_id' => 1]);
+        $this->missingFromDatabase('series_workout', ['series_id' => $series->id, 'workout_id' => 2]);
+
+        $response = $this->call('DELETE', '/api/exerciseSeries/'.$series->id);
+        $this->assertEquals(404, $response->getStatusCode());
+    }
 
     /**
      * @test
      * @return void
      */
-//    public function it_can_delete_a_series()
-//    {
-//        $this->logInUser();
-//
-//        $exercise = new Exercise([
-//            'name' => 'echidna'
-//        ]);
-//
-//        $exercise->user()->associate($this->user);
-//        $exercise->save();
-//
-//        $this->seeInDatabase('exercises', ['name' => 'echidna']);
-//
-//        $response = $this->call('DELETE', '/api/exercises/'.$exercise->id);
-//        $this->assertEquals(204, $response->getStatusCode());
-//        $this->missingFromDatabase('exercises', ['name' => 'echidna']);
-//
-//        $response = $this->call('DELETE', '/api/units/0');
-//        $this->assertEquals(404, $response->getStatusCode());
-//    }
+    public function it_throws_an_exception_if_user_tries_to_delete_a_series_that_is_in_use()
+    {
+        $this->logInUser();
+
+        $response = $this->call('DELETE', '/api/exerciseSeries/1');
+        $content = json_decode($response->getContent(), true);
+//        dd($content);
+        $this->assertEquals(400, $response->getStatusCode());
+        //Check the series is still in the database
+        $this->seeInDatabase('exercise_series', ['name' => 'pushup']);
+
+        $this->assertArrayHasKey('error', $content);
+        $this->assertEquals('Series could not be deleted. It is in use.', $content['error']);
+    }
 }

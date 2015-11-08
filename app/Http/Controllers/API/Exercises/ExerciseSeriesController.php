@@ -10,6 +10,7 @@ use App\Repositories\ExerciseSeriesRepository;
 use App\Repositories\WorkoutsRepository;
 use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 /**
  * Class ExerciseSeriesController
@@ -68,7 +69,7 @@ class ExerciseSeriesController extends Controller
         $series->user()->associate(Auth::user());
         $series->save();
 
-        return $this->responseCreated($series);
+        return $this->responseCreatedWithTransformer($series, new SeriesTransformer);
     }
 
     /**
@@ -103,9 +104,22 @@ class ExerciseSeriesController extends Controller
      */
     public function destroy(Series $series)
     {
-        //todo: notify user the series will not be deleted unless it has not been used, due to foreign key constraint
-        $series->delete();
-
-        return $this->responseNoContent();
+        try {
+            $series->delete();
+            return $this->responseNoContent();
+        }
+        catch (\Exception $e) {
+            //Integrity constraint violation
+            if ($e->getCode() === '23000') {
+                $message = 'Series could not be deleted. It is in use.';
+            }
+            else {
+                $message = 'There was an error';
+            }
+            return response([
+                'error' => $message,
+                'status' => Response::HTTP_BAD_REQUEST
+            ], Response::HTTP_BAD_REQUEST);
+        }
     }
 }
