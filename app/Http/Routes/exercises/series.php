@@ -1,3 +1,3 @@
 <?php
 
-Route::resource('exerciseSeries', 'Exercises\ExerciseSeriesController', ['only' => ['store', 'show', 'destroy']]);
+Route::resource('exerciseSeries', 'Exercises\ExerciseSeriesController', ['only' => ['index', 'store', 'show', 'destroy']]);

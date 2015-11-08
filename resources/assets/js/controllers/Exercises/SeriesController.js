@@ -74,10 +74,17 @@ var app = angular.module('tracker');
         $scope.showExerciseSeriesPopup = function ($series) {
             $scope.selected.exercise_series = $series;
 
-            ExercisesFactory.getExerciseSeriesInfo($series).then(function (response) {
-                $scope.exercise_series_popup = response.data;
-                $scope.show.popups.exercise_series = true;
-            });
+            $rootScope.showLoading();
+            ExerciseSeriesFactory.getExerciseSeriesInfo($series)
+                .then(function (response) {
+                    $scope.exercise_series_popup = response.data.data;
+                    $scope.show.popups.exercise_series = true;
+                    //$rootScope.$broadcast('provideFeedback', '');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
         };
 
         $scope.closePopup = function ($event, $popup) {

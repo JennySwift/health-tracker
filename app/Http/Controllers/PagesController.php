@@ -3,6 +3,7 @@
 use App\Http\Requests;
 use App\Http\Transformers\ExerciseEntryTransformer;
 use App\Http\Transformers\JournalTransformer;
+use App\Http\Transformers\SeriesTransformer;
 use App\Models\Journal\Journal;
 use App\Models\Tags\Tag;
 use App\Repositories\CaloriesRepository;
@@ -184,7 +185,7 @@ class PagesController extends Controller
     public function series()
     {
         JavaScript::put([
-            'series' => $this->exerciseSeriesRepository->getExerciseSeries(),
+            'series' => transform(createCollection($this->exerciseSeriesRepository->getExerciseSeries(), new SeriesTransformer))['data'],
             'workouts' => $this->workoutsRepository->getWorkouts()
         ]);
 

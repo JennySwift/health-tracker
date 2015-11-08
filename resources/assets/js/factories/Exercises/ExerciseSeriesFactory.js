@@ -3,7 +3,7 @@ angular.module('tracker')
         return {
 
             getExerciseSeriesInfo: function ($series) {
-                var $url = $series.path;
+                var $url = 'api/exerciseSeries/' + $series.id;
 
                 return $http.get($url);
             },

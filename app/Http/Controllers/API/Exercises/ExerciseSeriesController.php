@@ -2,10 +2,12 @@
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
+use App\Http\Transformers\SeriesTransformer;
 use App\Models\Exercises\Exercise;
 use App\Models\Exercises\Series;
 use App\Models\Exercises\Workout;
 use App\Repositories\ExerciseSeriesRepository;
+use App\Repositories\WorkoutsRepository;
 use Auth;
 use Illuminate\Http\Request;
 
@@ -19,31 +21,38 @@ class ExerciseSeriesController extends Controller
      * @var ExerciseSeriesRepository
      */
     private $exerciseSeriesRepository;
+    /**
+     * @var WorkoutsRepository
+     */
+    private $workoutsRepository;
 
     /**
      * @param ExerciseSeriesRepository $exerciseSeriesRepository
+     * @param WorkoutsRepository $workoutsRepository
      */
-    public function __construct(ExerciseSeriesRepository $exerciseSeriesRepository)
+    public function __construct(ExerciseSeriesRepository $exerciseSeriesRepository, WorkoutsRepository $workoutsRepository)
     {
         $this->exerciseSeriesRepository = $exerciseSeriesRepository;
+        $this->workoutsRepository = $workoutsRepository;
+    }
+
+    /**
+     *
+     * @return mixed
+     */
+    public function index()
+    {
+        return transform(createCollection($this->exerciseSeriesRepository->getExerciseSeries(), new SeriesTransformer));
     }
 
     /**
      * For the exercise series popup
-     * @param $id
+     * @param Series $series
      * @return array
      */
-    public function show($id)
+    public function show(Series $series)
     {
-        $series = Series::find($id);
-        $all_workouts = Workout::getWorkouts();
-        $workouts = $series->workouts()->lists('workout_id');
-
-        return [
-            "all_workouts" => $all_workouts,
-            "series" => $series,
-            "workouts" => $workouts
-        ];
+        return transform(createItem($series, new SeriesTransformer));
     }
 
     /**

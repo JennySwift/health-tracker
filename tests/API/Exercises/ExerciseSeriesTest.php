@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Exercises\Exercise;
+use App\Models\Exercises\Series;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Http\Response;
@@ -55,6 +56,62 @@ class ExerciseSeriesTest extends TestCase {
         $this->assertEquals(0, $content[0]['days_ago']);
         $this->assertEquals(1, $content[2]['days_ago']);
         $this->assertEquals(Carbon::today()->format('d/m/y'), $content[0]['date']);
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_list_the_series()
+    {
+        $this->logInUser();
+
+        $response = $this->call('GET', '/api/exerciseSeries');
+        $content = json_decode($response->getContent(), true)['data'];
+//        dd($content);
+
+        $this->assertArrayHasKey('id', $content[0]);
+        $this->assertArrayHasKey('name', $content[0]);
+        $this->assertArrayHasKey('workout_ids', $content[0]);
+        $this->assertArrayHasKey('workouts', $content[0]);
+
+        $this->assertEquals(2, $content[0]['id']);
+        $this->assertEquals('pullup', $content[0]['name']);
+
+        $this->assertEquals(1, $content[0]['workouts']['data'][0]['id']);
+        $this->assertEquals('day one', $content[0]['workouts']['data'][0]['name']);
+
+        $this->assertEquals([
+            1
+        ], $content[0]['workout_ids']);
+
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_show_a_series()
+    {
+        $this->logInUser();
+
+        $series = Series::forCurrentUser()->first();
+
+        $response = $this->call('GET', '/api/exerciseSeries/' . $series->id);
+        $content = json_decode($response->getContent(), true)['data'];
+
+        $this->assertArrayHasKey('id', $content);
+        $this->assertArrayHasKey('name', $content);
+        $this->assertArrayHasKey('workout_ids', $content);
+
+        $this->assertEquals(1, $content['id']);
+        $this->assertEquals('pushup', $content['name']);
+        $this->assertEquals([
+            1
+        ], $content['workout_ids']);
+
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+
     }
 
     /**
