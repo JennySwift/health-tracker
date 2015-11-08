@@ -73,6 +73,30 @@ class ExerciseSeriesController extends Controller
 
     /**
      *
+     * @param Request $request
+     * @param Series $series
+     * @return mixed
+     */
+    public function update(Request $request, Series $series)
+    {
+        // Create an array with the new fields merged
+        $data = array_compare($series->toArray(), $request->only([
+            'name'
+        ]));
+//        dd($data);
+
+        $series->update($data);
+
+        if ($request->has('workout_ids')) {
+            $series->workouts()->sync($request->get('workout_ids'));
+//            $series->save();
+        }
+
+        return $this->responseOkWithTransformer($series, new SeriesTransformer);
+    }
+
+    /**
+     *
      * @param Series $series
      * @return \Illuminate\Http\Response
      * @throws \Exception

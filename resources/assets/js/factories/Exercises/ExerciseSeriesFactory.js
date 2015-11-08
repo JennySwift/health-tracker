@@ -23,6 +23,15 @@ angular.module('tracker')
 
                 return $http.post($url, $data);
             },
+            update: function ($series) {
+                var $url = 'api/exerciseSeries/' + $series.id;
+                var $data = {
+                    name: $series.name,
+                    workout_ids: $series.workout_ids
+                };
+
+                return $http.put($url, $data);
+            },
             deleteExerciseSeries: function ($series) {
                 if (confirm("Are you sure you want to delete this series?")) {
                     var $url = $series.path;

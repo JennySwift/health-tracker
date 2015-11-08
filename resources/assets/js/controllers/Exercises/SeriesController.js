@@ -54,11 +54,19 @@ var app = angular.module('tracker');
             });
         };
 
-        $scope.deleteAndInsertSeriesIntoWorkouts = function () {
-            WorkoutsFactory.deleteAndInsertSeriesIntoWorkouts($scope.selected.exercise_series.id, $scope.exercise_series_popup.workouts).then(function (response) {
-                $scope.workouts = response.data;
-                $scope.show.popups.exercise_series = false;
-            });
+        $scope.updateSeries = function () {
+            $rootScope.showLoading();
+            ExerciseSeriesFactory.update($scope.exercise_series_popup)
+                .then(function (response) {
+                    var $index = _.indexOf($scope.exercise_series, _.findWhere($scope.exercise_series, {id: $scope.exercise_series_popup.id}));
+                    $scope.exercise_series[$index] = response.data.data;
+                    $rootScope.$broadcast('provideFeedback', 'Series updated');
+                    $scope.show.popups.exercise_series = false;
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
         };
 
         $scope.deleteExerciseSeries = function ($series) {

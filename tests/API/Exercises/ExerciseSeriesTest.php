@@ -118,6 +118,63 @@ class ExerciseSeriesTest extends TestCase {
      * @test
      * @return void
      */
+    public function it_can_update_a_series()
+    {
+        $this->logInUser();
+
+        $series = Series::forCurrentUser()->first();
+
+        $response = $this->call('PUT', '/api/exerciseSeries/'.$series->id, [
+            'name' => 'numbat',
+        ]);
+//        dd($response);
+        $content = json_decode($response->getContent(), true)['data'];
+//        dd($content);
+
+        $this->assertArrayHasKey('id', $content);
+        $this->assertArrayHasKey('name', $content);
+        $this->assertArrayHasKey('workout_ids', $content);
+
+        $this->assertEquals(1, $content['id']);
+        $this->assertEquals('numbat', $content['name']);
+        $this->assertEquals([1], $content['workout_ids']);
+
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    /**
+     * @test
+     * @return void
+     */
+    public function it_can_update_a_series_including_its_tags()
+    {
+        $this->logInUser();
+
+        $series = Series::forCurrentUser()->first();
+
+        $response = $this->call('PUT', '/api/exerciseSeries/'.$series->id, [
+            'name' => 'numbat',
+            'workout_ids' => [2,3]
+        ]);
+//        dd($response);
+        $content = json_decode($response->getContent(), true)['data'];
+//        dd($content);
+
+        $this->assertArrayHasKey('id', $content);
+        $this->assertArrayHasKey('name', $content);
+        $this->assertArrayHasKey('workout_ids', $content);
+
+        $this->assertEquals(1, $content['id']);
+        $this->assertEquals('numbat', $content['name']);
+        $this->assertEquals([2,3], $content['workout_ids']);
+
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    /**
+     * @test
+     * @return void
+     */
     public function it_lists_a_series()
     {
 //        $this->logInUser();
