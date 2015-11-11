@@ -65,9 +65,15 @@ var app = angular.module('tracker');
 		 */
 		
 		$scope.getJournalEntry = function () {
-			JournalFactory.getJournalEntry($scope.date.sql).then(function (response) {
-				$scope.journal_entry = response.data.data;
-			});
+            $rootScope.showLoading();
+            JournalFactory.getJournalEntry($scope.date.sql)
+                .then(function (response) {
+                    $scope.journal_entry = response.data.data;
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
 		};
 
         $scope.filterJournalEntries = function ($keycode) {
