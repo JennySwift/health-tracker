@@ -10,13 +10,19 @@
             id="exercise"
             class="form-control">
 
-        <div ng-show="showAutocompleteOptions.exercises">
+        <div ng-show="showAutocompleteOptions.exercises && autocomplete_options.exercises.length > 0">
             <div
                 ng-repeat="item in autocomplete_options.exercises"
                 ng-class="{'selected': item.selected}"
                 ng-mousedown="finishExerciseAutocomplete($scope.autocomplete_options.exercises, item)"
                 class="autocomplete-dropdown-item pointer">
                 [[item.name]] ([[item.description]])
+            </div>
+        </div>
+
+        <div ng-show="showAutocompleteOptions.exercises && autocomplete_options.exercises.length === 0">
+            <div>
+                No results found
             </div>
         </div>
 

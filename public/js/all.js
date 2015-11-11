@@ -13679,12 +13679,19 @@ angular.module('tracker')
             if ($keycode !== 13 && $keycode !== 38 && $keycode !== 40) {
                 //not enter, up arrow or down arrow
                 AutocompleteFactory.exercise().then(function (response) {
-                    //fill the dropdown
-                    $scope.autocomplete_options.exercises = response.data;
+                    if (response.data.length > 0) {
+                        //Results were found
+                        //fill the dropdown
+                        $scope.autocomplete_options.exercises = response.data;
+                        //select the first item
+                        $scope.autocomplete_options.exercises[0].selected = true;
+                    }
+                    else {
+                        //No results found
+                        $scope.autocomplete_options.exercises = [];
+                    }
                     //show the dropdown
                     $scope.showAutocompleteOptions.exercises = true;
-                    //select the first item
-                    $scope.autocomplete_options.exercises[0].selected = true;
                 });
             }
             else if ($keycode === 38) {
