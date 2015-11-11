@@ -1,21 +1,37 @@
 #journal {
-	display:flex;
-	flex-direction: column;
-	align-items: center;
-	button {
-		width: 100%;
-		max-width: 600px;
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    button {
+        width: 100%;
+        max-width: 600px;
         margin-bottom: 20px;
-	}
-    .wysiwyg {
-      max-width: 600px;
-      padding: 28px;
-      border: 13px solid #777;
     }
-    #filter-results {
-      > div {
-        padding: 10px 0;
-        border-bottom: 1px dashed #777;
-      }
+    .wysiwyg {
+        max-width: 600px;
+        padding: 28px;
+        border: 13px solid #777;
+    }
+    #filter-results-container {
+        border: 1px solid #777;
+        padding: 20px;
+        position: relative;
+        #filter-results {
+            max-height: 400px;
+            overflow: scroll;
+            > div {
+                padding: 10px 0;
+                border-bottom: 1px dashed #777;
+
+            }
+        }
+        .fa-close {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            color: $danger;
+            font-size: 20px;
+            cursor: pointer;
+        }
     }
 }

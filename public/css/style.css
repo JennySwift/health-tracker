@@ -439,9 +439,23 @@ body.browser-height {
     max-width: 600px;
     padding: 28px;
     border: 13px solid #777; }
-  #journal #filter-results > div {
-    padding: 10px 0;
-    border-bottom: 1px dashed #777; }
+  #journal #filter-results-container {
+    border: 1px solid #777;
+    padding: 20px;
+    position: relative; }
+    #journal #filter-results-container #filter-results {
+      max-height: 400px;
+      overflow: scroll; }
+      #journal #filter-results-container #filter-results > div {
+        padding: 10px 0;
+        border-bottom: 1px dashed #777; }
+    #journal #filter-results-container .fa-close {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      color: #d9534f;
+      font-size: 20px;
+      cursor: pointer; }
 
 #navbar {
   display: -webkit-flex;

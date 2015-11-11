@@ -13406,9 +13406,20 @@ var app = angular.module('tracker');
             if ($keycode !== 13) {
                 return false;
             }
-            JournalFactory.filter().then(function (response) {
-                $scope.filter_results = response.data.data;
-            });
+            $rootScope.showLoading();
+            JournalFactory.filter()
+                .then(function (response) {
+                    $scope.filter_results = response.data.data;
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        };
+
+        $scope.clearFilterResults = function () {
+            $scope.filter_results = [];
+            $("#filter-journal").val("");
         };
 
         /**
