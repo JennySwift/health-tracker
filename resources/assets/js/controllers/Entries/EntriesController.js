@@ -1,7 +1,7 @@
 var app = angular.module('tracker');
 
 (function () {
-    app.controller('entries', function ($rootScope, $scope, $http, DatesFactory, AutocompleteFactory, WeightsFactory) {
+    app.controller('entries', function ($rootScope, $scope, $http, DatesFactory, AutocompleteFactory, WeightsFactory, CaloriesFactory) {
 
         $scope.weight = weight;
 
@@ -87,10 +87,22 @@ var app = angular.module('tracker');
 
         $rootScope.$on('getEntries', function () {
             $rootScope.showLoading();
-            WeightsFactory.getEntriesForTheDay($scope.date.sql)
+            //Get weight for the day
+            WeightsFactory.getWeightForTheDay($scope.date.sql)
                 .then(function (response) {
                     $scope.weight = response.data;
                     //$rootScope.$broadcast('provideFeedback', '');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+            //Get calories for the day and average calories for 7 days
+            $rootScope.showLoading();
+            CaloriesFactory.getInfoForTheDay($scope.date.sql)
+                .then(function (response) {
+                    $scope.calories.day = response.data.forTheDay;
+                    $scope.calories.week_avg = response.data.averageFor7Days;
                     $rootScope.hideLoading();
                 })
                 .catch(function (response) {

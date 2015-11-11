@@ -27,8 +27,8 @@ class FoodEntrySeeder extends Seeder
         foreach (User::all() as $user) {
             $this->user = $user;
 
-            //Create menu entries for the last 5 days
-            foreach (range(0, 4) as $index) {
+            //Create menu entries for the last 8 days
+            foreach (range(0, 7) as $index) {
                 $date = Carbon::today()->subDays($index)->format('Y-m-d');
                 $this->createEntriesForOneDay($date, $index + 5);
             }

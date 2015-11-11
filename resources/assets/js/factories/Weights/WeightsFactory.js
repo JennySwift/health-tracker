@@ -1,7 +1,7 @@
 app.factory('WeightsFactory', function ($http) {
     return {
 
-        getEntriesForTheDay: function ($date) {
+        getWeightForTheDay: function ($date) {
             var $url = 'api/weights/' + $date;
             return $http.get($url);
         },
