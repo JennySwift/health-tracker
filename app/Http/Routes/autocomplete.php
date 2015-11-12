@@ -1,6 +1,6 @@
 <?php
 
 //This selects rows from both foods and recipes table.
-Route::post('select/autocompleteMenu', 'Search\AutocompleteController@autocompleteMenu');
-Route::post('select/autocompleteExercise', 'Search\AutocompleteController@autocompleteExercise');
-Route::post('select/autocompleteFood', 'Search\AutocompleteController@autocompleteFood');
+Route::post('autocomplete/menu', 'Search\AutocompleteController@autocompleteMenu');
+Route::post('autocomplete/exercise', 'Search\AutocompleteController@autocompleteExercise');
+Route::post('autocomplete/food', 'Search\AutocompleteController@autocompleteFood');

@@ -33,24 +33,32 @@ class AutocompleteController extends Controller
         foreach ($foods as $food) {
             $food->type = 'food';
         }
+
+        $menu = $foods;
         foreach ($recipes as $recipe) {
             $recipe->type = 'recipe';
+            $menu[] = $recipe;
         }
 
-        $menu = $foods->merge($recipes);
+        $menu = collect($menu);
+
+
+//        return $foods->merge($recipes);
+
+//        $menu = $foods->merge($recipes);
         $menu = $menu->sortBy(function ($item) {
             return $item->name;
         })->reverse()->reverse();
 
         // $menu = new Illuminate\Support\Collection([])
-        // $menu = collect([$food->toArray(), $recipe->toArray()]);
+//         $menu = collect([$foods->toArray(), $recipes->toArray()]);
 
         // dd($menu->collapse()->toArray());
 
-        // $menu->reverse()->reverse()->sortBy(function($item)
-        //  {
-        //      return $item->name;
-        //  });
+//         $menu->reverse()->reverse()->sortBy(function($item)
+//          {
+//              return $item->name;
+//          });
 
         // $menu = new Collection();
         // $menu->add();
@@ -59,15 +67,13 @@ class AutocompleteController extends Controller
         /**
          * This wouldn't sort by name in ascending order
          */
-        // $menu = $foods->merge($recipes)
-        //     ->sortBy(function($item)
-        //     {
-        //         var_dump($item->name);
-        //         return $item->name;
-        //     });
-        //     dd();
-        // $menu = $foods->merge($recipes)
-        //     ->sortBy('name');
+//         $menu = $foods->merge($recipes)
+//             ->sortBy(function($item)
+//             {
+//                 return $item->name;
+//             });
+//         $menu = $foods->merge($recipes)
+//             ->sortBy('name');
 
         // return [
         //     'foods' => $foods,

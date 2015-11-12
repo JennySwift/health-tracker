@@ -1,5 +1,5 @@
 angular.module('tracker')
-    .controller('MenuEntriesController', function ($rootScope, $scope, MenuEntriesFactory, RecipeEntriesFactory) {
+    .controller('MenuEntriesController', function ($rootScope, $scope, MenuEntriesFactory, RecipeEntriesFactory, AutocompleteFactory) {
 
         $scope.menuEntries = menuEntries;
 
@@ -91,7 +91,6 @@ angular.module('tracker')
             if ($keycode !== 13 && $keycode !== 38 && $keycode !== 40) {
                 //not enter, up arrow or down arrow
                 AutocompleteFactory.menu().then(function (response) {
-                    console.log(response);
                     //fill the dropdown
                     $scope.autocomplete_options.menu_items = response.data;
                     //show the dropdown

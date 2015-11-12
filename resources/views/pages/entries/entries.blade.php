@@ -19,7 +19,7 @@
 		</div>
 
         <div id="entries">
-            <div>
+            <div ng-controller="MenuEntriesController">
                 @include('pages.entries.menu-entry-inputs')
                 @include('pages.entries.menu-entries')
             </div>
