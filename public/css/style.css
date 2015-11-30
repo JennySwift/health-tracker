@@ -484,9 +484,10 @@ body.browser-height {
         position: absolute;
         top: 0; }
       #sleep-chart #sleep-chart-entries .date-entries .time {
-        position: absolute; }
+        position: absolute;
+        width: 100%; }
         #sleep-chart #sleep-chart-entries .date-entries .time.start {
-          background: pink;
+          background: #5cb85c;
           display: -webkit-flex;
           display: -ms-flexbox;
           display: flex;
@@ -497,6 +498,19 @@ body.browser-height {
           -ms-flex-pack: end;
           justify-content: flex-end; }
           #sleep-chart #sleep-chart-entries .date-entries .time.start label {
+            margin: 0; }
+        #sleep-chart #sleep-chart-entries .date-entries .time.finish {
+          background: coral;
+          display: -webkit-flex;
+          display: -ms-flexbox;
+          display: flex;
+          -webkit-flex-direction: column;
+          -ms-flex-direction: column;
+          flex-direction: column;
+          -webkit-justify-content: flex-end;
+          -ms-flex-pack: end;
+          justify-content: flex-end; }
+          #sleep-chart #sleep-chart-entries .date-entries .time.finish label {
             margin: 0; }
 
 #navbar {

@@ -15,7 +15,7 @@ class SleepController extends Controller
     public function index(Request $request)
     {
         $entries = Sleep::forCurrentUser()->get();
-        $formatForUser = 'd/m/y';
+        $formatForUser = 'D d/m/y';
 
         if($request->has('byDate')) {
 //            //Sort entries by date
@@ -51,9 +51,9 @@ class SleepController extends Controller
                     $array = [
                         'start' => Carbon::createFromFormat('Y-m-d H:i:s', $entry->start)->format('g:ia'),
                         'finish' => Carbon::createFromFormat('Y-m-d H:i:s', $entry->finish)->format('g:ia'),
-                        'startRelativeHeight' => $this->getStartRelativeHeight($entry),
-                        'finishRelativeHeight' => $this->getFinishRelativeHeight($entry),
-                        'durationInMinutes' => $this->getDurationInMinutes($entry)
+                        'startPosition' => $this->getStartRelativeHeight($entry),
+                        'finishPosition' => $this->getFinishRelativeHeight($entry),
+                        'startHeight' => $this->getDurationInMinutes($entry)
                     ];
 
                     $indexOfItem = $this->getIndexOfItem($entriesByDate, $startDate);
@@ -63,18 +63,26 @@ class SleepController extends Controller
                     $array = [
                         'start' => Carbon::createFromFormat('Y-m-d H:i:s', $entry->start)->format('g:ia'),
                         'finish' => null,
-                        'startRelativeHeight' => $this->getStartRelativeHeight($entry),
-                        'finishRelativeHeight' => null,
+                        'startPosition' => $this->getStartRelativeHeight($entry),
+                        'finishPosition' => null,
+                        'startHeight' => $this->getDurationInMinutes($entry, 'finish')
                     ];
 
                     $indexOfItem = $this->getIndexOfItem($entriesByDate, $startDate);
                     $entriesByDate[$indexOfItem][] = $array;
 
+                    $finish = $this->getFinish($entry);
+                    $midnight = clone $finish;
+                    $midnight = $midnight->hour(0)->minute(0);
+
                     $array = [
                         'start' => null,
-                        'finish' => Carbon::createFromFormat('Y-m-d H:i:s', $entry->finish)->format('g:ia'),
-                        'startRelativeHeight' => null,
-                        'finishRelativeHeight' => $this->getFinishRelativeHeight($entry)
+                        'fakeStart' => $midnight->format('g:ia'),
+                        'fakeStartPosition' => $this->getStartRelativeHeight($entry, true),
+                        'finish' => $finish->format('g:ia'),
+                        'startPosition' => null,
+                        'finishPosition' => $this->getFinishRelativeHeight($entry),
+                        'startHeight' => $this->getDurationInMinutes($entry, 'start')
                     ];
 
                     $indexOfItem = $this->getIndexOfItem($entriesByDate, $finishDate);
@@ -98,6 +106,16 @@ class SleepController extends Controller
 
     /**
      *
+     * @param $entry
+     * @return static
+     */
+    private function getFinish($entry)
+    {
+        return Carbon::createFromFormat('Y-m-d H:i:s', $entry->finish);
+    }
+
+    /**
+     *
      * @param $entriesByDate
      * @param $date
      * @return int|string
@@ -114,20 +132,46 @@ class SleepController extends Controller
     /**
      *
      * @param $entry
+     * @param bool $nullValue
      * @return int
      */
-    private function getDurationInMinutes($entry)
+    private function getDurationInMinutes($entry, $nullValue = false)
     {
-        $finish = Carbon::createFromFormat('Y-m-d H:i:s', $entry->finish);
-        return $finish->diffInMinutes(Carbon::createFromFormat('Y-m-d H:i:s', $entry->start));
+        if (!$nullValue) {
+            //Start and finish times are on the same day
+            $finish = Carbon::createFromFormat('Y-m-d H:i:s', $entry->finish);
+            return $finish->diffInMinutes(Carbon::createFromFormat('Y-m-d H:i:s', $entry->start));
+        }
+        else if ($nullValue === 'start') {
+            //The entry was finished on one day and started on an earlier day,
+            //so calculate the time from the finish till the most recent midnight
+            $finish = Carbon::createFromFormat('Y-m-d H:i:s', $entry->finish);
+            $midnight = clone $finish;
+            $midnight = $midnight->hour(0)->minute(0);
+            return $finish->diffInMinutes($midnight);
+        }
+        else if ($nullValue === 'finish') {
+            //The entry was started on one day and finished on a later day,
+            //so calculate the time from the start till midnight
+            $start = Carbon::createFromFormat('Y-m-d H:i:s', $entry->start);
+            $midnight = clone $start;
+            $midnight = $midnight->hour(24)->minute(0);
+            return $start->diffInMinutes($midnight);
+        }
+
     }
+
     /**
      *
      * @param $entry
+     * @param bool $fakeStart
      * @return int
      */
-    private function getStartRelativeHeight($entry)
+    private function getStartRelativeHeight($entry, $fakeStart = false)
     {
+        if ($fakeStart) {
+            return 0;
+        }
         return Carbon::createFromFormat('Y-m-d H:i:s', $entry->start)->diffInMinutes(Carbon::createFromFormat('Y-m-d H:i:s', $entry->start)->hour(0)->minute(0));
     }
 

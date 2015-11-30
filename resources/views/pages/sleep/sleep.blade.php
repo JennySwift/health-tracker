@@ -45,10 +45,27 @@
             <div id="sleep-chart-entries">
                 <div ng-repeat="date in entries" class="date-entries">
                     <div ng-repeat="entry in date">
-                        <div ng-style="{'bottom': entry.startRelativeHeight / 2 + 'px', 'height': entry.durationInMinutes / 2 + 'px'}" class="time start">
-                            <label class="label label-info">[[entry.start]]</label>
+
+                        <div
+                            ng-if="!entry.fakeStartPosition"
+                            ng-style="{'bottom': entry.startPosition/ 2 + 'px', 'height': entry.startHeight / 2 + 'px'}"
+                            class="time start">
+                            <label class="label label-success">[[entry.start]]</label>
                         </div>
-                        <div ng-style="{'bottom': entry.finishRelativeHeight / 2 + 'px'}" class="time finish">[[entry.finish]]</div>
+
+                        <div
+                            ng-if="!entry.fakeStartPosition"
+                            ng-style="{'bottom': entry.finishPosition/ 2 + 'px'}"
+                            class="time finish">
+                            <label class="label label-success">[[entry.finish]]</label>
+                        </div>
+
+                        <div ng-if="entry.fakeStartPosition || entry.fakeStartPosition === 0"
+                            ng-style="{'bottom': entry.fakeStartPosition + 'px', 'height': entry.startHeight / 2 + 'px'}"
+                            class="time start">
+                            {{--<label class="label label-danger">[[entry.fakeStart]]</label>--}}
+                        </div>
+
                     </div>
                     <div class="date">
                         <label class="label label-primary">[[date.date]]</label>

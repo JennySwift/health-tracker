@@ -29,8 +29,18 @@
             }
             .time {
                 position: absolute;
+                width: 100%;
                 &.start {
-                    background: pink;
+                    background: $success;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: flex-end;
+                    label {
+                        margin: 0;
+                    }
+                }
+                &.finish {
+                    background: coral;
                     display: flex;
                     flex-direction: column;
                     justify-content: flex-end;
