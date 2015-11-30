@@ -23,5 +23,8 @@ Route::get('/exercise-units', 'PagesController@exerciseUnits');
 //Journal
 Route::get('/journal', 'PagesController@journal');
 
+//Sleep
+Route::get('/sleep', 'PagesController@sleep');
+
 //Jasmine
 Route::get('tests', 'PagesController@jasmine');

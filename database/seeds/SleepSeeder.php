@@ -1,21 +1,21 @@
 <?php
 
-use App\Models\Exercises\Series as ExerciseSeries;
 use App\Models\Sleep\Sleep;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
-use Illuminate\Database\Eloquent\Model;
-
-use App\Models\Exercises\Workout;
+use Faker\Factory as Faker;
 
 class SleepSeeder extends Seeder {
 
     private $user;
+    private $faker;
 
     public function run()
 	{
 		Sleep::truncate();
+
+        $this->faker = Faker::create();
 
         $users = User::all();
 
@@ -31,7 +31,7 @@ class SleepSeeder extends Seeder {
 
                 $entry = new Sleep([
                     'start' => $date->hour(21)->format('Y-m-d H:i:s'),
-                    'finish' => $date->addDays(1)->hour(8)->format('Y-m-d H:i:s')
+                    'finish' => $date->addDays(1)->hour(8)->minute($this->faker->randomElement([0,15,30,45]))->format('Y-m-d H:i:s')
                 ]);
 
                 $entry->user()->associate($this->user);

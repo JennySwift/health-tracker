@@ -40,6 +40,7 @@
     </li>
 
     <li><a href="/journal">journal</a></li>
+    <li><a href="/sleep">sleep</a></li>
 
     <li><a href="#" id="search_button" class="location_button fa fa-search"></a></li>
 </ul>

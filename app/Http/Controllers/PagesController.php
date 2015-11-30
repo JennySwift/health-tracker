@@ -296,6 +296,15 @@ class PagesController extends Controller
     }
 
     /**
+     *
+     * @return \Illuminate\View\View
+     */
+    public function sleep()
+    {
+        return view('pages.sleep.sleep');
+    }
+
+    /**
      * Jasmine testing page
      * @return \Illuminate\View\View
      */

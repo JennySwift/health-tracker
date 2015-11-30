@@ -13466,6 +13466,24 @@ var app = angular.module('tracker');
 	});
 
 })();
+angular.module('tracker')
+    .controller('SleepController', function ($rootScope, $scope, SleepFactory) {
+
+        function getEntries () {
+            $rootScope.showLoading();
+            SleepFactory.getEntries()
+                .then(function (response) {
+                    $scope.entries = response.data;
+                    //$rootScope.$broadcast('provideFeedback', '');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        }
+
+        getEntries();
+    });
 var app = angular.module('tracker');
 
 (function () {
@@ -15174,6 +15192,79 @@ app.factory('ErrorsFactory', function ($q) {
     };
 });
 angular.module('tracker')
+    .factory('SleepFactory', function ($http) {
+
+        return {
+            getEntries: function () {
+                var $url = 'api/sleep';
+                
+                return $http.get($url);
+            }
+        }
+    });
+app.factory('WeightsFactory', function ($http) {
+    return {
+
+        getWeightForTheDay: function ($date) {
+            var $url = 'api/weights/' + $date;
+            return $http.get($url);
+        },
+
+        insertWeight: function ($sql_date) {
+            var $url = 'insert/weight';
+            var $weight = $("#weight").val();
+
+            var $data = {
+                date: $sql_date,
+                weight: $weight
+            };
+
+            return $http.post($url, $data);
+        },
+
+
+    };
+});
+app.factory('JournalFactory', function ($http) {
+    return {
+
+        getJournalEntry: function ($sqlDate) {
+            return $http.get('api/journal/' + $sqlDate);
+        },
+
+        filter: function () {
+            var $typing = $("#filter-journal").val();
+            var $url = 'api/filterJournalEntries';
+            var $data = {
+                typing: $typing
+            };
+
+            return $http.post($url, $data);
+        },
+
+        insert: function ($sqlDate) {
+            var $url = 'api/journal';
+
+            var $data = {
+                date: $sqlDate,
+                text: $("#journal-entry").html()
+            };
+
+            return $http.post($url, $data);
+        },
+
+        update: function ($entry) {
+            var $url = 'api/journal/' + $entry.id;
+
+            var $data = {
+                text: $("#journal-entry").html()
+            };
+
+            return $http.put($url, $data);
+        }
+    };
+});
+angular.module('tracker')
     .factory('ExerciseEntriesFactory', function ($http) {
         return {
             getSpecificExerciseEntries: function ($sql_date, $entry) {
@@ -15971,68 +16062,6 @@ angular.module('tracker')
             }
         }
     });
-app.factory('JournalFactory', function ($http) {
-    return {
-
-        getJournalEntry: function ($sqlDate) {
-            return $http.get('api/journal/' + $sqlDate);
-        },
-
-        filter: function () {
-            var $typing = $("#filter-journal").val();
-            var $url = 'api/filterJournalEntries';
-            var $data = {
-                typing: $typing
-            };
-
-            return $http.post($url, $data);
-        },
-
-        insert: function ($sqlDate) {
-            var $url = 'api/journal';
-
-            var $data = {
-                date: $sqlDate,
-                text: $("#journal-entry").html()
-            };
-
-            return $http.post($url, $data);
-        },
-
-        update: function ($entry) {
-            var $url = 'api/journal/' + $entry.id;
-
-            var $data = {
-                text: $("#journal-entry").html()
-            };
-
-            return $http.put($url, $data);
-        }
-    };
-});
-app.factory('WeightsFactory', function ($http) {
-    return {
-
-        getWeightForTheDay: function ($date) {
-            var $url = 'api/weights/' + $date;
-            return $http.get($url);
-        },
-
-        insertWeight: function ($sql_date) {
-            var $url = 'insert/weight';
-            var $weight = $("#weight").val();
-
-            var $data = {
-                date: $sql_date,
-                weight: $weight
-            };
-
-            return $http.post($url, $data);
-        },
-
-
-    };
-});
 angular.module('tracker')
     .directive('feedbackDirective', function ($sce, $timeout) {
         return {
