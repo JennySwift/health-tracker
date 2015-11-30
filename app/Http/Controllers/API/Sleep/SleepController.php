@@ -15,32 +15,33 @@ class SleepController extends Controller
     public function index(Request $request)
     {
         $entries = Sleep::forCurrentUser()->get();
+        $formatForUser = 'd/m/y';
 
         if($request->has('byDate')) {
 //            //Sort entries by date
 //            return $entries;
-            $earliestDate = Carbon::createFromFormat('Y-m-d H:i:s', Sleep::forCurrentUser()->min('start'))->format('Y-m-d');
-            $lastDate = Carbon::createFromFormat('Y-m-d H:i:s', Sleep::forCurrentUser()->max('finish'))->format('Y-m-d');
+            $earliestDate = Carbon::createFromFormat('Y-m-d H:i:s', Sleep::forCurrentUser()->min('start'));
+            $lastDate = Carbon::createFromFormat('Y-m-d H:i:s', Sleep::forCurrentUser()->max('finish'));
 
             //Form an array with all the dates in the range of entries
             $entriesByDate = [];
-            $entriesByDate[$lastDate] = [
-                'date' => $lastDate
+            $entriesByDate[$lastDate->format($formatForUser)] = [
+                'date' => $lastDate->format($formatForUser)
             ];
 
             $date = Carbon::createFromFormat('Y-m-d H:i:s', Sleep::forCurrentUser()->max('finish'));
-            while ($date->format('Y-m-d') > $earliestDate) {
+            while ($date > $earliestDate) {
                 $date = $date->subDays(1);
 
-                $entriesByDate[$date->format('Y-m-d')] = [
-                    'date' => $date->format('Y-m-d')
+                $entriesByDate[$date->format($formatForUser)] = [
+                    'date' => $date->format($formatForUser)
                 ];
             }
 
             //Add each entry to the array I formed
             foreach ($entries as $entry) {
-                $startDate = Carbon::createFromFormat('Y-m-d H:i:s', $entry->start)->format('Y-m-d');
-                $finishDate = Carbon::createFromFormat('Y-m-d H:i:s', $entry->finish)->format('Y-m-d');
+                $startDate = Carbon::createFromFormat('Y-m-d H:i:s', $entry->start)->format($formatForUser);
+                $finishDate = Carbon::createFromFormat('Y-m-d H:i:s', $entry->finish)->format($formatForUser);
 
                 if ($startDate === $finishDate) {
                     $array = [

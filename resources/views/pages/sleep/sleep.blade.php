@@ -48,7 +48,9 @@
                         <div ng-style="{'bottom': entry.startRelativeHeight / 2 + 'px'}" class="time">[[entry.start]]</div>
                         <div ng-style="{'bottom': entry.finishRelativeHeight / 2 + 'px'}" class="time">[[entry.finish]]</div>
                     </div>
-                    <div class="date">[[date.date]]</div>
+                    <div class="date">
+                        <label class="label label-primary">[[date.date]]</label>
+                    </div>
                 </div>
             </div>
 

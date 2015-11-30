@@ -461,7 +461,7 @@ body.browser-height {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  height: 720px;
+  height: 760px;
   -webkit-justify-content: space-around;
   -ms-flex-pack: distribute;
   justify-content: space-around;
