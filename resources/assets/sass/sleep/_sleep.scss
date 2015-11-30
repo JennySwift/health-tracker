@@ -1,6 +1,8 @@
 #sleep-chart {
     display: flex;
     height: 720px;
+    justify-content: space-around;
+    margin-top: 50px;
     #sleep-chart-times {
         position: relative;
         > * {
@@ -16,11 +18,14 @@
     #sleep-chart-entries {
         display: flex;
         overflow: scroll;
+        width: 850px;
         .date-entries {
             margin: 0 20px;
             position: relative;
+            min-width: 75px;
             .date {
-                margin-bottom: 20px;
+                position: absolute;
+                top: 0;
             }
             .time {
                 position: absolute;

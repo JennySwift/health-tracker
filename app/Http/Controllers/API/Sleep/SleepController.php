@@ -29,8 +29,9 @@ class SleepController extends Controller
             ];
 
             $date = Carbon::createFromFormat('Y-m-d H:i:s', Sleep::forCurrentUser()->max('finish'));
-            while ($date > $earliestDate) {
+            while ($date->format('Y-m-d') > $earliestDate) {
                 $date = $date->subDays(1);
+
                 $entriesByDate[$date->format('Y-m-d')] = [
                     'date' => $date->format('Y-m-d')
                 ];
