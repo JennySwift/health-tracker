@@ -457,6 +457,28 @@ body.browser-height {
       font-size: 20px;
       cursor: pointer; }
 
+#sleep-chart {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  height: 720px; }
+  #sleep-chart #sleep-chart-times {
+    position: relative; }
+    #sleep-chart #sleep-chart-times > * {
+      position: absolute; }
+  #sleep-chart #sleep-chart-entries {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    overflow: scroll; }
+    #sleep-chart #sleep-chart-entries .date-entries {
+      margin: 0 20px;
+      position: relative; }
+      #sleep-chart #sleep-chart-entries .date-entries .date {
+        margin-bottom: 20px; }
+      #sleep-chart #sleep-chart-entries .date-entries .time {
+        position: absolute; }
+
 #navbar {
   display: -webkit-flex;
   display: -ms-flexbox;

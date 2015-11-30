@@ -1,0 +1,30 @@
+#sleep-chart {
+    display: flex;
+    height: 720px;
+    #sleep-chart-times {
+        position: relative;
+        > * {
+            position: absolute;
+        }
+//        display: flex;
+//        flex-direction: column;
+//        justify-content: space-between;
+//        > * {
+//            padding: 3px 10px;
+//        }
+    }
+    #sleep-chart-entries {
+        display: flex;
+        overflow: scroll;
+        .date-entries {
+            margin: 0 20px;
+            position: relative;
+            .date {
+                margin-bottom: 20px;
+            }
+            .time {
+                position: absolute;
+            }
+        }
+    }
+}

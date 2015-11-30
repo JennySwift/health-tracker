@@ -3,7 +3,7 @@ angular.module('tracker')
 
         return {
             getEntries: function () {
-                var $url = 'api/sleep';
+                var $url = 'api/sleep?byDate=true';
                 
                 return $http.get($url);
             }

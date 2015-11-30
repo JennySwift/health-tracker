@@ -18,6 +18,7 @@ class SleepController extends Controller
 
         if($request->has('byDate')) {
 //            //Sort entries by date
+//            return $entries;
             $earliestDate = Carbon::createFromFormat('Y-m-d H:i:s', Sleep::forCurrentUser()->min('start'))->format('Y-m-d');
             $lastDate = Carbon::createFromFormat('Y-m-d H:i:s', Sleep::forCurrentUser()->max('finish'))->format('Y-m-d');
 
@@ -41,20 +42,33 @@ class SleepController extends Controller
                 $finishDate = Carbon::createFromFormat('Y-m-d H:i:s', $entry->finish)->format('Y-m-d');
 
                 if ($startDate === $finishDate) {
-                    $entriesByDate[$startDate][] = [
-                        'start' => Carbon::createFromFormat('Y-m-d H:i:s', $entry->start)->format('d M y g:ia'),
-                        'finish' => Carbon::createFromFormat('Y-m-d H:i:s', $entry->finish)->format('d M y g:ia')
+                    $array = [
+                        'start' => Carbon::createFromFormat('Y-m-d H:i:s', $entry->start)->format('g:ia'),
+                        'finish' => Carbon::createFromFormat('Y-m-d H:i:s', $entry->finish)->format('g:ia'),
+                        'startRelativeHeight' => Carbon::createFromFormat('Y-m-d H:i:s', $entry->start)->diffInMinutes(Carbon::createFromFormat('Y-m-d H:i:s', $entry->start)->hour(0)->minute(0)),
+                        'finishRelativeHeight' => Carbon::createFromFormat('Y-m-d H:i:s', $entry->finish)->diffInMinutes(Carbon::createFromFormat('Y-m-d H:i:s', $entry->finish)->hour(0)->minute(0))
                     ];
+
+                    $entriesByDate[$startDate][] = $array;
                 }
                 else {
-                    $entriesByDate[$startDate][] = [
-                        'start' => Carbon::createFromFormat('Y-m-d H:i:s', $entry->start)->format('d M y g:ia'),
-                        'finish' => null
+                    $array = [
+                        'start' => Carbon::createFromFormat('Y-m-d H:i:s', $entry->start)->format('g:ia'),
+                        'finish' => null,
+                        'startRelativeHeight' => Carbon::createFromFormat('Y-m-d H:i:s', $entry->start)->diffInMinutes(Carbon::createFromFormat('Y-m-d H:i:s', $entry->start)->hour(0)->minute(0)),
+                        'finishRelativeHeight' => null
                     ];
-                    $entriesByDate[$finishDate][] = [
+
+                    $entriesByDate[$startDate][] = $array;
+
+                    $array = [
                         'start' => null,
-                        'finish' => Carbon::createFromFormat('Y-m-d H:i:s', $entry->finish)->format('d M y g:ia'),
+                        'finish' => Carbon::createFromFormat('Y-m-d H:i:s', $entry->finish)->format('g:ia'),
+                        'startRelativeHeight' => null,
+                        'finishRelativeHeight' => Carbon::createFromFormat('Y-m-d H:i:s', $entry->finish)->diffInMinutes(Carbon::createFromFormat('Y-m-d H:i:s', $entry->finish)->hour(0)->minute(0))
                     ];
+
+                    $entriesByDate[$finishDate][] = $array;
                 }
             }
 
