@@ -25,16 +25,20 @@ class SleepController extends Controller
 
             //Form an array with all the dates in the range of entries
             $entriesByDate = [];
-            $entriesByDate[$lastDate->format($formatForUser)] = [
-                'date' => $lastDate->format($formatForUser)
+            $index = 0;
+            $entriesByDate[] = [
+                'date' => $lastDate->format($formatForUser),
+                'orderIndex' => $index
             ];
 
             $date = Carbon::createFromFormat('Y-m-d H:i:s', Sleep::forCurrentUser()->max('finish'));
             while ($date > $earliestDate) {
+                $index++;
                 $date = $date->subDays(1);
 
-                $entriesByDate[$date->format($formatForUser)] = [
-                    'date' => $date->format($formatForUser)
+                $entriesByDate[] = [
+                    'date' => $date->format($formatForUser),
+                    'orderIndex' => $index
                 ];
             }
 
@@ -52,7 +56,8 @@ class SleepController extends Controller
                         'durationInMinutes' => $this->getDurationInMinutes($entry)
                     ];
 
-                    $entriesByDate[$startDate][] = $array;
+                    $indexOfItem = $this->getIndexOfItem($entriesByDate, $startDate);
+                    $entriesByDate[$indexOfItem][] = $array;
                 }
                 else {
                     $array = [
@@ -62,7 +67,8 @@ class SleepController extends Controller
                         'finishRelativeHeight' => null,
                     ];
 
-                    $entriesByDate[$startDate][] = $array;
+                    $indexOfItem = $this->getIndexOfItem($entriesByDate, $startDate);
+                    $entriesByDate[$indexOfItem][] = $array;
 
                     $array = [
                         'start' => null,
@@ -71,11 +77,12 @@ class SleepController extends Controller
                         'finishRelativeHeight' => $this->getFinishRelativeHeight($entry)
                     ];
 
-                    $entriesByDate[$finishDate][] = $array;
+                    $indexOfItem = $this->getIndexOfItem($entriesByDate, $finishDate);
+                    $entriesByDate[$indexOfItem][] = $array;
                 }
             }
 
-            return $entriesByDate;
+            return collect($entriesByDate)->reverse();
 
 
         }
@@ -87,6 +94,21 @@ class SleepController extends Controller
         }
 
 
+    }
+
+    /**
+     *
+     * @param $entriesByDate
+     * @param $date
+     * @return int|string
+     */
+    private function getIndexOfItem($entriesByDate, $date)
+    {
+        foreach($entriesByDate as $key => $entry) {
+            if ($entry['date'] === $date) {
+                return $key;
+            }
+        }
     }
 
     /**
