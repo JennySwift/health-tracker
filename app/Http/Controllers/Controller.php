@@ -3,14 +3,30 @@
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Bus\DispatchesCommands;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use App;
+use League\Fractal\Manager;
+use League\Fractal\Resource\Collection;
+use League\Fractal\Serializer\DataArraySerializer;
+use League\Fractal\TransformerAbstract;
 
 abstract class Controller extends BaseController {
 
 	use DispatchesCommands, ValidatesRequests;
+
+    /**
+     * @var Request
+     */
+    private $request;
+
+    public function __construct(Request $request)
+    {
+
+        $this->request = $request;
+    }
 
 	//So that I don't have to remember to uncomment line 18 of kernel.php before pushing
 
@@ -113,5 +129,44 @@ abstract class Controller extends BaseController {
 
         return response(transform($resource), Response::HTTP_CREATED);
     }
+
+    /**
+     * For Fractal transformer
+     * @param $resource
+     * @return array
+     */
+    public function transform($resource)
+    {
+        $manager = new Manager();
+        $manager->setSerializer(new DataArraySerializer);
+
+//        $manager->parseIncludes(request()->get('includes', []));
+
+        if ($this->request->has('include')) {
+//            $manager->parseIncludes($_GET['include']);
+            //testable :) $_GET is not object-oriented
+            //download latest version of airmail :)
+            //pull request to laravel-starter repository getting rid of things in .gitignore
+            // /public/build
+            // /public/css
+            // /public/js
+            $manager->parseIncludes($this->request->include);
+        }
+
+        return $manager->createData($resource)->toArray();
+    }
+
+    /**
+     * For Fractal transformer
+     * @param $model
+     * @param TransformerAbstract $transformer
+     * @param null $key
+     * @return Collection
+     */
+    public function createCollection($model, TransformerAbstract $transformer, $key = null)
+    {
+        return new Collection($model, $transformer, $key);
+    }
+
 
 }

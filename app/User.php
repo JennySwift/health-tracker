@@ -163,6 +163,15 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     }
 
     /**
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function sleep()
+    {
+        return $this->hasMany('App\Models\Sleep\Sleep');
+    }
+
+    /**
      * Return the gravatar URL for the user
      * This method needs to be called getFieldAttribute
      * @return string
