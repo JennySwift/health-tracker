@@ -29,6 +29,15 @@
             }
             .time {
                 position: absolute;
+                &.start {
+                    background: pink;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: flex-end;
+                    label {
+                        margin: 0;
+                    }
+                }
             }
         }
     }

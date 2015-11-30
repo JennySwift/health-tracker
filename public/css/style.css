@@ -485,6 +485,19 @@ body.browser-height {
         top: 0; }
       #sleep-chart #sleep-chart-entries .date-entries .time {
         position: absolute; }
+        #sleep-chart #sleep-chart-entries .date-entries .time.start {
+          background: pink;
+          display: -webkit-flex;
+          display: -ms-flexbox;
+          display: flex;
+          -webkit-flex-direction: column;
+          -ms-flex-direction: column;
+          flex-direction: column;
+          -webkit-justify-content: flex-end;
+          -ms-flex-pack: end;
+          justify-content: flex-end; }
+          #sleep-chart #sleep-chart-entries .date-entries .time.start label {
+            margin: 0; }
 
 #navbar {
   display: -webkit-flex;

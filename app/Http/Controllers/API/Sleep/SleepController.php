@@ -47,8 +47,9 @@ class SleepController extends Controller
                     $array = [
                         'start' => Carbon::createFromFormat('Y-m-d H:i:s', $entry->start)->format('g:ia'),
                         'finish' => Carbon::createFromFormat('Y-m-d H:i:s', $entry->finish)->format('g:ia'),
-                        'startRelativeHeight' => Carbon::createFromFormat('Y-m-d H:i:s', $entry->start)->diffInMinutes(Carbon::createFromFormat('Y-m-d H:i:s', $entry->start)->hour(0)->minute(0)),
-                        'finishRelativeHeight' => Carbon::createFromFormat('Y-m-d H:i:s', $entry->finish)->diffInMinutes(Carbon::createFromFormat('Y-m-d H:i:s', $entry->finish)->hour(0)->minute(0))
+                        'startRelativeHeight' => $this->getStartRelativeHeight($entry),
+                        'finishRelativeHeight' => $this->getFinishRelativeHeight($entry),
+                        'durationInMinutes' => $this->getDurationInMinutes($entry)
                     ];
 
                     $entriesByDate[$startDate][] = $array;
@@ -57,8 +58,8 @@ class SleepController extends Controller
                     $array = [
                         'start' => Carbon::createFromFormat('Y-m-d H:i:s', $entry->start)->format('g:ia'),
                         'finish' => null,
-                        'startRelativeHeight' => Carbon::createFromFormat('Y-m-d H:i:s', $entry->start)->diffInMinutes(Carbon::createFromFormat('Y-m-d H:i:s', $entry->start)->hour(0)->minute(0)),
-                        'finishRelativeHeight' => null
+                        'startRelativeHeight' => $this->getStartRelativeHeight($entry),
+                        'finishRelativeHeight' => null,
                     ];
 
                     $entriesByDate[$startDate][] = $array;
@@ -67,7 +68,7 @@ class SleepController extends Controller
                         'start' => null,
                         'finish' => Carbon::createFromFormat('Y-m-d H:i:s', $entry->finish)->format('g:ia'),
                         'startRelativeHeight' => null,
-                        'finishRelativeHeight' => Carbon::createFromFormat('Y-m-d H:i:s', $entry->finish)->diffInMinutes(Carbon::createFromFormat('Y-m-d H:i:s', $entry->finish)->hour(0)->minute(0))
+                        'finishRelativeHeight' => $this->getFinishRelativeHeight($entry)
                     ];
 
                     $entriesByDate[$finishDate][] = $array;
@@ -86,5 +87,35 @@ class SleepController extends Controller
         }
 
 
+    }
+
+    /**
+     *
+     * @param $entry
+     * @return int
+     */
+    private function getDurationInMinutes($entry)
+    {
+        $finish = Carbon::createFromFormat('Y-m-d H:i:s', $entry->finish);
+        return $finish->diffInMinutes(Carbon::createFromFormat('Y-m-d H:i:s', $entry->start));
+    }
+    /**
+     *
+     * @param $entry
+     * @return int
+     */
+    private function getStartRelativeHeight($entry)
+    {
+        return Carbon::createFromFormat('Y-m-d H:i:s', $entry->start)->diffInMinutes(Carbon::createFromFormat('Y-m-d H:i:s', $entry->start)->hour(0)->minute(0));
+    }
+
+    /**
+     *
+     * @param $entry
+     * @return int
+     */
+    private function getFinishRelativeHeight($entry)
+    {
+        return Carbon::createFromFormat('Y-m-d H:i:s', $entry->finish)->diffInMinutes(Carbon::createFromFormat('Y-m-d H:i:s', $entry->finish)->hour(0)->minute(0));
     }
 }
