@@ -7,7 +7,7 @@ app.factory('JournalFactory', function ($http) {
 
         filter: function () {
             var $typing = $("#filter-journal").val();
-            var $url = 'api/journal/' + $typing;
+            var $url = 'api/journal?typing=' + $typing;
 
             return $http.get($url);
         },

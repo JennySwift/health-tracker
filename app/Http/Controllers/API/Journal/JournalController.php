@@ -29,12 +29,12 @@ class JournalController extends Controller
 
     /**
      *
-     * @param $typing
+     * @param Request $request
      * @return mixed
      */
-    public function index($typing)
+    public function index(Request $request)
     {
-        $typing = '%' . $typing . '%';
+        $typing = '%' . $request->get('typing') . '%';
         $matches = Journal::where('user_id', Auth::user()->id)
             ->where('text', 'LIKE', $typing)
             ->orderBy('date', 'desc')
