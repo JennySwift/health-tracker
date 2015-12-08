@@ -142,7 +142,7 @@ var app = angular.module('tracker');
 
         $scope.insertSleepEntry = function () {
             $rootScope.showLoading();
-            SleepFactory.store($scope.newSleepEntry)
+            SleepFactory.store($scope.newSleepEntry, $scope.date.sql)
                 .then(function (response) {
                     //$scope.sleeps.push(response.data);
                     $rootScope.$broadcast('provideFeedback', 'Entry created', 'success');

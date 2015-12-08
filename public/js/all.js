@@ -13468,7 +13468,7 @@ var app = angular.module('tracker');
 
         $scope.insertSleepEntry = function () {
             $rootScope.showLoading();
-            SleepFactory.store($scope.newSleepEntry)
+            SleepFactory.store($scope.newSleepEntry, $scope.date.sql)
                 .then(function (response) {
                     //$scope.sleeps.push(response.data);
                     $rootScope.$broadcast('provideFeedback', 'Entry created', 'success');
@@ -15217,20 +15217,22 @@ angular.module('tracker')
                 
                 return $http.get($url);
             },
-            store: function (entry) {
+            store: function (entry, date) {
                 var url = '/api/sleep';
 
-                var start = Date.parse(entry.start);
+                var startDate = date;
+                var finishDate = date;
 
                 if (entry.startedYesterday) {
-                    start = start.add({hours: -24});
+                    startDate = moment(startDate, 'YYYY-MM-DD').subtract(1, 'days').format('YYYY-MM-DD');
                 }
 
-                start = start.toString('yyyy-MM-dd HH:mm:ss');
+                var startTime = Date.parse(entry.start).toString('HH:mm:ss');
+                var finishTime = Date.parse(entry.finish).toString('HH:mm:ss');
 
                 var data = {
-                    start: start,
-                    finish: Date.parse(entry.finish).toString('yyyy-MM-dd HH:mm:ss')
+                    start: startDate + ' ' + startTime,
+                    finish: finishDate + ' ' + finishTime
                 };
 
                 return $http.post(url, data);
