@@ -1,13 +1,17 @@
 var app = angular.module('tracker');
 
 (function () {
-	app.controller('journal', function ($rootScope, $scope, $http, DatesFactory, JournalFactory) {
+	app.controller('journal', function ($rootScope, $scope, $http, DatesFactory, JournalFactory, SleepFactory) {
 		/**
 		 * scope properties
 		 */
 		
 		//journal
 		$scope.journal_entry = entry;
+
+        $scope.newSleepEntry = {
+            startedYesterday: true
+        };
 
 		//date
 		/**
@@ -135,6 +139,19 @@ var app = angular.module('tracker');
                     $rootScope.responseError(response);
                 });
         }
+
+        $scope.insertSleepEntry = function () {
+            $rootScope.showLoading();
+            SleepFactory.store($scope.newSleepEntry)
+                .then(function (response) {
+                    //$scope.sleeps.push(response.data);
+                    $rootScope.$broadcast('provideFeedback', 'Entry created', 'success');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        };
 
 		
 	});

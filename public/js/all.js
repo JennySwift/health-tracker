@@ -13327,13 +13327,17 @@ function runBlock ($rootScope, ErrorsFactory) {
 var app = angular.module('tracker');
 
 (function () {
-	app.controller('journal', function ($rootScope, $scope, $http, DatesFactory, JournalFactory) {
+	app.controller('journal', function ($rootScope, $scope, $http, DatesFactory, JournalFactory, SleepFactory) {
 		/**
 		 * scope properties
 		 */
 		
 		//journal
 		$scope.journal_entry = entry;
+
+        $scope.newSleepEntry = {
+            startedYesterday: true
+        };
 
 		//date
 		/**
@@ -13461,6 +13465,19 @@ var app = angular.module('tracker');
                     $rootScope.responseError(response);
                 });
         }
+
+        $scope.insertSleepEntry = function () {
+            $rootScope.showLoading();
+            SleepFactory.store($scope.newSleepEntry)
+                .then(function (response) {
+                    //$scope.sleeps.push(response.data);
+                    $rootScope.$broadcast('provideFeedback', 'Entry created', 'success');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        };
 
 		
 	});
@@ -15199,6 +15216,24 @@ angular.module('tracker')
                 var $url = 'api/sleep?byDate=true';
                 
                 return $http.get($url);
+            },
+            store: function (entry) {
+                var url = '/api/sleep';
+
+                var start = Date.parse(entry.start);
+
+                if (entry.startedYesterday) {
+                    start = start.add({hours: -24});
+                }
+
+                start = start.toString('yyyy-MM-dd HH:mm:ss');
+
+                var data = {
+                    start: start,
+                    finish: Date.parse(entry.finish).toString('yyyy-MM-dd HH:mm:ss')
+                };
+
+                return $http.post(url, data);
             }
         }
     });

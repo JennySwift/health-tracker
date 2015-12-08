@@ -421,6 +421,24 @@ body.browser-height {
   opacity: 0;
   height: 0px; }
 
+#new-sleep-entry {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  margin: 5px 0; }
+  #new-sleep-entry > * {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    margin: 0 5px; }
+    #new-sleep-entry > * input[type="checkbox"] {
+      margin: 0 7px; }
+    #new-sleep-entry > * button {
+      margin: 0; }
+
 #journal {
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -431,7 +449,7 @@ body.browser-height {
   -webkit-align-items: center;
   -ms-flex-align: center;
   align-items: center; }
-  #journal button {
+  #journal button.save {
     width: 100%;
     max-width: 600px;
     margin-bottom: 20px; }

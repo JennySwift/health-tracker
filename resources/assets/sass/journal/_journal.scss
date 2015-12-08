@@ -1,8 +1,24 @@
+#new-sleep-entry {
+    display: flex;
+    margin: 5px 0;
+    > * {
+        display: flex;
+        align-items: center;
+        margin: 0 5px;
+        input[type="checkbox"] {
+            margin: 0 7px;
+        }
+        button {
+            margin: 0;
+        }
+    }
+}
+
 #journal {
     display:flex;
     flex-direction: column;
     align-items: center;
-    button {
+    button.save {
         width: 100%;
         max-width: 600px;
         margin-bottom: 20px;

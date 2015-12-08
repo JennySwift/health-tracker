@@ -10,6 +10,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use App;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
+use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\DataArraySerializer;
 use League\Fractal\TransformerAbstract;
 
@@ -22,11 +23,11 @@ abstract class Controller extends BaseController {
      */
     private $request;
 
-    public function __construct(Request $request)
-    {
-
-        $this->request = $request;
-    }
+//    public function __construct(Request $request)
+//    {
+//
+//        $this->request = $request;
+//    }
 
 	//So that I don't have to remember to uncomment line 18 of kernel.php before pushing
 
@@ -64,6 +65,17 @@ abstract class Controller extends BaseController {
     public function responseNoContent()
     {
         return response([], Response::HTTP_NO_CONTENT);
+    }
+
+    /**
+     * @param Model               $model
+     * @param TransformerAbstract $transformer
+     * @param null                $key
+     * @return Item
+     */
+    function createItem($model, TransformerAbstract $transformer, $key = null)
+    {
+        return new Item($model, $transformer, $key);
     }
 
     /**
@@ -142,16 +154,11 @@ abstract class Controller extends BaseController {
 
 //        $manager->parseIncludes(request()->get('includes', []));
 
-        if ($this->request->has('include')) {
-//            $manager->parseIncludes($_GET['include']);
-            //testable :) $_GET is not object-oriented
-            //download latest version of airmail :)
-            //pull request to laravel-starter repository getting rid of things in .gitignore
-            // /public/build
-            // /public/css
-            // /public/js
-            $manager->parseIncludes($this->request->include);
-        }
+        //This seems to be causing an error with my __construct method in ProvidersController.php:
+        //'Call to a member function has() on null'
+//        if ($this->request->has('include')) {
+//            $manager->parseIncludes($this->request->include);
+//        }
 
         return $manager->createData($resource)->toArray();
     }

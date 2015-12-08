@@ -17,6 +17,8 @@
 
             <input ng-keyup="filterJournalEntries($event.keyCode)" type="text" placeholder="search entries" id="filter-journal" class="margin-bottom"/>
 
+            @include('templates.new-sleep-entry')
+
             <div ng-show="filter_results.length > 0" id="filter-results-container">
                 <i ng-click="clearFilterResults()" class="fa fa-close"></i>
 
@@ -35,7 +37,7 @@
 		
 			<div ng-bind-html="journal_entry.text" id="journal-entry" class="wysiwyg margin-bottom"></div>
 		
-			<button ng-click="insertOrUpdateJournalEntry()" class="btn btn-success">save entry</button>
+			<button ng-click="insertOrUpdateJournalEntry()" class="btn btn-success save">save entry</button>
 		
 		</div>
 		

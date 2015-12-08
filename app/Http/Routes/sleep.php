@@ -1,3 +1,3 @@
 <?php
 
-Route::resource('sleep', 'Sleep\SleepController', ['only' => ['index']]);
+Route::resource('sleep', 'Sleep\SleepController', ['only' => ['index', 'store']]);
