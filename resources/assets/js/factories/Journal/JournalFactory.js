@@ -7,12 +7,9 @@ app.factory('JournalFactory', function ($http) {
 
         filter: function () {
             var $typing = $("#filter-journal").val();
-            var $url = 'api/filterJournalEntries';
-            var $data = {
-                typing: $typing
-            };
+            var $url = 'api/journal/' + $typing;
 
-            return $http.post($url, $data);
+            return $http.get($url);
         },
 
         insert: function ($sqlDate) {
