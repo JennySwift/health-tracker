@@ -68,12 +68,43 @@ class Timer extends Model
      *
      * @return int
      */
-    public function getDurationInMinutesAttribute()
+    public function getTotalMinutesAttribute()
     {
         $start = Carbon::createFromFormat('Y-m-d H:i:s', $this->start);
         $finish = Carbon::createFromFormat('Y-m-d H:i:s', $this->finish);
         return $finish->diffInMinutes($start);
     }
+
+    /**
+     * Not the total minutes. If total minutes is 90, for calculating
+     * 1 hour, 30 mins.
+     */
+    public function getMinutesAttribute()
+    {
+        return $this->totalMinutes % 60;
+    }
+
+    public function getFormattedMinutesAttribute()
+    {
+        if ($this->minutes < 10) {
+            return '0' . $this->minutes;
+        }
+        else {
+            return $this->minutes;
+        }
+    }
+
+    /**
+     * If total minutes is 90, hours is 1.
+     * @return int
+     */
+    public function getHoursAttribute()
+    {
+        $finish = Carbon::createFromFormat('Y-m-d H:i:s', $this->finish);
+        return $finish->diffInHours(Carbon::createFromFormat('Y-m-d H:i:s', $this->start));
+    }
+
+
 
     /**
      * Just for one day. If it goes overnight it will not take that into account.

@@ -6,6 +6,11 @@
         .timer {
             display: flex;
             justify-content: space-between;
+            .duration {
+                display: flex;
+                justify-content: flex-end;
+                width: 50px;
+            }
         }
     }
 }

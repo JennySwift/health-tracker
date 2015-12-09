@@ -17,7 +17,7 @@ class ActivitiesTest extends TestCase
     {
         $response = $this->call('GET', '/api/activities');
         $content = json_decode($response->getContent(), true);
-    //  dd($content);
+//      dd($content);
 
         $this->assertArrayHasKey('id', $content[0]);
         $this->assertArrayHasKey('name', $content[0]);

@@ -65,6 +65,10 @@ angular.module('tracker')
             }
             return true;
 
-        }
+        };
+
+        $scope.formatMinutes = function (minutes) {
+            return minutes * 10;
+        };
 
     });

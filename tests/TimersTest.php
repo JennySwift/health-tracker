@@ -32,7 +32,7 @@ class TimersTest extends TestCase {
         $this->assertArrayHasKey('finishPosition', $content[0][4]);
         $this->assertArrayHasKey('startHeight', $content[0][4]);
         $this->assertArrayHasKey('color', $content[0][4]);
-        
+
 //        $this->assertArrayHasKey('id', $content[0]['activity']['data']);
 //        $this->assertArrayHasKey('name', $content[0]['activity']['data']);
 //        $this->assertArrayHasKey('color', $content[0]['activity']['data']);
@@ -52,7 +52,7 @@ class TimersTest extends TestCase {
     {
         $response = $this->call('GET', '/api/timers');
         $content = json_decode($response->getContent(), true);
-    //  dd($content);
+      dd($content);
 
         $this->assertArrayHasKey('id', $content[0]);
         $this->assertArrayHasKey('start', $content[0]);
@@ -60,6 +60,7 @@ class TimersTest extends TestCase {
         $this->assertArrayHasKey('startDate', $content[0]);
         $this->assertArrayHasKey('hours', $content[0]);
         $this->assertArrayHasKey('minutes', $content[0]);
+        $this->assertArrayHasKey('formattedMinutes', $content[0]);
         $this->assertArrayHasKey('activity', $content[0]);
 
         //Todo: check the values are correct
@@ -93,6 +94,7 @@ class TimersTest extends TestCase {
         $this->assertArrayHasKey('startDate', $content);
         $this->assertArrayHasKey('hours', $content);
         $this->assertArrayHasKey('minutes', $content);
+        $this->assertArrayHasKey('formattedMinutes', $content);
 
         $this->assertEquals('9:00pm', $content['start']);
         $this->assertEquals('8:30am', $content['finish']);

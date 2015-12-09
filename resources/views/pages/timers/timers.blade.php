@@ -38,8 +38,8 @@
                     <span ng-style="{'background': timer.activity.data.color}" class="label">[[timer.activity.data.name]]</span>
                 </div>
 
-                <div>
-                    <span>[[timer.minutes]]</span>
+                <div class="duration">
+                    <span>[[timer.hours]]:[[timer.formattedMinutes]]</span>
                 </div>
 
                 <div>

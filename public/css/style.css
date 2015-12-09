@@ -542,6 +542,14 @@ body.browser-height {
   -webkit-justify-content: space-between;
   -ms-flex-pack: justify;
   justify-content: space-between; }
+  #timers-page #timers .timer .duration {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-justify-content: flex-end;
+    -ms-flex-pack: end;
+    justify-content: flex-end;
+    width: 50px; }
 
 #navbar {
   display: -webkit-flex;

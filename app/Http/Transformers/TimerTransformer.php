@@ -34,15 +34,11 @@ class TimerTransformer extends TransformerAbstract
         ];
 
         if ($timer->finish) {
-            $finish = Carbon::createFromFormat('Y-m-d H:i:s', $timer->finish);
-            $durationInMinutes = $finish->diffInMinutes($start);
-            $minutes = $durationInMinutes % 60;
-            $hours = $finish->diffInHours($start);
-
-            $array['finish'] = $finish->format('g:ia');
-            $array['hours'] = $hours;
-            $array['minutes'] = $minutes;
-            $array['durationInMinutes'] = $durationInMinutes;
+            $array['finish'] = Carbon::createFromFormat('Y-m-d H:i:s', $timer->finish)->format('g:ia');
+            $array['hours'] = $timer->hours;
+            $array['minutes'] = $timer->minutes;
+            $array['formattedMinutes'] = $timer->formattedMinutes;
+            $array['durationInMinutes'] = $timer->totalMinutes;
         }
 
         return $array;
