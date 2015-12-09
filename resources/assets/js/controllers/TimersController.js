@@ -1,6 +1,8 @@
 angular.module('tracker')
     .controller('TimersController', function ($rootScope, $scope, TimersFactory, ActivitiesFactory) {
 
+        $("#new-timer-activity").select2({});
+        
         $scope.startTimer = function () {
             $rootScope.showLoading();
             TimersFactory.store($scope.newTimer)

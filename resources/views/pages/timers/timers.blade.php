@@ -20,7 +20,7 @@
         <select
             ng-options="activity.id as activity.name for activity in activities"
             ng-model="newTimer.activity.id"
-            id="activity"
+            id="new-timer-activity"
             class="form-control">
         </select>
 
