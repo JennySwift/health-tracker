@@ -8,7 +8,8 @@ elixir(function(mix) {
         'app.js',
         'controllers/**/*.js',
         'factories/**/*.js',
-        'directives/**/*.js'
+        'directives/**/*.js',
+        'filters/**/*.js'
     ], 'public/js/all.js');
 
     mix.scripts([

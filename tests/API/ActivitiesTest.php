@@ -60,13 +60,19 @@ class ActivitiesTest extends TestCase
 
         $this->assertArrayHasKey('id', $content[0]);
         $this->assertArrayHasKey('name', $content[0]);
+        $this->assertArrayHasKey('totalMinutes', $content[0]);
         $this->assertArrayHasKey('minutes', $content[0]);
+        $this->assertArrayHasKey('hours', $content[0]);
 
         $this->assertEquals('sleep', $content[0]['name']);
-        $this->assertEquals(555, $content[0]['minutes']);
+        $this->assertEquals(555, $content[0]['totalMinutes']);
+        $this->assertEquals(9, $content[0]['hours']);
+        $this->assertEquals(15, $content[0]['minutes']);
 
         $this->assertEquals('work', $content[1]['name']);
-        $this->assertEquals(60, $content[1]['minutes']);
+        $this->assertEquals(60, $content[1]['totalMinutes']);
+        $this->assertEquals(1, $content[1]['hours']);
+        $this->assertEquals(0, $content[1]['minutes']);
 
         $this->assertEquals(200, $response->getStatusCode());
     }

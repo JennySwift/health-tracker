@@ -47,7 +47,12 @@ class ActivitiesController extends Controller
             ->get();
 
         foreach ($activitiesForDay as $activity) {
-            $activity->minutes = $activity->calculateMinutesForDay($startOfDay, $endOfDay);
+            $activity->totalMinutes = $activity->calculateMinutesForDay($startOfDay, $endOfDay);
+            $activity->hours = floor($activity->totalMinutes / 60);
+            $activity->minutes = $activity->totalMinutes % 60;
+            if ($activity->minutes < 10) {
+                $activity->minutes = '0' . $activity->minutes;
+            }
         }
 
         return $activitiesForDay;
