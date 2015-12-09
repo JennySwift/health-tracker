@@ -69,6 +69,9 @@ angular.module('tracker')
                 };
                 
                 return $http.put(url, data);
+            },
+            checkForTimerInProgress: function () {
+                return $http.get('/api/timers/checkForTimerInProgress');
             }
         }
     });

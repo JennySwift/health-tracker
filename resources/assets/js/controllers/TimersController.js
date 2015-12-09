@@ -89,4 +89,31 @@ angular.module('tracker')
             return minutes * 10;
         };
 
+        function checkForTimerInProgress () {
+            $rootScope.showLoading();
+            TimersFactory.checkForTimerInProgress()
+                .then(function (response) {
+                    if (response.data) {
+                        resumeTimerOnPageLoad(response.data);
+                    }
+
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        }
+
+        checkForTimerInProgress();
+
+        function resumeTimerOnPageLoad (timer) {
+            $scope.timerInProgress = timer;
+            var seconds = moment().diff(moment(timer.start, 'YYYY-MM-DD HH:mm:ss'), 'seconds');
+            $('#timer-clock').timer({
+                format: '%H:%M:%S',
+                //The timer has already started
+                seconds: seconds
+            });
+        }
+
     });

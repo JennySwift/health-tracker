@@ -99,4 +99,16 @@ class TimersController extends Controller
         return response($timer, Response::HTTP_OK);
     }
 
+    /**
+     * Todo: test
+     * @return Response
+     */
+    public function checkForTimerInProgress()
+    {
+        $timerInProgress = Timer::forCurrentUser()->whereNull('finish')->first();
+        $timerInProgress = $this->transform($this->createItem($timerInProgress, new TimerTransformer))['data'];
+        
+        return response($timerInProgress, Response::HTTP_OK);
+    }
+
 }
