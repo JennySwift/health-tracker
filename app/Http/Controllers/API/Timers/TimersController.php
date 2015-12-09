@@ -135,7 +135,12 @@ class TimersController extends Controller
     {
         $sleep = new Timer($request->only(['start', 'finish']));
         $sleep->user()->associate(Auth::user());
-        $sleep->activity()->associate(Activity::find($request->get('activity_id')));
+
+        $activity = Activity::find($request->get('activity_id'));
+        if (!$activity) {
+            $activity = Activity::forCurrentUser()->where('name', 'sleep')->first();
+        }
+        $sleep->activity()->associate($activity);
         $sleep->save();
     
         $sleep = $this->transform($this->createItem($sleep, new TimerTransformer))['data'];

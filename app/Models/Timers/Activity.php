@@ -2,6 +2,7 @@
 
 namespace App\Models\Timers;
 
+use App\Traits\Models\Relationships\OwnedByUser;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -10,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Activity extends Model
 {
+    use OwnedByUser;
     /**
      * @var string
      */
