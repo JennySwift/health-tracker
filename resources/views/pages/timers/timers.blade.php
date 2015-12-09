@@ -37,7 +37,7 @@
         </div>
 
         <div id="activities-with-durations">
-            <span ng-repeat="activity in activitiesWithDurations" ng-style="{'background': activity.color}" class="label">[[activity.name]] [[activity.hours]]:[[activity.minutes]]</span>
+            <span ng-repeat="activity in activitiesWithDurations" ng-style="{'background': activity.color}" class="label label-default">[[activity.name]] [[activity.hours]]:[[activity.minutes]]</span>
         </div>
 
         <ul id="timers" class="list-group">

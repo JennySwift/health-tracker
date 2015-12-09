@@ -46,14 +46,32 @@ class ActivitiesController extends Controller
             })
             ->get();
 
+        //For calculating total untracked time
+        $totalMinutesForAllActivites = 0;
+
         foreach ($activitiesForDay as $activity) {
             $activity->totalMinutes = $activity->calculateMinutesForDay($startOfDay, $endOfDay);
+            $totalMinutesForAllActivites+= $activity->totalMinutes;
             $activity->hours = floor($activity->totalMinutes / 60);
             $activity->minutes = $activity->totalMinutes % 60;
             if ($activity->minutes < 10) {
                 $activity->minutes = '0' . $activity->minutes;
             }
         }
+
+        $untrackedTotalMinutes = 24 * 60 - $totalMinutesForAllActivites;
+        $untrackedHours = floor($untrackedTotalMinutes / 60);
+        $untrackedMinutes = $untrackedTotalMinutes % 60;
+        if ($untrackedMinutes < 10) {
+            $untrackedMinutes = '0' . $untrackedMinutes;
+        }
+
+        $activitiesForDay[] = [
+            'name' => 'untracked',
+            'totalMinutes' => $untrackedTotalMinutes,
+            'hours' => $untrackedHours,
+            'minutes' => $untrackedMinutes
+        ];
 
         return $activitiesForDay;
     }
