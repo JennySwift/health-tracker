@@ -1,7 +1,7 @@
 var app = angular.module('tracker');
 
 (function () {
-	app.controller('journal', function ($rootScope, $scope, $http, DatesFactory, JournalFactory, SleepFactory) {
+	app.controller('journal', function ($rootScope, $scope, $http, DatesFactory, JournalFactory) {
 		/**
 		 * scope properties
 		 */
@@ -142,7 +142,7 @@ var app = angular.module('tracker');
 
         $scope.insertSleepEntry = function () {
             $rootScope.showLoading();
-            SleepFactory.store($scope.newSleepEntry, $scope.date.sql)
+            TimersFactory.store($scope.newSleepEntry, $scope.date.sql)
                 .then(function (response) {
                     //$scope.sleeps.push(response.data);
                     $rootScope.$broadcast('provideFeedback', 'Entry created', 'success');
