@@ -37,6 +37,6 @@ class Activity extends Model
      */
     public function timers()
     {
-        return $this->hasMany('App\Models\Timer');
+        return $this->hasMany('App\Models\Timers\Timer');
     }
 }

@@ -16,7 +16,10 @@
 		<h1>Activities</h1>
 
         <div id="activities">
-            <div ng-repeat="activity in activities">[[activity.name]]</div>
+            <div ng-repeat="activity in activities">
+                <span>[[activity.name]]</span>
+                <span>Total duration: [[activity.totalDuration]]</span>
+            </div>
         </div>
 	</div>
 

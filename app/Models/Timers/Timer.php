@@ -66,10 +66,21 @@ class Timer extends Model
 
     /**
      *
+     * @return int
+     */
+    public function getDurationInMinutesAttribute()
+    {
+        $start = Carbon::createFromFormat('Y-m-d H:i:s', $this->start);
+        $finish = Carbon::createFromFormat('Y-m-d H:i:s', $this->finish);
+        return $finish->diffInMinutes($start);
+    }
+
+    /**
+     * Just for one day. If it goes overnight it will not take that into account.
      * @param bool $nullValue
      * @return int
      */
-    public function getDurationInMinutes($nullValue = false)
+    public function getDurationInMinutesDuringOneDay($nullValue = false)
     {
         if (!$nullValue) {
             //Start and finish times are on the same day

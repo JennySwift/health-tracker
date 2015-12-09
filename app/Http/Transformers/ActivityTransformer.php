@@ -16,9 +16,15 @@ class ActivityTransformer extends TransformerAbstract
      */
     public function transform(Activity $activity)
     {
+        $totalDuration = 0;
+        foreach ($activity->timers as $timer) {
+            $totalDuration+= $timer->durationInMinutes;
+        }
+        
         $array = [
             'id' => $activity->id,
             'name' => $activity->name,
+            'totalDuration' => $totalDuration
         ];
 
         return $array;

@@ -21,8 +21,10 @@ class ActivitiesTest extends TestCase
 
         $this->assertArrayHasKey('id', $content[0]);
         $this->assertArrayHasKey('name', $content[0]);
+        $this->assertArrayHasKey('totalDuration', $content[0]);
 
         $this->assertEquals('sleep', $content[0]['name']);
+        $this->assertEquals(3900, $content[0]['totalDuration']);
 
         $this->assertEquals(200, $response->getStatusCode());
     }
