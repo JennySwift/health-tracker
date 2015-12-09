@@ -80,12 +80,11 @@ class Timer extends Model
      * only start counting the total from 12:00am.
      * Or only count until 12:00am, depending on if the day is the
      * start of the finish of the timer.
+     * @param Carbon $dateTime
      * @return int
      */
-    public function getTotalMinutesForDay($date)
+    public function getTotalMinutesForDay(Carbon $dateTime)
     {
-//        var_dump($date);
-        $date = Carbon::createFromFormat('Y-m-d', $date);
         $start = Carbon::createFromFormat('Y-m-d H:i:s', $this->start);
         $finish = Carbon::createFromFormat('Y-m-d H:i:s', $this->finish);
 
@@ -93,18 +92,15 @@ class Timer extends Model
             return $finish->diffInMinutes($start);
         }
         else {
-//            dd('hi');
-            if ($start->isSameDay($date)) {
+            if ($start->isSameDay($dateTime)) {
                 //Make the finish at the end of the day
                 //instead of the next day
-//                $clone = clone $date;
-//                $finish = $clone->hour(24);
+//                $finish = $date->copy()->hour(24);
                 return 0;
             }
-            else if ($finish->isSameDay($date)) {
+            else if ($finish->isSameDay($dateTime)) {
                 //Make the start at the beginning of the day instead of the previous day
-                $clone = clone $date;
-                $start = $clone->hour(0);
+                $start = $dateTime->copy()->hour(0);
             }
             return $finish->diffInMinutes($start);
         }

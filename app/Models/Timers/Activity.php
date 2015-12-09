@@ -45,8 +45,11 @@ class Activity extends Model
     /**
      * Calculate how many minutes have been spent on the activity
      * for the day
+     * @param Carbon $startOfDay
+     * @param Carbon $endOfDay
+     * @return int
      */
-    public function calculateMinutesForDay($startOfDay, $endOfDay)
+    public function calculateMinutesForDay(Carbon $startOfDay, Carbon $endOfDay)
     {
         $minutes = 0;
         $timers = $this->timers()
@@ -58,12 +61,7 @@ class Activity extends Model
             ->get();
 
         foreach ($timers as $timer) {
-            //Todo: shouldn't have to do this. For some reason $this->timers is bringing up timers for the other user.
-            if ($timer->user_id === Auth::id()) {
-//                var_dump($timer->user_id);
-                $minutes+= $timer->getTotalMinutesForDay(Carbon::createFromFormat('Y-m-d H:i:s', $startOfDay)->format('Y-m-d'));
-            }
-
+            $minutes+= $timer->getTotalMinutesForDay($startOfDay);
         }
 
         return $minutes;

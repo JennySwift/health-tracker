@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Response;
+use Auth;
 
 class ActivitiesController extends Controller
 {
@@ -31,8 +32,8 @@ class ActivitiesController extends Controller
      */
     public function calculateTotalMinutesForDay($date = null)
     {
-        $startOfDay = Carbon::today()->hour(0)->format('Y-m-d H:i:s');
-        $endOfDay = Carbon::today()->hour(24)->format('Y-m-d H:i:s');
+        $startOfDay = Carbon::today()->hour(0);
+        $endOfDay = Carbon::today()->hour(24);
 
         $activitiesForDay = Activity::forCurrentUser()
             ->whereHas('timers', function($q) use ($date, $startOfDay, $endOfDay)
@@ -42,7 +43,8 @@ class ActivitiesController extends Controller
                     $q->whereBetween('start', [$startOfDay, $endOfDay])
                         ->orWhereBetween('finish', [$startOfDay, $endOfDay]);
                 });
-            })->get();
+            })
+            ->get();
 
         foreach ($activitiesForDay as $activity) {
             $activity->minutes = $activity->calculateMinutesForDay($startOfDay, $endOfDay);
