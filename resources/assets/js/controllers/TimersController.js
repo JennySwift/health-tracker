@@ -53,6 +53,7 @@ angular.module('tracker')
                 .then(function (response) {
                     $scope.timerInProgress = false;
                     $scope.timers.push(response.data);
+                    getTotalMinutesForActivitiesForTheDay();
                     //var $index = _.indexOf($scope.timers, _.findWhere($scope.timers, {id: response.data.id}));
                     //$scope.timers[$index] = response.data;
                     $rootScope.$broadcast('provideFeedback', 'Timer updated');
