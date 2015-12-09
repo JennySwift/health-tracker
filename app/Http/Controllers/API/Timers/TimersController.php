@@ -123,4 +123,16 @@ class TimersController extends Controller
         return response([], Response::HTTP_OK);
     }
 
+    /**
+     *
+     * @param Timer $timer
+     * @return Response
+     * @throws \Exception
+     */
+    public function destroy(Timer $timer)
+    {
+        $timer->delete();
+        return response([], Response::HTTP_NO_CONTENT);
+    }
+
 }

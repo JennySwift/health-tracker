@@ -2,6 +2,7 @@
 
 use App\Models\Timers\Activity;
 use App\Models\Timers\Timer;
+use App\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Http\Response;
@@ -177,6 +178,26 @@ class TimersTest extends TestCase {
         $this->assertEquals('11:00pm', $content['finish']);
 
         $this->assertEquals(200, $response->getStatusCode());
+
+        DB::rollBack();
+    }
+
+    /**
+     * @test
+     * @return void
+     */
+    public function it_can_delete_a_timer()
+    {
+        DB::beginTransaction();
+        $this->logInUser();
+
+        $timer = Timer::forCurrentUser()->first();
+
+        $response = $this->call('DELETE', '/api/timers/'.$timer->id);
+        $this->assertEquals(204, $response->getStatusCode());
+
+        $response = $this->call('DELETE', '/api/timer/' . $timer->id);
+        $this->assertEquals(404, $response->getStatusCode());
 
         DB::rollBack();
     }

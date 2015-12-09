@@ -128,6 +128,10 @@ li {
 .center {
   text-align: center; }
 
+.fa-times {
+  cursor: pointer;
+  color: #d9534f; }
+
 .vertical-center {
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -573,6 +577,10 @@ body.browser-height {
     -ms-flex-pack: end;
     justify-content: flex-end;
     width: 50px; }
+  #timers-page #timers .timer .fa-times {
+    visibility: hidden; }
+  #timers-page #timers .timer:hover .fa-times {
+    visibility: visible; }
 
 #navbar {
   display: -webkit-flex;

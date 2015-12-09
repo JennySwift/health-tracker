@@ -72,6 +72,11 @@ angular.module('tracker')
             },
             checkForTimerInProgress: function () {
                 return $http.get('/api/timers/checkForTimerInProgress');
+            },
+            destroy: function (timer) {
+                var url = '/api/timers/' + timer.id;
+            
+                return $http.delete(url);
             }
         }
     });

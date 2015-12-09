@@ -10,6 +10,11 @@
 	text-align: center;
 }
 
+.fa-times {
+    cursor: pointer;
+    color: $danger;
+}
+
 .vertical-center {
 	display: flex;
 	align-items: center;
