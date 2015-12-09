@@ -21,13 +21,25 @@ class ActivitySeeder extends Seeder {
 
         $users = User::all();
 
-        $activities = ['sleep', 'work'];
+        $activities = [
+            [
+                'name' => 'sleep',
+                'color' => '#5cb85c'
+            ],
+            [
+                'name' => 'work',
+                'color' => '#5bc0de'
+            ]
+        ];
 
         foreach($users as $user) {
             $this->user = $user;
 
             foreach ($activities as $activity) {
-                $temp = new Activity(['name' => $activity]);
+                $temp = new Activity([
+                    'name' => $activity['name'],
+                    'color' => $activity['color']
+                ]);
                 $temp->user()->associate($user);
                 $temp->save();
             }

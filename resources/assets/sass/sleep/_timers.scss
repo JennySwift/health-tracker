@@ -20,9 +20,13 @@
         overflow: scroll;
         width: 850px;
         .date-entries {
-            margin: 0 20px;
+//            margin: 0 20px;
+            border-right: 1px solid #777;
             position: relative;
-            min-width: 75px;
+            min-width: 50px;
+            &:first-child {
+                border-left: 1px solid #777;
+            }
             .date {
                 position: absolute;
                 top: 0;
@@ -31,7 +35,7 @@
                 position: absolute;
                 width: 100%;
                 &.start {
-                    background: $success;
+//                    background: $success;
                     display: flex;
                     flex-direction: column;
                     justify-content: flex-end;

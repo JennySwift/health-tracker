@@ -50,19 +50,31 @@ class TimersController extends Controller
             //Form an array with all the dates in the range of entries
             $entriesByDate = [];
             $index = 0;
+            $shortDate = clone $lastDate;
+            $shortDate = $shortDate->format('d/m');
+            $day = clone $lastDate;
+            $day = $day->format('D');
             $entriesByDate[] = [
                 'date' => $lastDate->format($formatForUser),
-                'orderIndex' => $index
+                'orderIndex' => $index,
+                'shortDate' => $shortDate,
+                'day' => $day
             ];
 
             $date = Carbon::createFromFormat('Y-m-d H:i:s', Timer::forCurrentUser()->max('finish'));
             while ($date > $earliestDate) {
                 $index++;
                 $date = $date->subDays(1);
+                $shortDate = clone $date;
+                $shortDate = $shortDate->format('d/m');
+                $day = clone $date;
+                $day = $day->format('D');
 
                 $entriesByDate[] = [
                     'date' => $date->format($formatForUser),
-                    'orderIndex' => $index
+                    'shortDate' => $shortDate,
+                    'orderIndex' => $index,
+                    'day' => $day
                 ];
             }
 
@@ -77,7 +89,8 @@ class TimersController extends Controller
                         'finish' => Carbon::createFromFormat('Y-m-d H:i:s', $entry->finish)->format('g:ia'),
                         'startPosition' => $entry->getStartRelativeHeight(),
                         'finishPosition' => $entry->getFinishRelativeHeight(),
-                        'startHeight' => $entry->getDurationInMinutesDuringOneDay()
+                        'startHeight' => $entry->getDurationInMinutesDuringOneDay(),
+                        'color' => $entry->activity->color
                     ];
 
                     $indexOfItem = $this->timersRepository->getIndexOfItem($entriesByDate, $startDate);
@@ -89,7 +102,8 @@ class TimersController extends Controller
                         'finish' => null,
                         'startPosition' => $entry->getStartRelativeHeight(),
                         'finishPosition' => null,
-                        'startHeight' => $entry->getDurationInMinutesDuringOneDay('finish')
+                        'startHeight' => $entry->getDurationInMinutesDuringOneDay('finish'),
+                        'color' => $entry->activity->color
                     ];
 
                     $indexOfItem = $this->timersRepository->getIndexOfItem($entriesByDate, $startDate);
@@ -106,7 +120,8 @@ class TimersController extends Controller
                         'finish' => $finish->format('g:ia'),
                         'startPosition' => null,
                         'finishPosition' => $entry->getFinishRelativeHeight(),
-                        'startHeight' => $entry->getDurationInMinutesDuringOneDay('start')
+                        'startHeight' => $entry->getDurationInMinutesDuringOneDay('start'),
+                        'color' => $entry->activity->color
                     ];
 
                     $indexOfItem = $this->timersRepository->getIndexOfItem($entriesByDate, $finishDate);

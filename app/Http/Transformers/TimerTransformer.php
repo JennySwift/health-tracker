@@ -13,6 +13,13 @@ use League\Fractal\TransformerAbstract;
 class TimerTransformer extends TransformerAbstract
 {
     /**
+     * @var array
+     */
+    protected $defaultIncludes = [
+        'activity'
+    ];
+
+    /**
      * @param Timer $sleep
      * @return array
      */
@@ -35,6 +42,18 @@ class TimerTransformer extends TransformerAbstract
         ];
 
         return $array;
+    }
+
+    /**
+     *
+     * @param Timer $timer
+     * @return \League\Fractal\Resource\Item
+     */
+    public function includeActivity(Timer $timer)
+    {
+        $activity = $timer->activity;
+
+        return $this->item($activity, new ActivityTransformer);
     }
 
 }

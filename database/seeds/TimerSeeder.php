@@ -30,10 +30,30 @@ class TimerSeeder extends Seeder {
             foreach (range(0, 4) as $index) {
                 $this->createDaySleep($index, $index * 15);
                 $this->createNightSleep($index, $index * 15);
+                $this->createWorkEntry($index);
             }
         }
 
 	}
+
+    /**
+     *
+     * @param $index
+     */
+    private function createWorkEntry($index)
+    {
+        $today = Carbon::today();
+        $this->date = $today->subDays($index);
+
+        $entry = new Timer([
+            'start' => $this->date->hour(13)->format('Y-m-d H:i:s'),
+            'finish' => $this->date->hour(14)->format('Y-m-d H:i:s')
+        ]);
+
+        $entry->user()->associate($this->user);
+        $entry->activity()->associate(Activity::where('name', 'work')->where('user_id', $this->user->id)->first());
+        $entry->save();
+    }
 
     /**
      * Create a night's sleep

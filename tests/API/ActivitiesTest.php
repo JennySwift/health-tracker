@@ -25,6 +25,7 @@ class ActivitiesTest extends TestCase
 
         $this->assertEquals('sleep', $content[0]['name']);
         $this->assertEquals(3900, $content[0]['totalDuration']);
+        $this->assertEquals(300, $content[1]['totalDuration']);
 
         $this->assertEquals(200, $response->getStatusCode());
     }

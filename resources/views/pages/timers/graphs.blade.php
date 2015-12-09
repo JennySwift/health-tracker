@@ -48,16 +48,16 @@
 
                         <div
                             ng-if="!entry.fakeStartPosition"
-                            ng-style="{'bottom': entry.startPosition/ 2 + 'px', 'height': entry.startHeight / 2 + 'px'}"
+                            ng-style="{'bottom': entry.startPosition/ 2 + 'px', 'height': entry.startHeight / 2 + 'px', 'background': entry.color}"
                             class="time start">
-                            <label class="label label-success">[[entry.start]]</label>
+                            <label ng-style="{'background': entry.color}" class="label">[[entry.start]]</label>
                         </div>
 
                         <div
                             ng-if="!entry.fakeStartPosition"
                             ng-style="{'bottom': entry.finishPosition/ 2 + 'px'}"
                             class="time finish">
-                            <label class="label label-success">[[entry.finish]]</label>
+                            <label ng-style="{'background': entry.color}" class="label">[[entry.finish]]</label>
                         </div>
 
                         <div ng-if="entry.fakeStartPosition || entry.fakeStartPosition === 0"
@@ -68,7 +68,8 @@
 
                     </div>
                     <div class="date">
-                        <label class="label label-primary">[[date.date]]</label>
+                        <label class="label label-primary">[[date.day]]</label>
+                        <label class="label label-primary">[[date.shortDate]]</label>
                     </div>
                 </div>
             </div>

@@ -495,9 +495,11 @@ body.browser-height {
     overflow: scroll;
     width: 850px; }
     #sleep-chart #sleep-chart-entries .date-entries {
-      margin: 0 20px;
+      border-right: 1px solid #777;
       position: relative;
-      min-width: 75px; }
+      min-width: 50px; }
+      #sleep-chart #sleep-chart-entries .date-entries:first-child {
+        border-left: 1px solid #777; }
       #sleep-chart #sleep-chart-entries .date-entries .date {
         position: absolute;
         top: 0; }
@@ -505,7 +507,6 @@ body.browser-height {
         position: absolute;
         width: 100%; }
         #sleep-chart #sleep-chart-entries .date-entries .time.start {
-          background: #5cb85c;
           display: -webkit-flex;
           display: -ms-flexbox;
           display: flex;

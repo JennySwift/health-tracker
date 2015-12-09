@@ -25,6 +25,12 @@ class TimersTest extends TestCase {
         $this->assertArrayHasKey('startDate', $content[0]);
         $this->assertArrayHasKey('hours', $content[0]);
         $this->assertArrayHasKey('minutes', $content[0]);
+        $this->assertArrayHasKey('activity', $content[0]);
+
+        $this->assertArrayHasKey('id', $content[0]['activity']['data']);
+        $this->assertArrayHasKey('name', $content[0]['activity']['data']);
+        $this->assertArrayHasKey('color', $content[0]['activity']['data']);
+        $this->assertArrayHasKey('totalDuration', $content[0]['activity']['data']);
 
 //        $this->assertEquals('9:00pm', $content[0]['start']);
 //        $this->assertEquals('8:00am', $content[0]['finish']);

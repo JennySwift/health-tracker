@@ -24,7 +24,8 @@ class ActivityTransformer extends TransformerAbstract
         $array = [
             'id' => $activity->id,
             'name' => $activity->name,
-            'totalDuration' => $totalDuration
+            'totalDuration' => $totalDuration,
+            'color' => $activity->color,
         ];
 
         return $array;
