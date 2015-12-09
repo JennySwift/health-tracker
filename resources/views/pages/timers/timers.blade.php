@@ -13,30 +13,22 @@
 
         {{--@include('templates.date-navigation')--}}
 
-        <div id="new-timer">
+        <div ng-show="!timerInProgress" id="new-timer">
+            <select
+                    ng-options="activity.id as activity.name for activity in activities"
+                    ng-model="newTimer.activity.id"
+                    id="new-timer-activity"
+                    class="form-control">
+            </select>
+
+            <button ng-click="startTimer()" class="btn btn-success">Start</button>
 
         </div>
 
-        <label for="activity">Activity</label>
-
-        [[activities]]
-
-        <select
-                ng-options="activity.id as activity.name for activity in activities"
-                ng-model="newTimer.activity.id"
-                id="new-timer-activity"
-                class="form-control">
-        </select>
-
-        {{--<select ng-model="newTimer.activity.id" name="activity" id="new-timer-activity" class="form-control">--}}
-            {{--<option ng-repeat="activity in activities" ng-value="activity.id">@{{ activity.name }}</option>--}}
-        {{--</select>--}}
-
-        <button ng-click="startTimer()" class="btn btn-success">Start</button>
-        <button ng-click="stopTimer()" class="btn btn-danger">Stop</button>
-
         <div ng-show="timerInProgress" id="timer-in-progress">
             <div>[[timerInProgress.activity.data.name]]</div>
+            <div id="timer-clock"></div>
+            <button ng-click="stopTimer()" class="btn btn-danger">Stop</button>
         </div>
 
         <div id="timer-filter">
@@ -45,7 +37,7 @@
         </div>
 
         <ul id="timers" class="list-group">
-            <li ng-repeat="timer in timers | filter: filterTimers" class="list-group-item timer">
+            <li ng-repeat="timer in timers | filter: filterTimers | orderBy: 'start':true" class="list-group-item timer">
                 <div>
                     <span ng-style="{'background': timer.activity.data.color}" class="label">[[timer.activity.data.name]]</span>
                 </div>

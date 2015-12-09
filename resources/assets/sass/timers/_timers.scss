@@ -2,6 +2,24 @@
     > * {
         margin-bottom: 20px;
     }
+    #timer-in-progress {
+        display: flex;
+        justify-content: center;
+        font-size: 30px;
+        > * {
+            margin: 0 20px;
+        }
+    }
+    #new-timer {
+        display: flex;
+        justify-content: center;
+        > * {
+            margin: 0px 20px;
+        }
+        select {
+            max-width: 300px;
+        }
+    }
     #timers {
         .timer {
             display: flex;

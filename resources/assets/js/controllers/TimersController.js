@@ -14,6 +14,7 @@ angular.module('tracker')
         //});
 
         $scope.startTimer = function () {
+            $('#timer-clock').timer({format: '%H:%M:%S'});
             $rootScope.showLoading();
             TimersFactory.store($scope.newTimer)
                 .then(function (response) {
@@ -46,10 +47,12 @@ angular.module('tracker')
         getActivities();
 
         $scope.stopTimer = function () {
+            $('#timer-clock').timer('remove');
             $rootScope.showLoading();
             TimersFactory.update($scope.timerInProgress)
                 .then(function (response) {
                     $scope.timerInProgress = false;
+                    $scope.timers.push(response.data);
                     //var $index = _.indexOf($scope.timers, _.findWhere($scope.timers, {id: response.data.id}));
                     //$scope.timers[$index] = response.data;
                     $rootScope.$broadcast('provideFeedback', 'Timer updated');

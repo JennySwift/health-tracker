@@ -13275,6 +13275,7 @@ else{while(date1>date2&&date1.clone().addDays(-date1.getDaysInMonth())>date2){da
 var diff=date2-date1;if(diff!==0){var ts=new TimeSpan(diff);this.days=ts.days;this.hours=ts.hours;this.minutes=ts.minutes;this.seconds=ts.seconds;this.milliseconds=ts.milliseconds;}
 return this;}};
 
+/*! timer.jquery 0.4.2 2015-08-04*/!function(a){function b(){p=setInterval(d,v.updateFrequency),t=!0}function c(){clearInterval(p),t=!1}function d(){s=g()-q,e(),u&&s%u===0&&(v.callback(),v.repeat||(u=v.duration=null),v.countdown&&(v.countdown=!1))}function e(){var a=s;v.countdown&&u>0&&(a=u-s),r[w](i(a)),r.data("seconds",a)}function f(){r.on("focus",function(){l()}),r.on("blur",function(){var a,b=r[w]();b.indexOf("sec")>0?s=Number(b.replace(/\ssec/g,"")):b.indexOf("min")>0?(b=b.replace(/\smin/g,""),a=b.split(":"),s=Number(60*a[0])+Number(a[1])):b.match(/\d{1,2}:\d{2}:\d{2}/)&&(a=b.split(":"),s=Number(3600*a[0])+Number(60*a[1])+Number(a[2])),m()})}function g(){return Math.round((new Date).getTime()/1e3)}function h(a){var b,c=0,d=Math.floor(a/60);return a>=3600&&(c=Math.floor(a/3600)),a>=3600&&(d=Math.floor(a%3600/60)),10>d&&c>0&&(d="0"+d),b=a%60,10>b&&(d>0||c>0)&&(b="0"+b),{hours:c,minutes:d,seconds:b}}function i(a){var b="",c=h(a);if(v.format){var d=[{identifier:"%h",value:c.hours,pad:!1},{identifier:"%m",value:c.minutes,pad:!1},{identifier:"%s",value:c.seconds,pad:!1},{identifier:"%H",value:parseInt(c.hours),pad:!0},{identifier:"%M",value:parseInt(c.minutes),pad:!0},{identifier:"%S",value:parseInt(c.seconds),pad:!0}];b=v.format,d.forEach(function(a){b=b.replace(new RegExp(a.identifier.replace(/([.*+?^=!:${}()|\[\]\/\\])/g,"\\$1"),"g"),a.pad&&a.value<10?"0"+a.value:a.value)})}else b=c.hours?c.hours+":"+c.minutes+":"+c.seconds:c.minutes?c.minutes+":"+c.seconds+" min":c.seconds+" sec";return b}function j(a){if(!isNaN(Number(a)))return a;var b=a.match(/\d{1,2}h/),c=a.match(/\d{1,2}m/),d=a.match(/\d{1,2}s/),e=0;return a=a.toLowerCase(),b&&(e+=3600*Number(b[0].replace("h",""))),c&&(e+=60*Number(c[0].replace("m",""))),d&&(e+=Number(d[0].replace("s",""))),e}function k(){t||(e(),b(),r.data("state",y))}function l(){t&&(c(),r.data("state",z))}function m(){t||(q=g()-s,b(),r.data("state",y))}function n(){q=g(),s=0,r.data("seconds",s),r.data("state",x),u=v.duration}function o(){c(),r.data("plugin_"+B,null),r.data("seconds",null),r.data("state",null),r[w]("")}var p,q,r,s=0,t=!1,u=null,v={seconds:0,editable:!1,restart:!1,duration:null,callback:function(){alert("Time up!"),c()},repeat:!1,countdown:!1,format:null,updateFrequency:1e3},w="html",x="stopped",y="running",z="paused",A=function(b,c){var d;v=a.extend(v,c),r=a(b),s=v.seconds,q=g()-s,r.data("seconds",s),r.data("state",x),d=r.prop("tagName").toLowerCase(),("input"===d||"textarea"===d)&&(w="val"),v.duration&&(u=v.duration=j(v.duration)),v.editable&&f()};A.prototype={start:function(){k()},pause:function(){l()},resume:function(){m()},reset:function(){n()},remove:function(){o()}};var B="timer";a.fn[B]=function(b){return b=b||"start",this.each(function(){a.data(this,"plugin_"+B)instanceof A||a.data(this,"plugin_"+B,new A(this,b));var c=a.data(this,"plugin_"+B);"string"==typeof b&&"function"==typeof c[b]&&c[b].call(c),"object"==typeof b&&c.start.call(c)})}}(jQuery);
 /* Tooltipster v3.2.6 */;(function(e,t,n){function s(t,n){this.bodyOverflowX;this.callbacks={hide:[],show:[]};this.checkInterval=null;this.Content;this.$el=e(t);this.$elProxy;this.elProxyPosition;this.enabled=true;this.options=e.extend({},i,n);this.mouseIsOverProxy=false;this.namespace="tooltipster-"+Math.round(Math.random()*1e5);this.Status="hidden";this.timerHide=null;this.timerShow=null;this.$tooltip;this.options.iconTheme=this.options.iconTheme.replace(".","");this.options.theme=this.options.theme.replace(".","");this._init()}function o(t,n){var r=true;e.each(t,function(e,i){if(typeof n[e]==="undefined"||t[e]!==n[e]){r=false;return false}});return r}function f(){return!a&&u}function l(){var e=n.body||n.documentElement,t=e.style,r="transition";if(typeof t[r]=="string"){return true}v=["Moz","Webkit","Khtml","O","ms"],r=r.charAt(0).toUpperCase()+r.substr(1);for(var i=0;i<v.length;i++){if(typeof t[v[i]+r]=="string"){return true}}return false}var r="tooltipster",i={animation:"fade",arrow:true,arrowColor:"",autoClose:true,content:null,contentAsHTML:false,contentCloning:true,debug:true,delay:200,minWidth:0,maxWidth:null,functionInit:function(e,t){},functionBefore:function(e,t){t()},functionReady:function(e,t){},functionAfter:function(e){},icon:"(?)",iconCloning:true,iconDesktop:false,iconTouch:false,iconTheme:"tooltipster-icon",interactive:false,interactiveTolerance:350,multiple:false,offsetX:0,offsetY:0,onlyOne:false,position:"top",positionTracker:false,speed:350,timer:0,theme:"tooltipster-default",touchDevices:true,trigger:"hover",updateAnimation:true};s.prototype={_init:function(){var t=this;if(n.querySelector){if(t.options.content!==null){t._content_set(t.options.content)}else{var r=t.$el.attr("title");if(typeof r==="undefined")r=null;t._content_set(r)}var i=t.options.functionInit.call(t.$el,t.$el,t.Content);if(typeof i!=="undefined")t._content_set(i);t.$el.removeAttr("title").addClass("tooltipstered");if(!u&&t.options.iconDesktop||u&&t.options.iconTouch){if(typeof t.options.icon==="string"){t.$elProxy=e('<span class="'+t.options.iconTheme+'"></span>');t.$elProxy.text(t.options.icon)}else{if(t.options.iconCloning)t.$elProxy=t.options.icon.clone(true);else t.$elProxy=t.options.icon}t.$elProxy.insertAfter(t.$el)}else{t.$elProxy=t.$el}if(t.options.trigger=="hover"){t.$elProxy.on("mouseenter."+t.namespace,function(){if(!f()||t.options.touchDevices){t.mouseIsOverProxy=true;t._show()}}).on("mouseleave."+t.namespace,function(){if(!f()||t.options.touchDevices){t.mouseIsOverProxy=false}});if(u&&t.options.touchDevices){t.$elProxy.on("touchstart."+t.namespace,function(){t._showNow()})}}else if(t.options.trigger=="click"){t.$elProxy.on("click."+t.namespace,function(){if(!f()||t.options.touchDevices){t._show()}})}}},_show:function(){var e=this;if(e.Status!="shown"&&e.Status!="appearing"){if(e.options.delay){e.timerShow=setTimeout(function(){if(e.options.trigger=="click"||e.options.trigger=="hover"&&e.mouseIsOverProxy){e._showNow()}},e.options.delay)}else e._showNow()}},_showNow:function(n){var r=this;r.options.functionBefore.call(r.$el,r.$el,function(){if(r.enabled&&r.Content!==null){if(n)r.callbacks.show.push(n);r.callbacks.hide=[];clearTimeout(r.timerShow);r.timerShow=null;clearTimeout(r.timerHide);r.timerHide=null;if(r.options.onlyOne){e(".tooltipstered").not(r.$el).each(function(t,n){var r=e(n),i=r.data("tooltipster-ns");e.each(i,function(e,t){var n=r.data(t),i=n.status(),s=n.option("autoClose");if(i!=="hidden"&&i!=="disappearing"&&s){n.hide()}})})}var i=function(){r.Status="shown";e.each(r.callbacks.show,function(e,t){t.call(r.$el)});r.callbacks.show=[]};if(r.Status!=="hidden"){var s=0;if(r.Status==="disappearing"){r.Status="appearing";if(l()){r.$tooltip.clearQueue().removeClass("tooltipster-dying").addClass("tooltipster-"+r.options.animation+"-show");if(r.options.speed>0)r.$tooltip.delay(r.options.speed);r.$tooltip.queue(i)}else{r.$tooltip.stop().fadeIn(i)}}else if(r.Status==="shown"){i()}}else{r.Status="appearing";var s=r.options.speed;r.bodyOverflowX=e("body").css("overflow-x");e("body").css("overflow-x","hidden");var o="tooltipster-"+r.options.animation,a="-webkit-transition-duration: "+r.options.speed+"ms; -webkit-animation-duration: "+r.options.speed+"ms; -moz-transition-duration: "+r.options.speed+"ms; -moz-animation-duration: "+r.options.speed+"ms; -o-transition-duration: "+r.options.speed+"ms; -o-animation-duration: "+r.options.speed+"ms; -ms-transition-duration: "+r.options.speed+"ms; -ms-animation-duration: "+r.options.speed+"ms; transition-duration: "+r.options.speed+"ms; animation-duration: "+r.options.speed+"ms;",f=r.options.minWidth?"min-width:"+Math.round(r.options.minWidth)+"px;":"",c=r.options.maxWidth?"max-width:"+Math.round(r.options.maxWidth)+"px;":"",h=r.options.interactive?"pointer-events: auto;":"";r.$tooltip=e('<div class="tooltipster-base '+r.options.theme+'" style="'+f+" "+c+" "+h+" "+a+'"><div class="tooltipster-content"></div></div>');if(l())r.$tooltip.addClass(o);r._content_insert();r.$tooltip.appendTo("body");r.reposition();r.options.functionReady.call(r.$el,r.$el,r.$tooltip);if(l()){r.$tooltip.addClass(o+"-show");if(r.options.speed>0)r.$tooltip.delay(r.options.speed);r.$tooltip.queue(i)}else{r.$tooltip.css("display","none").fadeIn(r.options.speed,i)}r._interval_set();e(t).on("scroll."+r.namespace+" resize."+r.namespace,function(){r.reposition()});if(r.options.autoClose){e("body").off("."+r.namespace);if(r.options.trigger=="hover"){if(u){setTimeout(function(){e("body").on("touchstart."+r.namespace,function(){r.hide()})},0)}if(r.options.interactive){if(u){r.$tooltip.on("touchstart."+r.namespace,function(e){e.stopPropagation()})}var p=null;r.$elProxy.add(r.$tooltip).on("mouseleave."+r.namespace+"-autoClose",function(){clearTimeout(p);p=setTimeout(function(){r.hide()},r.options.interactiveTolerance)}).on("mouseenter."+r.namespace+"-autoClose",function(){clearTimeout(p)})}else{r.$elProxy.on("mouseleave."+r.namespace+"-autoClose",function(){r.hide()})}}else if(r.options.trigger=="click"){setTimeout(function(){e("body").on("click."+r.namespace+" touchstart."+r.namespace,function(){r.hide()})},0);if(r.options.interactive){r.$tooltip.on("click."+r.namespace+" touchstart."+r.namespace,function(e){e.stopPropagation()})}}}}if(r.options.timer>0){r.timerHide=setTimeout(function(){r.timerHide=null;r.hide()},r.options.timer+s)}}})},_interval_set:function(){var t=this;t.checkInterval=setInterval(function(){if(e("body").find(t.$el).length===0||e("body").find(t.$elProxy).length===0||t.Status=="hidden"||e("body").find(t.$tooltip).length===0){if(t.Status=="shown"||t.Status=="appearing")t.hide();t._interval_cancel()}else{if(t.options.positionTracker){var n=t._repositionInfo(t.$elProxy),r=false;if(o(n.dimension,t.elProxyPosition.dimension)){if(t.$elProxy.css("position")==="fixed"){if(o(n.position,t.elProxyPosition.position))r=true}else{if(o(n.offset,t.elProxyPosition.offset))r=true}}if(!r){t.reposition()}}}},200)},_interval_cancel:function(){clearInterval(this.checkInterval);this.checkInterval=null},_content_set:function(e){if(typeof e==="object"&&e!==null&&this.options.contentCloning){e=e.clone(true)}this.Content=e},_content_insert:function(){var e=this,t=this.$tooltip.find(".tooltipster-content");if(typeof e.Content==="string"&&!e.options.contentAsHTML){t.text(e.Content)}else{t.empty().append(e.Content)}},_update:function(e){var t=this;t._content_set(e);if(t.Content!==null){if(t.Status!=="hidden"){t._content_insert();t.reposition();if(t.options.updateAnimation){if(l()){t.$tooltip.css({width:"","-webkit-transition":"all "+t.options.speed+"ms, width 0ms, height 0ms, left 0ms, top 0ms","-moz-transition":"all "+t.options.speed+"ms, width 0ms, height 0ms, left 0ms, top 0ms","-o-transition":"all "+t.options.speed+"ms, width 0ms, height 0ms, left 0ms, top 0ms","-ms-transition":"all "+t.options.speed+"ms, width 0ms, height 0ms, left 0ms, top 0ms",transition:"all "+t.options.speed+"ms, width 0ms, height 0ms, left 0ms, top 0ms"}).addClass("tooltipster-content-changing");setTimeout(function(){if(t.Status!="hidden"){t.$tooltip.removeClass("tooltipster-content-changing");setTimeout(function(){if(t.Status!=="hidden"){t.$tooltip.css({"-webkit-transition":t.options.speed+"ms","-moz-transition":t.options.speed+"ms","-o-transition":t.options.speed+"ms","-ms-transition":t.options.speed+"ms",transition:t.options.speed+"ms"})}},t.options.speed)}},t.options.speed)}else{t.$tooltip.fadeTo(t.options.speed,.5,function(){if(t.Status!="hidden"){t.$tooltip.fadeTo(t.options.speed,1)}})}}}}else{t.hide()}},_repositionInfo:function(e){return{dimension:{height:e.outerHeight(false),width:e.outerWidth(false)},offset:e.offset(),position:{left:parseInt(e.css("left")),top:parseInt(e.css("top"))}}},hide:function(n){var r=this;if(n)r.callbacks.hide.push(n);r.callbacks.show=[];clearTimeout(r.timerShow);r.timerShow=null;clearTimeout(r.timerHide);r.timerHide=null;var i=function(){e.each(r.callbacks.hide,function(e,t){t.call(r.$el)});r.callbacks.hide=[]};if(r.Status=="shown"||r.Status=="appearing"){r.Status="disappearing";var s=function(){r.Status="hidden";if(typeof r.Content=="object"&&r.Content!==null){r.Content.detach()}r.$tooltip.remove();r.$tooltip=null;e(t).off("."+r.namespace);e("body").off("."+r.namespace).css("overflow-x",r.bodyOverflowX);e("body").off("."+r.namespace);r.$elProxy.off("."+r.namespace+"-autoClose");r.options.functionAfter.call(r.$el,r.$el);i()};if(l()){r.$tooltip.clearQueue().removeClass("tooltipster-"+r.options.animation+"-show").addClass("tooltipster-dying");if(r.options.speed>0)r.$tooltip.delay(r.options.speed);r.$tooltip.queue(s)}else{r.$tooltip.stop().fadeOut(r.options.speed,s)}}else if(r.Status=="hidden"){i()}return r},show:function(e){this._showNow(e);return this},update:function(e){return this.content(e)},content:function(e){if(typeof e==="undefined"){return this.Content}else{this._update(e);return this}},reposition:function(){var n=this;if(e("body").find(n.$tooltip).length!==0){n.$tooltip.css("width","");n.elProxyPosition=n._repositionInfo(n.$elProxy);var r=null,i=e(t).width(),s=n.elProxyPosition,o=n.$tooltip.outerWidth(false),u=n.$tooltip.innerWidth()+1,a=n.$tooltip.outerHeight(false);if(n.$elProxy.is("area")){var f=n.$elProxy.attr("shape"),l=n.$elProxy.parent().attr("name"),c=e('img[usemap="#'+l+'"]'),h=c.offset().left,p=c.offset().top,d=n.$elProxy.attr("coords")!==undefined?n.$elProxy.attr("coords").split(","):undefined;if(f=="circle"){var v=parseInt(d[0]),m=parseInt(d[1]),g=parseInt(d[2]);s.dimension.height=g*2;s.dimension.width=g*2;s.offset.top=p+m-g;s.offset.left=h+v-g}else if(f=="rect"){var v=parseInt(d[0]),m=parseInt(d[1]),y=parseInt(d[2]),b=parseInt(d[3]);s.dimension.height=b-m;s.dimension.width=y-v;s.offset.top=p+m;s.offset.left=h+v}else if(f=="poly"){var w=[],E=[],S=0,x=0,T=0,N=0,C="even";for(var k=0;k<d.length;k++){var L=parseInt(d[k]);if(C=="even"){if(L>T){T=L;if(k===0){S=T}}if(L<S){S=L}C="odd"}else{if(L>N){N=L;if(k==1){x=N}}if(L<x){x=L}C="even"}}s.dimension.height=N-x;s.dimension.width=T-S;s.offset.top=p+x;s.offset.left=h+S}else{s.dimension.height=c.outerHeight(false);s.dimension.width=c.outerWidth(false);s.offset.top=p;s.offset.left=h}}var A=0,O=0,M=0,_=parseInt(n.options.offsetY),D=parseInt(n.options.offsetX),P=n.options.position;function H(){var n=e(t).scrollLeft();if(A-n<0){r=A-n;A=n}if(A+o-n>i){r=A-(i+n-o);A=i+n-o}}function B(n,r){if(s.offset.top-e(t).scrollTop()-a-_-12<0&&r.indexOf("top")>-1){P=n}if(s.offset.top+s.dimension.height+a+12+_>e(t).scrollTop()+e(t).height()&&r.indexOf("bottom")>-1){P=n;M=s.offset.top-a-_-12}}if(P=="top"){var j=s.offset.left+o-(s.offset.left+s.dimension.width);A=s.offset.left+D-j/2;M=s.offset.top-a-_-12;H();B("bottom","top")}if(P=="top-left"){A=s.offset.left+D;M=s.offset.top-a-_-12;H();B("bottom-left","top-left")}if(P=="top-right"){A=s.offset.left+s.dimension.width+D-o;M=s.offset.top-a-_-12;H();B("bottom-right","top-right")}if(P=="bottom"){var j=s.offset.left+o-(s.offset.left+s.dimension.width);A=s.offset.left-j/2+D;M=s.offset.top+s.dimension.height+_+12;H();B("top","bottom")}if(P=="bottom-left"){A=s.offset.left+D;M=s.offset.top+s.dimension.height+_+12;H();B("top-left","bottom-left")}if(P=="bottom-right"){A=s.offset.left+s.dimension.width+D-o;M=s.offset.top+s.dimension.height+_+12;H();B("top-right","bottom-right")}if(P=="left"){A=s.offset.left-D-o-12;O=s.offset.left+D+s.dimension.width+12;var F=s.offset.top+a-(s.offset.top+s.dimension.height);M=s.offset.top-F/2-_;if(A<0&&O+o>i){var I=parseFloat(n.$tooltip.css("border-width"))*2,q=o+A-I;n.$tooltip.css("width",q+"px");a=n.$tooltip.outerHeight(false);A=s.offset.left-D-q-12-I;F=s.offset.top+a-(s.offset.top+s.dimension.height);M=s.offset.top-F/2-_}else if(A<0){A=s.offset.left+D+s.dimension.width+12;r="left"}}if(P=="right"){A=s.offset.left+D+s.dimension.width+12;O=s.offset.left-D-o-12;var F=s.offset.top+a-(s.offset.top+s.dimension.height);M=s.offset.top-F/2-_;if(A+o>i&&O<0){var I=parseFloat(n.$tooltip.css("border-width"))*2,q=i-A-I;n.$tooltip.css("width",q+"px");a=n.$tooltip.outerHeight(false);F=s.offset.top+a-(s.offset.top+s.dimension.height);M=s.offset.top-F/2-_}else if(A+o>i){A=s.offset.left-D-o-12;r="right"}}if(n.options.arrow){var R="tooltipster-arrow-"+P;if(n.options.arrowColor.length<1){var U=n.$tooltip.css("background-color")}else{var U=n.options.arrowColor}if(!r){r=""}else if(r=="left"){R="tooltipster-arrow-right";r=""}else if(r=="right"){R="tooltipster-arrow-left";r=""}else{r="left:"+Math.round(r)+"px;"}if(P=="top"||P=="top-left"||P=="top-right"){var z=parseFloat(n.$tooltip.css("border-bottom-width")),W=n.$tooltip.css("border-bottom-color")}else if(P=="bottom"||P=="bottom-left"||P=="bottom-right"){var z=parseFloat(n.$tooltip.css("border-top-width")),W=n.$tooltip.css("border-top-color")}else if(P=="left"){var z=parseFloat(n.$tooltip.css("border-right-width")),W=n.$tooltip.css("border-right-color")}else if(P=="right"){var z=parseFloat(n.$tooltip.css("border-left-width")),W=n.$tooltip.css("border-left-color")}else{var z=parseFloat(n.$tooltip.css("border-bottom-width")),W=n.$tooltip.css("border-bottom-color")}if(z>1){z++}var X="";if(z!==0){var V="",J="border-color: "+W+";";if(R.indexOf("bottom")!==-1){V="margin-top: -"+Math.round(z)+"px;"}else if(R.indexOf("top")!==-1){V="margin-bottom: -"+Math.round(z)+"px;"}else if(R.indexOf("left")!==-1){V="margin-right: -"+Math.round(z)+"px;"}else if(R.indexOf("right")!==-1){V="margin-left: -"+Math.round(z)+"px;"}X='<span class="tooltipster-arrow-border" style="'+V+" "+J+';"></span>'}n.$tooltip.find(".tooltipster-arrow").remove();var K='<div class="'+R+' tooltipster-arrow" style="'+r+'">'+X+'<span style="border-color:'+U+';"></span></div>';n.$tooltip.append(K)}n.$tooltip.css({top:Math.round(M)+"px",left:Math.round(A)+"px"})}return n},enable:function(){this.enabled=true;return this},disable:function(){this.hide();this.enabled=false;return this},destroy:function(){var t=this;t.hide();if(t.$el[0]!==t.$elProxy[0])t.$elProxy.remove();t.$el.removeData(t.namespace).off("."+t.namespace);var n=t.$el.data("tooltipster-ns");if(n.length===1){var r=typeof t.Content==="string"?t.Content:e("<div></div>").append(t.Content).html();t.$el.removeClass("tooltipstered").attr("title",r).removeData(t.namespace).removeData("tooltipster-ns").off("."+t.namespace)}else{n=e.grep(n,function(e,n){return e!==t.namespace});t.$el.data("tooltipster-ns",n)}return t},elementIcon:function(){return this.$el[0]!==this.$elProxy[0]?this.$elProxy[0]:undefined},elementTooltip:function(){return this.$tooltip?this.$tooltip[0]:undefined},option:function(e,t){if(typeof t=="undefined")return this.options[e];else{this.options[e]=t;return this}},status:function(){return this.Status}};e.fn[r]=function(){var t=arguments;if(this.length===0){if(typeof t[0]==="string"){var n=true;switch(t[0]){case"setDefaults":e.extend(i,t[1]);break;default:n=false;break}if(n)return true;else return this}else{return this}}else{if(typeof t[0]==="string"){var r="#*$~&";this.each(function(){var n=e(this).data("tooltipster-ns"),i=n?e(this).data(n[0]):null;if(i){if(typeof i[t[0]]==="function"){var s=i[t[0]](t[1],t[2])}else{throw new Error('Unknown method .tooltipster("'+t[0]+'")')}if(s!==i){r=s;return false}}else{throw new Error("You called Tooltipster's \""+t[0]+'" method on an uninitialized element')}});return r!=="#*$~&"?r:this}else{var o=[],u=t[0]&&typeof t[0].multiple!=="undefined",a=u&&t[0].multiple||!u&&i.multiple,f=t[0]&&typeof t[0].debug!=="undefined",l=f&&t[0].debug||!f&&i.debug;this.each(function(){var n=false,r=e(this).data("tooltipster-ns"),i=null;if(!r){n=true}else if(a){n=true}else if(l){console.log('Tooltipster: one or more tooltips are already attached to this element: ignoring. Use the "multiple" option to attach more tooltips.')}if(n){i=new s(this,t[0]);if(!r)r=[];r.push(i.namespace);e(this).data("tooltipster-ns",r);e(this).data(i.namespace,i)}o.push(i)});if(a)return o;else return this}}};var u=!!("ontouchstart"in t);var a=false;e("body").one("mousemove",function(){a=true})})(jQuery,window,document);
 
 //var $page = window.location.pathname;
@@ -13342,6 +13343,536 @@ function runBlock ($rootScope, ErrorsFactory) {
     //});
 }
 
+var app = angular.module('tracker');
+
+(function () {
+    app.controller('entries', function ($rootScope, $scope, $http, DatesFactory, AutocompleteFactory, WeightsFactory, CaloriesFactory) {
+
+        $scope.weight = weight;
+
+        $scope.calories = {
+            day: calories_for_the_day,
+            week_avg: calories_for_the_week
+        };
+
+        $scope.showAutocompleteOptions = {};
+
+        //new entry
+        $scope.new_entry = {
+            exercise: {
+                unit: {}
+            },
+            exercise_unit: {},
+            menu: {},
+            food: {},
+        };
+
+        //autocomplete
+        $scope.autocomplete_options = {
+            exercises: {},
+            menu_items: {},
+            foods: {},
+            temporary_recipe_foods: {}
+        };
+
+
+        $scope.edit_weight = false;
+
+        $scope.date = {};
+
+        if ($scope.date.typed === undefined) {
+            $scope.date.typed = Date.parse('today').toString('dd/MM/yyyy');
+        }
+        $scope.date.long = Date.parse($scope.date.typed).toString('dd MMM yyyy');
+
+        $scope.goToDate = function ($number) {
+            $scope.date.typed = DatesFactory.goToDate($scope.date.typed, $number);
+        };
+
+        $scope.today = function () {
+            $scope.date.typed = DatesFactory.today();
+        };
+        $scope.changeDate = function ($keycode) {
+            if ($keycode === 13) {
+                $scope.date.typed = DatesFactory.changeDate($keycode, $("#date").val());
+            }
+        };
+
+        /**
+         * watches
+         */
+
+        $scope.$watch('date.typed', function (newValue, oldValue) {
+            $scope.date.sql = Date.parse($scope.date.typed).toString('yyyy-MM-dd');
+            $scope.date.long = Date.parse($scope.date.typed).toString('ddd dd MMM yyyy');
+            $("#date").val(newValue);
+
+            if (newValue === oldValue) {
+                // $scope.pageLoad();
+            }
+            else {
+                $scope.getEntries();
+            }
+        });
+
+        $("#food").val("");
+        $("#weight").val("");
+
+        /**
+         * Get all the user's entries for the current date:
+         * exercise entries
+         * menu entries
+         * weight
+         * calories for the day
+         * calorie average for the week
+         */
+        $scope.getEntries = function () {
+            $rootScope.$emit('getEntries');
+        };
+
+        $rootScope.$on('getEntries', function () {
+            $rootScope.showLoading();
+            //Get weight for the day
+            WeightsFactory.getWeightForTheDay($scope.date.sql)
+                .then(function (response) {
+                    $scope.weight = response.data;
+                    //$rootScope.$broadcast('provideFeedback', '');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+            //Get calories for the day and average calories for 7 days
+            $rootScope.showLoading();
+            CaloriesFactory.getInfoForTheDay($scope.date.sql)
+                .then(function (response) {
+                    $scope.calories.day = response.data.forTheDay;
+                    $scope.calories.week_avg = response.data.averageFor7Days;
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        });
+
+        $scope.insertOrUpdateWeight = function ($keycode) {
+            if ($keycode === 13) {
+                WeightsFactory.insertWeight($scope.date.sql).then(function (response) {
+                    $scope.weight = response.data;
+                    $scope.edit_weight = false;
+                    $("#weight").val("");
+                });
+            }
+        };
+
+        $scope.editWeight = function () {
+            $scope.edit_weight = true;
+            setTimeout(function () {
+                $("#weight").focus();
+            }, 500);
+        };
+
+        /**
+         * media queries
+         */
+
+        enquire.register("screen and (max-width: 890px", {
+            match: function () {
+                $("#avg-calories-for-the-week-text").text('Avg: ');
+            },
+            unmatch: function () {
+                $("#avg-calories-for-the-week-text").text('Avg calories (last 7 days): ');
+            }
+        });
+
+    });
+
+})();
+angular.module('tracker')
+    .controller('ExerciseEntriesController', function ($rootScope, $scope, ExerciseEntriesFactory, AutocompleteFactory) {
+
+        $scope.exerciseEntries = exerciseEntries;
+        $scope.exerciseUnits = exerciseUnits;
+
+        $scope.selectedExercise = {};
+
+        $rootScope.$on('getEntries', function () {
+            $rootScope.showLoading();
+            ExerciseEntriesFactory.getEntriesForTheDay($scope.date.sql)
+                .then(function (response) {
+                    $scope.exerciseEntries = response.data;
+                    //$rootScope.$broadcast('provideFeedback', '');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        });
+
+        /**
+         * Get all the the user's entries for a particular exercise
+         * with a particular unit on a particular date.
+         * @param $entry
+         */
+        $scope.getSpecificExerciseEntries = function ($entry) {
+            $rootScope.showLoading();
+            ExerciseEntriesFactory.getSpecificExerciseEntries($scope.date.sql, $entry)
+                .then(function (response) {
+                    $scope.show.popups.exercise_entries = true;
+                    $scope.exercise_entries_popup = response.data;
+                    //$rootScope.$broadcast('provideFeedback', '');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        };
+
+        $scope.insertExerciseEntry = function () {
+            $scope.new_entry.exercise.unit_id = $("#exercise-unit").val();
+            $rootScope.showLoading();
+            ExerciseEntriesFactory.insert($scope.date.sql, $scope.newEntry)
+                .then(function (response) {
+                    $scope.exerciseEntries = response.data;
+                    //$rootScope.$broadcast('provideFeedback', '');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        };
+
+        $scope.insertExerciseSet = function ($exercise) {
+            $rootScope.showLoading();
+            ExerciseEntriesFactory.insertExerciseSet($scope.date.sql, $exercise)
+                .then(function (response) {
+                    $scope.exerciseEntries = response.data;
+                    //$rootScope.$broadcast('provideFeedback', '');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        };
+
+        //Todo: get the entries for the day after deleting the entry
+        $scope.deleteExerciseEntry = function ($entry) {
+            ExerciseEntriesFactory.deleteExerciseEntry($entry)
+                .then(function (response) {
+                    //$scope.entries.exercise = response.data.entries_for_day;
+                    $scope.exercise_entries_popup.entries = _.without($scope.exercise_entries_popup.entries, $entry);
+                    $rootScope.$broadcast('provideFeedback', 'Entry deleted');
+                });
+        };
+
+        /**
+         * Autocomplete
+         */
+
+        $scope.autocompleteExercise = function ($keycode) {
+            if ($keycode !== 13 && $keycode !== 38 && $keycode !== 40) {
+                //not enter, up arrow or down arrow
+                AutocompleteFactory.exercise().then(function (response) {
+                    if (response.data.length > 0) {
+                        //Results were found
+                        //fill the dropdown
+                        $scope.autocomplete_options.exercises = response.data;
+                        //select the first item
+                        $scope.autocomplete_options.exercises[0].selected = true;
+                    }
+                    else {
+                        //No results found
+                        $scope.autocomplete_options.exercises = [];
+                    }
+                    //show the dropdown
+                    $scope.showAutocompleteOptions.exercises = true;
+                });
+            }
+            else if ($keycode === 38) {
+                //up arrow pressed
+                AutocompleteFactory.autocompleteUpArrow($scope.autocomplete_options.exercises);
+
+            }
+            else if ($keycode === 40) {
+                //down arrow pressed
+                AutocompleteFactory.autocompleteDownArrow($scope.autocomplete_options.exercises);
+            }
+        };
+
+        $scope.finishExerciseAutocomplete = function ($array, $selected) {
+            //array, input_to_focus, autocomplete_to_hide, input_to_fill, selected_property_to_define
+            $selected = $selected || _.findWhere($array, {selected: true});
+            $scope.selectedExercise = $selected;
+            $scope.selectedExercise.unit_id = $scope.selectedExercise.default_unit_id;
+            $scope.newEntry = $selected;
+            $scope.newEntry.quantity = $scope.selectedExercise.default_quantity;
+            $scope.selectedExercise = $selected;
+            $scope.showAutocompleteOptions.exercises = false;
+            setTimeout(function () {
+                $("#exercise-quantity").focus().select();
+            }, 500);
+        };
+
+        $scope.insertOrAutocompleteExerciseEntry = function ($keycode) {
+            if ($keycode !== 13) {
+                return;
+            }
+            //enter is pressed
+            if ($scope.showAutocompleteOptions.exercises) {
+                //if enter is for the autocomplete
+                $scope.finishExerciseAutocomplete($scope.autocomplete_options.exercises);
+            }
+            else {
+                // if enter is to add the entry
+                $scope.insertExerciseEntry();
+            }
+        };
+
+    });
+angular.module('tracker')
+    .controller('MenuEntriesController', function ($rootScope, $scope, MenuEntriesFactory, RecipeEntriesFactory, AutocompleteFactory) {
+
+        $scope.menuEntries = menuEntries;
+
+        //$scope.$watch('recipe.portion', function (newValue, oldValue) {
+        //    $($scope.temporary_recipe_popup.contents).each(function () {
+        //        if (this.original_quantity) {
+        //            //making sure we don't alter the quantity of a food that has been added to the temporary recipe (by doing the if check)
+        //            this.quantity = this.original_quantity * newValue;
+        //        }
+        //    });
+        //});
+
+        $scope.selected = {
+            dropdown_item: {},
+            food: {},
+            unit: {}
+        };
+
+        $rootScope.$on('getEntries', function () {
+            $rootScope.showLoading();
+            MenuEntriesFactory.getEntriesForTheDay($scope.date.sql)
+                .then(function (response) {
+                    $scope.menuEntries = response.data;
+                    //$rootScope.$broadcast('provideFeedback', '');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        });
+
+        $scope.insertMenuEntry = function () {
+            $scope.new_entry.food.id = $scope.selected.food.id;
+            $scope.new_entry.food.name = $scope.selected.food.name;
+            $scope.new_entry.food.unit_id = $("#food-unit").val();
+
+            MenuEntriesFactory.insertMenuEntry($scope.date.sql, $scope.new_entry.food).then(function (response) {
+                $scope.entries.menu = response.data.food_entries;
+                $scope.calories.day = response.data.calories_for_the_day;
+                $scope.calories.week_avg = response.data.calories_for_the_week;
+
+                if ($scope.temporary_recipe_popup.contents) {
+                    $scope.temporary_recipe_popup.contents.length = 0;
+                }
+                $scope.loading = false;
+            });
+        };
+
+        $scope.insertRecipeEntry = function () {
+            RecipeEntriesFactory.insertRecipeEntry($scope.date.sql, $scope.selected.menu.id, $scope.temporary_recipe_popup.contents).then(function (response) {
+                $scope.entries.menu = response.data;
+                $scope.show.popups.temporary_recipe = false;
+            });
+        };
+
+        $scope.deleteFoodEntry = function ($entry_id) {
+            $entry_id = $entry_id || $scope.selected.entry.id;
+
+            MenuEntriesFactory.deleteFoodEntry($entry_id, $scope.date.sql).then(function (response) {
+                $scope.entries.menu = response.data.food_entries;
+                $scope.calories.day = response.data.calories_for_the_day;
+                $scope.calories.week_avg = response.data.calories_for_the_week;
+                $scope.show.popups.delete_food_or_recipe_entry = false;
+            });
+        };
+
+        //Todo: get food entries, calories for the day and calories for the week
+        //after deleting
+        $scope.deleteRecipeEntry = function () {
+            RecipeEntriesFactory.deleteRecipeEntry($scope.date.sql, $scope.selected.recipe.id).then(function (response) {
+                $scope.entries.menu = response.data.food_entries;
+                $scope.calories.day = response.data.calories_for_the_day;
+                $scope.calories.week_avg = response.data.calories_for_the_week;
+                $scope.show.popups.delete_food_or_recipe_entry = false;
+            });
+        };
+
+        /**
+         * autocomplete
+         */
+
+        /**
+         * As user types in the input, populate the dropdown.
+         * If user presses arrows, select the appropriate item in the dropdown.
+         * If user presses enter, that is taken care of in $scope.insertOrAutocompleteMenuEntry.
+         * @param $keycode
+         */
+        $scope.autocompleteMenu = function ($keycode) {
+            if ($keycode !== 13 && $keycode !== 38 && $keycode !== 40) {
+                //not enter, up arrow or down arrow
+                AutocompleteFactory.menu().then(function (response) {
+                    //fill the dropdown
+                    $scope.autocomplete_options.menu_items = response.data;
+                    //show the dropdown
+                    $scope.showAutocompleteOptions.menu_items = true;
+                    //select the first item
+                    $scope.autocomplete_options.menu_items[0].selected = true;
+                });
+            }
+            else if ($keycode === 38) {
+                //up arrow pressed
+                AutocompleteFactory.autocompleteUpArrow($scope.autocomplete_options.menu_items);
+
+            }
+            else if ($keycode === 40) {
+                //down arrow pressed
+                AutocompleteFactory.autocompleteDownArrow($scope.autocomplete_options.menu_items);
+            }
+        };
+
+        /**
+         * For when the user presses enter from any of the relevant input fields.
+         * If enter is to complete the autocomplete, call appropriate functions.
+         * If enter is to add an entry, call the appropriate function.
+         * @param $keycode
+         */
+        $scope.insertOrAutocompleteMenuEntry = function ($keycode) {
+            if ($keycode !== 13) {
+                return;
+            }
+
+            //enter is pressed
+            if ($scope.showAutocompleteOptions.menu_items) {
+                //if enter is for the autocomplete
+                $scope.finishMenuAutocomplete($scope.autocomplete_options.menu_items, $("#food-quantity"));
+
+                if ($scope.selected.menu.type === 'recipe') {
+                    $scope.showTemporaryRecipePopup();
+                }
+            }
+
+            // enter is to add the entry
+            else {
+                $scope.insertMenuEntry();
+            }
+        };
+
+        $scope.finishMenuAutocomplete = function ($array, $set_focus) {
+            //array, input_to_focus, autocomplete_to_hide, input_to_fill, selected_property_to_define
+            var $selected = _.findWhere($array, {selected: true});
+            $scope.selected.food = $selected;
+            $scope.new_entry.menu = $selected;
+            $scope.selected.menu = $selected;
+            $scope.showAutocompleteOptions.menu_items = false;
+            $($set_focus).val("").focus();
+        };
+
+        /**
+         * autocomplete temporary recipe food
+         */
+
+        $scope.autocompleteTemporaryRecipeFood = function ($keycode) {
+            var $typing = $("#temporary-recipe-food-input").val();
+
+            if ($keycode !== 13 && $keycode !== 38 && $keycode !== 40) {
+                //not enter, up arrow or down arrow
+                //fill the dropdown
+                AutocompleteFactory.food($typing).then(function (response) {
+                    $scope.autocomplete_options.temporary_recipe_foods = response.data;
+                    //show the dropdown
+                    $scope.showAutocompleteOptions.temporary_recipe_foods = true;
+                    //select the first item
+                    $scope.autocomplete_options.temporary_recipe_foods[0].selected = true;
+                });
+            }
+            else if ($keycode === 38) {
+                //up arrow pressed
+                AutocompleteFactory.autocompleteUpArrow($scope.autocomplete_options.temporary_recipe_foods);
+
+            }
+            else if ($keycode === 40) {
+                //down arrow pressed
+                AutocompleteFactory.autocompleteDownArrow($scope.autocomplete_options.temporary_recipe_foods);
+            }
+        };
+
+        $scope.finishTemporaryRecipeFoodAutocomplete = function ($array, $set_focus) {
+            //array, input_to_focus, autocomplete_to_hide, input_to_fill, selected_property_to_define
+            var $selected = _.findWhere($array, {selected: true});
+            $scope.temporary_recipe_popup.food = $selected;
+            $scope.selected.food = $selected;
+            $scope.showAutocompleteOptions.temporary_recipe_foods = false;
+            $($set_focus).val("").focus();
+        };
+
+        $scope.insertOrAutocompleteTemporaryRecipeFood = function ($keycode) {
+            if ($keycode !== 13) {
+                return;
+            }
+            //enter is pressed
+            if ($scope.showAutocompleteOptions.temporary_recipe_foods) {
+                //enter is for the autocomplete
+                $scope.finishTemporaryRecipeFoodAutocomplete($scope.autocomplete_options.temporary_recipe_foods, $("#temporary-recipe-popup-food-quantity"));
+                // $scope.displayAssocUnitOptions();
+            }
+            else {
+                // if enter is to add the entry
+                $scope.insertFoodIntoTemporaryRecipe();
+            }
+        };
+
+        $scope.insertFoodIntoTemporaryRecipe = function () {
+            //we are adding a food to a temporary recipe
+            var $unit_name = $("#temporary-recipe-popup-unit option:selected").text();
+            $scope.temporary_recipe_popup.contents.push({
+                "food_id": $scope.temporary_recipe_popup.food.id,
+                "name": $scope.temporary_recipe_popup.food.name,
+                "quantity": $scope.temporary_recipe_popup.quantity,
+                "unit_id": $("#temporary-recipe-popup-unit").val(),
+                "unit_name": $unit_name,
+                "units": $scope.temporary_recipe_popup.food.units
+            });
+
+            $("#temporary-recipe-food-input").val("").focus();
+        };
+
+        $scope.deleteFromTemporaryRecipe = function ($item) {
+            $scope.temporary_recipe_popup.contents = _.without($scope.temporary_recipe_popup.contents, $item);
+        };
+
+        $scope.showTemporaryRecipePopup = function () {
+            $scope.show.popups.temporary_recipe = true;
+            FoodsFactory.getRecipeContents($scope.selected.menu.id).then(function (response) {
+                $scope.temporary_recipe_popup = response.data;
+
+                $($scope.temporary_recipe_popup.contents).each(function () {
+                    this.original_quantity = this.quantity;
+                });
+            });
+        };
+
+        $scope.showDeleteFoodOrRecipeEntryPopup = function ($entry_id, $recipe_id) {
+            $scope.show.popups.delete_food_or_recipe_entry = true;
+            $scope.selected.entry = {
+                id: $entry_id
+            };
+            $scope.selected.recipe = {
+                id: $recipe_id
+            };
+        };
+
+    });
 angular.module('tracker')
     .controller('FoodUnitsController', function ($scope, $rootScope, FoodUnitsFactory) {
         $scope.units = units;
@@ -14032,536 +14563,6 @@ var app = angular.module('tracker');
 var app = angular.module('tracker');
 
 (function () {
-    app.controller('entries', function ($rootScope, $scope, $http, DatesFactory, AutocompleteFactory, WeightsFactory, CaloriesFactory) {
-
-        $scope.weight = weight;
-
-        $scope.calories = {
-            day: calories_for_the_day,
-            week_avg: calories_for_the_week
-        };
-
-        $scope.showAutocompleteOptions = {};
-
-        //new entry
-        $scope.new_entry = {
-            exercise: {
-                unit: {}
-            },
-            exercise_unit: {},
-            menu: {},
-            food: {},
-        };
-
-        //autocomplete
-        $scope.autocomplete_options = {
-            exercises: {},
-            menu_items: {},
-            foods: {},
-            temporary_recipe_foods: {}
-        };
-
-
-        $scope.edit_weight = false;
-
-        $scope.date = {};
-
-        if ($scope.date.typed === undefined) {
-            $scope.date.typed = Date.parse('today').toString('dd/MM/yyyy');
-        }
-        $scope.date.long = Date.parse($scope.date.typed).toString('dd MMM yyyy');
-
-        $scope.goToDate = function ($number) {
-            $scope.date.typed = DatesFactory.goToDate($scope.date.typed, $number);
-        };
-
-        $scope.today = function () {
-            $scope.date.typed = DatesFactory.today();
-        };
-        $scope.changeDate = function ($keycode) {
-            if ($keycode === 13) {
-                $scope.date.typed = DatesFactory.changeDate($keycode, $("#date").val());
-            }
-        };
-
-        /**
-         * watches
-         */
-
-        $scope.$watch('date.typed', function (newValue, oldValue) {
-            $scope.date.sql = Date.parse($scope.date.typed).toString('yyyy-MM-dd');
-            $scope.date.long = Date.parse($scope.date.typed).toString('ddd dd MMM yyyy');
-            $("#date").val(newValue);
-
-            if (newValue === oldValue) {
-                // $scope.pageLoad();
-            }
-            else {
-                $scope.getEntries();
-            }
-        });
-
-        $("#food").val("");
-        $("#weight").val("");
-
-        /**
-         * Get all the user's entries for the current date:
-         * exercise entries
-         * menu entries
-         * weight
-         * calories for the day
-         * calorie average for the week
-         */
-        $scope.getEntries = function () {
-            $rootScope.$emit('getEntries');
-        };
-
-        $rootScope.$on('getEntries', function () {
-            $rootScope.showLoading();
-            //Get weight for the day
-            WeightsFactory.getWeightForTheDay($scope.date.sql)
-                .then(function (response) {
-                    $scope.weight = response.data;
-                    //$rootScope.$broadcast('provideFeedback', '');
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-            //Get calories for the day and average calories for 7 days
-            $rootScope.showLoading();
-            CaloriesFactory.getInfoForTheDay($scope.date.sql)
-                .then(function (response) {
-                    $scope.calories.day = response.data.forTheDay;
-                    $scope.calories.week_avg = response.data.averageFor7Days;
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        });
-
-        $scope.insertOrUpdateWeight = function ($keycode) {
-            if ($keycode === 13) {
-                WeightsFactory.insertWeight($scope.date.sql).then(function (response) {
-                    $scope.weight = response.data;
-                    $scope.edit_weight = false;
-                    $("#weight").val("");
-                });
-            }
-        };
-
-        $scope.editWeight = function () {
-            $scope.edit_weight = true;
-            setTimeout(function () {
-                $("#weight").focus();
-            }, 500);
-        };
-
-        /**
-         * media queries
-         */
-
-        enquire.register("screen and (max-width: 890px", {
-            match: function () {
-                $("#avg-calories-for-the-week-text").text('Avg: ');
-            },
-            unmatch: function () {
-                $("#avg-calories-for-the-week-text").text('Avg calories (last 7 days): ');
-            }
-        });
-
-    });
-
-})();
-angular.module('tracker')
-    .controller('ExerciseEntriesController', function ($rootScope, $scope, ExerciseEntriesFactory, AutocompleteFactory) {
-
-        $scope.exerciseEntries = exerciseEntries;
-        $scope.exerciseUnits = exerciseUnits;
-
-        $scope.selectedExercise = {};
-
-        $rootScope.$on('getEntries', function () {
-            $rootScope.showLoading();
-            ExerciseEntriesFactory.getEntriesForTheDay($scope.date.sql)
-                .then(function (response) {
-                    $scope.exerciseEntries = response.data;
-                    //$rootScope.$broadcast('provideFeedback', '');
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        });
-
-        /**
-         * Get all the the user's entries for a particular exercise
-         * with a particular unit on a particular date.
-         * @param $entry
-         */
-        $scope.getSpecificExerciseEntries = function ($entry) {
-            $rootScope.showLoading();
-            ExerciseEntriesFactory.getSpecificExerciseEntries($scope.date.sql, $entry)
-                .then(function (response) {
-                    $scope.show.popups.exercise_entries = true;
-                    $scope.exercise_entries_popup = response.data;
-                    //$rootScope.$broadcast('provideFeedback', '');
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        };
-
-        $scope.insertExerciseEntry = function () {
-            $scope.new_entry.exercise.unit_id = $("#exercise-unit").val();
-            $rootScope.showLoading();
-            ExerciseEntriesFactory.insert($scope.date.sql, $scope.newEntry)
-                .then(function (response) {
-                    $scope.exerciseEntries = response.data;
-                    //$rootScope.$broadcast('provideFeedback', '');
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        };
-
-        $scope.insertExerciseSet = function ($exercise) {
-            $rootScope.showLoading();
-            ExerciseEntriesFactory.insertExerciseSet($scope.date.sql, $exercise)
-                .then(function (response) {
-                    $scope.exerciseEntries = response.data;
-                    //$rootScope.$broadcast('provideFeedback', '');
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        };
-
-        //Todo: get the entries for the day after deleting the entry
-        $scope.deleteExerciseEntry = function ($entry) {
-            ExerciseEntriesFactory.deleteExerciseEntry($entry)
-                .then(function (response) {
-                    //$scope.entries.exercise = response.data.entries_for_day;
-                    $scope.exercise_entries_popup.entries = _.without($scope.exercise_entries_popup.entries, $entry);
-                    $rootScope.$broadcast('provideFeedback', 'Entry deleted');
-                });
-        };
-
-        /**
-         * Autocomplete
-         */
-
-        $scope.autocompleteExercise = function ($keycode) {
-            if ($keycode !== 13 && $keycode !== 38 && $keycode !== 40) {
-                //not enter, up arrow or down arrow
-                AutocompleteFactory.exercise().then(function (response) {
-                    if (response.data.length > 0) {
-                        //Results were found
-                        //fill the dropdown
-                        $scope.autocomplete_options.exercises = response.data;
-                        //select the first item
-                        $scope.autocomplete_options.exercises[0].selected = true;
-                    }
-                    else {
-                        //No results found
-                        $scope.autocomplete_options.exercises = [];
-                    }
-                    //show the dropdown
-                    $scope.showAutocompleteOptions.exercises = true;
-                });
-            }
-            else if ($keycode === 38) {
-                //up arrow pressed
-                AutocompleteFactory.autocompleteUpArrow($scope.autocomplete_options.exercises);
-
-            }
-            else if ($keycode === 40) {
-                //down arrow pressed
-                AutocompleteFactory.autocompleteDownArrow($scope.autocomplete_options.exercises);
-            }
-        };
-
-        $scope.finishExerciseAutocomplete = function ($array, $selected) {
-            //array, input_to_focus, autocomplete_to_hide, input_to_fill, selected_property_to_define
-            $selected = $selected || _.findWhere($array, {selected: true});
-            $scope.selectedExercise = $selected;
-            $scope.selectedExercise.unit_id = $scope.selectedExercise.default_unit_id;
-            $scope.newEntry = $selected;
-            $scope.newEntry.quantity = $scope.selectedExercise.default_quantity;
-            $scope.selectedExercise = $selected;
-            $scope.showAutocompleteOptions.exercises = false;
-            setTimeout(function () {
-                $("#exercise-quantity").focus().select();
-            }, 500);
-        };
-
-        $scope.insertOrAutocompleteExerciseEntry = function ($keycode) {
-            if ($keycode !== 13) {
-                return;
-            }
-            //enter is pressed
-            if ($scope.showAutocompleteOptions.exercises) {
-                //if enter is for the autocomplete
-                $scope.finishExerciseAutocomplete($scope.autocomplete_options.exercises);
-            }
-            else {
-                // if enter is to add the entry
-                $scope.insertExerciseEntry();
-            }
-        };
-
-    });
-angular.module('tracker')
-    .controller('MenuEntriesController', function ($rootScope, $scope, MenuEntriesFactory, RecipeEntriesFactory, AutocompleteFactory) {
-
-        $scope.menuEntries = menuEntries;
-
-        //$scope.$watch('recipe.portion', function (newValue, oldValue) {
-        //    $($scope.temporary_recipe_popup.contents).each(function () {
-        //        if (this.original_quantity) {
-        //            //making sure we don't alter the quantity of a food that has been added to the temporary recipe (by doing the if check)
-        //            this.quantity = this.original_quantity * newValue;
-        //        }
-        //    });
-        //});
-
-        $scope.selected = {
-            dropdown_item: {},
-            food: {},
-            unit: {}
-        };
-
-        $rootScope.$on('getEntries', function () {
-            $rootScope.showLoading();
-            MenuEntriesFactory.getEntriesForTheDay($scope.date.sql)
-                .then(function (response) {
-                    $scope.menuEntries = response.data;
-                    //$rootScope.$broadcast('provideFeedback', '');
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        });
-
-        $scope.insertMenuEntry = function () {
-            $scope.new_entry.food.id = $scope.selected.food.id;
-            $scope.new_entry.food.name = $scope.selected.food.name;
-            $scope.new_entry.food.unit_id = $("#food-unit").val();
-
-            MenuEntriesFactory.insertMenuEntry($scope.date.sql, $scope.new_entry.food).then(function (response) {
-                $scope.entries.menu = response.data.food_entries;
-                $scope.calories.day = response.data.calories_for_the_day;
-                $scope.calories.week_avg = response.data.calories_for_the_week;
-
-                if ($scope.temporary_recipe_popup.contents) {
-                    $scope.temporary_recipe_popup.contents.length = 0;
-                }
-                $scope.loading = false;
-            });
-        };
-
-        $scope.insertRecipeEntry = function () {
-            RecipeEntriesFactory.insertRecipeEntry($scope.date.sql, $scope.selected.menu.id, $scope.temporary_recipe_popup.contents).then(function (response) {
-                $scope.entries.menu = response.data;
-                $scope.show.popups.temporary_recipe = false;
-            });
-        };
-
-        $scope.deleteFoodEntry = function ($entry_id) {
-            $entry_id = $entry_id || $scope.selected.entry.id;
-
-            MenuEntriesFactory.deleteFoodEntry($entry_id, $scope.date.sql).then(function (response) {
-                $scope.entries.menu = response.data.food_entries;
-                $scope.calories.day = response.data.calories_for_the_day;
-                $scope.calories.week_avg = response.data.calories_for_the_week;
-                $scope.show.popups.delete_food_or_recipe_entry = false;
-            });
-        };
-
-        //Todo: get food entries, calories for the day and calories for the week
-        //after deleting
-        $scope.deleteRecipeEntry = function () {
-            RecipeEntriesFactory.deleteRecipeEntry($scope.date.sql, $scope.selected.recipe.id).then(function (response) {
-                $scope.entries.menu = response.data.food_entries;
-                $scope.calories.day = response.data.calories_for_the_day;
-                $scope.calories.week_avg = response.data.calories_for_the_week;
-                $scope.show.popups.delete_food_or_recipe_entry = false;
-            });
-        };
-
-        /**
-         * autocomplete
-         */
-
-        /**
-         * As user types in the input, populate the dropdown.
-         * If user presses arrows, select the appropriate item in the dropdown.
-         * If user presses enter, that is taken care of in $scope.insertOrAutocompleteMenuEntry.
-         * @param $keycode
-         */
-        $scope.autocompleteMenu = function ($keycode) {
-            if ($keycode !== 13 && $keycode !== 38 && $keycode !== 40) {
-                //not enter, up arrow or down arrow
-                AutocompleteFactory.menu().then(function (response) {
-                    //fill the dropdown
-                    $scope.autocomplete_options.menu_items = response.data;
-                    //show the dropdown
-                    $scope.showAutocompleteOptions.menu_items = true;
-                    //select the first item
-                    $scope.autocomplete_options.menu_items[0].selected = true;
-                });
-            }
-            else if ($keycode === 38) {
-                //up arrow pressed
-                AutocompleteFactory.autocompleteUpArrow($scope.autocomplete_options.menu_items);
-
-            }
-            else if ($keycode === 40) {
-                //down arrow pressed
-                AutocompleteFactory.autocompleteDownArrow($scope.autocomplete_options.menu_items);
-            }
-        };
-
-        /**
-         * For when the user presses enter from any of the relevant input fields.
-         * If enter is to complete the autocomplete, call appropriate functions.
-         * If enter is to add an entry, call the appropriate function.
-         * @param $keycode
-         */
-        $scope.insertOrAutocompleteMenuEntry = function ($keycode) {
-            if ($keycode !== 13) {
-                return;
-            }
-
-            //enter is pressed
-            if ($scope.showAutocompleteOptions.menu_items) {
-                //if enter is for the autocomplete
-                $scope.finishMenuAutocomplete($scope.autocomplete_options.menu_items, $("#food-quantity"));
-
-                if ($scope.selected.menu.type === 'recipe') {
-                    $scope.showTemporaryRecipePopup();
-                }
-            }
-
-            // enter is to add the entry
-            else {
-                $scope.insertMenuEntry();
-            }
-        };
-
-        $scope.finishMenuAutocomplete = function ($array, $set_focus) {
-            //array, input_to_focus, autocomplete_to_hide, input_to_fill, selected_property_to_define
-            var $selected = _.findWhere($array, {selected: true});
-            $scope.selected.food = $selected;
-            $scope.new_entry.menu = $selected;
-            $scope.selected.menu = $selected;
-            $scope.showAutocompleteOptions.menu_items = false;
-            $($set_focus).val("").focus();
-        };
-
-        /**
-         * autocomplete temporary recipe food
-         */
-
-        $scope.autocompleteTemporaryRecipeFood = function ($keycode) {
-            var $typing = $("#temporary-recipe-food-input").val();
-
-            if ($keycode !== 13 && $keycode !== 38 && $keycode !== 40) {
-                //not enter, up arrow or down arrow
-                //fill the dropdown
-                AutocompleteFactory.food($typing).then(function (response) {
-                    $scope.autocomplete_options.temporary_recipe_foods = response.data;
-                    //show the dropdown
-                    $scope.showAutocompleteOptions.temporary_recipe_foods = true;
-                    //select the first item
-                    $scope.autocomplete_options.temporary_recipe_foods[0].selected = true;
-                });
-            }
-            else if ($keycode === 38) {
-                //up arrow pressed
-                AutocompleteFactory.autocompleteUpArrow($scope.autocomplete_options.temporary_recipe_foods);
-
-            }
-            else if ($keycode === 40) {
-                //down arrow pressed
-                AutocompleteFactory.autocompleteDownArrow($scope.autocomplete_options.temporary_recipe_foods);
-            }
-        };
-
-        $scope.finishTemporaryRecipeFoodAutocomplete = function ($array, $set_focus) {
-            //array, input_to_focus, autocomplete_to_hide, input_to_fill, selected_property_to_define
-            var $selected = _.findWhere($array, {selected: true});
-            $scope.temporary_recipe_popup.food = $selected;
-            $scope.selected.food = $selected;
-            $scope.showAutocompleteOptions.temporary_recipe_foods = false;
-            $($set_focus).val("").focus();
-        };
-
-        $scope.insertOrAutocompleteTemporaryRecipeFood = function ($keycode) {
-            if ($keycode !== 13) {
-                return;
-            }
-            //enter is pressed
-            if ($scope.showAutocompleteOptions.temporary_recipe_foods) {
-                //enter is for the autocomplete
-                $scope.finishTemporaryRecipeFoodAutocomplete($scope.autocomplete_options.temporary_recipe_foods, $("#temporary-recipe-popup-food-quantity"));
-                // $scope.displayAssocUnitOptions();
-            }
-            else {
-                // if enter is to add the entry
-                $scope.insertFoodIntoTemporaryRecipe();
-            }
-        };
-
-        $scope.insertFoodIntoTemporaryRecipe = function () {
-            //we are adding a food to a temporary recipe
-            var $unit_name = $("#temporary-recipe-popup-unit option:selected").text();
-            $scope.temporary_recipe_popup.contents.push({
-                "food_id": $scope.temporary_recipe_popup.food.id,
-                "name": $scope.temporary_recipe_popup.food.name,
-                "quantity": $scope.temporary_recipe_popup.quantity,
-                "unit_id": $("#temporary-recipe-popup-unit").val(),
-                "unit_name": $unit_name,
-                "units": $scope.temporary_recipe_popup.food.units
-            });
-
-            $("#temporary-recipe-food-input").val("").focus();
-        };
-
-        $scope.deleteFromTemporaryRecipe = function ($item) {
-            $scope.temporary_recipe_popup.contents = _.without($scope.temporary_recipe_popup.contents, $item);
-        };
-
-        $scope.showTemporaryRecipePopup = function () {
-            $scope.show.popups.temporary_recipe = true;
-            FoodsFactory.getRecipeContents($scope.selected.menu.id).then(function (response) {
-                $scope.temporary_recipe_popup = response.data;
-
-                $($scope.temporary_recipe_popup.contents).each(function () {
-                    this.original_quantity = this.quantity;
-                });
-            });
-        };
-
-        $scope.showDeleteFoodOrRecipeEntryPopup = function ($entry_id, $recipe_id) {
-            $scope.show.popups.delete_food_or_recipe_entry = true;
-            $scope.selected.entry = {
-                id: $entry_id
-            };
-            $scope.selected.recipe = {
-                id: $recipe_id
-            };
-        };
-
-    });
-var app = angular.module('tracker');
-
-(function () {
     app.controller('ExerciseTagsController', function ($rootScope, $scope, ExerciseTagsFactory) {
 
         $scope.tags = exercise_tags;
@@ -15119,6 +15120,7 @@ angular.module('tracker')
         //});
 
         $scope.startTimer = function () {
+            $('#timer-clock').timer({format: '%H:%M:%S'});
             $rootScope.showLoading();
             TimersFactory.store($scope.newTimer)
                 .then(function (response) {
@@ -15151,10 +15153,12 @@ angular.module('tracker')
         getActivities();
 
         $scope.stopTimer = function () {
+            $('#timer-clock').timer('remove');
             $rootScope.showLoading();
             TimersFactory.update($scope.timerInProgress)
                 .then(function (response) {
                     $scope.timerInProgress = false;
+                    $scope.timers.push(response.data);
                     //var $index = _.indexOf($scope.timers, _.findWhere($scope.timers, {id: response.data.id}));
                     //$scope.timers[$index] = response.data;
                     $rootScope.$broadcast('provideFeedback', 'Timer updated');
@@ -15632,27 +15636,40 @@ angular.module('tracker')
             }
         }
     });
-app.factory('WeightsFactory', function ($http) {
+app.factory('JournalFactory', function ($http) {
     return {
 
-        getWeightForTheDay: function ($date) {
-            var $url = 'api/weights/' + $date;
+        getJournalEntry: function ($sqlDate) {
+            return $http.get('api/journal/' + $sqlDate);
+        },
+
+        filter: function () {
+            var $typing = $("#filter-journal").val();
+            var $url = 'api/journal?typing=' + $typing;
+
             return $http.get($url);
         },
 
-        insertWeight: function ($sql_date) {
-            var $url = 'insert/weight';
-            var $weight = $("#weight").val();
+        insert: function ($sqlDate) {
+            var $url = 'api/journal';
 
             var $data = {
-                date: $sql_date,
-                weight: $weight
+                date: $sqlDate,
+                text: $("#journal-entry").html()
             };
 
             return $http.post($url, $data);
         },
 
+        update: function ($entry) {
+            var $url = 'api/journal/' + $entry.id;
 
+            var $data = {
+                text: $("#journal-entry").html()
+            };
+
+            return $http.put($url, $data);
+        }
     };
 });
 angular.module('tracker')
@@ -16237,40 +16254,27 @@ angular.module('tracker')
             }
         }
     });
-app.factory('JournalFactory', function ($http) {
+app.factory('WeightsFactory', function ($http) {
     return {
 
-        getJournalEntry: function ($sqlDate) {
-            return $http.get('api/journal/' + $sqlDate);
-        },
-
-        filter: function () {
-            var $typing = $("#filter-journal").val();
-            var $url = 'api/journal?typing=' + $typing;
-
+        getWeightForTheDay: function ($date) {
+            var $url = 'api/weights/' + $date;
             return $http.get($url);
         },
 
-        insert: function ($sqlDate) {
-            var $url = 'api/journal';
+        insertWeight: function ($sql_date) {
+            var $url = 'insert/weight';
+            var $weight = $("#weight").val();
 
             var $data = {
-                date: $sqlDate,
-                text: $("#journal-entry").html()
+                date: $sql_date,
+                weight: $weight
             };
 
             return $http.post($url, $data);
         },
 
-        update: function ($entry) {
-            var $url = 'api/journal/' + $entry.id;
 
-            var $data = {
-                text: $("#journal-entry").html()
-            };
-
-            return $http.put($url, $data);
-        }
     };
 });
 angular.module('tracker')
