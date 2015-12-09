@@ -26,7 +26,6 @@ class ActivitiesController extends Controller
     }
 
     /**
-     * Todo: test
      * @param $date
      * @return mixed
      */

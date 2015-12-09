@@ -12,7 +12,6 @@ class TimersTest extends TestCase {
     use DatabaseTransactions;
 
     /**
-     * Todo: I think this should be checking it gets them in a date range
      * @test
      * @return void
      */
