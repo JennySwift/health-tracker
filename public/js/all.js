@@ -13340,6 +13340,23 @@ function runBlock ($rootScope, ErrorsFactory) {
     //});
 }
 
+angular.module('tracker')
+    .controller('ActivitiesController', function ($rootScope, $scope, ActivitiesFactory) {
+
+        function getActivities () {
+            $rootScope.showLoading();
+            ActivitiesFactory.index()
+                .then(function (response) {
+                    $scope.activities = response.data;
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        }
+        
+        getActivities();
+    });
 var app = angular.module('tracker');
 
 (function () {
@@ -15084,6 +15101,16 @@ var app = angular.module('tracker');
     });
 
 })();
+angular.module('tracker')
+    .factory('ActivitiesFactory', function ($http) {
+        return {
+            index: function () {
+                var url = '/api/activities';
+            
+                return $http.get(url);
+            }
+        }
+    });
 app.factory('AutocompleteFactory', function ($http) {
     var $object = {};
     $object.autocompleteUpArrow = function ($array) {
@@ -15229,7 +15256,7 @@ angular.module('tracker')
 
         return {
             getEntries: function () {
-                var $url = 'api/timers?byDate=true';
+                var $url = '/api/timers?byDate=true';
                 
                 return $http.get($url);
             },

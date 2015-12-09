@@ -5,7 +5,7 @@
 	<title>tracker</title>
 	@include('templates.head-links')
 </head>
-<body ng-controller="TimersController">
+<body ng-controller="ActivitiesController">
 
 	@include('templates.header')
 
@@ -13,8 +13,11 @@
 
         {{--@include('templates.date-navigation')--}}
 
-		<h1>Timers</h1>
+		<h1>Activities</h1>
 
+        <div id="activities">
+            <div ng-repeat="activity in activities">[[activity.name]]</div>
+        </div>
 	</div>
 
 	@include('templates.footer')

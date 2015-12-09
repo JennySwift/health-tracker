@@ -3,7 +3,7 @@ angular.module('tracker')
 
         return {
             getEntries: function () {
-                var $url = 'api/timers?byDate=true';
+                var $url = '/api/timers?byDate=true';
                 
                 return $http.get($url);
             },

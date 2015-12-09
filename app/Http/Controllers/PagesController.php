@@ -305,6 +305,24 @@ class PagesController extends Controller
     }
 
     /**
+     *
+     * @return \Illuminate\View\View
+     */
+    public function timerActivities()
+    {
+        return view('pages.timers.activities');
+    }
+
+    /**
+     *
+     * @return \Illuminate\View\View
+     */
+    public function timerGraphs()
+    {
+        return view('pages.timers.graphs');
+    }
+
+    /**
      * Jasmine testing page
      * @return \Illuminate\View\View
      */
