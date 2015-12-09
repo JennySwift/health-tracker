@@ -14,17 +14,29 @@
         {{--@include('templates.date-navigation')--}}
 
         <div id="new-timer">
-            <label for="activity">Activity</label>
 
-            <select
-                    ng-options="activity.id as activity.name for activity in activities"
-                    ng-model="newTimer.activity.id"
-                    id="new-timer-activity"
-                    class="form-control">
-            </select>
+        </div>
 
-            <button ng-click="startTimer()" class="btn btn-success">Start</button>
-            <button ng-click="stopTimer()" class="btn btn-danger">Stop</button>
+        <label for="activity">Activity</label>
+
+        [[activities]]
+
+        <select
+                ng-options="activity.id as activity.name for activity in activities"
+                ng-model="newTimer.activity.id"
+                id="new-timer-activity"
+                class="form-control">
+        </select>
+
+        {{--<select ng-model="newTimer.activity.id" name="activity" id="new-timer-activity" class="form-control">--}}
+            {{--<option ng-repeat="activity in activities" ng-value="activity.id">@{{ activity.name }}</option>--}}
+        {{--</select>--}}
+
+        <button ng-click="startTimer()" class="btn btn-success">Start</button>
+        <button ng-click="stopTimer()" class="btn btn-danger">Stop</button>
+
+        <div ng-show="timerInProgress" id="timer-in-progress">
+            <div>[[timerInProgress.activity.data.name]]</div>
         </div>
 
         <div id="timer-filter">
@@ -43,9 +55,9 @@
                 </div>
 
                 <div>
-                    <span>[[timer.start]]</span>
+                    <span>[[timer.formattedStart]]</span>
                     <span> - </span>
-                    <span>[[timer.finish]]</span>
+                    <span>[[timer.formattedFinish]]</span>
                 </div>
 
             </li>

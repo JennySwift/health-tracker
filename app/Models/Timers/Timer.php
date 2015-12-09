@@ -84,6 +84,10 @@ class Timer extends Model
         return $this->totalMinutes % 60;
     }
 
+    /**
+     *
+     * @return mixed|string
+     */
     public function getFormattedMinutesAttribute()
     {
         if ($this->minutes < 10) {
@@ -92,6 +96,15 @@ class Timer extends Model
         else {
             return $this->minutes;
         }
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getFormattedStartAttribute()
+    {
+        return Carbon::createFromFormat('Y-m-d H:i:s', $this->start)->format('g:ia');
     }
 
     /**

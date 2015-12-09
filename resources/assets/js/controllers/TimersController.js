@@ -1,7 +1,17 @@
 angular.module('tracker')
-    .controller('TimersController', function ($rootScope, $scope, TimersFactory, ActivitiesFactory) {
+    .controller('TimersController', function ($timeout, $rootScope, $scope, TimersFactory, ActivitiesFactory) {
 
-        $("#new-timer-activity").select2({});
+        //$("document").ready(function () {
+        //    $("#new-timer-activity").select2({});
+        //});
+        //
+        //$scope.newTimer = {
+        //    activity: {}
+        //};
+
+        //$timeout(function () {
+        //    $("#new-timer-activity").select2({});
+        //});
 
         $scope.startTimer = function () {
             $rootScope.showLoading();
@@ -15,6 +25,10 @@ angular.module('tracker')
                 .catch(function (response) {
                     $rootScope.responseError(response);
                 });
+        };
+
+        $scope.test = function () {
+            console.log('eh?');
         };
 
         function getActivities () {
@@ -35,6 +49,7 @@ angular.module('tracker')
             $rootScope.showLoading();
             TimersFactory.update($scope.timerInProgress)
                 .then(function (response) {
+                    $scope.timerInProgress = false;
                     //var $index = _.indexOf($scope.timers, _.findWhere($scope.timers, {id: response.data.id}));
                     //$scope.timers[$index] = response.data;
                     $rootScope.$broadcast('provideFeedback', 'Timer updated');
