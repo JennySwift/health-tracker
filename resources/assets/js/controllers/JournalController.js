@@ -1,7 +1,7 @@
 var app = angular.module('tracker');
 
 (function () {
-	app.controller('journal', function ($rootScope, $scope, $http, DatesFactory, JournalFactory) {
+	app.controller('journal', function ($rootScope, $scope, $http, DatesFactory, JournalFactory, TimersFactory) {
 		/**
 		 * scope properties
 		 */
