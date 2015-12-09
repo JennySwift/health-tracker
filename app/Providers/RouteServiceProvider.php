@@ -7,6 +7,7 @@ use App\Models\Menu\Entry as MenuEntry;
 use App\Models\Menu\Recipe;
 use App\Models\Journal\Journal;
 use App\Models\Tags\Tag;
+use App\Models\Timers\Timer;
 use App\Models\Units\Unit;
 use Carbon\Carbon;
 use Illuminate\Routing\Router;
@@ -87,6 +88,11 @@ class RouteServiceProvider extends ServiceProvider {
         Route::bind('exerciseUnits', function($id)
         {
             return Unit::forCurrentUser()->where('for', 'exercise')->findOrFail($id);
+        });
+
+        Route::bind('timers', function($id)
+        {
+            return Timer::forCurrentUser()->findOrFail($id);
         });
 
         /**

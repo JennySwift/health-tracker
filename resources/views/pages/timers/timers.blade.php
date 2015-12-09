@@ -15,6 +15,18 @@
 
 		<h1>Timers</h1>
 
+        <label for="activity">Activity</label>
+
+        <select
+            ng-options="activity.id as activity.name for activity in activities"
+            ng-model="newTimer.activity.id"
+            id="activity"
+            class="form-control">
+        </select>
+
+        <button ng-click="startTimer()" class="btn btn-success">Start</button>
+        <button ng-click="stopTimer()" class="btn btn-danger">Stop</button>
+
 	</div>
 
 	@include('templates.footer')

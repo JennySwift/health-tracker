@@ -18,7 +18,9 @@ class ActivityTransformer extends TransformerAbstract
     {
         $totalDuration = 0;
         foreach ($activity->timers as $timer) {
-            $totalDuration+= $timer->durationInMinutes;
+            if ($timer->finish) {
+                $totalDuration+= $timer->durationInMinutes;
+            }
         }
         
         $array = [

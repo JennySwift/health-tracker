@@ -80,52 +80,54 @@ class TimersController extends Controller
 
             //Add each entry to the array I formed
             foreach ($entries as $entry) {
-                $startDate = Carbon::createFromFormat('Y-m-d H:i:s', $entry->start)->format($formatForUser);
-                $finishDate = Carbon::createFromFormat('Y-m-d H:i:s', $entry->finish)->format($formatForUser);
+                if ($entry->finish) {
+                    $startDate = Carbon::createFromFormat('Y-m-d H:i:s', $entry->start)->format($formatForUser);
+                    $finishDate = Carbon::createFromFormat('Y-m-d H:i:s', $entry->finish)->format($formatForUser);
 
-                if ($startDate === $finishDate) {
-                    $array = [
-                        'start' => Carbon::createFromFormat('Y-m-d H:i:s', $entry->start)->format('g:ia'),
-                        'finish' => Carbon::createFromFormat('Y-m-d H:i:s', $entry->finish)->format('g:ia'),
-                        'startPosition' => $entry->getStartRelativeHeight(),
-                        'finishPosition' => $entry->getFinishRelativeHeight(),
-                        'startHeight' => $entry->getDurationInMinutesDuringOneDay(),
-                        'color' => $entry->activity->color
-                    ];
+                    if ($startDate === $finishDate) {
+                        $array = [
+                            'start' => Carbon::createFromFormat('Y-m-d H:i:s', $entry->start)->format('g:ia'),
+                            'finish' => Carbon::createFromFormat('Y-m-d H:i:s', $entry->finish)->format('g:ia'),
+                            'startPosition' => $entry->getStartRelativeHeight(),
+                            'finishPosition' => $entry->getFinishRelativeHeight(),
+                            'startHeight' => $entry->getDurationInMinutesDuringOneDay(),
+                            'color' => $entry->activity->color
+                        ];
 
-                    $indexOfItem = $this->timersRepository->getIndexOfItem($entriesByDate, $startDate);
-                    $entriesByDate[$indexOfItem][] = $array;
-                }
-                else {
-                    $array = [
-                        'start' => Carbon::createFromFormat('Y-m-d H:i:s', $entry->start)->format('g:ia'),
-                        'finish' => null,
-                        'startPosition' => $entry->getStartRelativeHeight(),
-                        'finishPosition' => null,
-                        'startHeight' => $entry->getDurationInMinutesDuringOneDay('finish'),
-                        'color' => $entry->activity->color
-                    ];
+                        $indexOfItem = $this->timersRepository->getIndexOfItem($entriesByDate, $startDate);
+                        $entriesByDate[$indexOfItem][] = $array;
+                    }
+                    else {
+                        $array = [
+                            'start' => Carbon::createFromFormat('Y-m-d H:i:s', $entry->start)->format('g:ia'),
+                            'finish' => null,
+                            'startPosition' => $entry->getStartRelativeHeight(),
+                            'finishPosition' => null,
+                            'startHeight' => $entry->getDurationInMinutesDuringOneDay('finish'),
+                            'color' => $entry->activity->color
+                        ];
 
-                    $indexOfItem = $this->timersRepository->getIndexOfItem($entriesByDate, $startDate);
-                    $entriesByDate[$indexOfItem][] = $array;
+                        $indexOfItem = $this->timersRepository->getIndexOfItem($entriesByDate, $startDate);
+                        $entriesByDate[$indexOfItem][] = $array;
 
-                    $finish = $entry->getFinish();
-                    $midnight = clone $finish;
-                    $midnight = $midnight->hour(0)->minute(0);
+                        $finish = $entry->getFinish();
+                        $midnight = clone $finish;
+                        $midnight = $midnight->hour(0)->minute(0);
 
-                    $array = [
-                        'start' => null,
-                        'fakeStart' => $midnight->format('g:ia'),
-                        'fakeStartPosition' => $entry->getStartRelativeHeight(true),
-                        'finish' => $finish->format('g:ia'),
-                        'startPosition' => null,
-                        'finishPosition' => $entry->getFinishRelativeHeight(),
-                        'startHeight' => $entry->getDurationInMinutesDuringOneDay('start'),
-                        'color' => $entry->activity->color
-                    ];
+                        $array = [
+                            'start' => null,
+                            'fakeStart' => $midnight->format('g:ia'),
+                            'fakeStartPosition' => $entry->getStartRelativeHeight(true),
+                            'finish' => $finish->format('g:ia'),
+                            'startPosition' => null,
+                            'finishPosition' => $entry->getFinishRelativeHeight(),
+                            'startHeight' => $entry->getDurationInMinutesDuringOneDay('start'),
+                            'color' => $entry->activity->color
+                        ];
 
-                    $indexOfItem = $this->timersRepository->getIndexOfItem($entriesByDate, $finishDate);
-                    $entriesByDate[$indexOfItem][] = $array;
+                        $indexOfItem = $this->timersRepository->getIndexOfItem($entriesByDate, $finishDate);
+                        $entriesByDate[$indexOfItem][] = $array;
+                    }
                 }
             }
 
@@ -155,11 +157,38 @@ class TimersController extends Controller
         if (!$activity) {
             $activity = Activity::forCurrentUser()->where('name', 'sleep')->first();
         }
+
         $sleep->activity()->associate($activity);
         $sleep->save();
     
         $sleep = $this->transform($this->createItem($sleep, new TimerTransformer))['data'];
         return response($sleep, Response::HTTP_CREATED);
+    }
+
+    /**
+     *
+     * @param Request $request
+     * @param Timer $timer
+     * @return Response
+     */
+    public function update(Request $request, Timer $timer)
+    {
+        // Create an array with the new fields merged
+        $data = array_compare($timer->toArray(), $request->only([
+            'start', 'finish'
+        ]));
+    
+        $timer->update($data);
+    
+        if ($request->has('activity_id')) {
+            $timer->activity()->associate(Activity::findOrFail($request->get('activity_id')));
+            $timer->save();
+        }
+
+//        dd($timer);
+    
+        $timer = $this->transform($this->createItem($timer, new TimerTransformer))['data'];
+        return response($timer, Response::HTTP_OK);
     }
 
 }
