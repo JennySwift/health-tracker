@@ -5,7 +5,7 @@
 	<title>tracker</title>
 	@include('templates.head-links')
 </head>
-<body ng-controller="SleepController">
+<body ng-controller="TimersController">
 
 	@include('templates.header')
 

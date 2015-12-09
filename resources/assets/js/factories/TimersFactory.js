@@ -1,14 +1,14 @@
 angular.module('tracker')
-    .factory('SleepFactory', function ($http) {
+    .factory('TimersFactory', function ($http) {
 
         return {
             getEntries: function () {
-                var $url = 'api/sleep?byDate=true';
+                var $url = 'api/timers?byDate=true';
                 
                 return $http.get($url);
             },
             store: function (entry, date) {
-                var url = '/api/sleep';
+                var url = '/api/timers';
 
                 var startDate = date;
                 var finishDate = date;

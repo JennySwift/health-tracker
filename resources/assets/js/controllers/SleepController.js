@@ -1,9 +1,9 @@
 angular.module('tracker')
-    .controller('SleepController', function ($rootScope, $scope, SleepFactory) {
+    .controller('TimersController', function ($rootScope, $scope, TimersFactory) {
 
         function getEntries () {
             $rootScope.showLoading();
-            SleepFactory.getEntries()
+            TimersFactory.getEntries()
                 .then(function (response) {
                     $scope.entries = response.data;
                     //$rootScope.$broadcast('provideFeedback', '');

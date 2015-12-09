@@ -299,9 +299,9 @@ class PagesController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function sleep()
+    public function timers()
     {
-        return view('pages.sleep.sleep');
+        return view('pages.timers.timers');
     }
 
     /**
