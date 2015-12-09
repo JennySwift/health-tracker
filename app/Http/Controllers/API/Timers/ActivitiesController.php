@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API\Timers;
 
 use App\Http\Transformers\ActivityTransformer;
 use App\Models\Timers\Activity;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -21,5 +22,32 @@ class ActivitiesController extends Controller
         $activities = Activity::forCurrentUser()->get();
         $activities = $this->transform($this->createCollection($activities, new ActivityTransformer))['data'];
         return response($activities, Response::HTTP_OK);
+    }
+
+    /**
+     * Todo: test
+     * @param $date
+     * @return mixed
+     */
+    public function calculateTotalMinutesForDay($date = null)
+    {
+        $startOfDay = Carbon::today()->hour(0)->format('Y-m-d H:i:s');
+        $endOfDay = Carbon::today()->hour(24)->format('Y-m-d H:i:s');
+
+        $activitiesForDay = Activity::forCurrentUser()
+            ->whereHas('timers', function($q) use ($date, $startOfDay, $endOfDay)
+            {
+                $q->where(function($q) use ($startOfDay, $endOfDay)
+                {
+                    $q->whereBetween('start', [$startOfDay, $endOfDay])
+                        ->orWhereBetween('finish', [$startOfDay, $endOfDay]);
+                });
+            })->get();
+
+        foreach ($activitiesForDay as $activity) {
+            $activity->minutes = $activity->calculateMinutesForDay($startOfDay, $endOfDay);
+        }
+
+        return $activitiesForDay;
     }
 }

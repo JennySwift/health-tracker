@@ -93,7 +93,7 @@ angular.module('tracker')
             $rootScope.showLoading();
             TimersFactory.checkForTimerInProgress()
                 .then(function (response) {
-                    if (response.data) {
+                    if (response.data.length > 0) {
                         resumeTimerOnPageLoad(response.data);
                     }
 
@@ -115,5 +115,19 @@ angular.module('tracker')
                 seconds: seconds
             });
         }
+
+        function getTotalMinutesForActivitiesForTheDay () {
+            $rootScope.showLoading();
+            ActivitiesFactory.getTotalMinutesForDay()
+                .then(function (response) {
+                    $scope.activitiesWithDurations = response.data;
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        }
+
+        getTotalMinutesForActivitiesForTheDay();
 
     });

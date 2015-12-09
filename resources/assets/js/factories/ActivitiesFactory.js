@@ -5,6 +5,9 @@ angular.module('tracker')
                 var url = '/api/activities';
             
                 return $http.get(url);
+            },
+            getTotalMinutesForDay: function () {
+                return $http.get('/api/activities/getTotalMinutesForDay');
             }
         }
     });

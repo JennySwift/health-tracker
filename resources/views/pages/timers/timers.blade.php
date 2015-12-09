@@ -36,6 +36,10 @@
             <input ng-model="timersFilter" type="text"/>
         </div>
 
+        <div id="activities-with-durations">
+            <span ng-repeat="activity in activitiesWithDurations" ng-style="{'background': 'activity.color'}">[[activity.name]] [[activity.minutes]]</span>
+        </div>
+
         <ul id="timers" class="list-group">
             <li ng-repeat="timer in timers | filter: filterTimers | orderBy: 'start':true" class="list-group-item timer">
                 <div>
