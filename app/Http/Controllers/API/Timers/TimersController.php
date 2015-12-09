@@ -38,15 +38,14 @@ class TimersController extends Controller
      */
     public function index(Request $request)
     {
-        $entries = Timer::forCurrentUser()->get();
-
         if($request->has('byDate')) {
-
+            $entries = Timer::forCurrentUser()->get();
             return $this->timersRepository->getTimersInDateRange($entries);
         }
 
         else {
-            //Return the timers separately
+            //Return the timers for today
+            $entries = Timer::forCurrentUser()->whereDate('finish', '=', Carbon::today()->format('Y-m-d'))->get();
             $entries = $this->transform($this->createCollection($entries, new TimerTransformer))['data'];
             return response($entries, Response::HTTP_OK);
         }

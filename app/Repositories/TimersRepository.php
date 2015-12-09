@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 
+use App\Models\Timers\Timer;
 use Carbon\Carbon;
 
 class TimersRepository {
@@ -80,7 +81,7 @@ class TimersRepository {
                         'color' => $entry->activity->color
                     ];
 
-                    $indexOfItem = $this->timersRepository->getIndexOfItem($entriesByDate, $startDate);
+                    $indexOfItem = $this->getIndexOfItem($entriesByDate, $startDate);
                     $entriesByDate[$indexOfItem][] = $array;
                 }
                 else {
@@ -93,7 +94,7 @@ class TimersRepository {
                         'color' => $entry->activity->color
                     ];
 
-                    $indexOfItem = $this->timersRepository->getIndexOfItem($entriesByDate, $startDate);
+                    $indexOfItem = $this->getIndexOfItem($entriesByDate, $startDate);
                     $entriesByDate[$indexOfItem][] = $array;
 
                     $finish = $entry->getFinish();
@@ -111,7 +112,7 @@ class TimersRepository {
                         'color' => $entry->activity->color
                     ];
 
-                    $indexOfItem = $this->timersRepository->getIndexOfItem($entriesByDate, $finishDate);
+                    $indexOfItem = $this->getIndexOfItem($entriesByDate, $finishDate);
                     $entriesByDate[$indexOfItem][] = $array;
                 }
             }

@@ -3,7 +3,7 @@ angular.module('tracker')
 
         function getEntries () {
             $rootScope.showLoading();
-            TimersFactory.index()
+            TimersFactory.index(true)
                 .then(function (response) {
                     $scope.entries = response.data;
                     //$rootScope.$broadcast('provideFeedback', '');
