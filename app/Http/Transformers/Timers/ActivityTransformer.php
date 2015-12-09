@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Transformers;
+namespace App\Http\Transformers\Timers;
 
 use App\Models\Timers\Activity;
 use League\Fractal\TransformerAbstract;

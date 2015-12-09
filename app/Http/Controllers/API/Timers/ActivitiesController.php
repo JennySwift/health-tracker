@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers\API\Timers;
 
-use App\Http\Transformers\ActivityTransformer;
-use App\Models\Timers\Activity;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
-use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Response;
+use App\Http\Requests;
+use App\Http\Transformers\Timers\ActivityTransformer;
+use App\Models\Timers\Activity;
 use Auth;
+use Carbon\Carbon;
+use Illuminate\Http\Response;
 
 class ActivitiesController extends Controller
 {
@@ -22,6 +21,7 @@ class ActivitiesController extends Controller
     {
         $activities = Activity::forCurrentUser()->get();
         $activities = $this->transform($this->createCollection($activities, new ActivityTransformer))['data'];
+
         return response($activities, Response::HTTP_OK);
     }
 
@@ -36,10 +36,8 @@ class ActivitiesController extends Controller
         $endOfDay = Carbon::today()->hour(24);
 
         $activitiesForDay = Activity::forCurrentUser()
-            ->whereHas('timers', function($q) use ($date, $startOfDay, $endOfDay)
-            {
-                $q->where(function($q) use ($startOfDay, $endOfDay)
-                {
+            ->whereHas('timers', function ($q) use ($date, $startOfDay, $endOfDay) {
+                $q->where(function ($q) use ($startOfDay, $endOfDay) {
                     $q->whereBetween('start', [$startOfDay, $endOfDay])
                         ->orWhereBetween('finish', [$startOfDay, $endOfDay]);
                 });
@@ -51,7 +49,7 @@ class ActivitiesController extends Controller
 
         foreach ($activitiesForDay as $activity) {
             $activity->totalMinutes = $activity->calculateMinutesForDay($startOfDay, $endOfDay);
-            $totalMinutesForAllActivites+= $activity->totalMinutes;
+            $totalMinutesForAllActivites += $activity->totalMinutes;
             $activity->hours = floor($activity->totalMinutes / 60);
             $activity->minutes = $activity->totalMinutes % 60;
             if ($activity->minutes < 10) {

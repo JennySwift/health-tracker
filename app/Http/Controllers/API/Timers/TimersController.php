@@ -2,15 +2,12 @@
 
 namespace App\Http\Controllers\API\Timers;
 
-use App\Http\Transformers\SleepTransformer;
-use App\Http\Transformers\TimerTransformer;
-use App\Models\Sleep\Sleep;
-use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Http\Requests;
+use App\Http\Transformers\Timers\TimerTransformer;
 use App\Models\Timers\Activity;
 use App\Models\Timers\Timer;
-use App\Repositories\SleepRepository;
-use App\Repositories\TimersRepository;
+use App\Repositories\Timers\TimersRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -38,8 +35,9 @@ class TimersController extends Controller
      */
     public function index(Request $request)
     {
-        if($request->has('byDate')) {
+        if ($request->has('byDate')) {
             $entries = Timer::forCurrentUser()->get();
+
             return $this->timersRepository->getTimersInDateRange($entries);
         }
 
@@ -47,14 +45,14 @@ class TimersController extends Controller
             //Return the timers for today
             $dateString = Carbon::today()->format('Y-m-d') . '%';
             $entries = Timer::forCurrentUser()
-                ->where(function ($q) use ($dateString)
-                {
+                ->where(function ($q) use ($dateString) {
                     $q->where('finish', 'LIKE', $dateString)
                         ->orWhere('start', 'LIKE', $dateString);
                 })
                 ->get();
 
             $entries = $this->transform($this->createCollection($entries, new TimerTransformer))['data'];
+
             return response($entries, Response::HTTP_OK);
         }
     }
@@ -76,8 +74,9 @@ class TimersController extends Controller
 
         $sleep->activity()->associate($activity);
         $sleep->save();
-    
+
         $sleep = $this->transform($this->createItem($sleep, new TimerTransformer))['data'];
+
         return response($sleep, Response::HTTP_CREATED);
     }
 
@@ -91,24 +90,25 @@ class TimersController extends Controller
     {
         // Create an array with the new fields merged
         $data = array_compare($timer->toArray(), $request->only([
-            'start', 'finish'
+            'start',
+            'finish'
         ]));
-    
+
         $timer->update($data);
-    
+
         if ($request->has('activity_id')) {
             $timer->activity()->associate(Activity::findOrFail($request->get('activity_id')));
             $timer->save();
         }
 
 //        dd($timer);
-    
+
         $timer = $this->transform($this->createItem($timer, new TimerTransformer))['data'];
+
         return response($timer, Response::HTTP_OK);
     }
 
     /**
-     * Todo: test
      * @return Response
      */
     public function checkForTimerInProgress()
@@ -117,6 +117,7 @@ class TimersController extends Controller
 
         if ($timerInProgress) {
             $timerInProgress = $this->transform($this->createItem($timerInProgress, new TimerTransformer))['data'];
+
             return response($timerInProgress, Response::HTTP_OK);
         }
 
@@ -132,6 +133,7 @@ class TimersController extends Controller
     public function destroy(Timer $timer)
     {
         $timer->delete();
+
         return response([], Response::HTTP_NO_CONTENT);
     }
 

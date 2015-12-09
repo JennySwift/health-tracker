@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Transformers;
+namespace App\Http\Transformers\Timers;
 
 use App\Models\Sleep\Sleep;
 use App\Models\Timers\Timer;

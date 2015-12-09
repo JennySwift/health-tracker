@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Repositories\Timers;
 
 
 use App\Models\Timers\Timer;
