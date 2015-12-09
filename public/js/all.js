@@ -13523,7 +13523,7 @@ angular.module('tracker')
 
         function getEntries () {
             $rootScope.showLoading();
-            TimersFactory.getEntries()
+            TimersFactory.index()
                 .then(function (response) {
                     $scope.entries = response.data;
                     //$rootScope.$broadcast('provideFeedback', '');
@@ -13540,7 +13540,7 @@ angular.module('tracker')
     .controller('TimersController', function ($rootScope, $scope, TimersFactory, ActivitiesFactory) {
 
         $("#new-timer-activity").select2({});
-        
+
         $scope.startTimer = function () {
             $rootScope.showLoading();
             TimersFactory.store($scope.newTimer)
@@ -13582,6 +13582,28 @@ angular.module('tracker')
                     $rootScope.responseError(response);
                 });
         };
+
+        function getTimers () {
+            $rootScope.showLoading();
+            TimersFactory.index()
+                .then(function (response) {
+                    $scope.timers = response.data;
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        }
+
+        getTimers();
+
+        $scope.filterTimers = function (timer) {
+            if ($scope.timersFilter) {
+                return timer.activity.data.name.indexOf($scope.timersFilter) !== -1;
+            }
+            return true;
+
+        }
 
     });
 var app = angular.module('tracker');
@@ -15305,8 +15327,11 @@ angular.module('tracker')
     .factory('TimersFactory', function ($http) {
 
         return {
-            getEntries: function () {
-                var $url = '/api/timers?byDate=true';
+            index: function (byDate) {
+                var $url = '/api/timers';
+                if (byDate) {
+                    $url+= '?byDate=true';
+                }
                 
                 return $http.get($url);
             },

@@ -11,6 +11,7 @@ class TimersTest extends TestCase {
     use DatabaseTransactions;
 
     /**
+     * Todo: I think this should be checking it gets them in a date range
      * @test
      * @return void
      */
@@ -35,6 +36,29 @@ class TimersTest extends TestCase {
 
 //        $this->assertEquals('9:00pm', $content[0]['start']);
 //        $this->assertEquals('8:00am', $content[0]['finish']);
+
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+    
+    /**
+     * @test
+     * @return void
+     */
+    public function it_gets_the_timers()
+    {
+        $response = $this->call('GET', '/api/timers');
+        $content = json_decode($response->getContent(), true);
+    //  dd($content);
+
+        $this->assertArrayHasKey('id', $content[0]);
+        $this->assertArrayHasKey('start', $content[0]);
+        $this->assertArrayHasKey('finish', $content[0]);
+        $this->assertArrayHasKey('startDate', $content[0]);
+        $this->assertArrayHasKey('hours', $content[0]);
+        $this->assertArrayHasKey('minutes', $content[0]);
+        $this->assertArrayHasKey('activity', $content[0]);
+
+        //Todo: check the values are correct
 
         $this->assertEquals(200, $response->getStatusCode());
     }

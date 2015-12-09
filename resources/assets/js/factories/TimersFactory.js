@@ -2,8 +2,11 @@ angular.module('tracker')
     .factory('TimersFactory', function ($http) {
 
         return {
-            getEntries: function () {
-                var $url = '/api/timers?byDate=true';
+            index: function (byDate) {
+                var $url = '/api/timers';
+                if (byDate) {
+                    $url+= '?byDate=true';
+                }
                 
                 return $http.get($url);
             },

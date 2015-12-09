@@ -532,6 +532,17 @@ body.browser-height {
           #sleep-chart #sleep-chart-entries .date-entries .time.finish label {
             margin: 0; }
 
+#timers-page > * {
+  margin-bottom: 20px; }
+
+#timers-page #timers .timer {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between; }
+
 #navbar {
   display: -webkit-flex;
   display: -ms-flexbox;

@@ -20,21 +20,21 @@ class TimerTransformer extends TransformerAbstract
     ];
 
     /**
-     * @param Timer $sleep
+     * @param Timer $timer
      * @return array
      */
-    public function transform(Timer $sleep)
+    public function transform(Timer $timer)
     {
-        $start = Carbon::createFromFormat('Y-m-d H:i:s', $sleep->start);
+        $start = Carbon::createFromFormat('Y-m-d H:i:s', $timer->start);
 
         $array = [
-            'id' => $sleep->id,
+            'id' => $timer->id,
             'start' => $start->format('g:ia'),
             'startDate' => $start->format('d/m/y')
         ];
 
-        if ($sleep->finish) {
-            $finish = Carbon::createFromFormat('Y-m-d H:i:s', $sleep->finish);
+        if ($timer->finish) {
+            $finish = Carbon::createFromFormat('Y-m-d H:i:s', $timer->finish);
             $durationInMinutes = $finish->diffInMinutes($start);
             $minutes = $durationInMinutes % 60;
             $hours = $finish->diffInHours($start);

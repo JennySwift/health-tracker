@@ -2,7 +2,7 @@ angular.module('tracker')
     .controller('TimersController', function ($rootScope, $scope, TimersFactory, ActivitiesFactory) {
 
         $("#new-timer-activity").select2({});
-        
+
         $scope.startTimer = function () {
             $rootScope.showLoading();
             TimersFactory.store($scope.newTimer)
@@ -44,5 +44,27 @@ angular.module('tracker')
                     $rootScope.responseError(response);
                 });
         };
+
+        function getTimers () {
+            $rootScope.showLoading();
+            TimersFactory.index()
+                .then(function (response) {
+                    $scope.timers = response.data;
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        }
+
+        getTimers();
+
+        $scope.filterTimers = function (timer) {
+            if ($scope.timersFilter) {
+                return timer.activity.data.name.indexOf($scope.timersFilter) !== -1;
+            }
+            return true;
+
+        }
 
     });

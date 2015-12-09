@@ -1,0 +1,11 @@
+#timers-page {
+    > * {
+        margin-bottom: 20px;
+    }
+    #timers {
+        .timer {
+            display: flex;
+            justify-content: space-between;
+        }
+    }
+}
