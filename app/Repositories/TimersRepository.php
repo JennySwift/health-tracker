@@ -3,7 +3,7 @@
 namespace App\Repositories;
 
 
-class SleepRepository {
+class TimersRepository {
 
     /**
      *

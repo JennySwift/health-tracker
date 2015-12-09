@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSleepTable extends Migration
+class CreateActivitiesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,11 +12,10 @@ class CreateSleepTable extends Migration
      */
     public function up()
     {
-        Schema::create('sleep', function (Blueprint $table) {
+        Schema::create('activities', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned()->index();
-            $table->timestamp('start')->index();
-            $table->timestamp('finish')->nullable()->index();
+            $table->string('name')->index();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
@@ -30,6 +29,6 @@ class CreateSleepTable extends Migration
      */
     public function down()
     {
-        Schema::drop('sleep');
+        Schema::drop('activities');
     }
 }

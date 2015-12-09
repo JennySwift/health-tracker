@@ -1,10 +1,11 @@
 <?php
 
+use App\Models\Timers\Activity;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Http\Response;
 
-class SleepTest extends TestCase {
+class TimersTest extends TestCase {
 
     use DatabaseTransactions;
 
@@ -14,7 +15,7 @@ class SleepTest extends TestCase {
      */
     public function it_gets_the_sleep_entries()
     {
-        $response = $this->call('GET', '/api/sleep');
+        $response = $this->call('GET', '/api/timers');
         $content = json_decode($response->getContent(), true);
 //      dd($content);
 
@@ -42,10 +43,12 @@ class SleepTest extends TestCase {
 
         $sleep = [
             'start' => '2015-12-01 21:00:00',
-            'finish' => '2015-12-02 08:30:00'
+            'finish' => '2015-12-02 08:30:00',
+            'activity_id' => Activity::where('name', 'sleep')->first()->id
         ];
 
-        $response = $this->call('POST', '/api/sleep', $sleep);
+        $response = $this->call('POST', '/api/timers', $sleep);
+//        dd($response);
         $content = json_decode($response->getContent(), true);
 //      dd($content);
 

@@ -53,7 +53,9 @@ class DatabaseSeeder extends Seeder {
 
 		$this->call('TaggableSeeder');
 
-		$this->call('SleepSeeder');
+		$this->call('ActivitySeeder');
+
+		$this->call('TimerSeeder');
 
 		DB::statement('SET FOREIGN_KEY_CHECKS=1');
 

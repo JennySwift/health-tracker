@@ -1,30 +1,34 @@
 <?php
 
-namespace App\Http\Controllers\API\Sleep;
+namespace App\Http\Controllers\API\Timers;
 
 use App\Http\Transformers\SleepTransformer;
+use App\Http\Transformers\TimerTransformer;
 use App\Models\Sleep\Sleep;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Models\Timers\Activity;
+use App\Models\Timers\Timer;
 use App\Repositories\SleepRepository;
+use App\Repositories\TimersRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
-class SleepController extends Controller
+class TimersController extends Controller
 {
     /**
-     * @var SleepRepository
+     * @var TimersRepository
      */
-    private $sleepRepository;
+    private $timersRepository;
 
     /**
-     * @param SleepRepository $sleepRepository
+     * @param TimersRepository $timersRepository
      */
-    public function __construct(SleepRepository $sleepRepository)
+    public function __construct(TimersRepository $timersRepository)
     {
-        $this->sleepRepository = $sleepRepository;
+        $this->timersRepository = $timersRepository;
     }
 
     /**
@@ -34,14 +38,14 @@ class SleepController extends Controller
      */
     public function index(Request $request)
     {
-        $entries = Sleep::forCurrentUser()->get();
+        $entries = Timer::forCurrentUser()->get();
         $formatForUser = 'D d/m/y';
 
         if($request->has('byDate')) {
 //            //Sort entries by date
 //            return $entries;
-            $earliestDate = Carbon::createFromFormat('Y-m-d H:i:s', Sleep::forCurrentUser()->min('start'));
-            $lastDate = Carbon::createFromFormat('Y-m-d H:i:s', Sleep::forCurrentUser()->max('finish'));
+            $earliestDate = Carbon::createFromFormat('Y-m-d H:i:s', Timer::forCurrentUser()->min('start'));
+            $lastDate = Carbon::createFromFormat('Y-m-d H:i:s', Timer::forCurrentUser()->max('finish'));
 
             //Form an array with all the dates in the range of entries
             $entriesByDate = [];
@@ -51,7 +55,7 @@ class SleepController extends Controller
                 'orderIndex' => $index
             ];
 
-            $date = Carbon::createFromFormat('Y-m-d H:i:s', Sleep::forCurrentUser()->max('finish'));
+            $date = Carbon::createFromFormat('Y-m-d H:i:s', Timer::forCurrentUser()->max('finish'));
             while ($date > $earliestDate) {
                 $index++;
                 $date = $date->subDays(1);
@@ -76,7 +80,7 @@ class SleepController extends Controller
                         'startHeight' => $entry->getDurationInMinutes()
                     ];
 
-                    $indexOfItem = $this->sleepRepository->getIndexOfItem($entriesByDate, $startDate);
+                    $indexOfItem = $this->timersRepository->getIndexOfItem($entriesByDate, $startDate);
                     $entriesByDate[$indexOfItem][] = $array;
                 }
                 else {
@@ -88,7 +92,7 @@ class SleepController extends Controller
                         'startHeight' => $entry->getDurationInMinutes('finish')
                     ];
 
-                    $indexOfItem = $this->sleepRepository->getIndexOfItem($entriesByDate, $startDate);
+                    $indexOfItem = $this->timersRepository->getIndexOfItem($entriesByDate, $startDate);
                     $entriesByDate[$indexOfItem][] = $array;
 
                     $finish = $entry->getFinish();
@@ -105,7 +109,7 @@ class SleepController extends Controller
                         'startHeight' => $entry->getDurationInMinutes('start')
                     ];
 
-                    $indexOfItem = $this->sleepRepository->getIndexOfItem($entriesByDate, $finishDate);
+                    $indexOfItem = $this->timersRepository->getIndexOfItem($entriesByDate, $finishDate);
                     $entriesByDate[$indexOfItem][] = $array;
                 }
             }
@@ -117,7 +121,7 @@ class SleepController extends Controller
 
         else {
             //Each sleep entry is separate
-            $entries = $this->transform($this->createCollection($entries, new SleepTransformer))['data'];
+            $entries = $this->transform($this->createCollection($entries, new TimerTransformer))['data'];
             return response($entries, Response::HTTP_OK);
         }
     }
@@ -129,11 +133,12 @@ class SleepController extends Controller
      */
     public function store(Request $request)
     {
-        $sleep = new Sleep($request->only(['start', 'finish']));
+        $sleep = new Timer($request->only(['start', 'finish']));
         $sleep->user()->associate(Auth::user());
+        $sleep->activity()->associate(Activity::find($request->get('activity_id')));
         $sleep->save();
     
-        $sleep = $this->transform($this->createItem($sleep, new SleepTransformer))['data'];
+        $sleep = $this->transform($this->createItem($sleep, new TimerTransformer))['data'];
         return response($sleep, Response::HTTP_CREATED);
     }
 

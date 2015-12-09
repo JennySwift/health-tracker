@@ -3,19 +3,20 @@
 namespace App\Http\Transformers;
 
 use App\Models\Sleep\Sleep;
+use App\Models\Timers\Timer;
 use Carbon\Carbon;
 use League\Fractal\TransformerAbstract;
 
 /**
- * Class SleepTransformer
+ * Class TimerTransformer
  */
-class SleepTransformer extends TransformerAbstract
+class TimerTransformer extends TransformerAbstract
 {
     /**
-     * @param Sleep $sleep
+     * @param Timer $sleep
      * @return array
      */
-    public function transform(Sleep $sleep)
+    public function transform(Timer $sleep)
     {
         $start = Carbon::createFromFormat('Y-m-d H:i:s', $sleep->start);
         $finish = Carbon::createFromFormat('Y-m-d H:i:s', $sleep->finish);

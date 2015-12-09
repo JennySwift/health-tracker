@@ -1,23 +1,23 @@
 <?php
 
-namespace App\Models\Sleep;
+namespace App\Models\Timers;
 
 use App\Traits\Models\Relationships\OwnedByUser;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class Sleep
- * @package App\Models\Sleep
+ * Class Timer
+ * @package App\Models\Timer
  */
-class Sleep extends Model
+class Timer extends Model
 {
     use OwnedByUser;
 
     /**
      * @var string
      */
-    protected $table = 'sleep';
+    protected $table = 'timers';
 
     /**
      * @var array
@@ -31,6 +31,15 @@ class Sleep extends Model
     public function user()
     {
         return $this->belongsTo('App\User');
+    }
+
+    /**
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function activity()
+    {
+        return $this->belongsTo('App\Models\Timers\Activity');
     }
 
     /**

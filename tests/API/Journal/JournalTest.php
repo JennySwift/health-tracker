@@ -42,11 +42,9 @@ class JournalTest extends TestCase {
     {
         $this->logInUser();
 
-        $data = [
-            'typing' => 'aut'
-        ];
+        $typing = 'aut';
 
-        $response = $this->call('POST', '/api/filterJournalEntries', $data);
+        $response = $this->call('GET', '/api/journal?typing=' . $typing);
         $content = json_decode($response->getContent(), true)['data'];
 //        dd($content);
 

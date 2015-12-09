@@ -25,7 +25,7 @@ Route::group(['namespace' => 'API', 'prefix' => 'api'], function () {
     require app_path('Http/Routes/weights.php');
     require app_path('Http/Routes/calories.php');
 
-    require app_path('Http/Routes/sleep.php');
+    require app_path('Http/Routes/timers.php');
 });
 
 require app_path('Http/Routes/tests.php');

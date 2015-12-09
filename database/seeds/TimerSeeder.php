@@ -1,12 +1,13 @@
 <?php
 
-use App\Models\Sleep\Sleep;
+use App\Models\Timers\Activity;
+use App\Models\Timers\Timer;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
 
-class SleepSeeder extends Seeder {
+class TimerSeeder extends Seeder {
 
     private $user;
     private $faker;
@@ -14,7 +15,7 @@ class SleepSeeder extends Seeder {
 
     public function run()
 	{
-		Sleep::truncate();
+		Timer::truncate();
 
         $this->faker = Faker::create();
 
@@ -42,12 +43,13 @@ class SleepSeeder extends Seeder {
         $today = Carbon::today();
         $this->date = $today->subDays($index);
 
-        $entry = new Sleep([
+        $entry = new Timer([
             'start' => $this->date->hour(21)->format('Y-m-d H:i:s'),
             'finish' => $this->date->addDays(1)->hour(8)->minute($this->faker->randomElement([0,15,30,45]))->format('Y-m-d H:i:s')
         ]);
 
         $entry->user()->associate($this->user);
+        $entry->activity()->associate(Activity::where('name', 'sleep')->first());
         $entry->save();
     }
 
@@ -59,12 +61,13 @@ class SleepSeeder extends Seeder {
         $today = Carbon::today();
         $this->date = $today->subDays($index);
 
-        $entry = new Sleep([
+        $entry = new Timer([
             'start' => $this->date->hour(16)->format('Y-m-d H:i:s'),
             'finish' => $this->date->hour(17)->minute($this->faker->randomElement([0,15,30,45]))->format('Y-m-d H:i:s')
         ]);
 
         $entry->user()->associate($this->user);
+        $entry->activity()->associate(Activity::where('name', 'sleep')->first());
         $entry->save();
     }
 
