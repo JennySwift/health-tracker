@@ -45,7 +45,15 @@ class TimersController extends Controller
 
         else {
             //Return the timers for today
-            $entries = Timer::forCurrentUser()->whereDate('finish', '=', Carbon::today()->format('Y-m-d'))->get();
+            $dateString = Carbon::today()->format('Y-m-d') . '%';
+            $entries = Timer::forCurrentUser()
+                ->where(function ($q) use ($dateString)
+                {
+                    $q->where('finish', 'LIKE', $dateString)
+                        ->orWhere('start', 'LIKE', $dateString);
+                })
+                ->get();
+
             $entries = $this->transform($this->createCollection($entries, new TimerTransformer))['data'];
             return response($entries, Response::HTTP_OK);
         }

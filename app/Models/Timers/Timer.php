@@ -95,8 +95,7 @@ class Timer extends Model
             if ($start->isSameDay($dateTime)) {
                 //Make the finish at the end of the day
                 //instead of the next day
-//                $finish = $date->copy()->hour(24);
-                return 0;
+                $finish = $dateTime->copy()->hour(24);
             }
             else if ($finish->isSameDay($dateTime)) {
                 //Make the start at the beginning of the day instead of the previous day

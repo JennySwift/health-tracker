@@ -65,8 +65,8 @@ class ActivitiesTest extends TestCase
         $this->assertArrayHasKey('hours', $content[0]);
 
         $this->assertEquals('sleep', $content[0]['name']);
-        $this->assertEquals(555, $content[0]['totalMinutes']);
-        $this->assertEquals(9, $content[0]['hours']);
+        $this->assertEquals(735, $content[0]['totalMinutes']);
+        $this->assertEquals(12, $content[0]['hours']);
         $this->assertEquals(15, $content[0]['minutes']);
 
         $this->assertEquals('work', $content[1]['name']);
