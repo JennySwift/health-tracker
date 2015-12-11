@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Timers\Activity;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 /**
@@ -54,7 +55,8 @@ class ActivitiesTest extends TestCase
     public function it_gets_the_total_minutes_for_the_day_for_the_activity()
     {
         $this->logInUser();
-        $response = $this->call('GET', '/api/activities/getTotalMinutesForDay');
+        $date = Carbon::today()->format('Y-m-d');
+        $response = $this->call('GET', '/api/activities/getTotalMinutesForDay?date=' . $date);
         $content = json_decode($response->getContent(), true);
 //      dd($content);
 

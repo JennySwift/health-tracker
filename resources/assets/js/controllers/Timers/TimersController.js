@@ -35,10 +35,6 @@ angular.module('tracker')
                 });
         };
 
-        $scope.test = function () {
-            console.log('eh?');
-        };
-
         function getActivities () {
             $rootScope.showLoading();
             ActivitiesFactory.index()

@@ -33,8 +33,9 @@ class ActivitiesController extends Controller
      */
     public function calculateTotalMinutesForDay(Request $request)
     {
-        $startOfDay = Carbon::createFromFormat('Y-m-d', $request->get('date'))->hour(0);
-        $endOfDay = Carbon::createFromFormat('Y-m-d', $request->get('date'))->hour(24);
+        $date = $request->get('date');
+        $startOfDay = Carbon::createFromFormat('Y-m-d', $date)->hour(0)->minute(0)->second(0);
+        $endOfDay = Carbon::createFromFormat('Y-m-d', $date)->hour(24)->minute(0)->second(0);
 
         $activitiesForDay = Activity::forCurrentUser()
             ->whereHas('timers', function ($q) use ($startOfDay, $endOfDay) {
