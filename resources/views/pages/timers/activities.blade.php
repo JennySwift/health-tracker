@@ -21,6 +21,11 @@
                 <span>Total duration: [[activity.totalDuration]]</span>
             </div>
         </div>
+
+        <div id="new-activity">
+            
+
+        </div>
 	</div>
 
 	@include('templates.footer')
