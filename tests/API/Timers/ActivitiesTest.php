@@ -3,6 +3,7 @@
 use App\Models\Timers\Activity;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Http\Response;
 
 /**
  * Class ActivitiesTest
@@ -82,6 +83,85 @@ class ActivitiesTest extends TestCase
         $this->assertEquals(45, $content[2]['minutes']);
 
         $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    /**
+     * @test
+     * @return void
+     */
+    public function it_can_create_an_activity()
+    {
+        DB::beginTransaction();
+        $this->logInUser();
+
+        $activity = [
+            'name' => 'koala',
+            'color' => 'red'
+        ];
+
+        $response = $this->call('POST', '/api/activities', $activity);
+        $content = json_decode($response->getContent(), true);
+//      dd($content);
+
+        $this->assertArrayHasKey('id', $content);
+        $this->assertArrayHasKey('name', $content);
+        $this->assertArrayHasKey('color', $content);
+
+        $this->assertEquals('koala', $content['name']);
+        $this->assertEquals('red', $content['color']);
+
+        $this->assertEquals(Response::HTTP_CREATED, $response->getStatusCode());
+
+        DB::rollBack();
+    }
+
+    /**
+     * @test
+     * @return void
+     */
+    public function it_can_update_an_activity()
+    {
+        DB::beginTransaction();
+        $this->logInUser();
+
+        $activity = Activity::forCurrentUser()->first();
+        $response = $this->call('PUT', '/api/activities/'.$activity->id, [
+            'name' => 'numbat',
+            'color' => 'blue'
+        ]);
+        $content = json_decode($response->getContent(), true);
+//        dd($content);
+
+        $this->assertArrayHasKey('id', $content);
+        $this->assertArrayHasKey('name', $content);
+        $this->assertArrayHasKey('color', $content);
+
+        $this->assertEquals('numbat', $content['name']);
+        $this->assertEquals('blue', $content['color']);
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        DB::rollBack();
+    }
+    
+    /**
+     * @test
+     * @return void
+     */
+    public function it_can_delete_an_activity()
+    {
+        DB::beginTransaction();
+        $this->logInUser();
+        
+        $activity = Activity::first();
+
+        $response = $this->call('DELETE', '/api/activities/'.$activity->id);
+        $this->assertEquals(204, $response->getStatusCode());
+    
+        $response = $this->call('DELETE', '/api/activity/' . $activity->id);
+        $this->assertEquals(404, $response->getStatusCode());
+    
+        DB::rollBack();
     }
 
 }

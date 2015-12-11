@@ -25,6 +25,40 @@ class ActivitiesController extends Controller
 
         return response($activities, Response::HTTP_OK);
     }
+    
+    /**
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function store(Request $request)
+    {
+        $activity = new Activity($request->only(['name', 'color']));
+        $activity->user()->associate(Auth::user());
+        $activity->save();
+    
+        $activity = $this->transform($this->createItem($activity, new ActivityTransformer))['data'];
+        return response($activity, Response::HTTP_CREATED);
+    }
+
+    /**
+     *
+     * @param Request $request
+     * @param Activity $activity
+     * @return Response
+     */
+    public function update(Request $request, Activity $activity)
+    {
+        // Create an array with the new fields merged
+        $data = array_compare($activity->toArray(), $request->only([
+            'name', 'color'
+        ]));
+
+        $activity->update($data);
+
+        $activity = $this->transform($this->createItem($activity, new ActivityTransformer))['data'];
+        return response($activity, Response::HTTP_OK);
+    }
 
     /**
      * @param Request $request
@@ -74,5 +108,31 @@ class ActivitiesController extends Controller
         ];
 
         return $activitiesForDay;
+    }
+
+    /**
+     *
+     * @param Activity $activity
+     * @return Response
+     */
+    public function destroy(Activity $activity)
+    {
+        try {
+            $activity->delete();
+            return response([], Response::HTTP_NO_CONTENT);
+        }
+        catch (\Exception $e) {
+            //Integrity constraint violation
+            if ($e->getCode() === '23000') {
+                $message = 'Activity could not be deleted. It is in use.';
+            }
+            else {
+                $message = 'There was an error';
+            }
+            return response([
+                'error' => $message,
+                'status' => Response::HTTP_BAD_REQUEST
+            ], Response::HTTP_BAD_REQUEST);
+        }
     }
 }

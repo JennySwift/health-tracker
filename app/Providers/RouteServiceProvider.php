@@ -7,6 +7,7 @@ use App\Models\Menu\Entry as MenuEntry;
 use App\Models\Menu\Recipe;
 use App\Models\Journal\Journal;
 use App\Models\Tags\Tag;
+use App\Models\Timers\Activity;
 use App\Models\Timers\Timer;
 use App\Models\Units\Unit;
 use Carbon\Carbon;
@@ -93,6 +94,11 @@ class RouteServiceProvider extends ServiceProvider {
         Route::bind('timers', function($id)
         {
             return Timer::forCurrentUser()->findOrFail($id);
+        });
+
+        Route::bind('activities', function($id)
+        {
+            return Activity::forCurrentUser()->findOrFail($id);
         });
 
         /**
