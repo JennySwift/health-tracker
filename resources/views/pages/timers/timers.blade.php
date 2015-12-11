@@ -12,6 +12,7 @@
 	<div class="container" id="timers-page">
 
         {{--@include('templates.date-navigation')--}}
+        <date-navigation-directive date="date"></date-navigation-directive>
 
         <div ng-show="!timerInProgress" id="new-timer">
             <select

@@ -8,6 +8,7 @@ use App\Http\Transformers\Timers\ActivityTransformer;
 use App\Models\Timers\Activity;
 use Auth;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class ActivitiesController extends Controller
@@ -26,16 +27,17 @@ class ActivitiesController extends Controller
     }
 
     /**
-     * @param $date
+     * @param Request $request
      * @return mixed
+     * @internal param $date
      */
-    public function calculateTotalMinutesForDay($date = null)
+    public function calculateTotalMinutesForDay(Request $request)
     {
-        $startOfDay = Carbon::today()->hour(0);
-        $endOfDay = Carbon::today()->hour(24);
+        $startOfDay = Carbon::createFromFormat('Y-m-d', $request->get('date'))->hour(0);
+        $endOfDay = Carbon::createFromFormat('Y-m-d', $request->get('date'))->hour(24);
 
         $activitiesForDay = Activity::forCurrentUser()
-            ->whereHas('timers', function ($q) use ($date, $startOfDay, $endOfDay) {
+            ->whereHas('timers', function ($q) use ($startOfDay, $endOfDay) {
                 $q->where(function ($q) use ($startOfDay, $endOfDay) {
                     $q->whereBetween('start', [$startOfDay, $endOfDay])
                         ->orWhereBetween('finish', [$startOfDay, $endOfDay]);

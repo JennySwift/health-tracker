@@ -6,8 +6,8 @@ angular.module('tracker')
             
                 return $http.get(url);
             },
-            getTotalMinutesForDay: function () {
-                return $http.get('/api/activities/getTotalMinutesForDay');
+            getTotalMinutesForDay: function (date) {
+                return $http.get('/api/activities/getTotalMinutesForDay?date=' + date);
             }
         }
     });

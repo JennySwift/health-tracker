@@ -35,6 +35,7 @@ class TimersController extends Controller
      */
     public function index(Request $request)
     {
+        //This bit is for the graphs
         if ($request->has('byDate')) {
             $entries = Timer::forCurrentUser()->get();
 
@@ -42,8 +43,8 @@ class TimersController extends Controller
         }
 
         else {
-            //Return the timers for today
-            $dateString = Carbon::today()->format('Y-m-d') . '%';
+            //Return the timers for the date
+            $dateString = Carbon::createFromFormat('Y-m-d', $request->get('date'))->format('Y-m-d') . '%';
             $entries = Timer::forCurrentUser()
                 ->where(function ($q) use ($dateString) {
                     $q->where('finish', 'LIKE', $dateString)

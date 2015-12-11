@@ -48,9 +48,10 @@ class TimersTest extends TestCase {
      * @test
      * @return void
      */
-    public function it_gets_the_timers()
+    public function it_gets_the_timers_for_a_day()
     {
-        $response = $this->call('GET', '/api/timers');
+        $date = Carbon::yesterday();
+        $response = $this->call('GET', '/api/timers?date=' . $date->copy()->format('Y-m-d'));
         $content = json_decode($response->getContent(), true);
 //      dd($content);
 
@@ -65,6 +66,8 @@ class TimersTest extends TestCase {
         $this->assertArrayHasKey('activity', $content[0]);
 
         //Todo: check the values are correct
+        $this->assertContains($date->copy()->format('Y-m-d'), $content[0]['start']);
+//        $this->assertEquals($date->copy()->format('Y-m-d'), $content[0]['startDate']);
 
         $this->assertEquals(200, $response->getStatusCode());
     }

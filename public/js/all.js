@@ -15119,6 +15119,13 @@ angular.module('tracker')
         //    $("#new-timer-activity").select2({});
         //});
 
+        $scope.date = {};
+
+        $scope.$on('changeDate', function (event) {
+            getTimers();
+            getTotalMinutesForActivitiesForTheDay();
+        });
+
         $scope.startTimer = function () {
             $('#timer-clock').timer({format: '%H:%M:%S'});
             $rootScope.showLoading();
@@ -15172,7 +15179,7 @@ angular.module('tracker')
 
         function getTimers () {
             $rootScope.showLoading();
-            TimersFactory.index()
+            TimersFactory.index(false, $scope.date.sql)
                 .then(function (response) {
                     $scope.timers = response.data;
                     $rootScope.hideLoading();
@@ -15181,8 +15188,6 @@ angular.module('tracker')
                     $rootScope.responseError(response);
                 });
         }
-
-        getTimers();
 
         $scope.filterTimers = function (timer) {
             if ($scope.timersFilter) {
@@ -15225,7 +15230,7 @@ angular.module('tracker')
 
         function getTotalMinutesForActivitiesForTheDay () {
             $rootScope.showLoading();
-            ActivitiesFactory.getTotalMinutesForDay()
+            ActivitiesFactory.getTotalMinutesForDay($scope.date.sql)
                 .then(function (response) {
                     $scope.activitiesWithDurations = response.data;
                     $rootScope.hideLoading();
@@ -15235,8 +15240,6 @@ angular.module('tracker')
                 });
         }
 
-        getTotalMinutesForActivitiesForTheDay();
-        
         $scope.deleteTimer = function (timer) {
             if (confirm("Are you sure?")) {
                 $rootScope.showLoading();
@@ -15262,8 +15265,8 @@ angular.module('tracker')
             
                 return $http.get(url);
             },
-            getTotalMinutesForDay: function () {
-                return $http.get('/api/activities/getTotalMinutesForDay');
+            getTotalMinutesForDay: function (date) {
+                return $http.get('/api/activities/getTotalMinutesForDay?date=' + date);
             }
         }
     });
@@ -15349,6 +15352,14 @@ app.factory('CaloriesFactory', function ($http) {
 });
 app.factory('DatesFactory', function ($http) {
     return {
+        setDate: function (date) {
+            if (date.typed === undefined) {
+                date.typed = Date.parse('today').toString('dd/MM/yyyy');
+            }
+            date.long = Date.parse(date.typed).toString('dd MMM yyyy');
+
+            return date;
+        },
         changeDate: function ($keycode, $date) {
             $date = Date.parseExact($date, ['d MMM yyyy', 'd/M/yyyy', 'd MMM yy', 'd/M/yy']).toString('dd/MM/yyyy');
             return $date;
@@ -16245,10 +16256,13 @@ angular.module('tracker')
     .factory('TimersFactory', function ($http) {
 
         return {
-            index: function (byDate) {
+            index: function (byDate, date) {
                 var $url = '/api/timers';
                 if (byDate) {
                     $url+= '?byDate=true';
+                }
+                else if (date) {
+                    $url+= '?date=' + date;
                 }
                 
                 return $http.get($url);
@@ -16346,6 +16360,48 @@ app.factory('WeightsFactory', function ($http) {
 
     };
 });
+angular.module('tracker')
+    .directive('dateNavigationDirective', function ($rootScope, DatesFactory) {
+        return {
+            scope: {
+                "date": "=date"
+            },
+            templateUrl: 'date-navigation-template',
+
+            link: function ($scope) {
+                $scope.date = DatesFactory.setDate($scope.date);
+
+                $scope.goToDate = function ($number) {
+                    $scope.date.typed = DatesFactory.goToDate($scope.date.typed, $number);
+                };
+
+                $scope.today = function () {
+                    $scope.date.typed = DatesFactory.today();
+                };
+                $scope.changeDate = function ($keycode, $date) {
+                    if ($keycode !== 13) {
+                        return false;
+                    }
+                    var $date = $date || $("#date").val();
+                    $scope.date.typed = DatesFactory.changeDate($keycode, $date);
+                };
+
+                $scope.$watch('date.typed', function (newValue, oldValue) {
+                    $scope.date.sql = Date.parse($scope.date.typed).toString('yyyy-MM-dd');
+                    $scope.date.long = Date.parse($scope.date.typed).toString('ddd dd MMM yyyy');
+                    $("#date").val(newValue);
+
+                    if (newValue === oldValue) {
+                        // $scope.pageLoad();
+                    }
+                    else {
+                        $rootScope.$broadcast('changeDate');
+                    }
+                });
+
+            }
+        }
+    });
 angular.module('tracker')
     .directive('feedbackDirective', function ($sce, $timeout) {
         return {

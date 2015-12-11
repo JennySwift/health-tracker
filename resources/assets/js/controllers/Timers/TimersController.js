@@ -13,6 +13,13 @@ angular.module('tracker')
         //    $("#new-timer-activity").select2({});
         //});
 
+        $scope.date = {};
+
+        $scope.$on('changeDate', function (event) {
+            getTimers();
+            getTotalMinutesForActivitiesForTheDay();
+        });
+
         $scope.startTimer = function () {
             $('#timer-clock').timer({format: '%H:%M:%S'});
             $rootScope.showLoading();
@@ -66,7 +73,7 @@ angular.module('tracker')
 
         function getTimers () {
             $rootScope.showLoading();
-            TimersFactory.index()
+            TimersFactory.index(false, $scope.date.sql)
                 .then(function (response) {
                     $scope.timers = response.data;
                     $rootScope.hideLoading();
@@ -75,8 +82,6 @@ angular.module('tracker')
                     $rootScope.responseError(response);
                 });
         }
-
-        getTimers();
 
         $scope.filterTimers = function (timer) {
             if ($scope.timersFilter) {
@@ -119,7 +124,7 @@ angular.module('tracker')
 
         function getTotalMinutesForActivitiesForTheDay () {
             $rootScope.showLoading();
-            ActivitiesFactory.getTotalMinutesForDay()
+            ActivitiesFactory.getTotalMinutesForDay($scope.date.sql)
                 .then(function (response) {
                     $scope.activitiesWithDurations = response.data;
                     $rootScope.hideLoading();
@@ -129,8 +134,6 @@ angular.module('tracker')
                 });
         }
 
-        getTotalMinutesForActivitiesForTheDay();
-        
         $scope.deleteTimer = function (timer) {
             if (confirm("Are you sure?")) {
                 $rootScope.showLoading();

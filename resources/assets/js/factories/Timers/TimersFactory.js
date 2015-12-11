@@ -2,10 +2,13 @@ angular.module('tracker')
     .factory('TimersFactory', function ($http) {
 
         return {
-            index: function (byDate) {
+            index: function (byDate, date) {
                 var $url = '/api/timers';
                 if (byDate) {
                     $url+= '?byDate=true';
+                }
+                else if (date) {
+                    $url+= '?date=' + date;
                 }
                 
                 return $http.get($url);

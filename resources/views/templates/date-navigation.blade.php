@@ -1,3 +1,4 @@
+{{--I'm moving this to a directive template for the timers. If it works and I probably can do the same for other times it is used and don't need this anymore--}}
 <h1 class="center">[[date.long]]</h1>
 
 <div id="date-navigation" class="margin-bottom">
