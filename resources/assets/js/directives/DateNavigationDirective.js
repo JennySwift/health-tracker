@@ -29,12 +29,7 @@ angular.module('tracker')
                     $scope.date.long = Date.parse($scope.date.typed).toString('ddd dd MMM yyyy');
                     $("#date").val(newValue);
 
-                    if (newValue === oldValue) {
-                        // $scope.pageLoad();
-                    }
-                    else {
-                        $rootScope.$broadcast('changeDate');
-                    }
+                    $rootScope.$broadcast('changeDate');
                 });
 
             }
