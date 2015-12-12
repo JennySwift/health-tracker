@@ -3,7 +3,7 @@ var elixir = require('laravel-elixir');
 elixir(function(mix) {
     mix.sass('style.scss');
 
-    mix.version("css/style.css");
+    //mix.version("css/style.css");
 
     mix.scripts([
         'plugins/*.js',
@@ -15,6 +15,8 @@ elixir(function(mix) {
     ], 'public/js/all.js');
 
     //mix.version("js/all.js");
+
+    mix.version(["css/style.css", "js/all.js"]);
 
     //mix.scripts([
     //    'jasmine/spec/*.js'
