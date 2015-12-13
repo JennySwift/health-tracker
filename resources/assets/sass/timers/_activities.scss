@@ -1,0 +1,19 @@
+#activities {
+    #new-activity {
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        margin-bottom: 40px;
+        > * {
+            margin: 0 10px;
+        }
+    }
+    .activity {
+        cursor: pointer;
+    }
+    #edit-activity {
+        button {
+            margin-top: 20px;
+        }
+    }
+}

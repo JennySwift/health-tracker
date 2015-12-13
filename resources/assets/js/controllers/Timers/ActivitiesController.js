@@ -34,12 +34,18 @@ angular.module('tracker')
                 .then(function (response) {
                     var $index = _.indexOf($scope.activities, _.findWhere($scope.activities, {id: activity.id}));
                     $scope.activities[$index] = response.data;
+                    $scope.editingActivity = false;
                     $rootScope.$broadcast('provideFeedback', 'Activity updated');
                     $rootScope.hideLoading();
                 })
                 .catch(function (response) {
                     $rootScope.responseError(response);
                 });
+        };
+
+        $scope.showEditActivity = function (activity) {
+            $scope.editingActivity = true;
+            $scope.selectedActivity = activity;
         };
 
         $scope.deleteActivity = function (activity) {
@@ -49,6 +55,7 @@ angular.module('tracker')
                     .then(function (response) {
                         $scope.activities = _.without($scope.activities, activity);
                         $rootScope.$broadcast('provideFeedback', 'Activity deleted');
+                        $scope.editingActivity = false;
                         $rootScope.hideLoading();
                     })
                     .catch(function (response) {

@@ -582,6 +582,26 @@ body.browser-height {
   #timers-page #timers .timer:hover .fa-times {
     visibility: visible; }
 
+#activities #new-activity {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: flex-end;
+  -ms-flex-align: end;
+  align-items: flex-end;
+  margin-bottom: 40px; }
+  #activities #new-activity > * {
+    margin: 0 10px; }
+
+#activities .activity {
+  cursor: pointer; }
+
+#activities #edit-activity button {
+  margin-top: 20px; }
+
 #navbar {
   display: -webkit-flex;
   display: -ms-flexbox;
