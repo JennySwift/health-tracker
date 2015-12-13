@@ -16,17 +16,17 @@ class ActivityTransformer extends TransformerAbstract
      */
     public function transform(Activity $activity)
     {
-        $totalDuration = 0;
+        $totalMinutes = 0;
         foreach ($activity->timers as $timer) {
             if ($timer->finish) {
-                $totalDuration+= $timer->totalMinutes;
+                $totalMinutes+= $timer->totalMinutes;
             }
         }
         
         $array = [
             'id' => $activity->id,
             'name' => $activity->name,
-            'totalDuration' => $totalDuration,
+            'totalMinutes' => $totalMinutes,
             'color' => $activity->color,
         ];
 

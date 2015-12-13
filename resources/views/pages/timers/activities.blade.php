@@ -47,7 +47,7 @@
                 <tr ng-repeat="activity in activities" ng-click="showEditActivity(activity)" class="activity">
                     <td><span ng-style="{'background': activity.color}" class="label label-default">[[activity.name]]</span></td>
                     <td>[[activity.color]]</td>
-                    <td>[[activity.totalDuration]]</td>
+                    <td>[[activity.totalMinutes | formatDurationFilter]]</td>
                 </tr>
 
             </table>
