@@ -10,7 +10,7 @@ angular.module('tracker')
             if (minutes < 10) {
                 minutes = '0' + minutes;
             }
-            
+
             return hours + ':' + minutes;
         }
     });

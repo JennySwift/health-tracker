@@ -45,6 +45,7 @@ angular.module('tracker')
                 .then(function (response) {
                     $scope.timers.push(response.data);
                     $rootScope.$broadcast('provideFeedback', 'Manual entry created', 'success');
+                    getTotalMinutesForActivitiesForTheDay();
                     $rootScope.hideLoading();
                 })
                 .catch(function (response) {
