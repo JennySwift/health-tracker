@@ -35,6 +35,23 @@ angular.module('tracker')
                 });
         };
 
+        /**
+         * Instead of starting and stopping the timer,
+         * enter the start and stop times manually
+         */
+        $scope.insertManualTimer = function () {
+            $rootScope.showLoading();
+            TimersFactory.store($scope.newManualTimer, $scope.date.sql)
+                .then(function (response) {
+                    $scope.timers.push(response.data);
+                    $rootScope.$broadcast('provideFeedback', 'Manual entry created', 'success');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        };
+
         function getActivities () {
             $rootScope.showLoading();
             ActivitiesFactory.index()

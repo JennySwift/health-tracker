@@ -14833,6 +14833,23 @@ angular.module('tracker')
                 });
         };
 
+        /**
+         * Instead of starting and stopping the timer,
+         * enter the start and stop times manually
+         */
+        $scope.insertManualTimer = function () {
+            $rootScope.showLoading();
+            TimersFactory.store($scope.newManualTimer, $scope.date.sql)
+                .then(function (response) {
+                    $scope.timers.push(response.data);
+                    $rootScope.$broadcast('provideFeedback', 'Manual entry created', 'success');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        };
+
         function getActivities () {
             $rootScope.showLoading();
             ActivitiesFactory.index()
@@ -16277,6 +16294,42 @@ angular.module('tracker')
             }
         }
     });
+app.factory('JournalFactory', function ($http) {
+    return {
+
+        getJournalEntry: function ($sqlDate) {
+            return $http.get('api/journal/' + $sqlDate);
+        },
+
+        filter: function () {
+            var $typing = $("#filter-journal").val();
+            var $url = 'api/journal?typing=' + $typing;
+
+            return $http.get($url);
+        },
+
+        insert: function ($sqlDate) {
+            var $url = 'api/journal';
+
+            var $data = {
+                date: $sqlDate,
+                text: $("#journal-entry").html()
+            };
+
+            return $http.post($url, $data);
+        },
+
+        update: function ($entry) {
+            var $url = 'api/journal/' + $entry.id;
+
+            var $data = {
+                text: $("#journal-entry").html()
+            };
+
+            return $http.put($url, $data);
+        }
+    };
+});
 angular.module('tracker')
     .factory('TimersFactory', function ($http) {
 
@@ -16362,42 +16415,6 @@ angular.module('tracker')
             }
         }
     });
-app.factory('JournalFactory', function ($http) {
-    return {
-
-        getJournalEntry: function ($sqlDate) {
-            return $http.get('api/journal/' + $sqlDate);
-        },
-
-        filter: function () {
-            var $typing = $("#filter-journal").val();
-            var $url = 'api/journal?typing=' + $typing;
-
-            return $http.get($url);
-        },
-
-        insert: function ($sqlDate) {
-            var $url = 'api/journal';
-
-            var $data = {
-                date: $sqlDate,
-                text: $("#journal-entry").html()
-            };
-
-            return $http.post($url, $data);
-        },
-
-        update: function ($entry) {
-            var $url = 'api/journal/' + $entry.id;
-
-            var $data = {
-                text: $("#journal-entry").html()
-            };
-
-            return $http.put($url, $data);
-        }
-    };
-});
 app.factory('WeightsFactory', function ($http) {
     return {
 

@@ -550,16 +550,16 @@ body.browser-height {
   #timers-page #timer-in-progress > * {
     margin: 0 20px; }
 
-#timers-page #new-timer {
+#timers-page #new-timer, #timers-page #new-manual-timer {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   -webkit-justify-content: center;
   -ms-flex-pack: center;
   justify-content: center; }
-  #timers-page #new-timer > * {
+  #timers-page #new-timer > *, #timers-page #new-manual-timer > * {
     margin: 0px 20px; }
-  #timers-page #new-timer select {
+  #timers-page #new-timer select, #timers-page #new-manual-timer select {
     max-width: 300px; }
 
 #timers-page #timers .timer {
