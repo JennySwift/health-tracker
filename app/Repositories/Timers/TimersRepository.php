@@ -25,6 +25,7 @@ class TimersRepository {
 
     /**
      * Sort entries by date
+     * For the graph
      * @param $entries
      * @return static
      */

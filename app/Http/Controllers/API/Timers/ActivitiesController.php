@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests;
 use App\Http\Transformers\Timers\ActivityTransformer;
 use App\Models\Timers\Activity;
+use App\Repositories\Timers\ActivitiesRepository;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -13,6 +14,19 @@ use Illuminate\Http\Response;
 
 class ActivitiesController extends Controller
 {
+    /**
+     * @var ActivitiesRepository
+     */
+    private $activitiesRepository;
+
+    /**
+     * ActivitiesController constructor.
+     * @param ActivitiesRepository $activitiesRepository
+     */
+    public function __construct(ActivitiesRepository $activitiesRepository)
+    {
+        $this->activitiesRepository = $activitiesRepository;
+    }
 
     /**
      *
@@ -61,53 +75,13 @@ class ActivitiesController extends Controller
     }
 
     /**
+     *
      * @param Request $request
-     * @return mixed
-     * @internal param $date
+     * @return array
      */
     public function calculateTotalMinutesForDay(Request $request)
     {
-        $date = $request->get('date');
-        $startOfDay = Carbon::createFromFormat('Y-m-d', $date)->hour(0)->minute(0)->second(0);
-        $endOfDay = Carbon::createFromFormat('Y-m-d', $date)->hour(24)->minute(0)->second(0);
-
-        $activitiesForDay = Activity::forCurrentUser()
-            ->whereHas('timers', function ($q) use ($startOfDay, $endOfDay) {
-                $q->where(function ($q) use ($startOfDay, $endOfDay) {
-                    $q->whereBetween('start', [$startOfDay, $endOfDay])
-                        ->orWhereBetween('finish', [$startOfDay, $endOfDay]);
-                });
-            })
-            ->get();
-
-        //For calculating total untracked time
-        $totalMinutesForAllActivites = 0;
-
-        foreach ($activitiesForDay as $activity) {
-            $activity->totalMinutes = $activity->calculateMinutesForDay($startOfDay, $endOfDay);
-            $totalMinutesForAllActivites += $activity->totalMinutes;
-            $activity->hours = floor($activity->totalMinutes / 60);
-            $activity->minutes = $activity->totalMinutes % 60;
-            if ($activity->minutes < 10) {
-                $activity->minutes = '0' . $activity->minutes;
-            }
-        }
-
-        $untrackedTotalMinutes = 24 * 60 - $totalMinutesForAllActivites;
-        $untrackedHours = floor($untrackedTotalMinutes / 60);
-        $untrackedMinutes = $untrackedTotalMinutes % 60;
-        if ($untrackedMinutes < 10) {
-            $untrackedMinutes = '0' . $untrackedMinutes;
-        }
-
-        $activitiesForDay[] = [
-            'name' => 'untracked',
-            'totalMinutes' => $untrackedTotalMinutes,
-            'hours' => $untrackedHours,
-            'minutes' => $untrackedMinutes
-        ];
-
-        return $activitiesForDay;
+        return $this->activitiesRepository->calculateTotalMinutesForDay($request->get('date'));
     }
 
     /**

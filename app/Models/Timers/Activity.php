@@ -43,27 +43,73 @@ class Activity extends Model
     }
 
     /**
-     * Calculate how many minutes have been spent on the activity
-     * for the day
-     * @param Carbon $startOfDay
-     * @param Carbon $endOfDay
-     * @return int
+     * Get the timer's for an activity whose start or finish
+     * is on a particular date
+     * @param $startOfDay
+     * @param $endOfDay
+     * @return mixed
      */
-    public function calculateMinutesForDay(Carbon $startOfDay, Carbon $endOfDay)
+    public function getTimersForDay($startOfDay, $endOfDay)
     {
-        $minutes = 0;
-        $timers = $this->timers()
+        return $this->timers()
             ->where(function($q) use ($startOfDay, $endOfDay)
             {
                 $q->whereBetween('start', [$startOfDay, $endOfDay])
                     ->orWhereBetween('finish', [$startOfDay, $endOfDay]);
             })
             ->get();
+    }
 
-        foreach ($timers as $timer) {
-            $minutes+= $timer->getTotalMinutesForDay($startOfDay);
+    /**
+     *
+     * @return int
+     */
+    public function totalMinutesForAllTime()
+    {
+        $total = 0;
+        foreach ($this->timers as $timer) {
+            if ($timer->finish) {
+                $total+= $timer->totalMinutes;
+            }
         }
 
-        return $minutes;
+        return $this->totalMinutesForAllTime = $total;
+    }
+
+    /**
+     * Calculate how many minutes have been spent on the activity
+     * for the day
+     * @param Carbon $startOfDay
+     * @param Carbon $endOfDay
+     * @return int
+     */
+    public function totalMinutesForDay(Carbon $startOfDay, Carbon $endOfDay)
+    {
+        $total = 0;
+        $timers = $this->getTimersForDay($startOfDay, $endOfDay);
+
+        foreach ($timers as $timer) {
+            $total+= $timer->getTotalMinutesForDay($startOfDay);
+        }
+
+        return $this->totalMinutesForDay = $total;
+    }
+
+    /**
+     *
+     * @return float
+     */
+    public function hoursForDay()
+    {
+        return $this->hoursForDay = floor($this->totalMinutesForDay / 60);
+    }
+
+    /**
+     * Not the total minutes for the day
+     * @return int
+     */
+    public function minutesForDay()
+    {
+        return $this->minutesForDay = $this->totalMinutesForDay % 60;
     }
 }
