@@ -94,14 +94,17 @@ class ActivitiesTest extends TestCase
         $this->assertArrayHasKey('name', $content[0]);
         $this->assertArrayHasKey('totalMinutesForWeek', $content[0]);
         $this->assertArrayHasKey('totalMinutesForAllTime', $content[0]);
+        $this->assertArrayHasKey('averageMinutesPerDayForWeek', $content[0]);
 
         $this->assertEquals('sleep', $content[0]['name']);
         $this->assertEquals(1980, $content[0]['totalMinutesForWeek']);
         $this->assertEquals(3900, $content[0]['totalMinutesForAllTime']);
+        $this->assertEquals(990, $content[0]['averageMinutesPerDayForWeek']);
 
         $this->assertEquals('work', $content[1]['name']);
         $this->assertEquals(120, $content[1]['totalMinutesForWeek']);
         $this->assertEquals(300, $content[1]['totalMinutesForAllTime']);
+        $this->assertEquals(60, $content[1]['averageMinutesPerDayForWeek']);
 
         $this->assertEquals('untracked', $content[2]['name']);
         $this->assertEquals(7980, $content[2]['totalMinutesForWeek']);

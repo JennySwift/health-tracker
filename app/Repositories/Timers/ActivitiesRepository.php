@@ -72,6 +72,7 @@ class ActivitiesRepository {
         foreach ($activities as $activity) {
             $activity->totalMinutesForWeek = $activity->calculateTotalMinutesForWeek($startOfWeek, $endOfWeek);
             $activity->totalMinutesForAllTime();
+            $activity->averageMinutesPerDayForWeek = $activity->calculateAverageMinutesPerDayForWeek($date);
             $totalMinutesForAllActivities += $activity->totalMinutesForWeek;
         }
 

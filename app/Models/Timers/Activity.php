@@ -128,6 +128,27 @@ class Activity extends Model
         return $total;
     }
 
+    /**
+     * If the week isn't over yet, instead of dividing by 7, do the
+     * division according to how many days of the week have happened
+     * So if today is Tuesday, divide by 3, for example.
+     * @param $date
+     * @return float
+     */
+    public function calculateAverageMinutesPerDayForWeek($date)
+    {
+        $date = Carbon::createFromFormat('Y-m-d', $date);
+        if (Carbon::today() < $date->copy()->endOfWeek()) {
+            //The week isn't over yet.
+            return round($this->totalMinutesForWeek / (Carbon::today()->dayOfWeek + 1));
+
+        }
+        else {
+            return round($this->totalMinutesForWeek / 7);
+        }
+
+    }
+
 
     /**
      *
