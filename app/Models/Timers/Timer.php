@@ -88,24 +88,24 @@ class Timer extends Model
      *
      * @return mixed|string
      */
-    public function getFormattedMinutesAttribute()
-    {
-        if ($this->minutes < 10) {
-            return '0' . $this->minutes;
-        }
-        else {
-            return $this->minutes;
-        }
-    }
+//    public function getFormattedMinutesAttribute()
+//    {
+//        if ($this->minutes < 10) {
+//            return '0' . $this->minutes;
+//        }
+//        else {
+//            return $this->minutes;
+//        }
+//    }
 
     /**
      *
      * @return string
      */
-    public function getFormattedStartAttribute()
-    {
-        return Carbon::createFromFormat('Y-m-d H:i:s', $this->start)->format('g:ia');
-    }
+//    public function getFormattedStartAttribute()
+//    {
+//        return Carbon::createFromFormat('Y-m-d H:i:s', $this->start)->format('g:ia');
+//    }
 
     /**
      *

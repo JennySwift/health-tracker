@@ -18,7 +18,7 @@
             </td>
 
             <td class="duration">
-                <span>[[timer.hours]]:[[timer.formattedMinutes]]</span>
+                <span>[[timer.hours | doubleDigitsFilter]]:[[timer.minutes | doubleDigitsFilter]]</span>
             </td>
 
             <td>
@@ -26,11 +26,11 @@
             </td>
 
             <td>
-                <span>[[timer.formattedStart]]</span>
+                <span>[[timer.start | formatDateTimeFilter ]]</span>
             </td>
 
             <td>
-                <span>[[timer.formattedFinish]]</span>
+                <span>[[timer.finish | formatDateTimeFilter]]</span>
             </td>
 
         </tr>
