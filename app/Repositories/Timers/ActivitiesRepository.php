@@ -30,7 +30,7 @@ class ActivitiesRepository {
      * @param $date
      * @return array
      */
-    public function calculateTotalMinutesForDay($date)
+    public function calculateTotalMinutesForAllActivitiesForDay($date)
     {
         $startOfDay = Carbon::createFromFormat('Y-m-d', $date)->hour(0)->minute(0)->second(0);
         $endOfDay = Carbon::createFromFormat('Y-m-d', $date)->hour(24)->minute(0)->second(0);
@@ -42,8 +42,6 @@ class ActivitiesRepository {
 
         foreach ($activitiesForDay as $activity) {
             $activity->totalMinutesForDay = $activity->calculateTotalMinutesForDay($startOfDay, $endOfDay);
-            $activity->hoursForDay();
-            $activity->minutesForDay();
 
             $totalMinutesForAllActivities += $activity->totalMinutesForDay;
         }

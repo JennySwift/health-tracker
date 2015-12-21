@@ -44,14 +44,7 @@ class TimersController extends Controller
 
         else {
             //Return the timers for the date
-            $dateString = Carbon::createFromFormat('Y-m-d', $request->get('date'))->format('Y-m-d') . '%';
-            $entries = Timer::forCurrentUser()
-                ->where(function ($q) use ($dateString) {
-                    $q->where('finish', 'LIKE', $dateString)
-                        ->orWhere('start', 'LIKE', $dateString);
-                })
-                ->get();
-
+            $entries = $this->timersRepository->getTimersOnDate($request->get('date'));
             $entries = $this->transform($this->createCollection($entries, new TimerTransformer(['date' => $request->get('date')])))['data'];
 
             return response($entries, Response::HTTP_OK);

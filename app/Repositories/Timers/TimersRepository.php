@@ -24,6 +24,23 @@ class TimersRepository {
     }
 
     /**
+     *
+     * @param $dateString
+     * @return mixed
+     */
+    public function getTimersOnDate($dateString)
+    {
+        $dateString = Carbon::createFromFormat('Y-m-d', $dateString)->format('Y-m-d') . '%';
+
+        return Timer::forCurrentUser()
+            ->where(function ($q) use ($dateString) {
+                $q->where('finish', 'LIKE', $dateString)
+                    ->orWhere('start', 'LIKE', $dateString);
+            })
+            ->get();
+    }
+
+    /**
      * Sort entries by date
      * For the graph
      * @param $entries

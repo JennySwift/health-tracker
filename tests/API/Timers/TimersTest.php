@@ -57,12 +57,9 @@ class TimersTest extends TestCase {
 
         $this->assertArrayHasKey('id', $content[0]);
         $this->assertArrayHasKey('start', $content[0]);
-        $this->assertArrayHasKey('formattedStart', $content[0]);
-        $this->assertArrayHasKey('formattedFinish', $content[0]);
         $this->assertArrayHasKey('startDate', $content[0]);
         $this->assertArrayHasKey('hours', $content[0]);
         $this->assertArrayHasKey('minutes', $content[0]);
-        $this->assertArrayHasKey('formattedMinutes', $content[0]);
         $this->assertArrayHasKey('activity', $content[0]);
         $this->assertArrayHasKey('durationInMinutesForDay', $content[0]);
 
@@ -91,32 +88,27 @@ class TimersTest extends TestCase {
         DB::beginTransaction();
         $this->logInUser();
 
+        $start = '2015-12-01 21:00:00';
+        $finish = '2015-12-02 08:30:00';
+
         $sleep = [
-            'start' => '2015-12-01 21:00:00',
-            'finish' => '2015-12-02 08:30:00',
+            'start' => $start,
+            'finish' => $finish,
             'activity_id' => Activity::where('name', 'sleep')->first()->id
         ];
 
         $response = $this->call('POST', '/api/timers', $sleep);
-//        dd($response);
         $content = json_decode($response->getContent(), true);
 //      dd($content);
 
         $this->assertArrayHasKey('id', $content);
         $this->assertArrayHasKey('start', $content);
-        $this->assertArrayHasKey('formattedStart', $content);
-        $this->assertArrayHasKey('formattedFinish', $content);
 //        $this->assertArrayHasKey('finish', $content);
         $this->assertArrayHasKey('startDate', $content);
-        $this->assertArrayHasKey('hours', $content);
-        $this->assertArrayHasKey('minutes', $content);
-        $this->assertArrayHasKey('formattedMinutes', $content);
 
-        $this->assertEquals('9:00pm', $content['formattedStart']);
-        $this->assertEquals('8:30am', $content['formattedFinish']);
+        $this->assertEquals($start, $content['start']);
+        $this->assertEquals($finish, $content['finish']);
         $this->assertEquals('01/12/15', $content['startDate']);
-        $this->assertEquals(11, $content['hours']);
-        $this->assertEquals(30, $content['minutes']);
         $this->assertEquals(690, $content['durationInMinutes']);
 
         $this->assertEquals(Response::HTTP_CREATED, $response->getStatusCode());
@@ -145,17 +137,10 @@ class TimersTest extends TestCase {
 
         $this->assertArrayHasKey('id', $content);
         $this->assertArrayHasKey('start', $content);
-//        $this->assertArrayHasKey('finish', $content);
         $this->assertArrayHasKey('startDate', $content);
-//        $this->assertArrayHasKey('hours', $content);
-//        $this->assertArrayHasKey('minutes', $content);
 
-        $this->assertEquals('9:00pm', $content['formattedStart']);
-//        $this->assertEquals('8:30am', $content['finish']);
+        $this->assertEquals('2015-12-01 21:00:00', $content['start']);
         $this->assertEquals('01/12/15', $content['startDate']);
-//        $this->assertEquals(11, $content['hours']);
-//        $this->assertEquals(30, $content['minutes']);
-//        $this->assertEquals(690, $content['durationInMinutes']);
 
         $this->assertEquals(Response::HTTP_CREATED, $response->getStatusCode());
 
@@ -182,15 +167,13 @@ class TimersTest extends TestCase {
 
         $this->assertArrayHasKey('id', $content);
         $this->assertArrayHasKey('start', $content);
-        $this->assertArrayHasKey('formattedStart', $content);
-        $this->assertArrayHasKey('formattedFinish', $content);
         $this->assertArrayHasKey('startDate', $content);
         $this->assertArrayHasKey('hours', $content);
         $this->assertArrayHasKey('minutes', $content);
         $this->assertArrayHasKey('durationInMinutesForDay', $content);
 
         //Todo: test values are correct
-        $this->assertEquals('11:00pm', $content['formattedFinish']);
+        $this->assertEquals($finish, $content['finish']);
 
         $this->assertEquals(200, $response->getStatusCode());
 

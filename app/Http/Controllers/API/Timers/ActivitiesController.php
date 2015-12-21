@@ -79,9 +79,9 @@ class ActivitiesController extends Controller
      * @param Request $request
      * @return array
      */
-    public function calculateTotalMinutesForDay(Request $request)
+    public function calculateTotalMinutesForAllActivitiesForDay(Request $request)
     {
-        return $this->activitiesRepository->calculateTotalMinutesForDay($request->get('date'));
+        return $this->activitiesRepository->calculateTotalMinutesForAllActivitiesForDay($request->get('date'));
     }
 
     /**
