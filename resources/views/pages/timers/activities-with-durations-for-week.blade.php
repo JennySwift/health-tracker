@@ -1,9 +1,9 @@
-<div id="activities-with-durations-for-week">
+<div>
+    <label>Filter activites</label>
+    <input ng-model="activitiesFilter" type="text"/>
+</div>
 
-    <div>
-        <label>Filter</label>
-        <input ng-model="activitiesFilter" type="text"/>
-    </div>
+<div id="activities-with-durations-for-week">
 
     <table class="table table-bordered">
         <thead>
