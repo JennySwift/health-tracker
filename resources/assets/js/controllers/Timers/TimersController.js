@@ -14,6 +14,7 @@ angular.module('tracker')
         //});
 
         $scope.date = {};
+        $scope.showTimerInProgress = true;
 
         $scope.$on('changeDate', function (event) {
             getTimers();

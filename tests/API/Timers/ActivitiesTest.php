@@ -77,7 +77,7 @@ class ActivitiesTest extends TestCase
         $this->assertEquals(1, $content[1]['hoursForDay']);
         $this->assertEquals(0, $content[1]['minutesForDay']);
 
-        $this->assertEquals('untracked', $content[2]['name']);
+        $this->assertContains('untracked', $content[2]['name']);
         $this->assertEquals(645, $content[2]['totalMinutesForDay']);
         $this->assertEquals(10, $content[2]['hoursForDay']);
         $this->assertEquals(45, $content[2]['minutesForDay']);

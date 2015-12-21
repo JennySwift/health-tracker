@@ -10,7 +10,7 @@
 
 </div>
 
-<div id="new-manual-timer">
+<div ng-show="!timerInProgress" id="new-manual-timer">
     <select
             ng-options="activity.id as activity.name for activity in activities"
             ng-model="newManualTimer.activity.id"

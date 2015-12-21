@@ -104,7 +104,15 @@ class TimersController extends Controller
 
 //        dd($timer);
 
-        $timer = $this->transform($this->createItem($timer, new TimerTransformer))['data'];
+        if ($timer->finish) {
+            $finishDate = Carbon::createFromFormat('Y-m-d H:i:s', $timer->finish)->format('Y-m-d');
+        }
+        else {
+            $finishDate = null;
+        }
+
+
+        $timer = $this->transform($this->createItem($timer, new TimerTransformer(['date' => $finishDate])))['data'];
 
         return response($timer, Response::HTTP_OK);
     }
