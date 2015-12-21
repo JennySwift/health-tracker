@@ -52,7 +52,7 @@ class TimersController extends Controller
                 })
                 ->get();
 
-            $entries = $this->transform($this->createCollection($entries, new TimerTransformer))['data'];
+            $entries = $this->transform($this->createCollection($entries, new TimerTransformer(['date' => $request->get('date')])))['data'];
 
             return response($entries, Response::HTTP_OK);
         }

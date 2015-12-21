@@ -21,7 +21,9 @@
                 <span>[[timer.hours]]:[[timer.formattedMinutes]]</span>
             </td>
 
-            <td></td>
+            <td>
+                <span>[[timer.durationInMinutesForDay | formatDurationFilter]]</span>
+            </td>
 
             <td>
                 <span>[[timer.formattedStart]]</span>

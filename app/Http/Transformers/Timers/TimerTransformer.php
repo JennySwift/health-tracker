@@ -20,6 +20,20 @@ class TimerTransformer extends TransformerAbstract
     ];
 
     /**
+     * @var array
+     */
+    private $params;
+
+    /**
+     * TimerTransformer constructor.
+     * @param array $params
+     */
+    public function __construct($params = [])
+    {
+        $this->params = $params;
+    }
+
+    /**
      * @param Timer $timer
      * @return array
      */
@@ -40,6 +54,7 @@ class TimerTransformer extends TransformerAbstract
             $array['minutes'] = $timer->minutes;
             $array['formattedMinutes'] = $timer->formattedMinutes;
             $array['durationInMinutes'] = $timer->totalMinutes;
+            $array['durationInMinutesForDay'] = $timer->getTotalMinutesForDay(Carbon::createFromFormat('Y-m-d', $this->params['date']));
         }
 
         return $array;

@@ -64,6 +64,16 @@ class TimersTest extends TestCase {
         $this->assertArrayHasKey('minutes', $content[0]);
         $this->assertArrayHasKey('formattedMinutes', $content[0]);
         $this->assertArrayHasKey('activity', $content[0]);
+        $this->assertArrayHasKey('durationInMinutesForDay', $content[0]);
+
+        $this->assertEquals(75, $content[0]['durationInMinutesForDay']);
+        $this->assertEquals(180, $content[1]['durationInMinutesForDay']);
+        $this->assertEquals(60, $content[2]['durationInMinutesForDay']);
+        $this->assertEquals(510, $content[3]['durationInMinutesForDay']);
+        $this->assertEquals(75, $content[4]['durationInMinutesForDay']);
+        $this->assertEquals(180, $content[5]['durationInMinutesForDay']);
+        $this->assertEquals(60, $content[6]['durationInMinutesForDay']);
+        $this->assertEquals(510, $content[7]['durationInMinutesForDay']);
 
         //Todo: check the values are correct
         $this->assertContains($date->copy()->format('Y-m-d'), $content[0]['start']);
