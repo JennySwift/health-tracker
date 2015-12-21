@@ -562,25 +562,11 @@ body.browser-height {
   #timers-page #new-timer select, #timers-page #new-manual-timer select {
     max-width: 300px; }
 
-#timers-page #timers .timer {
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
-  justify-content: space-between; }
-  #timers-page #timers .timer .duration {
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-justify-content: flex-end;
-    -ms-flex-pack: end;
-    justify-content: flex-end;
-    width: 50px; }
-  #timers-page #timers .timer .fa-times {
-    visibility: hidden; }
-  #timers-page #timers .timer:hover .fa-times {
-    visibility: visible; }
+#timers-page #timers .timer .fa-times {
+  visibility: hidden; }
+
+#timers-page #timers .timer:hover .fa-times {
+  visibility: visible; }
 
 #activities #new-activity {
   display: -webkit-flex;

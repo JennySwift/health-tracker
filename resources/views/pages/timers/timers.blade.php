@@ -1,19 +1,37 @@
-<ul id="timers" class="list-group">
-    <li ng-repeat="timer in timers | filter: activitiesFilter | orderBy: 'start':true" class="list-group-item timer">
-        <div>
-            <i ng-click="deleteTimer(timer)" class="fa fa-times .delete"></i>
-            <span ng-style="{'background': timer.activity.data.color}" class="label">[[timer.activity.data.name]]</span>
-        </div>
+<table id="timers" class="table table-bordered">
 
-        <div class="duration">
-            <span>[[timer.hours]]:[[timer.formattedMinutes]]</span>
-        </div>
+    <thead>
+        <tr>
+            <th>Activity</th>
+            <th>Duration</th>
+            <th>Duration today</th>
+            <th>Start</th>
+            <th>End</th>
+        </tr>
+    </thead>
 
-        <div>
-            <span>[[timer.formattedStart]]</span>
-            <span> - </span>
-            <span>[[timer.formattedFinish]]</span>
-        </div>
+    <tbody>
+        <tr ng-repeat="timer in timers | filter: activitiesFilter | orderBy: 'start':true" class="timer">
+            <td>
+                <i ng-click="deleteTimer(timer)" class="fa fa-times .delete"></i>
+                <span ng-style="{'background': timer.activity.data.color}" class="label">[[timer.activity.data.name]]</span>
+            </td>
 
-    </li>
-</ul>
+            <td class="duration">
+                <span>[[timer.hours]]:[[timer.formattedMinutes]]</span>
+            </td>
+
+            <td></td>
+
+            <td>
+                <span>[[timer.formattedStart]]</span>
+            </td>
+
+            <td>
+                <span>[[timer.formattedFinish]]</span>
+            </td>
+
+        </tr>
+    </tbody>
+
+</table>
