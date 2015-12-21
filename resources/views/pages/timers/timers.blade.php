@@ -1,6 +1,7 @@
-<table id="timers" class="table table-bordered">
+<div id="timers">
+    <table class="table table-bordered">
 
-    <thead>
+        <thead>
         <tr>
             <th>Activity</th>
             <th>Duration</th>
@@ -8,9 +9,9 @@
             <th>Start</th>
             <th>End</th>
         </tr>
-    </thead>
+        </thead>
 
-    <tbody>
+        <tbody>
         <tr ng-repeat="timer in timers | filter: activitiesFilter | orderBy: 'start':true" class="timer">
             <td>
                 <i ng-click="deleteTimer(timer)" class="fa fa-times .delete"></i>
@@ -26,14 +27,17 @@
             </td>
 
             <td>
-                <span>[[timer.start | formatDateTimeFilter ]]</span>
+                <span>[[timer.start | formatDateTimeFilter:'hoursAndMinutes' ]]</span>
+                <span class="seconds">:[[timer.start | formatDateTimeFilter:'seconds']]</span>
             </td>
 
             <td>
-                <span>[[timer.finish | formatDateTimeFilter]]</span>
+                <span>[[timer.finish | formatDateTimeFilter:'hoursAndMinutes']]</span>
+                <span class="seconds">:[[timer.finish | formatDateTimeFilter:'seconds']]</span>
             </td>
 
         </tr>
-    </tbody>
+        </tbody>
 
-</table>
+    </table>
+</div>

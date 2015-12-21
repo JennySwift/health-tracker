@@ -539,6 +539,22 @@ body.browser-height {
 #timers-page > * {
   margin-bottom: 20px; }
 
+#timers-page #activities-and-timers-container {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center; }
+  #timers-page #activities-and-timers-container > * {
+    margin: 0px 40px; }
+  #timers-page #activities-and-timers-container table td, #timers-page #activities-and-timers-container table th {
+    padding: 7px 5px;
+    margin: 0; }
+    #timers-page #activities-and-timers-container table td .seconds, #timers-page #activities-and-timers-container table th .seconds {
+      font-weight: lighter;
+      margin-left: 3px; }
+
 #timers-page #timer-in-progress {
   display: -webkit-flex;
   display: -ms-flexbox;

@@ -1,6 +1,27 @@
+@mixin seconds {
+    font-weight: lighter;
+    margin-left: 3px;
+}
+
 #timers-page {
     > * {
         margin-bottom: 20px;
+    }
+    #activities-and-timers-container {
+        display: flex;
+        justify-content: center;
+        > * {
+            margin: 0px 40px;
+        }
+        table {
+            td, th {
+                padding: 7px 5px;
+                margin: 0;
+                .seconds {
+                    @include seconds;
+                }
+            }
+        }
     }
     #timer-in-progress {
         display: flex;

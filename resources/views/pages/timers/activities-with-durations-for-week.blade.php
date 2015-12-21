@@ -1,8 +1,3 @@
-<div>
-    <label>Filter activites</label>
-    <input ng-model="activitiesFilter" type="text"/>
-</div>
-
 <div id="activities-with-durations-for-week">
 
     <table class="table table-bordered">
@@ -10,7 +5,7 @@
             <tr>
                 <th>Activity</th>
                 <th>Duration for week</th>
-                <th>Average per day for week</th>
+                <th>Avg/day for week</th>
                 <th>Duration for all time</th>
             </tr>
         </thead>
