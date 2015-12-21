@@ -18,6 +18,7 @@ angular.module('tracker')
         $scope.$on('changeDate', function (event) {
             getTimers();
             getTotalMinutesForActivitiesForTheDay();
+            getTotalMinutesForActivitiesForTheWeek();
         });
 
         checkForTimerInProgress();
@@ -48,6 +49,7 @@ angular.module('tracker')
                     $scope.timers.push(response.data);
                     $rootScope.$broadcast('provideFeedback', 'Manual entry created', 'success');
                     getTotalMinutesForActivitiesForTheDay();
+                    getTotalMinutesForActivitiesForTheWeek();
                     $rootScope.hideLoading();
                 })
                 .catch(function (response) {
@@ -77,6 +79,7 @@ angular.module('tracker')
                     $scope.timerInProgress = false;
                     $scope.timers.push(response.data);
                     getTotalMinutesForActivitiesForTheDay();
+                    getTotalMinutesForActivitiesForTheWeek();
                     //var $index = _.indexOf($scope.timers, _.findWhere($scope.timers, {id: response.data.id}));
                     //$scope.timers[$index] = response.data;
                     $rootScope.$broadcast('provideFeedback', 'Timer updated');
@@ -140,7 +143,19 @@ angular.module('tracker')
             $rootScope.showLoading();
             ActivitiesFactory.getTotalMinutesForDay($scope.date.sql)
                 .then(function (response) {
-                    $scope.activitiesWithDurations = response.data;
+                    $scope.activitiesWithDurationsForDay = response.data;
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        }
+
+        function getTotalMinutesForActivitiesForTheWeek () {
+            $rootScope.showLoading();
+            ActivitiesFactory.getTotalMinutesForWeek($scope.date.sql)
+                .then(function (response) {
+                    $scope.activitiesWithDurationsForWeek = response.data;
                     $rootScope.hideLoading();
                 })
                 .catch(function (response) {
@@ -155,6 +170,7 @@ angular.module('tracker')
                     .then(function (response) {
                         $scope.timers = _.without($scope.timers, timer);
                         getTotalMinutesForActivitiesForTheDay();
+                        getTotalMinutesForActivitiesForTheWeek();
                         $rootScope.$broadcast('provideFeedback', 'Timer deleted');
                         $rootScope.hideLoading();
                     })

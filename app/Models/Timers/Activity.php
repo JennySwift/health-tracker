@@ -44,18 +44,18 @@ class Activity extends Model
 
     /**
      * Get the timer's for an activity whose start or finish
-     * is on a particular date
-     * @param $startOfDay
-     * @param $endOfDay
+     * is on a particular date or week
+     * @param $start
+     * @param $end
      * @return mixed
      */
-    public function getTimersForDay($startOfDay, $endOfDay)
+    public function getTimersForTimePeriod($start, $end)
     {
         return $this->timers()
-            ->where(function($q) use ($startOfDay, $endOfDay)
+            ->where(function($q) use ($start, $end)
             {
-                $q->whereBetween('start', [$startOfDay, $endOfDay])
-                    ->orWhereBetween('finish', [$startOfDay, $endOfDay]);
+                $q->whereBetween('start', [$start, $end])
+                    ->orWhereBetween('finish', [$start, $end]);
             })
             ->get();
     }
@@ -67,7 +67,7 @@ class Activity extends Model
     public function totalMinutesForAllTime()
     {
         $total = 0;
-        foreach ($this->timers as $timer) {
+        foreach ($this->timers()->get() as $timer) {
             if ($timer->finish) {
                 $total+= $timer->totalMinutes;
             }
@@ -83,17 +83,38 @@ class Activity extends Model
      * @param Carbon $endOfDay
      * @return int
      */
-    public function totalMinutesForDay(Carbon $startOfDay, Carbon $endOfDay)
+    public function calculateTotalMinutesForDay(Carbon $startOfDay, Carbon $endOfDay)
     {
         $total = 0;
-        $timers = $this->getTimersForDay($startOfDay, $endOfDay);
+        $timers = $this->getTimersForTimePeriod($startOfDay, $endOfDay);
 
         foreach ($timers as $timer) {
             $total+= $timer->getTotalMinutesForDay($startOfDay);
         }
 
-        return $this->totalMinutesForDay = $total;
+        return $total;
     }
+
+    /**
+     * Calculate how many minutes have been spent on the activity
+     * for the week
+     * @param Carbon $startOfWeek
+     * @param Carbon $endOfWeek
+     * @return int
+     */
+    public function calculateTotalMinutesForWeek(Carbon $startOfWeek, Carbon $endOfWeek)
+    {
+        $total = 0;
+        $day = $endOfWeek->copy();
+
+        while ($day >= $startOfWeek) {
+            $total+= $this->calculateTotalMinutesForDay($day->copy()->startOfDay(), $day->copy()->endOfDay());
+            $day = $day->subDay();
+        }
+
+        return $total;
+    }
+
 
     /**
      *

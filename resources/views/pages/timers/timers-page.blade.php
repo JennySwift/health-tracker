@@ -17,7 +17,8 @@
         @include('pages.timers.new-timer')
         @include('pages.timers.timer-in-progress')
         @include('pages.timers.timer-filter')
-        @include('pages.timers.activities-with-durations')
+        @include('pages.timers.activities-with-durations-for-day')
+        @include('pages.timers.activities-with-durations-for-week')
         @include('pages.timers.timers')
 
 	</div>

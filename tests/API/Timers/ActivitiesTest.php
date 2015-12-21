@@ -86,6 +86,38 @@ class ActivitiesTest extends TestCase
     }
 
     /**
+     * Todo: this test depends on the day being Monday
+     * @test
+     * @return void
+     */
+    public function it_gets_the_total_minutes_for_the_week_for_the_activity()
+    {
+        $this->logInUser();
+        $date = Carbon::yesterday()->format('Y-m-d');
+        $response = $this->call('GET', '/api/activities/getTotalMinutesForWeek?date=' . $date);
+        $content = json_decode($response->getContent(), true);
+//      dd($content);
+
+        $this->assertArrayHasKey('id', $content[0]);
+        $this->assertArrayHasKey('name', $content[0]);
+        $this->assertArrayHasKey('totalMinutesForWeek', $content[0]);
+        $this->assertArrayHasKey('totalMinutesForAllTime', $content[0]);
+
+        $this->assertEquals('sleep', $content[0]['name']);
+        $this->assertEquals(1980, $content[0]['totalMinutesForWeek']);
+        $this->assertEquals(3900, $content[0]['totalMinutesForAllTime']);
+
+        $this->assertEquals('work', $content[1]['name']);
+        $this->assertEquals(120, $content[1]['totalMinutesForWeek']);
+        $this->assertEquals(300, $content[1]['totalMinutesForAllTime']);
+
+        $this->assertEquals('untracked', $content[2]['name']);
+        $this->assertEquals(7980, $content[2]['totalMinutesForWeek']);
+
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    /**
      * @test
      * @return void
      */
