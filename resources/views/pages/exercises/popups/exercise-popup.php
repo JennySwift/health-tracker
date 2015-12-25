@@ -15,6 +15,15 @@
 			</div>
 
 			<div>
+				<h5 class="center">target</h5>
+				<input
+					ng-model="exercise_popup.target"
+					type="text"
+					placeholder="target"
+					class="form-control">
+			</div>
+
+			<div>
 				<h5 class="center">series</h5>
 
 				<li

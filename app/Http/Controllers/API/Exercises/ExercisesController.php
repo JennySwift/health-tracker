@@ -82,7 +82,7 @@ class ExercisesController extends Controller
     {
         // Create an array with the new fields merged
         $data = array_compare($exercise->toArray(), $request->only([
-            'name', 'step_number', 'default_quantity', 'description'
+            'name', 'step_number', 'default_quantity', 'description', 'target'
         ]));
 
         $exercise->update($data);

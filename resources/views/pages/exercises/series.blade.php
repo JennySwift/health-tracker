@@ -50,12 +50,14 @@
                         <th>Step</th>
                         <th>Name</th>
                         <th>Description</th>
+                        <th>Target</th>
                         <th>Program</th>
                     </tr>
                     <tr ng-repeat="exercise in selected.exercise_series.exercises.data">
                         <td>[[exercise.stepNumber]]</td>
                         <td>[[exercise.name]]</td>
                         <td>[[exercise.description]]</td>
+                        <td>[[exercise.target]]</td>
                         <td>[[exercise.program.name]]</td>
                     </tr>
                 </table>

@@ -66,6 +66,7 @@ class ExerciseSeeder extends Seeder {
                 'description' => $faker->word,
                 'default_quantity' => 5,
                 'step_number' => $index,
+                'target' => 'something'
             ]);
 
             $exercise->user()->associate($this->user);
