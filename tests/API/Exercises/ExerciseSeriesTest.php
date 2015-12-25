@@ -61,6 +61,22 @@ class ExerciseSeriesTest extends TestCase {
     /**
      * @test
      */
+    public function it_can_show_the_exercises_in_a_series()
+    {
+        $this->logInUser();
+
+        $response = $this->apiCall('GET', '/api/exerciseSeries/1');
+        $content = json_decode($response->getContent(), true);
+
+        $this->assertArrayHasKey('exercises', $content);
+//        dd($content);
+
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+    }
+
+    /**
+     * @test
+     */
     public function it_can_list_the_series()
     {
         $this->logInUser();

@@ -53,7 +53,7 @@ class ExerciseSeriesController extends Controller
      */
     public function show(Series $series)
     {
-        return transform(createItem($series, new SeriesTransformer));
+        return transform(createItem($series, new SeriesTransformer))['data'];
     }
 
     /**

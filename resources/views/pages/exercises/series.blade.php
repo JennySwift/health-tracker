@@ -9,7 +9,7 @@
 
 @include('templates.header')
 
-<div ng-controller="SeriesController" id="exercises" class="container">
+<div ng-controller="SeriesController" id="exercise-series" class="container">
 
     @include('pages.exercises.index')
 
@@ -21,24 +21,37 @@
 
         <input ng-model="seriesPriorityFilter" type="text" placeholder="filter by priority">
 
-        <table class="table table-bordered">
-            <tr>
-                <th>series</th>
-                <th>history</th>
-                <th>workouts</th>
-                <th>priority</th>
-                <th>edit</th>
-                <th>x</th>
-            </tr>
-            <tr ng-repeat="series in exercise_series | filter:{'priority': seriesPriorityFilter}">
-                <td>[[series.name]]</td>
-                <td><button ng-click="getExerciseSeriesHistory(series)">show</button></td>
-                <td><span ng-repeat="workout in series.workouts.data" class="label label-default">[[workout.name]]</span></td>
-                <td>[[series.priority]]</td>
-                <td><button ng-click="showExerciseSeriesPopup(series)" class="btn-xs">edit</button></td>
-                <td><i ng-click="deleteExerciseSeries(series)" class="delete-item fa fa-times"></i></td>
-            </tr>
-        </table>
+        <div class="series-exercises-container">
+
+            <div>
+                <table id="series-table" class="table table-bordered">
+                    <tr>
+                        <th>series</th>
+                        <th>history</th>
+                        <th>workouts</th>
+                        <th>priority</th>
+                        <th>edit</th>
+                        <th>x</th>
+                    </tr>
+                    <tr ng-repeat="series in exercise_series | filter:{'priority': seriesPriorityFilter}" ng-class="{'selected': series.id === selected.exercise_series.id}">
+                        <td ng-click="getExercisesInSeries(series)" class="name">[[series.name]]</td>
+                        <td><button ng-click="getExerciseSeriesHistory(series)">show</button></td>
+                        <td><span ng-repeat="workout in series.workouts.data" class="label label-default">[[workout.name]]</span></td>
+                        <td>[[series.priority]]</td>
+                        <td><button ng-click="showExerciseSeriesPopup(series)" class="btn-xs">edit</button></td>
+                        <td><i ng-click="deleteExerciseSeries(series)" class="delete-item fa fa-times"></i></td>
+                    </tr>
+                </table>
+            </div>
+
+            <div>
+                <ul class="list-group">
+                    <li ng-repeat="exercise in selected.exercise_series.exercises.data" class="list-group-item">[[exercise.name]]</li>
+                </ul>
+            </div>
+        </div>
+
+
     </div>
 
 </div>

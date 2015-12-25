@@ -299,6 +299,18 @@ body.browser-height {
   #default-exercise-unit-popup-checkboxes label {
     padding: 2px 8px; }
 
+#exercise-series .series-exercises-container {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center; }
+  #exercise-series .series-exercises-container > * {
+    margin: 0 50px; }
+  #exercise-series .series-exercises-container #series-table .name {
+    cursor: pointer; }
+
 #exercise-popup h3:first-child {
   margin-top: 0;
   margin-bottom: 25px; }

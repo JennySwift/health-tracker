@@ -1,0 +1,14 @@
+#exercise-series {
+    .series-exercises-container {
+        display: flex;
+        justify-content: center;
+        > * {
+            margin: 0 50px;
+        }
+        #series-table {
+            .name {
+                cursor: pointer;
+            }
+        }
+    }
+}

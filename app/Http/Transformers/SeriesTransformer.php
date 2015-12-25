@@ -14,7 +14,7 @@ class SeriesTransformer extends TransformerAbstract
      * Todo: This isn't needed all the time
      * @var array
      */
-    protected $defaultIncludes = ['workouts'];
+    protected $defaultIncludes = ['workouts', 'exercises'];
 
     /**
      * @return array
@@ -39,6 +39,16 @@ class SeriesTransformer extends TransformerAbstract
     public function includeWorkouts(Series $series)
     {
         return createCollection($series->workouts, new WorkoutTransformer);
+    }
+
+    /**
+     *
+     * @param Series $series
+     * @return \League\Fractal\Resource\Collection
+     */
+    public function includeExercises(Series $series)
+    {
+        return createCollection($series->exercises, new ExerciseTransformer);
     }
 
 }

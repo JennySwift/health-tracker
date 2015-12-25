@@ -85,6 +85,21 @@ var app = angular.module('tracker');
                 });
         };
 
+        $scope.getExercisesInSeries = function ($series) {
+            //$scope.selected.exercise_series = $series;
+
+            $rootScope.showLoading();
+            ExerciseSeriesFactory.getExerciseSeriesInfo($series)
+                .then(function (response) {
+                    $scope.selected.exercise_series = response.data;
+
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        };
+
         /**
          * popups
          */
