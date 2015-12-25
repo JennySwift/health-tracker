@@ -71,6 +71,7 @@ class ExerciseSeriesTest extends TestCase {
 
         $this->assertArrayHasKey('id', $content[0]);
         $this->assertArrayHasKey('name', $content[0]);
+        $this->assertArrayHasKey('priority', $content[0]);
         $this->assertArrayHasKey('workout_ids', $content[0]);
         $this->assertArrayHasKey('workouts', $content[0]);
 
@@ -126,6 +127,7 @@ class ExerciseSeriesTest extends TestCase {
 
         $response = $this->call('PUT', '/api/exerciseSeries/'.$series->id, [
             'name' => 'numbat',
+            'priority' => 8
         ]);
 //        dd($response);
         $content = json_decode($response->getContent(), true)['data'];
@@ -133,10 +135,12 @@ class ExerciseSeriesTest extends TestCase {
 
         $this->assertArrayHasKey('id', $content);
         $this->assertArrayHasKey('name', $content);
+        $this->assertArrayHasKey('priority', $content);
         $this->assertArrayHasKey('workout_ids', $content);
 
         $this->assertEquals(1, $content['id']);
         $this->assertEquals('numbat', $content['name']);
+        $this->assertEquals('8', $content['priority']);
         $this->assertEquals([1], $content['workout_ids']);
 
         $this->assertEquals(200, $response->getStatusCode());

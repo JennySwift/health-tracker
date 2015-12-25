@@ -24,6 +24,7 @@ class SeriesTransformer extends TransformerAbstract
         $array = [
             'id' => $series->id,
             'name' => $series->name,
+            'priority' => $series->priority,
             'workout_ids' => $series->workouts()->lists('id'),
         ];
 

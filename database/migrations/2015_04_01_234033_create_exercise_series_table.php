@@ -17,6 +17,7 @@ class CreateExerciseSeriesTable extends Migration {
 			$table->increments('id')->index();
 			$table->integer('user_id')->unsigned()->index();
 			$table->string('name')->index();
+			$table->integer('priority')->index();
 			$table->timestamps();
 
 			$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

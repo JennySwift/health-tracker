@@ -17,17 +17,20 @@ class ExerciseSeriesSeeder extends Seeder {
         foreach($users as $user) {
             DB::table('exercise_series')->insert([
                 'name' => 'pushup',
-                'user_id' => $user->id
+                'user_id' => $user->id,
+                'priority' => 1
             ]);
 
             DB::table('exercise_series')->insert([
                 'name' => 'pullup',
-                'user_id' => $user->id
+                'user_id' => $user->id,
+                'priority' => 1
             ]);
 
             DB::table('exercise_series')->insert([
                 'name' => 'squat',
-                'user_id' => $user->id
+                'user_id' => $user->id,
+                'priority' => 2
             ]);
         }
 

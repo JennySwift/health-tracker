@@ -7,6 +7,12 @@
         <label for="seriesName">Name your series</label>
         <input ng-model="exercise_series_popup.name" type="text" name="seriesName" placeholder="name"/>
 
+		<div>
+		    <label for="exericise-series-priority"></label>
+		    <input ng-model="exercise_series_popup.priority" type="text" id="exercise-series-priority" name="exercise-series-priority" placeholder="priority" class="form-control"/>
+		</div>
+
+
 		<h5>Check the workouts which should include the [[exercise_series_popup.name]] series</h5>
 
 		<div ng-repeat="workout in workouts">

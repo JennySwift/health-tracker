@@ -82,7 +82,7 @@ class ExerciseSeriesController extends Controller
     {
         // Create an array with the new fields merged
         $data = array_compare($series->toArray(), $request->only([
-            'name'
+            'name', 'priority'
         ]));
 //        dd($data);
 

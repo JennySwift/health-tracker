@@ -26,6 +26,7 @@ angular.module('tracker')
                 var $url = 'api/exerciseSeries/' + $series.id;
                 var $data = {
                     name: $series.name,
+                    priority: $series.priority,
                     workout_ids: $series.workout_ids
                 };
 
