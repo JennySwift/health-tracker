@@ -11,10 +11,12 @@
             }
         }
         #exercises-table {
-            td {
+            td, th {
                 text-align: left;
-                border-top: none;
                 padding: 10px 15px;
+            }
+            td {
+                border-top: none;
                 //&:first-child {
                 //    border-left: 1px solid #ddd;
                 //}

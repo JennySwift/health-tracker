@@ -310,10 +310,11 @@ body.browser-height {
     margin: 0 50px; }
   #exercise-series .series-exercises-container #series-table .name {
     cursor: pointer; }
-  #exercise-series .series-exercises-container #exercises-table td {
+  #exercise-series .series-exercises-container #exercises-table td, #exercise-series .series-exercises-container #exercises-table th {
     text-align: left;
-    border-top: none;
     padding: 10px 15px; }
+  #exercise-series .series-exercises-container #exercises-table td {
+    border-top: none; }
   #exercise-series .series-exercises-container #exercises-table tr {
     border: 1px solid #ddd; }
     #exercise-series .series-exercises-container #exercises-table tr:first-child {
