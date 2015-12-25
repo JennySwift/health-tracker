@@ -55,12 +55,12 @@
                         <th>Program</th>
                     </tr>
                     <tr ng-repeat="exercise in selected.exercise_series.exercises.data | filter:{'priority': seriesPriorityFilter}">
-                        <td>[[exercise.stepNumber]]</td>
-                        <td>[[exercise.name]]</td>
-                        <td>[[exercise.description]]</td>
-                        <td>[[exercise.target]]</td>
-                        <td>[[exercise.priority]]</td>
-                        <td>[[exercise.program.name]]</td>
+                        <td ng-click="showExercisePopup(exercise)">[[exercise.stepNumber]]</td>
+                        <td ng-click="showExercisePopup(exercise)">[[exercise.name]]</td>
+                        <td ng-click="showExercisePopup(exercise)">[[exercise.description]]</td>
+                        <td ng-click="showExercisePopup(exercise)">[[exercise.target]]</td>
+                        <td ng-click="showExercisePopup(exercise)">[[exercise.priority]]</td>
+                        <td ng-click="showExercisePopup(exercise)">[[exercise.program.name]]</td>
                     </tr>
                 </table>
 

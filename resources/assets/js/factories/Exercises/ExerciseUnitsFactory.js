@@ -1,6 +1,11 @@
 angular.module('tracker')
     .factory('ExerciseUnitsFactory', function ($http) {
         return {
+            index: function () {
+                var url = '/api/exerciseUnits';
+
+                return $http.get(url);
+            },
             insert: function () {
                 var $url = 'api/exerciseUnits';
                 var $name = $("#create-new-exercise-unit").val();

@@ -314,7 +314,8 @@ body.browser-height {
     text-align: left;
     padding: 10px 15px; }
   #exercise-series .series-exercises-container #exercises-table td {
-    border-top: none; }
+    border-top: none;
+    cursor: pointer; }
   #exercise-series .series-exercises-container #exercises-table tr {
     border: 1px solid #ddd; }
     #exercise-series .series-exercises-container #exercises-table tr:first-child {
