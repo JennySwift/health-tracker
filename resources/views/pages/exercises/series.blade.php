@@ -45,9 +45,14 @@
             </div>
 
             <div>
-                <ul class="list-group">
-                    <li ng-repeat="exercise in selected.exercise_series.exercises.data" class="list-group-item">[[exercise.name]]</li>
-                </ul>
+                <table id="exercises-table" class="table">
+                    <tr ng-repeat="exercise in selected.exercise_series.exercises.data">
+                        <td>[[exercise.stepNumber]]</td>
+                        <td>[[exercise.name]]</td>
+                        <td>[[exercise.program.name]]</td>
+                    </tr>
+                </table>
+                
             </div>
         </div>
 
