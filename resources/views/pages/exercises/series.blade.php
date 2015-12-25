@@ -52,7 +52,9 @@
                         <td>[[exercise.program.name]]</td>
                     </tr>
                 </table>
-                
+
+                <p ng-if="selected.exercise_series.exercises.data.length === 0">No exercises in the series</p>
+
             </div>
         </div>
 

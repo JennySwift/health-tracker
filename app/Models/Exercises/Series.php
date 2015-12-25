@@ -54,7 +54,7 @@ class Series extends Model {
      */
     public function exercises()
     {
-        return $this->hasMany('App\Models\Exercises\Exercise');
+        return $this->hasMany('App\Models\Exercises\Exercise')->orderBy('step_number');
     }
 
     /**
