@@ -22,7 +22,8 @@ class ExerciseTransformer extends TransformerAbstract
             'description' => $exercise->description,
             'stepNumber' => $exercise->step_number,
             'defaultQuantity' => $exercise->default_quantity,
-            'tag_ids' => $exercise->tags()->lists('id')
+            'tag_ids' => $exercise->tags()->lists('id'),
+            'program' => $exercise->program
         ];
 
         if ($exercise->series) {

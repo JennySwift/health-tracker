@@ -26,6 +26,7 @@
 					<th>default quantity</th>
 					<th>default unit</th>
 					<th>tags</th>
+					<th>program</th>
 					<th>x</th>
 				</tr>
 				<tr ng-repeat="exercise in exercises | filter:{name: filter.exercises.name, description: filter.exercises.description}" class="hover">
@@ -38,6 +39,7 @@
 					<td ng-click="showExercisePopup(exercise)" class="pointer">
 						<span ng-repeat="tag in exercise.tags" class="badge">[[tag.name]]</span>
 					</td>
+					<td ng-click="showExercisePopup(exercise)" class="pointer">[[exercise.program.name]]</td>
 					<td><i ng-click="deleteExercise(exercise)" class="delete-item fa fa-times"></i></td>
 				</tr>
 			</table>

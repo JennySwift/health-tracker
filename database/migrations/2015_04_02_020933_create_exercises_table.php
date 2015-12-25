@@ -16,6 +16,8 @@ class CreateExercisesTable extends Migration {
 		{
 			$table->increments('id')->index();
 			$table->integer('user_id')->unsigned()->index();
+			$table->integer('program_id')->unsigned()->index();
+			$table->foreign('program_id')->references('id')->on('exercise_programs');
 			$table->string('name')->index();
 			$table->decimal('step_number', 10, 2)->nullable();
 			$table->integer('series_id')->nullable()->unsigned();

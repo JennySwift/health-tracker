@@ -26,6 +26,19 @@
 				</li>
 
 			</div>
+
+			<div>
+				<h5 class="center">program</h5>
+
+				<li
+					ng-repeat="program in programs"
+					class="list-group-item hover pointer"
+					ng-class="{'selected': program.id === exercise_popup.program.id}"
+					ng-click="exercise_popup.program.id = program.id">
+					[[program.name]]
+				</li>
+
+			</div>
 			
 			<div>
 				<h5 class="center">default unit</h5>

@@ -13502,274 +13502,6 @@ var app = angular.module('tracker');
 	});
 
 })();
-angular.module('tracker')
-    .controller('ActivitiesController', function ($rootScope, $scope, ActivitiesFactory) {
-
-        function getActivities () {
-            $rootScope.showLoading();
-            ActivitiesFactory.index()
-                .then(function (response) {
-                    $scope.activities = response.data;
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        }
-        
-        getActivities();
-
-        $scope.insertActivity = function () {
-            $rootScope.showLoading();
-            ActivitiesFactory.store($scope.newActivity)
-                .then(function (response) {
-                    $scope.activities.push(response.data);
-                    $rootScope.$broadcast('provideFeedback', 'Activity created', 'success');
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        };
-
-        $scope.updateActivity = function (activity) {
-            $rootScope.showLoading();
-            ActivitiesFactory.update(activity)
-                .then(function (response) {
-                    var $index = _.indexOf($scope.activities, _.findWhere($scope.activities, {id: activity.id}));
-                    $scope.activities[$index] = response.data;
-                    $scope.editingActivity = false;
-                    $rootScope.$broadcast('provideFeedback', 'Activity updated');
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        };
-
-        $scope.showEditActivity = function (activity) {
-            $scope.editingActivity = true;
-            $scope.selectedActivity = activity;
-        };
-
-        $scope.deleteActivity = function (activity) {
-            if (confirm("Are you sure? The timers for the activity will be deleted, too!")) {
-                $rootScope.showLoading();
-                ActivitiesFactory.destroy(activity)
-                    .then(function (response) {
-                        $scope.activities = _.without($scope.activities, activity);
-                        $rootScope.$broadcast('provideFeedback', 'Activity deleted');
-                        $scope.editingActivity = false;
-                        $rootScope.hideLoading();
-                    })
-                    .catch(function (response) {
-                        $rootScope.responseError(response);
-                    });
-            }
-        };
-    });
-angular.module('tracker')
-    .controller('TimerGraphsController', function ($rootScope, $scope, TimersFactory) {
-
-        function getEntries () {
-            $rootScope.showLoading();
-            TimersFactory.index(true)
-                .then(function (response) {
-                    $scope.entries = response.data;
-                    //$rootScope.$broadcast('provideFeedback', '');
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        }
-
-        getEntries();
-    });
-angular.module('tracker')
-    .controller('TimersController', function ($timeout, $rootScope, $scope, TimersFactory, ActivitiesFactory) {
-
-        //$("document").ready(function () {
-        //    $("#new-timer-activity").select2({});
-        //});
-        //
-        //$scope.newTimer = {
-        //    activity: {}
-        //};
-
-        //$timeout(function () {
-        //    $("#new-timer-activity").select2({});
-        //});
-
-        $scope.date = {};
-        $scope.showTimerInProgress = true;
-
-        $scope.$on('changeDate', function (event) {
-            getTimers();
-            getTotalMinutesForActivitiesForTheDay();
-            getTotalMinutesForActivitiesForTheWeek();
-        });
-
-        checkForTimerInProgress();
-
-        $scope.startTimer = function () {
-            $('#timer-clock').timer({format: '%H:%M:%S'});
-            $rootScope.showLoading();
-            TimersFactory.store($scope.newTimer)
-                .then(function (response) {
-                    //$scope.timers.push(response.data);
-                    $scope.timerInProgress = response.data;
-                    $rootScope.$broadcast('provideFeedback', 'Timer started', 'success');
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        };
-
-        /**
-         * Instead of starting and stopping the timer,
-         * enter the start and stop times manually
-         */
-        $scope.insertManualTimer = function () {
-            $rootScope.showLoading();
-            TimersFactory.store($scope.newManualTimer, $scope.date.sql)
-                .then(function (response) {
-                    $scope.timers.push(response.data);
-                    $rootScope.$broadcast('provideFeedback', 'Manual entry created', 'success');
-                    getTotalMinutesForActivitiesForTheDay();
-                    getTotalMinutesForActivitiesForTheWeek();
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        };
-
-        function getActivities () {
-            $rootScope.showLoading();
-            ActivitiesFactory.index()
-                .then(function (response) {
-                    $scope.activities = response.data;
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        }
-
-        getActivities();
-
-        $scope.stopTimer = function () {
-            $('#timer-clock').timer('remove');
-            $rootScope.showLoading();
-            TimersFactory.update($scope.timerInProgress)
-                .then(function (response) {
-                    $scope.timerInProgress = false;
-                    $scope.timers.push(response.data);
-                    getTotalMinutesForActivitiesForTheDay();
-                    getTotalMinutesForActivitiesForTheWeek();
-                    //var $index = _.indexOf($scope.timers, _.findWhere($scope.timers, {id: response.data.id}));
-                    //$scope.timers[$index] = response.data;
-                    $rootScope.$broadcast('provideFeedback', 'Timer updated');
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        };
-
-        function getTimers () {
-            $rootScope.showLoading();
-            TimersFactory.index(false, $scope.date.sql)
-                .then(function (response) {
-                    $scope.timers = response.data;
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        }
-
-        $scope.filterTimers = function (timer) {
-            if ($scope.timersFilter) {
-                return timer.activity.data.name.indexOf($scope.timersFilter) !== -1;
-            }
-            return true;
-
-        };
-
-        $scope.formatMinutes = function (minutes) {
-            return minutes * 10;
-        };
-
-        function checkForTimerInProgress () {
-            $rootScope.showLoading();
-            TimersFactory.checkForTimerInProgress()
-                .then(function (response) {
-                    if (response.data.activity) {
-                        resumeTimerOnPageLoad(response.data);
-                    }
-
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        }
-
-        function resumeTimerOnPageLoad (timer) {
-            $scope.timerInProgress = timer;
-            var seconds = moment().diff(moment(timer.start, 'YYYY-MM-DD HH:mm:ss'), 'seconds');
-            $('#timer-clock').timer({
-                format: '%H:%M:%S',
-                //The timer has already started
-                seconds: seconds
-            });
-        }
-
-        function getTotalMinutesForActivitiesForTheDay () {
-            $rootScope.showLoading();
-            ActivitiesFactory.getTotalMinutesForDay($scope.date.sql)
-                .then(function (response) {
-                    $scope.activitiesWithDurationsForDay = response.data;
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        }
-
-        function getTotalMinutesForActivitiesForTheWeek () {
-            $rootScope.showLoading();
-            ActivitiesFactory.getTotalMinutesForWeek($scope.date.sql)
-                .then(function (response) {
-                    $scope.activitiesWithDurationsForWeek = response.data;
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        }
-
-        $scope.deleteTimer = function (timer) {
-            if (confirm("Are you sure?")) {
-                $rootScope.showLoading();
-                TimersFactory.destroy(timer)
-                    .then(function (response) {
-                        $scope.timers = _.without($scope.timers, timer);
-                        getTotalMinutesForActivitiesForTheDay();
-                        getTotalMinutesForActivitiesForTheWeek();
-                        $rootScope.$broadcast('provideFeedback', 'Timer deleted');
-                        $rootScope.hideLoading();
-                    })
-                    .catch(function (response) {
-                        $rootScope.responseError(response);
-                    });
-            }
-        };
-
-    });
 var app = angular.module('tracker');
 
 (function () {
@@ -14987,6 +14719,274 @@ var app = angular.module('tracker');
     });
 
 })();
+angular.module('tracker')
+    .controller('ActivitiesController', function ($rootScope, $scope, ActivitiesFactory) {
+
+        function getActivities () {
+            $rootScope.showLoading();
+            ActivitiesFactory.index()
+                .then(function (response) {
+                    $scope.activities = response.data;
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        }
+        
+        getActivities();
+
+        $scope.insertActivity = function () {
+            $rootScope.showLoading();
+            ActivitiesFactory.store($scope.newActivity)
+                .then(function (response) {
+                    $scope.activities.push(response.data);
+                    $rootScope.$broadcast('provideFeedback', 'Activity created', 'success');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        };
+
+        $scope.updateActivity = function (activity) {
+            $rootScope.showLoading();
+            ActivitiesFactory.update(activity)
+                .then(function (response) {
+                    var $index = _.indexOf($scope.activities, _.findWhere($scope.activities, {id: activity.id}));
+                    $scope.activities[$index] = response.data;
+                    $scope.editingActivity = false;
+                    $rootScope.$broadcast('provideFeedback', 'Activity updated');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        };
+
+        $scope.showEditActivity = function (activity) {
+            $scope.editingActivity = true;
+            $scope.selectedActivity = activity;
+        };
+
+        $scope.deleteActivity = function (activity) {
+            if (confirm("Are you sure? The timers for the activity will be deleted, too!")) {
+                $rootScope.showLoading();
+                ActivitiesFactory.destroy(activity)
+                    .then(function (response) {
+                        $scope.activities = _.without($scope.activities, activity);
+                        $rootScope.$broadcast('provideFeedback', 'Activity deleted');
+                        $scope.editingActivity = false;
+                        $rootScope.hideLoading();
+                    })
+                    .catch(function (response) {
+                        $rootScope.responseError(response);
+                    });
+            }
+        };
+    });
+angular.module('tracker')
+    .controller('TimerGraphsController', function ($rootScope, $scope, TimersFactory) {
+
+        function getEntries () {
+            $rootScope.showLoading();
+            TimersFactory.index(true)
+                .then(function (response) {
+                    $scope.entries = response.data;
+                    //$rootScope.$broadcast('provideFeedback', '');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        }
+
+        getEntries();
+    });
+angular.module('tracker')
+    .controller('TimersController', function ($timeout, $rootScope, $scope, TimersFactory, ActivitiesFactory) {
+
+        //$("document").ready(function () {
+        //    $("#new-timer-activity").select2({});
+        //});
+        //
+        //$scope.newTimer = {
+        //    activity: {}
+        //};
+
+        //$timeout(function () {
+        //    $("#new-timer-activity").select2({});
+        //});
+
+        $scope.date = {};
+        $scope.showTimerInProgress = true;
+
+        $scope.$on('changeDate', function (event) {
+            getTimers();
+            getTotalMinutesForActivitiesForTheDay();
+            getTotalMinutesForActivitiesForTheWeek();
+        });
+
+        checkForTimerInProgress();
+
+        $scope.startTimer = function () {
+            $('#timer-clock').timer({format: '%H:%M:%S'});
+            $rootScope.showLoading();
+            TimersFactory.store($scope.newTimer)
+                .then(function (response) {
+                    //$scope.timers.push(response.data);
+                    $scope.timerInProgress = response.data;
+                    $rootScope.$broadcast('provideFeedback', 'Timer started', 'success');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        };
+
+        /**
+         * Instead of starting and stopping the timer,
+         * enter the start and stop times manually
+         */
+        $scope.insertManualTimer = function () {
+            $rootScope.showLoading();
+            TimersFactory.store($scope.newManualTimer, $scope.date.sql)
+                .then(function (response) {
+                    $scope.timers.push(response.data);
+                    $rootScope.$broadcast('provideFeedback', 'Manual entry created', 'success');
+                    getTotalMinutesForActivitiesForTheDay();
+                    getTotalMinutesForActivitiesForTheWeek();
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        };
+
+        function getActivities () {
+            $rootScope.showLoading();
+            ActivitiesFactory.index()
+                .then(function (response) {
+                    $scope.activities = response.data;
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        }
+
+        getActivities();
+
+        $scope.stopTimer = function () {
+            $('#timer-clock').timer('remove');
+            $rootScope.showLoading();
+            TimersFactory.update($scope.timerInProgress)
+                .then(function (response) {
+                    $scope.timerInProgress = false;
+                    $scope.timers.push(response.data);
+                    getTotalMinutesForActivitiesForTheDay();
+                    getTotalMinutesForActivitiesForTheWeek();
+                    //var $index = _.indexOf($scope.timers, _.findWhere($scope.timers, {id: response.data.id}));
+                    //$scope.timers[$index] = response.data;
+                    $rootScope.$broadcast('provideFeedback', 'Timer updated');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        };
+
+        function getTimers () {
+            $rootScope.showLoading();
+            TimersFactory.index(false, $scope.date.sql)
+                .then(function (response) {
+                    $scope.timers = response.data;
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        }
+
+        $scope.filterTimers = function (timer) {
+            if ($scope.timersFilter) {
+                return timer.activity.data.name.indexOf($scope.timersFilter) !== -1;
+            }
+            return true;
+
+        };
+
+        $scope.formatMinutes = function (minutes) {
+            return minutes * 10;
+        };
+
+        function checkForTimerInProgress () {
+            $rootScope.showLoading();
+            TimersFactory.checkForTimerInProgress()
+                .then(function (response) {
+                    if (response.data.activity) {
+                        resumeTimerOnPageLoad(response.data);
+                    }
+
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        }
+
+        function resumeTimerOnPageLoad (timer) {
+            $scope.timerInProgress = timer;
+            var seconds = moment().diff(moment(timer.start, 'YYYY-MM-DD HH:mm:ss'), 'seconds');
+            $('#timer-clock').timer({
+                format: '%H:%M:%S',
+                //The timer has already started
+                seconds: seconds
+            });
+        }
+
+        function getTotalMinutesForActivitiesForTheDay () {
+            $rootScope.showLoading();
+            ActivitiesFactory.getTotalMinutesForDay($scope.date.sql)
+                .then(function (response) {
+                    $scope.activitiesWithDurationsForDay = response.data;
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        }
+
+        function getTotalMinutesForActivitiesForTheWeek () {
+            $rootScope.showLoading();
+            ActivitiesFactory.getTotalMinutesForWeek($scope.date.sql)
+                .then(function (response) {
+                    $scope.activitiesWithDurationsForWeek = response.data;
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        }
+
+        $scope.deleteTimer = function (timer) {
+            if (confirm("Are you sure?")) {
+                $rootScope.showLoading();
+                TimersFactory.destroy(timer)
+                    .then(function (response) {
+                        $scope.timers = _.without($scope.timers, timer);
+                        getTotalMinutesForActivitiesForTheDay();
+                        getTotalMinutesForActivitiesForTheWeek();
+                        $rootScope.$broadcast('provideFeedback', 'Timer deleted');
+                        $rootScope.hideLoading();
+                    })
+                    .catch(function (response) {
+                        $rootScope.responseError(response);
+                    });
+            }
+        };
+
+    });
 var app = angular.module('tracker');
 
 (function () {
@@ -15079,7 +15079,7 @@ angular.module('tracker')
 var app = angular.module('tracker');
 
 (function () {
-    app.controller('exercises', function ($rootScope, $scope, $http, ExercisesFactory) {
+    app.controller('exercises', function ($rootScope, $scope, $http, ExercisesFactory, ProgramsFactory) {
 
         $scope.exercises = all_exercises;
         $scope.exercise_entries = {};
@@ -15117,6 +15117,20 @@ var app = angular.module('tracker');
                     });
             }
         };
+
+        function getPrograms () {
+            $rootScope.showLoading();
+            ProgramsFactory.index()
+                .then(function (response) {
+                    $scope.programs = response.data;
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        }
+
+        getPrograms();
 
         $scope.updateExercise = function () {
             $rootScope.showLoading();
@@ -15708,7 +15722,8 @@ app.factory('ExercisesFactory', function ($http) {
                 series_id: $exercise.series.id,
                 default_quantity: $exercise.defaultQuantity,
                 description: $exercise.description,
-                default_unit_id: $exercise.defaultUnit.id
+                default_unit_id: $exercise.defaultUnit.id,
+                program_id: $exercise.program.id
             };
 
             $("#exercise-step-number").val("");
@@ -15725,6 +15740,16 @@ app.factory('ExercisesFactory', function ($http) {
         },
     };
 });
+angular.module('tracker')
+    .factory('ProgramsFactory', function ($http) {
+        return {
+            index: function () {
+                var url = '/api/exercisePrograms';
+            
+                return $http.get(url);
+            }
+        }
+    });
 angular.module('tracker')
     .factory('WorkoutsFactory', function ($http) {
         return {

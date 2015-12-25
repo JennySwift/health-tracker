@@ -4,6 +4,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests;
 use App\Http\Transformers\ExerciseTransformer;
 use App\Models\Exercises\Exercise;
+use App\Models\Exercises\ExerciseProgram;
 use App\Models\Exercises\Series;
 use App\Models\Tags\Tag;
 use App\Models\Units\Unit;
@@ -89,6 +90,12 @@ class ExercisesController extends Controller
         if ($request->has('series_id')) {
             $series = Series::findOrFail($request->get('series_id'));
             $exercise->series()->associate($series);
+            $exercise->save();
+        }
+
+        if ($request->has('program_id')) {
+            $program = ExerciseProgram::findOrFail($request->get('program_id'));
+            $exercise->program()->associate($program);
             $exercise->save();
         }
 

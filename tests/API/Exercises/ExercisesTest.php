@@ -31,6 +31,7 @@ class ExercisesTest extends TestCase {
         $this->assertArrayHasKey('defaultUnit', $content[0]);
         $this->assertArrayHasKey('defaultQuantity', $content[0]);
         $this->assertArrayHasKey('tag_ids', $content[0]);
+        $this->assertArrayHasKey('program', $content[0]);
 
         $this->assertEquals(1, $content[0]['id']);
         $this->assertEquals('kneeling pushups', $content[0]['name']);
@@ -136,7 +137,8 @@ class ExercisesTest extends TestCase {
             'default_quantity' => 6,
             'description' => 'frog',
             'series_id' => 2,
-            'default_unit_id' => 2
+            'default_unit_id' => 2,
+            'program_id' => 2
         ]);
 //        dd($response);
         $content = json_decode($response->getContent(), true)['data'];
@@ -151,9 +153,11 @@ class ExercisesTest extends TestCase {
         $this->assertArrayHasKey('defaultQuantity', $content);
         $this->assertArrayHasKey('tags', $content);
         $this->assertArrayHasKey('tag_ids', $content);
+        $this->assertArrayHasKey('program', $content);
 
         $this->assertEquals(1, $content['id']);
         $this->assertEquals('numbat', $content['name']);
+        $this->assertEquals(2, $content['program']['id']);
         $this->assertEquals('frog', $content['description']);
         $this->assertEquals(2, $content['stepNumber']);
         $this->assertEquals(6, $content['defaultQuantity']);

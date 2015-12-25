@@ -40,7 +40,8 @@ app.factory('ExercisesFactory', function ($http) {
                 series_id: $exercise.series.id,
                 default_quantity: $exercise.defaultQuantity,
                 description: $exercise.description,
-                default_unit_id: $exercise.defaultUnit.id
+                default_unit_id: $exercise.defaultUnit.id,
+                program_id: $exercise.program.id
             };
 
             $("#exercise-step-number").val("");

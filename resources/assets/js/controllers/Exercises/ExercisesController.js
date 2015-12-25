@@ -1,7 +1,7 @@
 var app = angular.module('tracker');
 
 (function () {
-    app.controller('exercises', function ($rootScope, $scope, $http, ExercisesFactory) {
+    app.controller('exercises', function ($rootScope, $scope, $http, ExercisesFactory, ProgramsFactory) {
 
         $scope.exercises = all_exercises;
         $scope.exercise_entries = {};
@@ -39,6 +39,20 @@ var app = angular.module('tracker');
                     });
             }
         };
+
+        function getPrograms () {
+            $rootScope.showLoading();
+            ProgramsFactory.index()
+                .then(function (response) {
+                    $scope.programs = response.data;
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        }
+
+        getPrograms();
 
         $scope.updateExercise = function () {
             $rootScope.showLoading();

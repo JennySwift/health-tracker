@@ -40,6 +40,15 @@ class Exercise extends Model {
 
     /**
      *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function program()
+    {
+        return $this->belongsTo('App\Models\Exercises\ExerciseProgram');
+    }
+
+    /**
+     *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function defaultUnit()

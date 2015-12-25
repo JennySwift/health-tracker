@@ -47,6 +47,15 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
     /**
      *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function programs()
+    {
+        return $this->hasMany('App\Models\Exercises\Program');
+    }
+
+    /**
+     *
      * @return mixed
      */
     public function recipeTags()

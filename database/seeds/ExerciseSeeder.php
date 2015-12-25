@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Exercises\ExerciseProgram;
 use App\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
@@ -69,6 +70,7 @@ class ExerciseSeeder extends Seeder {
 
             $exercise->user()->associate($this->user);
             $exercise->defaultUnit()->associate($unit);
+            $exercise->program()->associate(ExerciseProgram::first());
 
             $exercise->series()->associate($series);
             $exercise->save();

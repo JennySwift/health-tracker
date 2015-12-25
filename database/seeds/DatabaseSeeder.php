@@ -34,6 +34,7 @@ class DatabaseSeeder extends Seeder {
 
 		//exercises
 		$this->call('ExerciseSeriesSeeder');
+		$this->call('ExerciseProgramSeeder');
 
 		$this->call('ExerciseSeeder');
 
