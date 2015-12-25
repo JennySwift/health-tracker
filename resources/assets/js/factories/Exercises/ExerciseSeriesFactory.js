@@ -12,13 +12,13 @@ angular.module('tracker')
 
                 return $http.get($url);
             },
-            insert: function () {
+            insert: function (series) {
                 var $url = 'api/exerciseSeries';
                 var $data = {
-                    name: $("#exercise-series").val()
+                    name: series.name
                 };
 
-                $("#exercise-series").val("");
+                series.name = '';
 
                 return $http.post($url, $data);
             },

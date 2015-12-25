@@ -43,7 +43,7 @@ class ExerciseSeriesController extends Controller
      */
     public function index()
     {
-        return transform(createCollection($this->exerciseSeriesRepository->getExerciseSeries(), new SeriesTransformer));
+        return transform(createCollection($this->exerciseSeriesRepository->getExerciseSeries(), new SeriesTransformer))['data'];
     }
 
     /**

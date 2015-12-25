@@ -82,7 +82,7 @@ class ExerciseSeriesTest extends TestCase {
         $this->logInUser();
 
         $response = $this->call('GET', '/api/exerciseSeries');
-        $content = json_decode($response->getContent(), true)['data'];
+        $content = json_decode($response->getContent(), true);
 //        dd($content);
 
         $this->assertArrayHasKey('id', $content[0]);
@@ -115,7 +115,7 @@ class ExerciseSeriesTest extends TestCase {
         $series = Series::forCurrentUser()->first();
 
         $response = $this->call('GET', '/api/exerciseSeries/' . $series->id);
-        $content = json_decode($response->getContent(), true)['data'];
+        $content = json_decode($response->getContent(), true);
 
         $this->assertArrayHasKey('id', $content);
         $this->assertArrayHasKey('name', $content);

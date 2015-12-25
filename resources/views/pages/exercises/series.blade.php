@@ -16,7 +16,7 @@
     <div>
         <div class="margin-bottom">
             <h2 class="center">Series</h2>
-            <input ng-keyup="insertExerciseSeries($event.keyCode)" type="text" placeholder="Add a new series"  id="exercise-series" class="form-control">
+            <input ng-model="newSeries.name" ng-keyup="insertExerciseSeries($event.keyCode)" type="text" placeholder="Add a new series"  id="exercise-series" class="form-control">
         </div>
 
         <input ng-model="seriesPriorityFilter" type="text" placeholder="filter by priority">

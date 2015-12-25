@@ -46,7 +46,7 @@ var app = angular.module('tracker');
                 return;
             }
             $rootScope.showLoading();
-            ExerciseSeriesFactory.insert()
+            ExerciseSeriesFactory.insert($scope.newSeries)
                 .then(function (response) {
                     $scope.exercise_series.push(response.data.data);
                     $rootScope.$broadcast('provideFeedback', 'Series created');
@@ -62,7 +62,7 @@ var app = angular.module('tracker');
             ExerciseSeriesFactory.update($scope.exercise_series_popup)
                 .then(function (response) {
                     var $index = _.indexOf($scope.exercise_series, _.findWhere($scope.exercise_series, {id: $scope.exercise_series_popup.id}));
-                    $scope.exercise_series[$index] = response.data.data;
+                    $scope.exercise_series[$index] = response.data;
                     $rootScope.$broadcast('provideFeedback', 'Series updated');
                     $scope.show.popups.exercise_series = false;
                     $rootScope.hideLoading();
@@ -110,7 +110,7 @@ var app = angular.module('tracker');
             $rootScope.showLoading();
             ExerciseSeriesFactory.getExerciseSeriesInfo($series)
                 .then(function (response) {
-                    $scope.exercise_series_popup = response.data.data;
+                    $scope.exercise_series_popup = response.data;
                     $scope.show.popups.exercise_series = true;
                     //$rootScope.$broadcast('provideFeedback', '');
                     $rootScope.hideLoading();
