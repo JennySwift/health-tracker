@@ -139,7 +139,8 @@ class ExercisesTest extends TestCase {
             'series_id' => 2,
             'default_unit_id' => 2,
             'program_id' => 2,
-            'target' => 'something else'
+            'target' => 'something else',
+            'priority' => 9
         ]);
 //        dd($response);
         $content = json_decode($response->getContent(), true)['data'];
@@ -163,6 +164,7 @@ class ExercisesTest extends TestCase {
         $this->assertEquals(2, $content['stepNumber']);
         $this->assertEquals(6, $content['defaultQuantity']);
         $this->assertEquals('something else', $content['target']);
+        $this->assertEquals(9, $content['priority']);
 
         $this->assertEquals([
             'id' => 2,

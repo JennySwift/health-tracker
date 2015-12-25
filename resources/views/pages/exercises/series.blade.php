@@ -51,13 +51,15 @@
                         <th>Name</th>
                         <th>Description</th>
                         <th>Target</th>
+                        <th>Priority</th>
                         <th>Program</th>
                     </tr>
-                    <tr ng-repeat="exercise in selected.exercise_series.exercises.data">
+                    <tr ng-repeat="exercise in selected.exercise_series.exercises.data | filter:{'priority': seriesPriorityFilter}">
                         <td>[[exercise.stepNumber]]</td>
                         <td>[[exercise.name]]</td>
                         <td>[[exercise.description]]</td>
                         <td>[[exercise.target]]</td>
+                        <td>[[exercise.priority]]</td>
                         <td>[[exercise.program.name]]</td>
                     </tr>
                 </table>

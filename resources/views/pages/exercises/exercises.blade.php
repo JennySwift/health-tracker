@@ -27,6 +27,7 @@
 					<th>default unit</th>
 					<th>tags</th>
 					<th>target</th>
+					<th>priority</th>
 					<th>program</th>
 					<th>x</th>
 				</tr>
@@ -41,6 +42,7 @@
 						<span ng-repeat="tag in exercise.tags" class="badge">[[tag.name]]</span>
 					</td>
 					<td ng-click="showExercisePopup(exercise)" class="pointer">[[exercise.target]]</td>
+					<td ng-click="showExercisePopup(exercise)" class="pointer">[[exercise.priority]]</td>
 					<td ng-click="showExercisePopup(exercise)" class="pointer">[[exercise.program.name]]</td>
 					<td><i ng-click="deleteExercise(exercise)" class="delete-item fa fa-times"></i></td>
 				</tr>

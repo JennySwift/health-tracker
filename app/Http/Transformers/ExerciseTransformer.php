@@ -24,6 +24,7 @@ class ExerciseTransformer extends TransformerAbstract
             'defaultQuantity' => $exercise->default_quantity,
             'tag_ids' => $exercise->tags()->lists('id'),
             'target' => $exercise->target,
+            'priority' => $exercise->priority,
             'program' => $exercise->program
         ];
 
