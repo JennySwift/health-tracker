@@ -53,6 +53,7 @@
                         <th>Target</th>
                         <th>Priority</th>
                         <th>Program</th>
+                        <th>Last done (days ago)</th>
                     </tr>
                     <tr ng-repeat="exercise in selected.exercise_series.exercises.data | filter:{'priority': seriesPriorityFilter}">
                         <td ng-click="showExercisePopup(exercise)">[[exercise.stepNumber]]</td>
@@ -61,6 +62,7 @@
                         <td ng-click="showExercisePopup(exercise)">[[exercise.target]]</td>
                         <td ng-click="showExercisePopup(exercise)">[[exercise.priority]]</td>
                         <td ng-click="showExercisePopup(exercise)">[[exercise.program.name]]</td>
+                        <td ng-click="showExercisePopup(exercise)">[[exercise.lastDone]]</td>
                     </tr>
                 </table>
 

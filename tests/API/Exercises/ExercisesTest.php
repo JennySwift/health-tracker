@@ -32,6 +32,7 @@ class ExercisesTest extends TestCase {
         $this->assertArrayHasKey('defaultQuantity', $content[0]);
         $this->assertArrayHasKey('tag_ids', $content[0]);
         $this->assertArrayHasKey('program', $content[0]);
+        $this->assertArrayHasKey('lastDone', $content[0]);
 
         $this->assertEquals(1, $content[0]['id']);
         $this->assertEquals('kneeling pushups', $content[0]['name']);

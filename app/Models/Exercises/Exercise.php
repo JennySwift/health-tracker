@@ -93,4 +93,13 @@ class Exercise extends Model {
         return route('api.exercises.show', $this->id);
     }
 
+    /**
+     * Get how many days ago the exercise was done
+     * @return mixed
+     */
+    public function getLastDoneAttribute()
+    {
+        return getHowManyDaysAgo($this->entries()->max('date'));
+    }
+
 }

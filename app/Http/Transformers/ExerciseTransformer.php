@@ -25,7 +25,8 @@ class ExerciseTransformer extends TransformerAbstract
             'tag_ids' => $exercise->tags()->lists('id'),
             'target' => $exercise->target,
             'priority' => $exercise->priority,
-            'program' => $exercise->program
+            'program' => $exercise->program,
+            'lastDone' => $exercise->lastDone
         ];
 
         if ($exercise->series) {
