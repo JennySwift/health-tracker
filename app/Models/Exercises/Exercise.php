@@ -99,7 +99,11 @@ class Exercise extends Model {
      */
     public function getLastDoneAttribute()
     {
-        return getHowManyDaysAgo($this->entries()->max('date'));
+        if (count($this->entries) > 0) {
+            return getHowManyDaysAgo($this->entries()->max('date'));
+        }
+
+        return null;
     }
 
 }
