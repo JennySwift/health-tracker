@@ -4,6 +4,10 @@
 
         <h3>History of entries in the [[selectedSeries.name]] series</h3>
 
+		<div class="filters">
+			<input ng-model="seriesHistoryFilter" type="text" placeholder="filter by exercise">
+		</div>
+
         <div ng-if="exercise_series_history.length === 0">No entries to show</div>
 
 		<table ng-if="exercise_series_history.length > 0" class="table table-bordered">
@@ -18,7 +22,7 @@
 				<th>total</th>
 			</tr>
 
-			<tr ng-repeat="entriesForDay in exercise_series_history">
+			<tr ng-repeat="entriesForDay in exercise_series_history | filter: {exercise: {name: seriesHistoryFilter}}">
 				<td>[[entriesForDay.date]]</td>
 				<td>[[entriesForDay.days_ago]]</td>
 				<td>[[entriesForDay.exercise.name]]</td>

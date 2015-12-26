@@ -356,6 +356,15 @@ body.browser-height {
 #exercise-popup .step input, #exercise-popup .priority input, #exercise-popup .default-quantity input {
   width: 70px; }
 
+#series-history-popup .filters {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  margin-bottom: 20px; }
+
 #series-history-popup h3 {
   margin: 0 0 17px 0; }
 
