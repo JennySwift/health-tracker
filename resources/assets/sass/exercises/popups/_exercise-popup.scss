@@ -13,4 +13,9 @@
 	input {
 		background: #FEE6BE;
 	}
+	.step, .priority, .default-quantity {
+		input {
+			width: 70px;
+		}
+	}
 }
