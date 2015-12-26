@@ -90,6 +90,7 @@ class ExerciseSeriesTest extends TestCase {
         $this->assertArrayHasKey('priority', $content[0]);
         $this->assertArrayHasKey('workout_ids', $content[0]);
         $this->assertArrayHasKey('workouts', $content[0]);
+        $this->assertArrayHasKey('lastDone', $content[0]);
 
         $this->assertEquals(2, $content[0]['id']);
         $this->assertEquals('pullup', $content[0]['name']);

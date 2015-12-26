@@ -27,6 +27,7 @@
                 <table id="series-table" class="table table-bordered">
                     <tr>
                         <th>series</th>
+                        <th>last done (days ago)</th>
                         <th>history</th>
                         <th>workouts</th>
                         <th>priority</th>
@@ -35,6 +36,7 @@
                     </tr>
                     <tr ng-repeat="series in exercise_series | filter:{'priority': seriesPriorityFilter}" ng-class="{'selected': series.id === selected.exercise_series.id}">
                         <td ng-click="getExercisesInSeries(series)" class="name">[[series.name]]</td>
+                        <td ng-click="getExercisesInSeries(series)" class="name">[[series.lastDone]]</td>
                         <td><button ng-click="getExerciseSeriesHistory(series)">show</button></td>
                         <td><span ng-repeat="workout in series.workouts.data" class="label label-default">[[workout.name]]</span></td>
                         <td>[[series.priority]]</td>

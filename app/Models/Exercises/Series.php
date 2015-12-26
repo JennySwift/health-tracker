@@ -76,4 +76,17 @@ class Series extends Model {
         return route('api.exerciseSeries.show', $this->id);
     }
 
+    /**
+     * Get how many days ago a series was last done
+     * @return mixed
+     */
+    public function getLastDoneAttribute()
+    {
+        if (count($this->entries) > 0) {
+            return getHowManyDaysAgo($this->entries()->max('date'));
+        }
+
+        return null;
+    }
+
 }

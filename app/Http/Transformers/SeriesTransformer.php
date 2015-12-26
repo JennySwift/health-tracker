@@ -26,6 +26,7 @@ class SeriesTransformer extends TransformerAbstract
             'name' => $series->name,
             'priority' => $series->priority,
             'workout_ids' => $series->workouts()->lists('id'),
+            'lastDone' => $series->lastDone
         ];
 
         return $array;
