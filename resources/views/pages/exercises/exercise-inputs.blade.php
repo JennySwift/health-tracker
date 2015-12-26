@@ -3,6 +3,7 @@
     <div class="flex">
         <input ng-model="filter.exercises.name" type="text" placeholder="name" class="form-control"/>
         <input ng-model="filter.exercises.description" type="text" placeholder="description" class="form-control"/>
+        <input ng-model="filter.exercises.series" type="text" placeholder="series" class="form-control"/>
         <input ng-model="filter.exercises.priority" type="text" placeholder="priority" class="form-control"/>
     </div>
 </div>
