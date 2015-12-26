@@ -8,8 +8,12 @@
 	#exercise-filters {
 		.flex {
 			display: flex;
-			:last-child {
-				width: 100px;
+			justify-content: center;
+			input {
+				width: 200px;
+				&:last-child {
+					width: 100px;
+				}
 			}
 			> * {
 				margin: 0 10px;

@@ -291,9 +291,14 @@ body.browser-height {
   #exercises #exercise-filters .flex {
     display: -webkit-flex;
     display: -ms-flexbox;
-    display: flex; }
-    #exercises #exercise-filters .flex :last-child {
-      width: 100px; }
+    display: flex;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center; }
+    #exercises #exercise-filters .flex input {
+      width: 200px; }
+      #exercises #exercise-filters .flex input:last-child {
+        width: 100px; }
     #exercises #exercise-filters .flex > * {
       margin: 0 10px; }
 
