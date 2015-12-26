@@ -1,6 +1,10 @@
-<div class="margin-bottom">
-    <input ng-model="filter.exercises.name" type="text" placeholder="filter exercises by name" class="form-control"/>
-    <input ng-model="filter.exercises.description" type="text" placeholder="filter exercises by description" class="form-control"/>
+<div id="exercise-filters" class="margin-bottom">
+    <h5>Filters</h5>
+    <div class="flex">
+        <input ng-model="filter.exercises.name" type="text" placeholder="name" class="form-control"/>
+        <input ng-model="filter.exercises.description" type="text" placeholder="description" class="form-control"/>
+        <input ng-model="filter.exercises.priority" type="text" placeholder="priority" class="form-control"/>
+    </div>
 </div>
 
 <div class="margin-bottom">

@@ -288,6 +288,14 @@ body.browser-height {
   flex-wrap: wrap; }
   #exercises > div {
     margin: 0 20px; }
+  #exercises #exercise-filters .flex {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex; }
+    #exercises #exercise-filters .flex :last-child {
+      width: 100px; }
+    #exercises #exercise-filters .flex > * {
+      margin: 0 10px; }
 
 #default-exercise-unit-popup-checkboxes {
   display: -webkit-flex;

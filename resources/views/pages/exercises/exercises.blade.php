@@ -31,7 +31,7 @@
 					<th>program</th>
 					<th>x</th>
 				</tr>
-				<tr ng-repeat="exercise in exercises | filter:{name: filter.exercises.name, description: filter.exercises.description}" class="hover">
+				<tr ng-repeat="exercise in exercises | filter:{name: filter.exercises.name, description: filter.exercises.description, priority: filter.exercises.priority}" class="hover">
 					<td ng-click="showExercisePopup(exercise)" class="pointer">[[exercise.name]]</td>
 					<td ng-click="showExercisePopup(exercise)" class="pointer">[[exercise.description]]</td>
 					<td ng-click="showExercisePopup(exercise)" class="pointer">[[exercise.stepNumber]]</td>
