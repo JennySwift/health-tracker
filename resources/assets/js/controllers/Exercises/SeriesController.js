@@ -9,6 +9,7 @@ var app = angular.module('tracker');
 
         $scope.exercise_series = series;
         $scope.workouts = workouts;
+        $scope.seriesPriorityFilter = 1;
 
         //show
         $scope.show = {
