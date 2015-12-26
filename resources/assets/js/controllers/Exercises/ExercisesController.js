@@ -1,7 +1,7 @@
 var app = angular.module('tracker');
 
 (function () {
-    app.controller('exercises', function ($rootScope, $scope, $http, ExercisesFactory, ProgramsFactory) {
+    app.controller('exercises', function ($rootScope, $scope, $http, ExercisesFactory, ExerciseSeriesFactory, ProgramsFactory) {
 
         $scope.exercises = all_exercises;
         $scope.exercise_entries = {};
@@ -24,6 +24,20 @@ var app = angular.module('tracker');
 
         //selected
         $scope.selected = {};
+
+        function getSeries () {
+            $rootScope.showLoading();
+            ExerciseSeriesFactory.index()
+                .then(function (response) {
+                    $scope.series = _.pluck(response.data, 'name');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        }
+
+        getSeries();
 
         $scope.insertExercise = function ($keycode) {
             if ($keycode === 13) {
