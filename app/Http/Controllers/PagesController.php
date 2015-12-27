@@ -186,7 +186,14 @@ class PagesController extends Controller
     {
         JavaScript::put([
             'series' => transform(createCollection($this->exerciseSeriesRepository->getExerciseSeries(), new SeriesTransformer))['data'],
-            'workouts' => $this->workoutsRepository->getWorkouts()
+            'workouts' => $this->workoutsRepository->getWorkouts(),
+            "exerciseEntries" => transform(
+                createCollection(
+                    $this->exerciseEntriesRepository->getEntriesForTheDay(Carbon::today()->format('Y-m-d')),
+                    new ExerciseEntryTransformer
+                )
+            )['data'],
+            "exerciseUnits" => $this->unitsRepository->getExerciseUnits(),
         ]);
 
         return view('pages.exercises.series');

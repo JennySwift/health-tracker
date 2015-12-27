@@ -4,6 +4,12 @@ angular.module('tracker')
         $scope.exerciseEntries = exerciseEntries;
         $scope.exerciseUnits = exerciseUnits;
 
+        if (!$scope.date) {
+            $scope.date = {
+                sql: moment().format('YYYY-MM-DD')
+            }
+        };
+
         $scope.selectedExercise = {};
 
         $rootScope.$on('getEntries', function () {

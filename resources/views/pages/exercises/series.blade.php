@@ -21,6 +21,12 @@
 
         <input ng-model="seriesPriorityFilter" type="text" placeholder="filter by priority">
 
+        <div ng-controller="ExerciseEntriesController">
+            @include('pages.entries.popups.exercise-entries')
+            @include('pages.entries.exercise-entry-inputs')
+            @include('pages.entries.exercise-entries')
+        </div>
+
         <div class="series-exercises-container">
 
             <div>
