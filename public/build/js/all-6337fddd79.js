@@ -13720,6 +13720,14 @@ angular.module('tracker')
                 });
         };
 
+        /**
+         * For updating the exercise entries from the
+         * series controller on the series page
+         */
+        $rootScope.$on('getExerciseEntries', function (event, data) {
+            $scope.exerciseEntries = data;
+        });
+
         //Todo: get the entries for the day after deleting the entry
         $scope.deleteExerciseEntry = function ($entry) {
             ExerciseEntriesFactory.deleteExerciseEntry($entry)
@@ -14259,7 +14267,7 @@ var app = angular.module('tracker');
 var app = angular.module('tracker');
 
 (function () {
-    app.controller('SeriesController', function ($rootScope, $scope, $http, ExercisesFactory, WorkoutsFactory, ExerciseSeriesFactory, ExerciseUnitsFactory, ProgramsFactory) {
+    app.controller('SeriesController', function ($rootScope, $scope, $http, ExercisesFactory, WorkoutsFactory, ExerciseSeriesFactory, ExerciseUnitsFactory, ExerciseEntriesFactory, ProgramsFactory) {
 
         /**
          * scope properties
@@ -14309,6 +14317,19 @@ var app = angular.module('tracker');
                 .then(function (response) {
                     $scope.exercise_series.push(response.data.data);
                     $rootScope.$broadcast('provideFeedback', 'Series created');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        };
+
+        $scope.insertExerciseSet = function ($exercise) {
+            $rootScope.showLoading();
+            ExerciseEntriesFactory.insertExerciseSet(moment().format('YYYY-MM-DD'), $exercise)
+                .then(function (response) {
+                    $rootScope.$broadcast('getExerciseEntries', response.data);
+                    //$rootScope.$broadcast('provideFeedback', '');
                     $rootScope.hideLoading();
                 })
                 .catch(function (response) {

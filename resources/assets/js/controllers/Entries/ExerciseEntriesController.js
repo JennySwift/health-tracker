@@ -71,6 +71,14 @@ angular.module('tracker')
                 });
         };
 
+        /**
+         * For updating the exercise entries from the
+         * series controller on the series page
+         */
+        $rootScope.$on('getExerciseEntries', function (event, data) {
+            $scope.exerciseEntries = data;
+        });
+
         //Todo: get the entries for the day after deleting the entry
         $scope.deleteExerciseEntry = function ($entry) {
             ExerciseEntriesFactory.deleteExerciseEntry($entry)

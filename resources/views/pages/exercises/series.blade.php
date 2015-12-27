@@ -33,7 +33,7 @@
                 <table id="series-table" class="table table-bordered">
                     <tr>
                         <th>series</th>
-                        <th>last done (days ago)</th>
+                        <th>days ago</th>
                         <th>history</th>
                         <th>workouts</th>
                         <th>priority</th>
@@ -61,7 +61,8 @@
                         <th>Target</th>
                         <th>Priority</th>
                         <th>Program</th>
-                        <th>Last done (days ago)</th>
+                        <th>Days ago</th>
+                        <th>Add</th>
                     </tr>
                     <tr ng-repeat="exercise in selected.exercise_series.exercises.data | filter:{'priority': seriesPriorityFilter}">
                         <td ng-click="showExercisePopup(exercise)">[[exercise.stepNumber]]</td>
@@ -71,6 +72,9 @@
                         <td ng-click="showExercisePopup(exercise)">[[exercise.priority]]</td>
                         <td ng-click="showExercisePopup(exercise)">[[exercise.program.name]]</td>
                         <td ng-click="showExercisePopup(exercise)">[[exercise.lastDone]]</td>
+                        <td>
+                            <button ng-click="insertExerciseSet(exercise)" class="btn btn-default btn-xs">Add set</button>
+                        </td>
                     </tr>
                 </table>
 
