@@ -40,7 +40,7 @@
                         <th>edit</th>
                         <th>x</th>
                     </tr>
-                    <tr ng-repeat="series in exercise_series | filter:{'priority': seriesPriorityFilter}" ng-class="{'selected': series.id === selected.exercise_series.id}">
+                    <tr ng-repeat="series in exercise_series | orderBy: 'lastDone' | filter:{'priority': seriesPriorityFilter}" ng-class="{'selected': series.id === selected.exercise_series.id}">
                         <td ng-click="getExercisesInSeries(series)" class="name">[[series.name]]</td>
                         <td ng-click="getExercisesInSeries(series)" class="name">[[series.lastDone]]</td>
                         <td><button ng-click="getExerciseSeriesHistory(series)">show</button></td>
