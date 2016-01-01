@@ -1,4 +1,4 @@
-<div id="new-exercise" class="margin-bottom">
+<div class="new-exercise margin-bottom">
 
     <div class="flex">
         <div>

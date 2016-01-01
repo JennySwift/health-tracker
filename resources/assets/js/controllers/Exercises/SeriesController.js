@@ -1,7 +1,7 @@
 var app = angular.module('tracker');
 
 (function () {
-    app.controller('SeriesController', function ($rootScope, $scope, $http, ExercisesFactory, WorkoutsFactory, ExerciseSeriesFactory, ExerciseUnitsFactory, ExerciseEntriesFactory, ProgramsFactory) {
+    app.controller('SeriesController', function ($rootScope, $scope, $http, ExercisesFactory, WorkoutsFactory, ExerciseSeriesFactory, ExerciseUnitsFactory, ExerciseEntriesFactory, ExercisesFactory, ProgramsFactory) {
 
         /**
          * scope properties
@@ -112,6 +112,21 @@ var app = angular.module('tracker');
                 .catch(function (response) {
                     $rootScope.responseError(response);
                 });
+        };
+
+        $scope.insertExercise = function ($keycode) {
+            if ($keycode === 13) {
+                $rootScope.showLoading();
+                ExercisesFactory.insert($scope.newExercise)
+                    .then(function (response) {
+                        //$scope.exercises.push(response.data);
+                        $rootScope.$broadcast('provideFeedback', 'Exercise created');
+                        $rootScope.hideLoading();
+                    })
+                    .catch(function (response) {
+                        $rootScope.responseError(response);
+                    });
+            }
         };
 
         /**

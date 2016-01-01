@@ -288,14 +288,14 @@ body.browser-height {
   flex-wrap: wrap; }
   #exercises > div {
     margin: 0 20px; }
-  #exercises #new-exercise .flex {
+  #exercises .new-exercise .flex {
     display: -webkit-flex;
     display: -ms-flexbox;
     display: flex;
     -webkit-flex-wrap: wrap;
     -ms-flex-wrap: wrap;
     flex-wrap: wrap; }
-    #exercises #new-exercise .flex > * {
+    #exercises .new-exercise .flex > * {
       margin: 10px; }
   #exercises #exercise-filters .flex {
     display: -webkit-flex;
@@ -320,6 +320,16 @@ body.browser-height {
   flex-wrap: wrap; }
   #default-exercise-unit-popup-checkboxes label {
     padding: 2px 8px; }
+
+#exercise-series .new-exercise .flex {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap; }
+  #exercise-series .new-exercise .flex > * {
+    margin: 10px; }
 
 #exercise-series .series-exercises-container {
   display: -webkit-flex;

@@ -5,16 +5,19 @@
 	height: 20px;
 }
 
-@mixin button {
-	/* color: $white;
-	box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2) inset, 0 0 0 2px $white inset, 0 0 70px 0 rgba(0, 0, 0, 0.15) inset, 0 2px 5px 0 rgba(0, 0, 0, 0.15); */
-}
-
-@mixin budget_li {
-	/* border: .5px solid black;
-	text-align: center;
-	width: 25%;
-	padding: 10px 0; */
+@mixin newExercise {
+	.new-exercise {
+		.flex {
+			display: flex;
+			flex-wrap: wrap;
+			.priority, .step-number, .default-quantity {
+				//width: 30px;
+			}
+			> * {
+				margin: 10px;
+			}
+		}
+	}
 }
 
 @mixin inputs {
@@ -41,28 +44,11 @@
 	}
 }
 
-@mixin alternatve_total_div {
-	&:nth-child(even) {
-		background: $lightblue;
-	}
-	&:nth-child(odd) {
-		background: $blue;
-	}
-}
-
 @mixin tags {
 	display: inline;
 	background: $lightgrey;
 	margin-right: 5px;
 	padding: 0px 5px;
-}
-
-@mixin tag_div {
-	@include tag_dropdowns;
-	position: absolute;
-	top: 42px;
-	overflow: scroll;
-	text-align: center;
 }
 
 @mixin tag_dropdowns {
@@ -86,27 +72,4 @@
 	position: absolute;
 	top: 0;
 	left: 0;
-}
-
-@mixin display {
-	background: $off_white;
-	height: 74%;
-	left: 0;
-	right: 0;
-	border-radius: $border-radius;
-	overflow: scroll;
-	.nth_child_list {
-		@include nth-child;
-		@include alternate;
-	}
-	.delete_category, .delete_account, .edit_category, .edit_account {
-		position: absolute;
-		right: 0;
-	}
-	.edit_category, .edit_account {
-		right: 51px;
-	}
-	#display_categories_mini_div, .display_accounts_mini_div {
-		position: relative;
-	}
 }
