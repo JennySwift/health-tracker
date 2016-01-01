@@ -1,5 +1,11 @@
 #exercise-series {
     @include newExercise;
+    .top-buttons {
+        display: flex;
+        > * {
+            margin: 0 5px;
+        }
+    }
     .series-exercises-container {
         display: flex;
         justify-content: center;

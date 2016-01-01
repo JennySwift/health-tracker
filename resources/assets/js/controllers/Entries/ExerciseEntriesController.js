@@ -3,6 +3,7 @@ angular.module('tracker')
 
         $scope.exerciseEntries = exerciseEntries;
         $scope.exerciseUnits = exerciseUnits;
+        $scope.showExerciseEntryInputs = false;
 
         if (!$scope.date) {
             $scope.date = {

@@ -1,4 +1,8 @@
-<div class="new-exercise margin-bottom">
+<div>
+    <button ng-click="showNewExerciseFields = !showNewExerciseFields" class="btn btn-success btn-sm">New Exercise</button>
+</div>
+
+<div ng-show="showNewExerciseFields" class="new-exercise margin-bottom">
 
     <div class="flex">
         <div>

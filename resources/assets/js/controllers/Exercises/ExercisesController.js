@@ -9,6 +9,7 @@ var app = angular.module('tracker');
         $scope.workouts = workouts;
         $scope.exercise_tags = exercise_tags;
         $scope.units = units;
+        $scope.showNewExerciseFields = false;
 
         //show
         $scope.show = {

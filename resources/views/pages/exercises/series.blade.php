@@ -14,20 +14,24 @@
     @include('pages.exercises.index')
 
     <div>
-        <div class="margin-bottom">
-            <h2 class="center">Series</h2>
-            <input ng-model="newSeries.name" ng-keyup="insertExerciseSeries($event.keyCode)" type="text" placeholder="Add a new series"  id="exercise-series" class="form-control">
+        <div class="top-buttons">
+            @include('pages.exercises.new-series')
+            @include('pages.exercises.new-exercise')
+            <div>
+                <input ng-model="seriesPriorityFilter" type="text" placeholder="filter by priority">
+            </div>
+
         </div>
-
-        <input ng-model="seriesPriorityFilter" type="text" placeholder="filter by priority">
-
+        
         <div ng-controller="ExerciseEntriesController">
             @include('pages.entries.popups.exercise-entries')
-            @include('pages.entries.exercise-entry-inputs')
+            <button ng-click="showExerciseEntryInputs = !showExerciseEntryInputs" class="btn btn-sm btn-success">Add manual entry</button>
+            <div ng-show="showExerciseEntryInputs">
+                @include('pages.entries.exercise-entry-inputs')
+            </div>
+
             @include('pages.entries.exercise-entries')
         </div>
-
-        @include('pages.exercises.new-exercise')
 
         <div class="series-exercises-container">
 

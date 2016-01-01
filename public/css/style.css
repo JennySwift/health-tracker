@@ -331,6 +331,13 @@ body.browser-height {
   #exercise-series .new-exercise .flex > * {
     margin: 10px; }
 
+#exercise-series .top-buttons {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex; }
+  #exercise-series .top-buttons > * {
+    margin: 0 5px; }
+
 #exercise-series .series-exercises-container {
   display: -webkit-flex;
   display: -ms-flexbox;
