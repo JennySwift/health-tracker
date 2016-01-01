@@ -5,6 +5,18 @@
 	> div {
 		margin: 0 20px;
 	}
+	#new-exercise {
+		.flex {
+			display: flex;
+			flex-wrap: wrap;
+			.priority, .step-number, .default-quantity {
+				//width: 30px;
+			}
+			> * {
+				margin: 10px;
+			}
+		}
+	}
 	#exercise-filters {
 		.flex {
 			display: flex;

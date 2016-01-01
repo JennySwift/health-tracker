@@ -43,7 +43,7 @@
                     <tr ng-repeat="series in exercise_series | orderBy: 'lastDone' | filter:{'priority': seriesPriorityFilter}" ng-class="{'selected': series.id === selected.exercise_series.id}">
                         <td ng-click="getExercisesInSeries(series)" class="name">[[series.name]]</td>
                         <td ng-click="getExercisesInSeries(series)" class="name">[[series.lastDone]]</td>
-                        <td><button ng-click="getExerciseSeriesHistory(series)">show</button></td>
+                        <td><button ng-click="getExerciseSeriesHistory(series)">history</button></td>
                         <td><span ng-repeat="workout in series.workouts.data" class="label label-default">[[workout.name]]</span></td>
                         <td>[[series.priority]]</td>
                         <td><button ng-click="showExerciseSeriesPopup(series)" class="btn-xs">edit</button></td>
@@ -58,8 +58,9 @@
                         <th>Step</th>
                         <th>Name</th>
                         <th>Description</th>
-                        <th>Target</th>
                         <th>Priority</th>
+                        <th>Default</th>
+                        <th>Target</th>
                         <th>Program</th>
                         <th>Days ago</th>
                         <th>Add</th>
@@ -68,8 +69,9 @@
                         <td ng-click="showExercisePopup(exercise)">[[exercise.stepNumber]]</td>
                         <td ng-click="showExercisePopup(exercise)">[[exercise.name]]</td>
                         <td ng-click="showExercisePopup(exercise)">[[exercise.description]]</td>
-                        <td ng-click="showExercisePopup(exercise)">[[exercise.target]]</td>
                         <td ng-click="showExercisePopup(exercise)">[[exercise.priority]]</td>
+                        <td ng-click="showExercisePopup(exercise)">[[exercise.defaultQuantity]]</td>
+                        <td ng-click="showExercisePopup(exercise)">[[exercise.target]]</td>
                         <td ng-click="showExercisePopup(exercise)">[[exercise.program.name]]</td>
                         <td ng-click="showExercisePopup(exercise)">[[exercise.lastDone]]</td>
                         <td>

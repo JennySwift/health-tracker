@@ -63,11 +63,19 @@ class ExercisesTest extends TestCase {
 
         $exercise = [
             'name' => 'kangaroo',
-            'description' => 'koala'
+            'description' => 'koala',
+            'priority' => 2,
+            'program_id' => 2,
+            'series_id' => 2,
+            'step_number' => 2,
+            'default_quantity' => 2,
+            'default_unit_id' => 2,
+            'target' => '2 reps'
         ];
 
         $response = $this->call('POST', '/api/exercises', $exercise);
         $content = json_decode($response->getContent(), true);
+//        dd($content);
 
         $this->assertArrayHasKey('id', $content);
         $this->assertArrayHasKey('name', $content);
@@ -76,6 +84,13 @@ class ExercisesTest extends TestCase {
 
         $this->assertEquals('kangaroo', $content['name']);
         $this->assertEquals('koala', $content['description']);
+        $this->assertEquals(2, $content['priority']);
+        $this->assertEquals(2, $content['program']['id']);
+        $this->assertEquals(2, $content['series']['id']);
+        $this->assertEquals(2, $content['stepNumber']);
+        $this->assertEquals(2, $content['defaultQuantity']);
+        $this->assertEquals(2, $content['defaultUnit']['id']);
+        $this->assertEquals('2 reps', $content['target']);
 
         $this->assertEquals(Response::HTTP_CREATED, $response->getStatusCode());
     }

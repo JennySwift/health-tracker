@@ -65,11 +65,22 @@ class ExercisesController extends Controller
      */
     public function store(Request $request)
     {
-        $exercise = new Exercise($request->only('name', 'description'));
+        $exercise = new Exercise($request->only(
+            'name',
+            'description',
+            'step_number',
+            'default_quantity',
+            'target',
+            'priority'
+        ));
         $exercise->user()->associate(Auth::user());
+        $exercise->program()->associate(ExerciseProgram::find($request->get('program_id')));
+        $exercise->series()->associate(Series::find($request->get('series_id')));
+        $exercise->defaultUnit()->associate(Unit::find($request->get('default_unit_id')));
         $exercise->save();
 
-        return $this->responseCreated($exercise);
+        $exercise = $this->transform($this->createItem($exercise, new ExerciseTransformer))['data'];
+        return response($exercise, Response::HTTP_CREATED);
     }
 
     /**

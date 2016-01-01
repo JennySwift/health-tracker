@@ -288,6 +288,15 @@ body.browser-height {
   flex-wrap: wrap; }
   #exercises > div {
     margin: 0 20px; }
+  #exercises #new-exercise .flex {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap; }
+    #exercises #new-exercise .flex > * {
+      margin: 10px; }
   #exercises #exercise-filters .flex {
     display: -webkit-flex;
     display: -ms-flexbox;

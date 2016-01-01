@@ -17,17 +17,21 @@ app.factory('ExercisesFactory', function ($http) {
             return $http.post($url, $data);
         },
 
-        insert: function () {
+        insert: function (exercise) {
             var $url = 'api/exercises';
-            var $name = $("#create-new-exercise").val();
-            var $description = $("#exercise-description").val();
 
             var $data = {
-                name: $name,
-                description: $description
+                name: exercise.name,
+                description: exercise.description,
+                priority: exercise.priority,
+                step_number: exercise.stepNumber,
+                default_quantity: exercise.defaultQuantity,
+                target: exercise.target,
+                program_id: exercise.program.id,
+                series_id: exercise.series.id,
+                default_unit_id: exercise.defaultUnit.id,
             };
 
-            $("#create-new-exercise, #exercise-description").val("");
             return $http.post($url, $data);
         },
 

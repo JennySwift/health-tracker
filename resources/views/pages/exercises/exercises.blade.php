@@ -15,8 +15,9 @@
 
 		<div>
 
-            @include('pages.exercises.exercise-inputs')
-			
+            @include('pages.exercises.exercise-filters')
+            @include('pages.exercises.new-exercise')
+
 			<table class="table table-bordered">
 				<tr>
 					<th>name</th>

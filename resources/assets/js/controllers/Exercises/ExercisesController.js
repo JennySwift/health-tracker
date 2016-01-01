@@ -42,7 +42,7 @@ var app = angular.module('tracker');
         $scope.insertExercise = function ($keycode) {
             if ($keycode === 13) {
                 $rootScope.showLoading();
-                ExercisesFactory.insert()
+                ExercisesFactory.insert($scope.newExercise)
                     .then(function (response) {
                         $scope.exercises.push(response.data);
                         $rootScope.$broadcast('provideFeedback', 'Exercise created');

@@ -18,27 +18,3 @@
         <input ng-model="filter.exercises.priority" type="text" placeholder="priority" class="form-control"/>
     </div>
 </div>
-
-<div class="margin-bottom">
-    <h2 class="center">Exercises</h2>
-    <input
-        ng-keyup="insertExercise($event.keyCode)"
-        type="text"
-        placeholder="Add a new exercise"
-        id="create-new-exercise"
-        class="form-control">
-
-    <input
-        ng-keyup="insertExercise($event.keyCode)"
-        type="text"
-        placeholder="description"
-        id="exercise-description"
-        class="form-control">
-
-    <button
-        ng-click="insertExercise(13)"
-        class="btn btn-success">
-        Add exercise
-    </button>
-
-</div>
