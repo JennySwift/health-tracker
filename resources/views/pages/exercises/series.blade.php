@@ -43,7 +43,7 @@
                         <th>Priority</th>
                     </tr>
                     <tr ng-repeat="series in exercise_series | orderBy: 'lastDone' | filter:{'priority': seriesPriorityFilter}" ng-class="{'selected': series.id === selected.exercise_series.id}">
-                        <td>
+                        <td class="actions">
                             <div class="btn-group">
                                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     [[series.name]] <span class="caret"></span>

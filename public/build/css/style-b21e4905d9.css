@@ -349,6 +349,8 @@ body.browser-height {
     margin: 0 50px; }
   #exercise-series .series-exercises-container #series-table .name {
     cursor: pointer; }
+  #exercise-series .series-exercises-container #series-table .actions {
+    text-align: left; }
   #exercise-series .series-exercises-container #exercises-table td, #exercise-series .series-exercises-container #exercises-table th {
     text-align: left;
     padding: 10px 15px; }
