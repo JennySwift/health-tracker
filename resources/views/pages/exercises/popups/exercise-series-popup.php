@@ -12,14 +12,6 @@
 		    <input ng-model="exercise_series_popup.priority" type="text" id="exercise-series-priority" name="exercise-series-priority" placeholder="priority" class="form-control"/>
 		</div>
 
-
-		<h5>Check the workouts which should include the [[exercise_series_popup.name]] series</h5>
-
-		<div ng-repeat="workout in workouts">
-			[[workout.name]]
-			<input checklist-model="exercise_series_popup.workout_ids" checklist-value="workout.id" type="checkbox">
-		</div>
-
 		<div class="buttons">
 			<button
 				ng-click="deleteExerciseSeries(exercise_series_popup)"

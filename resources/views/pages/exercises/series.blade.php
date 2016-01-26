@@ -41,7 +41,6 @@
                         <th>series</th>
                         <th>days ago</th>
                         <th>history</th>
-                        <th>workouts</th>
                         <th>priority</th>
                         <th>edit</th>
                     </tr>
@@ -49,7 +48,6 @@
                         <td ng-click="getExercisesInSeries(series)" class="name">[[series.name]]</td>
                         <td ng-click="getExercisesInSeries(series)" class="name">[[series.lastDone]]</td>
                         <td><button ng-click="getExerciseSeriesHistory(series)">history</button></td>
-                        <td><span ng-repeat="workout in series.workouts.data" class="label label-default">[[workout.name]]</span></td>
                         <td>[[series.priority]]</td>
                         <td><button ng-click="showExerciseSeriesPopup(series)" class="btn-xs">edit</button></td>
                     </tr>
