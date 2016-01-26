@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>tracker</title>
-	@include('templates.head-links')
+	@include('templates.shared.head-links')
 </head>
 <body>
 
-	@include('templates.header')
+	@include('templates.shared.header')
 	
 	<div ng-controller="exercises" id="exercises" class="container">
 
@@ -52,7 +52,7 @@
 
 	</div>
 
-	@include('templates.footer')
+	@include('templates.shared.footer')
 
 </body>
 </html>

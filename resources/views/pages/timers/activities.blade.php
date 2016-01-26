@@ -3,11 +3,11 @@
 <head>
 	<meta charset="UTF-8">
 	<title>tracker</title>
-	@include('templates.head-links')
+	@include('templates.shared.head-links')
 </head>
 <body ng-controller="ActivitiesController">
 
-	@include('templates.header')
+	@include('templates.shared.header')
 
 	<div class="container">
 
@@ -76,7 +76,7 @@
 
 	</div>
 
-	@include('templates.footer')
+	@include('templates.shared.footer')
 
 </body>
 </html>

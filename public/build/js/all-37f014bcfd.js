@@ -14047,56 +14047,6 @@ angular.module('tracker')
         };
 
     });
-var app = angular.module('tracker');
-
-(function () {
-    app.controller('ExerciseTagsController', function ($rootScope, $scope, ExerciseTagsFactory) {
-
-        $scope.tags = exercise_tags;
-
-        $scope.insertExerciseTag = function ($keypress) {
-            if ($keypress !== 13) {
-                return;
-            }
-            $rootScope.showLoading();
-            ExerciseTagsFactory.insert()
-                .then(function (response) {
-                    $scope.tags.push(response.data.data);
-                    $rootScope.$broadcast('provideFeedback', 'Tag created');
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        };
-
-        $scope.deleteExerciseTag = function ($tag) {
-            $rootScope.showLoading();
-            ExerciseTagsFactory.destroy($tag)
-                .then(function (response) {
-                    $scope.tags = _.without($scope.tags, $tag);
-                    $rootScope.$broadcast('provideFeedback', 'Tag deleted');
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        };
-
-        /**
-         * popups
-         */
-
-        $scope.closePopup = function ($event, $popup) {
-            var $target = $event.target;
-            if ($target.className === 'popup-outer') {
-                $scope.show.popups[$popup] = false;
-            }
-        };
-
-    });
-
-})();
 angular.module('tracker')
     .controller('ExerciseUnitsController', function ($rootScope, $scope, ExerciseUnitsFactory) {
 
@@ -15732,31 +15682,6 @@ angular.module('tracker')
                     return $http.delete($url);
                 }
             }
-        }
-    });
-angular.module('tracker')
-    .factory('ExerciseTagsFactory', function ($http) {
-        return {
-
-            insert: function () {
-                var $name = $("#create-exercise-tag").val();
-                var $url = 'api/exerciseTags';
-                var $data = {
-                    name: $name
-                };
-
-                $("#create-exercise-tag").val("");
-
-                return $http.post($url, $data);
-            },
-
-            destroy: function ($tag) {
-                if (confirm("Are you sure you want to delete this tag?")) {
-                    var $url = 'api/exerciseTags/' + $tag.id;
-
-                    return $http.delete($url);
-                }
-            },
         }
     });
 angular.module('tracker')

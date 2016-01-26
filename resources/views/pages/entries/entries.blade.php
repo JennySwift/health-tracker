@@ -3,16 +3,16 @@
 <head>
 	<meta charset="UTF-8" name="viewport" content="initial-scale = 1">
 	<title>tracker</title>
-	@include('templates.head-links')
+	@include('templates.shared.head-links')
 </head>
 <body ng-controller="entries">
 	
-	@include('templates.header')
+	@include('templates.shared.header')
 	@include('pages.entries.index')
 
 	<div class="container">
 
-        @include('templates.date-navigation')
+        @include('templates.shared.date-navigation')
 		
 		<div id="info-entries-wrapper">
             @include('pages.entries.info')
@@ -34,7 +34,7 @@
 
 	</div>
 
-	@include('templates.footer')
+	@include('templates.shared.footer')
 
 </body>
 </html>

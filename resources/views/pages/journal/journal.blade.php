@@ -3,15 +3,15 @@
 <head>
 	<meta charset="UTF-8">
 	<title>tracker</title>
-	@include('templates.head-links')
+	@include('templates.shared.head-links')
 </head>
 <body ng-controller="journal">
 
-	@include('templates.header')
+	@include('templates.shared.header')
 	
 	<div class="container">
 
-        @include('templates.date-navigation')
+        @include('templates.shared.date-navigation')
 
 		<div id="journal">
 
@@ -43,7 +43,7 @@
 		
 	</div>
 
-	@include('templates.footer')
+	@include('templates.shared.footer')
 
 </body>
 </html>

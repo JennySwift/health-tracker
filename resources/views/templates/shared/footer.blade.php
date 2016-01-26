@@ -1,14 +1,4 @@
-<!-- privacy policy -->
-
-<footer>
-    <li>
-        <a href="http://jennyswiftcreations.com/privacy-policy">Privacy Policy</a>
-    </li>
-
-    <li>
-        <a href="http://jennyswiftcreations.com/credits">Credits</a>
-    </li>
-</footer>
+@include('templates.shared.real-footer')
 
 {{--<script type="text/javascript" src="/js/all.js"></script>--}}
 <script type="text/javascript" src="{{ elixir("js/all.js") }}"></script>
