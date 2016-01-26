@@ -393,6 +393,34 @@ body.browser-height {
   justify-content: center;
   margin-bottom: 20px; }
 
+#exercise-units-page .new-exercise-unit-container {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center; }
+  #exercise-units-page .new-exercise-unit-container .new-exercise-unit {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    width: 500px; }
+    #exercise-units-page .new-exercise-unit-container .new-exercise-unit > * {
+      margin: 20px 2px; }
+
+#exercise-units-page .exercise-units-container {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center; }
+  #exercise-units-page .exercise-units-container .exercise-units {
+    width: 500px; }
+
 #series-history-popup h3 {
   margin: 0 0 17px 0; }
 

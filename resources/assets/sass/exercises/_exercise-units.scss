@@ -1,0 +1,21 @@
+#exercise-units-page {
+    .new-exercise-unit-container {
+        display: flex;
+        justify-content: center;
+        .new-exercise-unit {
+            display: flex;
+            justify-content: center;
+            width: 500px;
+            > * {
+                margin: 20px 2px;
+            }
+        }
+    }
+    .exercise-units-container {
+        display: flex;
+        justify-content: center;
+        .exercise-units {
+            width: 500px;
+        }
+    }
+}

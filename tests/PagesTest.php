@@ -109,7 +109,6 @@ class PagesTest extends TestCase {
     }
 
     /**
-     * //Todo: Check the workout shows up in the table
      * @test
      * @return void
      */
@@ -118,21 +117,6 @@ class PagesTest extends TestCase {
         $this->logInUser();
 
         $this->visit('/series')
-            ->see('pushup');
-
-        $this->assertEquals(Response::HTTP_OK, $this->apiCall('GET', '/')->getStatusCode());
-    }
-
-    /**
-     * @test
-     * @return void
-     */
-    public function it_can_display_the_workouts_page()
-    {
-        $this->logInUser();
-
-        $this->visit('/workouts')
-            ->see('add a new workout')
             ->see('pushup');
 
         $this->assertEquals(Response::HTTP_OK, $this->apiCall('GET', '/')->getStatusCode());
