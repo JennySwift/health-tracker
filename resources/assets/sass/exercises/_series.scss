@@ -2,6 +2,7 @@
     @include newExercise;
     .top-buttons {
         display: flex;
+        justify-content: space-between;
         > * {
             margin: 0 5px;
         }

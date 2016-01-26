@@ -14,25 +14,7 @@
     @include('pages.exercises.index')
 
     <div>
-        <div class="top-buttons">
-            @include('pages.exercises.new-series')
-            @include('pages.exercises.new-exercise')
-            <div>
-                <input ng-model="seriesPriorityFilter" type="text" placeholder="filter by priority">
-            </div>
-
-        </div>
-
-        <div ng-controller="ExerciseEntriesController">
-            @include('pages.entries.popups.exercise-entries')
-            <button ng-click="showExerciseEntryInputs = !showExerciseEntryInputs" class="btn btn-sm btn-success">Add manual entry</button>
-            <div ng-show="showExerciseEntryInputs">
-                @include('pages.entries.exercise-entry-inputs')
-            </div>
-
-            @include('pages.entries.exercise-entries')
-        </div>
-
+        @include('pages.exercises.series-top-row')
         <div class="series-exercises-container">
 
             <div>

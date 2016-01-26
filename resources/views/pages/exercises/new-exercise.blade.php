@@ -1,6 +1,3 @@
-<div>
-    <button ng-click="showNewExerciseFields = !showNewExerciseFields" class="btn btn-success btn-sm new-exercise-button">New Exercise</button>
-</div>
 
 <div ng-show="showNewExerciseFields" class="new-exercise margin-bottom">
 
@@ -122,7 +119,13 @@
         </div>
     </div>
 
-    <div class="form-group">
+    <div class="form-group flex">
+        <button
+                ng-click="showNewExerciseFields = false"
+                class="btn btn-default"
+        >
+            Close
+        </button>
         <button
                 ng-click="insertExercise(13)"
                 class="btn btn-success"
