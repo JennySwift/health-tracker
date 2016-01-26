@@ -7,11 +7,13 @@ angular.module('tracker')
             },
             insertMenuEntry: function ($sql_date, $new_entry) {
                 //for logging a food. there is a separate function if we are logging a recipe.
-                var $url = 'insert/menuEntry';
+                var $url = '/api/menuEntries';
 
                 var $data = {
                     date: $sql_date,
-                    new_entry: $new_entry,
+                    food_id: $new_entry.id,
+                    unit_id: $("#food-unit").val(),
+                    quantity: $("#food-quantity").val(),
                 };
 
                 $("#menu").val("").focus();
@@ -21,7 +23,7 @@ angular.module('tracker')
 
             deleteFoodEntry: function ($id, $sql_date) {
                 if (confirm("Are you sure you want to delete this entry?")) {
-                    var $url = 'delete/foodEntry';
+                    var $url = 'api/foodEntries/' + $id;
                     var $data = {
                         id: $id,
                         date: $sql_date

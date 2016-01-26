@@ -62,44 +62,36 @@ class MenuEntriesTest extends TestCase {
      * @test
      * @return void
      */
-//    public function it_can_add_a_new_menu_entry()
-//    {
-//        $this->logInUser();
-//
-//        $entry = [
-//            'date' => Carbon::today()->format('Y-m-d'),
-//            'exercise_id' => 1,
-//            'quantity' => 5,
-//            'unit_id' => 1
-//        ];
-//
-//        $response = $this->call('POST', '/api/exerciseEntries', $entry);
-//        $content = json_decode($response->getContent(), true);
-//
-//        $this->assertArrayHasKey('exercise_id', $content[0]);
-//        $this->assertArrayHasKey('name', $content[0]);
-//        $this->assertArrayHasKey('description', $content[0]);
-//        $this->assertArrayHasKey('step_number', $content[0]);
-//        $this->assertArrayHasKey('unit_id', $content[0]);
-//        $this->assertArrayHasKey('unit_name', $content[0]);
-//        $this->assertArrayHasKey('default_unit_id', $content[0]);
-//        $this->assertArrayHasKey('sets', $content[0]);
-//        $this->assertArrayHasKey('total', $content[0]);
-//        $this->assertArrayHasKey('quantity', $content[0]);
-//
-//        $this->assertEquals(1, $content[0]['exercise_id']);
-//        $this->assertEquals('kneeling pushups', $content[0]['name']);
-//        $this->assertEquals('1.00', $content[0]['step_number']);
-//        $this->assertEquals(1, $content[0]['unit_id']);
-//        $this->assertEquals('reps', $content[0]['unit_name']);
-//        $this->assertEquals(1, $content[0]['default_unit_id']);
-//        $this->assertEquals(4, $content[0]['sets']);
-//        $this->assertEquals(20, $content[0]['total']);
-//        $this->assertEquals(5, $content[0]['quantity']);
-//        $this->assertCount(2, $content);
-//
-//        $this->assertEquals(Response::HTTP_CREATED, $response->getStatusCode());
-//    }
+    public function it_can_add_a_new_menu_entry()
+    {
+        $this->logInUser();
+
+        $entry = [
+            'date' => '2010-05-01',
+            'food_id' => 3,
+            'quantity' => 4,
+            'unit_id' => 2,
+        ];
+
+        $response = $this->call('POST', '/api/menuEntries', $entry);
+        $content = json_decode($response->getContent(), true);
+//dd($content);
+
+        $this->assertArrayHasKey('date', $content);
+        $this->assertArrayHasKey('quantity', $content);
+        $this->assertArrayHasKey('food_id', $content);
+        $this->assertArrayHasKey('unit_id', $content);
+        $this->assertArrayHasKey('id', $content);
+        $this->assertArrayHasKey('food', $content);
+        $this->assertArrayHasKey('unit', $content);
+
+        $this->assertEquals('2010-05-01', $content['date']);
+        $this->assertEquals(4, $content['quantity']);
+        $this->assertEquals(2, $content['unit']['id']);
+        $this->assertEquals(3, $content['food']['id']);
+
+        $this->assertEquals(Response::HTTP_CREATED, $response->getStatusCode());
+    }
 
     /**
      * @test

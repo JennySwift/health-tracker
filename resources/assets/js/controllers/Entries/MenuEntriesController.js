@@ -32,14 +32,15 @@ angular.module('tracker')
         });
 
         $scope.insertMenuEntry = function () {
-            $scope.new_entry.food.id = $scope.selected.food.id;
-            $scope.new_entry.food.name = $scope.selected.food.name;
-            $scope.new_entry.food.unit_id = $("#food-unit").val();
+            //$scope.new_entry.food.id = $scope.selected.food.id;
+            //$scope.new_entry.food.name = $scope.selected.food.name;
+            //$scope.new_entry.food.unit_id = $("#food-unit").val();
 
-            MenuEntriesFactory.insertMenuEntry($scope.date.sql, $scope.new_entry.food).then(function (response) {
-                $scope.entries.menu = response.data.food_entries;
-                $scope.calories.day = response.data.calories_for_the_day;
-                $scope.calories.week_avg = response.data.calories_for_the_week;
+            MenuEntriesFactory.insertMenuEntry($scope.date.sql, $scope.selected.food).then(function (response) {
+                //$scope.entries.menu = response.data.food_entries;
+                //$scope.calories.day = response.data.calories_for_the_day;
+                //$scope.calories.week_avg = response.data.calories_for_the_week;
+                $rootScope.$emit('getEntries');
 
                 if ($scope.temporary_recipe_popup.contents) {
                     $scope.temporary_recipe_popup.contents.length = 0;
