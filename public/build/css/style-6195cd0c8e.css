@@ -288,6 +288,8 @@ body.browser-height {
   flex-wrap: wrap; }
   #exercises > div {
     margin: 0 20px; }
+  #exercises .new-exercise-button {
+    margin-bottom: 20px; }
   #exercises .new-exercise .flex {
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -296,7 +298,7 @@ body.browser-height {
     -ms-flex-wrap: wrap;
     flex-wrap: wrap; }
     #exercises .new-exercise .flex > * {
-      margin: 10px; }
+      margin-right: 10px; }
   #exercises #exercise-filters .flex {
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -308,8 +310,8 @@ body.browser-height {
       width: 200px; }
       #exercises #exercise-filters .flex input:last-child {
         width: 100px; }
-    #exercises #exercise-filters .flex > * {
-      margin: 0 10px; }
+    #exercises #exercise-filters .flex > *:not(:last-child) {
+      margin-right: 10px; }
 
 #default-exercise-unit-popup-checkboxes {
   display: -webkit-flex;
@@ -329,7 +331,7 @@ body.browser-height {
   -ms-flex-wrap: wrap;
   flex-wrap: wrap; }
   #exercise-series .new-exercise .flex > * {
-    margin: 10px; }
+    margin-right: 10px; }
 
 #exercise-series .top-buttons {
   display: -webkit-flex;
