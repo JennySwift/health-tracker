@@ -26,7 +26,6 @@
 					<th>series</th>
 					<th>default quantity</th>
 					<th>default unit</th>
-					<th>tags</th>
 					<th>target</th>
 					<th>priority</th>
 					<th>program</th>
@@ -39,9 +38,6 @@
 					<td ng-click="showExercisePopup(exercise)" class="pointer">[[exercise.series.name]]</td>
 					<td ng-click="showExercisePopup(exercise)" class="pointer">[[exercise.defaultQuantity]]</td>
 					<td ng-click="showExercisePopup(exercise)" class="pointer">[[exercise.defaultUnit.name]]</td>
-					<td ng-click="showExercisePopup(exercise)" class="pointer">
-						<span ng-repeat="tag in exercise.tags" class="badge">[[tag.name]]</span>
-					</td>
 					<td ng-click="showExercisePopup(exercise)" class="pointer">[[exercise.target]]</td>
 					<td ng-click="showExercisePopup(exercise)" class="pointer">[[exercise.priority]]</td>
 					<td ng-click="showExercisePopup(exercise)" class="pointer">[[exercise.program.name]]</td>
