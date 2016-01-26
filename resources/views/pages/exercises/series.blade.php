@@ -22,7 +22,7 @@
             </div>
 
         </div>
-        
+
         <div ng-controller="ExerciseEntriesController">
             @include('pages.entries.popups.exercise-entries')
             <button ng-click="showExerciseEntryInputs = !showExerciseEntryInputs" class="btn btn-sm btn-success">Add manual entry</button>
@@ -44,7 +44,6 @@
                         <th>workouts</th>
                         <th>priority</th>
                         <th>edit</th>
-                        <th>x</th>
                     </tr>
                     <tr ng-repeat="series in exercise_series | orderBy: 'lastDone' | filter:{'priority': seriesPriorityFilter}" ng-class="{'selected': series.id === selected.exercise_series.id}">
                         <td ng-click="getExercisesInSeries(series)" class="name">[[series.name]]</td>
@@ -53,7 +52,6 @@
                         <td><span ng-repeat="workout in series.workouts.data" class="label label-default">[[workout.name]]</span></td>
                         <td>[[series.priority]]</td>
                         <td><button ng-click="showExerciseSeriesPopup(series)" class="btn-xs">edit</button></td>
-                        <td><i ng-click="deleteExerciseSeries(series)" class="delete-item fa fa-times"></i></td>
                     </tr>
                 </table>
             </div>

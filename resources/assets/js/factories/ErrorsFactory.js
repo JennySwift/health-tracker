@@ -34,8 +34,6 @@ app.factory('ErrorsFactory', function ($q) {
             }
 
             return $message;
-
-            //return $q.reject(rejection);
         }
 
     };
