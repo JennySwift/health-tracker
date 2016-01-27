@@ -7,7 +7,7 @@
             <span>@{{ tag.name }}</span>
             <input
                 v-model="selectedRecipe.tag_ids"
-                value="tag.id"
+                :value="tag.id"
                 v-on:click="selectedRecipe.notification = 'Tags need saving.'"
                 type="checkbox">
         </li>

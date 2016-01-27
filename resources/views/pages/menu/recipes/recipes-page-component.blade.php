@@ -6,6 +6,7 @@
         <loading></loading>
 
         <recipe-popup
+            :tags="tags"
         >
         </recipe-popup>
 

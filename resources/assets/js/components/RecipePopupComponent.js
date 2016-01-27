@@ -6,7 +6,8 @@ var RecipePopup = Vue.component('recipe-popup', {
             selectedRecipe: {},
             newIngredient: {
                 food: {}
-            }
+            },
+            array: [1,2]
         };
     },
     components: {},
@@ -47,7 +48,7 @@ var RecipePopup = Vue.component('recipe-popup', {
         }
     },
     props: [
-        //data to be received from parent
+        'tags'
     ],
     ready: function () {
         this.listen();
