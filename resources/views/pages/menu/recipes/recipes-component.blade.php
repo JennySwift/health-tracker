@@ -18,7 +18,7 @@
         <div class="form-group">
             <label for="recipes-filter">Filter</label>
             <input
-                v-model="recipesFilter"
+                v-model="recipesNameFilter"
                 type="text"
                 id="recipes-filter"
                 name="recipes-filter"
@@ -38,7 +38,7 @@
                     <th>tags</th>
                     <th></th>
                 </tr>
-                <tr v-for="recipe in recipes | filterBy recipesFilter in 'name' | orderBy: 'name'">
+                <tr v-for="recipe in recipes | filterBy recipesNameFilter in 'name' | orderBy: 'name'">
                     <td v-on:click="showRecipePopup(recipe)" class="pointer">@{{ recipe.name }}</td>
                     <td>calories</td>
                     <td>

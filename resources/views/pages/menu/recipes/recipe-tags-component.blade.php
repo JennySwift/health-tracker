@@ -2,19 +2,30 @@
 
     <div>
 
-        <input
-                ng-model="new_item.recipe_tag"
-                ng-keyup="insertRecipeTag($event.keyCode)"
+        <div class="form-group">
+            <label for="new-tag-name">Name</label>
+            <input
+                v-model="newTag.name"
+                v-on:keyup.13="insertTag()"
                 type="text"
-                placeholder="add a new recipe tag"
-                id="create-new-recipe-tag"
-                class="form-control">
+                id="new-tag-name"
+                name="new-tag-name"
+                placeholder="name"
+                class="form-control"
+            >
+        </div>
 
-        <input
-                ng-model="filter.recipe_tags"
+        <div class="form-group">
+            <label for="tagsFilter">Filter</label>
+            <input
+                v-model="tagsFilter"
                 type="text"
-                placeholder="filter recipe tags"
-                class="form-control">
+                id="tagsFilter"
+                name="tagsFilter"
+                placeholder="Filter tags"
+                class="form-control"
+            >
+        </div>
 
         <hr>
 
@@ -26,18 +37,18 @@
                     <th class="tooltipster" title="check to filter recipes by the tag">filter</th>
                     <th></th>
                 </tr>
-                <tr ng-repeat="tag in tags | filter:filter.recipe_tags | orderBy: 'name'">
-                    <td>[[tag.name]]</td>
+                <tr v-for="tag in tags | filterBy tagsFilter in 'name' | orderBy: 'name'">
+                    <td>@{{ tag.name }}</td>
 
                     <td>
                         <input
-                                checklist-model="filter.recipes.tag_ids"
-                                checklist-value="tag.id"
+                                v-model="recipesTagFilter"
+                                value="tag.id"
                                 type="checkbox">
 
                     </td>
 
-                    <td><i ng-click="deleteRecipeTag(tag)" class="delete-item fa fa-times"></i></td>
+                    <td><i v-on:click="deleteTag(tag)" class="delete-item fa fa-times"></i></td>
                 </tr>
             </table>
 

@@ -16,7 +16,7 @@
             <div class="flex">
 
                 <recipes></recipes>
-                {{--<recipe-tags></recipe-tags>--}}
+                <recipe-tags></recipe-tags>
 
             </div>
         </div>
