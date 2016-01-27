@@ -2,10 +2,6 @@ var ExerciseUnitsPage = Vue.component('exercise-units-page', {
     template: '#exercise-units-page-template',
     data: function () {
         return {
-            //showLoading: false,
-            //addingNewExerciseUnitsPage: false,
-            //editingExerciseUnitsPage: false,
-            //selectedExerciseUnitsPage: {}
             units: units,
             newUnit: {}
         };
@@ -31,14 +27,6 @@ var ExerciseUnitsPage = Vue.component('exercise-units-page', {
             .error(function (response) {
                 this.handleResponseError(response);
             });
-        },
-
-        /**
-        *
-        */
-        showNewUnitFields: function () {
-            this.addingNewUnit = true;
-            this.editingUnit = false;
         },
 
         /**
