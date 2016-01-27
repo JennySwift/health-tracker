@@ -1,6 +1,9 @@
 @include('templates.shared.real-footer')
 
 @include('pages.exercises.exercise-units-page-component')
+@include('pages.menu.recipes.recipes-page-component')
+@include('pages.menu.recipes.recipes-component')
+@include('pages.menu.recipes.recipe-tags-component')
 @include('templates.shared.feedback-component')
 @include('templates.shared.loading-component')
 
