@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Menu\Entry;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Http\Response;
@@ -121,24 +122,20 @@ class MenuEntriesTest extends TestCase {
      * @test
      * @return void
      */
-//    public function it_can_delete_a_menu_entry()
-//    {
-//        $this->logInUser();
-//
-//        $exercise = new Exercise([
-//            'name' => 'echidna'
-//        ]);
-//
-//        $exercise->user()->associate($this->user);
-//        $exercise->save();
-//
-//        $this->seeInDatabase('exercises', ['name' => 'echidna']);
-//
-//        $response = $this->call('DELETE', '/api/exercises/'.$exercise->id);
-//        $this->assertEquals(204, $response->getStatusCode());
-//        $this->missingFromDatabase('exercises', ['name' => 'echidna']);
-//
-//        $response = $this->call('DELETE', '/api/units/0');
-//        $this->assertEquals(404, $response->getStatusCode());
-//    }
+    public function it_can_delete_a_menu_entry()
+    {
+        DB::beginTransaction();
+        $this->logInUser();
+
+        $entry = Entry::first();
+
+        $response = $this->call('DELETE', '/api/menuEntries/'.$entry->id);
+        $this->assertEquals(204, $response->getStatusCode());
+
+        $response = $this->call('DELETE', '/api/menuEntries/' . $entry->id);
+        $this->assertEquals(404, $response->getStatusCode());
+
+        DB::rollBack();
+    }
+
 }

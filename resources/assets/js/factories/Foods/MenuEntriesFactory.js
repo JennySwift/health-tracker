@@ -21,16 +21,10 @@ angular.module('tracker')
                 return $http.post($url, $data);
             },
 
-            deleteFoodEntry: function ($id, $sql_date) {
-                if (confirm("Are you sure you want to delete this entry?")) {
-                    var $url = 'api/foodEntries/' + $id;
-                    var $data = {
-                        id: $id,
-                        date: $sql_date
-                    };
+            destroy: function (entry) {
+                var url = '/api/menuEntries/' + entry.id;
 
-                    return $http.post($url, $data);
-                }
+                return $http.delete(url);
             }
         }
     });

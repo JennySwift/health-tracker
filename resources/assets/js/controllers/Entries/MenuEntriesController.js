@@ -56,27 +56,34 @@ angular.module('tracker')
             });
         };
 
-        $scope.deleteFoodEntry = function ($entry_id) {
-            $entry_id = $entry_id || $scope.selected.entry.id;
-
-            MenuEntriesFactory.deleteFoodEntry($entry_id, $scope.date.sql).then(function (response) {
-                $scope.entries.menu = response.data.food_entries;
-                $scope.calories.day = response.data.calories_for_the_day;
-                $scope.calories.week_avg = response.data.calories_for_the_week;
-                $scope.show.popups.delete_food_or_recipe_entry = false;
-            });
+        $scope.deleteMenuEntry = function (entry) {
+            //$entry_id = $entry.id || $scope.selected.entry.id;
+            if (confirm("Are you sure?")) {
+                $rootScope.showLoading();
+                MenuEntriesFactory.destroy(entry, $scope.date.sql)
+                    .then(function (response) {
+                        //Todo: no need to get all the entries here.
+                        // Just remove the one that was deleted, while still fetching the other info such as calories for the day
+                        $rootScope.$emit('getEntries');
+                        $rootScope.$broadcast('provideFeedback', 'Entry deleted');
+                        $rootScope.hideLoading();
+                    })
+                    .catch(function (response) {
+                        $rootScope.responseError(response);
+                    });
+            }
         };
 
         //Todo: get food entries, calories for the day and calories for the week
         //after deleting
-        $scope.deleteRecipeEntry = function () {
-            RecipeEntriesFactory.deleteRecipeEntry($scope.date.sql, $scope.selected.recipe.id).then(function (response) {
-                $scope.entries.menu = response.data.food_entries;
-                $scope.calories.day = response.data.calories_for_the_day;
-                $scope.calories.week_avg = response.data.calories_for_the_week;
-                $scope.show.popups.delete_food_or_recipe_entry = false;
-            });
-        };
+        //$scope.deleteRecipeEntry = function () {
+        //    RecipeEntriesFactory.deleteRecipeEntry($scope.date.sql, $scope.selected.recipe.id).then(function (response) {
+        //        $scope.entries.menu = response.data.food_entries;
+        //        $scope.calories.day = response.data.calories_for_the_day;
+        //        $scope.calories.week_avg = response.data.calories_for_the_week;
+        //        $scope.show.popups.delete_food_or_recipe_entry = false;
+        //    });
+        //};
 
         /**
          * autocomplete

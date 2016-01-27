@@ -21,7 +21,7 @@
                 <span ng-if="!entry.recipe">N/A</span>
             </td>
             <td>
-                <i ng-if="!entry.recipe" ng-click="deleteFoodEntry(entry.id)" class="delete-item fa fa-times"></i>
+                <i ng-if="!entry.recipe" ng-click="deleteMenuEntry(entry)" class="delete-item fa fa-times"></i>
                 <i ng-if="entry.recipe" ng-click="showDeleteFoodOrRecipeEntryPopup(entry.id, entry.recipe.id)" class="delete-item fa fa-times"></i>
             </td>
         </tr>
