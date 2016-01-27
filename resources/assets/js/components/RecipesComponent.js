@@ -9,6 +9,33 @@ var Recipes = Vue.component('recipes', {
         };
     },
     components: {},
+    filters: {
+        recipesFilter: function (recipes) {
+            var that = this;
+
+            return recipes.filter(function (recipe) {
+                var containsName = recipe.name.indexOf(that.recipesNameFilter) !== -1;
+                var containsTags = true;
+                var tagIdsForRecipe = _.pluck(recipe.tags.data, 'id');
+                var count = 0;
+
+                if (that.recipesTagFilter.length > 0) {
+                    containsTags = false;
+                    for (var i = 0; i < that.recipesTagFilter.length; i++) {
+                        if (tagIdsForRecipe.indexOf(that.recipesTagFilter[i]) !== -1) {
+                            //Recipe contains the tag
+                            count++;
+                        }
+                    }
+                    if (count === that.recipesTagFilter.length) {
+                        containsTags = true;
+                    }
+                }
+
+                return containsName && containsTags;
+            });
+        }
+    },
     methods: {
 
         /**
@@ -65,7 +92,8 @@ var Recipes = Vue.component('recipes', {
         }
     },
     props: [
-        //data to be received from parent
+        'tags',
+        'recipesTagFilter'
     ],
     ready: function () {
         $(".wysiwyg").wysiwyg();

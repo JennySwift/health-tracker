@@ -15,8 +15,16 @@
 
             <div class="flex">
 
-                <recipes></recipes>
-                <recipe-tags></recipe-tags>
+                <recipes
+                    :tags="tags"
+                    :recipes-tag-filter="recipesTagFilter"
+                >
+                </recipes>
+                <recipe-tags
+                    :tags.sync="tags"
+                    :recipes-tag-filter="recipesTagFilter"
+                >
+                </recipe-tags>
 
             </div>
         </div>

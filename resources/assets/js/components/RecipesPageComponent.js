@@ -2,10 +2,16 @@ var RecipesPage = Vue.component('recipes-page', {
     template: '#recipes-page-template',
     data: function () {
         return {
-
+            tags: recipe_tags,
+            recipesTagFilter: []
         };
     },
     components: {},
+    computed: {
+        //recipesTagFilter: function () {
+        //    return _.pluck(this.tags, 'id');
+        //}
+    },
     methods: {
         /**
          *

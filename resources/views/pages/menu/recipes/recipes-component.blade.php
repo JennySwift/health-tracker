@@ -38,7 +38,7 @@
                     <th>tags</th>
                     <th></th>
                 </tr>
-                <tr v-for="recipe in recipes | filterBy recipesNameFilter in 'name' | orderBy: 'name'">
+                <tr v-for="recipe in recipes | recipesFilter | orderBy: 'name'">
                     <td v-on:click="showRecipePopup(recipe)" class="pointer">@{{ recipe.name }}</td>
                     <td>calories</td>
                     <td>

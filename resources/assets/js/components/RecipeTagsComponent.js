@@ -3,11 +3,12 @@ var RecipeTags = Vue.component('recipe-tags', {
     data: function () {
         return {
             newTag: {},
-            tags: recipe_tags
         };
     },
     components: {},
+
     methods: {
+
         /**
         *
         */
@@ -55,7 +56,8 @@ var RecipeTags = Vue.component('recipe-tags', {
         }
     },
     props: [
-        //data to be received from parent
+        'tags',
+        'recipesTagFilter'
     ],
     ready: function () {
 

@@ -43,7 +43,7 @@
                     <td>
                         <input
                                 v-model="recipesTagFilter"
-                                value="tag.id"
+                                :value="tag.id"
                                 type="checkbox">
 
                     </td>
