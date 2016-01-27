@@ -61,4 +61,12 @@ function runBlock ($rootScope, ErrorsFactory) {
     //        }
     //    }
     //});
+
+
+    new Vue({
+        el: 'body',
+        events: {
+
+        }
+    });
 }

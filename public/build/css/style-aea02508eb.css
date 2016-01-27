@@ -404,7 +404,10 @@ body.browser-height {
   display: flex;
   -webkit-justify-content: center;
   -ms-flex-pack: center;
-  justify-content: center; }
+  justify-content: center;
+  -webkit-align-items: flex-end;
+  -ms-flex-align: end;
+  align-items: flex-end; }
   #exercise-units-page .new-exercise-unit-container .new-exercise-unit {
     display: -webkit-flex;
     display: -ms-flexbox;

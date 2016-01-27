@@ -1,5 +1,7 @@
 @include('templates.shared.real-footer')
 
+@include('pages.exercises.exercise-units-page-component')
+
 {{--<script type="text/javascript" src="/js/all.js"></script>--}}
 <script type="text/javascript" src="{{ elixir("js/all.js") }}"></script>
 
