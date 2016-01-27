@@ -9,6 +9,9 @@
 
 @include('templates.shared.header')
 
+<feedback></feedback>
+<loading></loading>
+
 <div class="container">
     <exercise-units-page
     >

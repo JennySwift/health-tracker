@@ -8,6 +8,8 @@
 <body>
 
     @include('templates.shared.header')
+	<feedback-directive></feedback-directive>
+	@include('templates.shared.loading')
 	
 	<div ng-controller="FoodsController" class="container">
 

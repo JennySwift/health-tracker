@@ -22593,7 +22593,7 @@ return this;}};
  */
 
 !function(t,e){"object"==typeof exports&&"object"==typeof module?module.exports=e():"function"==typeof define&&define.amd?define([],e):"object"==typeof exports?exports.VueResource=e():t.VueResource=e()}(this,function(){return function(t){function e(r){if(n[r])return n[r].exports;var o=n[r]={exports:{},id:r,loaded:!1};return t[r].call(o.exports,o,o.exports,e),o.loaded=!0,o.exports}var n={};return e.m=t,e.c=n,e.p="",e(0)}([function(t,e,n){function r(t){var e=n(1)(t);t.url=n(2)(e),t.http=n(3)(e),t.resource=n(7)(e),Object.defineProperties(t.prototype,{$url:{get:function(){return e.options(t.url,this,this.$options.url)}},$http:{get:function(){return e.options(t.http,this,this.$options.http)}},$resource:{get:function(){return t.resource.bind(this)}}})}window.Vue&&Vue.use(r),t.exports=r},function(t,e){t.exports=function(t){function e(t,r,o){for(var a in r)o&&(n.isPlainObject(r[a])||n.isArray(r[a]))?(n.isPlainObject(r[a])&&!n.isPlainObject(t[a])&&(t[a]={}),n.isArray(r[a])&&!n.isArray(t[a])&&(t[a]=[]),e(t[a],r[a],o)):void 0!==r[a]&&(t[a]=r[a])}var n=t.util.extend({},t.util);return n.isString=function(t){return"string"==typeof t},n.isFunction=function(t){return"function"==typeof t},n.options=function(t,e,r){return r=r||{},n.isFunction(r)&&(r=r.call(e)),n.extend(t.bind({vm:e,options:r}),t,{options:r})},n.each=function(t,e){var r,o;if("number"==typeof t.length)for(r=0;r<t.length;r++)e.call(t[r],t[r],r);else if(n.isObject(t))for(o in t)t.hasOwnProperty(o)&&e.call(t[o],t[o],o);return t},n.extend=function(t){var n,r=[],o=r.slice.call(arguments,1);return"boolean"==typeof t&&(n=t,t=o.shift()),o.forEach(function(r){e(t,r,n)}),t},n}},function(t,e){var n=document.documentMode,r=document.createElement("a");t.exports=function(t){function e(n,r){var o,i={},s={},u=n;return t.isPlainObject(u)||(u={url:n,params:r}),u=t.extend(!0,{},e.options,this.options,u),n=u.url.replace(/(\/?):([a-z]\w*)/gi,function(t,e,n){return u.params[n]?(i[n]=!0,e+a(u.params[n])):""}),t.isString(u.root)&&!n.match(/^(https?:)?\//)&&(n=u.root+"/"+n),t.each(u.params,function(t,e){i[e]||(s[e]=t)}),o=e.params(s),o&&(n+=(-1==n.indexOf("?")?"?":"&")+o),n}function o(e,n,r){var a,i=t.isArray(n),s=t.isPlainObject(n);t.each(n,function(n,u){a=t.isObject(n)||t.isArray(n),r&&(u=r+"["+(s||a?u:"")+"]"),!r&&i?e.add(n.name,n.value):a?o(e,n,u):e.add(u,n)})}function a(t){return i(t,!0).replace(/%26/gi,"&").replace(/%3D/gi,"=").replace(/%2B/gi,"+")}function i(t,e){return encodeURIComponent(t).replace(/%40/gi,"@").replace(/%3A/gi,":").replace(/%24/g,"$").replace(/%2C/gi,",").replace(/%20/g,e?"%20":"+")}return e.options={url:"",root:null,params:{}},e.params=function(e){var n=[];return n.add=function(e,n){t.isFunction(n)&&(n=n()),null===n&&(n=""),this.push(a(e)+"="+a(n))},o(n,e),n.join("&")},e.parse=function(t){return n&&(r.href=t,t=r.href),r.href=t,{href:r.href,protocol:r.protocol?r.protocol.replace(/:$/,""):"",port:r.port,host:r.host,hostname:r.hostname,pathname:"/"===r.pathname.charAt(0)?r.pathname:"/"+r.pathname,search:r.search?r.search.replace(/^\?/,""):"",hash:r.hash?r.hash.replace(/^#/,""):""}},t.url=e}},function(t,e,n){var r=n(4),o=n(6),a=n(5);t.exports=function(t){function e(a,u){var c;return t.isPlainObject(a)&&(u=a,a=""),u=t.extend({url:a},u),u=t.extend(!0,{},e.options,this.options,u),null===u.crossOrigin&&(u.crossOrigin=s(u.url)),u.method=u.method.toUpperCase(),u.headers=t.extend({},e.headers.common,u.crossOrigin?{}:e.headers.custom,e.headers[u.method.toLowerCase()],u.headers),t.isPlainObject(u.data)&&/^(GET|JSONP)$/i.test(u.method)&&(t.extend(u.params,u.data),delete u.data),u.emulateHTTP&&!u.crossOrigin&&/^(PUT|PATCH|DELETE)$/i.test(u.method)&&(u.headers["X-HTTP-Method-Override"]=u.method,u.method="POST"),u.emulateJSON&&t.isPlainObject(u.data)&&(u.headers["Content-Type"]="application/x-www-form-urlencoded",u.data=t.url.params(u.data)),t.isObject(u.data)&&/FormData/i.test(u.data.toString())&&delete u.headers["Content-Type"],t.isPlainObject(u.data)&&(u.data=JSON.stringify(u.data)),c=("JSONP"==u.method?o:r).call(this.vm,t,u),c=n(c.then(i,i),this.vm),u.success&&(c=c.success(u.success)),u.error&&(c=c.error(u.error)),c}function n(t,e){return t.success=function(r){return n(t.then(function(t){return r.call(e,t.data,t.status,t)||t}),e)},t.error=function(r){return n(t.then(void 0,function(t){return r.call(e,t.data,t.status,t)||t}),e)},t.always=function(r){var o=function(t){return r.call(e,t.data,t.status,t)||t};return n(t.then(o,o),e)},t}function i(t){try{t.data=JSON.parse(t.responseText)}catch(e){t.data=t.responseText}return t.ok?t:a.reject(t)}function s(e){var n=t.url.parse(e);return n.protocol!==u.protocol||n.host!==u.host}var u=t.url.parse(location.href),c={"Content-Type":"application/json;charset=utf-8"};return e.options={method:"get",params:{},data:"",xhr:null,jsonp:"callback",beforeSend:null,crossOrigin:null,emulateHTTP:!1,emulateJSON:!1},e.headers={put:c,post:c,patch:c,"delete":c,common:{Accept:"application/json, text/plain, */*"},custom:{"X-Requested-With":"XMLHttpRequest"}},["get","put","post","patch","delete","jsonp"].forEach(function(n){e[n]=function(e,r,o,a){return t.isFunction(r)&&(a=o,o=r,r=void 0),this(e,t.extend({method:n,data:r,success:o},a))}}),t.http=e}},function(t,e,n){var r=n(5),o=window.XDomainRequest;t.exports=function(t,e){var n,a=new XMLHttpRequest;return o&&e.crossOrigin&&(a=new XDomainRequest,e.headers={}),t.isPlainObject(e.xhr)&&t.extend(a,e.xhr),t.isFunction(e.beforeSend)&&e.beforeSend.call(this,a,e),n=new r(function(n,r){a.open(e.method,t.url(e),!0),t.each(e.headers,function(t,e){a.setRequestHeader(e,t)});var o=function(t){a.ok="load"===t.type,a.ok&&a.status&&(a.ok=a.status>=200&&a.status<300),(a.ok?n:r)(a)};a.onload=o,a.onabort=o,a.onerror=o,a.send(e.data)})}},function(t,e){function n(t){this.state=a,this.value=void 0,this.deferred=[];var e=this;try{t(function(t){e.resolve(t)},function(t){e.reject(t)})}catch(n){e.reject(n)}}var r=0,o=1,a=2;n.reject=function(t){return new n(function(e,n){n(t)})},n.resolve=function(t){return new n(function(e,n){e(t)})},n.all=function(t){return new n(function(e,n){function r(n){return function(r){a[n]=r,o+=1,o===t.length&&e(a)}}var o=0,a=[];0===t.length&&e(a);for(var i=0;i<t.length;i+=1)t[i].then(r(i),n)})},n.race=function(t){return new n(function(e,n){for(var r=0;r<t.length;r+=1)t[r].then(e,n)})};var i=n.prototype;i.resolve=function(t){var e=this;if(e.state===a){if(t===e)throw new TypeError("Promise settled with itself.");var n=!1;try{var o=t&&t.then;if(null!==t&&"object"==typeof t&&"function"==typeof o)return void o.call(t,function(t){n||e.resolve(t),n=!0},function(t){n||e.reject(t),n=!0})}catch(i){return void(n||e.reject(i))}e.state=r,e.value=t,e.notify()}},i.reject=function(t){var e=this;if(e.state===a){if(t===e)throw new TypeError("Promise settled with itself.");e.state=o,e.value=t,e.notify()}},i.notify=function(){var t=this;u(function(){if(t.state!==a)for(;t.deferred.length;){var e=t.deferred.shift(),n=e[0],i=e[1],s=e[2],u=e[3];try{t.state===r?s("function"==typeof n?n.call(void 0,t.value):t.value):t.state===o&&("function"==typeof i?s(i.call(void 0,t.value)):u(t.value))}catch(c){u(c)}}})},i["catch"]=function(t){return this.then(void 0,t)},i.then=function(t,e){var r=this;return new n(function(n,o){r.deferred.push([t,e,n,o]),r.notify()})};var s=[],u=function(t){s.push(t),1===s.length&&u.async()};if(u.run=function(){for(;s.length;)s[0](),s.shift()},window.MutationObserver){var c=document.createElement("div"),f=new MutationObserver(u.run);f.observe(c,{attributes:!0}),u.async=function(){c.setAttribute("x",0)}}else u.async=function(){setTimeout(u.run)};t.exports=window.Promise||n},function(t,e,n){var r=n(5);t.exports=function(t,e){var n,o,a="_jsonp"+Math.random().toString(36).substr(2),i={};return e.params[e.jsonp]=a,t.isFunction(e.beforeSend)&&e.beforeSend.call(this,{},e),new r(function(r,s){n=document.createElement("script"),n.src=t.url(e),n.type="text/javascript",n.async=!0,window[a]=function(t){o=t};var u=function(t){delete window[a],document.body.removeChild(n),"load"!==t.type||o||(t.type="error"),i.ok="error"!==t.type,i.status=i.ok?200:404,i.responseText=o?o:t.type,(i.ok?r:s)(i)};n.onload=u,n.onerror=u,document.body.appendChild(n)})}},function(t,e){t.exports=function(t){function e(r,o,a,i){var s=this,u={};return a=t.extend({},e.actions,a),t.each(a,function(e,a){e=t.extend(!0,{url:r,params:o||{}},i,e),u[a]=function(){return(s.$http||t.http)(n(e,arguments))}}),u}function n(e,n){var r,o,a,i=t.extend({},e),s={};switch(n.length){case 4:a=n[3],o=n[2];case 3:case 2:if(!t.isFunction(n[1])){s=n[0],r=n[1],o=n[2];break}if(t.isFunction(n[0])){o=n[0],a=n[1];break}o=n[1],a=n[2];case 1:t.isFunction(n[0])?o=n[0]:/^(POST|PUT|PATCH)$/i.test(i.method)?r=n[0]:s=n[0];break;case 0:break;default:throw"Expected up to 4 arguments [params, data, success, error], got "+n.length+" arguments"}return i.data=r,i.params=t.extend({},i.params,s),o&&(i.success=o),a&&(i.error=a),i}return e.actions={get:{method:"GET"},save:{method:"POST"},query:{method:"GET"},update:{method:"PUT"},remove:{method:"DELETE"},"delete":{method:"DELETE"}},t.resource=e}}])});
-
+Vue.config.debug = true;
 //var $page = window.location.pathname;
 var app = angular.module('tracker', [
     'ngSanitize',
@@ -22826,6 +22826,274 @@ var app = angular.module('tracker');
 	});
 
 })();
+angular.module('tracker')
+    .controller('ActivitiesController', function ($rootScope, $scope, ActivitiesFactory) {
+
+        function getActivities () {
+            $rootScope.showLoading();
+            ActivitiesFactory.index()
+                .then(function (response) {
+                    $scope.activities = response.data;
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        }
+        
+        getActivities();
+
+        $scope.insertActivity = function () {
+            $rootScope.showLoading();
+            ActivitiesFactory.store($scope.newActivity)
+                .then(function (response) {
+                    $scope.activities.push(response.data);
+                    $rootScope.$broadcast('provideFeedback', 'Activity created', 'success');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        };
+
+        $scope.updateActivity = function (activity) {
+            $rootScope.showLoading();
+            ActivitiesFactory.update(activity)
+                .then(function (response) {
+                    var $index = _.indexOf($scope.activities, _.findWhere($scope.activities, {id: activity.id}));
+                    $scope.activities[$index] = response.data;
+                    $scope.editingActivity = false;
+                    $rootScope.$broadcast('provideFeedback', 'Activity updated');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        };
+
+        $scope.showEditActivity = function (activity) {
+            $scope.editingActivity = true;
+            $scope.selectedActivity = activity;
+        };
+
+        $scope.deleteActivity = function (activity) {
+            if (confirm("Are you sure? The timers for the activity will be deleted, too!")) {
+                $rootScope.showLoading();
+                ActivitiesFactory.destroy(activity)
+                    .then(function (response) {
+                        $scope.activities = _.without($scope.activities, activity);
+                        $rootScope.$broadcast('provideFeedback', 'Activity deleted');
+                        $scope.editingActivity = false;
+                        $rootScope.hideLoading();
+                    })
+                    .catch(function (response) {
+                        $rootScope.responseError(response);
+                    });
+            }
+        };
+    });
+angular.module('tracker')
+    .controller('TimerGraphsController', function ($rootScope, $scope, TimersFactory) {
+
+        function getEntries () {
+            $rootScope.showLoading();
+            TimersFactory.index(true)
+                .then(function (response) {
+                    $scope.entries = response.data;
+                    //$rootScope.$broadcast('provideFeedback', '');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        }
+
+        getEntries();
+    });
+angular.module('tracker')
+    .controller('TimersController', function ($timeout, $rootScope, $scope, TimersFactory, ActivitiesFactory) {
+
+        //$("document").ready(function () {
+        //    $("#new-timer-activity").select2({});
+        //});
+        //
+        //$scope.newTimer = {
+        //    activity: {}
+        //};
+
+        //$timeout(function () {
+        //    $("#new-timer-activity").select2({});
+        //});
+
+        $scope.date = {};
+        $scope.showTimerInProgress = true;
+
+        $scope.$on('changeDate', function (event) {
+            getTimers();
+            getTotalMinutesForActivitiesForTheDay();
+            getTotalMinutesForActivitiesForTheWeek();
+        });
+
+        checkForTimerInProgress();
+
+        $scope.startTimer = function () {
+            $('#timer-clock').timer({format: '%H:%M:%S'});
+            $rootScope.showLoading();
+            TimersFactory.store($scope.newTimer)
+                .then(function (response) {
+                    //$scope.timers.push(response.data);
+                    $scope.timerInProgress = response.data;
+                    $rootScope.$broadcast('provideFeedback', 'Timer started', 'success');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        };
+
+        /**
+         * Instead of starting and stopping the timer,
+         * enter the start and stop times manually
+         */
+        $scope.insertManualTimer = function () {
+            $rootScope.showLoading();
+            TimersFactory.store($scope.newManualTimer, $scope.date.sql)
+                .then(function (response) {
+                    $scope.timers.push(response.data);
+                    $rootScope.$broadcast('provideFeedback', 'Manual entry created', 'success');
+                    getTotalMinutesForActivitiesForTheDay();
+                    getTotalMinutesForActivitiesForTheWeek();
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        };
+
+        function getActivities () {
+            $rootScope.showLoading();
+            ActivitiesFactory.index()
+                .then(function (response) {
+                    $scope.activities = response.data;
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        }
+
+        getActivities();
+
+        $scope.stopTimer = function () {
+            $('#timer-clock').timer('remove');
+            $rootScope.showLoading();
+            TimersFactory.update($scope.timerInProgress)
+                .then(function (response) {
+                    $scope.timerInProgress = false;
+                    $scope.timers.push(response.data);
+                    getTotalMinutesForActivitiesForTheDay();
+                    getTotalMinutesForActivitiesForTheWeek();
+                    //var $index = _.indexOf($scope.timers, _.findWhere($scope.timers, {id: response.data.id}));
+                    //$scope.timers[$index] = response.data;
+                    $rootScope.$broadcast('provideFeedback', 'Timer updated');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        };
+
+        function getTimers () {
+            $rootScope.showLoading();
+            TimersFactory.index(false, $scope.date.sql)
+                .then(function (response) {
+                    $scope.timers = response.data;
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        }
+
+        $scope.filterTimers = function (timer) {
+            if ($scope.timersFilter) {
+                return timer.activity.data.name.indexOf($scope.timersFilter) !== -1;
+            }
+            return true;
+
+        };
+
+        $scope.formatMinutes = function (minutes) {
+            return minutes * 10;
+        };
+
+        function checkForTimerInProgress () {
+            $rootScope.showLoading();
+            TimersFactory.checkForTimerInProgress()
+                .then(function (response) {
+                    if (response.data.activity) {
+                        resumeTimerOnPageLoad(response.data);
+                    }
+
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        }
+
+        function resumeTimerOnPageLoad (timer) {
+            $scope.timerInProgress = timer;
+            var seconds = moment().diff(moment(timer.start, 'YYYY-MM-DD HH:mm:ss'), 'seconds');
+            $('#timer-clock').timer({
+                format: '%H:%M:%S',
+                //The timer has already started
+                seconds: seconds
+            });
+        }
+
+        function getTotalMinutesForActivitiesForTheDay () {
+            $rootScope.showLoading();
+            ActivitiesFactory.getTotalMinutesForDay($scope.date.sql)
+                .then(function (response) {
+                    $scope.activitiesWithDurationsForDay = response.data;
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        }
+
+        function getTotalMinutesForActivitiesForTheWeek () {
+            $rootScope.showLoading();
+            ActivitiesFactory.getTotalMinutesForWeek($scope.date.sql)
+                .then(function (response) {
+                    $scope.activitiesWithDurationsForWeek = response.data;
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        }
+
+        $scope.deleteTimer = function (timer) {
+            if (confirm("Are you sure?")) {
+                $rootScope.showLoading();
+                TimersFactory.destroy(timer)
+                    .then(function (response) {
+                        $scope.timers = _.without($scope.timers, timer);
+                        getTotalMinutesForActivitiesForTheDay();
+                        getTotalMinutesForActivitiesForTheWeek();
+                        $rootScope.$broadcast('provideFeedback', 'Timer deleted');
+                        $rootScope.hideLoading();
+                    })
+                    .catch(function (response) {
+                        $rootScope.responseError(response);
+                    });
+            }
+        };
+
+    });
 var app = angular.module('tracker');
 
 (function () {
@@ -24066,274 +24334,6 @@ var app = angular.module('tracker');
     });
 
 })();
-angular.module('tracker')
-    .controller('ActivitiesController', function ($rootScope, $scope, ActivitiesFactory) {
-
-        function getActivities () {
-            $rootScope.showLoading();
-            ActivitiesFactory.index()
-                .then(function (response) {
-                    $scope.activities = response.data;
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        }
-        
-        getActivities();
-
-        $scope.insertActivity = function () {
-            $rootScope.showLoading();
-            ActivitiesFactory.store($scope.newActivity)
-                .then(function (response) {
-                    $scope.activities.push(response.data);
-                    $rootScope.$broadcast('provideFeedback', 'Activity created', 'success');
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        };
-
-        $scope.updateActivity = function (activity) {
-            $rootScope.showLoading();
-            ActivitiesFactory.update(activity)
-                .then(function (response) {
-                    var $index = _.indexOf($scope.activities, _.findWhere($scope.activities, {id: activity.id}));
-                    $scope.activities[$index] = response.data;
-                    $scope.editingActivity = false;
-                    $rootScope.$broadcast('provideFeedback', 'Activity updated');
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        };
-
-        $scope.showEditActivity = function (activity) {
-            $scope.editingActivity = true;
-            $scope.selectedActivity = activity;
-        };
-
-        $scope.deleteActivity = function (activity) {
-            if (confirm("Are you sure? The timers for the activity will be deleted, too!")) {
-                $rootScope.showLoading();
-                ActivitiesFactory.destroy(activity)
-                    .then(function (response) {
-                        $scope.activities = _.without($scope.activities, activity);
-                        $rootScope.$broadcast('provideFeedback', 'Activity deleted');
-                        $scope.editingActivity = false;
-                        $rootScope.hideLoading();
-                    })
-                    .catch(function (response) {
-                        $rootScope.responseError(response);
-                    });
-            }
-        };
-    });
-angular.module('tracker')
-    .controller('TimerGraphsController', function ($rootScope, $scope, TimersFactory) {
-
-        function getEntries () {
-            $rootScope.showLoading();
-            TimersFactory.index(true)
-                .then(function (response) {
-                    $scope.entries = response.data;
-                    //$rootScope.$broadcast('provideFeedback', '');
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        }
-
-        getEntries();
-    });
-angular.module('tracker')
-    .controller('TimersController', function ($timeout, $rootScope, $scope, TimersFactory, ActivitiesFactory) {
-
-        //$("document").ready(function () {
-        //    $("#new-timer-activity").select2({});
-        //});
-        //
-        //$scope.newTimer = {
-        //    activity: {}
-        //};
-
-        //$timeout(function () {
-        //    $("#new-timer-activity").select2({});
-        //});
-
-        $scope.date = {};
-        $scope.showTimerInProgress = true;
-
-        $scope.$on('changeDate', function (event) {
-            getTimers();
-            getTotalMinutesForActivitiesForTheDay();
-            getTotalMinutesForActivitiesForTheWeek();
-        });
-
-        checkForTimerInProgress();
-
-        $scope.startTimer = function () {
-            $('#timer-clock').timer({format: '%H:%M:%S'});
-            $rootScope.showLoading();
-            TimersFactory.store($scope.newTimer)
-                .then(function (response) {
-                    //$scope.timers.push(response.data);
-                    $scope.timerInProgress = response.data;
-                    $rootScope.$broadcast('provideFeedback', 'Timer started', 'success');
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        };
-
-        /**
-         * Instead of starting and stopping the timer,
-         * enter the start and stop times manually
-         */
-        $scope.insertManualTimer = function () {
-            $rootScope.showLoading();
-            TimersFactory.store($scope.newManualTimer, $scope.date.sql)
-                .then(function (response) {
-                    $scope.timers.push(response.data);
-                    $rootScope.$broadcast('provideFeedback', 'Manual entry created', 'success');
-                    getTotalMinutesForActivitiesForTheDay();
-                    getTotalMinutesForActivitiesForTheWeek();
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        };
-
-        function getActivities () {
-            $rootScope.showLoading();
-            ActivitiesFactory.index()
-                .then(function (response) {
-                    $scope.activities = response.data;
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        }
-
-        getActivities();
-
-        $scope.stopTimer = function () {
-            $('#timer-clock').timer('remove');
-            $rootScope.showLoading();
-            TimersFactory.update($scope.timerInProgress)
-                .then(function (response) {
-                    $scope.timerInProgress = false;
-                    $scope.timers.push(response.data);
-                    getTotalMinutesForActivitiesForTheDay();
-                    getTotalMinutesForActivitiesForTheWeek();
-                    //var $index = _.indexOf($scope.timers, _.findWhere($scope.timers, {id: response.data.id}));
-                    //$scope.timers[$index] = response.data;
-                    $rootScope.$broadcast('provideFeedback', 'Timer updated');
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        };
-
-        function getTimers () {
-            $rootScope.showLoading();
-            TimersFactory.index(false, $scope.date.sql)
-                .then(function (response) {
-                    $scope.timers = response.data;
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        }
-
-        $scope.filterTimers = function (timer) {
-            if ($scope.timersFilter) {
-                return timer.activity.data.name.indexOf($scope.timersFilter) !== -1;
-            }
-            return true;
-
-        };
-
-        $scope.formatMinutes = function (minutes) {
-            return minutes * 10;
-        };
-
-        function checkForTimerInProgress () {
-            $rootScope.showLoading();
-            TimersFactory.checkForTimerInProgress()
-                .then(function (response) {
-                    if (response.data.activity) {
-                        resumeTimerOnPageLoad(response.data);
-                    }
-
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        }
-
-        function resumeTimerOnPageLoad (timer) {
-            $scope.timerInProgress = timer;
-            var seconds = moment().diff(moment(timer.start, 'YYYY-MM-DD HH:mm:ss'), 'seconds');
-            $('#timer-clock').timer({
-                format: '%H:%M:%S',
-                //The timer has already started
-                seconds: seconds
-            });
-        }
-
-        function getTotalMinutesForActivitiesForTheDay () {
-            $rootScope.showLoading();
-            ActivitiesFactory.getTotalMinutesForDay($scope.date.sql)
-                .then(function (response) {
-                    $scope.activitiesWithDurationsForDay = response.data;
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        }
-
-        function getTotalMinutesForActivitiesForTheWeek () {
-            $rootScope.showLoading();
-            ActivitiesFactory.getTotalMinutesForWeek($scope.date.sql)
-                .then(function (response) {
-                    $scope.activitiesWithDurationsForWeek = response.data;
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        }
-
-        $scope.deleteTimer = function (timer) {
-            if (confirm("Are you sure?")) {
-                $rootScope.showLoading();
-                TimersFactory.destroy(timer)
-                    .then(function (response) {
-                        $scope.timers = _.without($scope.timers, timer);
-                        getTotalMinutesForActivitiesForTheDay();
-                        getTotalMinutesForActivitiesForTheWeek();
-                        $rootScope.$broadcast('provideFeedback', 'Timer deleted');
-                        $rootScope.hideLoading();
-                    })
-                    .catch(function (response) {
-                        $rootScope.responseError(response);
-                    });
-            }
-        };
-
-    });
 var app = angular.module('tracker');
 
 (function () {
@@ -25456,114 +25456,6 @@ angular.module('tracker')
             }
         }
     });
-angular.module('tracker')
-    .factory('TimersFactory', function ($http) {
-
-        return {
-            index: function (byDate, date) {
-                var $url = '/api/timers';
-                if (byDate) {
-                    $url+= '?byDate=true';
-                }
-                else if (date) {
-                    $url+= '?date=' + date;
-                }
-                
-                return $http.get($url);
-            },
-
-            store: function (entry, date) {
-                var data = {
-                    start: this.calculateStartDateTime(entry, date)
-                };
-
-                if (entry.finish) {
-                    data.finish = this.calculateFinishTime(entry, date);
-                }
-
-                if (entry.activity) {
-                    data.activity_id = entry.activity.id;
-                }
-
-                return $http.post('/api/timers', data);
-            },
-
-            calculateStartDateTime: function (entry, date) {
-                if (date) {
-                    return this.calculateStartDate(entry, date) + ' ' + this.calculateStartTime(entry);
-                }
-                else {
-                    //The 'start' timer button has been clicked rather than entering the time manually, so make the start now
-                    return moment().format('YYYY-MM-DD HH:mm:ss');
-                }
-
-            },
-
-            calculateStartDate: function (entry, date) {
-                if (entry.startedYesterday) {
-                    return moment(date, 'YYYY-MM-DD').subtract(1, 'days').format('YYYY-MM-DD');
-                }
-                else {
-                    return date;
-                }
-            },
-
-            calculateFinishTime: function (entry, date) {
-                if (entry.finish) {
-                    return date + ' ' + Date.parse(entry.finish).toString('HH:mm:ss');
-                }
-                else {
-                    //The stop timer button has been pressed. Make the finish time now.
-                    return moment().format('YYYY-MM-DD HH:mm:ss');
-                }
-
-            },
-
-            calculateStartTime: function (entry) {
-                return Date.parse(entry.start).toString('HH:mm:ss');
-            },
-            
-            update: function (timer) {
-                var url = '/api/timers/' + timer.id;
-                var data = {
-                    finish: this.calculateFinishTime(timer)
-                };
-                
-                return $http.put(url, data);
-            },
-            checkForTimerInProgress: function () {
-                return $http.get('/api/timers/checkForTimerInProgress');
-            },
-            destroy: function (timer) {
-                var url = '/api/timers/' + timer.id;
-            
-                return $http.delete(url);
-            }
-        }
-    });
-app.factory('WeightsFactory', function ($http) {
-    return {
-
-        getWeightForTheDay: function ($date) {
-            var $url = 'api/weights/' + $date;
-            return $http.get($url);
-        },
-
-        insertWeight: function ($sql_date) {
-            var $url = 'insert/weight';
-            var $weight = $("#weight").val();
-
-            var $data = {
-                date: $sql_date,
-                weight: $weight
-            };
-
-            return $http.post($url, $data);
-        },
-
-
-    };
-});
 app.factory('JournalFactory', function ($http) {
     return {
 
@@ -25791,6 +25683,114 @@ angular.module('tracker')
             }
         }
     });
+app.factory('WeightsFactory', function ($http) {
+    return {
+
+        getWeightForTheDay: function ($date) {
+            var $url = 'api/weights/' + $date;
+            return $http.get($url);
+        },
+
+        insertWeight: function ($sql_date) {
+            var $url = 'insert/weight';
+            var $weight = $("#weight").val();
+
+            var $data = {
+                date: $sql_date,
+                weight: $weight
+            };
+
+            return $http.post($url, $data);
+        },
+
+
+    };
+});
+angular.module('tracker')
+    .factory('TimersFactory', function ($http) {
+
+        return {
+            index: function (byDate, date) {
+                var $url = '/api/timers';
+                if (byDate) {
+                    $url+= '?byDate=true';
+                }
+                else if (date) {
+                    $url+= '?date=' + date;
+                }
+                
+                return $http.get($url);
+            },
+
+            store: function (entry, date) {
+                var data = {
+                    start: this.calculateStartDateTime(entry, date)
+                };
+
+                if (entry.finish) {
+                    data.finish = this.calculateFinishTime(entry, date);
+                }
+
+                if (entry.activity) {
+                    data.activity_id = entry.activity.id;
+                }
+
+                return $http.post('/api/timers', data);
+            },
+
+            calculateStartDateTime: function (entry, date) {
+                if (date) {
+                    return this.calculateStartDate(entry, date) + ' ' + this.calculateStartTime(entry);
+                }
+                else {
+                    //The 'start' timer button has been clicked rather than entering the time manually, so make the start now
+                    return moment().format('YYYY-MM-DD HH:mm:ss');
+                }
+
+            },
+
+            calculateStartDate: function (entry, date) {
+                if (entry.startedYesterday) {
+                    return moment(date, 'YYYY-MM-DD').subtract(1, 'days').format('YYYY-MM-DD');
+                }
+                else {
+                    return date;
+                }
+            },
+
+            calculateFinishTime: function (entry, date) {
+                if (entry.finish) {
+                    return date + ' ' + Date.parse(entry.finish).toString('HH:mm:ss');
+                }
+                else {
+                    //The stop timer button has been pressed. Make the finish time now.
+                    return moment().format('YYYY-MM-DD HH:mm:ss');
+                }
+
+            },
+
+            calculateStartTime: function (entry) {
+                return Date.parse(entry.start).toString('HH:mm:ss');
+            },
+            
+            update: function (timer) {
+                var url = '/api/timers/' + timer.id;
+                var data = {
+                    finish: this.calculateFinishTime(timer)
+                };
+                
+                return $http.put(url, data);
+            },
+            checkForTimerInProgress: function () {
+                return $http.get('/api/timers/checkForTimerInProgress');
+            },
+            destroy: function (timer) {
+                var url = '/api/timers/' + timer.id;
+            
+                return $http.delete(url);
+            }
+        }
+    });
 angular.module('tracker')
     .directive('dateNavigationDirective', function ($rootScope, DatesFactory) {
         return {
@@ -25926,7 +25926,7 @@ var ExerciseUnitsPage = Vue.component('exercise-units-page', {
         *
         */
         insertUnit: function () {
-            this.showLoading = true;
+            $.event.trigger('show-loading');
             var data = {
                 name: this.newUnit.name
             };
@@ -25935,8 +25935,8 @@ var ExerciseUnitsPage = Vue.component('exercise-units-page', {
                 this.units.push(response.data);
                 $.event.trigger('provide-feedback', ['Unit created', 'success']);
                 //this.$broadcast('provide-feedback', 'Unit created', 'success');
-                this.showLoading = false;
-                    $("#create-new-exercise-unit").val("");
+                $.event.trigger('hide-loading');
+                $("#create-new-exercise-unit").val("");
             })
             .error(function (response) {
                 this.handleResponseError(response);
@@ -25957,13 +25957,14 @@ var ExerciseUnitsPage = Vue.component('exercise-units-page', {
          */
         deleteUnit: function (unit) {
             if (confirm("Are you sure?")) {
-                this.showLoading = true;
+                $.event.trigger('show-loading');
                 this.$http.delete('/api/exerciseUnits/' + unit.id, function (response) {
                     this.units = _.without(this.units, unit);
                     $.event.trigger('provide-feedback', ['Unit deleted', 'success']);
                     //this.$broadcast('provide-feedback', 'Unit deleted', 'success');
-                    this.showLoading = false;
-                })
+                    $.event.trigger('hide-loading');
+
+                    })
                 .error(function (response) {
                     this.handleResponseError(response);
                 });
@@ -25984,6 +25985,109 @@ var ExerciseUnitsPage = Vue.component('exercise-units-page', {
     ],
     ready: function () {
 
+    }
+});
+
+Vue.component('feedback', {
+    template: "#feedback-template",
+    data: function () {
+        return {
+            feedbackMessages: []
+        };
+    },
+    methods: {
+        listen: function () {
+            var that = this;
+            $(document).on('provide-feedback', function (event, message, type) {
+                that.provideFeedback(message, type);
+            });
+        },
+        provideFeedback: function (message, type) {
+            var newMessage = {
+                message: message,
+                type: type
+            };
+
+            var that = this;
+
+            this.feedbackMessages.push(newMessage);
+
+            setTimeout(function () {
+                that.feedbackMessages = _.without(that.feedbackMessages, newMessage);
+            }, 3000);
+        },
+        handleResponseError: function (response) {
+            if (typeof response !== "undefined") {
+                var $message;
+
+                switch(response.status) {
+                    case 503:
+                        $message = 'Sorry, application under construction. Please try again later.';
+                        break;
+                    case 401:
+                        $message = 'You are not logged in';
+                        break;
+                    case 422:
+                        var html = "<ul>";
+
+                        for (var i = 0; i < response.length; i++) {
+                            var error = response[i];
+                            for (var j = 0; j < error.length; j++) {
+                                html += '<li>' + error[j] + '</li>';
+                            }
+                        }
+
+                        html += "</ul>";
+                        $message = html;
+                        break;
+                    default:
+                        $message = response.error;
+                        break;
+                }
+            }
+            else {
+                $message = 'There was an error';
+            }
+
+            return $message;
+
+        }
+    },
+    events: {
+        'provide-feedback': function (message, type) {
+            this.provideFeedback(message, type);
+        },
+        'response-error': function (response) {
+            this.provideFeedback(this.handleResponseError(response), 'error');
+        }
+    },
+    ready: function () {
+        this.listen();
+    },
+});
+Vue.component('loading', {
+    data: function () {
+        return {
+            showLoading: false
+        };
+    },
+    template: "#loading-template",
+    props: [
+        //'showLoading'
+    ],
+    methods: {
+        listen: function () {
+            var that = this;
+            $(document).on('show-loading', function (event, message, type) {
+                that.showLoading = true;
+            });
+            $(document).on('hide-loading', function (event, message, type) {
+                that.showLoading = false;
+            });
+        }
+    },
+    ready: function () {
+        this.listen();
     }
 });
 //# sourceMappingURL=all.js.map

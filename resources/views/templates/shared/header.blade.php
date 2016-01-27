@@ -70,8 +70,3 @@
 
 </ul>
 
-@if (Auth::user())
-    <feedback-directive></feedback-directive>
-    @include('templates.shared.loading')
-@endif
-

@@ -8,6 +8,8 @@
 <body ng-controller="entries">
 	
 	@include('templates.shared.header')
+    <feedback-directive></feedback-directive>
+    @include('templates.shared.loading')
 	@include('pages.entries.index')
 
 	<div class="container">

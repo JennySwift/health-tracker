@@ -16,7 +16,7 @@ var ExerciseUnitsPage = Vue.component('exercise-units-page', {
         *
         */
         insertUnit: function () {
-            this.showLoading = true;
+            $.event.trigger('show-loading');
             var data = {
                 name: this.newUnit.name
             };
@@ -25,8 +25,8 @@ var ExerciseUnitsPage = Vue.component('exercise-units-page', {
                 this.units.push(response.data);
                 $.event.trigger('provide-feedback', ['Unit created', 'success']);
                 //this.$broadcast('provide-feedback', 'Unit created', 'success');
-                this.showLoading = false;
-                    $("#create-new-exercise-unit").val("");
+                $.event.trigger('hide-loading');
+                $("#create-new-exercise-unit").val("");
             })
             .error(function (response) {
                 this.handleResponseError(response);
@@ -47,13 +47,14 @@ var ExerciseUnitsPage = Vue.component('exercise-units-page', {
          */
         deleteUnit: function (unit) {
             if (confirm("Are you sure?")) {
-                this.showLoading = true;
+                $.event.trigger('show-loading');
                 this.$http.delete('/api/exerciseUnits/' + unit.id, function (response) {
                     this.units = _.without(this.units, unit);
                     $.event.trigger('provide-feedback', ['Unit deleted', 'success']);
                     //this.$broadcast('provide-feedback', 'Unit deleted', 'success');
-                    this.showLoading = false;
-                })
+                    $.event.trigger('hide-loading');
+
+                    })
                 .error(function (response) {
                     this.handleResponseError(response);
                 });
