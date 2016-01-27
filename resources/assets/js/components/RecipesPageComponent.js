@@ -3,6 +3,7 @@ var RecipesPage = Vue.component('recipes-page', {
     data: function () {
         return {
             tags: recipe_tags,
+            recipes: recipes,
             recipesTagFilter: []
         };
     },

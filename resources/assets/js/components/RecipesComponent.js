@@ -2,7 +2,6 @@ var Recipes = Vue.component('recipes', {
     template: '#recipes-template',
     data: function () {
         return {
-            recipes: recipes,
             newRecipe: {},
             recipesNameFilter: '',
             recipesTagFilter: ''
@@ -108,7 +107,8 @@ var Recipes = Vue.component('recipes', {
     },
     props: [
         'tags',
-        'recipesTagFilter'
+        'recipesTagFilter',
+        'recipes'
     ],
     ready: function () {
         $(".wysiwyg").wysiwyg();
@@ -282,22 +282,4 @@ var Recipes = Vue.component('recipes', {
 //    $scope.showHelp = !$scope.showHelp;
 //};
 //
-//$scope.toggleEditMethod = function () {
-//    //Toggle the visibility of the wysywig
-//    $scope.recipe_popup.edit_method = !$scope.recipe_popup.edit_method;
-//
-//    //If we are editing the recipe, prepare the html of the wysiwyg
-//    if ($scope.recipe_popup.edit_method) {
-//        var $text;
-//        var $string = "";
-//
-//        //convert the array into a string so I can make the wysiwyg display the steps
-//        $($scope.recipe_popup.steps).each(function () {
-//            $text = this.text;
-//            $text = $text + '<br>';
-//            // $text = '<div>' + $text + '</div>';
-//            $string+= $text;
-//        });
-//        $("#edit-recipe-method").html($string);
-//    }
-//};
+

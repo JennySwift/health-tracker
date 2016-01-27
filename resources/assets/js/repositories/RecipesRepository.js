@@ -1,11 +1,14 @@
-//All contents of this file are now in RecipesRepository, so
-//once I have finished converting to Vue I no longer need this file
-app.factory('QuickRecipeFactory', function ($http) {
-    var $object = {};
+var RecipesRepository = {
 
-    $object.formatString = function ($string, $wysiwyg) {
+    /**
+     *
+     * @param $string
+     * @param $wysiwyg
+     * @returns {*}
+     */
+    formatString: function ($string, $wysiwyg) {
         //Format for any browser (hopefully)
-        var $string_and_array = $object.formatForAnyBrowser($string, $wysiwyg);
+        var $string_and_array = this.formatForAnyBrowser($string, $wysiwyg);
 
         //trim the items in the array
         $($string_and_array.array).each(function () {
@@ -13,8 +16,8 @@ app.factory('QuickRecipeFactory', function ($http) {
         });
 
         //separate the method from the recipe
-        return $object.separateMethod($string_and_array.array);
-    };
+        return this.separateMethod($string_and_array.array);
+    },
 
     /**
      * $lines is an array of all the lines in the wysywig.
@@ -23,7 +26,7 @@ app.factory('QuickRecipeFactory', function ($http) {
      * @param $lines
      * @returns {*}
      */
-    $object.separateMethod = function ($lines) {
+    separateMethod: function ($lines) {
         var $items;
         var $method;
         var $recipe;
@@ -100,7 +103,7 @@ app.factory('QuickRecipeFactory', function ($http) {
         }
 
         return $recipe;
-    };
+    },
 
     /**
      * The $string may contain unwanted br tags and
@@ -113,7 +116,7 @@ app.factory('QuickRecipeFactory', function ($http) {
      * @param $wysiwyg
      * @returns {{string: string, array: *}}
      */
-    $object.formatForAnyBrowser = function ($string, $wysiwyg) {
+    formatForAnyBrowser: function ($string, $wysiwyg) {
         //Remove any closing div tags and replace any opening div tags with a br tag.
         while ($string.indexOf('<div>') !== -1 || $string.indexOf('</div>') !== -1) {
             $string = $string.replace('<div>', '<br>').replace('</div>', '');
@@ -139,7 +142,7 @@ app.factory('QuickRecipeFactory', function ($http) {
             string: $string,
             array: $array
         };
-    };
+    },
 
     /**
      * $items is an array of strings.
@@ -151,7 +154,7 @@ app.factory('QuickRecipeFactory', function ($http) {
      * @param $items
      * @returns {Array}
      */
-    $object.populateItemsArray = function ($items) {
+    populateItemsArray: function ($items) {
         var $formatted_items = [];
         $($items).each(function () {
             $line = this;
@@ -179,7 +182,7 @@ app.factory('QuickRecipeFactory', function ($http) {
         });
 
         return $formatted_items;
-    };
+    },
 
     /**
      * Return an array of errors for each line that does not
@@ -187,7 +190,7 @@ app.factory('QuickRecipeFactory', function ($http) {
      * @param $items
      * @returns {{items: *, errors: Array}}
      */
-    $object.errorCheck = function ($items) {
+    $errorCheck: function ($items) {
         var $line_number = 0;
         var $errors = [];
         var $checked_quantity;
@@ -203,7 +206,7 @@ app.factory('QuickRecipeFactory', function ($http) {
             //The line contains quantity, unit and food.
             //Check the quantity is valid.
             else {
-                $checked_quantity = $object.validQuantityCheck($item.quantity);
+                $checked_quantity = this.validQuantityCheck($item.quantity);
                 if (!$checked_quantity) {
                     //Quantity is invalid
                     $errors.push('Quantity is invalid on line ' + $line_number);
@@ -220,7 +223,7 @@ app.factory('QuickRecipeFactory', function ($http) {
             items: $items,
             errors: $errors
         };
-    };
+    },
 
     /**
      * Check the quantity for any invalid characters.
@@ -228,7 +231,7 @@ app.factory('QuickRecipeFactory', function ($http) {
      * @param $quantity
      * @returns {*}
      */
-    $object.validQuantityCheck = function ($quantity) {
+    validQuantityCheck: function ($quantity) {
         for (var i = 0; i < $quantity.length; i++) {
             var $character = $quantity[i];
 
@@ -237,19 +240,19 @@ app.factory('QuickRecipeFactory', function ($http) {
                 $quantity = false;
             }
             else {
-                $quantity = $object.convertQuantityToDecimal($quantity);
+                $quantity = this.convertQuantityToDecimal($quantity);
             }
         }
 
         return $quantity;
-    };
+    },
 
     /**
      * Check if $quantity is a fraction, and if so, convert to decimal
      * @param $quantity
      * @returns {*}
      */
-    $object.convertQuantityToDecimal = function ($quantity) {
+    convertQuantityToDecimal: function ($quantity) {
         if ($quantity.indexOf('/') !== -1) {
             //it is a fraction
             var $parts = $quantity.split('/');
@@ -257,7 +260,5 @@ app.factory('QuickRecipeFactory', function ($http) {
         }
 
         return $quantity;
-    };
-
-    return $object;
-});
+    }
+}

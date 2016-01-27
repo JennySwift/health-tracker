@@ -7,7 +7,7 @@ var RecipePopup = Vue.component('recipe-popup', {
             newIngredient: {
                 food: {}
             },
-            array: [1,2]
+            editingMethod: false
         };
     },
     components: {},
@@ -34,8 +34,67 @@ var RecipePopup = Vue.component('recipe-popup', {
         /**
          *
          */
-        closePopup: function () {
-            this.showRecipePopup = false;
+        closePopup: function ($event) {
+            if ($event.target.className === 'popup-outer') {
+                this.showRecipePopup = false;
+            }
+        },
+        
+        /**
+        *
+        */
+        updateRecipe: function () {
+            $.event.trigger('show-loading');
+
+            var string = $("#edit-recipe-method").html();
+            var lines = RecipesRepository.formatString(string, $("#edit-recipe-method")).items;
+            var steps = [];
+
+            $(lines).each(function () {
+                steps.push(this);
+            });
+
+            this.selectedRecipe.steps = steps;
+
+            var data = {
+                name: this.selectedRecipe.name,
+                steps: this.selectedRecipe.steps
+            };
+
+            this.$http.put('/api/recipes/' + this.selectedRecipe.id, data, function (response) {
+                var index = _.indexOf(this.recipes, _.findWhere(this.recipes, {id: this.selectedRecipe.id}));
+                this.recipes[index].name = response.name;
+                //this.recipes[0].name = 'xyz';
+                this.editingMethod = false;
+                //this.showRecipePopup = false;
+                $.event.trigger('provide-feedback', ['Recipe updated', 'success']);
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
+        },
+
+        /**
+         *
+         */
+        toggleEditMethod: function () {
+            //Toggle the visibility of the wysywig
+            this.editingMethod = !this.editingMethod;
+
+            //If we are editing the recipe, prepare the html of the wysiwyg
+            if (this.editingMethod) {
+                var text;
+                var string = "";
+
+                //convert the array into a string so I can make the wysiwyg display the steps
+                $(this.selectedRecipe.steps).each(function () {
+                    text = this.text;
+                    text = text + '<br>';
+                    string+= text;
+                });
+                $("#edit-recipe-method").html(string);
+            }
         },
 
         /**
@@ -48,29 +107,10 @@ var RecipePopup = Vue.component('recipe-popup', {
         }
     },
     props: [
-        'tags'
+        'tags',
+        'recipes'
     ],
     ready: function () {
         this.listen();
     }
 });
-
-
-
-//$scope.updateRecipeMethod = function () {
-//    //this is some duplication of insertRecipeMethod
-//    var $string = $("#edit-recipe-method").html();
-//    var $lines = QuickRecipeFactory.formatString($string, $("#edit-recipe-method")).items;
-//    var $steps = [];
-//
-//    $($lines).each(function () {
-//        var $line = this;
-//        $steps.push($line);
-//    });
-//
-//    RecipesFactory.updateRecipeMethod($scope.recipe_popup.recipe.id, $steps).then(function (response) {
-//        $scope.recipe_popup = response.data;
-//        $scope.recipe_popup.edit_method = false;
-//    });
-//};
-

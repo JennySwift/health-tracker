@@ -24552,91 +24552,6 @@ app.factory('ErrorsFactory', function ($q) {
     };
 });
 angular.module('tracker')
-    .factory('TimersFactory', function ($http) {
-
-        return {
-            index: function (byDate, date) {
-                var $url = '/api/timers';
-                if (byDate) {
-                    $url+= '?byDate=true';
-                }
-                else if (date) {
-                    $url+= '?date=' + date;
-                }
-                
-                return $http.get($url);
-            },
-
-            store: function (entry, date) {
-                var data = {
-                    start: this.calculateStartDateTime(entry, date)
-                };
-
-                if (entry.finish) {
-                    data.finish = this.calculateFinishTime(entry, date);
-                }
-
-                if (entry.activity) {
-                    data.activity_id = entry.activity.id;
-                }
-
-                return $http.post('/api/timers', data);
-            },
-
-            calculateStartDateTime: function (entry, date) {
-                if (date) {
-                    return this.calculateStartDate(entry, date) + ' ' + this.calculateStartTime(entry);
-                }
-                else {
-                    //The 'start' timer button has been clicked rather than entering the time manually, so make the start now
-                    return moment().format('YYYY-MM-DD HH:mm:ss');
-                }
-
-            },
-
-            calculateStartDate: function (entry, date) {
-                if (entry.startedYesterday) {
-                    return moment(date, 'YYYY-MM-DD').subtract(1, 'days').format('YYYY-MM-DD');
-                }
-                else {
-                    return date;
-                }
-            },
-
-            calculateFinishTime: function (entry, date) {
-                if (entry.finish) {
-                    return date + ' ' + Date.parse(entry.finish).toString('HH:mm:ss');
-                }
-                else {
-                    //The stop timer button has been pressed. Make the finish time now.
-                    return moment().format('YYYY-MM-DD HH:mm:ss');
-                }
-
-            },
-
-            calculateStartTime: function (entry) {
-                return Date.parse(entry.start).toString('HH:mm:ss');
-            },
-            
-            update: function (timer) {
-                var url = '/api/timers/' + timer.id;
-                var data = {
-                    finish: this.calculateFinishTime(timer)
-                };
-                
-                return $http.put(url, data);
-            },
-            checkForTimerInProgress: function () {
-                return $http.get('/api/timers/checkForTimerInProgress');
-            },
-            destroy: function (timer) {
-                var url = '/api/timers/' + timer.id;
-            
-                return $http.delete(url);
-            }
-        }
-    });
-angular.module('tracker')
     .factory('ExerciseEntriesFactory', function ($http) {
         return {
             getSpecificExerciseEntries: function ($sql_date, $entry) {
@@ -25007,6 +24922,8 @@ angular.module('tracker')
             }
         }
     });
+//All contents of this file are now in RecipesRepository, so
+//once I have finished converting to Vue I no longer need this file
 app.factory('QuickRecipeFactory', function ($http) {
     var $object = {};
 
@@ -25437,6 +25354,91 @@ app.factory('JournalFactory', function ($http) {
         }
     };
 });
+angular.module('tracker')
+    .factory('TimersFactory', function ($http) {
+
+        return {
+            index: function (byDate, date) {
+                var $url = '/api/timers';
+                if (byDate) {
+                    $url+= '?byDate=true';
+                }
+                else if (date) {
+                    $url+= '?date=' + date;
+                }
+                
+                return $http.get($url);
+            },
+
+            store: function (entry, date) {
+                var data = {
+                    start: this.calculateStartDateTime(entry, date)
+                };
+
+                if (entry.finish) {
+                    data.finish = this.calculateFinishTime(entry, date);
+                }
+
+                if (entry.activity) {
+                    data.activity_id = entry.activity.id;
+                }
+
+                return $http.post('/api/timers', data);
+            },
+
+            calculateStartDateTime: function (entry, date) {
+                if (date) {
+                    return this.calculateStartDate(entry, date) + ' ' + this.calculateStartTime(entry);
+                }
+                else {
+                    //The 'start' timer button has been clicked rather than entering the time manually, so make the start now
+                    return moment().format('YYYY-MM-DD HH:mm:ss');
+                }
+
+            },
+
+            calculateStartDate: function (entry, date) {
+                if (entry.startedYesterday) {
+                    return moment(date, 'YYYY-MM-DD').subtract(1, 'days').format('YYYY-MM-DD');
+                }
+                else {
+                    return date;
+                }
+            },
+
+            calculateFinishTime: function (entry, date) {
+                if (entry.finish) {
+                    return date + ' ' + Date.parse(entry.finish).toString('HH:mm:ss');
+                }
+                else {
+                    //The stop timer button has been pressed. Make the finish time now.
+                    return moment().format('YYYY-MM-DD HH:mm:ss');
+                }
+
+            },
+
+            calculateStartTime: function (entry) {
+                return Date.parse(entry.start).toString('HH:mm:ss');
+            },
+            
+            update: function (timer) {
+                var url = '/api/timers/' + timer.id;
+                var data = {
+                    finish: this.calculateFinishTime(timer)
+                };
+                
+                return $http.put(url, data);
+            },
+            checkForTimerInProgress: function () {
+                return $http.get('/api/timers/checkForTimerInProgress');
+            },
+            destroy: function (timer) {
+                var url = '/api/timers/' + timer.id;
+            
+                return $http.delete(url);
+            }
+        }
+    });
 app.factory('WeightsFactory', function ($http) {
     return {
 
@@ -25577,6 +25579,270 @@ angular.module('tracker')
     });
 
 
+var RecipesRepository = {
+
+    /**
+     *
+     * @param $string
+     * @param $wysiwyg
+     * @returns {*}
+     */
+    formatString: function ($string, $wysiwyg) {
+        //Format for any browser (hopefully)
+        var $string_and_array = this.formatForAnyBrowser($string, $wysiwyg);
+
+        //trim the items in the array
+        $($string_and_array.array).each(function () {
+            this.trim();
+        });
+
+        //separate the method from the recipe
+        return this.separateMethod($string_and_array.array);
+    },
+
+    /**
+     * $lines is an array of all the lines in the wysywig.
+     * We want to return an object containing the item lines,
+     * and the method lines, separate from each other.
+     * @param $lines
+     * @returns {*}
+     */
+    separateMethod: function ($lines) {
+        var $items;
+        var $method;
+        var $recipe;
+        var $method_index;
+
+        /**
+         * @VP:
+         * Surely there's a way to do these checks with less code?
+         */
+
+        //Check for the method trigger possibilities
+        //First, the lowercase possibilities
+        if ($lines.indexOf('method') !== -1) {
+            $method_index = $lines.indexOf('method');
+        }
+        else if ($lines.indexOf('preparation') !== -1) {
+            $method_index = $lines.indexOf('preparation');
+        }
+        else if ($lines.indexOf('directions') !== -1) {
+            $method_index = $lines.indexOf('directions');
+        }
+
+        //Then, the uppercase possibilities
+        if ($lines.indexOf('Method') !== -1) {
+            $method_index = $lines.indexOf('Method');
+        }
+        else if ($lines.indexOf('Preparation') !== -1) {
+            $method_index = $lines.indexOf('Preparation');
+        }
+        else if ($lines.indexOf('Directions') !== -1) {
+            $method_index = $lines.indexOf('Directions');
+        }
+
+        //Then, the lowercase colon possibilities
+        //Todo: 'Steps' should also be acceptable
+        if ($lines.indexOf('method:') !== -1) {
+            $method_index = $lines.indexOf('method:');
+        }
+        else if ($lines.indexOf('preparation') !== -1) {
+            $method_index = $lines.indexOf('preparation:');
+        }
+        else if ($lines.indexOf('directions:') !== -1) {
+            $method_index = $lines.indexOf('directions:');
+        }
+
+        //Then, the uppercase colon possibilities
+        if ($lines.indexOf('Method:') !== -1) {
+            $method_index = $lines.indexOf('Method:');
+        }
+        else if ($lines.indexOf('Preparation:') !== -1) {
+            $method_index = $lines.indexOf('Preparation:');
+        }
+        else if ($lines.indexOf('Directions:') !== -1) {
+            $method_index = $lines.indexOf('Directions:');
+        }
+
+        //If $method_index, there is a method.
+        //If not, there is no method.
+        //Populate the object to return.
+        if ($method_index) {
+            $items = $lines.slice(0, $method_index);
+            $method = $lines.slice($method_index+1);
+
+            $recipe = {
+                items: $items,
+                method: $method
+            };
+        }
+        else {
+            //There is no method
+            $recipe = {
+                items: $lines
+            };
+        }
+
+        return $recipe;
+    },
+
+    /**
+     * The $string may contain unwanted br tags and
+     * both opening and closing div tags.
+     * Format the string so into a string of div tags to
+     * populate the html of the wysiwyg.
+     * And create an array from the $string.
+     * Return both the formatted string and the array.
+     * @param $string
+     * @param $wysiwyg
+     * @returns {{string: string, array: *}}
+     */
+    formatForAnyBrowser: function ($string, $wysiwyg) {
+        //Remove any closing div tags and replace any opening div tags with a br tag.
+        while ($string.indexOf('<div>') !== -1 || $string.indexOf('</div>') !== -1) {
+            $string = $string.replace('<div>', '<br>').replace('</div>', '');
+        }
+
+        //turn the string into an array of divs by first splitting at the br tags
+        var $array = $string.split('<br>');
+
+        //remove any empty elements from the array
+        $array = _.without($array, '');
+
+        var $formatted_string = "";
+
+        //make $formatted_string a string with div tags
+        for (var j = 0; j < $array.length; j++) {
+            $formatted_string += '<div>' + $array[j] + '</div>';
+        }
+
+        $string = $formatted_string;
+        $($wysiwyg).html($string);
+
+        return {
+            string: $string,
+            array: $array
+        };
+    },
+
+    /**
+     * $items is an array of strings.
+     * The string should include the quantity, unit, food, and description,
+     * providing the user has entered them.
+     * We want to take each string and turn it into an object with
+     * food, unit, quantity and description properties.
+     * Then return the new array of objects.
+     * @param $items
+     * @returns {Array}
+     */
+    populateItemsArray: function ($items) {
+        var $formatted_items = [];
+        $($items).each(function () {
+            $line = this;
+            var $item = {};
+
+            //if there is a description, separate the description from the quantity, unit and food
+            if ($line.indexOf(',') !== -1) {
+                $line = $line.split(',');
+                //grab the description, add it to the item so I can remove it from the line
+                //so it doesn't get in the way
+                $item.description = $line[1].trim();
+                $line = $line[0];
+            }
+
+            //$line is now just the quantity, unit and food, without the description
+            //split $line into an array with quantity, unit and food
+            $line = $line.split(' ');
+            //Add the quantity, unit and food to the $item
+            $item.quantity = $line[0];
+            $item.unit = $line[1];
+            $item.food = $line[2];
+
+            //Add the item object to the items array
+            $formatted_items.push($item);
+        });
+
+        return $formatted_items;
+    },
+
+    /**
+     * Return an array of errors for each line that does not
+     * have a quantity, unit and food
+     * @param $items
+     * @returns {{items: *, errors: Array}}
+     */
+    $errorCheck: function ($items) {
+        var $line_number = 0;
+        var $errors = [];
+        var $checked_quantity;
+
+        $($items).each(function () {
+            var $item = this;
+            $line_number++;
+
+            if (!$item.quantity || !$item.unit || !$item.food) {
+                $errors.push('Quantity, unit, and food have not all been included on line ' + $line_number);
+                $("#quick-recipe > div").eq($line_number-1).css('background', 'red');
+            }
+            //The line contains quantity, unit and food.
+            //Check the quantity is valid.
+            else {
+                $checked_quantity = this.validQuantityCheck($item.quantity);
+                if (!$checked_quantity) {
+                    //Quantity is invalid
+                    $errors.push('Quantity is invalid on line ' + $line_number);
+                    $("#quick-recipe > div").eq($line_number-1).css('background', 'red');
+                }
+                else {
+                    // Quantity is valid and if it was a fraction, it has now been converted to a decimal.
+                    $item.quantity = $checked_quantity;
+                }
+            }
+        });
+
+        return {
+            items: $items,
+            errors: $errors
+        };
+    },
+
+    /**
+     * Check the quantity for any invalid characters.
+     * If the quantity is a fraction, convert it to a decimal.
+     * @param $quantity
+     * @returns {*}
+     */
+    validQuantityCheck: function ($quantity) {
+        for (var i = 0; i < $quantity.length; i++) {
+            var $character = $quantity[i];
+
+            if (isNaN($character) && $character !== '.' && $character !== '/') {
+                //$character is not a number, '.', or '/'. The quantity is invalid.
+                $quantity = false;
+            }
+            else {
+                $quantity = this.convertQuantityToDecimal($quantity);
+            }
+        }
+
+        return $quantity;
+    },
+
+    /**
+     * Check if $quantity is a fraction, and if so, convert to decimal
+     * @param $quantity
+     * @returns {*}
+     */
+    convertQuantityToDecimal: function ($quantity) {
+        if ($quantity.indexOf('/') !== -1) {
+            //it is a fraction
+            var $parts = $quantity.split('/');
+            $quantity = parseInt($parts[0], 10) / parseInt($parts[1], 10);
+        }
+
+        return $quantity;
+    }
+}
 var ExerciseUnitsPage = Vue.component('exercise-units-page', {
     template: '#exercise-units-page-template',
     data: function () {
@@ -25782,7 +26048,7 @@ var RecipePopup = Vue.component('recipe-popup', {
             newIngredient: {
                 food: {}
             },
-            array: [1,2]
+            editingMethod: false
         };
     },
     components: {},
@@ -25809,8 +26075,67 @@ var RecipePopup = Vue.component('recipe-popup', {
         /**
          *
          */
-        closePopup: function () {
-            this.showRecipePopup = false;
+        closePopup: function ($event) {
+            if ($event.target.className === 'popup-outer') {
+                this.showRecipePopup = false;
+            }
+        },
+        
+        /**
+        *
+        */
+        updateRecipe: function () {
+            $.event.trigger('show-loading');
+
+            var string = $("#edit-recipe-method").html();
+            var lines = RecipesRepository.formatString(string, $("#edit-recipe-method")).items;
+            var steps = [];
+
+            $(lines).each(function () {
+                steps.push(this);
+            });
+
+            this.selectedRecipe.steps = steps;
+
+            var data = {
+                name: this.selectedRecipe.name,
+                steps: this.selectedRecipe.steps
+            };
+
+            this.$http.put('/api/recipes/' + this.selectedRecipe.id, data, function (response) {
+                var index = _.indexOf(this.recipes, _.findWhere(this.recipes, {id: this.selectedRecipe.id}));
+                this.recipes[index].name = response.name;
+                //this.recipes[0].name = 'xyz';
+                this.editingMethod = false;
+                //this.showRecipePopup = false;
+                $.event.trigger('provide-feedback', ['Recipe updated', 'success']);
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
+        },
+
+        /**
+         *
+         */
+        toggleEditMethod: function () {
+            //Toggle the visibility of the wysywig
+            this.editingMethod = !this.editingMethod;
+
+            //If we are editing the recipe, prepare the html of the wysiwyg
+            if (this.editingMethod) {
+                var text;
+                var string = "";
+
+                //convert the array into a string so I can make the wysiwyg display the steps
+                $(this.selectedRecipe.steps).each(function () {
+                    text = this.text;
+                    text = text + '<br>';
+                    string+= text;
+                });
+                $("#edit-recipe-method").html(string);
+            }
         },
 
         /**
@@ -25823,32 +26148,13 @@ var RecipePopup = Vue.component('recipe-popup', {
         }
     },
     props: [
-        'tags'
+        'tags',
+        'recipes'
     ],
     ready: function () {
         this.listen();
     }
 });
-
-
-
-//$scope.updateRecipeMethod = function () {
-//    //this is some duplication of insertRecipeMethod
-//    var $string = $("#edit-recipe-method").html();
-//    var $lines = QuickRecipeFactory.formatString($string, $("#edit-recipe-method")).items;
-//    var $steps = [];
-//
-//    $($lines).each(function () {
-//        var $line = this;
-//        $steps.push($line);
-//    });
-//
-//    RecipesFactory.updateRecipeMethod($scope.recipe_popup.recipe.id, $steps).then(function (response) {
-//        $scope.recipe_popup = response.data;
-//        $scope.recipe_popup.edit_method = false;
-//    });
-//};
-
 
 var RecipeTags = Vue.component('recipe-tags', {
     template: '#recipe-tags-template',
@@ -25920,7 +26226,6 @@ var Recipes = Vue.component('recipes', {
     template: '#recipes-template',
     data: function () {
         return {
-            recipes: recipes,
             newRecipe: {},
             recipesNameFilter: '',
             recipesTagFilter: ''
@@ -26026,7 +26331,8 @@ var Recipes = Vue.component('recipes', {
     },
     props: [
         'tags',
-        'recipesTagFilter'
+        'recipesTagFilter',
+        'recipes'
     ],
     ready: function () {
         $(".wysiwyg").wysiwyg();
@@ -26200,31 +26506,14 @@ var Recipes = Vue.component('recipes', {
 //    $scope.showHelp = !$scope.showHelp;
 //};
 //
-//$scope.toggleEditMethod = function () {
-//    //Toggle the visibility of the wysywig
-//    $scope.recipe_popup.edit_method = !$scope.recipe_popup.edit_method;
-//
-//    //If we are editing the recipe, prepare the html of the wysiwyg
-//    if ($scope.recipe_popup.edit_method) {
-//        var $text;
-//        var $string = "";
-//
-//        //convert the array into a string so I can make the wysiwyg display the steps
-//        $($scope.recipe_popup.steps).each(function () {
-//            $text = this.text;
-//            $text = $text + '<br>';
-//            // $text = '<div>' + $text + '</div>';
-//            $string+= $text;
-//        });
-//        $("#edit-recipe-method").html($string);
-//    }
-//};
+
 
 var RecipesPage = Vue.component('recipes-page', {
     template: '#recipes-page-template',
     data: function () {
         return {
             tags: recipe_tags,
+            recipes: recipes,
             recipesTagFilter: []
         };
     },

@@ -7,6 +7,7 @@
 
         <recipe-popup
             :tags="tags"
+            :recipes.sync="recipes"
         >
         </recipe-popup>
 
@@ -21,6 +22,7 @@
                 <recipes
                     :tags="tags"
                     :recipes-tag-filter="recipesTagFilter"
+                    :recipes.sync="recipes"
                 >
                 </recipes>
                 <recipe-tags

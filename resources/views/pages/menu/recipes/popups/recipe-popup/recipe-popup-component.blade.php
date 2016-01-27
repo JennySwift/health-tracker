@@ -7,7 +7,17 @@
 
         <div id="recipe-popup" class="popup-inner">
 
-            <h1 class="center">@{{ selectedRecipe.name }}</h1>
+            <div class="form-group">
+                <label for="selected-recipe-name">Name</label>
+                <input
+                    v-model="selectedRecipe.name"
+                    type="text"
+                    id="selected-recipe-name"
+                    name="selected-recipe-name"
+                    placeholder="name"
+                    class="form-control"
+                >
+            </div>
 
             @include('pages.menu.recipes.popups.recipe-popup.add-ingredient')
             @include('pages.menu.recipes.popups.recipe-popup.ingredients')

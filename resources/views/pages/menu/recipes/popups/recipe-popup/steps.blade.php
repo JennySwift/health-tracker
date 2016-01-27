@@ -28,11 +28,10 @@
     </div>
 
     <!-- edit method -->
-    <div v-show="selectedRecipe.editMethod" class="transition flex">enter the method for this recipe
+    <div v-show="editingMethod" class="transition flex">enter the method for this recipe
 
         <div class="wysiwyg-container">
             <div id="edit-recipe-method" class="wysiwyg margin-bottom"></div>
-            <button v-on:click="updateRecipeMethod()">save changes</button>
         </div>
 
     </div>
