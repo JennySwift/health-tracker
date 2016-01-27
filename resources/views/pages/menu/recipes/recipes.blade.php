@@ -9,8 +9,7 @@
         class="form-control">
 
     <input
-        ng-model="filter.recipes.name"
-        ng-keyup="filterRecipes()"
+        ng-model="recipesFilter"
         type="text"
         placeholder="filter recipes by name"
         id="filter-recipes"
@@ -27,7 +26,7 @@
                 <th>tags</th>
                 <th></th>
             </tr>
-            <tr ng-repeat="recipe in recipes.filtered | orderBy: 'name'">
+            <tr ng-repeat="recipe in recipes.filtered | filter:{name: recipesFilter} | orderBy: 'name'">
                 <td ng-click="showRecipePopup(recipe)" class="pointer">[[recipe.name]]</td>
                 <td>calories</td>
                 <td>
