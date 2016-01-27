@@ -77,7 +77,7 @@ var app = angular.module('tracker');
             ExerciseSeriesFactory.update($scope.exercise_series_popup)
                 .then(function (response) {
                     var $index = _.indexOf($scope.exercise_series, _.findWhere($scope.exercise_series, {id: $scope.exercise_series_popup.id}));
-                    $scope.exercise_series[$index] = response.data;
+                    $scope.exercise_series[$index] = response.data.data;
                     $rootScope.$broadcast('provideFeedback', 'Series updated');
                     $scope.show.popups.exercise_series = false;
                     $rootScope.hideLoading();
