@@ -39,6 +39,21 @@ var Recipes = Vue.component('recipes', {
     methods: {
 
         /**
+         *
+         * @param recipe
+         */
+        showRecipePopup: function (recipe) {
+            $.event.trigger('show-loading');
+            this.$http.get('/api/recipes/' + recipe.id, function (response) {
+                    $.event.trigger('show-recipe-popup', [response]);
+                    $.event.trigger('hide-loading');
+                })
+                .error(function (response) {
+                    this.handleResponseError(response);
+                });
+        },
+
+        /**
         *
         */
         insertRecipe: function () {
@@ -205,20 +220,6 @@ var Recipes = Vue.component('recipes', {
 // * popups
 // */
 //
-//$scope.showRecipePopup = function ($recipe) {
-//    // $scope.selected.recipe = $recipe;
-//    $rootScope.showLoading();
-//    RecipesFactory.show($recipe)
-//        .then(function (response) {
-//            $scope.show.popups.recipe = true;
-//            $scope.recipe_popup.recipe = response.data;
-//            //$rootScope.$broadcast('provideFeedback', '');
-//            $rootScope.hideLoading();
-//        })
-//        .catch(function (response) {
-//            $rootScope.responseError(response);
-//        });
-//};
 //
 ///**
 // * autocomplete food (for adding food to a recipe in the recipe popup)

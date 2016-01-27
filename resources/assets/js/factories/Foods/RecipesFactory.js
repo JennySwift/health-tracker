@@ -30,11 +30,7 @@ angular.module('tracker')
 
                 return $http.post($url, $data);
             },
-            show: function ($recipe) {
-                var $url = 'api/recipes/' + $recipe.id;
 
-                return $http.get($url);
-            },
             insertFoodIntoRecipe: function ($data) {
                 var $url = 'insert/foodIntoRecipe';
 

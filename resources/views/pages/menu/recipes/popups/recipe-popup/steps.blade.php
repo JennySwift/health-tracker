@@ -1,38 +1,38 @@
 <h3>Steps</h3>
 <h5>Use the checkboxes while you make your recipe.</h5>
 
-<div>
+<div v-if="selectedRecipe.steps">
     <!-- steps-only show if they exist -->
-    <div ng-show="recipe_popup.recipe.steps.length > 0" class="flex">
+    <div v-show="selectedRecipe.steps.length > 0" class="flex">
 
         <table id="steps-table" class="table table-bordered">
-            <tr ng-repeat="step in recipe_popup.recipe.steps">
+            <tr v-for="step in selectedRecipe.steps">
                 <td>
                     <div class="vertical-center">
                         <input type="checkbox">
                     </div>
                 </td>
-                <td>[[step.text]]</td>
+                <td>@{{ step.text }}</td>
             </tr>
         </table>
 
-        <button ng-click="toggleEditMethod()" class="margin-bottom">edit method</button>
+        <button v-on:click="toggleEditMethod()" class="margin-bottom">edit method</button>
 
     </div>
 
     <!-- add method -->
-    <div ng-show="recipe_popup.recipe.steps.length < 1" class="flex">
+    <div v-show="selectedRecipe.steps.length < 1" class="flex">
         <h1>Enter the method for this recipe</h1>
         <div id="recipe-method" class="wysiwyg"></div>
-        <button ng-click="insertRecipeMethod()">add method</button>
+        <button v-on:click="insertRecipeMethod()">add method</button>
     </div>
 
     <!-- edit method -->
-    <div ng-show="recipe_popup.edit_method" class="transition flex">enter the method for this recipe
+    <div v-show="selectedRecipe.editMethod" class="transition flex">enter the method for this recipe
 
         <div class="wysiwyg-container">
             <div id="edit-recipe-method" class="wysiwyg margin-bottom"></div>
-            <button ng-click="updateRecipeMethod()">save changes</button>
+            <button v-on:click="updateRecipeMethod()">save changes</button>
         </div>
 
     </div>

@@ -4,6 +4,7 @@
 @include('pages.menu.recipes.recipes-page-component')
 @include('pages.menu.recipes.recipes-component')
 @include('pages.menu.recipes.recipe-tags-component')
+@include('pages.menu.recipes.popups.recipe-popup.recipe-popup-component')
 @include('templates.shared.feedback-component')
 @include('templates.shared.loading-component')
 

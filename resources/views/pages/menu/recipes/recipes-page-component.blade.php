@@ -5,7 +5,9 @@
         <feedback></feedback>
         <loading></loading>
 
-        {{--@include('pages.menu.recipes.popups.recipe-popup.recipe')--}}
+        <recipe-popup
+        >
+        </recipe-popup>
 
         <div id="foods">
 
