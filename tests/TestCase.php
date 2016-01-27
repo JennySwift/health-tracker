@@ -54,5 +54,19 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
         $this->user = $user;
     }
 
+    /**
+     *
+     * @param $recipe
+     */
+    protected function checkRecipeKeysExist($recipe)
+    {
+        $this->assertArrayHasKey('id', $recipe);
+        $this->assertArrayHasKey('name', $recipe);
+        $this->assertArrayHasKey('steps', $recipe);
+        $this->assertArrayHasKey('tag_ids', $recipe);
+        $this->assertArrayHasKey('ingredients', $recipe);
+        $this->assertArrayHasKey('tags', $recipe);
+    }
+
 
 }

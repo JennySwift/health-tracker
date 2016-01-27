@@ -90,13 +90,23 @@ class Recipe extends Model {
 
     /**
      *
-     * @return mixed
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function tags()
-	{
-		return $this->belongsToMany('App\Models\Tags\Tag', 'taggables', 'taggable_id', 'tag_id')
+    {
+        return $this
+            ->belongsToMany('App\Models\Tags\Tag', 'taggables', 'taggable_id', 'tag_id')
             ->where('taggable_type', 'recipe');
-	}
+    }
+
+    /**
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+//    public function tags()
+//    {
+//        return $this->morphMany('App\Models\Tags\Tag', 'taggable');
+//    }
 
     /**
      *

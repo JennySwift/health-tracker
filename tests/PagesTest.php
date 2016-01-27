@@ -138,21 +138,6 @@ class PagesTest extends TestCase {
     }
 
     /**
-     * @test
-     * @return void
-     */
-    public function it_can_display_the_exercise_tags_page()
-    {
-        $this->logInUser();
-
-        $this->visit('/exercise-tags')
-            ->see('add a new tag')
-            ->see('pushups');
-
-        $this->assertEquals(Response::HTTP_OK, $this->apiCall('GET', '/')->getStatusCode());
-    }
-
-    /**
      * Todo: check the entry is there
      * @test
      * @return void

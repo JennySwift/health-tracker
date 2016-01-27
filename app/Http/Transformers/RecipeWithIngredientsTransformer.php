@@ -20,6 +20,7 @@ class RecipeWithIngredientsTransformer extends TransformerAbstract
      * return transform(createItem($recipe, new RecipeTransformer, true));
      * So instead I just created a second recipe transformer,
      * which is much the same as this one.
+     * @param Recipe $recipe
      * @return array
      */
     public function transform(Recipe $recipe)

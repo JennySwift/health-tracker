@@ -54,3 +54,23 @@ var RecipePopup = Vue.component('recipe-popup', {
         this.listen();
     }
 });
+
+
+
+//$scope.updateRecipeMethod = function () {
+//    //this is some duplication of insertRecipeMethod
+//    var $string = $("#edit-recipe-method").html();
+//    var $lines = QuickRecipeFactory.formatString($string, $("#edit-recipe-method")).items;
+//    var $steps = [];
+//
+//    $($lines).each(function () {
+//        var $line = this;
+//        $steps.push($line);
+//    });
+//
+//    RecipesFactory.updateRecipeMethod($scope.recipe_popup.recipe.id, $steps).then(function (response) {
+//        $scope.recipe_popup = response.data;
+//        $scope.recipe_popup.edit_method = false;
+//    });
+//};
+

@@ -20,6 +20,8 @@ class DatabaseSeeder extends Seeder {
 
 		$this->call('UnitSeeder');
 
+		$this->call('TagSeeder');
+
 		// foods
 
 		$this->call('FoodSeeder');
@@ -49,10 +51,6 @@ class DatabaseSeeder extends Seeder {
 		$this->call('JournalSeeder');
 
 		//tags
-
-		$this->call('TagSeeder');
-
-		$this->call('TaggableSeeder');
 
 		$this->call('ActivitySeeder');
 

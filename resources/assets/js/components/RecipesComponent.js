@@ -137,16 +137,10 @@ var Recipes = Vue.component('recipes', {
 //};
 
 
-/**
- * Deletes tags from the recipe then adds the correct ones
- */
-//$scope.insertTagsIntoRecipe = function () {
-//    $scope.recipe_popup.notification = 'Saving tags...';
-//    RecipesFactory.insertTagsIntoRecipe($scope.recipe_popup.recipe.id, $scope.recipe_popup.tags).then(function (response) {
-//        $scope.recipe_popup.notification = 'Tags have been saved.';
-//        $scope.recipes.filtered = response.data;
-//    });
-//};
+
+
+
+
 //
 //
 ///**
@@ -174,22 +168,7 @@ var Recipes = Vue.component('recipes', {
 // * update
 // */
 //
-//$scope.updateRecipeMethod = function () {
-//    //this is some duplication of insertRecipeMethod
-//    var $string = $("#edit-recipe-method").html();
-//    var $lines = QuickRecipeFactory.formatString($string, $("#edit-recipe-method")).items;
-//    var $steps = [];
-//
-//    $($lines).each(function () {
-//        var $line = this;
-//        $steps.push($line);
-//    });
-//
-//    RecipesFactory.updateRecipeMethod($scope.recipe_popup.recipe.id, $steps).then(function (response) {
-//        $scope.recipe_popup = response.data;
-//        $scope.recipe_popup.edit_method = false;
-//    });
-//};
+
 //
 //$scope.updateCalories = function ($keycode, $unit_id, $calories) {
 //    if ($keycode === 13) {
@@ -209,11 +188,6 @@ var Recipes = Vue.component('recipes', {
 // * delete
 // */
 //
-//$scope.deleteFoodFromRecipe = function ($food_id) {
-//    RecipesFactory.deleteFoodFromRecipe($food_id, $scope.recipe_popup.recipe.id).then(function (response) {
-//        $scope.recipe_popup = response.data;
-//    });
-//};
 //
 //
 ///**
@@ -273,6 +247,12 @@ var Recipes = Vue.component('recipes', {
 //    }
 //};
 //
+
+//$scope.deleteFoodFromRecipe = function ($food_id) {
+//    RecipesFactory.deleteFoodFromRecipe($food_id, $scope.recipe_popup.recipe.id).then(function (response) {
+//        $scope.recipe_popup = response.data;
+//    });
+//};
 //$scope.insertFoodIntoRecipe = function () {
 //    //we are adding a food to a permanent recipe
 //    var $data = {
@@ -289,6 +269,10 @@ var Recipes = Vue.component('recipes', {
 //    $("#recipe-popup-food-input").val("").focus();
 //    $scope.recipe_popup.food.description = "";
 //};
+
+
+
+
 //
 ///**
 // * other

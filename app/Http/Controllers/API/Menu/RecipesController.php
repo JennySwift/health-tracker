@@ -3,12 +3,15 @@
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
 use App\Http\Transformers\RecipeTransformer;
+use App\Http\Transformers\RecipeWithIngredientsTransformer;
 use App\Models\Menu\Recipe;
+use App\Models\Tags\Tag;
 use App\Repositories\RecipesRepository;
 use Auth;
 use DB;
 use Debugbar;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 
 /**
@@ -69,6 +72,32 @@ class RecipesController extends Controller
         $recipe = $this->recipesRepository->insert($request->get('name'));
 
         return $this->responseCreatedWithTransformer($recipe, new RecipeTransformer);
+    }
+
+    /**
+    * UPDATE /api/recipes/{recipes}
+    * @param Request $request
+    * @param Recipe $recipe
+    * @return Response
+    */
+    public function update(Request $request, Recipe $recipe)
+    {
+        // Create an array with the new fields merged
+        $data = array_compare($recipe->toArray(), $request->only([
+            'name'
+        ]));
+
+        $recipe->update($data);
+
+        if ($request->has('tag_ids')) {
+            $ids = $request->get('tag_ids');
+            $pivotData = array_fill(0, count($ids), ['taggable_type' => 'recipe']);
+            $syncData  = array_combine($ids, $pivotData);
+            $recipe->tags()->sync($syncData);
+        }
+
+        $recipe = $this->transform($this->createItem($recipe, new RecipeWithIngredientsTransformer))['data'];
+        return response($recipe, Response::HTTP_OK);
     }
 
     /**

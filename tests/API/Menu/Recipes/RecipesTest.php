@@ -25,9 +25,7 @@ class RecipesTest extends TestCase {
         $content = json_decode($response->getContent(), true);
 //        dd($content);
 
-        $this->assertArrayHasKey('id', $content[0]);
-        $this->assertArrayHasKey('name', $content[0]);
-        $this->assertArrayHasKey('tags', $content[0]);
+        $this->checkRecipeKeysExist($content[0]);
 
         $this->assertEquals(1, $content[0]['id']);
         $this->assertEquals('delicious recipe', $content[0]['name']);
@@ -53,12 +51,7 @@ class RecipesTest extends TestCase {
         $content = json_decode($response->getContent(), true);
 //        dd($content);
 
-        $this->assertArrayHasKey('id', $content);
-        $this->assertArrayHasKey('name', $content);
-        $this->assertArrayHasKey('steps', $content);
-        $this->assertArrayHasKey('tag_ids', $content);
-        $this->assertArrayHasKey('ingredients', $content);
-        $this->assertArrayHasKey('tags', $content);
+        $this->checkRecipeKeysExist($content);
 
         $this->assertEquals(1, $content['id']);
         $this->assertEquals('delicious recipe', $content['name']);
@@ -84,8 +77,7 @@ class RecipesTest extends TestCase {
         $content = json_decode($response->getContent(), true)['data'];
 //        dd($content);
 
-        $this->assertArrayHasKey('id', $content);
-        $this->assertArrayHasKey('name', $content);
+        $this->checkRecipeKeysExist($content);
 
         $this->assertEquals('kangaroo', $content['name']);
 
@@ -162,9 +154,7 @@ class RecipesTest extends TestCase {
 //        dd($content);
 
         //Check the response is correct
-        $this->assertArrayHasKey('id', $content);
-        $this->assertArrayHasKey('name', $content);
-        $this->assertArrayHasKey('tags', $content);
+        $this->checkRecipeKeysExist($content);
 
         $this->assertEquals('super recipe', $content['name']);
 
@@ -174,12 +164,7 @@ class RecipesTest extends TestCase {
         $response = $this->call('GET', '/api/recipes/' . $content['id']);
         $content = json_decode($response->getContent(), true);
 
-        $this->assertArrayHasKey('id', $content);
-        $this->assertArrayHasKey('name', $content);
-        $this->assertArrayHasKey('steps', $content);
-        $this->assertArrayHasKey('tag_ids', $content);
-        $this->assertArrayHasKey('ingredients', $content);
-        $this->assertArrayHasKey('tags', $content);
+        $this->checkRecipeKeysExist($content);
 
         $this->assertEquals('super recipe', $content['name']);
         $this->assertEquals('Blend', $content['steps'][0]['text']);
@@ -210,25 +195,31 @@ class RecipesTest extends TestCase {
      * @test
      * @return void
      */
-//    public function it_can_update_a_recipe()
-//    {
-//        $this->logInUser();
-//
-//        $unit = Unit::forCurrentUser()->where('for', 'food')->first();
-//
-//        $response = $this->call('PUT', '/api/foodUnits/'.$unit->id, [
-//            'name' => 'numbat'
-//        ]);
-//        $content = json_decode($response->getContent(), true)['data'];
-//
-//        $this->assertArrayHasKey('id', $content);
-//        $this->assertArrayHasKey('name', $content);
-//        $this->assertArrayHasKey('for', $content);
-//
-//        $this->assertEquals('numbat', $content['name']);
-//
-//        $this->assertEquals(200, $response->getStatusCode());
-//    }
+    public function it_can_update_a_recipe()
+    {
+        DB::beginTransaction();
+        $this->logInUser();
+
+        $recipe = Recipe::forCurrentUser()->first();
+
+        $response = $this->call('PUT', '/api/recipes/'.$recipe->id, [
+            'name' => 'numbat',
+//            'steps' => '',
+            'tag_ids' => [1,3]
+        ]);
+        $content = json_decode($response->getContent(), true);
+//        dd($content);
+
+        $this->checkRecipeKeysExist($content);
+
+        //Todo: check other attributes are correct
+        $this->assertEquals('numbat', $content['name']);
+        $this->assertEquals([1,3], $content['tag_ids']);
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        DB::rollBack();
+    }
 
     /**
      * @test

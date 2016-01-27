@@ -25,15 +25,24 @@ class Tag extends Model {
 	{
 		return $this->belongsTo('App\User');
 	}
+	
+//	/**
+//	*
+//	* @return \Illuminate\Database\Eloquent\Relations\MorphTo
+//	*/
+//	public function taggables()
+//	{
+//	    return $this->morphTo();
+//	}
 
     /**
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function recipes()
-	{
-		return $this->belongsToMany('App\Models\Foods\Recipe', 'recipe_tag', 'tag_id', 'taggable_id');
-	}
+//    public function recipes()
+//	{
+//		return $this->belongsToMany('App\Models\Foods\Recipe', 'taggables', 'tag_id', 'taggable_id')->where('for', 'recipe');
+//	}
 
     /**
      *
@@ -41,7 +50,7 @@ class Tag extends Model {
      */
     public function exercises()
 	{
-		return $this->belongsToMany('App\Models\Exercises\Exercise', 'taggables', 'tag_id', 'taggable_id');
+		dd($this->belongsToMany('App\Models\Exercises\Exercise', 'taggables', 'tag_id', 'taggable_id')->toSql());
 	}
 
 }

@@ -28,6 +28,24 @@ class TagSeeder extends Seeder {
             ]);
 
             Tag::create([
+                'name' => 'salad',
+                'for' => 'recipe',
+                'user_id' => $user->id
+            ]);
+
+            Tag::create([
+                'name' => 'dessert',
+                'for' => 'recipe',
+                'user_id' => $user->id
+            ]);
+
+            Tag::create([
+                'name' => 'fruit salad',
+                'for' => 'recipe',
+                'user_id' => $user->id
+            ]);
+
+            Tag::create([
                 'name' => 'pushups',
                 'for' => 'exercise',
                 'user_id' => $user->id
