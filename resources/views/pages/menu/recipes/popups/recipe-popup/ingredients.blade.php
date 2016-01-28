@@ -10,12 +10,12 @@
                 <th>description</th>
                 <th>x</th>
             </tr>
-            <tr v-for="item in selectedRecipe.ingredients">
-                <td>@{{ item.name }}</td>
-                <td>@{{ item.unit_name }}</td>
-                <td>@{{ item.quantity }}</td>
-                <td>@{{ item.description }}</td>
-                <td><i v-on:click="deleteFoodFromRecipe(item.food_id)" class="delete-item fa fa-times"></i></td>
+            <tr v-for="ingredient in selectedRecipe.ingredients">
+                <td>@{{ ingredient.name }}</td>
+                <td>@{{ ingredient.unit_name }}</td>
+                <td>@{{ ingredient.quantity }}</td>
+                <td>@{{ ingredient.description }}</td>
+                <td><i v-on:click="deleteIngredientFromRecipe(ingredient)" class="delete-item fa fa-times"></i></td>
             </tr>
         </table>
     </div>
