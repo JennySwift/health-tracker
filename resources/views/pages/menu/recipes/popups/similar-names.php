@@ -12,17 +12,17 @@
 				<th>existing food</th>
 			</tr>
 
-			<tr v-for="item in newRecipe.similarNames.foods">
+			<tr v-for="item in similarNames.foods">
 				<td>
-					@{{ item.specified_food.name }}
+					@{{ item.specifiedFood.name }}
 					<div class="vertical-center">
-						<input v-model="item.checked" value="item.specified_food.name" type="radio">
+						<input v-model="item.checked" value="item.specifiedFood.name" type="radio">
 					</div>
 				</td>
 				<td>
-					[[item.existing_food.name]]
+					@{{ item.existingFood.name }}
 					<div class="vertical-center">
-						<input ng-model="item.checked" ng-value="item.existing_food.name" type="radio">
+						<input v-model="item.checked" value="item.existingFood.name" type="radio">
 					</div>
 				</td>
 			</tr>
@@ -34,17 +34,17 @@
 			<th>specified unit</th>
 			<th>existing unit</th>
 
-			<tr v-for="item in newRecipe.similarNames.units">
+			<tr v-for="item in similarNames.units">
 				<td>
-					@{{ item.specified_unit.name }}
+					@{{ item.specifiedUnit.name }}
 					<div class="vertical-center">
-						<input v-model="item.checked" value="item.specified_unit.name" type="radio">
+						<input v-model="item.checked" value="item.specifiedUnit.name" type="radio">
 					</div>
 				</td>
 				<td>
-					@{{ item.existing_unit.name }}
+					@{{ item.existingUnit.name }}
 					<div class="vertical-center">
-						<input v-model="item.checked" value="item.existing_unit.name" type="radio">
+						<input v-model="item.checked" value="item.existingUnit.name" type="radio">
 					</div>
 				</td>
 			</tr>

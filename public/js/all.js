@@ -23955,150 +23955,6 @@ var app = angular.module('tracker');
 
 })();
 angular.module('tracker')
-    .controller('QuickRecipeController', function ($rootScope, $scope, QuickRecipeFactory, RecipesFactory) {
-
-        /**
-         * End goal of the function:
-         * Call RecipesFactory.insertQuickRecipe, with $check_similar_names as true.
-         * Send the contents, steps, and name of new recipe.
-         *
-         * The PHP checks for similar names and returns similar names if found.
-         * The JS checks for similar names in the response.
-         *
-         * If they exist, a popup shows.
-         * From there, the user can click a button
-         * which fires quickRecipeFinish,
-         * sending the recipe info again
-         * but this time without the similar name check.
-         *
-         * If none exist, the recipe should have been entered with the PHP
-         * and things should update accordingly on the page.
-         */
-        $scope.quickRecipe = function () {
-            //remove any previous error styling so it doesn't wreck up the html
-            $("#quick-recipe > *").removeAttr("style");
-
-            //Empty the errors array from any previous attempts
-            $scope.errors.quick_recipe = [];
-
-            //Hide the errors div because even with emptying the scope property,
-            // the display is slow to update.
-            $("#quick-recipe-errors").hide();
-
-            var $string = $("#quick-recipe").html();
-
-            //Recipe is an object, with an array of items and an array of steps.
-            var $recipe = QuickRecipeFactory.formatString($string, $("#quick-recipe"));
-
-            $recipe.items = QuickRecipeFactory.populateItemsArray($recipe.items);
-
-            //check item contains quantity, unit and food
-            //and convert quantities to decimals if necessary
-            var $items_and_errors = QuickRecipeFactory.errorCheck($recipe.items);
-
-            if ($items_and_errors.errors.length > 0) {
-                $scope.errors.quick_recipe = $items_and_errors.errors;
-                $("#quick-recipe-errors").show();
-                return;
-            }
-
-            //Prompt the user for the recipe name
-            var $recipe_name = prompt('name your recipe');
-
-            //If the user changes their mind and cancels
-            if (!$recipe_name) {
-                return;
-            }
-
-            $recipe = {
-                name: $recipe_name,
-                ingredients: $items_and_errors.items,
-                steps: $recipe.method
-            };
-
-            $scope.quick_recipe = $recipe;
-
-            quickRecipeAttemptInsert($recipe);
-        };
-
-        /**
-         * Attempt to insert the recipe.
-         * It won't be inserted if similar names are found.
-         * @param $recipe
-         */
-        function quickRecipeAttemptInsert ($recipe) {
-            $rootScope.showLoading();
-            RecipesFactory.insertQuickRecipe($recipe, true)
-                .then(function (response) {
-                    if (response.data.similar_names) {
-                        $rootScope.$broadcast('provideFeedback', 'Similar names were found');
-                        $scope.quick_recipe.similar_names = response.data.similar_names;
-                        $scope.show.popups.similar_names = true;
-                    }
-                    else {
-                        $rootScope.$broadcast('provideFeedback', 'Recipe created');
-                        $scope.recipes.filtered.push(response.data.data);
-                    }
-
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        }
-
-
-        /**
-         * This is for entering the recipe after the similar name check is done.
-         * We call RecipesFactory.insertQuickRecipe again,
-         * but this time with $check_similar_names parameter as false,
-         * so that the recipe gets entered.
-         */
-        $scope.quickRecipeFinish = function () {
-            $scope.show.popups.similar_names = false;
-
-            doTheFoods();
-            doTheUnits();
-            insertQuickRecipe();
-        };
-
-        function doTheFoods () {
-            $($scope.quick_recipe.similar_names.foods).each(function () {
-                if (this.checked === this.existing_food.name) {
-                    // We are using the existing food rather than creating a new food.
-                    // Therefore, change $scope.quick_recipe.contents
-                    // to use the correct food name.
-                    $scope.quick_recipe.ingredients[this.index].food = this.existing_food.name;
-                }
-            });
-        }
-
-        function doTheUnits () {
-            $($scope.quick_recipe.similar_names.units).each(function () {
-                if (this.checked === this.existing_unit.name) {
-                    //we are using the existing unit rather than creating
-                    //a new unit. therefore, change $scope.quick_recipe.contents
-                    // to use the correct unit name.
-                    $scope.quick_recipe.ingredients[this.index].unit = this.existing_unit.name;
-                }
-            });
-        }
-
-        function insertQuickRecipe () {
-            $rootScope.showLoading();
-            RecipesFactory.insertQuickRecipe($scope.quick_recipe, false)
-                .then(function (response) {
-                    $scope.recipes.filtered.push(response.data.data);
-                    $rootScope.$broadcast('provideFeedback', 'Recipe created');
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        }
-
-    });
-angular.module('tracker')
     .controller('ActivitiesController', function ($rootScope, $scope, ActivitiesFactory) {
 
         function getActivities () {
@@ -24913,269 +24769,6 @@ angular.module('tracker')
             }
         }
     });
-//All contents of this file are now in RecipesRepository, so
-//once I have finished converting to Vue I no longer need this file
-app.factory('QuickRecipeFactory', function ($http) {
-    var $object = {};
-
-    $object.formatString = function ($string, $wysiwyg) {
-        //Format for any browser (hopefully)
-        var $string_and_array = $object.formatForAnyBrowser($string, $wysiwyg);
-
-        //trim the items in the array
-        $($string_and_array.array).each(function () {
-            this.trim();
-        });
-
-        //separate the method from the recipe
-        return $object.separateMethod($string_and_array.array);
-    };
-
-    /**
-     * $lines is an array of all the lines in the wysywig.
-     * We want to return an object containing the item lines,
-     * and the method lines, separate from each other.
-     * @param $lines
-     * @returns {*}
-     */
-    $object.separateMethod = function ($lines) {
-        var $items;
-        var $method;
-        var $recipe;
-        var $method_index;
-
-        /**
-         * @VP:
-         * Surely there's a way to do these checks with less code?
-         */
-
-        //Check for the method trigger possibilities
-        //First, the lowercase possibilities
-        if ($lines.indexOf('method') !== -1) {
-            $method_index = $lines.indexOf('method');
-        }
-        else if ($lines.indexOf('preparation') !== -1) {
-            $method_index = $lines.indexOf('preparation');
-        }
-        else if ($lines.indexOf('directions') !== -1) {
-            $method_index = $lines.indexOf('directions');
-        }
-
-        //Then, the uppercase possibilities
-        if ($lines.indexOf('Method') !== -1) {
-            $method_index = $lines.indexOf('Method');
-        }
-        else if ($lines.indexOf('Preparation') !== -1) {
-            $method_index = $lines.indexOf('Preparation');
-        }
-        else if ($lines.indexOf('Directions') !== -1) {
-            $method_index = $lines.indexOf('Directions');
-        }
-
-        //Then, the lowercase colon possibilities
-        //Todo: 'Steps' should also be acceptable
-        if ($lines.indexOf('method:') !== -1) {
-            $method_index = $lines.indexOf('method:');
-        }
-        else if ($lines.indexOf('preparation') !== -1) {
-            $method_index = $lines.indexOf('preparation:');
-        }
-        else if ($lines.indexOf('directions:') !== -1) {
-            $method_index = $lines.indexOf('directions:');
-        }
-
-        //Then, the uppercase colon possibilities
-        if ($lines.indexOf('Method:') !== -1) {
-            $method_index = $lines.indexOf('Method:');
-        }
-        else if ($lines.indexOf('Preparation:') !== -1) {
-            $method_index = $lines.indexOf('Preparation:');
-        }
-        else if ($lines.indexOf('Directions:') !== -1) {
-            $method_index = $lines.indexOf('Directions:');
-        }
-
-        //If $method_index, there is a method.
-        //If not, there is no method.
-        //Populate the object to return.
-        if ($method_index) {
-            $items = $lines.slice(0, $method_index);
-            $method = $lines.slice($method_index+1);
-
-            $recipe = {
-                items: $items,
-                method: $method
-            };
-        }
-        else {
-            //There is no method
-            $recipe = {
-                items: $lines
-            };
-        }
-
-        return $recipe;
-    };
-
-    /**
-     * The $string may contain unwanted br tags and
-     * both opening and closing div tags.
-     * Format the string so into a string of div tags to
-     * populate the html of the wysiwyg.
-     * And create an array from the $string.
-     * Return both the formatted string and the array.
-     * @param $string
-     * @param $wysiwyg
-     * @returns {{string: string, array: *}}
-     */
-    $object.formatForAnyBrowser = function ($string, $wysiwyg) {
-        //Remove any closing div tags and replace any opening div tags with a br tag.
-        while ($string.indexOf('<div>') !== -1 || $string.indexOf('</div>') !== -1) {
-            $string = $string.replace('<div>', '<br>').replace('</div>', '');
-        }
-
-        //turn the string into an array of divs by first splitting at the br tags
-        var $array = $string.split('<br>');
-
-        //remove any empty elements from the array
-        $array = _.without($array, '');
-
-        var $formatted_string = "";
-
-        //make $formatted_string a string with div tags
-        for (var j = 0; j < $array.length; j++) {
-            $formatted_string += '<div>' + $array[j] + '</div>';
-        }
-
-        $string = $formatted_string;
-        $($wysiwyg).html($string);
-
-        return {
-            string: $string,
-            array: $array
-        };
-    };
-
-    /**
-     * $items is an array of strings.
-     * The string should include the quantity, unit, food, and description,
-     * providing the user has entered them.
-     * We want to take each string and turn it into an object with
-     * food, unit, quantity and description properties.
-     * Then return the new array of objects.
-     * @param $items
-     * @returns {Array}
-     */
-    $object.populateItemsArray = function ($items) {
-        var $formatted_items = [];
-        $($items).each(function () {
-            $line = this;
-            var $item = {};
-
-            //if there is a description, separate the description from the quantity, unit and food
-            if ($line.indexOf(',') !== -1) {
-                $line = $line.split(',');
-                //grab the description, add it to the item so I can remove it from the line
-                //so it doesn't get in the way
-                $item.description = $line[1].trim();
-                $line = $line[0];
-            }
-
-            //$line is now just the quantity, unit and food, without the description
-            //split $line into an array with quantity, unit and food
-            $line = $line.split(' ');
-            //Add the quantity, unit and food to the $item
-            $item.quantity = $line[0];
-            $item.unit = $line[1];
-            $item.food = $line[2];
-
-            //Add the item object to the items array
-            $formatted_items.push($item);
-        });
-
-        return $formatted_items;
-    };
-
-    /**
-     * Return an array of errors for each line that does not
-     * have a quantity, unit and food
-     * @param $items
-     * @returns {{items: *, errors: Array}}
-     */
-    $object.errorCheck = function ($items) {
-        var $line_number = 0;
-        var $errors = [];
-        var $checked_quantity;
-
-        $($items).each(function () {
-            var $item = this;
-            $line_number++;
-
-            if (!$item.quantity || !$item.unit || !$item.food) {
-                $errors.push('Quantity, unit, and food have not all been included on line ' + $line_number);
-                $("#quick-recipe > div").eq($line_number-1).css('background', 'red');
-            }
-            //The line contains quantity, unit and food.
-            //Check the quantity is valid.
-            else {
-                $checked_quantity = $object.validQuantityCheck($item.quantity);
-                if (!$checked_quantity) {
-                    //Quantity is invalid
-                    $errors.push('Quantity is invalid on line ' + $line_number);
-                    $("#quick-recipe > div").eq($line_number-1).css('background', 'red');
-                }
-                else {
-                    // Quantity is valid and if it was a fraction, it has now been converted to a decimal.
-                    $item.quantity = $checked_quantity;
-                }
-            }
-        });
-
-        return {
-            items: $items,
-            errors: $errors
-        };
-    };
-
-    /**
-     * Check the quantity for any invalid characters.
-     * If the quantity is a fraction, convert it to a decimal.
-     * @param $quantity
-     * @returns {*}
-     */
-    $object.validQuantityCheck = function ($quantity) {
-        for (var i = 0; i < $quantity.length; i++) {
-            var $character = $quantity[i];
-
-            if (isNaN($character) && $character !== '.' && $character !== '/') {
-                //$character is not a number, '.', or '/'. The quantity is invalid.
-                $quantity = false;
-            }
-            else {
-                $quantity = $object.convertQuantityToDecimal($quantity);
-            }
-        }
-
-        return $quantity;
-    };
-
-    /**
-     * Check if $quantity is a fraction, and if so, convert to decimal
-     * @param $quantity
-     * @returns {*}
-     */
-    $object.convertQuantityToDecimal = function ($quantity) {
-        if ($quantity.indexOf('/') !== -1) {
-            //it is a fraction
-            var $parts = $quantity.split('/');
-            $quantity = parseInt($parts[0], 10) / parseInt($parts[1], 10);
-        }
-
-        return $quantity;
-    };
-
-    return $object;
-});
 angular.module('tracker')
     .factory('RecipeEntriesFactory', function ($http) {
         return {
@@ -25227,77 +24820,6 @@ app.factory('RecipeTagsFactory', function ($http) {
         },
     };
 });
-angular.module('tracker')
-    .factory('RecipesFactory', function ($http) {
-        return {
-            filterRecipes: function ($tag_ids) {
-                var $url = 'select/filterRecipes';
-
-                var $data = {
-                    typing: $("#filter-recipes").val(),
-                    tag_ids: $tag_ids
-                };
-
-                return $http.post($url, $data);
-            },
-            insert: function ($name) {
-                var $url = 'api/recipes';
-                var $data = {
-                    name: $name
-                };
-
-                return $http.post($url, $data);
-            },
-            insertQuickRecipe: function ($recipe, $check_similar_names) {
-                var $url = 'api/quickRecipes';
-                var $data = {
-                    name: $recipe.name,
-                    ingredients: $recipe.ingredients,
-                    steps: $recipe.steps,
-                    check_for_similar_names: $check_similar_names
-                };
-
-                return $http.post($url, $data);
-            },
-
-            insertFoodIntoRecipe: function ($data) {
-                var $url = 'insert/foodIntoRecipe';
-
-                return $http.post($url, $data);
-            },
-            insertTagsIntoRecipe: function ($recipe_id, $tags) {
-                var $url = 'insert/tagsIntoRecipe';
-                var $data = {
-                    recipe_id: $recipe_id,
-                    tags: $tags
-                };
-
-                return $http.post($url, $data);
-            },
-            /**
-             * Deletes the existing method then inserts the edited method
-             * @param $recipe_id
-             * @param $steps
-             * @returns {*}
-             */
-            updateRecipeMethod: function ($recipe_id, $steps) {
-                var $url = 'update/recipeMethod';
-                var $data = {
-                    recipe_id: $recipe_id,
-                    steps: $steps
-                };
-
-                return $http.post($url, $data);
-            },
-            destroy: function ($recipe) {
-                if (confirm("Are you sure you want to delete this recipe?")) {
-                    var $url = 'api/recipes/' + $recipe.id;
-
-                    return $http.delete($url);
-                }
-            }
-        }
-    });
 app.factory('JournalFactory', function ($http) {
     return {
 
@@ -25652,14 +25174,14 @@ var RecipesRepository = {
             $method = $lines.slice($method_index+1);
 
             $recipe = {
-                items: $items,
-                method: $method
+                ingredients: $items,
+                steps: $method
             };
         }
         else {
             //There is no method
             $recipe = {
-                items: $lines
+                ingredients: $lines
             };
         }
 
@@ -25748,79 +25270,80 @@ var RecipesRepository = {
     /**
      * Return an array of errors for each line that does not
      * have a quantity, unit and food
-     * @param $items
+     * @param ingredients
      * @returns {{items: *, errors: Array}}
      */
-    $errorCheck: function ($items) {
-        var $line_number = 0;
-        var $errors = [];
-        var $checked_quantity;
+    errorCheck: function (ingredients) {
+        var lineNumber = 0;
+        var errors = [];
+        var checkedQuantity;
+        var that = this;
 
-        $($items).each(function () {
-            var $item = this;
-            $line_number++;
+        $(ingredients).each(function () {
+            var ingredient = this;
+            lineNumber++;
 
-            if (!$item.quantity || !$item.unit || !$item.food) {
-                $errors.push('Quantity, unit, and food have not all been included on line ' + $line_number);
-                $("#quick-recipe > div").eq($line_number-1).css('background', 'red');
+            if (!ingredient.quantity || !ingredient.unit || !ingredient.food) {
+                errors.push('Quantity, unit, and food have not all been included on line ' + lineNumber);
+                $("#quick-recipe > div").eq(lineNumber-1).css('background', 'red');
             }
             //The line contains quantity, unit and food.
             //Check the quantity is valid.
             else {
-                $checked_quantity = this.validQuantityCheck($item.quantity);
-                if (!$checked_quantity) {
+                $checkedQuantity = that.validQuantityCheck(ingredient.quantity);
+                if (!$checkedQuantity) {
                     //Quantity is invalid
-                    $errors.push('Quantity is invalid on line ' + $line_number);
-                    $("#quick-recipe > div").eq($line_number-1).css('background', 'red');
+                    errors.push('Quantity is invalid on line ' + lineNumber);
+                    $("#quick-recipe > div").eq(lineNumber-1).css('background', 'red');
                 }
                 else {
                     // Quantity is valid and if it was a fraction, it has now been converted to a decimal.
-                    $item.quantity = $checked_quantity;
+                    ingredient.quantity = checkedQuantity;
                 }
             }
         });
 
         return {
-            items: $items,
-            errors: $errors
+            ingredients: ingredients,
+            errors: errors
         };
     },
 
     /**
      * Check the quantity for any invalid characters.
      * If the quantity is a fraction, convert it to a decimal.
-     * @param $quantity
+     * @param quantity
      * @returns {*}
      */
-    validQuantityCheck: function ($quantity) {
-        for (var i = 0; i < $quantity.length; i++) {
-            var $character = $quantity[i];
+    validQuantityCheck: function (quantity) {
+        for (var i = 0; i < quantity.length; i++) {
+            var character = quantity[i];
 
-            if (isNaN($character) && $character !== '.' && $character !== '/') {
-                //$character is not a number, '.', or '/'. The quantity is invalid.
-                $quantity = false;
+            if (isNaN(character) && character !== '.' && character !== '/') {
+                //character is not a number, '.', or '/'. The quantity is invalid.
+                quantity = false;
             }
             else {
-                $quantity = this.convertQuantityToDecimal($quantity);
+                quantity = this.convertQuantityToDecimal(quantity);
             }
         }
 
-        return $quantity;
+        return quantity;
     },
 
     /**
      * Check if $quantity is a fraction, and if so, convert to decimal
-     * @param $quantity
+     * @param quantity
      * @returns {*}
      */
-    convertQuantityToDecimal: function ($quantity) {
-        if ($quantity.indexOf('/') !== -1) {
+    convertQuantityToDecimal: function (quantity) {
+        if (quantity.indexOf('/') !== -1) {
             //it is a fraction
-            var $parts = $quantity.split('/');
-            $quantity = parseInt($parts[0], 10) / parseInt($parts[1], 10);
+            var parts = quantity.split('/');
+            quantity = parseInt($parts[0], 10) / parseInt(parts[1], 10);
         }
 
-        return $quantity;
+        return quantity;
     }
 }
 var ExerciseUnitsPage = Vue.component('exercise-units-page', {
@@ -26143,7 +25666,9 @@ var NewQuickRecipe = Vue.component('new-quick-recipe', {
             showHelp: false,
             newRecipe: {
                 similarNames: []
-            }
+            },
+            similarNames: [],
+            checkForSimilarNames: true
         };
     },
     components: {},
@@ -26156,6 +25681,136 @@ var NewQuickRecipe = Vue.component('new-quick-recipe', {
             this.showHelp = !this.showHelp;
         },
 
+        /**
+         * End goal of the function:
+         * Call RecipesFactory.insertQuickRecipe, with $check_similar_names as true.
+         * Send the contents, steps, and name of new recipe.
+         *
+         * The PHP checks for similar names and returns similar names if found.
+         * The JS checks for similar names in the response.
+         *
+         * If they exist, a popup shows.
+         * From there, the user can click a button
+         * which fires quickRecipeFinish,
+         * sending the recipe info again
+         * but this time without the similar name check.
+         *
+         * If none exist, the recipe should have been entered with the PHP
+         * and things should update accordingly on the page.
+         */
+        insertRecipeIfNoSimilarNames: function () {
+            //remove any previous error styling so it doesn't wreck up the html
+            $("#quick-recipe > *").removeAttr("style");
+
+            //Empty the errors array from any previous attempts
+            this.errors = [];
+
+            //Hide the errors div because even with emptying the scope property,
+            // the display is slow to update.
+            $("#quick-recipe-errors").hide();
+
+            var string = $("#quick-recipe").html();
+
+            //this.newRecipe is an object, with an array of items and an array of steps.
+            this.newRecipe = RecipesRepository.formatString(string, $("#quick-recipe"));
+
+            this.newRecipe.ingredients = RecipesRepository.populateItemsArray(this.newRecipe.ingredients);
+
+            this.checkForAndHandleErrors();
+
+            if (!this.errors) {
+                //Prompt the user for the recipe name
+                this.newRecipe.name = prompt('name your recipe');
+
+                //If the user changes their mind and cancels
+                if (!recipeName) {
+                    return;
+                }
+
+                this.quickRecipeAttemptInsert();
+            }
+        },
+
+        /**
+         * Check item contains quantity, unit and food
+         * and convert quantities to decimals if necessary
+         */
+        checkForAndHandleErrors: function () {
+            var itemsAndErrors = RecipesRepository.errorCheck(this.newRecipe.ingredients);
+            this.newRecipe.ingredients = itemsAndErrors.ingredients;
+
+            if (itemsAndErrors.errors.length > 0) {
+                this.errors = itemsAndErrors.errors;
+                $("#quick-recipe-errors").show();
+            }
+        },
+
+        /**
+         * Attempt to insert the recipe.
+         * It won't be inserted if similar names are found.
+         */
+        quickRecipeAttemptInsert: function () {
+            $.event.trigger('show-loading');
+            var data = {
+                name: this.newRecipe.name,
+                ingredients: this.newRecipe.ingredients,
+                steps: this.newRecipe.steps,
+                checkForSimilarNames: this.checkForSimilarNames
+            };
+
+            this.$http.post('/api/quickRecipes', data, function (response) {
+                    this.recipes.push(response);
+                    $.event.trigger('hide-loading');
+
+                    if (response.data.similar_names) {
+                        $.event.trigger('provide-feedback', ['Similar names were found', 'success']);
+                        //this.newRecipe.similarNames = response.similarNames;
+                        this.similarNames = response.similarNames;
+                        this.showPopup = true;
+                    }
+                    else {
+                        this.recipes.push(response);
+                    }
+                })
+                .error(function (response) {
+                    this.handleResponseError(response);
+                });
+        },
+
+        /**
+         * This is for entering the recipe after the similar name check is done.
+         * We call insertQuickRecipe again,
+         * but this time with $checkSimilarNames parameter as false,
+         * so that the recipe gets entered.
+         */
+        quickRecipeFinish: function () {
+            this.showPopup = false;
+            this.doTheFoods();
+            this.doTheUnits();
+            this.insertQuickRecipe();
+        },
+
+        doTheFoods: function () {
+            $(this.newRecipe.similarNames.foods).each(function () {
+                if (this.checked === this.existingFood.name) {
+                    // We are using the existing food rather than creating a new food.
+                    // Therefore, change $scope.quick_recipe.contents
+                    // to use the correct food name.
+                    this.newRecipe.ingredients[this.index].food = this.existingFood.name;
+                }
+            });
+        },
+
+        doTheUnits: function () {
+            $(this.newRecipe.similarNames.units).each(function () {
+                if (this.checked === this.existingUnit.name) {
+                    //we are using the existing unit rather than creating
+                    //a new unit. therefore, change $scope.quick_recipe.contents
+                    // to use the correct unit name.
+                    this.newRecipe.ingredients[this.index].unit = this.existingUnit.name;
+                }
+            });
+        },
 
         /**
          *

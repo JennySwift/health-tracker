@@ -91,14 +91,14 @@ var RecipesRepository = {
             $method = $lines.slice($method_index+1);
 
             $recipe = {
-                items: $items,
-                method: $method
+                ingredients: $items,
+                steps: $method
             };
         }
         else {
             //There is no method
             $recipe = {
-                items: $lines
+                ingredients: $lines
             };
         }
 
@@ -187,78 +187,79 @@ var RecipesRepository = {
     /**
      * Return an array of errors for each line that does not
      * have a quantity, unit and food
-     * @param $items
+     * @param ingredients
      * @returns {{items: *, errors: Array}}
      */
-    $errorCheck: function ($items) {
-        var $line_number = 0;
-        var $errors = [];
-        var $checked_quantity;
+    errorCheck: function (ingredients) {
+        var lineNumber = 0;
+        var errors = [];
+        var checkedQuantity;
+        var that = this;
 
-        $($items).each(function () {
-            var $item = this;
-            $line_number++;
+        $(ingredients).each(function () {
+            var ingredient = this;
+            lineNumber++;
 
-            if (!$item.quantity || !$item.unit || !$item.food) {
-                $errors.push('Quantity, unit, and food have not all been included on line ' + $line_number);
-                $("#quick-recipe > div").eq($line_number-1).css('background', 'red');
+            if (!ingredient.quantity || !ingredient.unit || !ingredient.food) {
+                errors.push('Quantity, unit, and food have not all been included on line ' + lineNumber);
+                $("#quick-recipe > div").eq(lineNumber-1).css('background', 'red');
             }
             //The line contains quantity, unit and food.
             //Check the quantity is valid.
             else {
-                $checked_quantity = this.validQuantityCheck($item.quantity);
-                if (!$checked_quantity) {
+                $checkedQuantity = that.validQuantityCheck(ingredient.quantity);
+                if (!$checkedQuantity) {
                     //Quantity is invalid
-                    $errors.push('Quantity is invalid on line ' + $line_number);
-                    $("#quick-recipe > div").eq($line_number-1).css('background', 'red');
+                    errors.push('Quantity is invalid on line ' + lineNumber);
+                    $("#quick-recipe > div").eq(lineNumber-1).css('background', 'red');
                 }
                 else {
                     // Quantity is valid and if it was a fraction, it has now been converted to a decimal.
-                    $item.quantity = $checked_quantity;
+                    ingredient.quantity = checkedQuantity;
                 }
             }
         });
 
         return {
-            items: $items,
-            errors: $errors
+            ingredients: ingredients,
+            errors: errors
         };
     },
 
     /**
      * Check the quantity for any invalid characters.
      * If the quantity is a fraction, convert it to a decimal.
-     * @param $quantity
+     * @param quantity
      * @returns {*}
      */
-    validQuantityCheck: function ($quantity) {
-        for (var i = 0; i < $quantity.length; i++) {
-            var $character = $quantity[i];
+    validQuantityCheck: function (quantity) {
+        for (var i = 0; i < quantity.length; i++) {
+            var character = quantity[i];
 
-            if (isNaN($character) && $character !== '.' && $character !== '/') {
-                //$character is not a number, '.', or '/'. The quantity is invalid.
-                $quantity = false;
+            if (isNaN(character) && character !== '.' && character !== '/') {
+                //character is not a number, '.', or '/'. The quantity is invalid.
+                quantity = false;
             }
             else {
-                $quantity = this.convertQuantityToDecimal($quantity);
+                quantity = this.convertQuantityToDecimal(quantity);
             }
         }
 
-        return $quantity;
+        return quantity;
     },
 
     /**
      * Check if $quantity is a fraction, and if so, convert to decimal
-     * @param $quantity
+     * @param quantity
      * @returns {*}
      */
-    convertQuantityToDecimal: function ($quantity) {
-        if ($quantity.indexOf('/') !== -1) {
+    convertQuantityToDecimal: function (quantity) {
+        if (quantity.indexOf('/') !== -1) {
             //it is a fraction
-            var $parts = $quantity.split('/');
-            $quantity = parseInt($parts[0], 10) / parseInt($parts[1], 10);
+            var parts = quantity.split('/');
+            quantity = parseInt($parts[0], 10) / parseInt(parts[1], 10);
         }
 
-        return $quantity;
+        return quantity;
     }
 }
