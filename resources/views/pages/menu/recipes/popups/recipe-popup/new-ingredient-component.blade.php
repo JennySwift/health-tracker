@@ -3,7 +3,7 @@
     <div class="margin-bottom">
         <div>
             <input
-                v-model="newIngredient.foodName"
+                v-model="newIngredient.food.name"
                 v-on:keyup="respondToKeyup($event.keyCode)"
                 v-on:blur="show.autocomplete_options.foods = false"
                 type="text"

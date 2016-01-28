@@ -25997,7 +25997,9 @@ var NewIngredient = Vue.component('new-ingredient', {
     template: '#new-ingredient-template',
     data: function () {
         return {
-            newIngredient: {},
+            newIngredient: {
+                food: {}
+            },
             autocompleteOptions: [],
             showDropdown: false,
             currentIndex: 0
@@ -26011,8 +26013,8 @@ var NewIngredient = Vue.component('new-ingredient', {
          * @param keycode
          */
         respondToKeyup: function (keycode) {
-            if (keycode !== 13 && keycode !== 38 && keycode !== 40) {
-                //not enter, up arrow or down arrow
+            if (keycode !== 13 && keycode !== 38 && keycode !== 40 && keycode !== 39 && keycode !== 37) {
+                //not enter, up, down, right or left arrows
                 this.populateOptions();
             }
             else if (keycode === 38) {
@@ -26027,6 +26029,9 @@ var NewIngredient = Vue.component('new-ingredient', {
                     this.currentIndex++;
                 }
             }
+            else if (keycode === 13) {
+                this.respondToEnter();
+            }
         },
 
         /**
@@ -26035,7 +26040,7 @@ var NewIngredient = Vue.component('new-ingredient', {
         populateOptions: function () {
             //fill the dropdown
             $.event.trigger('show-loading');
-            this.$http.get('/api/foods?typing=' + this.newIngredient.foodName, function (response) {
+            this.$http.get('/api/foods?typing=' + this.newIngredient.food.name, function (response) {
                 this.autocompleteOptions = response.data;
                 this.showDropdown = true;
                 this.currentIndex = 0;
@@ -26048,34 +26053,24 @@ var NewIngredient = Vue.component('new-ingredient', {
 
         /**
          *
-         * @param $array
-         * @param $set_focus
          */
-        finishFoodAutocomplete: function ($array, $set_focus) {
-            //array, input_to_focus, autocomplete_to_hide, input_to_fill, selected_property_to_define
-            var $selected = _.findWhere($array, {selected: true});
-            $scope.recipe_popup.food = $selected;
-            $scope.selected.food = $selected;
-            $scope.show.autocomplete_options.foods = false;
-            $($set_focus).val("").focus();
+        respondToEnter: function () {
+            if (this.showDropdown) {
+                //enter is for the autocomplete
+                this.selectOption();
+            }
+            else {
+                //enter is to add the entry
+                $scope.insertFoodIntoRecipe();
+            }
         },
 
         /**
          *
          */
-        insertOrAutocompleteFoodEntry: function ($keycode) {
-            if ($keycode !== 13) {
-                return;
-            }
-            //enter is pressed
-            if ($scope.show.autocomplete_options.foods) {
-                //enter is for the autocomplete
-                $scope.finishFoodAutocomplete($scope.recipe_popup.autocomplete_options, $("#recipe-popup-food-quantity"));
-            }
-            else {
-                // if enter is to add the entry
-                $scope.insertFoodIntoRecipe();
-            }
+        selectOption: function () {
+            this.newIngredient.food = this.autocompleteOptions[this.currentIndex];
+            this.showDropdown = false;
         },
 
         /**
