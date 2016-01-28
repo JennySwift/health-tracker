@@ -46,13 +46,19 @@ class FoodsController extends Controller
     }
 
     /**
-     * Get all foods with units
      * GET api/foods
      * @param Request $request
      * @return mixed
      */
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->get('typing')) {
+            $foods = Food::forCurrentUser()
+                ->where('name', 'LIKE', '%' . $request->get('typing') . '%')
+                ->get();
+            return transform(createCollection($foods, new FoodTransformer));
+        }
+
         return $this->foodsRepository->getFoods();
     }
 

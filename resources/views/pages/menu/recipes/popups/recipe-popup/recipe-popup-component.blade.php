@@ -19,7 +19,11 @@
                 >
             </div>
 
-            @include('pages.menu.recipes.popups.recipe-popup.add-ingredient')
+            <h3>Add ingredient</h3>
+            <new-ingredient
+                :recipe-name="selectedRecipe.name"
+            >
+            </new-ingredient>
             @include('pages.menu.recipes.popups.recipe-popup.ingredients')
             @include('pages.menu.recipes.popups.recipe-popup.steps')
             @include('pages.menu.recipes.popups.recipe-popup.tags')

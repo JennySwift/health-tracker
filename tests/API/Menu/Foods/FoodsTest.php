@@ -42,6 +42,27 @@ class FoodsTest extends TestCase {
      * @test
      * @return void
      */
+    public function it_can_autocomplete_the_foods()
+    {
+        $this->logInUser();
+
+        $response = $this->apiCall('GET', '/api/foods?typing=p');
+        $content = json_decode($response->getContent(), true)['data'];
+//        dd($content);
+
+        $this->checkFoodKeysExist($content[0]);
+
+        foreach ($content as $food) {
+            $this->assertContains('p', $food['name']);
+        }
+
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    /**
+     * @test
+     * @return void
+     */
     public function it_can_add_a_new_food()
     {
         $this->logInUser();

@@ -43,15 +43,6 @@ app.factory('AutocompleteFactory', function ($http) {
         return $http.post($url, $data);
     };
 
-    $object.food = function ($typing) {
-        var $url = 'api/autocomplete/food';
-        var $data = {
-            typing: $typing
-        };
-
-        return $http.post($url, $data);
-    };
-
     $object.menu = function () {
         var $typing = $("#menu").val();
         var $url = 'api/autocomplete/menu';
