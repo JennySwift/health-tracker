@@ -26140,6 +26140,7 @@ var NewQuickRecipe = Vue.component('new-quick-recipe', {
         return {
             errors: {},
             showPopup: false,
+            showHelp: false,
             newRecipe: {
                 similarNames: []
             }
@@ -26147,6 +26148,15 @@ var NewQuickRecipe = Vue.component('new-quick-recipe', {
     },
     components: {},
     methods: {
+
+        /**
+         *
+         */
+        toggleHelp: function () {
+            this.showHelp = !this.showHelp;
+        },
+
+
         /**
          *
          * @param response
@@ -26560,15 +26570,6 @@ var Recipes = Vue.component('recipes', {
 //    });
 //};
 
-//
-///**
-// * other
-// */
-//
-//$scope.toggleQuickRecipeHelp = function () {
-//    $scope.showHelp = !$scope.showHelp;
-//};
-//
 
 
 var RecipesPage = Vue.component('recipes-page', {

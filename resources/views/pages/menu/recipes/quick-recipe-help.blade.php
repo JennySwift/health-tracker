@@ -1,4 +1,4 @@
-<button v-on:click="toggleQuickRecipeHelp()">Help</button>
+<button v-on:click="toggleHelp()">Help</button>
 
 <div v-show="showHelp" class="animate-show transition">
     <ul>

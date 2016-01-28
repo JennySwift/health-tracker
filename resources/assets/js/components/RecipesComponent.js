@@ -184,13 +184,4 @@ var Recipes = Vue.component('recipes', {
 //    });
 //};
 
-//
-///**
-// * other
-// */
-//
-//$scope.toggleQuickRecipeHelp = function () {
-//    $scope.showHelp = !$scope.showHelp;
-//};
-//
 
