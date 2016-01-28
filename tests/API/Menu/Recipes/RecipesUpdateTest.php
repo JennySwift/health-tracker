@@ -1,6 +1,8 @@
 <?php
 
+use App\Models\Menu\Food;
 use App\Models\Menu\Recipe;
+use App\Models\Units\Unit;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 /**
@@ -97,6 +99,53 @@ class RecipeUpdateTest extends TestCase
 
         $this->checkIngredientKeysExist($content['ingredients'][0]);
         $this->assertCount($foodCount -1, $content['ingredients']);
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        DB::rollBack();
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_add_an_ingredient_to_a_recipe()
+    {
+        DB::beginTransaction();
+        $this->logInUser();
+
+        $recipe = Recipe::forCurrentUser()->first();
+
+        $food = Food::forCurrentUser()->offset(2)->first();
+        $unit = Unit::forCurrentUser()->where('for', 'food')->offset(2)->first();
+
+        $data = [
+            'addIngredient' => true,
+            'food_id' => $food->id,
+            'unit_id' => $unit->id,
+            'quantity' => 9,
+            'description' => 'blah blah'
+        ];
+
+
+        $foodCount = count($recipe->foods);
+
+        $response = $this->call('PUT', '/api/recipes/'.$recipe->id, $data);
+        $content = json_decode($response->getContent(), true);
+//        dd($content);
+
+        $this->seeInDatabase('food_recipe', [
+            'food_id' => $food->id,
+            'unit_id' => $unit->id,
+            'quantity' => 9,
+            'description' => 'blah blah'
+        ]);
+
+        $this->assertCount($foodCount + 1, $recipe->foods()->get());
+
+        $this->checkRecipeKeysExist($content);
+
+        $this->checkIngredientKeysExist($content['ingredients'][0]);
+        $this->assertCount($foodCount + 1, $content['ingredients']);
 
         $this->assertEquals(200, $response->getStatusCode());
 

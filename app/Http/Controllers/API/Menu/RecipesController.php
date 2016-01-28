@@ -91,6 +91,13 @@ class RecipesController extends Controller
                 ->where('unit_id', $request->get('unit_id'))
                 ->delete();
         }
+        else if ($request->get('addIngredient')) {
+            $recipe->foods()->attach($request->get('food_id'), [
+                'unit_id' => $request->get('unit_id'),
+                'quantity' => $request->get('quantity'),
+                'description' => $request->get('description')
+            ]);
+        }
         else {
             // Create an array with the new fields merged
             $data = array_compare($recipe->toArray(), $request->only([

@@ -88,6 +88,23 @@ var NewIngredient = Vue.component('new-ingredient', {
             this.showDropdown = false;
         },
 
+        insertFoodIntoRecipe: function () {
+            var $data = {
+                recipe_id: $scope.recipe_popup.recipe.id,
+                food_id: $scope.selected.food.id,
+                unit_id: $("#recipe-popup-unit").val(),
+                quantity: $scope.recipe_popup.food.quantity,
+                description: $scope.recipe_popup.food.description
+            };
+
+            RecipesFactory.insertFoodIntoRecipe($data).then(function (response) {
+                $scope.recipe_popup = response.data;
+            });
+            $("#recipe-popup-food-input").val("").focus();
+            $scope.recipe_popup.food.description = "";
+        },
+
+
         /**
          *
          * @param response
@@ -104,22 +121,3 @@ var NewIngredient = Vue.component('new-ingredient', {
 
     }
 });
-
-
-
-//$scope.insertFoodIntoRecipe = function () {
-//    //we are adding a food to a permanent recipe
-//    var $data = {
-//        recipe_id: $scope.recipe_popup.recipe.id,
-//        food_id: $scope.selected.food.id,
-//        unit_id: $("#recipe-popup-unit").val(),
-//        quantity: $scope.recipe_popup.food.quantity,
-//        description: $scope.recipe_popup.food.description
-//    };
-//
-//    RecipesFactory.insertFoodIntoRecipe($data).then(function (response) {
-//        $scope.recipe_popup = response.data;
-//    });
-//    $("#recipe-popup-food-input").val("").focus();
-//    $scope.recipe_popup.food.description = "";
-//};
