@@ -93,6 +93,10 @@ class RecipeUpdateTest extends TestCase
             'unit_id' => $ingredient->unit_id
         ]);
 
+        //Todo: this test can fail if more than one row is removed,
+        //so if there is more than one row in the recipe with the same food id
+        //and unit id. This is unlikely in real life, so improve the seeder.
+
         $this->assertCount($foodCount - 1, $recipe->foods()->get());
 
         $this->checkRecipeKeysExist($content);

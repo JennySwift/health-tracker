@@ -32,8 +32,9 @@ class FoodsTest extends TestCase {
 
         $this->assertEquals([
             'id' => 3,
-            'name' => 'small'
-        ], $content[0]['defaultUnit']);
+            'name' => 'small',
+            'for' => 'food'
+        ], $content[0]['defaultUnit']['data']);
 
         $this->assertEquals(200, $response->getStatusCode());
     }
