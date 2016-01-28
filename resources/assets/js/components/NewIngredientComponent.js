@@ -3,7 +3,14 @@ var NewIngredient = Vue.component('new-ingredient', {
     data: function () {
         return {
             newIngredient: {
-                food: {},
+                food: {
+                    units: {
+                        data: []
+                    },
+                    defaultUnit: {
+                        data: {}
+                    }
+                },
                 unit: {}
             },
             autocompleteOptions: [],

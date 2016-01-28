@@ -36,15 +36,18 @@
             <div class="form-group">
                 <label for="new-ingredient-unit-name">Unit</label>
 
+                <pre v-if="newIngredient.food.units">@{{$data.newIngredient.food.units.data[0] | json}}</pre>
+                <pre>@{{$data.newIngredient.food.defaultUnit.data | json}}</pre>
+
                 <select
-                    v-model="newIngredient.unit.name"
+                    v-model="newIngredient.unit"
                     v-on:keyup.13="insertFoodIntoRecipe()"
                     id="new-ingredient-unit-name"
                     class="form-control"
                 >
                     <option
-                        v-for="unit in newIngredient.food.units"
-                        v-bind:value="unit.id"
+                        v-for="unit in newIngredient.food.units.data"
+                        v-bind:value="unit"
                     >
                         @{{ unit.name }}
                     </option>

@@ -145,12 +145,21 @@ abstract class Controller extends BaseController {
     /**
      * For Fractal transformer
      * @param $resource
+     * @param null $includes
      * @return array
      */
-    public function transform($resource)
+    public function transform($resource, $includes = null)
     {
         $manager = new Manager();
         $manager->setSerializer(new DataArraySerializer);
+
+//        if (isset($_GET['include'])) {
+//            $manager->parseIncludes($_GET['include']);
+//        }
+
+        if ($includes) {
+            $manager->parseIncludes($includes);
+        }
 
 //        $manager->parseIncludes(request()->get('includes', []));
 

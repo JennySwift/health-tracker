@@ -23,6 +23,38 @@ class FoodTransformer extends TransformerAbstract
     }
 
     /**
+     * @var array
+     */
+    protected $availableIncludes = ['units'];
+
+    /**
+     * @var array
+     */
+    protected $defaultIncludes = ['defaultUnit'];
+
+    /**
+    *
+    * @param Food $food
+    * @return \League\Fractal\Resource\Item
+    */
+    public function includeDefaultUnit(Food $food)
+    {
+        if ($food->default_unit_id) {
+            return $this->item($food->defaultUnit, new UnitTransformer);
+        }
+    }
+
+    /**
+     *
+     * @param Food $food
+     * @return \League\Fractal\Resource\Collection
+     */
+    public function includeUnits(Food $food)
+    {
+        return $this->collection($food->units, new UnitTransformer);
+    }
+
+    /**
      * Transform food response
      * @param Food $food
      * @return array
@@ -36,16 +68,19 @@ class FoodTransformer extends TransformerAbstract
             'defaultCalories' => $food->getDefaultCalories(),
         ];
 
-        if (isset($this->params['units'])) {
-            $array['units'] = $food->units;
-        }
+//        if (isset($this->params['units'])) {
+//            $array['units'] = $food->units;
+//        }
 
-        if ($food->default_unit_id) {
-            $array['defaultUnit'] = [
-                'id' => $food->defaultUnit->id,
-                'name' => $food->defaultUnit->name
-            ];
-        }
+//        if ($food->default_unit_id) {
+//            $array['defaultUnit'] = [
+//                'id' => $food->defaultUnit->id,
+//                'name' => $food->defaultUnit->name
+//            ];
+//            $array['defaultUnit'] = $food->defaultUnit;
+//            $array['defaultUnit'] = $this->includeDefaultUnit($food);
+//        }
+
         return $array;
     }
 

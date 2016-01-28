@@ -54,14 +54,18 @@ class FoodsTest extends TestCase {
         $this->assertArrayHasKey('units', $content[0]);
 
         //Check the units are correct for the second food
-        $this->assertCount(2, $content[1]['units']);
-        $this->assertEquals('grams', $content[1]['units'][0]['name']);
-        $this->assertEquals('medium', $content[1]['units'][1]['name']);
-        $this->assertEquals('medium', $content[1]['defaultUnit']['name']);
+        $this->assertCount(2, $content[1]['units']['data']);
+        $this->assertEquals('grams', $content[1]['units']['data'][0]['name']);
+        $this->assertEquals('medium', $content[1]['units']['data'][1]['name']);
+        $this->assertEquals('medium', $content[1]['defaultUnit']['data']['name']);
 
         foreach ($content as $food) {
             $this->assertContains('p', $food['name']);
         }
+
+        //Check the default unit is the same as the unit in the units array,
+        //so the select box works
+        $this->assertEquals($content[1]['defaultUnit']['data'], $content[1]['units']['data'][1]);
 
         $this->assertEquals(200, $response->getStatusCode());
     }
