@@ -56,6 +56,29 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
 
     /**
      *
+     * @param $food
+     */
+    protected function checkFoodKeysExist($food)
+    {
+        $this->assertArrayHasKey('id', $food);
+        $this->assertArrayHasKey('name', $food);
+        $this->assertArrayHasKey('path', $food);
+        $this->assertArrayHasKey('defaultCalories', $food);
+        $this->assertArrayHasKey('defaultUnit', $food);
+    }
+
+    /**
+     *
+     * @param $tag
+     */
+    protected function checkTagKeysExist($tag)
+    {
+        $this->assertArrayHasKey('id', $tag);
+        $this->assertArrayHasKey('name', $tag);
+    }
+
+    /**
+     *
      * @param $recipe
      */
     protected function checkRecipeKeysExist($recipe)

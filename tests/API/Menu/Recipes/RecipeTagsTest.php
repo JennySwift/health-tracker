@@ -19,12 +19,13 @@ class RecipeTagsTest extends TestCase {
 
         $response = $this->apiCall('GET', '/api/recipeTags');
         $content = json_decode($response->getContent(), true);
+//        dd($content);
 
         $this->assertArrayHasKey('id', $content[0]);
         $this->assertArrayHasKey('name', $content[0]);
 
-        $this->assertEquals(1, $content[0]['id']);
-        $this->assertEquals('main meal', $content[0]['name']);
+        $this->assertEquals(4, $content[0]['id']);
+        $this->assertEquals('dessert', $content[0]['name']);
 
         $this->assertEquals(200, $response->getStatusCode());
     }

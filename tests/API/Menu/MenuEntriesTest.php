@@ -41,7 +41,7 @@ class MenuEntriesTest extends TestCase {
 
         $this->assertEquals([
             'id' => 1,
-            'name' => 'quinoa'
+            'name' => 'apple'
         ], $content[0]['food']);
 
         $this->assertEquals([
