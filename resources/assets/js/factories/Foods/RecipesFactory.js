@@ -60,17 +60,6 @@ angular.module('tracker')
 
                 return $http.post($url, $data);
             },
-            deleteFoodFromRecipe: function ($food_id, $recipe_id) {
-                if (confirm("Are you sure you want to remove this food from your recipe?")) {
-                    var $url = 'delete/foodFromRecipe';
-                    var $data = {
-                        food_id: $food_id,
-                        recipe_id: $recipe_id
-                    };
-
-                    return $http.post($url, $data);
-                }
-            },
             destroy: function ($recipe) {
                 if (confirm("Are you sure you want to delete this recipe?")) {
                     var $url = 'api/recipes/' + $recipe.id;

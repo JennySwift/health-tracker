@@ -82,18 +82,39 @@ class RecipesController extends Controller
     */
     public function update(Request $request, Recipe $recipe)
     {
-        // Create an array with the new fields merged
-        $data = array_compare($recipe->toArray(), $request->only([
-            'name'
-        ]));
+        if ($request->get('removeIngredient')) {
+            //This line didn't work so I'm using DB::table instead
+//            $recipe->foods()->detach([$request->get('food_id') => ['unit_id' => $request->get('unit_id')]]);
+            DB::table('food_recipe')
+                ->where('food_id', $request->get('food_id'))
+                ->where('unit_id', $request->get('unit_id'))
+                ->delete();
+        }
+        else {
+            // Create an array with the new fields merged
+            $data = array_compare($recipe->toArray(), $request->only([
+                'name'
+            ]));
 
-        $recipe->update($data);
+            $recipe->update($data);
 
-        if ($request->has('tag_ids')) {
-            $ids = $request->get('tag_ids');
-            $pivotData = array_fill(0, count($ids), ['taggable_type' => 'recipe']);
-            $syncData  = array_combine($ids, $pivotData);
-            $recipe->tags()->sync($syncData);
+            if ($request->has('tag_ids')) {
+                $ids = $request->get('tag_ids');
+                $pivotData = array_fill(0, count($ids), ['taggable_type' => 'recipe']);
+                $syncData  = array_combine($ids, $pivotData);
+                $recipe->tags()->sync($syncData);
+            }
+
+            if ($request->has('ingredients')) {
+                //Remove the existing ingredients from the recipe
+                $currentFoodIds = $recipe->foods()->lists('id')->all();
+                $recipe->foods()->detach($currentFoodIds);
+
+                //Attach the current ingredients to the recipe
+                foreach ($request->get('ingredients') as $ingredient) {
+                    $recipe->foods()->attach([$ingredient['food_id'] => ['unit_id' => $ingredient['unit_id']]]);
+                }
+            }
         }
 
         $recipe = $this->transform($this->createItem($recipe, new RecipeWithIngredientsTransformer))['data'];

@@ -34,7 +34,7 @@ class FoodSeeder extends MasterSeeder
 
     private function insertFoods($unit_ids)
     {
-        foreach (Config::get('foods.userTwo') as $food) {
+        foreach (Config::get('foods.userOne') as $food) {
             $food = new Food([
                 'name' => $food
             ]);

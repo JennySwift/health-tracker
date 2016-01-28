@@ -248,11 +248,7 @@ var Recipes = Vue.component('recipes', {
 //};
 //
 
-//$scope.deleteFoodFromRecipe = function ($food_id) {
-//    RecipesFactory.deleteFoodFromRecipe($food_id, $scope.recipe_popup.recipe.id).then(function (response) {
-//        $scope.recipe_popup = response.data;
-//    });
-//};
+
 //$scope.insertFoodIntoRecipe = function () {
 //    //we are adding a food to a permanent recipe
 //    var $data = {

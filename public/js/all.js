@@ -24742,6 +24742,42 @@ angular.module('tracker')
             }
         }
     });
+app.factory('JournalFactory', function ($http) {
+    return {
+
+        getJournalEntry: function ($sqlDate) {
+            return $http.get('api/journal/' + $sqlDate);
+        },
+
+        filter: function () {
+            var $typing = $("#filter-journal").val();
+            var $url = 'api/journal?typing=' + $typing;
+
+            return $http.get($url);
+        },
+
+        insert: function ($sqlDate) {
+            var $url = 'api/journal';
+
+            var $data = {
+                date: $sqlDate,
+                text: $("#journal-entry").html()
+            };
+
+            return $http.post($url, $data);
+        },
+
+        update: function ($entry) {
+            var $url = 'api/journal/' + $entry.id;
+
+            var $data = {
+                text: $("#journal-entry").html()
+            };
+
+            return $http.put($url, $data);
+        }
+    };
+});
 angular.module('tracker')
     .factory('FoodUnitsFactory', function ($http) {
         return {
@@ -25298,17 +25334,6 @@ angular.module('tracker')
 
                 return $http.post($url, $data);
             },
-            deleteFoodFromRecipe: function ($food_id, $recipe_id) {
-                if (confirm("Are you sure you want to remove this food from your recipe?")) {
-                    var $url = 'delete/foodFromRecipe';
-                    var $data = {
-                        food_id: $food_id,
-                        recipe_id: $recipe_id
-                    };
-
-                    return $http.post($url, $data);
-                }
-            },
             destroy: function ($recipe) {
                 if (confirm("Are you sure you want to delete this recipe?")) {
                     var $url = 'api/recipes/' + $recipe.id;
@@ -25318,42 +25343,6 @@ angular.module('tracker')
             }
         }
     });
-app.factory('JournalFactory', function ($http) {
-    return {
-
-        getJournalEntry: function ($sqlDate) {
-            return $http.get('api/journal/' + $sqlDate);
-        },
-
-        filter: function () {
-            var $typing = $("#filter-journal").val();
-            var $url = 'api/journal?typing=' + $typing;
-
-            return $http.get($url);
-        },
-
-        insert: function ($sqlDate) {
-            var $url = 'api/journal';
-
-            var $data = {
-                date: $sqlDate,
-                text: $("#journal-entry").html()
-            };
-
-            return $http.post($url, $data);
-        },
-
-        update: function ($entry) {
-            var $url = 'api/journal/' + $entry.id;
-
-            var $data = {
-                text: $("#journal-entry").html()
-            };
-
-            return $http.put($url, $data);
-        }
-    };
-});
 angular.module('tracker')
     .factory('TimersFactory', function ($http) {
 
@@ -26474,11 +26463,7 @@ var Recipes = Vue.component('recipes', {
 //};
 //
 
-//$scope.deleteFoodFromRecipe = function ($food_id) {
-//    RecipesFactory.deleteFoodFromRecipe($food_id, $scope.recipe_popup.recipe.id).then(function (response) {
-//        $scope.recipe_popup = response.data;
-//    });
-//};
+
 //$scope.insertFoodIntoRecipe = function () {
 //    //we are adding a food to a permanent recipe
 //    var $data = {
