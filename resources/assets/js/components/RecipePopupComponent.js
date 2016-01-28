@@ -58,15 +58,17 @@ var RecipePopup = Vue.component('recipe-popup', {
 
             var data = {
                 name: this.selectedRecipe.name,
-                steps: this.selectedRecipe.steps
+                steps: this.selectedRecipe.steps,
+                tag_ids: this.selectedRecipe.tag_ids
             };
 
             this.$http.put('/api/recipes/' + this.selectedRecipe.id, data, function (response) {
                 var index = _.indexOf(this.recipes, _.findWhere(this.recipes, {id: this.selectedRecipe.id}));
                 this.recipes[index].name = response.name;
-                //this.recipes[0].name = 'xyz';
+                this.recipes[index].tags = response.tags;
+                this.recipes[index].tag_ds = response.tag_ids;
                 this.editingMethod = false;
-                //this.showRecipePopup = false;
+                this.showRecipePopup = false;
                 $.event.trigger('provide-feedback', ['Recipe updated', 'success']);
                 $.event.trigger('hide-loading');
             })
