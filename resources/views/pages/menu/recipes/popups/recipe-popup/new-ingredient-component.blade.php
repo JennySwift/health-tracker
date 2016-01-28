@@ -33,7 +33,7 @@
                 <label for="new-ingredient-quantity">Quantity</label>
                 <input
                     v-model="newIngredient.quantity"
-                    v-on:keyup.13="insertFoodIntoRecipe()"
+                    v-on:keyup.13="addFoodToRecipe()"
                     type="text"
                     id="new-ingredient-quantity"
                     name="new-ingredient-quantity"
@@ -51,7 +51,7 @@
 
                 <select
                     v-model="newIngredient.unit"
-                    v-on:keyup.13="insertFoodIntoRecipe()"
+                    v-on:keyup.13="addFoodToRecipe()"
                     id="new-ingredient-unit-name"
                     class="form-control"
                 >
@@ -68,7 +68,7 @@
                 <label for="new-ingredient-description">Description</label>
                 <input
                     v-model="newIngredient.description"
-                    v-on:keyup.13="insertFoodIntoRecipe()"
+                    v-on:keyup.13="addFoodToRecipe()"
                     type="text"
                     id="new-ingredient-description"
                     name="new-ingredient-description"

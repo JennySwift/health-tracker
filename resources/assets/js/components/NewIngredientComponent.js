@@ -74,7 +74,7 @@ var NewIngredient = Vue.component('new-ingredient', {
             }
             else {
                 //enter is to add the entry
-                $scope.insertFoodIntoRecipe();
+                $scope.addFoodToRecipe();
             }
         },
 
@@ -88,20 +88,38 @@ var NewIngredient = Vue.component('new-ingredient', {
             this.showDropdown = false;
         },
 
-        insertFoodIntoRecipe: function () {
-            var $data = {
-                recipe_id: $scope.recipe_popup.recipe.id,
-                food_id: $scope.selected.food.id,
-                unit_id: $("#recipe-popup-unit").val(),
-                quantity: $scope.recipe_popup.food.quantity,
-                description: $scope.recipe_popup.food.description
+        /**
+         *
+         */
+        addFoodToRecipe: function () {
+            $.event.trigger('show-loading');
+
+            var data = {
+                addIngredient: true,
+                food_id: this.newIngredient.food.id,
+                unit_id: this.newIngredient.unit.id,
+                quantity: this.newIngredient.quantity,
+                description: this.newIngredient.description
             };
 
-            RecipesFactory.insertFoodIntoRecipe($data).then(function (response) {
-                $scope.recipe_popup = response.data;
-            });
-            $("#recipe-popup-food-input").val("").focus();
-            $scope.recipe_popup.food.description = "";
+            this.$http.put('/api/recipes/' + this.selectedRecipe.id, data, function (response) {
+                    this.selectedRecipe.ingredients.push({
+                        name: this.newIngredient.food.name,
+                        unit_name: this.newIngredient.unit.name,
+                        quantity: this.newIngredient.quantity,
+                        description: this.newIngredient.description,
+                    });
+                    $.event.trigger('provide-feedback', ['Food added', 'success']);
+                    $.event.trigger('hide-loading');
+
+                    this.newIngredient.description = '';
+                    this.newIngredient.quantity = '';
+
+                    $("#new-ingredient-food-name").focus();
+                })
+                .error(function (response) {
+                    this.handleResponseError(response);
+                });
         },
 
 
@@ -115,7 +133,7 @@ var NewIngredient = Vue.component('new-ingredient', {
         }
     },
     props: [
-        'recipeName'
+        'selectedRecipe'
     ],
     ready: function () {
 
