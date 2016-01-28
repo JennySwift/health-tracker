@@ -84,7 +84,7 @@ var NewIngredient = Vue.component('new-ingredient', {
         selectOption: function () {
             this.newIngredient.food = this.autocompleteOptions[this.currentIndex];
             //this.newIngredient.quantity = this.newIngredient.food.defaultQuantity;
-            this.newIngredient.unit = this.newIngredient.food.defaultUnit;
+            this.newIngredient.unit = this.newIngredient.food.defaultUnit.data;
             this.showDropdown = false;
         },
 

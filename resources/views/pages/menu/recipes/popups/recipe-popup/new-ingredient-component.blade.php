@@ -36,8 +36,9 @@
             <div class="form-group">
                 <label for="new-ingredient-unit-name">Unit</label>
 
-                <pre v-if="newIngredient.food.units">@{{$data.newIngredient.food.units.data[0] | json}}</pre>
-                <pre>@{{$data.newIngredient.food.defaultUnit.data | json}}</pre>
+                {{--<pre v-if="newIngredient.food.units">@{{$data.newIngredient.food.units.data[1] | json}}</pre>--}}
+                {{--<pre>@{{$data.newIngredient.food.defaultUnit.data | json}}</pre>--}}
+                {{--<pre>@{{$data.newIngredient.unit | json}}</pre>--}}
 
                 <select
                     v-model="newIngredient.unit"
