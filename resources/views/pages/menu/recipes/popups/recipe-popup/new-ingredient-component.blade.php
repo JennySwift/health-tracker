@@ -2,15 +2,20 @@
 
     <div class="margin-bottom">
         <div>
-            <input
-                v-model="newIngredient.food.name"
-                v-on:keyup="respondToKeyup($event.keyCode)"
-                v-on:blur="showDropdown = false"
-                type="text"
-                placeholder="add food to @{{ recipeName }}"
-                id="recipe-popup-food-input"
-                class="form-control"
-            >
+
+            <div class="form-group">
+                <label for="new-ingredient-food-name">Food</label>
+                <input
+                    v-model="newIngredient.food.name"
+                    v-on:keyup="respondToKeyup($event.keyCode)"
+                    v-on:blur="showDropdown = false"
+                    type="text"
+                    id="new-ingredient-food-name"
+                    name="new-ingredient-food-name"
+                    placeholder="food"
+                    class="form-control"
+                >
+            </div>
 
             <div
                 v-show="showDropdown"
@@ -24,14 +29,18 @@
                 </div>
             </div>
 
-            <input
-                v-model="newIngredient.quantity"
-                v-on:keyup.13="insertFoodIntoRecipe()"
-                type="text"
-                placeholder="quantity"
-                id="recipe-popup-food-quantity"
-                class="form-control"
-            >
+            <div class="form-group">
+                <label for="new-ingredient-quantity">Quantity</label>
+                <input
+                    v-model="newIngredient.quantity"
+                    v-on:keyup.13="insertFoodIntoRecipe()"
+                    type="text"
+                    id="new-ingredient-quantity"
+                    name="new-ingredient-quantity"
+                    placeholder="quantity"
+                    class="form-control"
+                >
+            </div>
 
             <div class="form-group">
                 <label for="new-ingredient-unit-name">Unit</label>
@@ -55,13 +64,18 @@
                 </select>
             </div>
 
-            {{--<input--}}
-                    {{--v-model="newIngredient.description"--}}
-                    {{--v-on:keyup="insertOrAutocompleteFoodEntry($event.keyCode)"--}}
-                    {{--type="text"--}}
-                    {{--placeholder="description"--}}
-                    {{--class="form-control"--}}
-            {{-->--}}
+            <div class="form-group">
+                <label for="new-ingredient-description">Description</label>
+                <input
+                    v-model="newIngredient.description"
+                    v-on:keyup.13="insertFoodIntoRecipe()"
+                    type="text"
+                    id="new-ingredient-description"
+                    name="new-ingredient-description"
+                    placeholder="description"
+                    class="form-control"
+                >
+            </div>
         </div>
     </div>
 
