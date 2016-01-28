@@ -5,6 +5,7 @@ use App\Http\Requests;
 use App\Http\Transformers\RecipeTransformer;
 use App\Http\Transformers\RecipeWithIngredientsTransformer;
 use App\Models\Menu\Recipe;
+use App\Models\Menu\RecipeMethod;
 use App\Models\Tags\Tag;
 use App\Repositories\RecipesRepository;
 use Auth;
@@ -105,12 +106,30 @@ class RecipesController extends Controller
                 $recipe->tags()->sync($syncData);
             }
 
+            if ($request->has('steps')) {
+                //Remove the existing steps from the recipe
+                $currentSteps = $recipe->steps()->delete();
+
+                //Attach the updated steps to the recipe
+                $count = 0;
+                foreach ($request->get('steps') as $step) {
+                    $count++;
+                    $step = new RecipeMethod([
+                        'step' => $count,
+                        'text' => $step
+                    ]);
+                    $step->user()->associate(Auth::user());
+                    $step->recipe()->associate($recipe);
+                    $step->save();
+                }
+            }
+
             if ($request->has('ingredients')) {
                 //Remove the existing ingredients from the recipe
                 $currentFoodIds = $recipe->foods()->lists('id')->all();
                 $recipe->foods()->detach($currentFoodIds);
 
-                //Attach the current ingredients to the recipe
+                //Attach the updated ingredients to the recipe
                 foreach ($request->get('ingredients') as $ingredient) {
                     $recipe->foods()->attach([$ingredient['food_id'] => ['unit_id' => $ingredient['unit_id']]]);
                 }

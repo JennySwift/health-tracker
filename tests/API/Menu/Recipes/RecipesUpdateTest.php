@@ -23,7 +23,7 @@ class RecipeUpdateTest extends TestCase
 
         $response = $this->call('PUT', '/api/recipes/'.$recipe->id, [
             'name' => 'numbat',
-//            'steps' => '',
+            'steps' => ['one', 'two', 'three'],
             'tag_ids' => [1,3],
             'ingredients' => [
                 ['food_id' => 2, 'unit_id' => 3],
@@ -42,6 +42,15 @@ class RecipeUpdateTest extends TestCase
         $this->assertEquals(2, $content['ingredients'][0]['food_id']);
         $this->assertEquals(4, $content['ingredients'][1]['food_id']);
         $this->assertCount(2, $content['ingredients']);
+
+        //Check the steps are correct
+        $this->assertEquals(1, $content['steps'][0]['step']);
+        $this->assertEquals('one', $content['steps'][0]['text']);
+        $this->assertEquals(2, $content['steps'][1]['step']);
+        $this->assertEquals('two', $content['steps'][1]['text']);
+        $this->assertEquals(3, $content['steps'][2]['step']);
+        $this->assertEquals('three', $content['steps'][2]['text']);
+        $this->assertCount(3, $content['steps']);
 
         $this->assertEquals(200, $response->getStatusCode());
 
