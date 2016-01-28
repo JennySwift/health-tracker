@@ -3,7 +3,9 @@ var RecipePopup = Vue.component('recipe-popup', {
     data: function () {
         return {
             showRecipePopup: false,
-            selectedRecipe: {},
+            selectedRecipe: {
+                steps: []
+            },
             newIngredient: {
                 food: {}
             },
@@ -29,6 +31,7 @@ var RecipePopup = Vue.component('recipe-popup', {
         showPopup: function (recipe) {
             this.selectedRecipe = recipe;
             this.showRecipePopup = true;
+            //$(".wysiwyg").wysiwyg();
         },
 
         /**

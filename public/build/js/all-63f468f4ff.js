@@ -26033,9 +26033,7 @@ var RecipePopup = Vue.component('recipe-popup', {
     data: function () {
         return {
             showRecipePopup: false,
-            selectedRecipe: {
-                steps: []
-            },
+            selectedRecipe: {},
             newIngredient: {
                 food: {}
             },
@@ -26061,7 +26059,6 @@ var RecipePopup = Vue.component('recipe-popup', {
         showPopup: function (recipe) {
             this.selectedRecipe = recipe;
             this.showRecipePopup = true;
-            //$(".wysiwyg").wysiwyg();
         },
 
         /**

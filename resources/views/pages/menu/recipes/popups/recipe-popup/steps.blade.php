@@ -1,7 +1,7 @@
 <h3>Steps</h3>
 <h5>Use the checkboxes while you make your recipe.</h5>
 
-<div v-if="selectedRecipe.steps">
+<div>
     <!-- steps-only show if they exist -->
     <div v-show="selectedRecipe.steps.length > 0" class="flex">
 
