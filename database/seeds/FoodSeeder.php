@@ -10,7 +10,11 @@ use App\User;
  */
 class FoodSeeder extends MasterSeeder
 {
+    /**
+     * @var
+     */
     private $user;
+    private $unitIds;
 
     /**
      *
@@ -22,39 +26,63 @@ class FoodSeeder extends MasterSeeder
 
         foreach(User::all() as $user) {
             $this->user = $user;
-            $unit_ids = Unit::where('user_id', $user->id)
+            $this->unitIds = Unit::where('user_id', $user->id)
                 ->where('for', 'food')
-                ->limit(2)
                 ->lists('id')
                 ->all();
 
-            $this->insertFoods($unit_ids);
+            $this->insertFoods();
         }
     }
 
-    private function insertFoods($unit_ids)
+    /**
+     *
+     */
+    private function insertFoods()
     {
-        foreach (Config::get('foods.userOne') as $food) {
+        foreach (Config::get('foods.userOne') as $tempFood) {
             $food = new Food([
-                'name' => $food
+                'name' => $tempFood['name']
             ]);
 
             $food->user()->associate($this->user);
             $food->save();
 
-            //Attach the units
-            foreach ($unit_ids as $unit_id) {
-                $food->units()->attach($unit_id, ['calories' => 5]);
-            }
+            $this->attachUnits($food, $tempFood);
+            $this->attachDefaultUnit($food, $tempFood);
 
-            //Attach the default unit
-            $defaultUnit = Unit::find($unit_ids[0]);
-            $food->defaultUnit()->associate($defaultUnit);
             $food->save();
-
         }
     }
 
+    /**
+     *
+     * @param Food $food
+     * @param $tempFood
+     */
+    private function attachUnits(Food $food, $tempFood)
+    {
+        foreach ($tempFood['units'] as $unitName) {
+            $unitId = Unit::where('user_id', $this->user->id)
+                ->where('name', $unitName)
+                ->first();
 
+            $food->units()->attach($unitId, ['calories' => 5]);
+        }
+    }
+
+    /**
+     *
+     * @param Food $food
+     * @param $tempFood
+     */
+    private function attachDefaultUnit(Food $food, $tempFood)
+    {
+        $defaultUnit = Unit::where('user_id', $this->user->id)
+            ->where('name', $tempFood['defaultUnit'])
+            ->first();
+
+        $food->defaultUnit()->associate($defaultUnit);
+    }
 
 }

@@ -51,6 +51,13 @@ class FoodsTest extends TestCase {
 //        dd($content);
 
         $this->checkFoodKeysExist($content[0]);
+        $this->assertArrayHasKey('units', $content[0]);
+
+        //Check the units are correct for the second food
+        $this->assertCount(2, $content[1]['units']);
+        $this->assertEquals('grams', $content[1]['units'][0]['name']);
+        $this->assertEquals('medium', $content[1]['units'][1]['name']);
+        $this->assertEquals('medium', $content[1]['defaultUnit']['name']);
 
         foreach ($content as $food) {
             $this->assertContains('p', $food['name']);

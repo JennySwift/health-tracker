@@ -9,6 +9,20 @@ use League\Fractal\TransformerAbstract;
 class FoodTransformer extends TransformerAbstract
 {
     /**
+     * @var array
+     */
+    private $params;
+
+    /**
+     * FoodTransformer constructor.
+     * @param array $params
+     */
+    public function __construct($params = [])
+    {
+        $this->params = $params;
+    }
+
+    /**
      * Transform food response
      * @param Food $food
      * @return array
@@ -20,8 +34,11 @@ class FoodTransformer extends TransformerAbstract
             'name' => $food->name,
             'path' => $food->path,
             'defaultCalories' => $food->getDefaultCalories(),
-//            'units' => $food->units
         ];
+
+        if (isset($this->params['units'])) {
+            $array['units'] = $food->units;
+        }
 
         if ($food->default_unit_id) {
             $array['defaultUnit'] = [

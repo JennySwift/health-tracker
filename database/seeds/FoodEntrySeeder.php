@@ -33,8 +33,6 @@ class FoodEntrySeeder extends Seeder
                 $this->createEntriesForOneDay($date, $index + 5);
             }
         }
-
-
     }
 
     /**
@@ -50,31 +48,53 @@ class FoodEntrySeeder extends Seeder
             $entry = new Entry([
                 'date' => $date,
                 'quantity' => $quantity,
-                'recipe_id' => '',
             ]);
 
             $entry->user()->associate($this->user);
 
-            //Attach food
-            $food_ids = Food::where('user_id', $this->user->id)->lists('id')->all();
-            $entry->food()->associate(Food::find($food_ids[$index]));
-
-            //Attach unit
-            $unit_ids = collect($entry->food->units)->lists('id');
-            $entry->unit()->associate(Unit::find($unit_ids[$index]));
-
-            //Attach recipe for the last entry if the date is today
-            if ($date === Carbon::today()->format('Y-m-d') && $index === 1) {
-                $recipe_ids = Recipe::where('user_id', $this->user->id)->lists('id')->all();
-//                dd($recipe_ids);
-                $entry->recipe()->associate(Recipe::find($recipe_ids[0]));
-            }
-
-
+            $this->attachFood($entry, $index);
+            $this->attachUnit($entry, $index);
+            $this->attachRecipe($date, $entry, $index);
 
             $entry->save();
 
         }
+    }
+
+    /**
+     * Attach recipe for the last entry if the date is today
+     * @param $date
+     * @param Entry $entry
+     * @param $index
+     */
+    private function attachRecipe($date, Entry $entry, $index)
+    {
+        if ($date === Carbon::today()->format('Y-m-d') && $index === 1) {
+            $recipe_ids = Recipe::where('user_id', $this->user->id)->lists('id')->all();
+            $entry->recipe()->associate(Recipe::find($recipe_ids[0]));
+        }
+    }
+
+    /**
+     *
+     * @param Entry $entry
+     * @param $index
+     */
+    private function attachFood(Entry $entry, $index)
+    {
+        $food_ids = Food::where('user_id', $this->user->id)->lists('id')->all();
+        $entry->food()->associate(Food::find($food_ids[$index]));
+    }
+
+    /**
+     *
+     * @param Entry $entry
+     * @param $index
+     */
+    private function attachUnit(Entry $entry, $index)
+    {
+        $unit_ids = collect($entry->food->units)->lists('id')->all();
+        $entry->unit()->associate(Unit::find($unit_ids[$index]));
     }
 
 }

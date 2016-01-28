@@ -2,12 +2,48 @@
 
 return [
     'userOne' => [
-        'apple',
-        'banana',
-        'orange',
-        'mango',
-        'watermelon',
-        'papaya',
+        [
+            'name' => 'apple',
+            'units' => [
+                'small'
+            ],
+            'defaultUnit' => 'small'
+        ],
+        [
+            'name' => 'banana',
+            'units' => [
+                'small', 'medium', 'large'
+            ],
+            'defaultUnit' => 'medium'
+        ],
+        [
+            'name' => 'orange',
+            'units' => [
+                'medium', 'large'
+            ],
+            'defaultUnit' => 'large'
+        ],
+        [
+            'name' => 'mango',
+            'units' => [
+                'medium'
+            ],
+            'defaultUnit' => 'medium'
+        ],
+        [
+            'name' => 'watermelon',
+            'units' => [
+                'grams'
+            ],
+            'defaultUnit' => 'grams'
+        ],
+        [
+            'name' => 'papaya',
+            'units' => [
+                'grams', 'medium'
+            ],
+            'defaultUnit' => 'medium'
+        ],
 //        'pear',
 //        'peach',
 //        'nectarine',

@@ -55,8 +55,9 @@ class FoodsController extends Controller
         if ($request->get('typing')) {
             $foods = Food::forCurrentUser()
                 ->where('name', 'LIKE', '%' . $request->get('typing') . '%')
+                ->with('units')
                 ->get();
-            return transform(createCollection($foods, new FoodTransformer));
+            return transform(createCollection($foods, new FoodTransformer(['units' => true])));
         }
 
         return $this->foodsRepository->getFoods();
