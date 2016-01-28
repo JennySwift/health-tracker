@@ -1,4 +1,4 @@
-<div ng-show="show.popups.similar_names" ng-click="closePopup($event, 'similar_names')" class="popup-outer">
+<div v-show="showPopup" v-on:click="closePopup($event)" class="popup-outer">
 
 	<div class="popup-inner">
 
@@ -12,11 +12,11 @@
 				<th>existing food</th>
 			</tr>
 
-			<tr ng-repeat="item in quick_recipe.similar_names.foods">
+			<tr v-for="item in newRecipe.similarNames.foods">
 				<td>
-					[[item.specified_food.name]]
+					@{{ item.specified_food.name }}
 					<div class="vertical-center">
-						<input ng-model="item.checked" ng-value="item.specified_food.name" type="radio">
+						<input v-model="item.checked" value="item.specified_food.name" type="radio">
 					</div>
 				</td>
 				<td>
@@ -34,25 +34,25 @@
 			<th>specified unit</th>
 			<th>existing unit</th>
 
-			<tr ng-repeat="item in quick_recipe.similar_names.units">
+			<tr v-for="item in newRecipe.similarNames.units">
 				<td>
-					[[item.specified_unit.name]]
+					@{{ item.specified_unit.name }}
 					<div class="vertical-center">
-						<input ng-model="item.checked" ng-value="item.specified_unit.name" type="radio">
+						<input v-model="item.checked" value="item.specified_unit.name" type="radio">
 					</div>
 				</td>
 				<td>
-					[[item.existing_unit.name]]
+					@{{ item.existing_unit.name }}
 					<div class="vertical-center">
-						<input ng-model="item.checked" ng-value="item.existing_unit.name" type="radio">
+						<input v-model="item.checked" value="item.existing_unit.name" type="radio">
 					</div>
 				</td>
 			</tr>
 		</table>
 
 		<div>
-			<button ng-click="show.popups.similar_names = false">cancel</button>
-			<button ng-click="quickRecipeFinish()">go</button>
+			<button v-on:click="showPopup = false">Cancel</button>
+			<button v-on:click="quickRecipeFinish()">Go</button>
 		</div>
 
 	</div>

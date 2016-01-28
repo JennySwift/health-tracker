@@ -2,7 +2,11 @@ var NewQuickRecipe = Vue.component('new-quick-recipe', {
     template: '#new-quick-recipe-template',
     data: function () {
         return {
-            errors: {}
+            errors: {},
+            showPopup: false,
+            newRecipe: {
+                similarNames: []
+            }
         };
     },
     components: {},

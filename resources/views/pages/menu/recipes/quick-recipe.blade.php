@@ -13,13 +13,13 @@
 		
 		<div id="quick-recipe" class="wysiwyg margin-bottom"></div>
 		
-		<button ng-click="quickRecipe()" class="btn btn-success">Enter recipe</button>
+		<button v-on:click="quickRecipe()" class="btn btn-success">Enter recipe</button>
 	</div>
 
 	<!-- errors -->
 
 	<div id="quick-recipe-errors">
-		<div ng-repeat="error in errors.quick_recipe">[[error]]</div>
+		<div v-for="error in errors.quick_recipe">@{{ error }}</div>
 	</div>
 
 </div>

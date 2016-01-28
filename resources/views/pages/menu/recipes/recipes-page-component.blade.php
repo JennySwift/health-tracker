@@ -13,7 +13,7 @@
 
         <div id="foods">
 
-            {{--<new-quick-recipe></new-quick-recipe>--}}
+            <new-quick-recipe></new-quick-recipe>
 
             <hr>
 

@@ -2,6 +2,7 @@
 
 @include('pages.exercises.exercise-units-page-component')
 @include('pages.menu.recipes.recipes-page-component')
+@include('pages.menu.recipes.new-quick-recipe-component')
 @include('pages.menu.recipes.recipes-component')
 @include('pages.menu.recipes.recipe-tags-component')
 @include('pages.menu.recipes.popups.recipe-popup.recipe-popup-component')

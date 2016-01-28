@@ -1,6 +1,6 @@
-<button ng-click="toggleQuickRecipeHelp()">Help</button>
+<button v-on:click="toggleQuickRecipeHelp()">Help</button>
 
-<div ng-show="showHelp" class="animate-show transition">
+<div v-show="showHelp" class="animate-show transition">
     <ul>
         <li>This is where you can quickly add a recipe by pasting it in the box below.</li>
         <li>It needs to be in a specific format for it to work,</li>
