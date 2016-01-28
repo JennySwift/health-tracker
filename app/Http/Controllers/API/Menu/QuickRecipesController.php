@@ -48,12 +48,12 @@ class QuickRecipesController extends Controller
     {
         $ingredients = $request->get('ingredients');
 
-        if ($request->get('check_for_similar_names')) {
+        if ($request->get('checkForSimilarNames')) {
             $similarNames = $this->quickRecipesRepository->checkEntireRecipeForSimilarNames($ingredients);
 
             if (isset($similarNames['foods']) || isset($similarNames['units'])) {
                 return [
-                    'similar_names' => $similarNames
+                    'similarNames' => $similarNames
                 ];
             }
             else {

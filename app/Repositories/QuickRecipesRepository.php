@@ -78,8 +78,8 @@ class QuickRecipesRepository {
 
         if ($foundUnit) {
             return [
-                'specified_unit' => ['name' => $unitName],
-                'existing_unit' => ['name' => $foundUnit],
+                'specifiedUnit' => ['name' => $unitName],
+                'existingUnit' => ['name' => $foundUnit],
                 'checked' => $foundUnit,
                 'index' => $index
             ];
@@ -100,8 +100,8 @@ class QuickRecipesRepository {
 
         if ($foundFood) {
             return [
-                'specified_food' => ['name' => $foodName],
-                'existing_food' => ['name' => $foundFood],
+                'specifiedFood' => ['name' => $foodName],
+                'existingFood' => ['name' => $foundFood],
                 'checked' => $foundFood,
                 'index' => $index
             ];
@@ -126,31 +126,31 @@ class QuickRecipesRepository {
 
             if (substr($name, -3) === 'ies') {
                 //the name ends in 'ies'. check if it's singular form exists.
-                $similar_name = substr($name, 0, -3) . 'y';
-                $found = pluckName($similar_name, $table);
+                $similarName = substr($name, 0, -3) . 'y';
+                $found = pluckName($similarName, $table);
             }
             elseif (substr($name, -1) === 'y') {
                 //the name ends in 'y'. Check if it's plural form exists.
-                $similar_name = substr($name, 0, -1) . 'ies';
-                $found = pluckName($similar_name, $table);
+                $similarName = substr($name, 0, -1) . 'ies';
+                $found = pluckName($similarName, $table);
             }
 
             elseif (substr($name, -1) === 's' && !isset($found)) {
                 //the name ends in s. check if its singular form is in the database
-                $similar_name = substr($name, 0, -1);
-                $found = pluckName($similar_name, $table);
+                $similarName = substr($name, 0, -1);
+                $found = pluckName($similarName, $table);
 
                 //if nothing was found, check if its plural form is in the database
                 if (!isset($found)) {
-                    $similar_name = $name . 'es';
-                    $found = pluckName($similar_name, $table);
+                    $similarName = $name . 'es';
+                    $found = pluckName($similarName, $table);
                 }
             }
 
             //check if it's plural form exists if no singular forms were found
             if (!isset($found)) {
-                $similar_name = $name . 's';
-                $found = pluckName($similar_name, $table);
+                $similarName = $name . 's';
+                $found = pluckName($similarName, $table);
             }
         }
         if (isset($found)) {
