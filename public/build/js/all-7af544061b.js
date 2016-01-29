@@ -25189,8 +25189,12 @@ var RecipesRepository = {
 
         //Find the index of the word that indicates the start of the steps
         for (var i = 0; i < possibilities.length; i++) {
-            if (linesLower.indexOf(possibilities[i]) !== -1 || linesLower.indexOf(possibilities[i] + ':') !== -1) {
+            if (linesLower.indexOf(possibilities[i]) !== -1) {
                 return linesLower.indexOf(possibilities[i]);
+            }
+            //Allow for colon after the word
+            else if (linesLower.indexOf(possibilities[i] + ':') !== -1) {
+                return linesLower.indexOf(possibilities[i] + ':');
             }
         }
     },
@@ -25213,9 +25217,9 @@ var RecipesRepository = {
             var ingredientAsString = this;
             var ingredientAsObject = {};
 
-            ingredientAsObject.description = that.getIngredientDescription();
+            ingredientAsObject.description = that.getIngredientDescription(ingredientAsString);
 
-            var quantityUnitAndFood = that.getIngredientQuantityUnitAndFood();
+            var quantityUnitAndFood = that.getIngredientQuantityUnitAndFood(ingredientAsString);
 
             //$line is now just the quantity, unit and food, without the description
             //split $line into an array with quantity, unit and food
@@ -25233,21 +25237,30 @@ var RecipesRepository = {
         return ingredientsAsObjects;
     },
 
+
     /**
      * If there is a description,
      * separate the description from the quantity, unit and food
+     * @param ingredientAsString
+     * @returns {*}
      */
     getIngredientDescription: function (ingredientAsString) {
         var split = this.splitDescriptionFromQuantityUnitAndFood(ingredientAsString);
-        return split[1].trim();
+
+        if (split[1]) {
+            return split[1].trim();
+        }
+
+        //There is no description
+        return '';
     },
 
     /**
      *
      * @returns {*}
      */
-    getIngredientQuantityUnitAndFood: function () {
-        var split = this.splitDescriptionFromQuantityUnitAndFood();
+    getIngredientQuantityUnitAndFood: function (ingredientAsString) {
+        var split = this.splitDescriptionFromQuantityUnitAndFood(ingredientAsString);
 
         return split[0];
     },
@@ -25255,12 +25268,14 @@ var RecipesRepository = {
     /**
      *
      * @param ingredientAsString
-     * @returns {Array|*}
+     * @returns {*}
      */
     splitDescriptionFromQuantityUnitAndFood: function (ingredientAsString) {
         if (ingredientAsString.indexOf(',') !== -1) {
-            return split = this.split(',');
+            return ingredientAsString.split(',');
         }
+
+        return [ingredientAsString];
     },
 
     /**
@@ -25277,8 +25292,8 @@ var RecipesRepository = {
             var ingredient = this;
             lineNumber++;
 
-            this.checkIngredientContainsQuantityUnitAndFood(ingredient, lineNumber);
-            ingredient = this.checkIngredientQuantityIsValid(ingredient, lineNumber);
+            that.checkIngredientContainsQuantityUnitAndFood(ingredient, lineNumber);
+            ingredient = that.checkIngredientQuantityIsValid(ingredient, lineNumber);
         });
 
         return this.errors;
