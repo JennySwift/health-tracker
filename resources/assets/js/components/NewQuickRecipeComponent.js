@@ -59,7 +59,7 @@ var NewQuickRecipe = Vue.component('new-quick-recipe', {
 
             this.errors = RecipesRepository.checkIngredientsForErrors(this.newRecipe.ingredients);
 
-            if (!this.errors) {
+            if (this.errors.length < 1) {
                 //Prompt the user for the recipe name
                 this.newRecipe.name = prompt('name your recipe');
 
@@ -100,10 +100,9 @@ var NewQuickRecipe = Vue.component('new-quick-recipe', {
             };
 
             this.$http.post('/api/quickRecipes', data, function (response) {
-                    this.recipes.push(response);
                     $.event.trigger('hide-loading');
 
-                    if (response.data.similar_names) {
+                    if (response.similarNames) {
                         $.event.trigger('provide-feedback', ['Similar names were found', 'success']);
                         //this.newRecipe.similarNames = response.similarNames;
                         this.similarNames = response.similarNames;
@@ -124,7 +123,7 @@ var NewQuickRecipe = Vue.component('new-quick-recipe', {
          * but this time with $checkSimilarNames parameter as false,
          * so that the recipe gets entered.
          */
-        quickRecipeFinish: function () {
+        insertRecipeWithoutCheckingForSimilarNames: function () {
             this.showPopup = false;
             this.doTheFoods();
             this.doTheUnits();

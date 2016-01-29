@@ -52,7 +52,7 @@
 
 		<div>
 			<button v-on:click="showPopup = false">Cancel</button>
-			<button v-on:click="quickRecipeFinish()">Go</button>
+			<button v-on:click="insertRecipeWithoutCheckingForSimilarNames()">Go</button>
 		</div>
 
 	</div>
