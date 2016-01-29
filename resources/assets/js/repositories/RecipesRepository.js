@@ -1,11 +1,41 @@
 var RecipesRepository = {
-    
-    getIngredients: function () {
-        var string = $("#quick-recipe").html();
-        return lines.slice(0, stepsIndex);
+
+    /**
+     *
+     * @returns {*}
+     */
+    getArrayOfIngredientsAndSteps: function () {
+        var stringOfIngredientsAndSteps = this.formatString($("#quick-recipe").html());
+        $("#quick-recipe").html(stringOfIngredientsAndSteps);
+        return this.convertFormattedRecipeStringToArrayOfIngredientsAndSteps(stringOfIngredientsAndSteps);
     },
 
-    getIngredientArray: function () {
+    /**
+     *
+     * @param arrayOfIngredientsAndSteps
+     * @returns {*|Array.<T>|string|Blob|ArrayBuffer}
+     */
+    getIngredients: function (arrayOfIngredientsAndSteps) {
+        var stepsIndex = this.getStepsIndex(arrayOfIngredientsAndSteps);
+        return arrayOfIngredientsAndSteps.slice(0, stepsIndex);
+    },
+
+    /**
+     *
+     * @param arrayOfIngredientsAndSteps
+     * @returns {*|Array.<T>|string|Blob|ArrayBuffer}
+     */
+    getSteps: function (arrayOfIngredientsAndSteps) {
+        var stepsIndex = this.getStepsIndex(arrayOfIngredientsAndSteps);
+        return arrayOfIngredientsAndSteps.slice(stepsIndex+1);
+    },
+
+    /**
+     *
+     * @param string
+     * @returns {*}
+     */
+    convertFormattedRecipeStringToArrayOfIngredientsAndSteps: function (string) {
         //turn the string into an array of divs by first splitting at the br tags
         var array = string.split('<br>');
 
@@ -17,29 +47,40 @@ var RecipesRepository = {
         if (array[0].indexOf('<!--') !== -1 && array[0].indexOf('-->') !== -1) {
             array.shift();
         }
-    },
-    
-    getSteps: function () {
-        return lines.slice(stepsIndex+1);
+
+        //Remove white space
+        for (var i = 0; i < array.length; i++) {
+            array[i] = array[i].trim();
+        }
+
+        return array;
     },
 
     /**
-     *
+     * The string may contain unwanted br tags and
+     * both opening and closing div tags.
+     * Format the string into a string of div tags to
+     * populate the html of the wysiwyg.
      * @param string
-     * @param wysiwyg
-     * @returns {*}
+     * @returns {string|*}
      */
-    formatString: function (string, wysiwyg) {
-        //Format for any browser (hopefully)
-        var stringAndArray = this.formatForAnyBrowser(string, wysiwyg);
+    formatString: function (string) {
+        //Remove any closing div tags and replace any opening div tags with a br tag.
+        while (string.indexOf('<div>') !== -1 || string.indexOf('</div>') !== -1) {
+            string = string.replace('<div>', '<br>').replace('</div>', '');
+        }
 
-        //trim the items in the array
-        $(stringAndArray.array).each(function () {
-            this.trim();
-        });
+        //var formattedString = "";
+        //var array = string.split('<br>');
 
-        //separate the steps from the recipe
-        return this.separateStepsFromIngredients(stringAndArray.array);
+        //make formattedString a string with div tags
+        //for (var j = 0; j < array.length; j++) {
+        //    formattedString += '<div>' + array[j] + '</div>';
+        //}
+
+        //string = formattedString;
+
+        return string;
     },
 
     /**
@@ -49,7 +90,7 @@ var RecipesRepository = {
      * @param lines
      * @returns {*|number|Number}
      */
-    findStepsIndex: function (lines) {
+    getStepsIndex: function (lines) {
         var possibilities = [
             'steps',
             'preparation',
@@ -72,55 +113,26 @@ var RecipesRepository = {
     },
 
     /**
-     * The string may contain unwanted br tags and
-     * both opening and closing div tags.
-     * Format the string so into a string of div tags to
-     * populate the html of the wysiwyg.
-     * And create an array from the string.
-     * Return both the formatted string and the array.
-     * @param string
-     * @param wysiwyg
-     * @returns {{string: string, array: *}}
-     */
-    formatString: function (string, wysiwyg) {
-        //Remove any closing div tags and replace any opening div tags with a br tag.
-        while (string.indexOf('<div>') !== -1 || string.indexOf('</div>') !== -1) {
-            string = string.replace('<div>', '<br>').replace('</div>', '');
-        }
-
-        var formattedString = "";
-
-        //make formattedString a string with div tags
-        for (var j = 0; j < array.length; j++) {
-            formattedString += '<div>' + array[j] + '</div>';
-        }
-
-        string = formattedString;
-        $(wysiwyg).html(string);
-
-        return string;
-    },
-
-    /**
      * ingredients is an array of strings.
      * The string should include the quantity, unit, food, and description,
      * providing the user has entered them.
      * We want to take each string and turn it into an object with
      * food, unit, quantity and description properties.
      * Then return the new array of objects.
-     * @param items
+     * @param ingredients (array)
      * @returns {Array}
      */
     convertIngredientStringsToObjects: function (ingredients) {
         var ingredientsAsObjects = [];
+        var that = this;
 
         $(ingredients).each(function () {
             var ingredientAsString = this;
             var ingredientAsObject = {};
 
-            ingredientAsObject.description = this.getIngredientDescription();
+            ingredientAsObject.description = that.getIngredientDescription();
 
-            var quantityUnitAndFood = this.getIngredientQuantityUnitAndFood();
+            var quantityUnitAndFood = that.getIngredientQuantityUnitAndFood();
 
             //$line is now just the quantity, unit and food, without the description
             //split $line into an array with quantity, unit and food
@@ -143,18 +155,8 @@ var RecipesRepository = {
      * separate the description from the quantity, unit and food
      */
     getIngredientDescription: function (ingredientAsString) {
-        var split = this.splitDescriptionFromQuantityUnitAndFood();
+        var split = this.splitDescriptionFromQuantityUnitAndFood(ingredientAsString);
         return split[1].trim();
-    },
-
-    /**
-     *
-     * @returns {Array|*}
-     */
-    splitDescriptionFromQuantityUnitAndFood: function () {
-        if (ingredientAsString.indexOf(',') !== -1) {
-            return split = this.split(',');
-        }
     },
 
     /**
@@ -168,45 +170,67 @@ var RecipesRepository = {
     },
 
     /**
-     * Return an array of errors for each line that does not
-     * have a quantity, unit and food
-     * @param ingredients
-     * @returns {{items: *, errors: Array}}
+     *
+     * @param ingredientAsString
+     * @returns {Array|*}
      */
-    errorCheck: function (ingredients) {
+    splitDescriptionFromQuantityUnitAndFood: function (ingredientAsString) {
+        if (ingredientAsString.indexOf(',') !== -1) {
+            return split = this.split(',');
+        }
+    },
+
+    /**
+     *
+     * @param ingredients
+     * @returns {Array}
+     */
+    checkIngredientsForErrors: function (ingredients) {
         var lineNumber = 0;
-        var errors = [];
-        var checkedQuantity;
+        this.errors = [];
         var that = this;
 
         $(ingredients).each(function () {
             var ingredient = this;
             lineNumber++;
 
-            if (!ingredient.quantity || !ingredient.unit || !ingredient.food) {
-                errors.push('Quantity, unit, and food have not all been included on line ' + lineNumber);
-                $("#quick-recipe > div").eq(lineNumber-1).css('background', 'red');
-            }
-            //The line contains quantity, unit and food.
-            //Check the quantity is valid.
-            else {
-                $checkedQuantity = that.validQuantityCheck(ingredient.quantity);
-                if (!$checkedQuantity) {
-                    //Quantity is invalid
-                    errors.push('Quantity is invalid on line ' + lineNumber);
-                    $("#quick-recipe > div").eq(lineNumber-1).css('background', 'red');
-                }
-                else {
-                    // Quantity is valid and if it was a fraction, it has now been converted to a decimal.
-                    ingredient.quantity = checkedQuantity;
-                }
-            }
+            this.checkIngredientContainsQuantityUnitAndFood(ingredient, lineNumber);
+            ingredient = this.checkIngredientQuantityIsValid(ingredient, lineNumber);
         });
 
-        return {
-            ingredients: ingredients,
-            errors: errors
-        };
+        return this.errors;
+    },
+
+    /**
+     *
+     * @param ingredient
+     * @param lineNumber
+     */
+    checkIngredientContainsQuantityUnitAndFood: function (ingredient, lineNumber) {
+        if (!ingredient.quantity || !ingredient.unit || !ingredient.food) {
+            this.errors.push('Quantity, unit, and food have not all been included on line ' + lineNumber);
+            $("#quick-recipe > div").eq(lineNumber-1).css('background', 'red');
+        }
+    },
+
+    /**
+     *
+     * @param ingredient
+     * @param lineNumber
+     */
+    checkIngredientQuantityIsValid: function (ingredient, lineNumber) {
+        var checkedQuantity = this.checkQuantityIsValid(ingredient.quantity);
+        if (!checkedQuantity) {
+            //Quantity is invalid
+            this.errors.push('Quantity is invalid on line ' + lineNumber);
+            $("#quick-recipe > div").eq(lineNumber-1).css('background', 'red');
+        }
+        else {
+            // Quantity is valid and if it was a fraction, it has now been converted to a decimal.
+            ingredient.quantity = checkedQuantity;
+        }
+
+        return ingredient;
     },
 
     /**
@@ -215,7 +239,7 @@ var RecipesRepository = {
      * @param quantity
      * @returns {*}
      */
-    validQuantityCheck: function (quantity) {
+    checkQuantityIsValid: function (quantity) {
         for (var i = 0; i < quantity.length; i++) {
             var character = quantity[i];
 
