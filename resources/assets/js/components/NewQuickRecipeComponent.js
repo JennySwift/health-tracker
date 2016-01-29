@@ -50,26 +50,29 @@ var NewQuickRecipe = Vue.component('new-quick-recipe', {
             // the display is slow to update.
             $("#quick-recipe-errors").hide();
 
-            var string = $("#quick-recipe").html();
+            this.newRecipe.ingredients = RecipesRepository.getIngredients();
+            this.newRecipe.steps = RecipesRepository.getSteps();
 
-            //this.newRecipe is an object, with an array of items and an array of steps.
-            this.newRecipe = RecipesRepository.formatString(string, $("#quick-recipe"));
-
-            this.newRecipe.ingredients = RecipesRepository.populateItemsArray(this.newRecipe.ingredients);
-
-            this.checkForAndHandleErrors();
-
-            if (!this.errors) {
-                //Prompt the user for the recipe name
-                this.newRecipe.name = prompt('name your recipe');
-
-                //If the user changes their mind and cancels
-                if (!recipeName) {
-                    return;
-                }
-
-                this.quickRecipeAttemptInsert();
-            }
+            //var string = $("#quick-recipe").html();
+            //
+            ////this.newRecipe is an object, with an array of items and an array of steps.
+            //this.newRecipe = RecipesRepository.formatString(string, $("#quick-recipe"));
+            //
+            //this.newRecipe.ingredients = RecipesRepository.populateItemsArray(this.newRecipe.ingredients);
+            //
+            //this.checkForAndHandleErrors();
+            //
+            //if (!this.errors) {
+            //    //Prompt the user for the recipe name
+            //    this.newRecipe.name = prompt('name your recipe');
+            //
+            //    //If the user changes their mind and cancels
+            //    if (!recipeName) {
+            //        return;
+            //    }
+            //
+            //    this.quickRecipeAttemptInsert();
+            //}
         },
 
         /**

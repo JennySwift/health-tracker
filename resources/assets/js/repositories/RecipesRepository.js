@@ -1,187 +1,170 @@
 var RecipesRepository = {
+    
+    getIngredients: function () {
+        var string = $("#quick-recipe").html();
+        return lines.slice(0, stepsIndex);
+    },
+
+    getIngredientArray: function () {
+        //turn the string into an array of divs by first splitting at the br tags
+        var array = string.split('<br>');
+
+        //remove any empty elements from the array
+        array = _.without(array, '');
+
+        //Chrome was putting this line at the top. Remove that:
+        //<!--?xml version="1.0" encoding="UTF-8" standalone="no"?-->
+        if (array[0].indexOf('<!--') !== -1 && array[0].indexOf('-->') !== -1) {
+            array.shift();
+        }
+    },
+    
+    getSteps: function () {
+        return lines.slice(stepsIndex+1);
+    },
 
     /**
      *
-     * @param $string
-     * @param $wysiwyg
+     * @param string
+     * @param wysiwyg
      * @returns {*}
      */
-    formatString: function ($string, $wysiwyg) {
+    formatString: function (string, wysiwyg) {
         //Format for any browser (hopefully)
-        var $string_and_array = this.formatForAnyBrowser($string, $wysiwyg);
+        var stringAndArray = this.formatForAnyBrowser(string, wysiwyg);
 
         //trim the items in the array
-        $($string_and_array.array).each(function () {
+        $(stringAndArray.array).each(function () {
             this.trim();
         });
 
-        //separate the method from the recipe
-        return this.separateMethod($string_and_array.array);
+        //separate the steps from the recipe
+        return this.separateStepsFromIngredients(stringAndArray.array);
     },
 
     /**
-     * $lines is an array of all the lines in the wysywig.
-     * We want to return an object containing the item lines,
-     * and the method lines, separate from each other.
-     * @param $lines
-     * @returns {*}
+     * Check for the possibilities of words that indicate
+     * which line the steps starts on
+     *
+     * @param lines
+     * @returns {*|number|Number}
      */
-    separateMethod: function ($lines) {
-        var $items;
-        var $method;
-        var $recipe;
-        var $method_index;
+    findStepsIndex: function (lines) {
+        var possibilities = [
+            'steps',
+            'preparation',
+            'directions',
+            'method'
+        ];
 
-        /**
-         * @VP:
-         * Surely there's a way to do these checks with less code?
-         */
-
-        //Check for the method trigger possibilities
-        //First, the lowercase possibilities
-        if ($lines.indexOf('method') !== -1) {
-            $method_index = $lines.indexOf('method');
-        }
-        else if ($lines.indexOf('preparation') !== -1) {
-            $method_index = $lines.indexOf('preparation');
-        }
-        else if ($lines.indexOf('directions') !== -1) {
-            $method_index = $lines.indexOf('directions');
+        //Convert lines to lower case
+        var linesLower = [];
+        for (var i = 0; i < lines.length; i++) {
+            linesLower.push(lines[i].toLowerCase());
         }
 
-        //Then, the uppercase possibilities
-        if ($lines.indexOf('Method') !== -1) {
-            $method_index = $lines.indexOf('Method');
+        //Find the index of the word that indicates the start of the steps
+        for (var i = 0; i < possibilities.length; i++) {
+            if (linesLower.indexOf(possibilities[i]) !== -1 || linesLower.indexOf(possibilities[i] + ':') !== -1) {
+                return linesLower.indexOf(possibilities[i]);
+            }
         }
-        else if ($lines.indexOf('Preparation') !== -1) {
-            $method_index = $lines.indexOf('Preparation');
-        }
-        else if ($lines.indexOf('Directions') !== -1) {
-            $method_index = $lines.indexOf('Directions');
-        }
-
-        //Then, the lowercase colon possibilities
-        //Todo: 'Steps' should also be acceptable
-        if ($lines.indexOf('method:') !== -1) {
-            $method_index = $lines.indexOf('method:');
-        }
-        else if ($lines.indexOf('preparation') !== -1) {
-            $method_index = $lines.indexOf('preparation:');
-        }
-        else if ($lines.indexOf('directions:') !== -1) {
-            $method_index = $lines.indexOf('directions:');
-        }
-
-        //Then, the uppercase colon possibilities
-        if ($lines.indexOf('Method:') !== -1) {
-            $method_index = $lines.indexOf('Method:');
-        }
-        else if ($lines.indexOf('Preparation:') !== -1) {
-            $method_index = $lines.indexOf('Preparation:');
-        }
-        else if ($lines.indexOf('Directions:') !== -1) {
-            $method_index = $lines.indexOf('Directions:');
-        }
-
-        //If $method_index, there is a method.
-        //If not, there is no method.
-        //Populate the object to return.
-        if ($method_index) {
-            $items = $lines.slice(0, $method_index);
-            $method = $lines.slice($method_index+1);
-
-            $recipe = {
-                ingredients: $items,
-                steps: $method
-            };
-        }
-        else {
-            //There is no method
-            $recipe = {
-                ingredients: $lines
-            };
-        }
-
-        return $recipe;
     },
 
     /**
-     * The $string may contain unwanted br tags and
+     * The string may contain unwanted br tags and
      * both opening and closing div tags.
      * Format the string so into a string of div tags to
      * populate the html of the wysiwyg.
-     * And create an array from the $string.
+     * And create an array from the string.
      * Return both the formatted string and the array.
-     * @param $string
-     * @param $wysiwyg
+     * @param string
+     * @param wysiwyg
      * @returns {{string: string, array: *}}
      */
-    formatForAnyBrowser: function ($string, $wysiwyg) {
+    formatString: function (string, wysiwyg) {
         //Remove any closing div tags and replace any opening div tags with a br tag.
-        while ($string.indexOf('<div>') !== -1 || $string.indexOf('</div>') !== -1) {
-            $string = $string.replace('<div>', '<br>').replace('</div>', '');
+        while (string.indexOf('<div>') !== -1 || string.indexOf('</div>') !== -1) {
+            string = string.replace('<div>', '<br>').replace('</div>', '');
         }
 
-        //turn the string into an array of divs by first splitting at the br tags
-        var $array = $string.split('<br>');
+        var formattedString = "";
 
-        //remove any empty elements from the array
-        $array = _.without($array, '');
-
-        var $formatted_string = "";
-
-        //make $formatted_string a string with div tags
-        for (var j = 0; j < $array.length; j++) {
-            $formatted_string += '<div>' + $array[j] + '</div>';
+        //make formattedString a string with div tags
+        for (var j = 0; j < array.length; j++) {
+            formattedString += '<div>' + array[j] + '</div>';
         }
 
-        $string = $formatted_string;
-        $($wysiwyg).html($string);
+        string = formattedString;
+        $(wysiwyg).html(string);
 
-        return {
-            string: $string,
-            array: $array
-        };
+        return string;
     },
 
     /**
-     * $items is an array of strings.
+     * ingredients is an array of strings.
      * The string should include the quantity, unit, food, and description,
      * providing the user has entered them.
      * We want to take each string and turn it into an object with
      * food, unit, quantity and description properties.
      * Then return the new array of objects.
-     * @param $items
+     * @param items
      * @returns {Array}
      */
-    populateItemsArray: function ($items) {
-        var $formatted_items = [];
-        $($items).each(function () {
-            $line = this;
-            var $item = {};
+    convertIngredientStringsToObjects: function (ingredients) {
+        var ingredientsAsObjects = [];
 
-            //if there is a description, separate the description from the quantity, unit and food
-            if ($line.indexOf(',') !== -1) {
-                $line = $line.split(',');
-                //grab the description, add it to the item so I can remove it from the line
-                //so it doesn't get in the way
-                $item.description = $line[1].trim();
-                $line = $line[0];
-            }
+        $(ingredients).each(function () {
+            var ingredientAsString = this;
+            var ingredientAsObject = {};
+
+            ingredientAsObject.description = this.getIngredientDescription();
+
+            var quantityUnitAndFood = this.getIngredientQuantityUnitAndFood();
 
             //$line is now just the quantity, unit and food, without the description
             //split $line into an array with quantity, unit and food
-            $line = $line.split(' ');
-            //Add the quantity, unit and food to the $item
-            $item.quantity = $line[0];
-            $item.unit = $line[1];
-            $item.food = $line[2];
+            var split = quantityUnitAndFood.split(' ');
+
+            //Add the quantity, unit and food to the ingredientAsObject
+            ingredientAsObject.quantity = split[0];
+            ingredientAsObject.unit = split[1];
+            ingredientAsObject.food = split[2];
 
             //Add the item object to the items array
-            $formatted_items.push($item);
+            ingredientsAsObjects.push(ingredientAsObject);
         });
 
-        return $formatted_items;
+        return ingredientsAsObjects;
+    },
+
+    /**
+     * If there is a description,
+     * separate the description from the quantity, unit and food
+     */
+    getIngredientDescription: function (ingredientAsString) {
+        var split = this.splitDescriptionFromQuantityUnitAndFood();
+        return split[1].trim();
+    },
+
+    /**
+     *
+     * @returns {Array|*}
+     */
+    splitDescriptionFromQuantityUnitAndFood: function () {
+        if (ingredientAsString.indexOf(',') !== -1) {
+            return split = this.split(',');
+        }
+    },
+
+    /**
+     *
+     * @returns {*}
+     */
+    getIngredientQuantityUnitAndFood: function () {
+        var split = this.splitDescriptionFromQuantityUnitAndFood();
+
+        return split[0];
     },
 
     /**
