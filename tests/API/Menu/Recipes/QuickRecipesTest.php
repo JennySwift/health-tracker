@@ -63,7 +63,6 @@ class QuickRecipesTest extends TestCase
         $this->logInUser();
 
         $data = [
-            'check_for_similar_names' => true,
             'name' => 'super recipe',
             'ingredients' => [
                 [

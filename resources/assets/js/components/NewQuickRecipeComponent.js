@@ -9,7 +9,6 @@ var NewQuickRecipe = Vue.component('new-quick-recipe', {
                 similarNames: []
             },
             similarNames: [],
-            checkForSimilarNames: true
         };
     },
     components: {},
@@ -55,16 +54,41 @@ var NewQuickRecipe = Vue.component('new-quick-recipe', {
                     return;
                 }
 
-                this.quickRecipeAttemptInsert();
+                this.checkForSimilarNames();
             }
         },
 
         /**
-         * Attempt to insert the recipe.
-         * It won't be inserted if similar names are found.
+         *
          */
-        quickRecipeAttemptInsert: function () {
+        checkForSimilarNames: function () {
             $.event.trigger('show-loading');
+
+            var data = {
+                ingredients: this.newRecipe.ingredients
+            };
+
+            this.$http.get('/api/quickRecipes/checkForSimilarNames', data, function (response) {
+                    $.event.trigger('hide-loading');
+                    this.similarNames = response;
+
+                    if (response.units || response.foods) {
+                        $.event.trigger('provide-feedback', ['Similar names were found', 'success']);
+                        this.showPopup = true;
+                    }
+                })
+                .error(function (response) {
+                    this.handleResponseError(response);
+                });
+        },
+
+        /**
+         * This is for entering the recipe after the similar name check is done.
+         * We call insertQuickRecipe again,
+         * but this time with $checkSimilarNames parameter as false,
+         * so that the recipe gets entered.
+         */
+        insertRecipeWithoutCheckingForSimilarNames: function () {
             var data = {
                 name: this.newRecipe.name,
                 ingredients: this.newRecipe.ingredients,
@@ -88,15 +112,7 @@ var NewQuickRecipe = Vue.component('new-quick-recipe', {
                 .error(function (response) {
                     this.handleResponseError(response);
                 });
-        },
 
-        /**
-         * This is for entering the recipe after the similar name check is done.
-         * We call insertQuickRecipe again,
-         * but this time with $checkSimilarNames parameter as false,
-         * so that the recipe gets entered.
-         */
-        insertRecipeWithoutCheckingForSimilarNames: function () {
             this.showPopup = false;
             this.doTheFoods();
             this.doTheUnits();
