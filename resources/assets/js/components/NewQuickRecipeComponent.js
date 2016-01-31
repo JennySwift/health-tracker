@@ -59,6 +59,14 @@ var NewQuickRecipe = Vue.component('new-quick-recipe', {
         },
 
         /**
+        *
+        */
+        showNewRecipeFields: function () {
+            this.addingNewRecipe = true;
+            this.editingRecipe = false;
+        },
+
+        /**
          *
          */
         checkForSimilarNames: function () {
@@ -69,26 +77,34 @@ var NewQuickRecipe = Vue.component('new-quick-recipe', {
             };
 
             this.$http.get('/api/quickRecipes/checkForSimilarNames', data, function (response) {
-                    $.event.trigger('hide-loading');
-                    this.similarNames = response;
+                $.event.trigger('hide-loading');
+                this.similarNames = response;
 
-                    if (response.units || response.foods) {
-                        $.event.trigger('provide-feedback', ['Similar names were found', 'success']);
-                        this.showPopup = true;
-                    }
-                })
-                .error(function (response) {
-                    this.handleResponseError(response);
-                });
+                if (response.units || response.foods) {
+                    $.event.trigger('provide-feedback', ['Similar names were found', 'success']);
+                    this.showPopup = true;
+                }
+                else {
+                    this.insertRecipe();
+                }
+
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
         },
 
         /**
-         * This is for entering the recipe after the similar name check is done.
-         * We call insertQuickRecipe again,
-         * but this time with $checkSimilarNames parameter as false,
-         * so that the recipe gets entered.
+         *
          */
-        insertRecipeWithoutCheckingForSimilarNames: function () {
+        insertRecipe: function () {
+            $.event.trigger('show-loading');
+            if (this.similarNames.foods || this.similarNames.units) {
+                this.chooseCorrectFoodName();
+                this.chooseCorrectUnitName();
+                this.showPopup = false;
+            }
+
             var data = {
                 name: this.newRecipe.name,
                 ingredients: this.newRecipe.ingredients,
@@ -97,46 +113,32 @@ var NewQuickRecipe = Vue.component('new-quick-recipe', {
             };
 
             this.$http.post('/api/quickRecipes', data, function (response) {
+                    $.event.trigger('provide-feedback', ['Recipe created', 'success']);
                     $.event.trigger('hide-loading');
-
-                    if (response.similarNames) {
-                        $.event.trigger('provide-feedback', ['Similar names were found', 'success']);
-                        //this.newRecipe.similarNames = response.similarNames;
-                        this.similarNames = response.similarNames;
-                        this.showPopup = true;
-                    }
-                    else {
-                        this.recipes.push(response);
-                    }
+                    this.recipes.push(response.data);
                 })
                 .error(function (response) {
                     this.handleResponseError(response);
                 });
-
-            this.showPopup = false;
-            this.doTheFoods();
-            this.doTheUnits();
-            this.insertQuickRecipe();
         },
 
-        doTheFoods: function () {
-            $(this.newRecipe.similarNames.foods).each(function () {
+        /**
+         *
+         */
+        chooseCorrectFoodName: function () {
+            $(this.similarNames.foods).each(function () {
                 if (this.checked === this.existingFood.name) {
-                    // We are using the existing food rather than creating a new food.
-                    // Therefore, change $scope.quick_recipe.contents
-                    // to use the correct food name.
+                    // Use the existing food rather than creating a new food.
                     this.newRecipe.ingredients[this.index].food = this.existingFood.name;
                 }
             });
         },
 
-        doTheUnits: function () {
+        chooseCorrectUnitName: function () {
             $(this.newRecipe.similarNames.units).each(function () {
                 if (this.checked === this.existingUnit.name) {
-                    //we are using the existing unit rather than creating
-                    //a new unit. therefore, change $scope.quick_recipe.contents
-                    // to use the correct unit name.
-                    this.newRecipe.ingredients[this.index].unit = this.existingUnit.name;
+                    //Use the existing unit rather than creating a new unit
+                     this.newRecipe.ingredients[this.index].unit = this.existingUnit.name;
                 }
             });
         },
@@ -164,6 +166,15 @@ var NewQuickRecipe = Vue.component('new-quick-recipe', {
             this.newRecipe.steps = RecipesRepository.getSteps(arrayOfIngredientsAndSteps);
             this.newRecipe.ingredients = RecipesRepository.convertIngredientStringsToObjects(this.newRecipe.ingredients);
             this.errors = RecipesRepository.checkIngredientsForErrors(this.newRecipe.ingredients);
+        },
+
+        /**
+         *
+         */
+        closePopup: function ($event) {
+            if ($event.target.className === 'popup-outer') {
+                this.showPopup = false;
+            }
         },
 
         /**
