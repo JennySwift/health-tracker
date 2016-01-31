@@ -18,8 +18,6 @@ class QuickRecipesTest extends TestCase
         $this->logInUser();
 
         $data = [
-            'checkForSimilarNames' => true,
-            'name' => 'super recipe',
             'ingredients' => [
                 [
                     'description' => 'chopped',
@@ -32,27 +30,26 @@ class QuickRecipesTest extends TestCase
                     'quantity' => 2,
                     'unit' => 'large'
                 ]
-            ],
-            'steps' => ['Blend', 'Eat']
+            ]
         ];
 
-        $response = $this->call('POST', '/api/quickRecipes', $data);
+        $response = $this->apiCall('GET', '/api/quickRecipes/checkForSimilarNames', $data);
         $content = json_decode($response->getContent(), true);
 //        dd($content);
 
         //Check similar food data is correct
-        $this->assertArrayHasKey('foods', $content['similarNames']);
-        $this->assertEquals('bananas', $content['similarNames']['foods'][0]['specifiedFood']['name']);
-        $this->assertEquals('banana', $content['similarNames']['foods'][0]['existingFood']['name']);
-        $this->assertEquals('banana', $content['similarNames']['foods'][0]['checked']);
-        $this->assertEquals(1, $content['similarNames']['foods'][0]['index']);
+        $this->assertArrayHasKey('foods', $content);
+        $this->assertEquals('bananas', $content['foods'][0]['specifiedFood']['name']);
+        $this->assertEquals('banana', $content['foods'][0]['existingFood']['name']);
+        $this->assertEquals('banana', $content['foods'][0]['checked']);
+        $this->assertEquals(1, $content['foods'][0]['index']);
 
         //Check similar unit data is correct
-        $this->assertArrayHasKey('units', $content['similarNames']);
-        $this->assertEquals('gram', $content['similarNames']['units'][0]['specifiedUnit']['name']);
-        $this->assertEquals('grams', $content['similarNames']['units'][0]['existingUnit']['name']);
-        $this->assertEquals('grams', $content['similarNames']['units'][0]['checked']);
-        $this->assertEquals(0, $content['similarNames']['units'][0]['index']);
+        $this->assertArrayHasKey('units', $content);
+        $this->assertEquals('gram', $content['units'][0]['specifiedUnit']['name']);
+        $this->assertEquals('grams', $content['units'][0]['existingUnit']['name']);
+        $this->assertEquals('grams', $content['units'][0]['checked']);
+        $this->assertEquals(0, $content['units'][0]['index']);
     }
 
     /**

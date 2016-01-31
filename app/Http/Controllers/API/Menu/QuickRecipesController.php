@@ -38,38 +38,25 @@ class QuickRecipesController extends Controller
     }
 
     /**
-     * Check for similar names.
-     * If they are found, return them.
-     * If not, insert the recipe.
+     *
      * @param Request $request
      * @return array
      */
-    public function store(Request $request)
+    public function checkForSimilarNames(Request $request)
     {
-        $ingredients = $request->get('ingredients');
-
-        if ($request->get('checkForSimilarNames')) {
-            $similarNames = $this->quickRecipesRepository->checkEntireRecipeForSimilarNames($ingredients);
-
-            if (isset($similarNames['foods']) || isset($similarNames['units'])) {
-                return [
-                    'similarNames' => $similarNames
-                ];
-            }
-            else {
-                //No similar names were found.
-                //Insert the recipe.
-                $recipe = $this->recipesRepository->insert($request->get('name'), $ingredients, $request->get('steps'));
-            }
-        }
-        else {
-            //We are not checking for similar names.
-            //Insert the recipe
-            $recipe = $this->recipesRepository->insert($request->get('name'), $ingredients, $request->get('steps'));
-        }
-        return $this->responseCreatedWithTransformer($recipe, new RecipeTransformer);
+        return $this->quickRecipesRepository->checkEntireRecipeForSimilarNames($request->get('ingredients'));
     }
 
+    /**
+     *
+     * @param Request $request
+     * @return mixed
+     */
+    public function store(Request $request)
+    {
+        $recipe = $this->recipesRepository->insert($request->get('name'), $request->get('ingredients'), $request->get('steps'));
 
+        return $this->responseCreatedWithTransformer($recipe, new RecipeTransformer);
+    }
 
 }

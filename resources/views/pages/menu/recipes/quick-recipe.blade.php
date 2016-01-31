@@ -13,7 +13,7 @@
 		
 		<div id="quick-recipe" class="wysiwyg margin-bottom"></div>
 		
-		<button v-on:click="insertRecipeIfNoSimilarNames()" class="btn btn-success">Enter recipe</button>
+		<button v-on:click="respondToEnterRecipeBtnClick()" class="btn btn-success">Enter recipe</button>
 	</div>
 
 	<!-- errors -->
