@@ -1,8 +1,14 @@
 <script id="exercise-entries-template" type="x-template">
 
 <div>
-    @include('pages.entries.popups.exercise-entries')
-    @include('pages.entries.exercise-entry-inputs')
+    @include('pages.entries.popups.specific-exercise-entries-popup')
+
+    <new-item-with-autocomplete
+            :selected-recipe.sync="selectedRecipe"
+            :insert-item-function="insertExerciseEntry"
+    >
+    </new-item-with-autocomplete>
+
     @include('pages.entries.exercise-entries')
 </div>
 
