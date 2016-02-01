@@ -13,7 +13,10 @@
 
         <div id="foods">
 
-            <new-quick-recipe></new-quick-recipe>
+            <new-quick-recipe
+                :recipes.sync="recipes"
+            >
+            </new-quick-recipe>
 
             <hr>
 

@@ -25868,7 +25868,7 @@ var NewQuickRecipe = Vue.component('new-quick-recipe', {
         }
     },
     props: [
-        //data to be received from parent
+        'recipes'
     ],
     ready: function () {
 
