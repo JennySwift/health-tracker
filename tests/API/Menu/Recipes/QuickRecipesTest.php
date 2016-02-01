@@ -41,14 +41,14 @@ class QuickRecipesTest extends TestCase
         $this->assertArrayHasKey('foods', $content);
         $this->assertEquals('bananas', $content['foods'][0]['specifiedFood']['name']);
         $this->assertEquals('banana', $content['foods'][0]['existingFood']['name']);
-        $this->assertEquals('banana', $content['foods'][0]['checked']);
+        $this->assertEquals('banana', $content['foods'][0]['selected']);
         $this->assertEquals(1, $content['foods'][0]['index']);
 
         //Check similar unit data is correct
         $this->assertArrayHasKey('units', $content);
         $this->assertEquals('gram', $content['units'][0]['specifiedUnit']['name']);
         $this->assertEquals('grams', $content['units'][0]['existingUnit']['name']);
-        $this->assertEquals('grams', $content['units'][0]['checked']);
+        $this->assertEquals('grams', $content['units'][0]['selected']);
         $this->assertEquals(0, $content['units'][0]['index']);
     }
 

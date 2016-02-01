@@ -80,7 +80,7 @@ class QuickRecipesRepository {
             return [
                 'specifiedUnit' => ['name' => $unitName],
                 'existingUnit' => ['name' => $foundUnit],
-                'checked' => $foundUnit,
+                'selected' => $foundUnit,
                 'index' => $index
             ];
         }
@@ -102,7 +102,7 @@ class QuickRecipesRepository {
             return [
                 'specifiedFood' => ['name' => $foodName],
                 'existingFood' => ['name' => $foundFood],
-                'checked' => $foundFood,
+                'selected' => $foundFood,
                 'index' => $index
             ];
         }

@@ -16,13 +16,13 @@
 				<td>
 					@{{ item.specifiedFood.name }}
 					<div class="vertical-center">
-						<input v-model="item.checked" value="item.specifiedFood.name" type="radio">
+						<input v-model="item.selected" :value="item.specifiedFood.name" type="radio">
 					</div>
 				</td>
 				<td>
 					@{{ item.existingFood.name }}
 					<div class="vertical-center">
-						<input v-model="item.checked" value="item.existingFood.name" type="radio">
+						<input v-model="item.selected" :value="item.existingFood.name" type="radio">
 					</div>
 				</td>
 			</tr>
@@ -38,13 +38,13 @@
 				<td>
 					@{{ item.specifiedUnit.name }}
 					<div class="vertical-center">
-						<input v-model="item.checked" value="item.specifiedUnit.name" type="radio">
+						<input v-model="item.selected" :value="item.specifiedUnit.name" type="radio">
 					</div>
 				</td>
 				<td>
 					@{{ item.existingUnit.name }}
 					<div class="vertical-center">
-						<input v-model="item.checked" value="item.existingUnit.name" type="radio">
+						<input v-model="item.selected" :value="item.existingUnit.name" type="radio">
 					</div>
 				</td>
 			</tr>

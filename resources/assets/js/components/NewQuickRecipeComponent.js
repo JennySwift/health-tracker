@@ -126,19 +126,24 @@ var NewQuickRecipe = Vue.component('new-quick-recipe', {
          *
          */
         chooseCorrectFoodName: function () {
+            var that = this;
             $(this.similarNames.foods).each(function () {
-                if (this.checked === this.existingFood.name) {
+                if (this.selected === this.existingFood.name) {
                     // Use the existing food rather than creating a new food.
-                    this.newRecipe.ingredients[this.index].food = this.existingFood.name;
+                    that.newRecipe.ingredients[this.index].food = this.existingFood.name;
                 }
             });
         },
 
+        /**
+         *
+         */
         chooseCorrectUnitName: function () {
+            var that = this;
             $(this.newRecipe.similarNames.units).each(function () {
-                if (this.checked === this.existingUnit.name) {
+                if (this.selected === this.existingUnit.name) {
                     //Use the existing unit rather than creating a new unit
-                     this.newRecipe.ingredients[this.index].unit = this.existingUnit.name;
+                     that.newRecipe.ingredients[this.index].unit = this.existingUnit.name;
                 }
             });
         },
