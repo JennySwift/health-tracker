@@ -27,7 +27,7 @@
         </div>
 
         <input
-            v-on:keyup="changeDate($event.keyCode)"
+            v-on:keyup.13="changeDate()"
             type="text"
             placeholder="date"
             id="date"

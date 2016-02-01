@@ -32,16 +32,12 @@ var DateNavigation = Vue.component('date-navigation', {
 
         /**
          *
-         * @param $keycode
-         * @param $date
+         * @param date
          * @returns {boolean}
          */
-        changeDate: function ($keycode, $date) {
-            if ($keycode !== 13) {
-                return false;
-            }
-            var $date = $date || $("#date").val();
-            this.date.typed = DatesRepository.changeDate($keycode, $date);
+        changeDate: function (date) {
+            var date = date || $("#date").val();
+            this.date.typed = DatesRepository.changeDate(date);
         },
 
         /**
