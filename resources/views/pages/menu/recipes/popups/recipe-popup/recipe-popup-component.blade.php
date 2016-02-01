@@ -20,10 +20,11 @@
             </div>
 
             <h3>Add ingredient</h3>
-            <new-ingredient
+            <new-item-with-autocomplete
                 :selected-recipe.sync="selectedRecipe"
+                :insert-item-function="addIngredientToRecipe"
             >
-            </new-ingredient>
+            </new-item-with-autocomplete>
             @include('pages.menu.recipes.popups.recipe-popup.ingredients')
             @include('pages.menu.recipes.popups.recipe-popup.steps')
             @include('pages.menu.recipes.popups.recipe-popup.tags')

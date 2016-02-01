@@ -1,5 +1,5 @@
-var NewIngredient = Vue.component('new-ingredient', {
-    template: '#new-ingredient-template',
+var NewItemWithAutocomplete = Vue.component('new-item-with-autocomplete', {
+    template: '#new-item-with-autocomplete-template',
     data: function () {
         return {
             newIngredient: {
@@ -83,7 +83,6 @@ var NewIngredient = Vue.component('new-ingredient', {
          */
         selectOption: function () {
             this.newIngredient.food = this.autocompleteOptions[this.currentIndex];
-            //this.newIngredient.quantity = this.newIngredient.food.defaultQuantity;
             this.newIngredient.unit = this.newIngredient.food.defaultUnit.data;
             this.showDropdown = false;
         },
@@ -91,37 +90,13 @@ var NewIngredient = Vue.component('new-ingredient', {
         /**
          *
          */
-        addFoodToRecipe: function () {
-            $.event.trigger('show-loading');
+        insertItem: function () {
+            this.insertItemFunction(this.newIngredient);
+            this.newIngredient.description = '';
+            this.newIngredient.quantity = '';
 
-            var data = {
-                addIngredient: true,
-                food_id: this.newIngredient.food.id,
-                unit_id: this.newIngredient.unit.id,
-                quantity: this.newIngredient.quantity,
-                description: this.newIngredient.description
-            };
-
-            this.$http.put('/api/recipes/' + this.selectedRecipe.id, data, function (response) {
-                    this.selectedRecipe.ingredients.push({
-                        name: this.newIngredient.food.name,
-                        unit_name: this.newIngredient.unit.name,
-                        quantity: this.newIngredient.quantity,
-                        description: this.newIngredient.description,
-                    });
-                    $.event.trigger('provide-feedback', ['Food added', 'success']);
-                    $.event.trigger('hide-loading');
-
-                    this.newIngredient.description = '';
-                    this.newIngredient.quantity = '';
-
-                    $("#new-ingredient-food-name").focus();
-                })
-                .error(function (response) {
-                    this.handleResponseError(response);
-                });
+            $("#new-ingredient-food-name").focus();
         },
-
 
         /**
          *
@@ -133,7 +108,8 @@ var NewIngredient = Vue.component('new-ingredient', {
         }
     },
     props: [
-        'selectedRecipe'
+        'selectedRecipe',
+        'insertItemFunction'
     ],
     ready: function () {
 

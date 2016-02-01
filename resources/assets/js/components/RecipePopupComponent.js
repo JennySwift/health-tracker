@@ -23,6 +23,9 @@ var RecipePopup = Vue.component('recipe-popup', {
             $(document).on('show-recipe-popup', function (event, recipe) {
                 that.showPopup(recipe);
             });
+            $(document).on('add-ingredient-to-recipe', function (event, ingredient) {
+                that.addIngredientToRecipe(ingredient);
+            });
         },
 
         /**
@@ -122,6 +125,35 @@ var RecipePopup = Vue.component('recipe-popup', {
                 });
                 $("#edit-recipe-method").html(string);
             }
+        },
+
+        /**
+         *
+         */
+        addIngredientToRecipe: function (ingredient) {
+            $.event.trigger('show-loading');
+
+            var data = {
+                addIngredient: true,
+                food_id: ingredient.food.id,
+                unit_id: ingredient.unit.id,
+                quantity: ingredient.quantity,
+                description: ingredient.description
+            };
+
+            this.$http.put('/api/recipes/' + this.selectedRecipe.id, data, function (response) {
+                    this.selectedRecipe.ingredients.push({
+                        name: ingredient.food.name,
+                        unit_name: ingredient.unit.name,
+                        quantity: ingredient.quantity,
+                        description: ingredient.description,
+                    });
+                    $.event.trigger('provide-feedback', ['Food added', 'success']);
+                    $.event.trigger('hide-loading');
+                })
+                .error(function (response) {
+                    this.handleResponseError(response);
+                });
         },
 
         /**

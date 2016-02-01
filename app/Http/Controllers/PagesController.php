@@ -141,11 +141,11 @@ class PagesController extends Controller
             "foodUnits" => $this->unitsRepository->getFoodUnits(),
 
             "weight" => $weightsRepository->getWeightForTheDay($date),
-            "calories_for_the_day" => $this->caloriesRepository->getCaloriesForDay($date),
-            "calories_for_the_week" => $this->caloriesRepository->getCaloriesFor7Days($date)
+            "caloriesForTheDay" => $this->caloriesRepository->getCaloriesForDay($date),
+            "calorieAverageFor7Days" => $this->caloriesRepository->getCaloriesFor7Days($date)
         ]);
 
-        return view('pages.entries.entries');
+        return view('pages.entries.entries-page');
     }
 
 
