@@ -14,7 +14,7 @@ angular.module('tracker')
                 return $http.get($url);
             },
 
-            store: function (entry, date) {
+            setData: function (entry, date) {
                 var data = {
                     start: this.calculateStartDateTime(entry, date)
                 };
@@ -27,7 +27,7 @@ angular.module('tracker')
                     data.activity_id = entry.activity.id;
                 }
 
-                return $http.post('/api/timers', data);
+                return data;
             },
 
             calculateStartDateTime: function (entry, date) {

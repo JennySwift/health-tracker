@@ -4,6 +4,7 @@
 @include('pages.entries.entries-page-component')
 @include('pages.entries.menu-entries-component')
 @include('pages.entries.exercise-entries-component')
+@include('pages.journal.journal-page-component')
 @include('pages.menu.recipes.recipes-page-component')
 @include('pages.menu.recipes.new-quick-recipe-component')
 @include('pages.menu.recipes.recipes-component')

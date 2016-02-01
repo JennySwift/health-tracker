@@ -11,7 +11,7 @@ var DateNavigation = Vue.component('date-navigation', {
             this.date.sql = Date.parse(this.date.typed).toString('yyyy-MM-dd');
             this.date.long = Date.parse(this.date.typed).toString('ddd dd MMM yyyy');
             $("#date").val(this.date.typed);
-            $.event.trigger('change-date');
+            $.event.trigger('date-changed');
 
             if (newValue === oldValue) {
                 // this.pageLoad();

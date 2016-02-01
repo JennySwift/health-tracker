@@ -1,0 +1,151 @@
+var JournalPage = Vue.component('journal-page', {
+    template: '#journal-page-template',
+    data: function () {
+        return {
+            date: DatesRepository.setDate(this.date),
+            filterResults: [],
+            journalEntry: entry,
+            newSleepEntry: {
+                startedYesterday: true
+            }
+        };
+    },
+    components: {},
+    methods: {
+        /**
+        *
+        */
+        getJournalEntry: function () {
+            $.event.trigger('show-loading');
+            this.$http.get('api/journal/' + this.date.sql, function (response) {
+                this.journalEntry = response.data;
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
+        },
+
+        /**
+        *
+        */
+        filterJournalEntries: function () {
+            var typing = $("#filter-journal").val();
+
+            $.event.trigger('show-loading');
+            this.$http.get('/api/journal?typing=' + typing, function (response) {
+                this.filterResults = response.data;
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
+        },
+
+        /**
+         *
+         */
+        clearFilterResults: function () {
+            this.filterResults = [];
+            $("#filter-journal").val("");
+        },
+
+        /**
+         * If the id of the journal entry exists, update the entry.
+         * If not, insert the entry.
+         */
+        insertOrUpdateJournalEntry: function () {
+            if (this.journalEntry.id) {
+                this.updateEntry();
+            }
+            else {
+                this.createEntry();
+            }
+
+        },
+
+
+        /**
+        *
+        */
+        updateEntry: function (entry) {
+            $.event.trigger('show-loading');
+
+            var data = {
+                text: $("#journal-entry").html()
+            };
+
+            this.$http.put('/api/journal/' + entry.id, data, function (response) {
+                this.journalEntry = response.data;
+                $.event.trigger('provide-feedback', ['Entry updated', 'success']);
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
+        },
+
+        /**
+        *
+        */
+        insertEntry: function () {
+            $.event.trigger('show-loading');
+            var data = {
+                date: this.date.dql,
+                text: $("#journal-entry").html()
+            };
+
+            this.$http.post('/api/journal', data, function (response) {
+                this.journalEntry = response.data;
+                $.event.trigger('provide-feedback', ['Entry created', 'success']);
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
+        },
+
+        /**
+        *
+        */
+        insertSleepEntry: function () {
+            $.event.trigger('show-loading');
+            var data = TimersRepository.setData(this.newSleepEntry, this.date.sql);
+
+            this.$http.post('/api/timers', data, function (response) {
+                $.event.trigger('provide-feedback', ['Sleep entry created', 'success']);
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
+        },
+
+        /**
+         *
+         */
+        listen: function () {
+            var that = this;
+            $(document).on('date-changed', function (event) {
+                that.getJournalEntry();
+            });
+        },
+
+        /**
+         *
+         * @param response
+         */
+        handleResponseError: function (response) {
+            this.$broadcast('response-error', response);
+            this.showLoading = false;
+        }
+    },
+    props: [
+        //data to be received from parent
+    ],
+    ready: function () {
+        $(".wysiwyg").wysiwyg();
+        this.listen();
+    }
+});
+

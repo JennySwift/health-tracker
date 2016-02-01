@@ -299,7 +299,7 @@ class PagesController extends Controller
             'entry' => $entry
         ]);
 
-        return view('pages.journal.journal');
+        return view('pages.journal.journal-page');
     }
 
     /**

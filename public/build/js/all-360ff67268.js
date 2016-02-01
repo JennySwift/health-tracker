@@ -22667,165 +22667,6 @@ function runBlock ($rootScope, ErrorsFactory) {
     });
 }
 
-var app = angular.module('tracker');
-
-(function () {
-	app.controller('journal', function ($rootScope, $scope, $http, DatesFactory, JournalFactory, TimersFactory) {
-		/**
-		 * scope properties
-		 */
-		
-		//journal
-		$scope.journal_entry = entry;
-
-        $scope.newSleepEntry = {
-            startedYesterday: true
-        };
-
-		//date
-		/**
-		 * There is a lot of date stuff here that is duplication of the date stuff in EntriesController.js.
-		 * Any way of making it dry?
-		 */
-
-		$scope.date = {};
-		
-		if ($scope.date.typed === undefined) {
-			$scope.date.typed = Date.parse('today').toString('dd/MM/yyyy');
-		}
-		$scope.date.long = Date.parse($scope.date.typed).toString('dd MMM yyyy');
-
-		$scope.goToDate = function ($number) {
-			$scope.date.typed = DatesFactory.goToDate($scope.date.typed, $number);
-		};
-
-		$scope.today = function () {
-			$scope.date.typed = DatesFactory.today();
-		};
-		$scope.changeDate = function ($keycode, $date) {
-            if ($keycode !== 13) {
-                return false;
-            }
-            var $date = $date || $("#date").val();
-            $scope.date.typed = DatesFactory.changeDate($keycode, $date);
-		};
-
-		/**
-		 * plugins
-		 */
-		
-		$(".wysiwyg").wysiwyg();
-
-		/**
-		 * watches
-		 */
-		
-		$scope.$watch('date.typed', function (newValue, oldValue) {
-			$scope.date.sql = Date.parse($scope.date.typed).toString('yyyy-MM-dd');
-			$scope.date.long = Date.parse($scope.date.typed).toString('ddd dd MMM yyyy');
-			$("#date").val(newValue);
-
-			if (newValue === oldValue) {
-				// $scope.pageLoad();
-			}
-			else {
-				$scope.getJournalEntry();
-			}
-		});
-		
-		/**
-		 * select
-		 */
-		
-		$scope.getJournalEntry = function () {
-            $rootScope.showLoading();
-            JournalFactory.getJournalEntry($scope.date.sql)
-                .then(function (response) {
-                    $scope.journal_entry = response.data.data;
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-		};
-
-        $scope.filterJournalEntries = function ($keycode) {
-            if ($keycode !== 13) {
-                return false;
-            }
-            $rootScope.showLoading();
-            JournalFactory.filter()
-                .then(function (response) {
-                    $scope.filter_results = response.data.data;
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        };
-
-        $scope.clearFilterResults = function () {
-            $scope.filter_results = [];
-            $("#filter-journal").val("");
-        };
-
-        /**
-         * If the id of the journal entry exists, update the entry.
-         * If not, insert the entry.
-         */
-		$scope.insertOrUpdateJournalEntry = function () {
-            if ($scope.journal_entry.id) {
-                updateEntry();
-            }
-            else {
-                createEntry();
-            }
-
-		};
-
-        function updateEntry () {
-            $rootScope.showLoading();
-            JournalFactory.update($scope.journal_entry)
-                .then(function (response) {
-                    $scope.journal_entry = response.data.data;
-                    $rootScope.$broadcast('provideFeedback', 'Entry updated');
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        }
-
-        function createEntry () {
-            $rootScope.showLoading();
-            JournalFactory.insert($scope.date.sql)
-                .then(function (response) {
-                    $scope.journal_entry = response.data.data;
-                    $rootScope.$broadcast('provideFeedback', 'Entry created');
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        }
-
-        $scope.insertSleepEntry = function () {
-            $rootScope.showLoading();
-            TimersFactory.store($scope.newSleepEntry, $scope.date.sql)
-                .then(function (response) {
-                    //$scope.sleeps.push(response.data);
-                    $rootScope.$broadcast('provideFeedback', 'Entry created', 'success');
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        };
-
-		
-	});
-
-})();
 angular.module('tracker')
     .controller('ExerciseEntriesController', function ($rootScope, $scope, ExerciseEntriesFactory, AutocompleteFactory) {
 
@@ -24364,42 +24205,6 @@ app.factory('RecipeTagsFactory', function ($http) {
         },
     };
 });
-app.factory('JournalFactory', function ($http) {
-    return {
-
-        getJournalEntry: function ($sqlDate) {
-            return $http.get('api/journal/' + $sqlDate);
-        },
-
-        filter: function () {
-            var $typing = $("#filter-journal").val();
-            var $url = 'api/journal?typing=' + $typing;
-
-            return $http.get($url);
-        },
-
-        insert: function ($sqlDate) {
-            var $url = 'api/journal';
-
-            var $data = {
-                date: $sqlDate,
-                text: $("#journal-entry").html()
-            };
-
-            return $http.post($url, $data);
-        },
-
-        update: function ($entry) {
-            var $url = 'api/journal/' + $entry.id;
-
-            var $data = {
-                text: $("#journal-entry").html()
-            };
-
-            return $http.put($url, $data);
-        }
-    };
-});
 angular.module('tracker')
     .factory('TimersFactory', function ($http) {
 
@@ -24416,7 +24221,7 @@ angular.module('tracker')
                 return $http.get($url);
             },
 
-            store: function (entry, date) {
+            setData: function (entry, date) {
                 var data = {
                     start: this.calculateStartDateTime(entry, date)
                 };
@@ -24429,7 +24234,7 @@ angular.module('tracker')
                     data.activity_id = entry.activity.id;
                 }
 
-                return $http.post('/api/timers', data);
+                return data;
             },
 
             calculateStartDateTime: function (entry, date) {
@@ -24923,6 +24728,23 @@ var RecipesRepository = {
         return quantity;
     }
 }
+var TimersRepository = {
+    store: function (entry, date) {
+        var data = {
+            start: this.calculateStartDateTime(entry, date)
+        };
+
+        if (entry.finish) {
+            data.finish = this.calculateFinishTime(entry, date);
+        }
+
+        if (entry.activity) {
+            data.activity_id = entry.activity.id;
+        }
+
+        return $http.post('/api/timers', data);
+    }
+};
 var DateNavigation = Vue.component('date-navigation', {
     template: '#date-navigation-template',
     data: function () {
@@ -24936,7 +24758,7 @@ var DateNavigation = Vue.component('date-navigation', {
             this.date.sql = Date.parse(this.date.typed).toString('yyyy-MM-dd');
             this.date.long = Date.parse(this.date.typed).toString('ddd dd MMM yyyy');
             $("#date").val(this.date.typed);
-            $.event.trigger('change-date');
+            $.event.trigger('date-changed');
 
             if (newValue === oldValue) {
                 // this.pageLoad();
@@ -25332,6 +25154,158 @@ Vue.component('feedback', {
         this.listen();
     },
 });
+var JournalPage = Vue.component('journal-page', {
+    template: '#journal-page-template',
+    data: function () {
+        return {
+            date: DatesRepository.setDate(this.date),
+            filterResults: [],
+            journalEntry: entry,
+            newSleepEntry: {
+                startedYesterday: true
+            }
+        };
+    },
+    components: {},
+    methods: {
+        /**
+        *
+        */
+        getJournalEntry: function () {
+            $.event.trigger('show-loading');
+            this.$http.get('api/journal/' + this.date.sql, function (response) {
+                this.journalEntry = response.data;
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
+        },
+
+        /**
+        *
+        */
+        filterJournalEntries: function () {
+            var typing = $("#filter-journal").val();
+
+            $.event.trigger('show-loading');
+            this.$http.get('/api/journal?typing=' + typing, function (response) {
+                this.filterResults = response.data;
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
+        },
+
+        /**
+         *
+         */
+        clearFilterResults: function () {
+            this.filterResults = [];
+            $("#filter-journal").val("");
+        },
+
+        /**
+         * If the id of the journal entry exists, update the entry.
+         * If not, insert the entry.
+         */
+        insertOrUpdateJournalEntry: function () {
+            if (this.journalEntry.id) {
+                this.updateEntry();
+            }
+            else {
+                this.createEntry();
+            }
+
+        },
+
+
+        /**
+        *
+        */
+        updateEntry: function (entry) {
+            $.event.trigger('show-loading');
+
+            var data = {
+                text: $("#journal-entry").html()
+            };
+
+            this.$http.put('/api/journal/' + entry.id, data, function (response) {
+                this.journalEntry = response.data;
+                $.event.trigger('provide-feedback', ['Entry updated', 'success']);
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
+        },
+
+        /**
+        *
+        */
+        insertEntry: function () {
+            $.event.trigger('show-loading');
+            var data = {
+                date: this.date.dql,
+                text: $("#journal-entry").html()
+            };
+
+            this.$http.post('/api/journal', data, function (response) {
+                this.journalEntry = response.data;
+                $.event.trigger('provide-feedback', ['Entry created', 'success']);
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
+        },
+
+        /**
+        *
+        */
+        insertSleepEntry: function () {
+            $.event.trigger('show-loading');
+            var data = TimersRepository.setData(this.newSleepEntry, this.date.sql);
+
+            this.$http.post('/api/timers', data, function (response) {
+                $.event.trigger('provide-feedback', ['Sleep entry created', 'success']);
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
+        },
+
+        /**
+         *
+         */
+        listen: function () {
+            var that = this;
+            $(document).on('date-changed', function (event) {
+                that.getJournalEntry();
+            });
+        },
+
+        /**
+         *
+         * @param response
+         */
+        handleResponseError: function (response) {
+            this.$broadcast('response-error', response);
+            this.showLoading = false;
+        }
+    },
+    props: [
+        //data to be received from parent
+    ],
+    ready: function () {
+        $(".wysiwyg").wysiwyg();
+        this.listen();
+    }
+});
+
+
 Vue.component('loading', {
     data: function () {
         return {
