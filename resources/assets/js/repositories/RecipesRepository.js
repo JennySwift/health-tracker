@@ -6,8 +6,18 @@ var RecipesRepository = {
      */
     getArrayOfIngredientsAndSteps: function () {
         var stringOfIngredientsAndSteps = this.formatString($("#quick-recipe").html());
-        $("#quick-recipe").html(stringOfIngredientsAndSteps);
         return this.convertFormattedRecipeStringToArrayOfIngredientsAndSteps(stringOfIngredientsAndSteps);
+    },
+
+    /**
+     *
+     */
+    modifyQuickRecipeHtml: function (arrayOfIngredientsAndSteps) {
+        var html = '';
+        for (var i = 0; i < arrayOfIngredientsAndSteps.length; i++) {
+            html+= '<div>' + arrayOfIngredientsAndSteps[i] + '</div>';
+        }
+        $("#quick-recipe").html(html);
     },
 
     /**
@@ -279,7 +289,7 @@ var RecipesRepository = {
         if (quantity.indexOf('/') !== -1) {
             //it is a fraction
             var parts = quantity.split('/');
-            quantity = parseInt($parts[0], 10) / parseInt(parts[1], 10);
+            quantity = parseInt(parts[0], 10) / parseInt(parts[1], 10);
         }
 
         return quantity;

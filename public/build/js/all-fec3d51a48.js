@@ -25100,8 +25100,18 @@ var RecipesRepository = {
      */
     getArrayOfIngredientsAndSteps: function () {
         var stringOfIngredientsAndSteps = this.formatString($("#quick-recipe").html());
-        $("#quick-recipe").html(stringOfIngredientsAndSteps);
         return this.convertFormattedRecipeStringToArrayOfIngredientsAndSteps(stringOfIngredientsAndSteps);
+    },
+
+    /**
+     *
+     */
+    modifyQuickRecipeHtml: function (arrayOfIngredientsAndSteps) {
+        var html = '';
+        for (var i = 0; i < arrayOfIngredientsAndSteps.length; i++) {
+            html+= '<div>' + arrayOfIngredientsAndSteps[i] + '</div>';
+        }
+        $("#quick-recipe").html(html);
     },
 
     /**
@@ -25373,7 +25383,7 @@ var RecipesRepository = {
         if (quantity.indexOf('/') !== -1) {
             //it is a fraction
             var parts = quantity.split('/');
-            quantity = parseInt($parts[0], 10) / parseInt(parts[1], 10);
+            quantity = parseInt(parts[0], 10) / parseInt(parts[1], 10);
         }
 
         return quantity;
@@ -25735,7 +25745,11 @@ var NewQuickRecipe = Vue.component('new-quick-recipe', {
             $("#quick-recipe > *").removeAttr("style");
             $("#quick-recipe-errors").hide();
 
-            this.addPropertiesToRecipe(RecipesRepository.getArrayOfIngredientsAndSteps());
+            var arrayOfIngredientsAndSteps = RecipesRepository.getArrayOfIngredientsAndSteps();
+
+            this.addPropertiesToRecipe(arrayOfIngredientsAndSteps);
+            RecipesRepository.modifyQuickRecipeHtml(arrayOfIngredientsAndSteps);
+            this.checkForAndHandleErrors();
 
             if (this.errors.length < 1) {
                 //Prompt the user for the recipe name
@@ -25747,6 +25761,9 @@ var NewQuickRecipe = Vue.component('new-quick-recipe', {
                 }
 
                 this.checkForSimilarNames();
+            }
+            else {
+                $("#quick-recipe-errors").show();
             }
         },
 
@@ -25841,28 +25858,20 @@ var NewQuickRecipe = Vue.component('new-quick-recipe', {
         },
 
         /**
-         * Check item contains quantity, unit and food
-         * and convert quantities to decimals if necessary
+         *
          */
         checkForAndHandleErrors: function () {
-            var itemsAndErrors = RecipesRepository.errorCheck(this.newRecipe.ingredients);
-            this.newRecipe.ingredients = itemsAndErrors.ingredients;
-
-            if (itemsAndErrors.errors.length > 0) {
-                this.errors = itemsAndErrors.errors;
-                $("#quick-recipe-errors").show();
-            }
+            this.errors = [];
+            this.errors = RecipesRepository.checkIngredientsForErrors(this.newRecipe.ingredients);
         },
 
         /**
          *
          */
         addPropertiesToRecipe: function (arrayOfIngredientsAndSteps) {
-            this.errors = [];
             this.newRecipe.ingredients = RecipesRepository.getIngredients(arrayOfIngredientsAndSteps);
             this.newRecipe.steps = RecipesRepository.getSteps(arrayOfIngredientsAndSteps);
             this.newRecipe.ingredients = RecipesRepository.convertIngredientStringsToObjects(this.newRecipe.ingredients);
-            this.errors = RecipesRepository.checkIngredientsForErrors(this.newRecipe.ingredients);
         },
 
         /**
