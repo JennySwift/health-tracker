@@ -1,7 +1,7 @@
 var app = angular.module('tracker');
 
 (function () {
-    app.controller('SeriesController', function ($rootScope, $scope, $http, ExercisesFactory, WorkoutsFactory, ExerciseSeriesFactory, ExerciseUnitsFactory, ExerciseEntriesFactory, ExercisesFactory, ProgramsFactory) {
+    app.controller('SeriesController', function ($rootScope, $scope, $http, WorkoutsFactory, ExerciseSeriesFactory, ExerciseUnitsFactory, ExerciseEntriesFactory, ExercisesFactory, ProgramsFactory) {
 
         /**
          * scope properties
@@ -212,6 +212,7 @@ var app = angular.module('tracker');
 
         function getUnits () {
             $rootScope.showLoading();
+
             ExerciseUnitsFactory.index()
                 .then(function (response) {
                     $scope.units = response.data;
