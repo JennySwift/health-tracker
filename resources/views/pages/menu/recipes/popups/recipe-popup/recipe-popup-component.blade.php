@@ -23,6 +23,7 @@
             <new-item-with-autocomplete
                 :selected-recipe.sync="selectedRecipe"
                 :insert-item-function="addIngredientToRecipe"
+                show-description-field="true"
             >
             </new-item-with-autocomplete>
             @include('pages.menu.recipes.popups.recipe-popup.ingredients')

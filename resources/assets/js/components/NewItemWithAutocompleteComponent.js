@@ -109,7 +109,8 @@ var NewItemWithAutocomplete = Vue.component('new-item-with-autocomplete', {
     },
     props: [
         'selectedRecipe',
-        'insertItemFunction'
+        'insertItemFunction',
+        'showDescriptionField'
     ],
     ready: function () {
 
