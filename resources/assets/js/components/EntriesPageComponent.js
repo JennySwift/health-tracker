@@ -6,7 +6,7 @@ var EntriesPage = Vue.component('entries-page', {
             weight: weight,
             calories: {
                 day: caloriesForTheDay,
-                AverageFor7Days: calorieAverageFor7Days,
+                averageFor7Days: calorieAverageFor7Days,
             },
             showAutocompleteOptions: {},
             newEntry: {
