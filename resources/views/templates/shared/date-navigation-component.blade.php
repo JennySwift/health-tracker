@@ -3,6 +3,8 @@
 <div>
 
     <h1 class="center">@{{ date.long }}</h1>
+    
+    <pre>@{{$data.date | json}}</pre>
 
     <div id="date-navigation" class="margin-bottom">
 
@@ -33,7 +35,7 @@
         >
 
         <button
-            v-on:click="today()"
+            v-on:click="goToToday()"
             type="button"
             id="today"
             class="my-btn"

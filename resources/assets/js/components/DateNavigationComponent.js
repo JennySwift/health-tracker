@@ -7,18 +7,11 @@ var DateNavigation = Vue.component('date-navigation', {
     },
     components: {},
     watch: {
-        'date': function (newValue, oldValue) {
+        'date.typed': function (newValue, oldValue) {
             this.date.sql = Date.parse(this.date.typed).toString('yyyy-MM-dd');
             this.date.long = Date.parse(this.date.typed).toString('ddd dd MMM yyyy');
             $("#date").val(this.date.typed);
             $.event.trigger('date-changed');
-
-            if (newValue === oldValue) {
-                // this.pageLoad();
-            }
-            else {
-                this.getEntries();
-            }
         }
     },
     methods: {
@@ -33,7 +26,7 @@ var DateNavigation = Vue.component('date-navigation', {
         /**
          *
          */
-        today: function () {
+        goToToday: function () {
             this.date.typed = DatesRepository.today();
         },
 

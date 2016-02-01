@@ -107,31 +107,6 @@ var EntriesPage = Vue.component('entries-page', {
 
         /**
          *
-         * @param $number
-         */
-        goToDate: function ($number) {
-            this.date.typed = DatesRepository.goToDate(this.date.typed, $number);
-        },
-
-        /**
-         *
-         */
-        today: function () {
-            this.date.typed = DatesRepository.today();
-        },
-
-        /**
-         *
-         * @param keycode
-         */
-        changeDate: function (keycode) {
-            if (keycode === 13) {
-                this.date.typed = DatesRepository.changeDate($("#date").val());
-            }
-        },
-
-        /**
-         *
          */
         getWeightForTheDay: function () {
             $.event.trigger('show-loading');
@@ -165,6 +140,11 @@ var EntriesPage = Vue.component('entries-page', {
         listen: function () {
             var that = this;
             $(document).on('get-entries', function (event) {
+                $.event.trigger('show-loading');
+                that.getWeightForTheDay();
+                that.getCalorieInfoForTheDay();
+            });
+            $(document).on('date-changed', function (event) {
                 $.event.trigger('show-loading');
                 that.getWeightForTheDay();
                 that.getCalorieInfoForTheDay();

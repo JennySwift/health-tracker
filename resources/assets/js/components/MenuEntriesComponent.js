@@ -201,6 +201,36 @@ var MenuEntriesComponent = Vue.component('menu-entries', {
         //},
 
         /**
+        *
+        */
+        getEntriesForTheDay: function () {
+            $.event.trigger('show-loading');
+            this.$http.get('/api/menuEntries/' + this.date.sql, function (response) {
+                this.menuEntries = response;
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
+        },
+
+        /**
+         *
+         */
+        listen: function () {
+            var that = this;
+            $(document).on('get-entries', function (event) {
+                $.event.trigger('show-loading');
+                that.getEntriesForTheDay();
+                that.getWeightForTheDay();
+                that.getCalorieInfoForTheDay();
+            });
+            $(document).on('date-changed', function (event) {
+                that.getEntriesForTheDay();
+            });
+        },
+
+        /**
          *
          * @param response
          */
@@ -213,7 +243,7 @@ var MenuEntriesComponent = Vue.component('menu-entries', {
         'date'
     ],
     ready: function () {
-
+        this.listen();
     }
 });
 
@@ -224,19 +254,6 @@ var MenuEntriesComponent = Vue.component('menu-entries', {
 //            this.quantity = this.original_quantity * newValue;
 //        }
 //    });
-//});
-
-//$rootScope.$on('getEntries', function () {
-//    $rootScope.showLoading();
-//    MenuEntriesFactory.getEntriesForTheDay(this.date.sql)
-//        .then(function (response) {
-//            this.menuEntries = response.data;
-//            //$rootScope.$broadcast('provideFeedback', '');
-//            $rootScope.hideLoading();
-//        })
-//        .catch(function (response) {
-//            $rootScope.responseError(response);
-//        });
 //});
 
 
