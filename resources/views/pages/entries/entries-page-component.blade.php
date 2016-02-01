@@ -4,20 +4,25 @@
 
     @include('pages.entries.index')
 
-    @include('templates.shared.date-navigation')
+    <date-navigation
+        :date.sync="date"
+    >
+    </date-navigation>
 
     <div id="info-entries-wrapper">
         @include('pages.entries.info')
     </div>
 
     <div id="entries">
-        <new-item-with-autocomplete
-                :selected-recipe.sync="selectedRecipe"
+        <menu-entries
+            :date="date"
         >
-        </new-item-with-autocomplete>
+        </menu-entries>
 
-        <exercise-entries></exercise-entries>
-    </div>
+        <exercise-entries
+            :date="date"
+        >
+        </exercise-entries>
 
 </div>
 

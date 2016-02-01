@@ -1,4 +1,4 @@
-<div ng-controller="MenuEntriesController">
+<div>
     <table class="table table-bordered">
         <caption>food entries</caption>
 
@@ -11,18 +11,36 @@
             <th></th>
         </tr>
 
-        <tr ng-repeat="entry in menuEntries">
-            <td>[[entry.food.name]]</td>
-            <td>[[entry.quantity]]</td>
-            <td>[[entry.unit.name]]</td>
-            <td>[[entry.calories]]</td>
+        <tr v-for="entry in menuEntries">
+            <td>@{{ entry.food.name }}</td>
+            <td>@{{ entry.quantity }}</td>
+            <td>@{{ entry.unit.name }}</td>
+            <td>@{{ entry.calories }}</td>
             <td>
-                <span ng-if="entry.recipe" class="badge">[[entry.recipe.name]]</span>
-                <span ng-if="!entry.recipe">N/A</span>
+                <span
+                    v-if="entry.recipe"
+                    class="badge"
+                >
+                    @{{ entry.recipe.name }}
+                </span>
+                <span
+                    v-if="!entry.recipe"
+                >
+                    N/A
+                </span>
             </td>
             <td>
-                <i ng-if="!entry.recipe" ng-click="deleteMenuEntry(entry)" class="delete-item fa fa-times"></i>
-                <i ng-if="entry.recipe" ng-click="showDeleteFoodOrRecipeEntryPopup(entry.id, entry.recipe.id)" class="delete-item fa fa-times"></i>
+                <i
+                    v-if="!entry.recipe"
+                    v-on:click="deleteMenuEntry(entry)"
+                    class="delete-item fa fa-times">
+                </i>
+                <i
+                    v-if="entry.recipe"
+                    v-on:click="showDeleteFoodOrRecipeEntryPopup(entry.id, entry.recipe.id)"
+                    class="delete-item fa fa-times"
+                >
+                </i>
             </td>
         </tr>
     </table>

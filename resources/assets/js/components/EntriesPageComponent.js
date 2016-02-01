@@ -2,6 +2,7 @@ var EntriesPage = Vue.component('entries-page', {
     template: '#entries-page-template',
     data: function () {
         return {
+            date: DatesRepository.setDate(this.date),
             weight: weight,
             calories: {
                 day: caloriesForTheDay,
@@ -23,26 +24,10 @@ var EntriesPage = Vue.component('entries-page', {
                 temporaryRecipeFoods: {}
             },
             editWeight: false,
-            date: {}
         }
     },
     components: {},
-    watch: {
-        'date.typed': function (newValue, oldValue) {
-            this.date.sql = Date.parse(this.date.typed).toString('yyyy-MM-dd');
-            this.date.long = Date.parse(this.date.typed).toString('ddd dd MMM yyyy');
-            $("#date").val(newValue);
-
-            if (newValue === oldValue) {
-                // this.pageLoad();
-            }
-            else {
-                this.getEntries();
-            }
-        }
-    },
     methods: {
-
         /**
          *
          */
@@ -80,8 +65,8 @@ var EntriesPage = Vue.component('entries-page', {
         },
 
         /**
-        *
-        */
+         *
+         */
         insertWeight: function () {
             $.event.trigger('show-loading');
 
@@ -91,20 +76,20 @@ var EntriesPage = Vue.component('entries-page', {
             };
 
             this.$http.post('insert/weight', data, function (response) {
-                this.weight = response;
-                this.editWeight = false;
-                $("#weight").val("");
-                $.event.trigger('provide-feedback', ['Weight created', 'success']);
-                $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
-                this.handleResponseError(response);
-            });
+                    this.weight = response;
+                    this.editWeight = false;
+                    $("#weight").val("");
+                    $.event.trigger('provide-feedback', ['Weight created', 'success']);
+                    $.event.trigger('hide-loading');
+                })
+                .error(function (response) {
+                    this.handleResponseError(response);
+                });
         },
 
         /**
-        *
-        */
+         *
+         */
         showNewWeightFields: function () {
             this.addingNewWeight = true;
             this.editingWeight = false;
@@ -146,32 +131,32 @@ var EntriesPage = Vue.component('entries-page', {
         },
 
         /**
-        *
-        */
+         *
+         */
         getWeightForTheDay: function () {
             $.event.trigger('show-loading');
             this.$http.get('api/weights/' + this.date.sql, function (response) {
-                this.weight = response;
-                $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
-                this.handleResponseError(response);
-            });
+                    this.weight = response;
+                    $.event.trigger('hide-loading');
+                })
+                .error(function (response) {
+                    this.handleResponseError(response);
+                });
         },
 
         /**
-        * Get calories for the day and average calories for 7 days
-        */
+         * Get calories for the day and average calories for 7 days
+         */
         getCalorieInfoForTheDay: function () {
             $.event.trigger('show-loading');
             this.$http.get('api/calories/' + this.date.sql, function (response) {
-                this.calories.day = response.forTheDay;
-                this.calories.week_avg = response.averageFor7Days;
-                $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
-                this.handleResponseError(response);
-            });
+                    this.calories.day = response.forTheDay;
+                    this.calories.week_avg = response.averageFor7Days;
+                    $.event.trigger('hide-loading');
+                })
+                .error(function (response) {
+                    this.handleResponseError(response);
+                });
         },
 
         /**
@@ -181,8 +166,8 @@ var EntriesPage = Vue.component('entries-page', {
             var that = this;
             $(document).on('get-entries', function (event) {
                 $.event.trigger('show-loading');
-                this.getWeightForTheDay();
-                this.getCalorieInfoForTheDay();
+                that.getWeightForTheDay();
+                that.getCalorieInfoForTheDay();
             });
         },
 
@@ -203,10 +188,5 @@ var EntriesPage = Vue.component('entries-page', {
         $("#weight").val("");
         this.mediaQueries();
         this.listen();
-
-        if (this.date.typed === undefined) {
-            this.date.typed = Date.parse('today').toString('dd/MM/yyyy');
-        }
-        this.date.long = Date.parse(this.date.typed).toString('dd MMM yyyy');
     }
 });

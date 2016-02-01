@@ -1,9 +1,13 @@
 var DatesRepository = {
     setDate: function (date) {
+        if (date === undefined) {
+            var date = {};
+        }
         if (date.typed === undefined) {
             date.typed = Date.parse('today').toString('dd/MM/yyyy');
         }
         date.long = Date.parse(date.typed).toString('dd MMM yyyy');
+        date.sql = Date.parse(date.typed).toString('yyyy-MM-dd');
 
         return date;
     },

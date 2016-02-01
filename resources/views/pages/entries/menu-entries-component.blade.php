@@ -1,7 +1,12 @@
 <script id="menu-entries-template" type="x-template">
 
 <div>
-{{--    @include('pages.entries.menu-entry-inputs')--}}
+    <new-item-with-autocomplete
+            {{--:selected-recipe.sync="selectedRecipe"--}}
+            :insert-item-function="insertMenuEntry"
+    >
+    </new-item-with-autocomplete>
+
     @include('pages.entries.menu-entries')
 </div>
 

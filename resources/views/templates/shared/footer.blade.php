@@ -12,6 +12,7 @@
 @include('pages.menu.recipes.popups.recipe-popup.new-item-with-autocomplete-component')
 @include('templates.shared.feedback-component')
 @include('templates.shared.loading-component')
+@include('templates.shared.date-navigation-component')
 
 <script type="text/javascript" src="{{ elixir("js/all.js") }}"></script>
 
