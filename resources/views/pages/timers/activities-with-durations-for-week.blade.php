@@ -10,13 +10,13 @@
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="activity in activitiesWithDurationsForWeek | filter: activitiesFilter">
-                <td>[[activity.name]]</td>
-                <td>[[activity.totalMinutesForWeek | formatDurationFilter]]</td>
-                <td>[[activity.averageMinutesPerDayForWeek | formatDurationFilter]]</td>
+            <tr v-for="activity in activitiesWithDurationsForTheWeek | filter: activitiesFilter">
+                <td>@{{ activity.name }}</td>
+                <td>@{{ activity.totalMinutesForWeek | formatDuration }}</td>
+                <td>@{{ activity.averageMinutesPerDayForWeek | formatDuration }}</td>
                 <td>
-                    <div ng-if="activity.totalMinutesForAllTime">
-                        [[activity.totalMinutesForAllTime | formatDurationFilter]]
+                    <div v-if="activity.totalMinutesForAllTime">
+                        @{{ activity.totalMinutesForAllTime | formatDuration }}
                     </div>
                 </td>
             </tr>

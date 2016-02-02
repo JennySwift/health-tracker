@@ -23945,59 +23945,59 @@ angular.module('tracker')
     });
 
 
-angular.module('tracker')
-    .filter('doubleDigitsFilter', function () {
-        return function (number) {
-            if (number < 10) {
-                return '0' + number;
-            }
-
-            return number;
-        }
-    });
-
-
-angular.module('tracker')
-    .filter('formatDateTimeFilter', function () {
-        return function (dateTime, format) {
-            if (!format) {
-                return moment(dateTime, 'YYYY-MM-DD HH:mm:ss').format('hh:mm:ssa DD/MM');
-            }
-            else if (format === 'seconds') {
-                return moment(dateTime, 'YYYY-MM-DD HH:mm:ss').format('ss a DD/MM');
-            }
-            else if (format === 'hoursAndMinutes') {
-                return moment(dateTime, 'YYYY-MM-DD HH:mm:ss').format('hh:mm');
-            }
-            else if (format === 'object') {
-                return {
-                    seconds: moment(dateTime, 'YYYY-MM-DD HH:mm:ss').format('ss')
-                };
-            }
-        }
-    });
+//angular.module('tracker')
+//    .filter('doubleDigitsFilter', function () {
+//        return function (number) {
+//            if (number < 10) {
+//                return '0' + number;
+//            }
+//
+//            return number;
+//        }
+//    });
 
 
-angular.module('tracker')
-    .filter('formatDurationFilter', function () {
-        return function (minutes) {
-            if (!minutes) {
-                return '-';
-            }
+//angular.module('tracker')
+//    .filter('formatDateTimeFilter', function () {
+//        return function (dateTime, format) {
+//            if (!format) {
+//                return moment(dateTime, 'YYYY-MM-DD HH:mm:ss').format('hh:mm:ssa DD/MM');
+//            }
+//            else if (format === 'seconds') {
+//                return moment(dateTime, 'YYYY-MM-DD HH:mm:ss').format('ss a DD/MM');
+//            }
+//            else if (format === 'hoursAndMinutes') {
+//                return moment(dateTime, 'YYYY-MM-DD HH:mm:ss').format('hh:mm');
+//            }
+//            else if (format === 'object') {
+//                return {
+//                    seconds: moment(dateTime, 'YYYY-MM-DD HH:mm:ss').format('ss')
+//                };
+//            }
+//        }
+//    });
 
-            var hours = Math.floor(minutes / 60);
-            if (hours < 10) {
-                hours = '0' + hours;
-            }
 
-            minutes = minutes % 60;
-            if (minutes < 10) {
-                minutes = '0' + minutes;
-            }
-
-            return hours + ':' + minutes;
-        }
-    });
+//angular.module('tracker')
+//    .filter('formatDurationFilter', function () {
+//        return function (minutes) {
+//            if (!minutes) {
+//                return '-';
+//            }
+//
+//            var hours = Math.floor(minutes / 60);
+//            if (hours < 10) {
+//                hours = '0' + hours;
+//            }
+//
+//            minutes = minutes % 60;
+//            if (minutes < 10) {
+//                minutes = '0' + minutes;
+//            }
+//
+//            return hours + ':' + minutes;
+//        }
+//    });
 
 
 var DatesRepository = {
@@ -26163,8 +26163,51 @@ var TimersPage = Vue.component('timers-page', {
             timers: [],
             activities: [],
             timersFilter: false,
-            activitiesWithDurationsForTheWeek: []
+            activitiesWithDurationsForTheWeek: [],
+            activitiesWithDurationsForTheDay: []
         };
+    },
+    filters: {
+        formatDateTime: function (dateTime, format) {
+            if (!format) {
+                return moment(dateTime, 'YYYY-MM-DD HH:mm:ss').format('hh:mm:ssa DD/MM');
+            }
+            else if (format === 'seconds') {
+                return moment(dateTime, 'YYYY-MM-DD HH:mm:ss').format('ss a DD/MM');
+            }
+            else if (format === 'hoursAndMinutes') {
+                return moment(dateTime, 'YYYY-MM-DD HH:mm:ss').format('hh:mm');
+            }
+            else if (format === 'object') {
+                return {
+                    seconds: moment(dateTime, 'YYYY-MM-DD HH:mm:ss').format('ss')
+                };
+            }
+        },
+        doubleDigits: function (number) {
+            if (number < 10) {
+                return '0' + number;
+            }
+
+            return number;
+        },
+        formatDuration: function (minutes) {
+            if (!minutes) {
+                return '-';
+            }
+
+            var hours = Math.floor(minutes / 60);
+            if (hours < 10) {
+                hours = '0' + hours;
+            }
+
+            minutes = minutes % 60;
+            if (minutes < 10) {
+                minutes = '0' + minutes;
+            }
+
+            return hours + ':' + minutes;
+        }
     },
     components: {},
     methods: {
@@ -26320,7 +26363,7 @@ var TimersPage = Vue.component('timers-page', {
         getTotalMinutesForActivitiesForTheDay: function () {
             $.event.trigger('show-loading');
             this.$http.get('/api/activities/getTotalMinutesForDay?date=' + this.date.sql, function (response) {
-                this.activitiesWithDurationsForDay = response;
+                this.activitiesWithDurationsForTheDay = response;
                 $.event.trigger('hide-loading');
             })
             .error(function (response) {
@@ -26334,7 +26377,7 @@ var TimersPage = Vue.component('timers-page', {
         getTotalMinutesForActivitiesForTheWeek: function () {
             $.event.trigger('show-loading');
             this.$http.get('/api/activities/getTotalMinutesForWeek?date=' + this.date.sql, function (response) {
-                this.activitiesWithDurationsForWeek = response;
+                this.activitiesWithDurationsForTheWeek = response;
                 $.event.trigger('hide-loading');
             })
             .error(function (response) {
@@ -26371,7 +26414,7 @@ var TimersPage = Vue.component('timers-page', {
         },
 
         /**
-         * 
+         *
          * @param response
          */
         handleResponseError: function (response) {
@@ -26385,6 +26428,9 @@ var TimersPage = Vue.component('timers-page', {
     ready: function () {
         this.checkForTimerInProgress();
         this.getActivities();
+        this.getTimers();
+        this.getTotalMinutesForActivitiesForTheDay();
+        this.getTotalMinutesForActivitiesForTheWeek();
         this.listen();
     }
 });

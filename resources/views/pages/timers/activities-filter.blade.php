@@ -1,4 +1,4 @@
 <div>
     <label>Filter activities</label>
-    <input ng-model="activitiesFilter" type="text"/>
+    <input v-model="activitiesFilter" type="text"/>
 </div>
