@@ -22,7 +22,7 @@
 </div>
 
 <div ng-controller="ExerciseEntriesController">
-    @include('pages.entries.popups.exercise-entries')
+    @include('pages.entries.popups.specific-exercise-entries-popup')
     <button ng-click="showExerciseEntryInputs = !showExerciseEntryInputs" class="btn btn-sm btn-success">Add manual entry</button>
     <div ng-show="showExerciseEntryInputs">
         @include('pages.entries.exercise-entry-inputs')
