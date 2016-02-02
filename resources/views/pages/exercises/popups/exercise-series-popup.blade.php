@@ -2,7 +2,7 @@
 
 	<div class="popup-inner">
 
-        <h3 class="popup-title">[[selectedSeries.name]] series</h3>
+        <h3 class="popup-title">@{{ selectedSeries.name }} series</h3>
 
         <label for="seriesName">Name your series</label>
         <input v-model="selectedSeries.name" type="text" name="seriesName" placeholder="name"/>

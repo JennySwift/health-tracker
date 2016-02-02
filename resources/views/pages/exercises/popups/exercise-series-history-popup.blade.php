@@ -1,4 +1,4 @@
-<div v-show="showexerciseSeriesHistoryPopup"  v-click="closePopup($event, 'exerciseSeriesHistory')" class="popup-outer">
+<div v-show="showExerciseSeriesHistoryPopup"  v-click="closePopup($event, 'exerciseSeriesHistory')" class="popup-outer">
 
 	<div id="series-history-popup" class="popup-inner">
 

@@ -8,6 +8,7 @@ var SeriesPage = Vue.component('series-page', {
             seriesPriorityFilter: 1,
             showNewSeriesFields: false,
             showExerciseSeriesHistoryPopup: false,
+            showExerciseSeriesPopup: false,
             showExercisePopup: false,
             newSeries: {},
             newExercise: {},
@@ -132,8 +133,8 @@ var SeriesPage = Vue.component('series-page', {
         getExercisesInSeries: function (series) {
             $.event.trigger('show-loading');
             this.$http.get('/api/exerciseSeries/' + series.id, function (response) {
-            this.selectedSeries = response;
-            $.event.trigger('hide-loading');
+                this.selectedSeries = response;
+                $.event.trigger('hide-loading');
             })
             .error(function (response) {
                 this.handleResponseError(response);

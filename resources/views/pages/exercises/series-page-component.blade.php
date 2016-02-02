@@ -18,7 +18,7 @@
                             <th>Priority</th>
                         </tr>
                         <tr
-                            v-for="series in exercise_series | orderBy: 'lastDone' | filter:{'priority': seriesPriorityFilter}"
+                            v-for="series in exerciseSeries | orderBy: 'lastDone' | filter:{'priority': seriesPriorityFilter}"
                             v-bind:class="{'selected': series.id === selectedSeries.id}"
                         >
                             <td class="actions">
