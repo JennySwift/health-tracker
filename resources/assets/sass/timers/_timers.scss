@@ -34,6 +34,7 @@
     #new-timer, #new-manual-timer {
         display: flex;
         justify-content: center;
+        align-items: flex-end;
         > * {
             margin: 0px 20px;
         }

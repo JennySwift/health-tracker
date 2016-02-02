@@ -2,33 +2,6 @@ angular.module('tracker')
     .factory('TimersFactory', function ($http) {
 
         return {
-            index: function (byDate, date) {
-                var $url = '/api/timers';
-                if (byDate) {
-                    $url+= '?byDate=true';
-                }
-                else if (date) {
-                    $url+= '?date=' + date;
-                }
-                
-                return $http.get($url);
-            },
-
-            setData: function (entry, date) {
-                var data = {
-                    start: this.calculateStartDateTime(entry, date)
-                };
-
-                if (entry.finish) {
-                    data.finish = this.calculateFinishTime(entry, date);
-                }
-
-                if (entry.activity) {
-                    data.activity_id = entry.activity.id;
-                }
-
-                return data;
-            },
 
             calculateStartDateTime: function (entry, date) {
                 if (date) {
@@ -63,23 +36,6 @@ angular.module('tracker')
 
             calculateStartTime: function (entry) {
                 return Date.parse(entry.start).toString('HH:mm:ss');
-            },
-            
-            update: function (timer) {
-                var url = '/api/timers/' + timer.id;
-                var data = {
-                    finish: this.calculateFinishTime(timer)
-                };
-                
-                return $http.put(url, data);
-            },
-            checkForTimerInProgress: function () {
-                return $http.get('/api/timers/checkForTimerInProgress');
-            },
-            destroy: function (timer) {
-                var url = '/api/timers/' + timer.id;
-            
-                return $http.delete(url);
             }
         }
     });

@@ -684,7 +684,10 @@ body.browser-height {
   display: flex;
   -webkit-justify-content: center;
   -ms-flex-pack: center;
-  justify-content: center; }
+  justify-content: center;
+  -webkit-align-items: flex-end;
+  -ms-flex-align: end;
+  align-items: flex-end; }
   #timers-page #new-timer > *, #timers-page #new-manual-timer > * {
     margin: 0px 20px; }
   #timers-page #new-timer select, #timers-page #new-manual-timer select {

@@ -23328,190 +23328,6 @@ angular.module('tracker')
         getEntries();
     });
 angular.module('tracker')
-    .controller('TimersController', function ($timeout, $rootScope, $scope, TimersFactory, ActivitiesFactory) {
-
-        //$("document").ready(function () {
-        //    $("#new-timer-activity").select2({});
-        //});
-        //
-        //$scope.newTimer = {
-        //    activity: {}
-        //};
-
-        //$timeout(function () {
-        //    $("#new-timer-activity").select2({});
-        //});
-
-        $scope.date = {};
-        $scope.showTimerInProgress = true;
-
-        $scope.$on('changeDate', function (event) {
-            getTimers();
-            getTotalMinutesForActivitiesForTheDay();
-            getTotalMinutesForActivitiesForTheWeek();
-        });
-
-        checkForTimerInProgress();
-
-        $scope.startTimer = function () {
-            $('#timer-clock').timer({format: '%H:%M:%S'});
-            $rootScope.showLoading();
-            TimersFactory.store($scope.newTimer)
-                .then(function (response) {
-                    //$scope.timers.push(response.data);
-                    $scope.timerInProgress = response.data;
-                    $rootScope.$broadcast('provideFeedback', 'Timer started', 'success');
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        };
-
-        /**
-         * Instead of starting and stopping the timer,
-         * enter the start and stop times manually
-         */
-        $scope.insertManualTimer = function () {
-            $rootScope.showLoading();
-            TimersFactory.store($scope.newManualTimer, $scope.date.sql)
-                .then(function (response) {
-                    $scope.timers.push(response.data);
-                    $rootScope.$broadcast('provideFeedback', 'Manual entry created', 'success');
-                    getTotalMinutesForActivitiesForTheDay();
-                    getTotalMinutesForActivitiesForTheWeek();
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        };
-
-        function getActivities () {
-            $rootScope.showLoading();
-            ActivitiesFactory.index()
-                .then(function (response) {
-                    $scope.activities = response.data;
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        }
-
-        getActivities();
-
-        $scope.stopTimer = function () {
-            $('#timer-clock').timer('remove');
-            $rootScope.showLoading();
-            TimersFactory.update($scope.timerInProgress)
-                .then(function (response) {
-                    $scope.timerInProgress = false;
-                    $scope.timers.push(response.data);
-                    getTotalMinutesForActivitiesForTheDay();
-                    getTotalMinutesForActivitiesForTheWeek();
-                    //var $index = _.indexOf($scope.timers, _.findWhere($scope.timers, {id: response.data.id}));
-                    //$scope.timers[$index] = response.data;
-                    $rootScope.$broadcast('provideFeedback', 'Timer updated');
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        };
-
-        function getTimers () {
-            $rootScope.showLoading();
-            TimersFactory.index(false, $scope.date.sql)
-                .then(function (response) {
-                    $scope.timers = response.data;
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        }
-
-        $scope.filterTimers = function (timer) {
-            if ($scope.timersFilter) {
-                return timer.activity.data.name.indexOf($scope.timersFilter) !== -1;
-            }
-            return true;
-
-        };
-
-        $scope.formatMinutes = function (minutes) {
-            return minutes * 10;
-        };
-
-        function checkForTimerInProgress () {
-            $rootScope.showLoading();
-            TimersFactory.checkForTimerInProgress()
-                .then(function (response) {
-                    if (response.data.activity) {
-                        resumeTimerOnPageLoad(response.data);
-                    }
-
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        }
-
-        function resumeTimerOnPageLoad (timer) {
-            $scope.timerInProgress = timer;
-            var seconds = moment().diff(moment(timer.start, 'YYYY-MM-DD HH:mm:ss'), 'seconds');
-            $('#timer-clock').timer({
-                format: '%H:%M:%S',
-                //The timer has already started
-                seconds: seconds
-            });
-        }
-
-        function getTotalMinutesForActivitiesForTheDay () {
-            $rootScope.showLoading();
-            ActivitiesFactory.getTotalMinutesForDay($scope.date.sql)
-                .then(function (response) {
-                    $scope.activitiesWithDurationsForDay = response.data;
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        }
-
-        function getTotalMinutesForActivitiesForTheWeek () {
-            $rootScope.showLoading();
-            ActivitiesFactory.getTotalMinutesForWeek($scope.date.sql)
-                .then(function (response) {
-                    $scope.activitiesWithDurationsForWeek = response.data;
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        }
-
-        $scope.deleteTimer = function (timer) {
-            if (confirm("Are you sure?")) {
-                $rootScope.showLoading();
-                TimersFactory.destroy(timer)
-                    .then(function (response) {
-                        $scope.timers = _.without($scope.timers, timer);
-                        getTotalMinutesForActivitiesForTheDay();
-                        getTotalMinutesForActivitiesForTheWeek();
-                        $rootScope.$broadcast('provideFeedback', 'Timer deleted');
-                        $rootScope.hideLoading();
-                    })
-                    .catch(function (response) {
-                        $rootScope.responseError(response);
-                    });
-            }
-        };
-
-    });
-angular.module('tracker')
     .factory('ActivitiesFactory', function ($http) {
         return {
             index: function () {
@@ -24030,33 +23846,6 @@ angular.module('tracker')
     .factory('TimersFactory', function ($http) {
 
         return {
-            index: function (byDate, date) {
-                var $url = '/api/timers';
-                if (byDate) {
-                    $url+= '?byDate=true';
-                }
-                else if (date) {
-                    $url+= '?date=' + date;
-                }
-                
-                return $http.get($url);
-            },
-
-            setData: function (entry, date) {
-                var data = {
-                    start: this.calculateStartDateTime(entry, date)
-                };
-
-                if (entry.finish) {
-                    data.finish = this.calculateFinishTime(entry, date);
-                }
-
-                if (entry.activity) {
-                    data.activity_id = entry.activity.id;
-                }
-
-                return data;
-            },
 
             calculateStartDateTime: function (entry, date) {
                 if (date) {
@@ -24091,23 +23880,6 @@ angular.module('tracker')
 
             calculateStartTime: function (entry) {
                 return Date.parse(entry.start).toString('HH:mm:ss');
-            },
-            
-            update: function (timer) {
-                var url = '/api/timers/' + timer.id;
-                var data = {
-                    finish: this.calculateFinishTime(timer)
-                };
-                
-                return $http.put(url, data);
-            },
-            checkForTimerInProgress: function () {
-                return $http.get('/api/timers/checkForTimerInProgress');
-            },
-            destroy: function (timer) {
-                var url = '/api/timers/' + timer.id;
-            
-                return $http.delete(url);
             }
         }
     });
@@ -24550,7 +24322,14 @@ var RecipesRepository = {
     }
 }
 var TimersRepository = {
-    store: function (entry, date) {
+
+    /**
+     *
+     * @param entry
+     * @param date
+     * @returns {{start: *}}
+     */
+    setData: function (entry, date) {
         var data = {
             start: this.calculateStartDateTime(entry, date)
         };
@@ -24563,7 +24342,83 @@ var TimersRepository = {
             data.activity_id = entry.activity.id;
         }
 
-        return $http.post('/api/timers', data);
+        return data;
+    },
+
+    /**
+     *
+     * @param byDate
+     * @param date
+     * @returns {string}
+     */
+    calculateUrl: function (byDate, date) {
+        var url = '/api/timers';
+        if (byDate) {
+            url+= '?byDate=true';
+        }
+        else if (date) {
+            url+= '?date=' + date;
+        }
+
+        return url;
+    },
+
+    /**
+     *
+     * @param entry
+     * @param date
+     * @returns {*}
+     */
+    calculateStartDateTime: function (entry, date) {
+        if (date) {
+            return this.calculateStartDate(entry, date) + ' ' + this.calculateStartTime(entry);
+        }
+        else {
+            //The 'start' timer button has been clicked rather than entering the time manually, so make the start now
+            return moment().format('YYYY-MM-DD HH:mm:ss');
+        }
+
+    },
+
+    /**
+     *
+     * @param entry
+     * @param date
+     * @returns {*}
+     */
+    calculateStartDate: function (entry, date) {
+        if (entry.startedYesterday) {
+            return moment(date, 'YYYY-MM-DD').subtract(1, 'days').format('YYYY-MM-DD');
+        }
+        else {
+            return date;
+        }
+    },
+
+    /**
+     *
+     * @param entry
+     * @param date
+     * @returns {*}
+     */
+    calculateFinishTime: function (entry, date) {
+        if (entry.finish) {
+            return date + ' ' + Date.parse(entry.finish).toString('HH:mm:ss');
+        }
+        else {
+            //The stop timer button has been pressed. Make the finish time now.
+            return moment().format('YYYY-MM-DD HH:mm:ss');
+        }
+
+    },
+
+    /**
+     *
+     * @param entry
+     * @returns {string}
+     */
+    calculateStartTime: function (entry) {
+        return Date.parse(entry.start).toString('HH:mm:ss');
     }
 };
 var DateNavigation = Vue.component('date-navigation', {
@@ -26292,4 +26147,245 @@ var RecipesPage = Vue.component('recipes-page', {
     }
 });
 
+var TimersPage = Vue.component('timers-page', {
+    template: '#timers-page-template',
+    data: function () {
+        return {
+            date: DatesRepository.setDate(this.date),
+            timerInProgress: false,
+            newTimer: {
+                activity: {}
+            },
+            newManualTimer: {
+                activity: {}
+            },
+            showTimerInProgress: true,
+            timers: [],
+            activities: [],
+            timersFilter: false,
+            activitiesWithDurationsForTheWeek: []
+        };
+    },
+    components: {},
+    methods: {
+
+        /**
+        *
+        */
+        startTimer: function () {
+            $.event.trigger('show-loading');
+            var data = TimersRepository.setData(this.newTimer);
+            $('#timer-clock').timer({format: '%H:%M:%S'});
+
+            this.$http.post('/api/timers/', data, function (response) {
+                $scope.timerInProgress = response.data;
+                $.event.trigger('provide-feedback', ['Timer started', 'success']);
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
+        },
+
+        /**
+         * Instead of starting and stopping the timer,
+         * enter the start and stop times manually
+         */
+        insertManualTimer: function () {
+            $.event.trigger('show-loading');
+            var data = TimersRepository.setData(this.newManualTimer, this.date.sql);
+            $('#timer-clock').timer({format: '%H:%M:%S'});
+
+            this.$http.post('/api/timers/', data, function (response) {
+                this.timers.push(response.data);
+                this.getTotalMinutesForActivitiesForTheDay();
+                this.getTotalMinutesForActivitiesForTheWeek();
+                $.event.trigger('provide-feedback', ['Manual entry created', 'success']);
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
+        },
+
+        /**
+        *
+        */
+        getActivities: function () {
+            $.event.trigger('show-loading');
+            this.$http.get('/api/activities', function (response) {
+                this.activities = response;
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
+        },
+
+        /**
+        *
+        */
+        stopTimer: function (timer) {
+            $.event.trigger('show-loading');
+            $('#timer-clock').timer('remove');
+
+            var data = {
+                finish: TimersRepository.calculateFinishTime(this.timerInProgress)
+            };
+
+            this.$http.put('/api/timers/' + this.timerInProgress.id, data, function (response) {
+                this.timerInProgress = false;
+                this.timers.push(response);
+                this.getTotalMinutesForActivitiesForTheDay();
+                this.getTotalMinutesForActivitiesForTheWeek();
+                $.event.trigger('provide-feedback', ['Timer updated', 'success']);
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
+        },
+
+        /**
+        *
+        */
+        getTimers: function () {
+            $.event.trigger('show-loading');
+            var url = TimersRepository.calculateUrl(false, this.date.sql);
+
+            this.$http.get(url, function (response) {
+                this.timers = response;
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
+        },
+
+        /**
+         *
+         * @param timer
+         * @returns {boolean}
+         */
+        filterTimers: function (timer) {
+            if (this.timersFilter) {
+                return timer.activity.data.name.indexOf(this.timersFilter) !== -1;
+            }
+            return true;
+
+        },
+
+        /**
+         *
+         * @param minutes
+         * @returns {number}
+         */
+        formatMinutes: function (minutes) {
+            return minutes * 10;
+        },
+
+        /**
+        *
+        */
+        checkForTimerInProgress: function () {
+            $.event.trigger('show-loading');
+            this.$http.get('/api/timers/checkForTimerInProgress', function (response) {
+                if (response.activity) {
+                    this.resumeTimerOnPageLoad(response);
+                }
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
+        },
+
+        /**
+         *
+         * @param timer
+         */
+        resumeTimerOnPageLoad: function (timer) {
+            this.timerInProgress = timer;
+            var seconds = moment().diff(moment(timer.start, 'YYYY-MM-DD HH:mm:ss'), 'seconds');
+            $('#timer-clock').timer({
+                format: '%H:%M:%S',
+                //The timer has already started
+                seconds: seconds
+            });
+        },
+
+        /**
+        *
+        */
+        getTotalMinutesForActivitiesForTheDay: function () {
+            $.event.trigger('show-loading');
+            this.$http.get('/api/activities/getTotalMinutesForDay?date=' + this.date.sql, function (response) {
+                this.activitiesWithDurationsForDay = response;
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
+        },
+
+        /**
+        *
+        */
+        getTotalMinutesForActivitiesForTheWeek: function () {
+            $.event.trigger('show-loading');
+            this.$http.get('/api/activities/getTotalMinutesForWeek?date=' + this.date.sql, function (response) {
+                this.activitiesWithDurationsForWeek = response;
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
+        },
+
+        /**
+        *
+        */
+        deleteTimer: function (timer) {
+            if (confirm("Are you sure?")) {
+                $.event.trigger('show-loading');
+                this.$http.delete('/api/timers/' + timer.id, function (response) {
+                    this.timers = _.without(this.timers, timer);
+                    this.getTotalMinutesForActivitiesForTheDay();
+                    this.getTotalMinutesForActivitiesForTheWeek();
+                    $.event.trigger('provide-feedback', ['Timer deleted', 'success']);
+                    $.event.trigger('hide-loading');
+                })
+                .error(function (response) {
+                    this.handleResponseError(response);
+                });
+            }
+        },
+
+        listen: function () {
+            var that = this;
+            $(document).on('date-changed', function (event) {
+                that.getTimers();
+                that.getTotalMinutesForActivitiesForTheDay();
+                that.getTotalMinutesForActivitiesForTheWeek();
+            });
+        },
+
+        /**
+         * 
+         * @param response
+         */
+        handleResponseError: function (response) {
+            this.$broadcast('response-error', response);
+            this.showLoading = false;
+        }
+    },
+    props: [
+        //data to be received from parent
+    ],
+    ready: function () {
+        this.checkForTimerInProgress();
+        this.getActivities();
+        this.listen();
+    }
+});
 //# sourceMappingURL=all.js.map
