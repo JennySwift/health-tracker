@@ -21,8 +21,8 @@ class ExerciseEntryTransformer extends TransformerAbstract
                 'id' => $entry->exercise_id,
                 'name' => $entry->exercise->name,
                 'description' => $entry->exercise->description,
-                'step_number' => $entry->exercise->step_number,
-                'default_unit_id' => $entry->exercise->default_unit_id,
+                'stepNumber' => $entry->exercise->step_number,
+                'defaultQuantity' => $entry->exercise->default_quantity,
             ],
             'unit' => [
                 'id' => $entry->unit->id,
@@ -32,6 +32,13 @@ class ExerciseEntryTransformer extends TransformerAbstract
             'total' => $entry->total,
             'quantity' => $entry->quantity,
         ];
+
+        if ($entry->exercise->defaultUnit) {
+            $array['exercise']['defaultUnit'] = [
+                'id' => $entry->exercise->defaultUnit->id,
+                'name' => $entry->exercise->defaultUnit->name
+            ];
+        }
 
         return $array;
     }

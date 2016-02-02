@@ -36,10 +36,10 @@
             </td>
             <td>
                 <button
-                    v-if="entry.unit.id === entry.exercise.default_unit_id"
+                    v-if="entry.unit.id === entry.exercise.defaultUnit.id"
                     v-on:click="insertExerciseSet(entry.exercise)"
                     class="btn-xs">
-                    add set
+                    <i class="fa fa-plus"></i> @{{ entry.exercise.defaultQuantity }} @{{ entry.exercise.defaultUnit.name }}
                 </button>
             </td>
         </tr>

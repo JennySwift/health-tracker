@@ -79,7 +79,7 @@ var SeriesPage = Vue.component('series-page', {
 
             this.$http.post('/api/exerciseEntries', data, function (response) {
                 $.event.trigger('provide-feedback', ['Set added', 'success']);
-                $.event.trigger('get-exercise-entries', [response.data]);
+                $.event.trigger('get-exercise-entries-for-the-day');
                 this.showLoading = false;
                 this.newSeries.name = '';
                 $.event.trigger('hide-loading');

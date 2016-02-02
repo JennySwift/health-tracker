@@ -8,7 +8,8 @@ var ExerciseEntries = Vue.component('exercise-entries', {
             selectedExercise: {
                 unit: {}
             },
-            showSpecificExerciseEntriesPopup: false
+            showSpecificExerciseEntriesPopup: false,
+            //newEntry: {}
         };
     },
     components: {},
@@ -50,7 +51,7 @@ var ExerciseEntries = Vue.component('exercise-entries', {
             };
 
             this.$http.get('api/select/specificExerciseEntries', function (response) {
-                $scope.show.popups.exercise_entries = true;
+                this.showSpecificExerciseEntriesPopup = true;
                 this.selectedExercise = response;
                 $.event.trigger('hide-loading');
             })
@@ -59,41 +60,71 @@ var ExerciseEntries = Vue.component('exercise-entries', {
             });
         },
 
-        insertExerciseEntry: function () {
-            $scope.new_entry.exercise.unit_id = $("#exercise-unit").val();
-            $rootScope.showLoading();
-            ExerciseEntriesFactory.insert($scope.date.sql, $scope.newEntry)
-                .then(function (response) {
-                    $scope.exerciseEntries = response.data;
-                    //$rootScope.$broadcast('provideFeedback', '');
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
+        /**
+        *
+        */
+        insertEntry: function () {
+            $.event.trigger('show-loading');
+
+            //this.newEntry.exercise.unit_id = $("#exercise-unit").val();
+            //$("#exercise").val("").focus();
+
+            var data = {
+                date: this.date.sql,
+                exercise_id: this.newEntry.id,
+                quantity: this.newEntry.quantity,
+                unit_id: this.newEntry.unit_id
+            };
+
+            this.$http.post('/api/exerciseEntries', data, function (response) {
+                this.exerciseEntries = response;
+                $.event.trigger('provide-feedback', ['Entry created', 'success']);
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
         },
 
-        insertExerciseSet: function ($exercise) {
-            $rootScope.showLoading();
-            ExerciseEntriesFactory.insertExerciseSet($scope.date.sql, $exercise)
-                .then(function (response) {
-                    $scope.exerciseEntries = response.data;
-                    //$rootScope.$broadcast('provideFeedback', '');
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
+        /**
+         * Similar method to this in SeriesPageComponent
+         */
+        insertExerciseSet: function (exercise) {
+            $.event.trigger('show-loading');
+            var data = {
+                date: this.date.sql,
+                exercise_id: exercise.id,
+                exerciseSet: true
+            };
+
+            this.$http.post('/api/exerciseEntries', data, function (response) {
+                $.event.trigger('provide-feedback', ['Set added', 'success']);
+                this.getEntriesForTheDay();
+                //$.event.trigger('get-exercise-entries', [response.data]);
+                this.newSeries.name = '';
+                this.exerciseEntries = response.data;
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
         },
 
-        //Todo: get the entries for the day after deleting the entry
-        deleteExerciseEntry: function ($entry) {
-            ExerciseEntriesFactory.deleteExerciseEntry($entry)
-                .then(function (response) {
-                    //$scope.entries.exercise = response.data.entries_for_day;
-                    $scope.exercise_entries_popup.entries = _.without($scope.exercise_entries_popup.entries, $entry);
-                    $rootScope.$broadcast('provideFeedback', 'Entry deleted');
+        /**
+        *
+        */
+        deleteExerciseEntry: function (entry) {
+            if (confirm("Are you sure?")) {
+                $.event.trigger('show-loading');
+                this.$http.delete('/api/exerciseEntries/' + entry.id, function (response) {
+                    this.selectedExercise.entries = _.without(this.selectedExercise.entries, entry);
+                    $.event.trigger('provide-feedback', ['Entry deleted', 'success']);
+                    $.event.trigger('hide-loading');
+                })
+                .error(function (response) {
+                    this.handleResponseError(response);
                 });
+            }
         },
 
         /**
@@ -101,9 +132,13 @@ var ExerciseEntries = Vue.component('exercise-entries', {
          */
         listen: function () {
             var that = this;
-            //$(document).on('get-exercise-entries', function (event) {
-            //    that.getEntriesForTheDay();
-            //});
+            /**
+             * For updating the exercise entries from the
+             * series controller on the series page
+             */
+            $(document).on('get-exercise-entries-for-the-day', function (event) {
+                that.getEntriesForTheDay();
+            });
             $(document).on('date-changed', function (event) {
                 that.getEntriesForTheDay();
             });
@@ -111,9 +146,9 @@ var ExerciseEntries = Vue.component('exercise-entries', {
              * For updating the exercise entries from the
              * series controller on the series page
              */
-            $(document).on('getExerciseEntries', function (event, data) {
-                that.exerciseEntries = data;
-            });
+            //$(document).on('getExerciseEntries', function (event, data) {
+            //    that.exerciseEntries = data;
+            //});
         },
 
         /**
