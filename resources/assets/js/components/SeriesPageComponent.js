@@ -2,6 +2,7 @@ var SeriesPage = Vue.component('series-page', {
     template: '#series-page-template',
     data: function () {
         return {
+            date: DatesRepository.setDate(this.date),
             exerciseSeries: series,
             exerciseSeriesHistory: [],
             workouts: workouts,
@@ -16,9 +17,11 @@ var SeriesPage = Vue.component('series-page', {
                 exercises: {
                     data: []
                 }
-
             },
-            selectedExercise: {}
+            selectedExercise: {
+                unit: {}
+            },
+            showExerciseEntryInputs: false
         };
     },
     components: {},
@@ -75,7 +78,7 @@ var SeriesPage = Vue.component('series-page', {
             };
 
             this.$http.post('/api/exerciseEntries', data, function (response) {
-                $.event.trigger('provide-feedback', ['Series created', 'success']);
+                $.event.trigger('provide-feedback', ['Set added', 'success']);
                 $.event.trigger('get-exercise-entries', [response.data]);
                 this.showLoading = false;
                 this.newSeries.name = '';

@@ -21,13 +21,14 @@
 
 </div>
 
-{{--This div used to be exercise entries controller--}}
-{{--<div>--}}
-    {{--@include('pages.entries.popups.specific-exercise-entries-popup')--}}
-    {{--<button v-on:click="showExerciseEntryInputs = !showExerciseEntryInputs" class="btn btn-sm btn-success">Add manual entry</button>--}}
-    {{--<div v-show="showExerciseEntryInputs">--}}
-        {{--@include('pages.entries.exercise-entry-inputs')--}}
-    {{--</div>--}}
+<div>
+    <button v-on:click="showExerciseEntryInputs = !showExerciseEntryInputs" class="btn btn-sm btn-success">Add manual entry</button>
+    <div v-show="showExerciseEntryInputs">
+        @include('pages.entries.exercise-entry-inputs')
+    </div>
 
-    {{--@include('pages.entries.exercise-entries')--}}
-{{--</div>--}}
+    <exercise-entries
+        :date="date"
+    >
+    </exercise-entries>
+</div>
