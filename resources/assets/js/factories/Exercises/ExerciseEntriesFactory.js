@@ -15,16 +15,6 @@ angular.module('tracker')
 
                 return $http.post($url, $data);
             },
-            insertExerciseSet: function ($sqlDate, $exercise) {
-                var $url = 'api/exerciseEntries';
-                var $data = {
-                    date: $sqlDate,
-                    exercise_id: $exercise.id,
-                    exerciseSet: true
-                };
-
-                return $http.post($url, $data);
-            },
 
             deleteExerciseEntry: function ($entry) {
                 if (confirm("Are you sure you want to delete this entry?")) {

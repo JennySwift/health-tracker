@@ -1,13 +1,13 @@
 
-<div ng-show="showNewExerciseFields" class="new-exercise margin-bottom">
+<div v-show="showNewExerciseFields" class="new-exercise margin-bottom">
 
     <div class="flex">
         <div>
             <div class="form-group">
                 <label for="new-exercise-name">Name</label>
                 <input
-                        ng-model="newExercise.name"
-                        ng-keyup="insertExercise($event.keyCode)"
+                        v-model="newExercise.name"
+                        v-on:keyup="insertExercise($event.keyCode)"
                         type="text"
                         id="new-exercise-name"
                         name="new-exercise-name"
@@ -19,8 +19,8 @@
             <div class="form-group">
                 <label for="new-exercise-description">Description</label>
                 <input
-                        ng-model="newExercise.description"
-                        ng-keyup="insertExercise($event.keyCode)"
+                        v-model="newExercise.description"
+                        v-on:keyup="insertExercise($event.keyCode)"
                         type="text"
                         id="new-exercise-description"
                         name="new-exercise-description"
@@ -32,8 +32,8 @@
             <div class="step-number form-group">
                 <label for="new-exercise-step-number">Step Number</label>
                 <input
-                        ng-model="newExercise.stepNumber"
-                        ng-keyup="insertExercise($event.keyCode)"
+                        v-model="newExercise.stepNumber"
+                        v-on:keyup="insertExercise($event.keyCode)"
                         type="text"
                         id="new-exercise-step-number"
                         name="new-exercise-step-number"
@@ -45,8 +45,8 @@
             <div class="priority form-group">
                 <label for="new-exercise-priority">Priority</label>
                 <input
-                        ng-model="newExercise.priority"
-                        ng-keyup="insertExercise($event.keyCode)"
+                        v-model="newExercise.priority"
+                        v-on:keyup="insertExercise($event.keyCode)"
                         type="text"
                         id="new-exercise-priority"
                         name="new-exercise-priority"
@@ -58,8 +58,8 @@
             <div class="form-group">
                 <label for="new-exercise-target">Target</label>
                 <input
-                        ng-model="newExercise.target"
-                        ng-keyup="insertExercise($event.keyCode)"
+                        v-model="newExercise.target"
+                        v-on:keyup="insertExercise($event.keyCode)"
                         type="text"
                         id="new-exercise-target"
                         name="new-exercise-target"
@@ -73,8 +73,8 @@
             <div class="form-group">
                 <label for="new-exercise-program">Program</label>
                 <select
-                        ng-options="program as program.name for program in programs"
-                        ng-model="newExercise.program"
+                        v-options="program as program.name for program in programs"
+                        v-model="newExercise.program"
                         id="new-exercise-program"
                         class="form-control"
                 >
@@ -84,8 +84,8 @@
             <div class="form-group">
                 <label for="new-exercise-series">Series</label>
                 <select
-                        ng-options="series as series.name for series in exercise_series"
-                        ng-model="newExercise.series"
+                        v-options="series as series.name for series in exercise_series"
+                        v-model="newExercise.series"
                         id="new-exercise-series"
                         class="form-control"
                 >
@@ -95,8 +95,8 @@
             <div class="form-group">
                 <label for="new-exercise-default-unit">Default Unit</label>
                 <select
-                        ng-options="unit as unit.name for unit in units"
-                        ng-model="newExercise.defaultUnit"
+                        v-options="unit as unit.name for unit in units"
+                        v-model="newExercise.defaultUnit"
                         id="new-exercise-unit"
                         class="form-control"
                 >
@@ -106,8 +106,8 @@
             <div class="default-quantity form-group">
                 <label for="new-exercise-step-number">Default Quantity</label>
                 <input
-                        ng-model="newExercise.defaultQuantity"
-                        ng-keyup="insertExercise($event.keyCode)"
+                        v-model="newExercise.defaultQuantity"
+                        v-on:keyup="insertExercise($event.keyCode)"
                         type="text"
                         id="new-exercise-default-quantity"
                         name="new-exercise-default-quantity"
@@ -121,13 +121,13 @@
 
     <div class="form-group flex">
         <button
-                ng-click="showNewExerciseFields = false"
+                v-on:click="showNewExerciseFields = false"
                 class="btn btn-default"
         >
             Close
         </button>
         <button
-                ng-click="insertExercise(13)"
+                v-on:click="insertExercise(13)"
                 class="btn btn-success"
         >
             Add exercise
