@@ -27,6 +27,11 @@ var EntriesPage = Vue.component('entries-page', {
         }
     },
     components: {},
+    filters: {
+        roundNumber: function (number) {
+            return Math.round(number);
+        }
+    },
     methods: {
         /**
          *
