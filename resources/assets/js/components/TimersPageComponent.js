@@ -72,7 +72,7 @@ var TimersPage = Vue.component('timers-page', {
             $('#timer-clock').timer({format: '%H:%M:%S'});
 
             this.$http.post('/api/timers/', data, function (response) {
-                $scope.timerInProgress = response.data;
+                this.timerInProgress = response;
                 $.event.trigger('provide-feedback', ['Timer started', 'success']);
                 $.event.trigger('hide-loading');
             })
