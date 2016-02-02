@@ -69,6 +69,26 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
 
     /**
      *
+     * @param $exercise
+     */
+    protected function checkExerciseKeysExist($exercise)
+    {
+        $this->assertArrayHasKey('id', $exercise);
+        $this->assertArrayHasKey('name', $exercise);
+        $this->assertArrayHasKey('stepNumber', $exercise);
+        $this->assertArrayHasKey('series', $exercise);
+        $this->assertArrayHasKey('defaultUnit', $exercise);
+        $this->assertArrayHasKey('defaultQuantity', $exercise);
+        $this->assertArrayHasKey('tag_ids', $exercise);
+        $this->assertArrayHasKey('tags', $exercise);
+        $this->assertArrayHasKey('program', $exercise);
+        $this->assertArrayHasKey('lastDone', $exercise);
+        $this->assertArrayHasKey('priority', $exercise);
+        $this->assertArrayHasKey('target', $exercise);
+    }
+
+    /**
+     *
      * @param $tag
      */
     protected function checkTagKeysExist($tag)

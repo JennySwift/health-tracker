@@ -11,6 +11,14 @@ var NewItemWithAutocomplete = Vue.component('new-item-with-autocomplete', {
                         data: {}
                     }
                 },
+                exercise: {
+                    units: {
+                        data: []
+                    },
+                    defaultUnit: {
+                        data: {}
+                    }
+                },
                 unit: {}
             },
             autocompleteOptions: [],
@@ -53,7 +61,7 @@ var NewItemWithAutocomplete = Vue.component('new-item-with-autocomplete', {
         populateOptions: function () {
             //fill the dropdown
             $.event.trigger('show-loading');
-            this.$http.get('/api/foods?typing=' + this.newIngredient.food.name, function (response) {
+            this.$http.get(this.url + '?typing=' + this.newIngredient[this.autocompleteField].name, function (response) {
                 this.autocompleteOptions = response.data;
                 this.showDropdown = true;
                 this.currentIndex = 0;
@@ -82,8 +90,8 @@ var NewItemWithAutocomplete = Vue.component('new-item-with-autocomplete', {
          *
          */
         selectOption: function () {
-            this.newIngredient.food = this.autocompleteOptions[this.currentIndex];
-            this.newIngredient.unit = this.newIngredient.food.defaultUnit.data;
+            this.newIngredient[this.autocompleteField] = this.autocompleteOptions[this.currentIndex];
+            this.newIngredient.unit = this.newIngredient[this.autocompleteField].defaultUnit.data;
             this.showDropdown = false;
         },
 
@@ -110,7 +118,9 @@ var NewItemWithAutocomplete = Vue.component('new-item-with-autocomplete', {
     props: [
         'selectedRecipe',
         'insertItemFunction',
-        'showDescriptionField'
+        'showDescriptionField',
+        'url',
+        'autocompleteField'
     ],
     ready: function () {
 

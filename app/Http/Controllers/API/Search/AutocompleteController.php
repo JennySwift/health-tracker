@@ -132,18 +132,18 @@ class AutocompleteController extends Controller
      * @param Request $request
      * @return mixed
      */
-    public function autocompleteExercise(Request $request)
-    {
-        $exercise = '%' . $request->get('exercise') . '%';
-
-        $exercises = Exercise
-            ::where('name', 'LIKE', $exercise)
-            ->where('user_id', Auth::user()->id)
-            ->select('id', 'name', 'description', 'default_unit_id', 'default_quantity')
-            ->get();
-
-        return $exercises;
-    }
+//    public function autocompleteExercise(Request $request)
+//    {
+//        $exercise = '%' . $request->get('exercise') . '%';
+//
+//        $exercises = Exercise
+//            ::where('name', 'LIKE', $exercise)
+//            ->where('user_id', Auth::user()->id)
+//            ->select('id', 'name', 'description', 'default_unit_id', 'default_quantity')
+//            ->get();
+//
+//        return $exercises;
+//    }
 
 
 

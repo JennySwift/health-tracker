@@ -4,9 +4,9 @@
         <div>
 
             <div class="form-group">
-                <label for="new-ingredient-food-name">Food</label>
+                <label for="new-ingredient-food-name">@{{ autocompleteField | capitalize }}</label>
                 <input
-                    v-model="newIngredient.food.name"
+                    v-model="newIngredient[autocompleteField].name"
                     v-on:keyup="respondToKeyup($event.keyCode)"
                     v-on:blur="showDropdown = false"
                     type="text"

@@ -41,10 +41,18 @@ class ExercisesController extends Controller
 
     /**
      *
+     * @param Request $request
      * @return mixed
      */
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->get('typing')) {
+            $exercises = Exercise::forCurrentUser()
+                ->where('name', 'LIKE', '%' . $request->get('typing') . '%')
+                ->get();
+            return $this->transform($this->createCollection($exercises, new ExerciseTransformer));
+        }
+
         return $this->exercisesRepository->getExercises();
     }
 

@@ -8,7 +8,24 @@ use League\Fractal\TransformerAbstract;
  */
 class ExerciseTransformer extends TransformerAbstract
 {
+    /**
+     * @var array
+     */
     protected $defaultIncludes = ['tags'];
+
+    /**
+     * @var array
+     */
+    private $params;
+
+    /**
+     * ExerciseTransformer constructor.
+     * @param array $params
+     */
+    public function __construct($params = [])
+    {
+        $this->params = $params;
+    }
 
     /**
      * @param Exercise $exercise

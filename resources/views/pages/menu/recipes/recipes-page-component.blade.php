@@ -2,9 +2,6 @@
 
     <div class="container">
 
-        <feedback></feedback>
-        <loading></loading>
-
         <recipe-popup
             :tags="tags"
             :recipes.sync="recipes"

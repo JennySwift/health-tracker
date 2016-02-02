@@ -24,15 +24,7 @@ class ExercisesTest extends TestCase {
         $response = $this->apiCall('GET', '/api/exercises');
         $content = json_decode($response->getContent(), true);
 
-        $this->assertArrayHasKey('id', $content[0]);
-        $this->assertArrayHasKey('name', $content[0]);
-        $this->assertArrayHasKey('stepNumber', $content[0]);
-        $this->assertArrayHasKey('series', $content[0]);
-        $this->assertArrayHasKey('defaultUnit', $content[0]);
-        $this->assertArrayHasKey('defaultQuantity', $content[0]);
-        $this->assertArrayHasKey('tag_ids', $content[0]);
-        $this->assertArrayHasKey('program', $content[0]);
-        $this->assertArrayHasKey('lastDone', $content[0]);
+        $this->checkExerciseKeysExist($content[0]);
 
         $this->assertEquals(1, $content[0]['id']);
         $this->assertEquals('kneeling pushups', $content[0]['name']);
@@ -48,6 +40,29 @@ class ExercisesTest extends TestCase {
             'id' => 1,
             'name' => 'reps'
         ], $content[0]['defaultUnit']);
+
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    /**
+     * @test
+     * @return void
+     */
+    public function it_can_autocomplete_the_exercises()
+    {
+        $this->logInUser();
+
+        $response = $this->apiCall('GET', '/api/exercises?typing=p');
+        $content = json_decode($response->getContent(), true)['data'];
+//        dd($content);
+
+        $this->checkExerciseKeysExist($content[0]);
+
+        $this->assertEquals(1, $content[0]['defaultUnit']['id']);
+
+        foreach ($content as $exercise) {
+            $this->assertContains('p', $exercise['name']);
+        }
 
         $this->assertEquals(200, $response->getStatusCode());
     }
@@ -107,13 +122,7 @@ class ExercisesTest extends TestCase {
         $response = $this->call('GET', '/api/exercises/' . $exercise->id);
         $content = json_decode($response->getContent(), true);
 
-        $this->assertArrayHasKey('id', $content);
-        $this->assertArrayHasKey('name', $content);
-        $this->assertArrayHasKey('stepNumber', $content);
-        $this->assertArrayHasKey('series', $content);
-        $this->assertArrayHasKey('defaultUnit', $content);
-        $this->assertArrayHasKey('defaultQuantity', $content);
-        $this->assertArrayHasKey('tag_ids', $content);
+        $this->checkExerciseKeysExist($content);
 
         $this->assertEquals(1, $content['id']);
         $this->assertEquals('kneeling pushups', $content['name']);
@@ -162,16 +171,7 @@ class ExercisesTest extends TestCase {
         $content = json_decode($response->getContent(), true)['data'];
 //        dd($content);
 
-        $this->assertArrayHasKey('id', $content);
-        $this->assertArrayHasKey('name', $content);
-        $this->assertArrayHasKey('description', $content);
-        $this->assertArrayHasKey('stepNumber', $content);
-        $this->assertArrayHasKey('series', $content);
-        $this->assertArrayHasKey('defaultUnit', $content);
-        $this->assertArrayHasKey('defaultQuantity', $content);
-        $this->assertArrayHasKey('tags', $content);
-        $this->assertArrayHasKey('tag_ids', $content);
-        $this->assertArrayHasKey('program', $content);
+        $this->checkExerciseKeysExist($content);
 
         $this->assertEquals(1, $content['id']);
         $this->assertEquals('numbat', $content['name']);
@@ -213,14 +213,7 @@ class ExercisesTest extends TestCase {
         $content = json_decode($response->getContent(), true)['data'];
 //        dd($content);
 
-        $this->assertArrayHasKey('id', $content);
-        $this->assertArrayHasKey('name', $content);
-        $this->assertArrayHasKey('stepNumber', $content);
-        $this->assertArrayHasKey('series', $content);
-        $this->assertArrayHasKey('defaultUnit', $content);
-        $this->assertArrayHasKey('defaultQuantity', $content);
-        $this->assertArrayHasKey('tags', $content);
-        $this->assertArrayHasKey('tag_ids', $content);
+        $this->checkExerciseKeysExist($content);
 
         $this->assertEquals(1, $content['id']);
         $this->assertEquals('kneeling pushups', $content['name']);

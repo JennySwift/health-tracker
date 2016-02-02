@@ -24,6 +24,8 @@
                 :selected-recipe.sync="selectedRecipe"
                 :insert-item-function="addIngredientToRecipe"
                 show-description-field="true"
+                url="/api/foods"
+                autocomplete-field="food"
             >
             </new-item-with-autocomplete>
             @include('pages.menu.recipes.popups.recipe-popup.ingredients')
