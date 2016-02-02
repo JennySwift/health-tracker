@@ -16,7 +16,12 @@
 			class="list-group-item pointer"
 		>
 			<span>Today's weight: </span>
-			<span class="badge">@{{ weight.weight | number:2 }}</span>
+			<span
+				v-if="weight"
+				class="badge"
+			>
+				@{{ weight.weight | number:2 }}
+			</span>
 		</li>
 
 		<li v-show="editWeight === true" class="list-group-item">
