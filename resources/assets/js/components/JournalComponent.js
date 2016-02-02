@@ -59,23 +59,22 @@ var JournalPage = Vue.component('journal-page', {
                 this.updateEntry();
             }
             else {
-                this.createEntry();
+                this.insertEntry();
             }
-
         },
 
 
         /**
         *
         */
-        updateEntry: function (entry) {
+        updateEntry: function () {
             $.event.trigger('show-loading');
 
             var data = {
                 text: $("#journal-entry").html()
             };
 
-            this.$http.put('/api/journal/' + entry.id, data, function (response) {
+            this.$http.put('/api/journal/' + this.journalEntry.id, data, function (response) {
                 this.journalEntry = response.data;
                 $.event.trigger('provide-feedback', ['Entry updated', 'success']);
                 $.event.trigger('hide-loading');
@@ -91,7 +90,7 @@ var JournalPage = Vue.component('journal-page', {
         insertEntry: function () {
             $.event.trigger('show-loading');
             var data = {
-                date: this.date.dql,
+                date: this.date.sql,
                 text: $("#journal-entry").html()
             };
 

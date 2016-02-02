@@ -3,8 +3,6 @@
 <div>
 
     <h1 class="center">@{{ date.long }}</h1>
-    
-    <pre>@{{$data.date | json}}</pre>
 
     <div id="date-navigation" class="margin-bottom">
 

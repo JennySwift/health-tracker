@@ -8,8 +8,8 @@
 <body>
 
 @include('templates.shared.header')
-<feedback-directive></feedback-directive>
-@include('templates.shared.loading')
+<feedback></feedback>
+<loading></loading>
 
 <div class="container">
 	<journal-page></journal-page>

@@ -8,8 +8,8 @@
 <body>
 
 @include('templates.shared.header')
-<feedback-directive></feedback-directive>
-@include('templates.shared.loading')
+<feedback></feedback>
+<loading></loading>
 
 <recipes-page></recipes-page>
 

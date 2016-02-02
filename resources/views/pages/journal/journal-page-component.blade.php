@@ -1,8 +1,6 @@
 <script id="journal-page-template" type="x-template">
 
     <div id="journal">
-        
-        {{--<pre>@{{$data.date | json}}</pre>--}}
 
         <date-navigation
             :date.sync="date"
@@ -41,9 +39,14 @@
             <a data-edit="bold" class="fa fa-bold"></a>
         </div>
 
-        <div id="journal-entry" class="wysiwyg margin-bottom">@{{{ journalEntry.text }}}</div>
+        <div
+            v-html="journalEntry.text"
+            id="journal-entry"
+            class="wysiwyg margin-bottom"
+        >
+        </div>
 
-        <button ng-click="insertOrUpdateJournalEntry()" class="btn btn-success save">Save entry</button>
+        <button v-on:click="insertOrUpdateJournalEntry()" class="btn btn-success save">Save entry</button>
 
     </div>
 
