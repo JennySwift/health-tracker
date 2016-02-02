@@ -219,12 +219,10 @@ var MenuEntriesComponent = Vue.component('menu-entries', {
          */
         listen: function () {
             var that = this;
-            $(document).on('get-entries', function (event) {
-                $.event.trigger('show-loading');
-                that.getEntriesForTheDay();
-                that.getWeightForTheDay();
-                that.getCalorieInfoForTheDay();
-            });
+            //$(document).on('get-food-entries', function (event) {
+            //    $.event.trigger('show-loading');
+            //    that.getEntriesForTheDay();
+            //});
             $(document).on('date-changed', function (event) {
                 that.getEntriesForTheDay();
             });

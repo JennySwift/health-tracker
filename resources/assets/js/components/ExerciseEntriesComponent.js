@@ -101,15 +101,18 @@ var ExerciseEntries = Vue.component('exercise-entries', {
          */
         listen: function () {
             var that = this;
-            $(document).on('get-entries', function (event) {
-                this.getEntriesForTheDay();
+            //$(document).on('get-exercise-entries', function (event) {
+            //    that.getEntriesForTheDay();
+            //});
+            $(document).on('date-changed', function (event) {
+                that.getEntriesForTheDay();
             });
             /**
              * For updating the exercise entries from the
              * series controller on the series page
              */
             $(document).on('getExerciseEntries', function (event, data) {
-                this.exerciseEntries = data;
+                that.exerciseEntries = data;
             });
         },
 

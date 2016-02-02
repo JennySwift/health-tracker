@@ -50,9 +50,9 @@ var EntriesPage = Vue.component('entries-page', {
          * calories for the day
          * calorie average for the week
          */
-        getEntries: function () {
-            $.event.trigger('get-entries');
-        },
+        //getEntries: function () {
+        //    $.event.trigger('get-entries');
+        //},
 
         /**
          *
