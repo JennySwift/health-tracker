@@ -6,6 +6,7 @@
 @include('pages.entries.exercise-entries-component')
 @include('pages.journal.journal-page-component')
 @include('pages.timers.timers-page-component')
+@include('pages.timers.activities-page-component')
 @include('pages.exercises.series-page-component')
 @include('pages.menu.recipes.recipes-page-component')
 @include('pages.menu.recipes.new-quick-recipe-component')

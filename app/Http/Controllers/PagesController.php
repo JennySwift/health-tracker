@@ -317,7 +317,7 @@ class PagesController extends Controller
      */
     public function timerActivities()
     {
-        return view('pages.timers.activities');
+        return view('pages.timers.activities-page');
     }
 
     /**
