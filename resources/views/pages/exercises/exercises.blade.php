@@ -11,7 +11,9 @@
 	
 	<div ng-controller="exercises" id="exercises" class="container">
 
-        @include('pages.exercises.index')
+		@include('pages.exercises.popups.exercise-popup')
+		@include('pages.exercises.popups.exercise-series-history-popup')
+		@include('pages.exercises.popups.exercise-series-popup')
 
 		<div>
 

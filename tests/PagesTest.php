@@ -40,13 +40,7 @@ class PagesTest extends TestCase {
 
         $this->visit('/')
             ->see($this->user->name)
-            ->see('today')
-            /**
-             * @VP:
-             * This line passes even when 'add set' is not on the page.
-             * It is in the HTML though.
-             */
-            ->see('add set');
+            ->see('today');
 
         $this->assertEquals(Response::HTTP_OK, $this->apiCall('GET', '/')->getStatusCode());
     }

@@ -79,29 +79,16 @@ class ExerciseEntriesTest extends TestCase {
         $content = json_decode($response->getContent(), true);
 //        dd($content);
 
-        $this->assertArrayHasKey('exercise', $content[0]);
-        $this->assertArrayHasKey('id', $content[0]['exercise']);
-        $this->assertArrayHasKey('name', $content[0]['exercise']);
-        $this->assertArrayHasKey('description', $content[0]['exercise']);
-        $this->assertArrayHasKey('step_number', $content[0]['exercise']);
-        $this->assertArrayHasKey('default_unit_id', $content[0]['exercise']);
-
-        $this->assertArrayHasKey('unit', $content[0]);
-        $this->assertArrayHasKey('id', $content[0]['unit']);
-        $this->assertArrayHasKey('name', $content[0]['unit']);
-
-        $this->assertArrayHasKey('sets', $content[0]);
-        $this->assertArrayHasKey('total', $content[0]);
-        $this->assertArrayHasKey('quantity', $content[0]);
+        $this->checkExerciseEntryKeysExist($content[0]);
 
         $this->assertEquals(1, $content[0]['exercise']['id']);
         $this->assertEquals('kneeling pushups', $content[0]['exercise']['name']);
-        $this->assertEquals('1.00', $content[0]['exercise']['step_number']);
+        $this->assertEquals('1.00', $content[0]['exercise']['stepNumber']);
 
         $this->assertEquals(1, $content[0]['unit']['id']);
         $this->assertEquals('reps', $content[0]['unit']['name']);
 
-        $this->assertEquals(1, $content[0]['exercise']['default_unit_id']);
+        $this->assertEquals(1, $content[0]['exercise']['defaultUnit']['id']);
         $this->assertEquals(3, $content[0]['sets']);
         $this->assertEquals(15, $content[0]['total']);
         $this->assertEquals(5, $content[0]['quantity']);
@@ -128,25 +115,12 @@ class ExerciseEntriesTest extends TestCase {
         $content = json_decode($response->getContent(), true);
 //        dd($content);
 
-        $this->assertArrayHasKey('exercise', $content[0]);
-        $this->assertArrayHasKey('id', $content[0]['exercise']);
-        $this->assertArrayHasKey('name', $content[0]['exercise']);
-        $this->assertArrayHasKey('description', $content[0]['exercise']);
-        $this->assertArrayHasKey('step_number', $content[0]['exercise']);
-        $this->assertArrayHasKey('default_unit_id', $content[0]['exercise']);
-
-        $this->assertArrayHasKey('unit', $content[0]);
-        $this->assertArrayHasKey('id', $content[0]['unit']);
-        $this->assertArrayHasKey('name', $content[0]['unit']);
-
-        $this->assertArrayHasKey('sets', $content[0]);
-        $this->assertArrayHasKey('total', $content[0]);
-        $this->assertArrayHasKey('quantity', $content[0]);
+        $this->checkExerciseEntryKeysExist($content[0]);
 
         $this->assertEquals(1, $content[0]['exercise']['id']);
         $this->assertEquals('kneeling pushups', $content[0]['exercise']['name']);
-        $this->assertEquals('1.00', $content[0]['exercise']['step_number']);
-        $this->assertEquals(1, $content[0]['exercise']['default_unit_id']);
+        $this->assertEquals('1.00', $content[0]['exercise']['stepNumber']);
+        $this->assertEquals(1, $content[0]['exercise']['defaultUnit']['id']);
 
         $this->assertEquals(1, $content[0]['unit']['id']);
         $this->assertEquals('reps', $content[0]['unit']['name']);
