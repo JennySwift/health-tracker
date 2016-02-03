@@ -23482,7 +23482,8 @@ var ExercisePopup = Vue.component('exercise-popup', {
             if (confirm("Are you sure?")) {
                 $.event.trigger('show-loading');
                 this.$http.delete('/api/exercises/' + this.selectedExercise.id, function (response) {
-                    this.exercises = _.without(this.exercises, this.selectedExercise);
+                    var index = _.indexOf(this.exercises, _.findWhere(this.exercises, {id: this.selectedExercise.id}));
+                    this.exercises = _.without(this.exercises, this.exercises[index]);
                     $.event.trigger('provide-feedback', ['Exercise deleted', 'success']);
                     this.showPopup = false;
                     $.event.trigger('hide-loading');
