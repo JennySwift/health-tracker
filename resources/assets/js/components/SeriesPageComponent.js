@@ -15,9 +15,6 @@ var SeriesPage = Vue.component('series-page', {
                     data: []
                 }
             },
-            selectedExercise: {
-                unit: {}
-            },
             showExerciseEntryInputs: false
         };
     },
@@ -150,21 +147,6 @@ var SeriesPage = Vue.component('series-page', {
             .error(function (response) {
                 this.handleResponseError(response);
             });
-        },
-
-        /**
-         *
-         */
-        showExercisePopup: function (exercise) {
-            $.event.trigger('show-loading');
-            this.$http.get('/api/exercises/' + exercise.id, function (response) {
-                    this.selectedExercise = response;
-                    $.event.trigger('show-exercise-popup');
-                    $.event.trigger('hide-loading');
-                })
-                .error(function (response) {
-                    this.handleResponseError(response);
-                });
         },
 
         /**

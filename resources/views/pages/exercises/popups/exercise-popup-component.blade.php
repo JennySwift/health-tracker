@@ -1,8 +1,11 @@
 <script id="exercise-popup-template" type="x-template">
 
 	<div v-show="showPopup" v-on:click="closePopup($event)" class="popup-outer">
-
+		
 		<div id="exercise-popup" class="popup-inner">
+
+			{{--<pre>@{{$data.exercises | json}}</pre>--}}
+			{{--<pre>@{{$data.selectedExercise | json}}</pre>--}}
 
 			<h3 class="center">@{{  selectedExercise.name }}</h3>
 
@@ -123,7 +126,10 @@
 
 			</div>
 
-			<button v-on:click="updateExercise()" class="btn btn-success save">Save</button>
+			<div class="buttons">
+				<button v-on:click="updateExercise()" class="btn btn-success save">Save</button>
+				<button v-on:click="deleteExercise()" class="btn btn-danger save">Delete</button>
+			</div>
 
 		</div>
 

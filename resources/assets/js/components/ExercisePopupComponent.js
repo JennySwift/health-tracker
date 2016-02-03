@@ -9,6 +9,24 @@ var ExercisePopup = Vue.component('exercise-popup', {
     methods: {
 
         /**
+         *
+         */
+        deleteExercise: function () {
+            if (confirm("Are you sure?")) {
+                $.event.trigger('show-loading');
+                this.$http.delete('/api/exercises/' + this.selectedExercise.id, function (response) {
+                    this.exercises = _.without(this.exercises, this.selectedExercise);
+                    $.event.trigger('provide-feedback', ['Exercise deleted', 'success']);
+                    this.showPopup = false;
+                    $.event.trigger('hide-loading');
+                })
+                .error(function (response) {
+                    this.handleResponseError(response);
+                });
+            }
+        },
+
+        /**
         *
         */
         closePopup: function ($event) {
@@ -37,7 +55,8 @@ var ExercisePopup = Vue.component('exercise-popup', {
         }
     },
     props: [
-        'selectedExercise'
+        'selectedExercise',
+        'exercises'
     ],
     ready: function () {
         this.listen();

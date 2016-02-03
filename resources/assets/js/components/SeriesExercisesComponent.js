@@ -2,7 +2,9 @@ var SeriesExercises = Vue.component('series-exercises', {
     template: '#series-exercises-template',
     data: function () {
         return {
-            array: [1,2,3]
+            selectedExercise: {
+                unit: {}
+            }
         };
     },
     components: {},
@@ -27,6 +29,22 @@ var SeriesExercises = Vue.component('series-exercises', {
         }
     },
     methods: {
+
+        /**
+         *
+         */
+        showExercisePopup: function (exercise) {
+            $.event.trigger('show-loading');
+            this.$http.get('/api/exercises/' + exercise.id, function (response) {
+                    this.selectedExercise = response;
+                    $.event.trigger('show-exercise-popup');
+                    $.event.trigger('hide-loading');
+                })
+                .error(function (response) {
+                    this.handleResponseError(response);
+                });
+        },
+
         /**
          *
          * @param response

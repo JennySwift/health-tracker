@@ -2,11 +2,6 @@
 
     <div id="exercise-series" class="container">
 
-        <exercise-popup
-            :selected-exercise="selectedExercise"
-        >
-        </exercise-popup>
-
         <series-history-popup
                 :exercise-series-history="exerciseSeriesHistory"
                 :selected-series="selectedSeries"

@@ -45,23 +45,6 @@ var ExercisesPage = Vue.component('exercises-page', {
         },
 
         /**
-        *
-        */
-        deleteExercise: function (exercise) {
-            if (confirm("Are you sure?")) {
-                $.event.trigger('show-loading');
-                this.$http.delete('/api/exercises/' + exercise.id, function (response) {
-                    this.exercises = _.without(this.exercises, exercise);
-                    $.event.trigger('provide-feedback', ['Exercise deleted', 'success']);
-                    $.event.trigger('hide-loading');
-                })
-                .error(function (response) {
-                    this.handleResponseError(response);
-                });
-            }
-        },
-
-        /**
          *
          */
         showExercisePopup: function (exercise) {

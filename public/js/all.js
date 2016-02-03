@@ -24402,6 +24402,24 @@ var ExercisePopup = Vue.component('exercise-popup', {
     methods: {
 
         /**
+         *
+         */
+        deleteExercise: function () {
+            if (confirm("Are you sure?")) {
+                $.event.trigger('show-loading');
+                this.$http.delete('/api/exercises/' + this.selectedExercise.id, function (response) {
+                    this.exercises = _.without(this.exercises, this.selectedExercise);
+                    $.event.trigger('provide-feedback', ['Exercise deleted', 'success']);
+                    this.showPopup = false;
+                    $.event.trigger('hide-loading');
+                })
+                .error(function (response) {
+                    this.handleResponseError(response);
+                });
+            }
+        },
+
+        /**
         *
         */
         closePopup: function ($event) {
@@ -24430,7 +24448,8 @@ var ExercisePopup = Vue.component('exercise-popup', {
         }
     },
     props: [
-        'selectedExercise'
+        'selectedExercise',
+        'exercises'
     ],
     ready: function () {
         this.listen();
@@ -24548,23 +24567,6 @@ var ExercisesPage = Vue.component('exercises-page', {
             .error(function (response) {
                 this.handleResponseError(response);
             });
-        },
-
-        /**
-        *
-        */
-        deleteExercise: function (exercise) {
-            if (confirm("Are you sure?")) {
-                $.event.trigger('show-loading');
-                this.$http.delete('/api/exercises/' + exercise.id, function (response) {
-                    this.exercises = _.without(this.exercises, exercise);
-                    $.event.trigger('provide-feedback', ['Exercise deleted', 'success']);
-                    $.event.trigger('hide-loading');
-                })
-                .error(function (response) {
-                    this.handleResponseError(response);
-                });
-            }
         },
 
         /**
@@ -25959,7 +25961,9 @@ var SeriesExercises = Vue.component('series-exercises', {
     template: '#series-exercises-template',
     data: function () {
         return {
-            array: [1,2,3]
+            selectedExercise: {
+                unit: {}
+            }
         };
     },
     components: {},
@@ -25984,6 +25988,22 @@ var SeriesExercises = Vue.component('series-exercises', {
         }
     },
     methods: {
+
+        /**
+         *
+         */
+        showExercisePopup: function (exercise) {
+            $.event.trigger('show-loading');
+            this.$http.get('/api/exercises/' + exercise.id, function (response) {
+                    this.selectedExercise = response;
+                    $.event.trigger('show-exercise-popup');
+                    $.event.trigger('hide-loading');
+                })
+                .error(function (response) {
+                    this.handleResponseError(response);
+                });
+        },
+
         /**
          *
          * @param response
@@ -26066,9 +26086,6 @@ var SeriesPage = Vue.component('series-page', {
                 exercises: {
                     data: []
                 }
-            },
-            selectedExercise: {
-                unit: {}
             },
             showExerciseEntryInputs: false
         };
@@ -26202,21 +26219,6 @@ var SeriesPage = Vue.component('series-page', {
             .error(function (response) {
                 this.handleResponseError(response);
             });
-        },
-
-        /**
-         *
-         */
-        showExercisePopup: function (exercise) {
-            $.event.trigger('show-loading');
-            this.$http.get('/api/exercises/' + exercise.id, function (response) {
-                    this.selectedExercise = response;
-                    $.event.trigger('show-exercise-popup');
-                    $.event.trigger('hide-loading');
-                })
-                .error(function (response) {
-                    this.handleResponseError(response);
-                });
         },
 
         /**

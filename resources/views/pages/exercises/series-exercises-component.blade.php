@@ -2,6 +2,12 @@
 
     <div>
 
+        <exercise-popup
+                :selected-exercise="selectedExercise"
+                :exercises.sync="selectedSeries.exercises.data"
+        >
+        </exercise-popup>
+
         <table id="exercises-table" class="table">
             <tr>
                 <th>Step</th>

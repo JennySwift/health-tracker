@@ -4,6 +4,7 @@
     
     <exercise-popup
             :selected-exercise="selectedExercise"
+            :exercises.sync="exercises"
     >
     </exercise-popup>
 
@@ -28,7 +29,6 @@
                 <th>target</th>
                 <th>priority</th>
                 <th>program</th>
-                <th>x</th>
             </tr>
             <tr v-for="exercise in exercises | filter:{name: filter.exercises.name, description: filter.exercises.description, priority: filter.exercises.priority, series: {name: filter.exercises.series}}" class="hover">
                 <td v-on:click="showExercisePopup(exercise)" class="pointer">@{{ exercise.name }}</td>
@@ -40,7 +40,6 @@
                 <td v-on:click="showExercisePopup(exercise)" class="pointer">@{{ exercise.target }}</td>
                 <td v-on:click="showExercisePopup(exercise)" class="pointer">@{{ exercise.priority }}</td>
                 <td v-on:click="showExercisePopup(exercise)" class="pointer">@{{ exercise.program.name }}</td>
-                <td><i v-on:click="deleteExercise(exercise)" class="delete-item fa fa-times"></i></td>
             </tr>
         </table>
     </div>
