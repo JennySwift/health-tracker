@@ -15,6 +15,7 @@
 
         <series-popup
                 :selected-series="selectedSeries"
+                :exercise-series.sync="exerciseSeries"
         >
         </series-popup>
 

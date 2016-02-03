@@ -95,30 +95,6 @@ var SeriesPage = Vue.component('series-page', {
         /**
         *
         */
-        updateSeries: function (series) {
-            $.event.trigger('show-loading');
-
-            var data = {
-                name: $series.name,
-                priority: $series.priority,
-                workout_ids: $series.workout_ids
-            };
-
-            this.$http.put('/api/exerciseSeries/' + series.id, data, function (response) {
-                var index = _.indexOf(this.exercise_series, _.findWhere(this.exerciseSeries, {id: this.selectedSeries.id}));
-                this.exerciseSeries[index] = response.data;
-                this.showExerciseSeriesPopup = false;
-                $.event.trigger('provide-feedback', ['Series updated', 'success']);
-                $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
-                this.handleResponseError(response);
-            });
-        },
-
-        /**
-        *
-        */
         deleteSeries: function (series) {
             if (confirm("Are you sure?")) {
                 $.event.trigger('show-loading');

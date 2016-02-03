@@ -9,6 +9,31 @@ var SeriesPopup = Vue.component('series-popup', {
     methods: {
 
         /**
+         *
+         */
+        updateSeries: function () {
+            $.event.trigger('show-loading');
+
+            var data = {
+                name: this.selectedSeries.name,
+                priority: this.selectedSeries.priority,
+                workout_ids: this.selectedSeries.workout_ids
+            };
+
+            this.$http.put('/api/exerciseSeries/' + this.selectedSeries.id, data, function (response) {
+                    var index = _.indexOf(this.exerciseSeries, _.findWhere(this.exerciseSeries, {id: this.selectedSeries.id}));
+                    this.exerciseSeries[index].name = response.data.name;
+                    this.exerciseSeries[index].priority = response.data.priority;
+                    this.showPopup = false;
+                    $.event.trigger('provide-feedback', ['Series updated', 'success']);
+                    $.event.trigger('hide-loading');
+                })
+                .error(function (response) {
+                    this.handleResponseError(response);
+                });
+        },
+
+        /**
         *
         */
         closePopup: function ($event) {
@@ -38,7 +63,8 @@ var SeriesPopup = Vue.component('series-popup', {
         }
     },
     props: [
-        'selectedSeries'
+        'selectedSeries',
+        'exerciseSeries'
     ],
     ready: function () {
         this.listen();
