@@ -175,7 +175,7 @@ class PagesController extends Controller
 
         ]);
 
-        return view('pages.exercises.exercises');
+        return view('pages.exercises.exercises-page');
     }
 
     /**
@@ -196,7 +196,7 @@ class PagesController extends Controller
             "exerciseUnits" => $this->unitsRepository->getExerciseUnits(),
         ]);
 
-        return view('pages.exercises.series');
+        return view('pages.exercises.series-page');
     }
 
     /**

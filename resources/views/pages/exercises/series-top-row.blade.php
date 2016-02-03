@@ -13,7 +13,7 @@
     </div>
 
     @include('pages.exercises.new-series')
-    @include('pages.exercises.new-exercise')
+    <new-exercise></new-exercise>
 
     <div class="filters">
         <input v-model="priorityFilter" type="text" placeholder="filter by priority">

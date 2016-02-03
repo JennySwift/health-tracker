@@ -140,24 +140,6 @@ var SeriesPage = Vue.component('series-page', {
         /**
         *
         */
-        insertExercise: function () {
-            $.event.trigger('show-loading');
-            var data = ExercisesRepository.setData(this.newExercise);
-
-            this.$http.post('/api/exercises', data, function (response) {
-                this.exercises.push(response);
-                $.event.trigger('provide-feedback', ['Exercise created', 'success']);
-                this.showLoading = false;
-                $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
-                this.handleResponseError(response);
-            });
-        },
-
-        /**
-        *
-        */
         showExerciseSeriesPopup: function (series) {
             $.event.trigger('show-loading');
             this.$http.get('/api/exerciseSeries/' + series.id, function (response) {
