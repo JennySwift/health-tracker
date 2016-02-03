@@ -49,9 +49,9 @@ router.map({
     '/journal': {
         component: JournalPage
     },
-    //'/food-units': {
-    //    component: FoodUnitsPage
-    //},
+    '/food-units': {
+        component: FoodUnitsPage
+    },
     '/timers': {
         component: TimersPage,
         subRoutes: {

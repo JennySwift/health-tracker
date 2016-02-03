@@ -10,6 +10,7 @@
 @include('pages.entries.exercise-entries-component')
 @include('pages.journal.journal-page-component')
 @include('pages.menu.foods.foods-page-component')
+@include('pages.menu.foods.food-units-page-component')
 @include('pages.menu.foods.popups.food-popup-component')
 @include('pages.timers.timers-page-component')
 @include('pages.timers.activities-page-component')
