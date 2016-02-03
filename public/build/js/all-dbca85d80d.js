@@ -26037,6 +26037,9 @@ router.map({
             '/': {
                 component: TimersPage
             },
+            '/timers': {
+                component: TimersPage
+            },
             '/activities': {
                 component: ActivitiesPage
             },

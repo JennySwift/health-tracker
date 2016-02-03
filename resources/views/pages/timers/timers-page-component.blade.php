@@ -1,6 +1,6 @@
 <script id="timers-page-template" type="x-template">
 
-    <div class="container" id="timers-page">
+    <div id="timers-page">
 
         <date-navigation
             :date.sync="date"
