@@ -25813,7 +25813,7 @@ var TimersPage = Vue.component('timers-page', {
             $('#timer-clock').timer({format: '%H:%M:%S'});
 
             this.$http.post('/api/timers/', data, function (response) {
-                this.timers.push(response.data);
+                this.timers.push(response);
                 this.getTotalMinutesForActivitiesForTheDay();
                 this.getTotalMinutesForActivitiesForTheWeek();
                 $.event.trigger('provide-feedback', ['Manual entry created', 'success']);

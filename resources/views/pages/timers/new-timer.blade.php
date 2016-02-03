@@ -67,7 +67,7 @@
     </div>
 
     <div class="form-group">
-        <button v-on: click="insertManualTimer()" class="btn btn-success">Add manual time entry</button>
+        <button v-on:click="insertManualTimer()" class="btn btn-success">Add manual time entry</button>
     </div>
 
 
