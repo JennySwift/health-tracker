@@ -26021,7 +26021,9 @@ var SeriesPage = Vue.component('series-page', {
     components: {},
     filters: {
         filterSeries: function (series) {
-            return _.sortBy(series, 'lastDone');
+            series = _.chain(series).sortBy('priority').sortBy('lastDone').partition('lastDone').flatten().value();
+            return series;
+            //return _.sortBy(series, 'lastDone');
             //'priority': seriesPriorityFilter
         }
     },
