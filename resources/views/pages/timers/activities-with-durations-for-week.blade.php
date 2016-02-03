@@ -10,7 +10,10 @@
             </tr>
         </thead>
         <tbody>
-            <tr v-for="activity in activitiesWithDurationsForTheWeek | filter: activitiesFilter">
+            <tr
+                v-for="activity in activitiesWithDurationsForTheWeek
+                    | filterBy activitiesFilter in 'name'"
+            >
                 <td>@{{ activity.name }}</td>
                 <td>@{{ activity.totalMinutesForWeek | formatDuration }}</td>
                 <td>@{{ activity.averageMinutesPerDayForWeek | formatDuration }}</td>

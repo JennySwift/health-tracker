@@ -14,7 +14,7 @@
 
         <div id="activities-and-timers-container">
             @include('pages.timers.activities-with-durations-for-week')
-            {{--        @include('pages.timers.timer-filter')--}}
+                    {{--@include('pages.timers.timer-filter')--}}
             @include('pages.timers.timers')
         </div>
 

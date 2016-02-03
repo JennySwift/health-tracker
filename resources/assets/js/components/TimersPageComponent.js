@@ -14,6 +14,7 @@ var TimersPage = Vue.component('timers-page', {
             timers: [],
             activities: [],
             timersFilter: false,
+            activitiesFilter: '',
             activitiesWithDurationsForTheWeek: [],
             activitiesWithDurationsForTheDay: []
         };

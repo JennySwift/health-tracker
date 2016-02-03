@@ -12,7 +12,12 @@
         </thead>
 
         <tbody>
-        <tr v-for="timer in timers | filter: activitiesFilter | orderBy: 'start':true" class="timer">
+        <tr
+            v-for="timer in timers
+                | filterBy activitiesFilter in 'activity.data.name'
+                | orderBy 'start' -1"
+            class="timer"
+        >
             <td>
                 <i v-on:click="deleteTimer(timer)" class="fa fa-times .delete"></i>
                 <span v-bind:style="{'background': timer.activity.data.color}" class="label">@{{ timer.activity.data.name }}</span>
