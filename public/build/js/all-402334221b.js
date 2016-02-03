@@ -23321,7 +23321,7 @@ var ExerciseEntries = Vue.component('exercise-entries', {
         },
 
         /**
-         * Similar method to this in SeriesPageComponent
+         * Similar method to this in SeriesExercisesComponent
          */
         insertExerciseSet: function (exercise) {
             $.event.trigger('show-loading');
@@ -25583,23 +25583,6 @@ var SeriesPage = Vue.component('series-page', {
         /**
         *
         */
-        deleteSeries: function (series) {
-            if (confirm("Are you sure?")) {
-                $.event.trigger('show-loading');
-                this.$http.delete('/api/exerciseSeries/' + series.id, function (response) {
-                    this.exerciseSeries = _.without(this.exerciseSeries, series);
-                    $.event.trigger('provide-feedback', ['Series deleted', 'success']);
-                    $.event.trigger('hide-loading');
-                })
-                .error(function (response) {
-                    this.handleResponseError(response);
-                });
-            }
-        },
-
-        /**
-        *
-        */
         getExercisesInSeries: function (series) {
             $.event.trigger('show-loading');
             this.$http.get('/api/exerciseSeries/' + series.id, function (response) {
@@ -25707,6 +25690,26 @@ var SeriesPopup = Vue.component('series-popup', {
                 .error(function (response) {
                     this.handleResponseError(response);
                 });
+        },
+
+        /**
+         *
+         */
+        deleteSeries: function () {
+            if (confirm("Are you sure?")) {
+                $.event.trigger('show-loading');
+                this.$http.delete('/api/exerciseSeries/' + this.selectedSeries.id, function (response) {
+                    //this.exerciseSeries = _.without(this.exerciseSeries, this.selectedSeries);
+                    var index = _.indexOf(this.exerciseSeries, _.findWhere(this.exerciseSeries, {id: this.selectedSeries.id}));
+                    this.exerciseSeries = _.without(this.exerciseSeries, this.exerciseSeries[index]);
+                    this.showPopup = false;
+                    $.event.trigger('provide-feedback', ['Series deleted', 'success']);
+                        $.event.trigger('hide-loading');
+                    })
+                    .error(function (response) {
+                        this.handleResponseError(response);
+                    });
+            }
         },
 
         /**

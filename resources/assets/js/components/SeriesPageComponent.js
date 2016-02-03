@@ -98,23 +98,6 @@ var SeriesPage = Vue.component('series-page', {
         /**
         *
         */
-        deleteSeries: function (series) {
-            if (confirm("Are you sure?")) {
-                $.event.trigger('show-loading');
-                this.$http.delete('/api/exerciseSeries/' + series.id, function (response) {
-                    this.exerciseSeries = _.without(this.exerciseSeries, series);
-                    $.event.trigger('provide-feedback', ['Series deleted', 'success']);
-                    $.event.trigger('hide-loading');
-                })
-                .error(function (response) {
-                    this.handleResponseError(response);
-                });
-            }
-        },
-
-        /**
-        *
-        */
         getExercisesInSeries: function (series) {
             $.event.trigger('show-loading');
             this.$http.get('/api/exerciseSeries/' + series.id, function (response) {

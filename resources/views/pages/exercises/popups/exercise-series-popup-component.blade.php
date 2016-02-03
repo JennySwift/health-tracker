@@ -23,7 +23,7 @@
 
 			<div class="buttons">
 				<button
-						v-on:click="deleteExerciseSeries(selectedSeries)"
+						v-on:click="deleteSeries()"
 						class="btn btn-danger"
 				>
 					Delete

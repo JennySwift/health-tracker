@@ -87,7 +87,7 @@ var ExerciseEntries = Vue.component('exercise-entries', {
         },
 
         /**
-         * Similar method to this in SeriesPageComponent
+         * Similar method to this in SeriesExercisesComponent
          */
         insertExerciseSet: function (exercise) {
             $.event.trigger('show-loading');
