@@ -14,7 +14,14 @@
                 v-for="activity in activitiesWithDurationsForTheWeek
                     | filterBy activitiesFilter in 'name'"
             >
-                <td>@{{ activity.name }}</td>
+                <td>
+                    <span
+                        v-bind:style="{'background': activity.color}"
+                        class="label"
+                    >
+                        @{{ activity.name }}
+                    </span>
+                </td>
                 <td>@{{ activity.totalMinutesForWeek | formatDuration }}</td>
                 <td>@{{ activity.averageMinutesPerDayForWeek | formatDuration }}</td>
                 <td>
