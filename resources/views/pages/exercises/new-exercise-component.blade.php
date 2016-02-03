@@ -8,7 +8,7 @@
                     <label for="new-exercise-name">Name</label>
                     <input
                             v-model="newExercise.name"
-                            v-on:keyup="insertExercise($event.keyCode)"
+                            v-on:keyup.13="insertExercise($event.keyCode)"
                             type="text"
                             id="new-exercise-name"
                             name="new-exercise-name"
@@ -21,7 +21,7 @@
                     <label for="new-exercise-description">Description</label>
                     <input
                             v-model="newExercise.description"
-                            v-on:keyup="insertExercise($event.keyCode)"
+                            v-on:keyup.13="insertExercise($event.keyCode)"
                             type="text"
                             id="new-exercise-description"
                             name="new-exercise-description"
@@ -34,7 +34,7 @@
                     <label for="new-exercise-step-number">Step Number</label>
                     <input
                             v-model="newExercise.stepNumber"
-                            v-on:keyup="insertExercise($event.keyCode)"
+                            v-on:keyup.13="insertExercise($event.keyCode)"
                             type="text"
                             id="new-exercise-step-number"
                             name="new-exercise-step-number"
@@ -47,7 +47,7 @@
                     <label for="new-exercise-priority">Priority</label>
                     <input
                             v-model="newExercise.priority"
-                            v-on:keyup="insertExercise($event.keyCode)"
+                            v-on:keyup.13="insertExercise($event.keyCode)"
                             type="text"
                             id="new-exercise-priority"
                             name="new-exercise-priority"
@@ -60,7 +60,7 @@
                     <label for="new-exercise-target">Target</label>
                     <input
                             v-model="newExercise.target"
-                            v-on:keyup="insertExercise($event.keyCode)"
+                            v-on:keyup.13="insertExercise($event.keyCode)"
                             type="text"
                             id="new-exercise-target"
                             name="new-exercise-target"
@@ -126,7 +126,7 @@
                     <label for="new-exercise-step-number">Default Quantity</label>
                     <input
                             v-model="newExercise.defaultQuantity"
-                            v-on:keyup="insertExercise($event.keyCode)"
+                            v-on:keyup.13="insertExercise($event.keyCode)"
                             type="text"
                             id="new-exercise-default-quantity"
                             name="new-exercise-default-quantity"

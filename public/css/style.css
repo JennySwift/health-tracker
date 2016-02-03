@@ -288,7 +288,7 @@ body.browser-height {
   flex-wrap: wrap; }
   #exercises > div {
     margin: 0 20px; }
-  #exercises .new-exercise-button {
+  #exercises .new-exercise-container {
     margin-bottom: 20px; }
   #exercises .new-exercise .flex {
     display: -webkit-flex;

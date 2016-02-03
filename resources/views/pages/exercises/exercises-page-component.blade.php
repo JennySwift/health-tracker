@@ -15,11 +15,23 @@
 
         @include('pages.exercises.exercise-filters')
 
-        <new-exercise
-                :show-new-exercise-fields="showNewExerciseFields"
-                :exercises.sync="exercises"
-        >
-        </new-exercise>
+        <div class="new-exercise-container">
+            <button
+                    v-on:click="showNewExerciseFields = !showNewExerciseFields"
+                    class="btn btn-default"
+            >
+                New
+            </button>
+
+            <new-exercise
+                    :show-new-exercise-fields.sync="showNewExerciseFields"
+                    :exercises.sync="exercises"
+                    :programs="programs"
+                    :exercise-series="exerciseSeries"
+                    :units="units"
+            >
+            </new-exercise>
+        </div>
 
         <table class="table table-bordered">
             <tr>

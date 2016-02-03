@@ -37,7 +37,10 @@ var NewExercise = Vue.component('new-exercise', {
     },
     props: [
         'showNewExerciseFields',
-        'exercises'
+        'exercises',
+        'programs',
+        'exerciseSeries',
+        'units'
     ],
     ready: function () {
 
