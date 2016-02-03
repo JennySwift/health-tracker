@@ -40,9 +40,9 @@ router.map({
     '/exercise-units': {
         component: ExerciseUnitsPage
     },
-    //'/foods': {
-    //    component: FoodsPage
-    //},
+    '/foods': {
+        component: FoodsPage
+    },
     '/recipes': {
         component: RecipesPage
     },
