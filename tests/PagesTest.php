@@ -53,7 +53,7 @@ class PagesTest extends TestCase {
     {
         $this->logInUser();
 
-        $this->visit('/foods')
+        $this->visit('/#/foods')
             ->see('banana');
 
         $this->assertEquals(Response::HTTP_OK, $this->apiCall('GET', '/')->getStatusCode());
@@ -84,7 +84,7 @@ class PagesTest extends TestCase {
     {
         $this->logInUser();
 
-        $this->visit('/food-units')
+        $this->visit('/#/food-units')
             ->see('large');
 
         $this->assertEquals(Response::HTTP_OK, $this->apiCall('GET', '/')->getStatusCode());
