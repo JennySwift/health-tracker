@@ -3,13 +3,12 @@ var ExercisesPage = Vue.component('exercises-page', {
     data: function () {
         return {
             selectedExercise: ExercisesRepository.selectedExercise,
-            exercises: all_exercises,
-            workouts: workouts,
+            exercises: [],
             showNewExerciseFields: false,
             series: [],
-            exerciseSeries: series,
+            exerciseSeries: [],
             programs: [],
-            units: units
+            units: []
         };
     },
     components: {},
@@ -22,6 +21,35 @@ var ExercisesPage = Vue.component('exercises-page', {
             $.event.trigger('show-loading');
             this.$http.get('/api/exerciseSeries', function (response) {
                 this.series = _.pluck(response.data, 'name');
+                this.exerciseSeries = response.data;
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
+        },
+
+        /**
+        *
+        */
+        getExercises: function () {
+            $.event.trigger('show-loading');
+            this.$http.get('/api/exercises', function (response) {
+                this.exercises = response;
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
+        },
+
+        /**
+        *
+        */
+        getUnits: function () {
+            $.event.trigger('show-loading');
+            this.$http.get('/api/exerciseUnits', function (response) {
+                this.units = response;
                 $.event.trigger('hide-loading');
             })
             .error(function (response) {
@@ -80,5 +108,7 @@ var ExercisesPage = Vue.component('exercises-page', {
     ready: function () {
         this.getSeries();
         this.getPrograms();
+        this.getUnits();
+        this.getExercises();
     }
 });

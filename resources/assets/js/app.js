@@ -1,72 +1,77 @@
-//var $page = window.location.pathname;
-var app = angular.module('tracker', [
-    'ngSanitize',
-    'ngAnimate',
-    'checklist-model'
-]);
+var App = Vue.component('app', {
 
-app.config(function ($interpolateProvider) {
-    $interpolateProvider.startSymbol('[[');
-    $interpolateProvider.endSymbol(']]');
 });
 
-app.run(runBlock);
+var router = new VueRouter({
+    hashbang: false
+});
 
-function runBlock ($rootScope, ErrorsFactory) {
-
-    $rootScope.show = {
-        popups: {}
-    };
-
-    $rootScope.responseError = function (response) {
-        $rootScope.$broadcast('provideFeedback', ErrorsFactory.responseError(response), 'error');
-        $rootScope.hideLoading();
-    };
-
-    $rootScope.closePopup = function ($event, $popup) {
-        var $target = $event.target;
-        if ($target.className === 'popup-outer') {
-            $rootScope.show.popups[$popup] = false;
+router.map({
+    '/': {
+        component: EntriesPage,
+        //subRoutes: {
+        //    //default for if no id is specified
+        //    '/': {
+        //        component: Item
+        //    },
+        //    '/:id': {
+        //        component: Item
+        //    }
+        //}
+    },
+    '/entries': {
+        component: EntriesPage,
+        //subRoutes: {
+        //    //default for if no id is specified
+        //    '/': {
+        //        component: Item
+        //    },
+        //    '/:id': {
+        //        component: Item
+        //    }
+        //}
+    },
+    '/exercises': {
+        component: ExercisesPage
+    },
+    '/exercise-units': {
+        component: ExerciseUnitsPage
+    },
+    //'/foods': {
+    //    component: FoodsPage
+    //},
+    '/recipes': {
+        component: RecipesPage
+    },
+    '/journal': {
+        component: JournalPage
+    },
+    //'/food-units': {
+    //    component: FoodUnitsPage
+    //},
+    '/timers': {
+        component: TimersPage,
+        subRoutes: {
+            '/': {
+                component: TimersPage
+            },
+            '/activities': {
+                component: ActivitiesPage
+            },
+            //'/graphs': {
+            //    component: GraphsPage
+            //}
         }
-    };
+    }
+});
 
-    $rootScope.showLoading = function () {
-        $rootScope.loading = true;
-    };
+router.start(App, 'body');
 
-    $rootScope.hideLoading = function () {
-        $rootScope.loading = false;
-    };
-
-    /**
-     * old code
-     */
-
-    /**
-     * media queries
-     * $scope.apply works how I want it but it keeps causing a firebug error
-     */
-
-    //enquire.register("screen and (min-width: 600px", {
-    //    match: function () {
-    //        if ($scope.tab.food_entries || $scope.tab.exercise_entries) {
-    //            $scope.changeTab('entries');
-    //            // $scope.$apply();
-    //        }
-    //    },
-    //    unmatch: function () {
-    //        if ($scope.tab.entries) {
-    //            $scope.changeTab('food_entries');
-    //            // $scope.$apply();
-    //        }
-    //    }
-    //});
+//new Vue({
+//    el: 'body',
+//    events: {
+//
+//    }
+//});
 
 
-    new Vue({
-        el: 'body',
-        events: {
-
-        }
-    });
-}

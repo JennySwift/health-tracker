@@ -154,76 +154,50 @@ class PagesController extends Controller
      * @param ExercisesRepository $exercisesRepository
      * @return \Illuminate\View\View
      */
-    public function exercises()
-    {
-        JavaScript::put([
-            /**
-             * @VP:
-             * If I instead did:
-             * 'exercises' => $this->getExercises()
-             * it didn't work. Why wouldn't it let me call it 'exercises?'
-             * The same thing happened when I tried to use 'tags' instead of 'exercise_tags.'
-             */
-            'all_exercises' => $this->exercisesRepository->getExercises(),
-            'series' => $this->exerciseSeriesRepository->getExerciseSeries(),
-            'workouts' => $this->workoutsRepository->getWorkouts(),
-            'units' => $this->unitsRepository->getExerciseUnits(),
-            'exercise_tags' => Tag::forCurrentUser()
-                ->where('for', 'exercise')
-                ->orderBy('name', 'asc')
-                ->get()
-
-        ]);
-
-        return view('pages.exercises.exercises-page');
-    }
+//    public function exercises()
+//    {
+//        JavaScript::put([
+//            /**
+//             * @VP:
+//             * If I instead did:
+//             * 'exercises' => $this->getExercises()
+//             * it didn't work. Why wouldn't it let me call it 'exercises?'
+//             * The same thing happened when I tried to use 'tags' instead of 'exercise_tags.'
+//             */
+//            'all_exercises' => $this->exercisesRepository->getExercises(),
+//            'series' => $this->exerciseSeriesRepository->getExerciseSeries(),
+//            'workouts' => $this->workoutsRepository->getWorkouts(),
+//            'units' => $this->unitsRepository->getExerciseUnits(),
+//            'exercise_tags' => Tag::forCurrentUser()
+//                ->where('for', 'exercise')
+//                ->orderBy('name', 'asc')
+//                ->get()
+//
+//        ]);
+//
+//        return view('pages.exercises.exercises-page');
+//    }
 
     /**
      * Exercise series page
      * @return \Illuminate\View\View
      */
-    public function series()
-    {
-        JavaScript::put([
-            'series' => transform(createCollection($this->exerciseSeriesRepository->getExerciseSeries(), new SeriesTransformer))['data'],
-            'workouts' => $this->workoutsRepository->getWorkouts(),
-            "exerciseEntries" => transform(
-                createCollection(
-                    $this->exerciseEntriesRepository->getEntriesForTheDay(Carbon::today()->format('Y-m-d')),
-                    new ExerciseEntryTransformer
-                )
-            )['data'],
-            "exerciseUnits" => $this->unitsRepository->getExerciseUnits(),
-        ]);
-
-        return view('pages.exercises.series-page');
-    }
-
-    /**
-     * Workouts page
-     * @return \Illuminate\View\View
-     */
-    public function workouts()
-    {
-        JavaScript::put([
-            'workouts' => $this->workoutsRepository->getWorkouts(),
-        ]);
-
-        return view('pages.exercises.workouts');
-    }
-
-    /**
-     * Exercise tags page
-     * @return \Illuminate\View\View
-     */
-    public function exerciseTags()
-    {
-        JavaScript::put([
-            'exercise_tags' => $this->exerciseTagsRepository->getExerciseTags()
-        ]);
-
-        return view('pages.exercises.exercise-tags');
-    }
+//    public function series()
+//    {
+//        JavaScript::put([
+//            'series' => transform(createCollection($this->exerciseSeriesRepository->getExerciseSeries(), new SeriesTransformer))['data'],
+//            'workouts' => $this->workoutsRepository->getWorkouts(),
+//            "exerciseEntries" => transform(
+//                createCollection(
+//                    $this->exerciseEntriesRepository->getEntriesForTheDay(Carbon::today()->format('Y-m-d')),
+//                    new ExerciseEntryTransformer
+//                )
+//            )['data'],
+//            "exerciseUnits" => $this->unitsRepository->getExerciseUnits(),
+//        ]);
+//
+//        return view('pages.exercises.series-page');
+//    }
 
     /**
      *
@@ -242,16 +216,16 @@ class PagesController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function recipes()
-    {
-        JavaScript::put([
-            'foods_with_units' => $this->foodsRepository->getFoods(),
-            'recipes' => $this->recipesRepository->filterRecipes('', []),
-            'recipe_tags' => $this->recipeTagsRepository->getRecipeTags()
-        ]);
-
-        return view('pages.menu.recipes.recipes-page');
-    }
+//    public function recipes()
+//    {
+//        JavaScript::put([
+//            'foods_with_units' => $this->foodsRepository->getFoods(),
+//            'recipes' => $this->recipesRepository->filterRecipes('', []),
+//            'recipe_tags' => $this->recipeTagsRepository->getRecipeTags()
+//        ]);
+//
+//        return view('pages.menu.recipes.recipes-page');
+//    }
 
     /**
      *
@@ -270,55 +244,55 @@ class PagesController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function exerciseUnits()
-    {
-        JavaScript::put([
-            'units' => $this->unitsRepository->getExerciseUnits()
-        ]);
-
-        return view('pages.exercises.exercise-units');
-    }
-
-    /**
-     *
-     * @return \Illuminate\View\View
-     */
-    public function journal()
-    {
-        $date = Carbon::today()->format('Y-m-d');
-
-        $entry = Journal::forCurrentUser()->where('date', $date)->first();
-        if ($entry) {
-            $entry = transform(createItem($entry, new JournalTransformer))['data'];
-        }
-        else {
-            $entry = [];
-        }
-
-        JavaScript::put([
-            'entry' => $entry
-        ]);
-
-        return view('pages.journal.journal-page');
-    }
+//    public function exerciseUnits()
+//    {
+//        JavaScript::put([
+//            'units' => $this->unitsRepository->getExerciseUnits()
+//        ]);
+//
+//        return view('pages.exercises.exercise-units');
+//    }
 
     /**
      *
      * @return \Illuminate\View\View
      */
-    public function timers()
-    {
-        return view('pages.timers.timers-page');
-    }
+//    public function journal()
+//    {
+//        $date = Carbon::today()->format('Y-m-d');
+//
+//        $entry = Journal::forCurrentUser()->where('date', $date)->first();
+//        if ($entry) {
+//            $entry = transform(createItem($entry, new JournalTransformer))['data'];
+//        }
+//        else {
+//            $entry = [];
+//        }
+//
+//        JavaScript::put([
+//            'entry' => $entry
+//        ]);
+//
+//        return view('pages.journal.journal-page');
+//    }
 
     /**
      *
      * @return \Illuminate\View\View
      */
-    public function timerActivities()
-    {
-        return view('pages.timers.activities-page');
-    }
+//    public function timers()
+//    {
+//        return view('pages.timers.timers-page');
+//    }
+
+    /**
+     *
+     * @return \Illuminate\View\View
+     */
+//    public function timerActivities()
+//    {
+//        return view('pages.timers.activities-page');
+//    }
 
     /**
      *

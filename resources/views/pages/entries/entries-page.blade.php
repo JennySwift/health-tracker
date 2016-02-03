@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="tracker">
+<html lang="en">
 <head>
 	<meta charset="UTF-8">
 	<title>tracker</title>
@@ -13,7 +13,7 @@
 
 
 <div class="container">
-	<entries-page></entries-page>
+	<router-view></router-view>
 </div>
 
 @include('templates.shared.footer')

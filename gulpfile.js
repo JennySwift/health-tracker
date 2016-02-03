@@ -7,7 +7,7 @@ elixir(function(mix) {
         'plugins/*.js',
         'config.js',
 
-        'app.js',
+        //'app.js',
         'controllers/**/*.js',
         'factories/**/*.js',
         'directives/**/*.js',
@@ -16,7 +16,7 @@ elixir(function(mix) {
         //'helpers.js',
         'repositories/**/*.js',
         'components/**/*.js',
-        //'app.js',
+        'app.js',
         //'routes.js'
     ], 'public/js/all.js');
 

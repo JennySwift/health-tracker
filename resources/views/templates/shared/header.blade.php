@@ -32,9 +32,9 @@
                 <span class="caret"></span>
             </a>
             <ul class="dropdown-menu" role="menu">
-                <li><a href="/foods">Foods</a></li>
-                <li><a href="/recipes">Recipes</a></li>
-                <li><a href="/food-units">Units</a></li>
+                <li><a v-link="{path: '/foods'}" href="#">Foods</a></li>
+                <li><a v-link="{path: '/recipes'}" href="#">Recipes</a></li>
+                <li><a v-link="{path: '/food-units'}" href="#v-link="{path: '/exercises'}" ">Units</a></li>
             </ul>
         </li>
 
@@ -44,9 +44,9 @@
                 <span class="caret"></span>
             </a>
             <ul class="dropdown-menu" role="menu">
-                <li><a href="/exercises">Exercises</a></li>
-                <li><a href="/series">Series</a></li>
-                <li><a href="/exercise-units">Units</a></li>
+                <li><a v-link="{path: '/exercises'}" href="#">Exercises</a></li>
+                <li><a v-link="{path: '/series'}" href="#">Series</a></li>
+                <li><a v-link="{path: '/exercise-units'}" href="#">Units</a></li>
             </ul>
         </li>
 
@@ -58,9 +58,9 @@
                 <span class="caret"></span>
             </a>
             <ul class="dropdown-menu" role="menu">
-                <li><a href="/timers/timers">Timers</a></li>
-                <li><a href="/timers/activities">Activities</a></li>
-                <li><a href="/timers/graphs">Graphs</a></li>
+                <li><a v-link="{path: '/timers/timers'}" href="#">Timers</a></li>
+                <li><a v-link="{path: '/timers/activities'}" href="#">Activities</a></li>
+                <li><a v-link="{path: '/timers/graphs'}" href="#">Graphs</a></li>
             </ul>
         </li>
 
