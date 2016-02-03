@@ -61,7 +61,11 @@
                     </table>
                 </div>
 
-                @include('pages.exercises.series-exercises')
+                <series-exercises
+                        :selected-series="selectedSeries"
+                        :priority-filter="priorityFilter"
+                >
+                </series-exercises>
             </div>
 
 

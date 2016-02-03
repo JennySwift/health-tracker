@@ -4,6 +4,7 @@
 @include('pages.exercises.popups.exercise-series-history-popup-component')
 @include('pages.exercises.popups.exercise-series-popup-component')
 @include('pages.exercises.popups.exercise-popup-component')
+@include('pages.exercises.series-exercises-component')
 @include('pages.entries.entries-page-component')
 @include('pages.entries.menu-entries-component')
 @include('pages.entries.exercise-entries-component')

@@ -73,7 +73,7 @@
 					<li
 							v-for="series in exercise_series"
 							class="list-group-item hover pointer"
-							v-class="{'selected': series.id ===  selectedExercise.series.id}"
+							v-bind:class="{'selected': series.id ===  selectedExercise.series.id}"
 							v-on:click=" selectedExercise.series.id = series.id">
 						@{{ series.name }}
 					</li>
@@ -86,7 +86,7 @@
 					<li
 							v-for="program in programs"
 							class="list-group-item hover pointer"
-							v-class="{'selected': program.id ===  selectedExercise.program.id}"
+							v-bind:class="{'selected': program.id ===  selectedExercise.program.id}"
 							v-on:click=" selectedExercise.program.id = program.id">
 						@{{ program.name }}
 					</li>
@@ -98,7 +98,7 @@
 					<li
 							v-for="unit in units"
 							class="list-group-item hover pointer"
-							v-class="{'selected': unit.id ===  selectedExercise.defaultUnit.id}"
+							v-bind:class="{'selected': unit.id ===  selectedExercise.defaultUnit.id}"
 							v-on:click=" selectedExercise.defaultUnit.id = unit.id">
 						@{{ unit.name }}
 					</li>

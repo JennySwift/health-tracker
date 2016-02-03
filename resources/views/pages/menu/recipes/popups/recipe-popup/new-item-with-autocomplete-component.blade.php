@@ -100,7 +100,7 @@
             {{--<div v-show="showAutocompleteOptions.menu_items">--}}
                 {{--<div--}}
                         {{--v-repeat="item in autocomplete_options.menu_items"--}}
-                        {{--v-class="{'selected': item.selected}"--}}
+                        {{--v-bind:class="{'selected': item.selected}"--}}
                         {{--data-id="[[item.id]]"--}}
                         {{--data-type="[[item.type]]"--}}
                         {{--class="autocomplete-dropdown-item"--}}

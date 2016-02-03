@@ -16,7 +16,7 @@
     @include('pages.exercises.new-exercise')
 
     <div class="filters">
-        <input v-model="seriesPriorityFilter" type="text" placeholder="filter by priority">
+        <input v-model="priorityFilter" type="text" placeholder="filter by priority">
     </div>
 
 </div>

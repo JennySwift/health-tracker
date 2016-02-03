@@ -6,7 +6,7 @@ var SeriesPage = Vue.component('series-page', {
             exerciseSeries: series,
             exerciseSeriesHistory: [],
             workouts: workouts,
-            seriesPriorityFilter: 1,
+            priorityFilter: 1,
             showNewSeriesFields: false,
             newSeries: {},
             newExercise: {},
@@ -24,10 +24,22 @@ var SeriesPage = Vue.component('series-page', {
     components: {},
     filters: {
         filterSeries: function (series) {
+            var that = this;
+
+            //Sort
             series = _.chain(series).sortBy('priority').sortBy('lastDone').partition('lastDone').flatten().value();
-            return series;
-            //return _.sortBy(series, 'lastDone');
-            //'priority': seriesPriorityFilter
+
+            //Filter
+            return series.filter(function (thisSeries) {
+                var filteredIn = true;
+
+                //Priority filter
+                if (that.priorityFilter && thisSeries.priority != that.priorityFilter) {
+                    filteredIn = false;
+                }
+
+                return filteredIn;
+            });
         }
     },
     methods: {

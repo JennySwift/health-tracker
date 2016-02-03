@@ -72,34 +72,52 @@
         <div>
             <div class="form-group">
                 <label for="new-exercise-program">Program</label>
+
                 <select
-                        v-options="program as program.name for program in programs"
-                        v-model="newExercise.program"
-                        id="new-exercise-program"
-                        class="form-control"
+                    v-model="newExercise.program"
+                    id="new-exercise-program"
+                    class="form-control"
                 >
+                    <option
+                        v-for="program in programs"
+                        v-bind:value="program"
+                    >
+                        @{{ program.name }}
+                    </option>
                 </select>
             </div>
 
             <div class="form-group">
                 <label for="new-exercise-series">Series</label>
+
                 <select
-                        v-options="series as series.name for series in exercise_series"
                         v-model="newExercise.series"
                         id="new-exercise-series"
                         class="form-control"
                 >
+                    <option
+                            v-for="series in exerciseSeries"
+                            v-bind:value="series"
+                    >
+                        @{{ series.name }}
+                    </option>
                 </select>
             </div>
 
             <div class="form-group">
-                <label for="new-exercise-default-unit">Default Unit</label>
+                <label for="new-exercise-default-unit">DefaultUnit</label>
+
                 <select
-                        v-options="unit as unit.name for unit in units"
                         v-model="newExercise.defaultUnit"
-                        id="new-exercise-unit"
+                        id="new-exercise-default-unit"
                         class="form-control"
                 >
+                    <option
+                            v-for="unit in units"
+                            v-bind:value="unit"
+                    >
+                        @{{ unit.name }}
+                    </option>
                 </select>
             </div>
 
