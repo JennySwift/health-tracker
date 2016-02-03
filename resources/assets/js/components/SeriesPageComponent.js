@@ -96,29 +96,6 @@ var SeriesPage = Vue.component('series-page', {
         },
 
         /**
-         *
-         */
-        insertExerciseSet: function (exercise) {
-            $.event.trigger('show-loading');
-            var data = {
-                date: moment().format('YYYY-MM-DD'),
-                exercise_id: exercise.id,
-                exerciseSet: true
-            };
-
-            this.$http.post('/api/exerciseEntries', data, function (response) {
-                $.event.trigger('provide-feedback', ['Set added', 'success']);
-                $.event.trigger('get-exercise-entries-for-the-day');
-                this.showLoading = false;
-                this.newSeries.name = '';
-                $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
-                this.handleResponseError(response);
-            });
-        },
-
-        /**
         *
         */
         deleteSeries: function (series) {
