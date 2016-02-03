@@ -32,7 +32,7 @@
             </tr>
 
             <tr v-for="activity in activities" v-on:click="showEditActivity(activity)" class="activity">
-                <td><span v-style="{'background': activity.color}" class="label label-default">@{{ activity.name }}</span></td>
+                <td><span v-bind:style="{'background': activity.color}" class="label label-default">@{{ activity.name }}</span></td>
                 <td>@{{ activity.color }}</td>
                 <td>@{{ activity.totalMinutes | formatDuration }}</td>
             </tr>
