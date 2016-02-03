@@ -50,7 +50,7 @@
             </ul>
         </li>
 
-        <li><a href="/journal">journal</a></li>
+        <li><a v-link="{path: '/journal'}" href="#">journal</a></li>
 
         <li id="menu-dropdown" class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -59,7 +59,7 @@
             </a>
             <ul class="dropdown-menu" role="menu">
                 <li><a v-link="{path: '/timers'}" href="#">Timers</a></li>
-                <li><a v-link="{path: '/timers/activities'}" href="#">Activities</a></li>
+                <li><a v-link="{path: '/activities'}" href="#">Activities</a></li>
                 <li><a v-link="{path: '/timers/graphs'}" href="#">Graphs</a></li>
             </ul>
         </li>

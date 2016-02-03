@@ -4,7 +4,7 @@ var JournalPage = Vue.component('journal-page', {
         return {
             date: DatesRepository.setDate(this.date),
             filterResults: [],
-            journalEntry: entry,
+            journalEntry: {},
             newSleepEntry: {
                 startedYesterday: true
             }
@@ -145,6 +145,7 @@ var JournalPage = Vue.component('journal-page', {
     ready: function () {
         $(".wysiwyg").wysiwyg();
         this.listen();
+        this.getJournalEntry();
     }
 });
 

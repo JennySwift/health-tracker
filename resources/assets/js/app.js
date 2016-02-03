@@ -55,20 +55,21 @@ router.map({
     '/timers': {
         component: TimersPage,
         subRoutes: {
-            '/': {
-                component: TimersPage
-            },
-            '/timers': {
-                component: TimersPage
-            },
-            '/activities': {
-                component: ActivitiesPage
-            },
+            //'/': {
+            //    component: TimersPage
+            //},
+            //'/timers': {
+            //    component: TimersPage
+            //},
+
             //'/graphs': {
             //    component: GraphsPage
             //}
         }
-    }
+    },
+    '/activities': {
+        component: ActivitiesPage
+    },
 });
 
 router.start(App, 'body');

@@ -23747,12 +23747,26 @@ var ExerciseUnitsPage = Vue.component('exercise-units-page', {
     template: '#exercise-units-page-template',
     data: function () {
         return {
-            units: units,
+            units: [],
             newUnit: {}
         };
     },
     components: {},
     methods: {
+        /**
+        *
+        */
+        getUnits: function () {
+            $.event.trigger('show-loading');
+            this.$http.get('/api/exerciseUnits', function (response) {
+                this.units = response;
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
+        },
+
         /**
         *
         */
@@ -23807,7 +23821,7 @@ var ExerciseUnitsPage = Vue.component('exercise-units-page', {
         //data to be received from parent
     ],
     ready: function () {
-
+        this.getUnits();
     }
 });
 var ExercisesPage = Vue.component('exercises-page', {
@@ -24008,7 +24022,7 @@ var JournalPage = Vue.component('journal-page', {
         return {
             date: DatesRepository.setDate(this.date),
             filterResults: [],
-            journalEntry: entry,
+            journalEntry: {},
             newSleepEntry: {
                 startedYesterday: true
             }
@@ -24149,6 +24163,7 @@ var JournalPage = Vue.component('journal-page', {
     ready: function () {
         $(".wysiwyg").wysiwyg();
         this.listen();
+        this.getJournalEntry();
     }
 });
 
@@ -26034,20 +26049,21 @@ router.map({
     '/timers': {
         component: TimersPage,
         subRoutes: {
-            '/': {
-                component: TimersPage
-            },
-            '/timers': {
-                component: TimersPage
-            },
-            '/activities': {
-                component: ActivitiesPage
-            },
+            //'/': {
+            //    component: TimersPage
+            //},
+            //'/timers': {
+            //    component: TimersPage
+            //},
+
             //'/graphs': {
             //    component: GraphsPage
             //}
         }
-    }
+    },
+    '/activities': {
+        component: ActivitiesPage
+    },
 });
 
 router.start(App, 'body');

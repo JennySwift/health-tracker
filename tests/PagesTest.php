@@ -134,6 +134,21 @@ class PagesTest extends TestCase {
     }
 
     /**
+     * @test
+     * @return void
+     */
+    public function it_can_display_the_activities_page()
+    {
+        $this->logInUser();
+
+        $this->visit('/#/timers/activities')
+            ->see('Activities')
+            ->dontSee('Add manual time entry');
+
+        $this->assertEquals(Response::HTTP_OK, $this->apiCall('GET', '/')->getStatusCode());
+    }
+
+    /**
      * Todo: check the entry is there
      * @test
      * @return void
