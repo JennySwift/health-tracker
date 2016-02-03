@@ -25244,8 +25244,8 @@ var RecipesPage = Vue.component('recipes-page', {
     template: '#recipes-page-template',
     data: function () {
         return {
-            tags: recipe_tags,
-            recipes: recipes,
+            tags: [],
+            recipes: [],
             recipesTagFilter: []
         };
     },
@@ -25256,6 +25256,35 @@ var RecipesPage = Vue.component('recipes-page', {
         //}
     },
     methods: {
+
+        /**
+        *
+        */
+        getTags: function () {
+            $.event.trigger('show-loading');
+            this.$http.get('/api/recipeTags', function (response) {
+                this.tags = response;
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
+        },
+
+        /**
+        *
+        */
+        getRecipes: function () {
+            $.event.trigger('show-loading');
+            this.$http.get('/api/recipes', function (response) {
+                this.recipes = response;
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
+        },
+
         /**
          *
          * @param response
@@ -25269,7 +25298,8 @@ var RecipesPage = Vue.component('recipes-page', {
         //data to be received from parent
     ],
     ready: function () {
-
+        this.getRecipes();
+        this.getTags();
     }
 });
 
@@ -25278,7 +25308,6 @@ var SeriesExercises = Vue.component('series-exercises', {
     data: function () {
         return {
             selectedExercise: ExercisesRepository.selectedExercise,
-            exerciseSeries: series
         };
     },
     components: {},
@@ -25332,7 +25361,8 @@ var SeriesExercises = Vue.component('series-exercises', {
         'selectedSeries',
         'priorityFilter',
         'programs',
-        'units'
+        'units',
+        'exerciseSeries'
     ],
     ready: function () {
 
@@ -25392,9 +25422,8 @@ var SeriesPage = Vue.component('series-page', {
     data: function () {
         return {
             date: DatesRepository.setDate(this.date),
-            exerciseSeries: series,
+            exerciseSeries: [],
             exerciseSeriesHistory: [],
-            workouts: workouts,
             priorityFilter: 1,
             showNewSeriesFields: false,
             newSeries: {},
@@ -25431,6 +25460,20 @@ var SeriesPage = Vue.component('series-page', {
         }
     },
     methods: {
+
+        /**
+        *
+        */
+        getSeries: function () {
+            $.event.trigger('show-loading');
+            this.$http.get('/api/exerciseSeries', function (response) {
+                this.exerciseSeries = response;
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
+        },
 
         /**
         *
@@ -25583,6 +25626,7 @@ var SeriesPage = Vue.component('series-page', {
     ready: function () {
         this.getPrograms();
         this.getUnits();
+        this.getSeries();
     }
 });
 
@@ -25968,6 +26012,9 @@ router.map({
     },
     '/exercises': {
         component: ExercisesPage
+    },
+    '/series': {
+        component: SeriesPage
     },
     '/exercise-units': {
         component: ExerciseUnitsPage

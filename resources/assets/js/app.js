@@ -34,6 +34,9 @@ router.map({
     '/exercises': {
         component: ExercisesPage
     },
+    '/series': {
+        component: SeriesPage
+    },
     '/exercise-units': {
         component: ExerciseUnitsPage
     },

@@ -3,7 +3,6 @@ var SeriesExercises = Vue.component('series-exercises', {
     data: function () {
         return {
             selectedExercise: ExercisesRepository.selectedExercise,
-            exerciseSeries: series
         };
     },
     components: {},
@@ -57,7 +56,8 @@ var SeriesExercises = Vue.component('series-exercises', {
         'selectedSeries',
         'priorityFilter',
         'programs',
-        'units'
+        'units',
+        'exerciseSeries'
     ],
     ready: function () {
 

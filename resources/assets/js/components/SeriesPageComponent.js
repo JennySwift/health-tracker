@@ -3,9 +3,8 @@ var SeriesPage = Vue.component('series-page', {
     data: function () {
         return {
             date: DatesRepository.setDate(this.date),
-            exerciseSeries: series,
+            exerciseSeries: [],
             exerciseSeriesHistory: [],
-            workouts: workouts,
             priorityFilter: 1,
             showNewSeriesFields: false,
             newSeries: {},
@@ -42,6 +41,20 @@ var SeriesPage = Vue.component('series-page', {
         }
     },
     methods: {
+
+        /**
+        *
+        */
+        getSeries: function () {
+            $.event.trigger('show-loading');
+            this.$http.get('/api/exerciseSeries', function (response) {
+                this.exerciseSeries = response;
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
+        },
 
         /**
         *
@@ -194,6 +207,7 @@ var SeriesPage = Vue.component('series-page', {
     ready: function () {
         this.getPrograms();
         this.getUnits();
+        this.getSeries();
     }
 });
 

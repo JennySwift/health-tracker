@@ -1,6 +1,6 @@
 <script id="series-page-template" type="x-template">
 
-    <div id="exercise-series" class="container">
+    <div id="exercise-series">
 
         <series-history-popup
                 :exercise-series-history="exerciseSeriesHistory"
@@ -61,6 +61,7 @@
                         :priority-filter="priorityFilter"
                         :units="units"
                         :programs="programs"
+                        :exercise-series="exerciseSeries"
                 >
                 </series-exercises>
             </div>
