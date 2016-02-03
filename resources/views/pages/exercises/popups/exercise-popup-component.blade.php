@@ -74,7 +74,7 @@
 					<h5 class="center">series</h5>
 
 					<li
-							v-for="series in exercise_series"
+							v-for="series in exerciseSeries"
 							class="list-group-item hover pointer"
 							v-bind:class="{'selected': series.id ===  selectedExercise.series.id}"
 							v-on:click=" selectedExercise.series.id = series.id">
@@ -107,28 +107,28 @@
 					</li>
 				</div>
 
-				<div>
-					<h5 class="center">tags</h5>
+				{{--<div>--}}
+					{{--<h5 class="center">tags</h5>--}}
 
-					<ul class="list-group">
-						<li
-								v-for="tag in exercise_tags"
-								class="list-group-item">
-							<span>@{{ tag.name }}</span>
+					{{--<ul class="list-group">--}}
+						{{--<li--}}
+								{{--v-for="tag in exercise_tags"--}}
+								{{--class="list-group-item">--}}
+							{{--<span>@{{ tag.name }}</span>--}}
 
-							<input
-									checklist-model=" selectedExercise.tag_ids"
-									checklist-value="tag.id"
-									type="checkbox">
-						</li>
-					</ul>
-				</div>
+							{{--<input--}}
+									{{--checklist-model=" selectedExercise.tag_ids"--}}
+									{{--checklist-value="tag.id"--}}
+									{{--type="checkbox">--}}
+						{{--</li>--}}
+					{{--</ul>--}}
+				{{--</div>--}}
 
 			</div>
 
 			<div class="buttons">
-				<button v-on:click="updateExercise()" class="btn btn-success save">Save</button>
 				<button v-on:click="deleteExercise()" class="btn btn-danger save">Delete</button>
+				<button v-on:click="updateExercise()" class="btn btn-success save">Save</button>
 			</div>
 
 		</div>

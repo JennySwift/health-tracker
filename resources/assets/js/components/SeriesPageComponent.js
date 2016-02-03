@@ -15,7 +15,9 @@ var SeriesPage = Vue.component('series-page', {
                     data: []
                 }
             },
-            showExerciseEntryInputs: false
+            showExerciseEntryInputs: false,
+            units: [],
+            programs: []
         };
     },
     components: {},
@@ -152,28 +154,6 @@ var SeriesPage = Vue.component('series-page', {
         /**
         *
         */
-        updateExercise: function (exercise) {
-            $.event.trigger('show-loading');
-
-            var data = ExercisesRepository.setData(exercise);
-
-            this.$http.put('/api/exercises/' + exercise.id, data, function (response) {
-                this.selectedExercise = response.data;
-                var index = _.indexOf(this.selectedSeries.exercises.data, _.findWhere(this.selectedSeries.exercises.data, {id: this.selectedExercise.id}));
-                this.selectedSeries.exercises.data[index] = response.data;
-                this.showExercisePopup = false;
-                $.event.trigger('provide-feedback', ['Exercise updated', 'success']);
-                $.event.trigger('hide-loading');
-                $("#exercise-step-number").val("");
-            })
-            .error(function (response) {
-                this.handleResponseError(response);
-            });
-        },
-
-        /**
-        *
-        */
         getPrograms: function () {
             $.event.trigger('show-loading');
             this.$http.get('/api/exercisePrograms', function (response) {
@@ -186,17 +166,17 @@ var SeriesPage = Vue.component('series-page', {
         },
 
         /**
-        *
-        */
+         *
+         */
         getUnits: function () {
             $.event.trigger('show-loading');
             this.$http.get('/api/exerciseUnits', function (response) {
-                this.units = response;
-                $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
-                this.handleResponseError(response);
-            });
+                    this.units = response;
+                    $.event.trigger('hide-loading');
+                })
+                .error(function (response) {
+                    this.handleResponseError(response);
+                });
         },
 
         /**

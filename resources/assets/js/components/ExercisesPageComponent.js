@@ -2,15 +2,14 @@ var ExercisesPage = Vue.component('exercises-page', {
     template: '#exercises-page-template',
     data: function () {
         return {
-            selectedExercise: {},
+            selectedExercise: ExercisesRepository.selectedExercise,
             exercises: all_exercises,
-            exercise_entries: {},
-            exercise_series: series,
             workouts: workouts,
-            exercise_tags: exercise_tags,
-            units: units,
             showNewExerciseFields: false,
-            series: []
+            series: [],
+            exerciseSeries: series,
+            programs: [],
+            units: units
         };
     },
     components: {},

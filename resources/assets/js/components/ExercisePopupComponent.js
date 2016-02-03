@@ -11,6 +11,39 @@ var ExercisePopup = Vue.component('exercise-popup', {
         /**
          *
          */
+        updateExercise: function () {
+            $.event.trigger('show-loading');
+
+            var data = ExercisesRepository.setData(this.selectedExercise);
+
+            this.$http.put('/api/exercises/' + this.selectedExercise.id, data, function (response) {
+                    this.selectedExercise = response.data;
+                    var index = _.indexOf(this.exercises, _.findWhere(this.exercises, {id: this.selectedExercise.id}));
+
+                    this.exercises[index].name = response.data.name;
+                    this.exercises[index].description = response.data.description;
+                    this.exercises[index].step = response.data.step;
+                    this.exercises[index].series = response.data.series;
+                    this.exercises[index].defaultQuantity = response.data.defaultQuantity;
+                    this.exercises[index].defaultUnit = response.data.defaultUnit;
+                    this.exercises[index].target = response.data.target;
+                    this.exercises[index].priority = response.data.priority;
+                    this.exercises[index].program = response.data.program;
+
+
+                    this.showPopup = false;
+                    $.event.trigger('provide-feedback', ['Exercise updated', 'success']);
+                    $.event.trigger('hide-loading');
+                    $("#exercise-step-number").val("");
+                })
+                .error(function (response) {
+                    this.handleResponseError(response);
+                });
+        },
+
+        /**
+         *
+         */
         deleteExercise: function () {
             if (confirm("Are you sure?")) {
                 $.event.trigger('show-loading');
@@ -56,7 +89,10 @@ var ExercisePopup = Vue.component('exercise-popup', {
     },
     props: [
         'selectedExercise',
-        'exercises'
+        'exercises',
+        'exerciseSeries',
+        'programs',
+        'units'
     ],
     ready: function () {
         this.listen();

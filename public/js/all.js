@@ -22668,6 +22668,24 @@ function runBlock ($rootScope, ErrorsFactory) {
 }
 
 angular.module('tracker')
+    .controller('TimerGraphsController', function ($rootScope, $scope, TimersFactory) {
+
+        function getEntries () {
+            $rootScope.showLoading();
+            TimersFactory.index(true)
+                .then(function (response) {
+                    $scope.entries = response.data;
+                    //$rootScope.$broadcast('provideFeedback', '');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        }
+
+        getEntries();
+    });
+angular.module('tracker')
     .controller('FoodUnitsController', function ($scope, $rootScope, FoodUnitsFactory) {
         $scope.units = units;
 
@@ -22883,24 +22901,6 @@ var app = angular.module('tracker');
 	});
 
 })();
-angular.module('tracker')
-    .controller('TimerGraphsController', function ($rootScope, $scope, TimersFactory) {
-
-        function getEntries () {
-            $rootScope.showLoading();
-            TimersFactory.index(true)
-                .then(function (response) {
-                    $scope.entries = response.data;
-                    //$rootScope.$broadcast('provideFeedback', '');
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        }
-
-        getEntries();
-    });
 angular.module('tracker')
     .factory('ActivitiesFactory', function ($http) {
         return {
@@ -23442,6 +23442,11 @@ var ExercisesRepository = {
         };
 
         return data;
+    },
+    selectedExercise: {
+        program: {},
+        series: {},
+        defaultUnit: {}
     }
 };
 var FiltersRepository = {
@@ -24404,6 +24409,39 @@ var ExercisePopup = Vue.component('exercise-popup', {
         /**
          *
          */
+        updateExercise: function () {
+            $.event.trigger('show-loading');
+
+            var data = ExercisesRepository.setData(this.selectedExercise);
+
+            this.$http.put('/api/exercises/' + this.selectedExercise.id, data, function (response) {
+                    this.selectedExercise = response.data;
+                    var index = _.indexOf(this.exercises, _.findWhere(this.exercises, {id: this.selectedExercise.id}));
+
+                    this.exercises[index].name = response.data.name;
+                    this.exercises[index].description = response.data.description;
+                    this.exercises[index].step = response.data.step;
+                    this.exercises[index].series = response.data.series;
+                    this.exercises[index].defaultQuantity = response.data.defaultQuantity;
+                    this.exercises[index].defaultUnit = response.data.defaultUnit;
+                    this.exercises[index].target = response.data.target;
+                    this.exercises[index].priority = response.data.priority;
+                    this.exercises[index].program = response.data.program;
+
+
+                    this.showPopup = false;
+                    $.event.trigger('provide-feedback', ['Exercise updated', 'success']);
+                    $.event.trigger('hide-loading');
+                    $("#exercise-step-number").val("");
+                })
+                .error(function (response) {
+                    this.handleResponseError(response);
+                });
+        },
+
+        /**
+         *
+         */
         deleteExercise: function () {
             if (confirm("Are you sure?")) {
                 $.event.trigger('show-loading');
@@ -24449,7 +24487,10 @@ var ExercisePopup = Vue.component('exercise-popup', {
     },
     props: [
         'selectedExercise',
-        'exercises'
+        'exercises',
+        'exerciseSeries',
+        'programs',
+        'units'
     ],
     ready: function () {
         this.listen();
@@ -24527,15 +24568,14 @@ var ExercisesPage = Vue.component('exercises-page', {
     template: '#exercises-page-template',
     data: function () {
         return {
-            selectedExercise: {},
+            selectedExercise: ExercisesRepository.selectedExercise,
             exercises: all_exercises,
-            exercise_entries: {},
-            exercise_series: series,
             workouts: workouts,
-            exercise_tags: exercise_tags,
-            units: units,
             showNewExerciseFields: false,
-            series: []
+            series: [],
+            exerciseSeries: series,
+            programs: [],
+            units: units
         };
     },
     components: {},
@@ -25961,9 +26001,8 @@ var SeriesExercises = Vue.component('series-exercises', {
     template: '#series-exercises-template',
     data: function () {
         return {
-            selectedExercise: {
-                unit: {}
-            }
+            selectedExercise: ExercisesRepository.selectedExercise,
+            exerciseSeries: series
         };
     },
     components: {},
@@ -26015,7 +26054,9 @@ var SeriesExercises = Vue.component('series-exercises', {
     },
     props: [
         'selectedSeries',
-        'priorityFilter'
+        'priorityFilter',
+        'programs',
+        'units'
     ],
     ready: function () {
 
@@ -26087,7 +26128,9 @@ var SeriesPage = Vue.component('series-page', {
                     data: []
                 }
             },
-            showExerciseEntryInputs: false
+            showExerciseEntryInputs: false,
+            units: [],
+            programs: []
         };
     },
     components: {},
@@ -26224,28 +26267,6 @@ var SeriesPage = Vue.component('series-page', {
         /**
         *
         */
-        updateExercise: function (exercise) {
-            $.event.trigger('show-loading');
-
-            var data = ExercisesRepository.setData(exercise);
-
-            this.$http.put('/api/exercises/' + exercise.id, data, function (response) {
-                this.selectedExercise = response.data;
-                var index = _.indexOf(this.selectedSeries.exercises.data, _.findWhere(this.selectedSeries.exercises.data, {id: this.selectedExercise.id}));
-                this.selectedSeries.exercises.data[index] = response.data;
-                this.showExercisePopup = false;
-                $.event.trigger('provide-feedback', ['Exercise updated', 'success']);
-                $.event.trigger('hide-loading');
-                $("#exercise-step-number").val("");
-            })
-            .error(function (response) {
-                this.handleResponseError(response);
-            });
-        },
-
-        /**
-        *
-        */
         getPrograms: function () {
             $.event.trigger('show-loading');
             this.$http.get('/api/exercisePrograms', function (response) {
@@ -26258,17 +26279,17 @@ var SeriesPage = Vue.component('series-page', {
         },
 
         /**
-        *
-        */
+         *
+         */
         getUnits: function () {
             $.event.trigger('show-loading');
             this.$http.get('/api/exerciseUnits', function (response) {
-                this.units = response;
-                $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
-                this.handleResponseError(response);
-            });
+                    this.units = response;
+                    $.event.trigger('hide-loading');
+                })
+                .error(function (response) {
+                    this.handleResponseError(response);
+                });
         },
 
         /**

@@ -5,6 +5,9 @@
     <exercise-popup
             :selected-exercise="selectedExercise"
             :exercises.sync="exercises"
+            :exercise-series="exerciseSeries"
+            :programs="programs"
+            :units="units"
     >
     </exercise-popup>
 

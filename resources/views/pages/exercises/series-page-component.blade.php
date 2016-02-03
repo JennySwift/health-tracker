@@ -59,6 +59,8 @@
                 <series-exercises
                         :selected-series="selectedSeries"
                         :priority-filter="priorityFilter"
+                        :units="units"
+                        :programs="programs"
                 >
                 </series-exercises>
             </div>
