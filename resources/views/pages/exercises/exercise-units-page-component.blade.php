@@ -28,7 +28,11 @@
 
         <div class="exercise-units-container">
             <div class="exercise-units">
-                <li v-for="unit in units | orderBy: 'name'" class="list-group-item">
+                <li
+                    v-for="unit in units
+                        | orderBy 'name'"
+                    class="list-group-item"
+                >
                     @{{ unit.name }}
                     <i v-on:click="deleteUnit(unit)" class="delete-item fa fa-times"></i>
                 </li>
