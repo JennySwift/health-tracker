@@ -8,9 +8,6 @@ var SeriesPage = Vue.component('series-page', {
             workouts: workouts,
             seriesPriorityFilter: 1,
             showNewSeriesFields: false,
-            showExerciseSeriesHistoryPopup: false,
-            showExerciseSeriesPopup: false,
-            showExercisePopup: false,
             newSeries: {},
             newExercise: {},
             selectedSeries: {
@@ -25,6 +22,12 @@ var SeriesPage = Vue.component('series-page', {
         };
     },
     components: {},
+    filters: {
+        filterSeries: function (series) {
+            return _.sortBy(series, 'lastDone');
+            //'priority': seriesPriorityFilter
+        }
+    },
     methods: {
 
         /**
@@ -34,10 +37,10 @@ var SeriesPage = Vue.component('series-page', {
             $.event.trigger('show-loading');
 
             this.$http.get('api/seriesEntries/' + series.id, function (response) {
-                this.showExerciseSeriesHistoryPopup = true;
                 //For displaying the name of the series in the popup
-                this.selectedSeries = $series;
+                this.selectedSeries = series;
                 this.exerciseSeriesHistory = response;
+                $.event.trigger('show-series-history-popup');
                 $.event.trigger('hide-loading');
             })
             .error(function (response) {
@@ -162,45 +165,33 @@ var SeriesPage = Vue.component('series-page', {
             });
         },
 
+        /**
+        *
+        */
         showExerciseSeriesPopup: function (series) {
-            this.selectedSeries = series;
-
             $.event.trigger('show-loading');
-            ExerciseSeriesFactory.getExerciseSeriesInfo(series)
-                .then(function (response) {
-                    this.selectedSeries = response;
-                    this.showExerciseSeriesPopup = true;
-                    $.event.trigger('hide-loading');
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        },
-
-        closePopup: function ($event, $popup) {
-            var $target = $event.target;
-            if ($target.className === 'popup-outer') {
-                this.show.popups[$popup] = false;
-            }
+            this.$http.get('/api/exerciseSeries/' + series.id, function (response) {
+                this.selectedSeries = response;
+                $.event.trigger('show-series-popup');
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
         },
 
         /**
-         * Duplicate from exercises controller
-         * @param $exercise
+         *
          */
-        showExercisePopup: function ($exercise) {
-            this.selected.exercise = $exercise;
-
-            $rootScope.showLoading();
-            ExercisesFactory.show($exercise)
-                .then(function (response) {
-                    this.exercise_popup = response.data;
-                    this.show.popups.exercise = true;
-                    //$rootScope.$broadcast('provideFeedback', '');
-                    $rootScope.hideLoading();
+        showExercisePopup: function (exercise) {
+            $.event.trigger('show-loading');
+            this.$http.get('/api/exercises/' + exercise.id, function (response) {
+                    this.selectedExercise = response;
+                    $.event.trigger('show-exercise-popup');
+                    $.event.trigger('hide-loading');
                 })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
+                .error(function (response) {
+                    this.handleResponseError(response);
                 });
         },
 

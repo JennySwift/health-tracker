@@ -23156,12 +23156,6 @@ angular.module('tracker')
 app.factory('ExercisesFactory', function ($http) {
     return {
 
-        show: function ($exercise) {
-            var $url = 'api/exercises/' + $exercise.id;
-
-            return $http.get($url);
-        },
-
         insertTagsInExercise: function ($exercise_id, $tags) {
             var $url = 'insert/tagsInExercise';
             var $data = {
@@ -24537,6 +24531,52 @@ var ExerciseEntries = Vue.component('exercise-entries', {
         this.listen();
     }
 });
+var ExercisePopup = Vue.component('exercise-popup', {
+    template: '#exercise-popup-template',
+    data: function () {
+        return {
+            showPopup: false
+        };
+    },
+    components: {},
+    methods: {
+
+        /**
+        *
+        */
+        closePopup: function ($event) {
+            if ($event.target.className === 'popup-outer') {
+                this.showPopup = false;
+            }
+        },
+
+        /**
+         *
+         */
+        listen: function () {
+            var that = this;
+            $(document).on('show-exercise-popup', function (event) {
+                that.showPopup = true;
+            });
+        },
+
+        /**
+         *
+         * @param response
+         */
+        handleResponseError: function (response) {
+            this.$broadcast('response-error', response);
+            this.showLoading = false;
+        }
+    },
+    props: [
+        'selectedExercise'
+    ],
+    ready: function () {
+        this.listen();
+    }
+});
+
 var ExerciseUnitsPage = Vue.component('exercise-units-page', {
     template: '#exercise-units-page-template',
     data: function () {
@@ -25907,6 +25947,54 @@ var RecipesPage = Vue.component('recipes-page', {
     }
 });
 
+var SeriesHistoryPopup = Vue.component('series-history-popup', {
+    template: '#series-history-popup-template',
+    data: function () {
+        return {
+            showPopup: false
+        };
+    },
+    components: {},
+    methods: {
+
+        /**
+        *
+        */
+        closePopup: function ($event) {
+            if ($event.target.className === 'popup-outer') {
+                this.showPopup = false;
+            }
+        },
+
+        /**
+         *
+         */
+        listen: function () {
+            var that = this;
+            $(document).on('show-series-history-popup', function (event, series) {
+                that.selectedSeries = series;
+                that.showPopup = true;
+            });
+        },
+
+        /**
+         *
+         * @param response
+         */
+        handleResponseError: function (response) {
+            this.$broadcast('response-error', response);
+            this.showLoading = false;
+        }
+    },
+    props: [
+        'exerciseSeriesHistory',
+        'selectedSeries'
+    ],
+    ready: function () {
+        this.listen();
+    }
+});
+
 var SeriesPage = Vue.component('series-page', {
     template: '#series-page-template',
     data: function () {
@@ -25917,9 +26005,6 @@ var SeriesPage = Vue.component('series-page', {
             workouts: workouts,
             seriesPriorityFilter: 1,
             showNewSeriesFields: false,
-            showExerciseSeriesHistoryPopup: false,
-            showExerciseSeriesPopup: false,
-            showExercisePopup: false,
             newSeries: {},
             newExercise: {},
             selectedSeries: {
@@ -25934,6 +26019,12 @@ var SeriesPage = Vue.component('series-page', {
         };
     },
     components: {},
+    filters: {
+        filterSeries: function (series) {
+            return _.sortBy(series, 'lastDone');
+            //'priority': seriesPriorityFilter
+        }
+    },
     methods: {
 
         /**
@@ -25943,10 +26034,10 @@ var SeriesPage = Vue.component('series-page', {
             $.event.trigger('show-loading');
 
             this.$http.get('api/seriesEntries/' + series.id, function (response) {
-                this.showExerciseSeriesHistoryPopup = true;
                 //For displaying the name of the series in the popup
-                this.selectedSeries = $series;
+                this.selectedSeries = series;
                 this.exerciseSeriesHistory = response;
+                $.event.trigger('show-series-history-popup');
                 $.event.trigger('hide-loading');
             })
             .error(function (response) {
@@ -26071,45 +26162,33 @@ var SeriesPage = Vue.component('series-page', {
             });
         },
 
+        /**
+        *
+        */
         showExerciseSeriesPopup: function (series) {
-            this.selectedSeries = series;
-
             $.event.trigger('show-loading');
-            ExerciseSeriesFactory.getExerciseSeriesInfo(series)
-                .then(function (response) {
-                    this.selectedSeries = response;
-                    this.showExerciseSeriesPopup = true;
-                    $.event.trigger('hide-loading');
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        },
-
-        closePopup: function ($event, $popup) {
-            var $target = $event.target;
-            if ($target.className === 'popup-outer') {
-                this.show.popups[$popup] = false;
-            }
+            this.$http.get('/api/exerciseSeries/' + series.id, function (response) {
+                this.selectedSeries = response;
+                $.event.trigger('show-series-popup');
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
         },
 
         /**
-         * Duplicate from exercises controller
-         * @param $exercise
+         *
          */
-        showExercisePopup: function ($exercise) {
-            this.selected.exercise = $exercise;
-
-            $rootScope.showLoading();
-            ExercisesFactory.show($exercise)
-                .then(function (response) {
-                    this.exercise_popup = response.data;
-                    this.show.popups.exercise = true;
-                    //$rootScope.$broadcast('provideFeedback', '');
-                    $rootScope.hideLoading();
+        showExercisePopup: function (exercise) {
+            $.event.trigger('show-loading');
+            this.$http.get('/api/exercises/' + exercise.id, function (response) {
+                    this.selectedExercise = response;
+                    $.event.trigger('show-exercise-popup');
+                    $.event.trigger('hide-loading');
                 })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
+                .error(function (response) {
+                    this.handleResponseError(response);
                 });
         },
 
@@ -26181,6 +26260,53 @@ var SeriesPage = Vue.component('series-page', {
     }
 });
 
+
+var SeriesPopup = Vue.component('series-popup', {
+    template: '#series-popup-template',
+    data: function () {
+        return {
+            showPopup: false
+        };
+    },
+    components: {},
+    methods: {
+
+        /**
+        *
+        */
+        closePopup: function ($event) {
+            if ($event.target.className === 'popup-outer') {
+                this.showPopup = false;
+            }
+        },
+
+        /**
+         *
+         */
+        listen: function () {
+            var that = this;
+            $(document).on('show-series-popup', function (event, series) {
+                that.selectedSeries = series;
+                that.showPopup = true;
+            });
+        },
+
+        /**
+         *
+         * @param response
+         */
+        handleResponseError: function (response) {
+            this.$broadcast('response-error', response);
+            this.showLoading = false;
+        }
+    },
+    props: [
+        'selectedSeries'
+    ],
+    ready: function () {
+        this.listen();
+    }
+});
 
 var TimersPage = Vue.component('timers-page', {
     template: '#timers-page-template',

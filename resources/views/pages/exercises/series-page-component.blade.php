@@ -2,9 +2,21 @@
 
     <div id="exercise-series" class="container">
 
-        @include('pages.exercises.popups.exercise-popup')
-        @include('pages.exercises.popups.exercise-series-history-popup')
-        @include('pages.exercises.popups.exercise-series-popup')
+        <exercise-popup
+            :selected-exercise="selectedExercise"
+        >
+        </exercise-popup>
+
+        <series-history-popup
+                :exercise-series-history="exerciseSeriesHistory"
+                :selected-series="selectedSeries"
+        >
+        </series-history-popup>
+
+        <series-popup
+                :selected-series="selectedSeries"
+        >
+        </series-popup>
 
         <div>
             @include('pages.exercises.series-top-row')
@@ -18,7 +30,7 @@
                             <th>Priority</th>
                         </tr>
                         <tr
-                            v-for="series in exerciseSeries | orderBy: 'lastDone' | filter:{'priority': seriesPriorityFilter}"
+                            v-for="series in exerciseSeries | filterSeries"
                             v-bind:class="{'selected': series.id === selectedSeries.id}"
                         >
                             <td class="actions">

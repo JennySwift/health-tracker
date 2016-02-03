@@ -11,9 +11,9 @@
 	
 	<div ng-controller="exercises" id="exercises" class="container">
 
-		@include('pages.exercises.popups.exercise-popup')
-		@include('pages.exercises.popups.exercise-series-history-popup')
-		@include('pages.exercises.popups.exercise-series-popup')
+		@include('pages.exercises.popups.exercise-popup-component')
+		@include('pages.exercises.popups.exercise-series-history-popup-component')
+		@include('pages.exercises.popups.exercise-series-popup-component')
 
 		<div>
 

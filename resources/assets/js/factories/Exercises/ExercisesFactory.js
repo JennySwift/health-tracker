@@ -1,12 +1,6 @@
 app.factory('ExercisesFactory', function ($http) {
     return {
 
-        show: function ($exercise) {
-            var $url = 'api/exercises/' + $exercise.id;
-
-            return $http.get($url);
-        },
-
         insertTagsInExercise: function ($exercise_id, $tags) {
             var $url = 'insert/tagsInExercise';
             var $data = {
