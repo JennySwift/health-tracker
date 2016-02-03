@@ -25113,7 +25113,7 @@ var Recipes = Vue.component('recipes', {
         return {
             newRecipe: {},
             recipesNameFilter: '',
-            recipesTagFilter: ''
+            //recipesTagFilter: ''
         };
     },
     components: {},

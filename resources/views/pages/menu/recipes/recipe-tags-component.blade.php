@@ -37,7 +37,11 @@
                     <th class="tooltipster" title="check to filter recipes by the tag">filter</th>
                     <th></th>
                 </tr>
-                <tr v-for="tag in tags | filterBy tagsFilter in 'name' | orderBy: 'name'">
+                <tr
+                    v-for="tag in tags
+                        | filterBy tagsFilter in 'name'
+                        | orderBy 'name'"
+                >
                     <td>@{{ tag.name }}</td>
 
                     <td>
