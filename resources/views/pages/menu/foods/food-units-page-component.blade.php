@@ -3,16 +3,23 @@
     <div class="row">
 
         <div class="col col-sm-6 col-sm-offset-3">
-            <input
-                    v-on:keyup="insertFoodUnit($event.keyCode)"
+            <div class="form-group">
+                <label for="new-food-unit-name">Name</label>
+                <input
+                    v-model="newUnit.name"
+                    v-on:keyup.13="insertUnit()"
                     type="text"
-                    placeholder="add a new food unit"
-                    id="create-new-food-unit"
-                    class="form-control">
+                    id="new-food-unit-name"
+                    name="new-food-unit-name"
+                    placeholder="name"
+                    class="form-control"
+                >
+            </div>
 
             <button
-                    v-on:click="insertFoodUnit(13)"
-                    class="btn btn-success">
+                v-on:click="insertUnit()"
+                class="btn btn-success"
+            >
                 Add unit
             </button>
 
@@ -25,7 +32,7 @@
                     class="list-group-item"
                 >
                     @{{ unit.name }}
-                    <i v-on:click="deleteFoodUnit(unit)" class="delete-item fa fa-times"></i>
+                    <i v-on:click="deleteUnit(unit)" class="delete-item fa fa-times"></i>
                 </li>
             </div>
         </div>

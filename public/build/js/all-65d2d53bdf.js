@@ -22199,37 +22199,6 @@ Vue.config.debug = true;
 //
 //        getEntries();
 //    });
-//angular.module('tracker')
-//    .factory('FoodUnitsFactory', function ($http) {
-//        return {
-//            insert: function () {
-//                var $url = 'api/foodUnits';
-//                var $name = $("#create-new-food-unit").val();
-//
-//                var $data = {
-//                    name: $name
-//                };
-//
-//                $("#create-new-food-unit").val("");
-//                return $http.post($url, $data);
-//            },
-//            update: function ($unit) {
-//                var $url = 'api/foodUnits/' + $unit.id;
-//                var $data = {
-//                    unit: $unit
-//                };
-//
-//                return $http.put($url, $data);
-//            },
-//            destroy: function ($unit) {
-//                if (confirm("Are you sure you want to delete this unit?")) {
-//                    var $url = 'api/foodUnits/' + $unit.id;
-//
-//                    return $http.delete($url);
-//                }
-//            }
-//        }
-//    });
 //app.factory('FoodsFactory', function ($http) {
 //	return {
 //
@@ -23864,7 +23833,8 @@ var FoodUnitsPage = Vue.component('food-units-page', {
     template: '#food-units-page-template',
     data: function () {
         return {
-            units: []
+            units: [],
+            newUnit: {}
         };
     },
     components: {},
@@ -23884,34 +23854,43 @@ var FoodUnitsPage = Vue.component('food-units-page', {
             });
         },
 
-        insertFoodUnit: function ($keycode) {
-            if ($keycode === 13) {
-                //$scope.showLoading();
-                FoodUnitsFactory.insert()
-                    .then(function (response) {
-                        $scope.units.push(response.data.data);
-                        $rootScope.$broadcast('provideFeedback', 'Unit created');
-                        //$scope.hideLoading();
-                    })
-                    .catch(function (response) {
-                        $rootScope.responseError(response);
-                    });
+        /**
+        *
+        */
+        insertUnit: function () {
+            $.event.trigger('show-loading');
+            var data = {
+                name: this.newUnit.name
+            };
+
+            this.$http.post('/api/foodUnits', data, function (response) {
+                this.units.push(response.data);
+                $.event.trigger('provide-feedback', ['Unit created', 'success']);
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
+        },
+
+        /**
+        *
+        */
+        deleteUnit: function (unit) {
+            if (confirm("Are you sure?")) {
+                $.event.trigger('show-loading');
+                this.$http.delete('/api/foodUnits/' + unit.id, function (response) {
+                    this.units = _.without(this.units, unit);
+                    //var index = _.indexOf(this.units, _.findWhere(this.units, {id: this.unit.id}));
+                    //this.units = _.without(this.units, this.units[index]);
+                    $.event.trigger('provide-feedback', ['Unit deleted', 'success']);
+                    $.event.trigger('hide-loading');
+                })
+                .error(function (response) {
+                    this.handleResponseError(response);
+                });
             }
         },
-
-        deleteFoodUnit: function ($unit) {
-            //$scope.showLoading();
-            FoodUnitsFactory.destroy($unit)
-                .then(function (response) {
-                    $scope.units = _.without($scope.units, $unit);
-                    $rootScope.$broadcast('provideFeedback', 'Unit deleted');
-                    //$scope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        },
-
 
         /**
          *
