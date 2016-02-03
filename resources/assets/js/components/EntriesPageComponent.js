@@ -28,8 +28,14 @@ var EntriesPage = Vue.component('entries-page', {
     },
     components: {},
     filters: {
-        roundNumber: function (number) {
-            return Math.round(number);
+        roundNumber: function (number, howManyDecimals) {
+            if (!howManyDecimals) {
+                return Math.round(number);
+            }
+            else if (howManyDecimals === 'one') {
+                var multiplyAndDivideBy = 10;
+                return Math.round(number * multiplyAndDivideBy) / multiplyAndDivideBy;
+            }
         }
     },
     methods: {

@@ -26,7 +26,7 @@ class WeightSeeder extends Seeder {
 
                 Weight::create([
                     'date' => Carbon::today()->subDays($index)->format('Y-m-d'),
-                    'weight' => $index + 50,
+                    'weight' => $index / 10 + 50,
                     'user_id' => $user->id
                 ]);
             }
