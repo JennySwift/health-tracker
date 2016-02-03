@@ -23618,10 +23618,35 @@ var ExercisesPage = Vue.component('exercises-page', {
             series: [],
             exerciseSeries: [],
             programs: [],
-            units: []
+            units: [],
+            filterByName: '',
+            filterByDescription: '',
+            filterByPriority: '',
+            filterBySeries: ''
         };
     },
     components: {},
+    filters: {
+        exercisesFilter: function (exercises) {
+            var that = this;
+            return exercises.filter(function (exercise) {
+                //Name and description filters
+                var show = exercise.name.indexOf(that.filterByName) !== -1 && exercise.description.indexOf(that.filterByDescription) !== -1;
+
+                //Priority filter
+                if (that.filterByPriority && exercise.priority != that.filterByPriority) {
+                    show = false;
+                }
+
+                //Series filter
+                if (that.filterBySeries && exercise.series.name != that.filterBySeries) {
+                    show = false;
+                }
+
+                return show;
+            });
+        }
+    },
     methods: {
 
         /**
@@ -23630,8 +23655,8 @@ var ExercisesPage = Vue.component('exercises-page', {
         getSeries: function () {
             $.event.trigger('show-loading');
             this.$http.get('/api/exerciseSeries', function (response) {
-                this.series = _.pluck(response.data, 'name');
-                this.exerciseSeries = response.data;
+                this.series = _.pluck(response, 'name');
+                this.exerciseSeries = response;
                 $.event.trigger('hide-loading');
             })
             .error(function (response) {

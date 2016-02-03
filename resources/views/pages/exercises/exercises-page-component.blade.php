@@ -33,7 +33,10 @@
                 <th>priority</th>
                 <th>program</th>
             </tr>
-            <tr v-for="exercise in exercises | filter:{name: filter.exercises.name, description: filter.exercises.description, priority: filter.exercises.priority, series: {name: filter.exercises.series}}" class="hover">
+            <tr
+                v-for="exercise in exercises | exercisesFilter"
+                class="hover"
+            >
                 <td v-on:click="showExercisePopup(exercise)" class="pointer">@{{ exercise.name }}</td>
                 <td v-on:click="showExercisePopup(exercise)" class="pointer">@{{ exercise.description }}</td>
                 <td v-on:click="showExercisePopup(exercise)" class="pointer">@{{ exercise.stepNumber }}</td>

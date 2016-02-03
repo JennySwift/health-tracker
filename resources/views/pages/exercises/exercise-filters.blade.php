@@ -1,5 +1,6 @@
 <div id="exercise-filters" class="margin-bottom">
     <h5>Filters</h5>
+    
     <div class="flex">
         <input
             v-model="filterByName"
