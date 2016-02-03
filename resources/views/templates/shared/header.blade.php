@@ -24,7 +24,7 @@
         <li class="iphone"><a ng-click="changeTab('food_entries')" href="">food log</a></li>
         <li class="iphone"><a ng-click="changeTab('exercise_entries')" href="">exercise log</a></li> -->
 
-        <li><a href="/">entries</a></li>
+        <li><a v-link="{path: '/'}" href="#">entries</a></li>
 
         <li id="menu-dropdown" class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
