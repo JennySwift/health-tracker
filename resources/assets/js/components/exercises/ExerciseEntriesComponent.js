@@ -3,13 +3,11 @@ var ExerciseEntries = Vue.component('exercise-entries', {
     data: function () {
         return {
             exerciseEntries: exerciseEntries,
-            exerciseUnits: exerciseUnits,
             showExerciseEntryInputs: false,
             selectedExercise: {
                 unit: {}
             },
             showSpecificExerciseEntriesPopup: false,
-            //newEntry: {}
         };
     },
     components: {},
@@ -53,32 +51,6 @@ var ExerciseEntries = Vue.component('exercise-entries', {
             this.$http.get('api/select/specificExerciseEntries', function (response) {
                 this.showSpecificExerciseEntriesPopup = true;
                 this.selectedExercise = response;
-                $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
-                this.handleResponseError(response);
-            });
-        },
-
-        /**
-        *
-        */
-        insertEntry: function () {
-            $.event.trigger('show-loading');
-
-            //this.newEntry.exercise.unit_id = $("#exercise-unit").val();
-            //$("#exercise").val("").focus();
-
-            var data = {
-                date: this.date.sql,
-                exercise_id: this.newEntry.id,
-                quantity: this.newEntry.quantity,
-                unit_id: this.newEntry.unit_id
-            };
-
-            this.$http.post('/api/exerciseEntries', data, function (response) {
-                this.exerciseEntries = response;
-                $.event.trigger('provide-feedback', ['Entry created', 'success']);
                 $.event.trigger('hide-loading');
             })
             .error(function (response) {

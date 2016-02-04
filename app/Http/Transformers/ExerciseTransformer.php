@@ -11,7 +11,7 @@ class ExerciseTransformer extends TransformerAbstract
     /**
      * @var array
      */
-    protected $defaultIncludes = ['tags'];
+    protected $defaultIncludes = ['tags', 'defaultUnit'];
 
     /**
      * @var array
@@ -53,14 +53,19 @@ class ExerciseTransformer extends TransformerAbstract
             ];
         }
 
-        if ($exercise->defaultUnit) {
-            $array['defaultUnit'] = [
-                'id' => $exercise->defaultUnit->id,
-                'name' => $exercise->defaultUnit->name
-            ];
-        }
-
         return $array;
+    }
+
+    /**
+     *
+     * @param Exercise $exercise
+     * @return \League\Fractal\Resource\Item
+     */
+    public function includeDefaultUnit(Exercise $exercise)
+    {
+        if ($exercise->defaultUnit) {
+            return createItem($exercise->defaultUnit, new UnitTransformer);
+        }
     }
 
     /**

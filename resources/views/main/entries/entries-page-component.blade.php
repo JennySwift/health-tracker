@@ -28,7 +28,10 @@
         </div>
 
         <div>
-            {{--<new-exercise-entry></new-exercise-entry>--}}
+            <new-exercise-entry
+                :date="date"
+            >
+            </new-exercise-entry>
 
             <exercise-entries
                     :date="date"

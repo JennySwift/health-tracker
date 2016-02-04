@@ -10,6 +10,8 @@ class ExerciseUnitsTest extends TestCase {
 
     /**
      * It lists the exercise units for the user
+     * Todo: check only the units for the current user are displayed,
+     * without adding the user_id field to the response
      * @test
      * @return void
      */
@@ -20,15 +22,10 @@ class ExerciseUnitsTest extends TestCase {
         $response = $this->apiCall('GET', '/api/exerciseUnits');
         $content = json_decode($response->getContent(), true);
 
-        $this->assertArrayHasKey('id', $content[0]);
-        $this->assertArrayHasKey('name', $content[0]);
-        $this->assertArrayHasKey('user_id', $content[0]);
-        $this->assertArrayHasKey('for', $content[0]);
+        $this->checkExerciseUnitKeysExist($content[0]);
 
         $this->assertEquals(2, $content[0]['id']);
-        $this->assertEquals(1, $content[0]['user_id']);
         $this->assertEquals('minutes', $content[0]['name']);
-        $this->assertEquals('exercise', $content[0]['for']);
 
         $this->assertEquals(200, $response->getStatusCode());
     }

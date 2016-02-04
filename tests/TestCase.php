@@ -118,10 +118,11 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
      *
      * @param $unit
      */
-    private function checkExerciseUnitKeysExist($unit)
+    protected function checkExerciseUnitKeysExist($unit)
     {
         $this->assertArrayHasKey('id', $unit);
         $this->assertArrayHasKey('name', $unit);
+        $this->assertArrayNotHasKey('created_at', $unit);
     }
 
     /**

@@ -10,7 +10,7 @@
                 type="text"
                 :id="autocompleteFieldId"
                 :name="autocompleteFieldId"
-                placeholder="food"
+                :placeholder="autocompleteField"
                 class="form-control"
         >
     </div>

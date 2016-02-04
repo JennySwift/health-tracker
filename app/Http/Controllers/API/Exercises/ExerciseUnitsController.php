@@ -35,12 +35,14 @@ class ExerciseUnitsController extends Controller
     }
 
     /**
-     *
-     * @return mixed
+     * GET /api/units
+     * @return Response
      */
     public function index()
     {
-        return $this->unitsRepository->getExerciseUnits();
+        $units = $this->unitsRepository->getExerciseUnits();
+        $units = $this->transform($this->createCollection($units, new UnitTransformer))['data'];
+        return response($units, Response::HTTP_OK);
     }
 
     /**

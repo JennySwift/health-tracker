@@ -68,8 +68,6 @@ class PagesController extends Controller
                     new ExerciseEntryTransformer
                 )
             )['data'],
-            "exerciseUnits" => $this->unitsRepository->getExerciseUnits(),
-
             "menuEntries" => $this->menuEntriesRepository->getEntriesForTheDay($date),
             "foodUnits" => $this->unitsRepository->getFoodUnits(),
 
