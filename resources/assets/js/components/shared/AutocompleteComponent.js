@@ -1,27 +1,11 @@
-var NewItemWithAutocomplete = Vue.component('new-item-with-autocomplete', {
-    template: '#new-item-with-autocomplete-template',
+var Autocomplete = Vue.component('autocomplete', {
+    template: '#autocomplete-template',
     data: function () {
         return {
-            newIngredient: {
-                food: {
-                    units: {
-                        data: []
-                    },
-                    defaultUnit: {
-                        data: {}
-                    }
-                },
-                exercise: {
-                    units: {
-                        data: []
-                    },
-                    defaultUnit: {
-                        data: {}
-                    }
-                },
-                unit: {}
-            },
             autocompleteOptions: [],
+            chosenOption: {
+                name: ''
+            },
             showDropdown: false,
             currentIndex: 0
         };
@@ -61,15 +45,15 @@ var NewItemWithAutocomplete = Vue.component('new-item-with-autocomplete', {
         populateOptions: function () {
             //fill the dropdown
             $.event.trigger('show-loading');
-            this.$http.get(this.url + '?typing=' + this.newIngredient[this.autocompleteField].name, function (response) {
-                this.autocompleteOptions = response.data;
-                this.showDropdown = true;
-                this.currentIndex = 0;
-                $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
-                this.handleResponseError(response);
-            });
+            this.$http.get(this.url + '?typing=' + this.chosenOption.name, function (response) {
+                    this.autocompleteOptions = response.data;
+                    this.showDropdown = true;
+                    this.currentIndex = 0;
+                    $.event.trigger('hide-loading');
+                })
+                .error(function (response) {
+                    this.handleResponseError(response);
+                });
         },
 
         /**
@@ -82,7 +66,7 @@ var NewItemWithAutocomplete = Vue.component('new-item-with-autocomplete', {
             }
             else {
                 //enter is to add the entry
-                $scope.addFoodToRecipe();
+                this.insertItemFunction();
             }
         },
 
@@ -90,20 +74,14 @@ var NewItemWithAutocomplete = Vue.component('new-item-with-autocomplete', {
          *
          */
         selectOption: function () {
-            this.newIngredient[this.autocompleteField] = this.autocompleteOptions[this.currentIndex];
-            this.newIngredient.unit = this.newIngredient[this.autocompleteField].defaultUnit.data;
+            this.chosenOption = this.autocompleteOptions[this.currentIndex];
             this.showDropdown = false;
-        },
-
-        /**
-         *
-         */
-        insertItem: function () {
-            this.insertItemFunction(this.newIngredient);
-            this.newIngredient.description = '';
-            this.newIngredient.quantity = '';
-
-            $("#new-ingredient-food-name").focus();
+            if (this.idToFocusAfterAutocomplete) {
+                var that = this;
+                setTimeout(function () {
+                    $("#" + that.idToFocusAfterAutocomplete).focus();
+                }, 100);
+            }
         },
 
         /**
@@ -116,11 +94,10 @@ var NewItemWithAutocomplete = Vue.component('new-item-with-autocomplete', {
         }
     },
     props: [
-        'selectedRecipe',
-        'insertItemFunction',
-        'showDescriptionField',
         'url',
-        'autocompleteField'
+        'autocompleteField',
+        'insertItemFunction',
+        'idToFocusAfterAutocomplete'
     ],
     ready: function () {
 

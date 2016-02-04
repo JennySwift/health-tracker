@@ -47,13 +47,13 @@
 <div>
     <button v-on:click="showExerciseEntryInputs = !showExerciseEntryInputs" class="btn btn-sm btn-success">Add manual entry</button>
     <div v-show="showExerciseEntryInputs">
-        <new-item-with-autocomplete
+        <autocomplete
                 {{--:selected-recipe.sync="selectedRecipe"--}}
                 :insert-item-function="insertExerciseEntry"
                 url="/api/exercises"
                 autocomplete-field="exercise"
         >
-        </new-item-with-autocomplete>
+        </autocomplete>
     </div>
 
     <exercise-entries

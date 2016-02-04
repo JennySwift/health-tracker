@@ -1,14 +1,5 @@
 <script id="menu-entries-template" type="x-template">
 
-<div>
-    <new-item-with-autocomplete
-            {{--:selected-recipe.sync="selectedRecipe"--}}
-            :insert-item-function="insertMenuEntry"
-            url="/api/foods"
-            autocomplete-field="food"
-    >
-    </new-item-with-autocomplete>
-
     <div>
         <table class="table table-bordered">
             <caption>food entries</caption>
@@ -56,6 +47,5 @@
             </tr>
         </table>
     </div>
-</div>
 
 </script>

@@ -1,33 +1,15 @@
-<script id="new-item-with-autocomplete-template" type="x-template">
+<script id="new-menu-entry-template" type="x-template">
 
     <div class="margin-bottom">
         <div>
 
-            <div class="form-group">
-                <label for="new-ingredient-food-name">@{{ autocompleteField | capitalize }}</label>
-                <input
-                    v-model="newIngredient[autocompleteField].name"
-                    v-on:keyup="respondToKeyup($event.keyCode)"
-                    v-on:blur="showDropdown = false"
-                    type="text"
-                    id="new-ingredient-food-name"
-                    name="new-ingredient-food-name"
-                    placeholder="food"
-                    class="form-control"
-                >
-            </div>
-
-            <div
-                v-show="showDropdown"
-                class="autocomplete-dropdown"
+            <autocomplete
+                    :insert-item-function="insertMenuEntry"
+                    url="/api/foods"
+                    autocomplete-field="food"
+                    id-to-focus-after-autocomplete="new-ingredient-quantity"
             >
-                <div
-                    v-for="option in autocompleteOptions"
-                    v-bind:class="{'selected': currentIndex === $index}"
-                    class="autocomplete-dropdown-item">
-                    @{{ option.name }}
-                </div>
-            </div>
+            </autocomplete>
 
             <div class="form-group">
                 <label for="new-ingredient-quantity">Quantity</label>

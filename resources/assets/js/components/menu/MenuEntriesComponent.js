@@ -17,59 +17,6 @@ var MenuEntriesComponent = Vue.component('menu-entries', {
         /**
         *
         */
-        insertMenuEntry: function (ingredient) {
-            $.event.trigger('show-loading');
-            var data = {
-                date: this.date.sql,
-                food_id: ingredient.food.id,
-                unit_id: ingredient.unit.id,
-                quantity: ingredient.quantity,
-            };
-
-            $.event.trigger('get-entries');
-
-            if (this.temporaryRecipePopup.contents) {
-                this.temporaryRecipePopup.contents.length = 0;
-            }
-
-            $("#menu").val("").focus();
-
-            this.$http.post('/api/menuEntries', data, function (response) {
-                this.menuEntries.push(response);
-                $.event.trigger('provide-feedback', ['Menu entry created', 'success']);
-                $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
-                this.handleResponseError(response);
-            });
-        },
-
-        /**
-        *
-        */
-        insertRecipeEntry: function () {
-            $.event.trigger('show-loading');
-            var data = {
-                date: this.date.sql,
-                recipe_id: this.selected.menu.id,
-                recipe_contents: this.temporaryRecipePopup.contents
-            };
-
-            this.$http.post('/insert/recipeEntry', data, function (response) {
-                this.entries.menu = response.data;
-                this.show.popups.temporary_recipe = false;
-                    $("#menu").val("").focus();
-                $.event.trigger('provide-feedback', ['Recipe created', 'success']);
-                $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
-                this.handleResponseError(response);
-            });
-        },
-
-        /**
-        *
-        */
         deleteMenuEntry: function (entry) {
             if (confirm("Are you sure?")) {
                 $.event.trigger('show-loading');
@@ -115,31 +62,6 @@ var MenuEntriesComponent = Vue.component('menu-entries', {
             }
         },
 
-        finishTemporaryRecipeFoodAutocomplete: function ($array, $set_focus) {
-            //array, input_to_focus, autocomplete_to_hide, input_to_fill, selected_property_to_define
-            var $selected = _.findWhere($array, {selected: true});
-            this.temporaryRecipePopup.food = $selected;
-            this.selected.food = $selected;
-            this.showAutocompleteOptions.temporary_recipe_foods = false;
-            $($set_focus).val("").focus();
-        },
-
-        insertOrAutocompleteTemporaryRecipeFood: function ($keycode) {
-            if ($keycode !== 13) {
-                return;
-            }
-            //enter is pressed
-            if (this.showAutocompleteOptions.temporary_recipe_foods) {
-                //enter is for the autocomplete
-                this.finishTemporaryRecipeFoodAutocomplete(this.autocomplete_options.temporary_recipe_foods, $("#temporary-recipe-popup-food-quantity"));
-                // this.displayAssocUnitOptions();
-            }
-            else {
-                // if enter is to add the entry
-                this.insertFoodIntoTemporaryRecipe();
-            }
-        },
-
         /**
          *
          */
@@ -163,20 +85,6 @@ var MenuEntriesComponent = Vue.component('menu-entries', {
          */
         deleteFromTemporaryRecipe: function ($item) {
             this.temporaryRecipePopup.contents = _.without(this.temporaryRecipePopup.contents, $item);
-        },
-
-        /**
-         *
-         */
-        showTemporaryRecipePopup: function () {
-            this.show.popups.temporary_recipe = true;
-            FoodsFactory.getRecipeContents(this.selected.menu.id).then(function (response) {
-                this.temporaryRecipePopup = response.data;
-
-                $(this.temporaryRecipePopup.contents).each(function () {
-                    this.original_quantity = this.quantity;
-                });
-            });
         },
 
         showDeleteFoodOrRecipeEntryPopup: function ($entry_id, $recipe_id) {

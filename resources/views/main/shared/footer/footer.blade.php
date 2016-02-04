@@ -26,9 +26,12 @@
 @include('main.menu.recipes.recipes-component')
 @include('main.menu.recipes.recipe-tags-component')
 @include('main.menu.recipes.recipe-popup.recipe-popup-component')
-@include('main.menu.recipes.recipe-popup.new-item-with-autocomplete-component')
+
+{{--Shared--}}
+@include('main.menu.entries.new-menu-entry-component')
 @include('main.shared.feedback-component')
 @include('main.shared.loading-component')
+@include('main.shared.autocomplete-component')
 @include('main.shared.date-navigation-component')
 
 <script type="text/javascript" src="{{ elixir("js/all.js") }}"></script>

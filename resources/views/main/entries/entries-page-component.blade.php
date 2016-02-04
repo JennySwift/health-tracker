@@ -14,15 +14,21 @@
     </div>
 
     <div id="entries">
-        <menu-entries
-            :date="date"
-        >
-        </menu-entries>
 
         <div>
-            <new-exercise-entry>
+            <new-menu-entry
+                :date="date"
+            >
+            </new-menu-entry>
 
-            </new-exercise-entry>
+            <menu-entries
+                :date="date"
+            >
+            </menu-entries>
+        </div>
+
+        <div>
+            {{--<new-exercise-entry></new-exercise-entry>--}}
 
             <exercise-entries
                     :date="date"

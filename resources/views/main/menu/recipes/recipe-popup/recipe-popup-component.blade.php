@@ -20,14 +20,14 @@
             </div>
 
             <h3>Add ingredient</h3>
-            <new-item-with-autocomplete
+            <autocomplete
                 :selected-recipe.sync="selectedRecipe"
                 :insert-item-function="addIngredientToRecipe"
                 show-description-field="true"
                 url="/api/foods"
                 autocomplete-field="food"
             >
-            </new-item-with-autocomplete>
+            </autocomplete>
             @include('main.menu.recipes.recipe-popup.ingredients')
             @include('main.menu.recipes.recipe-popup.steps')
             @include('main.menu.recipes.recipe-popup.tags')
