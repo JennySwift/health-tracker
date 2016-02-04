@@ -158,7 +158,7 @@ var EntriesPage = Vue.component('entries-page', {
                 that.getWeightForTheDay();
                 that.getCalorieInfoForTheDay();
             });
-            $(document).on('menu-entry-added', function (event) {
+            $(document).on('menu-entry-added, menu-entry-deleted', function (event) {
                 that.getCalorieInfoForTheDay();
             });
         },

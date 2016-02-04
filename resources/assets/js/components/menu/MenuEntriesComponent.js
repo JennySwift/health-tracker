@@ -21,10 +21,9 @@ var MenuEntriesComponent = Vue.component('menu-entries', {
             if (confirm("Are you sure?")) {
                 $.event.trigger('show-loading');
                 this.$http.delete('/api/menuEntries/' + entry.id, function (response) {
-                    //Todo: no need to get all the entries here.
-                    // Just remove the one that was deleted, while still fetching the other info such as calories for the day
-                    $.event.trigger('get-entries');
+                    this.menuEntries = _.without(this.menuEntries, entry);
                     $.event.trigger('provide-feedback', ['MenuEntry deleted', 'success']);
+                    $.event.trigger('menu-entry-deleted');
                     $.event.trigger('hide-loading');
                 })
                 .error(function (response) {
