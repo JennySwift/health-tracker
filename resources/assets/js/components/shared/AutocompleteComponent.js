@@ -82,6 +82,7 @@ var Autocomplete = Vue.component('autocomplete', {
                     $("#" + that.idToFocusAfterAutocomplete).focus();
                 }, 100);
             }
+            this.$dispatch('option-chosen', this.chosenOption);
         },
 
         /**

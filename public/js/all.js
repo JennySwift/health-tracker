@@ -23207,8 +23207,6 @@ var NewMenuEntry = Vue.component('new-menu-entry', {
     components: {},
     methods: {
 
-        //when autocomplete changes, this.newIngredient.unit = this.newIngredient[this.autocompleteField].defaultUnit.data;
-
         /**
          *
          */
@@ -23291,6 +23289,12 @@ var NewMenuEntry = Vue.component('new-menu-entry', {
     props: [
         'date'
     ],
+    events: {
+        'option-chosen': function (option) {
+            this.newIngredient.food = option;
+            this.newIngredient.unit = option.defaultUnit.data;
+        }
+    },
     ready: function () {
 
     }
@@ -25505,6 +25509,7 @@ var Autocomplete = Vue.component('autocomplete', {
                     $("#" + that.idToFocusAfterAutocomplete).focus();
                 }, 100);
             }
+            this.$dispatch('option-chosen', this.chosenOption);
         },
 
         /**
