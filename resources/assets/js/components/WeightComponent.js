@@ -5,6 +5,7 @@ var Weight = Vue.component('weight', {
             weight: weight,
             editingWeight: false,
             addingNewWeight: false,
+            newWeight: {}
         };
     },
     components: {},
@@ -17,35 +18,56 @@ var Weight = Vue.component('weight', {
 
         /**
          *
-         * @param keycode
          */
-        insertOrUpdateWeight: function (keycode) {
-            if (keycode === 13) {
-                this.insertWeight();
+        showNewWeightOrEditWeightFields: function () {
+            if (this.weight.id) {
+                this.showEditWeightFields();
+            }
+            else {
+                this.showNewWeightFields();
             }
         },
 
         /**
-         *
-         */
+        *
+        */
         insertWeight: function () {
+            $.event.trigger('show-loading');
+            var data = {
+                date: this.date.sql,
+                weight: this.newWeight.weight
+            };
+
+            this.$http.post('/api/weights', data, function (response) {
+                this.weight = response;
+                this.addingNewWeight = false;
+                $.event.trigger('provide-feedback', ['Weight created', 'success']);
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
+        },
+
+        /**
+        *
+        */
+        updateWeight: function () {
             $.event.trigger('show-loading');
 
             var data = {
-                date: this.date.sql,
-                weight: $("#weight").val()
+                weight: this.weight.weight
             };
 
-            this.$http.post('insert/weight', data, function (response) {
-                    this.weight = response;
-                    this.editWeight = false;
-                    $("#weight").val("");
-                    $.event.trigger('provide-feedback', ['Weight created', 'success']);
-                    $.event.trigger('hide-loading');
-                })
-                .error(function (response) {
-                    this.handleResponseError(response);
-                });
+            this.$http.put('/api/weights/' + this.weight.id, data, function (response) {
+                this.weight = response;
+                this.editingWeight = false;
+                $.event.trigger('provide-feedback', ['Weight updated', 'success']);
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
         },
 
         /**
@@ -59,8 +81,9 @@ var Weight = Vue.component('weight', {
         /**
          *
          */
-        editWeight: function () {
-            this.editWeight = true;
+        showEditWeightFields: function () {
+            this.editingWeight = true;
+            this.addingNewWeight = false;
             setTimeout(function () {
                 $("#weight").focus();
             }, 500);
