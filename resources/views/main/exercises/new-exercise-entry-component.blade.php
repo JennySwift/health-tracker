@@ -26,9 +26,6 @@
 
         <div class="form-group">
             <label for="new-ingredient-unit-name">Unit</label>
-            
-            <pre>@{{$data.units[0] | json}}</pre>
-            <pre>@{{$data.newEntry.unit | json}}</pre>
 
             <select
                     v-model="newEntry.unit"

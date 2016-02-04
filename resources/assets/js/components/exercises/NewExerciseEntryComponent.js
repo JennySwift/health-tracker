@@ -36,11 +36,12 @@ var NewExerciseEntry = Vue.component('new-exercise-entry', {
                 date: this.date.sql,
                 exercise_id: this.newEntry.id,
                 quantity: this.newEntry.quantity,
-                unit_id: this.newEntry.unit_id
+                unit_id: this.newEntry.unit.id
             };
 
             this.$http.post('/api/exerciseEntries', data, function (response) {
                     //this.exerciseEntries = response;
+                    $.event.trigger('exercise-entry-added', [response]);
                     $.event.trigger('provide-feedback', ['Entry created', 'success']);
                     $.event.trigger('hide-loading');
                 })

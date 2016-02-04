@@ -114,6 +114,10 @@ var ExerciseEntries = Vue.component('exercise-entries', {
             $(document).on('date-changed', function (event) {
                 that.getEntriesForTheDay();
             });
+            $(document).on('exercise-entry-added', function (event, data) {
+                //Todo: all the entries I think are actually in the data (unnecessarily)
+                that.getEntriesForTheDay();
+            });
             /**
              * For updating the exercise entries from the
              * series controller on the series page
