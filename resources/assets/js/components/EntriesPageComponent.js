@@ -137,7 +137,7 @@ var EntriesPage = Vue.component('entries-page', {
             $.event.trigger('show-loading');
             this.$http.get('api/calories/' + this.date.sql, function (response) {
                     this.calories.day = response.forTheDay;
-                    this.calories.week_avg = response.averageFor7Days;
+                    this.calories.averageFor7Days = response.averageFor7Days;
                     $.event.trigger('hide-loading');
                 })
                 .error(function (response) {
