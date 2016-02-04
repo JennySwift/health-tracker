@@ -2,14 +2,14 @@
 
 <div>
     <div class="form-group">
-        <label for="new-ingredient-food-name">@{{ autocompleteField | capitalize }}</label>
+        <label :for="autocompleteFieldId">@{{ autocompleteField | capitalize }}</label>
         <input
                 v-model="chosenOption.name"
                 v-on:keyup="respondToKeyup($event.keyCode)"
                 v-on:blur="showDropdown = false"
                 type="text"
-                id="new-ingredient-food-name"
-                name="new-ingredient-food-name"
+                :id="autocompleteFieldId"
+                :name="autocompleteFieldId"
                 placeholder="food"
                 class="form-control"
         >

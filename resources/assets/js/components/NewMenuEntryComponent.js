@@ -21,29 +21,29 @@ var NewMenuEntry = Vue.component('new-menu-entry', {
         /**
          *
          */
-        insertMenuEntry: function (ingredient) {
+        insertMenuEntry: function () {
             $.event.trigger('show-loading');
             var data = {
                 date: this.date.sql,
-                food_id: ingredient.food.id,
-                unit_id: ingredient.unit.id,
-                quantity: ingredient.quantity,
+                food_id: this.newIngredient.food.id,
+                unit_id: this.newIngredient.unit.id,
+                quantity: this.newIngredient.quantity,
             };
 
             $.event.trigger('get-entries');
 
-            if (this.temporaryRecipePopup.contents) {
-                this.temporaryRecipePopup.contents.length = 0;
-            }
+            //if (this.temporaryRecipePopup.contents) {
+            //    this.temporaryRecipePopup.contents.length = 0;
+            //}
 
-            $("#menu").val("").focus();
+            $("#new-menu-entry-food").focus();
 
             this.$http.post('/api/menuEntries', data, function (response) {
-                this.menuEntries.push(response);
                 this.newIngredient.description = '';
                 this.newIngredient.quantity = '';
                 $("#new-ingredient-food-name").focus();
                 $.event.trigger('provide-feedback', ['Menu entry created', 'success']);
+                $.event.trigger('menu-entry-added', [response]);
                 $.event.trigger('hide-loading');
             })
             .error(function (response) {

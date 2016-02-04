@@ -127,10 +127,12 @@ var MenuEntriesComponent = Vue.component('menu-entries', {
          */
         listen: function () {
             var that = this;
-            //$(document).on('get-food-entries', function (event) {
-            //    $.event.trigger('show-loading');
-            //    that.getEntriesForTheDay();
-            //});
+            $(document).on('menu-entry-added', function (event, entry) {
+                $.event.trigger('show-loading');
+                if (entry.date === that.date.sql) {
+                    that.menuEntries.push(entry)
+                }
+            });
             $(document).on('date-changed', function (event) {
                 that.getEntriesForTheDay();
             });

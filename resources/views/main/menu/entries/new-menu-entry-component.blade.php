@@ -8,6 +8,7 @@
                     url="/api/foods"
                     autocomplete-field="food"
                     id-to-focus-after-autocomplete="new-ingredient-quantity"
+                    autocomplete-field-id="new-menu-entry-food"
             >
             </autocomplete>
 
@@ -15,7 +16,7 @@
                 <label for="new-ingredient-quantity">Quantity</label>
                 <input
                     v-model="newIngredient.quantity"
-                    v-on:keyup.13="insertItem()"
+                    v-on:keyup.13="insertMenuEntry()"
                     type="text"
                     id="new-ingredient-quantity"
                     name="new-ingredient-quantity"
@@ -29,7 +30,7 @@
 
                 <select
                     v-model="newIngredient.unit"
-                    v-on:keyup.13="insertItem()"
+                    v-on:keyup.13="insertMenuEntry()"
                     id="new-ingredient-unit-name"
                     class="form-control"
                 >
@@ -46,7 +47,7 @@
                 <label for="new-ingredient-description">Description</label>
                 <input
                     v-model="newIngredient.description"
-                    v-on:keyup.13="insertItem()"
+                    v-on:keyup.13="insertMenuEntry()"
                     type="text"
                     id="new-ingredient-description"
                     name="new-ingredient-description"
