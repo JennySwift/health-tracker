@@ -1,9 +1,9 @@
-<script id="new-menu-entry-template" type="x-template">
+<script id="new-food-entry-template" type="x-template">
 
     <div class="margin-bottom">
 
         <autocomplete
-                :insert-item-function="insertMenuEntry"
+                :insert-item-function="addIngredientToRecipe"
                 url="/api/foods"
                 autocomplete-field="food"
                 id-to-focus-after-autocomplete="new-ingredient-quantity"
@@ -15,7 +15,7 @@
             <label for="new-ingredient-quantity">Quantity</label>
             <input
                     v-model="newIngredient.quantity"
-                    v-on:keyup.13="insertMenuEntry()"
+                    v-on:keyup.13="addIngredientToRecipe()"
                     type="text"
                     id="new-ingredient-quantity"
                     name="new-ingredient-quantity"
@@ -29,7 +29,7 @@
 
             <select
                     v-model="newIngredient.unit"
-                    v-on:keyup.13="insertMenuEntry()"
+                    v-on:keyup.13="addIngredientToRecipe()"
                     id="new-ingredient-unit-name"
                     class="form-control"
             >
@@ -42,6 +42,18 @@
             </select>
         </div>
 
+        <div class="form-group">
+            <label for="new-ingredient-description">Description</label>
+            <input
+                    v-model="newIngredient.description"
+                    v-on:keyup.13="addIngredientToRecipe()"
+                    type="text"
+                    id="new-ingredient-description"
+                    name="new-ingredient-description"
+                    placeholder="description"
+                    class="form-control"
+            >
+        </div>
     </div>
 
 </script>

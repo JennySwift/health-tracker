@@ -38,6 +38,7 @@
 
 {{--Shared--}}
 @include('main.menu.entries.new-menu-entry-component')
+@include('main.menu.entries.new-food-entry-component')
 @include('main.shared.feedback-component')
 @include('main.shared.loading-component')
 @include('main.shared.autocomplete-component')
