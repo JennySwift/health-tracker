@@ -1,11 +1,11 @@
-@extends('templates.auth.master')
+@extends('auth.master')
 
 @section('content')
     <div id="login">
         <h1>Login</h1>
         <div class="flex">
-            @include('templates.auth.errors')
-            @include('templates.auth.login-form')
+            @include('auth.errors')
+            @include('auth.login-form')
         </div>
     </div>
 

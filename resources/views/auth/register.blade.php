@@ -1,4 +1,4 @@
-@extends('templates.auth.master')
+@extends('auth.master')
 
 @section('content')
     <div id="register">
@@ -20,8 +20,8 @@
         </div>
 
         <div class="flex">
-            @include('templates.auth.errors')
-            @include('templates.auth.register-form')
+            @include('auth.errors')
+            @include('auth.register-form')
         </div>
     </div>
 @endsection

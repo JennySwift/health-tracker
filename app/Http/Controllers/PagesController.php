@@ -78,7 +78,7 @@ class PagesController extends Controller
             "calorieAverageFor7Days" => $this->caloriesRepository->getCaloriesFor7Days($date)
         ]);
 
-        return view('pages.entries.entries-page');
+        return view('main.home-page');
     }
 
     /**

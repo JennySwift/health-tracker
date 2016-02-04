@@ -17,7 +17,7 @@ return [
      * Why wouldn't my commented attempt work here? (See views/exercises.php.)
      * The only way I got it to work was to use a blade include.
      */
-    'bind_js_vars_to_this_view' => 'templates.shared.footer',
+    'bind_js_vars_to_this_view' => 'main.shared.footer.footer',
     // 'bind_js_vars_to_this_view' => base_path() . '/resources/views/footer.blade.php',
 
     /*
