@@ -151,13 +151,14 @@ var EntriesPage = Vue.component('entries-page', {
         listen: function () {
             var that = this;
             $(document).on('get-entries', function (event) {
-                $.event.trigger('show-loading');
                 that.getWeightForTheDay();
                 that.getCalorieInfoForTheDay();
             });
             $(document).on('date-changed', function (event) {
-                $.event.trigger('show-loading');
                 that.getWeightForTheDay();
+                that.getCalorieInfoForTheDay();
+            });
+            $(document).on('menu-entry-added', function (event) {
                 that.getCalorieInfoForTheDay();
             });
         },
