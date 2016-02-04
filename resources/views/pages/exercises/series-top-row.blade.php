@@ -32,7 +32,13 @@
     >
     </new-series>
 
-    <new-exercise></new-exercise>
+    <new-exercise
+        :show-new-exercise-fields.sync="showNewExerciseFields"
+        :programs="programs"
+        :exercise-series="exerciseSeries"
+        :units="units"
+    >
+    </new-exercise>
 
     <div class="filters">
         <input v-model="priorityFilter" type="text" placeholder="filter by priority">

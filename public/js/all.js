@@ -24495,10 +24495,14 @@ var NewExercise = Vue.component('new-exercise', {
             var data = ExercisesRepository.setData(this.newExercise);
 
             this.$http.post('/api/exercises', data, function (response) {
+                if (this.exercises) {
+                    //If adding new exercise from the series page,
+                    //this.exercises isn't specified
                     this.exercises.push(response);
-                    $.event.trigger('provide-feedback', ['Exercise created', 'success']);
-                    this.showLoading = false;
-                    $.event.trigger('hide-loading');
+                }
+
+                $.event.trigger('provide-feedback', ['Exercise created', 'success']);
+                $.event.trigger('hide-loading');
                 })
                 .error(function (response) {
                     this.handleResponseError(response);
@@ -25541,6 +25545,7 @@ var SeriesPage = Vue.component('series-page', {
             exerciseSeriesHistory: [],
             priorityFilter: 1,
             showNewSeriesFields: false,
+            showNewExerciseFields: false,
             selectedSeries: {
                 exercises: {
                     data: []

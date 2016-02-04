@@ -7,6 +7,7 @@ var SeriesPage = Vue.component('series-page', {
             exerciseSeriesHistory: [],
             priorityFilter: 1,
             showNewSeriesFields: false,
+            showNewExerciseFields: false,
             selectedSeries: {
                 exercises: {
                     data: []
