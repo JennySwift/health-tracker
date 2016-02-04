@@ -3,6 +3,7 @@
 {{--Entries--}}
 @include('main.entries.entries-page-component')
 @include('main.menu.entries.menu-entries-component')
+@include('main.entries.weight-component')
 
 {{--Journal--}}
 @include('main.journal.journal-page-component')

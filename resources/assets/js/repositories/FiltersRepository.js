@@ -21,5 +21,21 @@ var FiltersRepository = {
         }
 
         return hours + ':' + minutes;
+    },
+
+    /**
+     *
+     * @param number
+     * @param howManyDecimals
+     * @returns {number}
+     */
+    roundNumber: function (number, howManyDecimals) {
+        if (!howManyDecimals) {
+            return Math.round(number);
+        }
+        else if (howManyDecimals === 'one') {
+            var multiplyAndDivideBy = 10;
+            return Math.round(number * multiplyAndDivideBy) / multiplyAndDivideBy;
+        }
     }
 };

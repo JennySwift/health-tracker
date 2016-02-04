@@ -2,7 +2,7 @@ var RecipeTags = Vue.component('recipe-tags', {
     template: '#recipe-tags-template',
     data: function () {
         return {
-            newTag: {},
+            newTag: {}
         };
     },
     components: {},

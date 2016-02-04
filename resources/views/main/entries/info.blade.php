@@ -10,28 +10,10 @@
 			<span class="badge">@{{ calories.averageFor7Days | roundNumber }}</span>
 		</li>
 
-		<li
-			v-show="edit_weight !== true"
-			v-on:click="editWeight()"
-			class="list-group-item pointer"
+		<weight
+			:date="date"
 		>
-			<span>Today's weight: </span>
-			<span
-				v-if="weight"
-				class="badge"
-			>
-				@{{ weight.weight | roundNumber 'one' }}
-			</span>
-		</li>
-
-		<li v-show="editWeight === true" class="list-group-item">
-			<input
-				v-on:keyup="insertOrUpdateWeight($event.keyCode)"
-				type="number"
-				placeholder="enter your weight"
-				id="weight"
-			>
-		</li>
+		</weight>
 	</ul>
 
 </div>
