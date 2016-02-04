@@ -46,7 +46,6 @@
                                         <li>
                                             <a
                                                 v-on:click="getExercisesInSeries(series)"
-                                                {{--href="#"--}}
                                             >
                                                 Exercises
                                             </a>
@@ -54,7 +53,6 @@
                                         <li>
                                             <a
                                                 v-on:click="getExerciseSeriesHistory(series)"
-                                                {{--href="#"--}}
                                             >
                                                 History
                                             </a>
@@ -62,7 +60,6 @@
                                         <li>
                                             <a
                                                 v-on:click="showExerciseSeriesPopup(series)"
-                                                {{--href="#"--}}
                                             >
                                                 Edit
                                             </a>

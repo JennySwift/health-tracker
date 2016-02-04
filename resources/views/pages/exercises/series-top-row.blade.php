@@ -9,7 +9,6 @@
                 <li>
                     <a
                         v-on:click="showNewSeriesFields = true;showNewExerciseFields = false"
-                        {{--href="#"--}}
                     >
                         Series
                     </a>
@@ -17,7 +16,6 @@
                 <li>
                     <a
                         v-on:click="showNewExerciseFields = true;showNewSeriesFields = false"
-                        {{--href="#"--}}
                     >
                         Exercise
                     </a>
@@ -49,7 +47,13 @@
 <div>
     <button v-on:click="showExerciseEntryInputs = !showExerciseEntryInputs" class="btn btn-sm btn-success">Add manual entry</button>
     <div v-show="showExerciseEntryInputs">
-        @include('pages.entries.exercise-entry-inputs')
+        <new-item-with-autocomplete
+                {{--:selected-recipe.sync="selectedRecipe"--}}
+                :insert-item-function="insertExerciseEntry"
+                url="/api/exercises"
+                autocomplete-field="exercise"
+        >
+        </new-item-with-autocomplete>
     </div>
 
     <exercise-entries

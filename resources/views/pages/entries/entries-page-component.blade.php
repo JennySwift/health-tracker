@@ -20,13 +20,9 @@
         </menu-entries>
 
         <div>
-            <new-item-with-autocomplete
-                    {{--:selected-recipe.sync="selectedRecipe"--}}
-                    :insert-item-function="insertExerciseEntry"
-                    url="/api/exercises"
-                    autocomplete-field="exercise"
-            >
-            </new-item-with-autocomplete>
+            <new-exercise-entry>
+
+            </new-exercise-entry>
 
             <exercise-entries
                     :date="date"

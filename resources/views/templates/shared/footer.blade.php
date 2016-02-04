@@ -8,6 +8,8 @@
 @include('pages.entries.entries-page-component')
 @include('pages.entries.menu-entries-component')
 @include('pages.entries.exercise-entries-component')
+@include('pages.entries.new-exercise-entry-component')
+@include('pages.entries.popups.specific-exercise-entries-popup-component')
 @include('pages.journal.journal-page-component')
 @include('pages.menu.foods.foods-page-component')
 @include('pages.menu.foods.food-units-page-component')
