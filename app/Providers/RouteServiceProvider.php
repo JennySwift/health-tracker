@@ -102,9 +102,19 @@ class RouteServiceProvider extends ServiceProvider {
             return Activity::forCurrentUser()->findOrFail($id);
         });
 
-        Route::bind('weights', function($id)
+        Route::bind('weights', function($idOrDate)
         {
-            return Weight::forCurrentUser()->findOrFail($id);
+            if (strrpos($idOrDate, '-')) {
+                //parameter is the date of the entry
+                $weight = Weight::forCurrentUser()
+                    ->where('date', $idOrDate)
+                    ->first();
+            }
+            else {
+                //parameter is the id of the entry
+                $weight = Weight::forCurrentUser()->findOrFail($idOrDate);
+            }
+            return $weight;
         });
 
         /**

@@ -12,7 +12,7 @@ class WeightsTest extends TestCase {
     /**
      * @test
      */
-    public function it_can_show_a_weight_entry()
+    public function it_can_show_a_weight_entry_by_date()
     {
         $this->logInUser();
 
@@ -20,14 +20,36 @@ class WeightsTest extends TestCase {
 
         $response = $this->call('GET', '/api/weights/' . $date);
         $content = json_decode($response->getContent(), true);
+        dd($content);
 
-        $this->assertArrayHasKey('id', $content);
-        $this->assertArrayHasKey('date', $content);
-        $this->assertArrayHasKey('weight', $content);
+        $this->checkWeightKeysExist($content);
 
         $this->assertEquals(1, $content['id']);
         $this->assertEquals($date, $content['date']);
         $this->assertEquals('50.0', $content['weight']);
+
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+
+    }
+
+    /**
+     * @test
+     */
+    public function it_has_the_correct_response_if_the_user_does_not_have_a_weight_entry_on_the_specified_date()
+    {
+        $this->logInUser();
+
+        $date = Carbon::tomorrow()->format('Y-m-d');
+
+        $response = $this->call('GET', '/api/weights/' . $date);
+        $content = json_decode($response->getContent(), true);
+//        dd($content);
+
+        $this->checkWeightKeysExist($content);
+
+        $this->assertNull($content['weight']);
+        $this->assertNull($content['id']);
+        $this->assertNull($content['date']);
 
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
 

@@ -8,10 +8,16 @@
     >
         <span>Today's weight: </span>
 			<span
-                v-if="weight"
+                v-if="weight.weight"
                 class="badge"
             >
 				@{{ weight.weight | roundNumber 'one' }}
+			</span>
+            <span
+                v-if="!weight.weight"
+                class="badge"
+            >
+				-
 			</span>
     </li>
 

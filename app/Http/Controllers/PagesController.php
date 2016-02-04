@@ -70,8 +70,6 @@ class PagesController extends Controller
             )['data'],
             "menuEntries" => $this->menuEntriesRepository->getEntriesForTheDay($date),
             "foodUnits" => $this->unitsRepository->getFoodUnits(),
-
-            "weight" => $weightsRepository->getWeightForTheDay($date),
             "caloriesForTheDay" => $this->caloriesRepository->getCaloriesForDay($date),
             "calorieAverageFor7Days" => $this->caloriesRepository->getCaloriesFor7Days($date)
         ]);

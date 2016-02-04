@@ -2,7 +2,7 @@ var Weight = Vue.component('weight', {
     template: '#weight-template',
     data: function () {
         return {
-            weight: weight,
+            weight: {},
             editingWeight: false,
             addingNewWeight: false,
             newWeight: {}
@@ -130,6 +130,7 @@ var Weight = Vue.component('weight', {
     ],
     ready: function () {
         $("#weight").val("");
+        this.getWeightForTheDay();
         this.listen();
     }
 });

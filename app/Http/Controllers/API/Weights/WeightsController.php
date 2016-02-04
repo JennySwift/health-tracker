@@ -28,14 +28,21 @@ class WeightsController extends Controller
     {
         $this->weightsRepository = $weightsRepository;
     }
+
     /**
      * Get the user's weight for the day
-     * @param $date
-     * @return mixed
+     * If the user does not have a weight entry for the day,
+     * all fields will be null
+     * GET /api/weights/{weights}
+     * @param Weight $weight
+     * @return Response
      */
-    public function show($date)
+    public function show(Weight $weight)
     {
-        return $this->weightsRepository->getWeightForTheDay($date);
+        if ($weight) {
+            $weight = $this->transform($this->createItem($weight, new WeightTransformer))['data'];
+            return response($weight, Response::HTTP_OK);
+        }
     }
 
     /**
