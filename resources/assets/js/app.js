@@ -70,6 +70,9 @@ router.map({
     '/activities': {
         component: ActivitiesPage
     },
+    '/graphs': {
+        component: GraphsPage
+    },
 });
 
 router.start(App, 'body');

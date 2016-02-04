@@ -15,6 +15,7 @@
 @include('pages.menu.foods.food-units-page-component')
 @include('pages.menu.foods.popups.food-popup-component')
 @include('pages.timers.timers-page-component')
+@include('pages.timers.graphs-page-component')
 @include('pages.timers.activities-page-component')
 @include('pages.exercises.series-page-component')
 @include('pages.exercises.exercises-page-component')
