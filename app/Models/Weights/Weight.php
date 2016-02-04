@@ -12,6 +12,11 @@ class Weight extends Model {
 
     use OwnedByUser;
 
+	/**
+	 * @var array
+     */
+	protected $fillable = ['date', 'weight'];
+
     /**
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

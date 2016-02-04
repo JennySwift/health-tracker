@@ -10,6 +10,7 @@ use App\Models\Tags\Tag;
 use App\Models\Timers\Activity;
 use App\Models\Timers\Timer;
 use App\Models\Units\Unit;
+use App\Models\Weights\Weight;
 use Carbon\Carbon;
 use Illuminate\Routing\Router;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
@@ -99,6 +100,11 @@ class RouteServiceProvider extends ServiceProvider {
         Route::bind('activities', function($id)
         {
             return Activity::forCurrentUser()->findOrFail($id);
+        });
+
+        Route::bind('weights', function($id)
+        {
+            return Weight::forCurrentUser()->findOrFail($id);
         });
 
         /**

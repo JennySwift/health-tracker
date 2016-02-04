@@ -37,49 +37,55 @@ class WeightsTest extends TestCase {
      * @test
      * @return void
      */
-//    public function it_can_add_a_weight_entry()
-//    {
-//        $this->logInUser();
-//
-//        $unit = [
-//            'name' => 'kangaroo'
-//        ];
-//
-//        $response = $this->call('POST', '/api/foodUnits', $unit);
-//        $content = json_decode($response->getContent(), true)['data'];
-//
-//        $this->assertArrayHasKey('id', $content);
-//        $this->assertArrayHasKey('name', $content);
-//        $this->assertArrayHasKey('for', $content);
-//
-//        $this->assertContains($unit['name'], $content);
-//
-//        $this->assertEquals(Response::HTTP_CREATED, $response->getStatusCode());
-//    }
+    public function it_can_create_a_weight_entry()
+    {
+        DB::beginTransaction();
+        $this->logInUser();
+
+        $weight = [
+            'weight' => 60,
+            'date' => '2010-05-02'
+        ];
+
+        $response = $this->call('POST', '/api/weights', $weight);
+        $content = json_decode($response->getContent(), true);
+//      dd($content);
+
+        $this->checkWeightKeysExist($content);
+
+        $this->assertEquals(60, $content['weight']);
+        $this->assertEquals('2010-05-02', $content['date']);
+
+        $this->assertEquals(Response::HTTP_CREATED, $response->getStatusCode());
+
+        DB::rollBack();
+    }
 
     /**
      * @test
      * @return void
      */
-//    public function it_can_update_a_weight_entry()
-//    {
-//        $this->logInUser();
-//
-//        $unit = Unit::forCurrentUser()->where('for', 'food')->first();
-//
-//        $response = $this->call('PUT', '/api/foodUnits/'.$unit->id, [
-//            'name' => 'numbat'
-//        ]);
-//        $content = json_decode($response->getContent(), true)['data'];
-//
-//        $this->assertArrayHasKey('id', $content);
-//        $this->assertArrayHasKey('name', $content);
-//        $this->assertArrayHasKey('for', $content);
-//
-//        $this->assertEquals('numbat', $content['name']);
-//
-//        $this->assertEquals(200, $response->getStatusCode());
-//    }
+    public function it_can_update_a_weight_entry()
+    {
+        DB::beginTransaction();
+        $this->logInUser();
+
+        $weight = Weight::forCurrentUser()->first();
+
+        $response = $this->call('PUT', '/api/weights/'.$weight->id, [
+            'weight' => 3.8
+        ]);
+        $content = json_decode($response->getContent(), true);
+//        dd($content);
+
+        $this->checkWeightKeysExist($content);
+
+        $this->assertEquals(3.8, $content['weight']);
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        DB::rollBack();
+    }
 
     /**
      * @test

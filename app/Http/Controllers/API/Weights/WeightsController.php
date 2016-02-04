@@ -2,10 +2,13 @@
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
+use App\Http\Transformers\WeightTransformer;
+use App\Models\Weights\Weight;
 use App\Repositories\WeightsRepository;
 use Auth;
 use Debugbar;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 /**
  * Class WeightsController
@@ -36,18 +39,39 @@ class WeightsController extends Controller
     }
 
     /**
-     * This method is a good example of the S.O.L.I.D principles
-     * Todo: refactor into two separate methods
+     * POST /api/weights
      * @param Request $request
-     * @param WeightsRepository $weightsRepository
+     * @return Response
      */
-    public function insertOrUpdateWeight(Request $request, WeightsRepository $weightsRepository)
+    public function store(Request $request)
     {
-        $date = $request->get('date');
-        $weight = $request->get('weight');
+        $weight = new Weight($request->only([
+            'weight',
+            'date'
+        ]));
+        $weight->user()->associate(Auth::user());
+        $weight->save();
 
-        return $weightsRepository->insertOrUpdate($date, $weight);
-
+        $weight = $this->transform($this->createItem($weight, new WeightTransformer))['data'];
+        return response($weight, Response::HTTP_CREATED);
     }
 
+    /**
+    * UPDATE /api/weights/{weights}
+    * @param Request $request
+    * @param Weight $weight
+    * @return Response
+    */
+    public function update(Request $request, Weight $weight)
+    {
+        // Create an array with the new fields merged
+        $data = array_compare($weight->toArray(), $request->only([
+            'weight'
+        ]));
+
+        $weight->update($data);
+
+        $weight = $this->transform($this->createItem($weight, new WeightTransformer))['data'];
+        return response($weight, Response::HTTP_OK);
+    }
 }

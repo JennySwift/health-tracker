@@ -10,26 +10,6 @@ use Auth;
  */
 class WeightsRepository
 {
-
-    /**
-     *
-     * @param $date
-     * @param $weight
-     * @return int
-     */
-    public function insertOrUpdate($date, $weight)
-    {
-        if ($this->getWeight($date)) {
-            //This date already has a weight entry. We are updating, not inserting.
-            $this->updateWeight($date, $weight);
-        }
-        else {
-            //we are inserting
-            $this->insertWeight($date, $weight);
-        }
-        return $this->getWeight($date);
-    }
-
     /**
      *
      * @param $date
@@ -47,35 +27,4 @@ class WeightsRepository
 
         return null;
     }
-
-    /**
-     *
-     * @param $date
-     * @param $weight
-     * @return mixed
-     */
-    public function insertWeight($date, $weight)
-    {
-        return Weight::insert([
-            'date' => $date,
-            'weight' => $weight,
-            'user_id' => Auth::user()->id
-        ]);
-    }
-
-    /**
-     *
-     * @param $date
-     * @param $weight
-     * @return mixed
-     */
-    public function updateWeight($date, $weight)
-    {
-        return Weight::where('date', $date)
-              ->where('user_id', Auth::user()->id)
-              ->update([
-                'weight' => $weight
-              ]);
-    }
-
 }

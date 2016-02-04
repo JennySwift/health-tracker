@@ -151,6 +151,17 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
 
     /**
      *
+     * @param $weight
+     */
+    protected function checkWeightKeysExist($weight)
+    {
+        $this->assertArrayHasKey('id', $weight);
+        $this->assertArrayHasKey('date', $weight);
+        $this->assertArrayHasKey('weight', $weight);
+    }
+
+    /**
+     *
      * @param $ingredient
      */
     protected function checkIngredientKeysExist($ingredient)

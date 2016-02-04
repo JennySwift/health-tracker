@@ -19,8 +19,7 @@ Route::group(['namespace' => 'API', 'prefix' => 'api'], function () {
     Route::resource('calories', 'Calories\CaloriesController', ['only' => 'show']);
 
     //Weights
-    Route::post('insert/weight', 'Weights\WeightsController@insertOrUpdateWeight');
-    Route::resource('weights', 'Weights\WeightsController', ['only' => 'show']);
+    Route::resource('weights', 'Weights\WeightsController', ['only' => ['show', 'store', 'update']]);
 
     //Units
     Route::resource('foodUnits', 'Menu\FoodUnitsController', ['only' => ['index', 'store', 'update', 'destroy']]);
