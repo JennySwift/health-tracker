@@ -6,13 +6,32 @@
                 Add <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
-                <li><a v-on:click="showNewSeriesFields = true;showNewExerciseFields = false" href="#">Series</a></li>
-                <li><a v-on:click="showNewExerciseFields = true;showNewSeriesFields = false" href="#">Exercise</a></li>
+                <li>
+                    <a
+                        v-on:click="showNewSeriesFields = true;showNewExerciseFields = false"
+                        {{--href="#"--}}
+                    >
+                        Series
+                    </a>
+                </li>
+                <li>
+                    <a
+                        v-on:click="showNewExerciseFields = true;showNewSeriesFields = false"
+                        {{--href="#"--}}
+                    >
+                        Exercise
+                    </a>
+                </li>
             </ul>
         </div>
     </div>
 
-    @include('pages.exercises.new-series')
+    <new-series
+        :show-new-series-fields="showNewSeriesFields"
+        :exercise-series.sync="exerciseSeries"
+    >
+    </new-series>
+
     <new-exercise></new-exercise>
 
     <div class="filters">

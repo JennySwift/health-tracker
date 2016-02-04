@@ -7,6 +7,11 @@
             margin: 0 5px;
         }
     }
+    .dropdown-menu {
+        a {
+            cursor: pointer;
+        }
+    }
     .series-exercises-container {
         display: flex;
         justify-content: center;
@@ -19,9 +24,6 @@
             }
             .actions {
                 text-align: left;
-                a {
-                    cursor: pointer;
-                }
             }
         }
         #exercises-table {

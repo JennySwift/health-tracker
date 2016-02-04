@@ -17,6 +17,7 @@
 @include('pages.exercises.series-page-component')
 @include('pages.exercises.exercises-page-component')
 @include('pages.exercises.new-exercise-component')
+@include('pages.exercises.new-series-component')
 @include('pages.menu.recipes.recipes-page-component')
 @include('pages.menu.recipes.new-quick-recipe-component')
 @include('pages.menu.recipes.recipes-component')

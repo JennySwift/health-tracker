@@ -343,6 +343,9 @@ body.browser-height {
   #exercise-series .top-buttons > * {
     margin: 0 5px; }
 
+#exercise-series .dropdown-menu a {
+  cursor: pointer; }
+
 #exercise-series .series-exercises-container {
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -356,8 +359,6 @@ body.browser-height {
     cursor: pointer; }
   #exercise-series .series-exercises-container #series-table .actions {
     text-align: left; }
-    #exercise-series .series-exercises-container #series-table .actions a {
-      cursor: pointer; }
   #exercise-series .series-exercises-container #exercises-table td, #exercise-series .series-exercises-container #exercises-table th {
     text-align: left;
     padding: 10px 15px; }

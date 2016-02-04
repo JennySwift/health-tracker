@@ -7,8 +7,6 @@ var SeriesPage = Vue.component('series-page', {
             exerciseSeriesHistory: [],
             priorityFilter: 1,
             showNewSeriesFields: false,
-            newSeries: {},
-            newExercise: {},
             selectedSeries: {
                 exercises: {
                     data: []
@@ -67,27 +65,6 @@ var SeriesPage = Vue.component('series-page', {
                 this.selectedSeries = series;
                 this.exerciseSeriesHistory = response;
                 $.event.trigger('show-series-history-popup');
-                $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
-                this.handleResponseError(response);
-            });
-        },
-
-        /**
-        *
-        */
-        insertSeries: function () {
-            $.event.trigger('show-loading');
-            var data = {
-                name: this.newSeries.name
-            };
-
-            this.$http.post('/api/exerciseSeries', data, function (response) {
-                this.exerciseSeries.push(response.data);
-                $.event.trigger('provide-feedback', ['Series created', 'success']);
-                this.showLoading = false;
-                this.newSeries.name = '';
                 $.event.trigger('hide-loading');
             })
             .error(function (response) {
