@@ -65,7 +65,7 @@ var ExerciseEntries = Vue.component('exercise-entries', {
             $.event.trigger('show-loading');
             var data = {
                 date: this.date.sql,
-                exercise_id: exercise.id,
+                exercise_id: exercise.data.id,
                 exerciseSet: true
             };
 
