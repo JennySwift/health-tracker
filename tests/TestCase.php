@@ -109,6 +109,7 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
 
         $this->assertArrayHasKey('exercise', $entry);
 
+        $this->assertArrayHasKey('id', $entry);
         $this->assertArrayHasKey('sets', $entry);
         $this->assertArrayHasKey('total', $entry);
         $this->assertArrayHasKey('quantity', $entry);

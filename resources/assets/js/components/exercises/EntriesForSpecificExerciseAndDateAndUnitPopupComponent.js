@@ -40,13 +40,17 @@ var EntriesForSpecificExerciseAndDateAndUnitPopup = Vue.component('entries-for-s
             if (confirm("Are you sure?")) {
                 $.event.trigger('show-loading');
                 this.$http.delete('/api/exerciseEntries/' + entry.id, function (response) {
-                        this.entries = _.without(this.entries, entry);
-                        $.event.trigger('provide-feedback', ['Entry deleted', 'success']);
-                        $.event.trigger('hide-loading');
-                    })
-                    .error(function (response) {
-                        this.handleResponseError(response);
-                    });
+                    this.entries = _.without(this.entries, entry);
+                    //This might be unnecessary to do each time, and it fetches a lot
+                    //of data for just deleting one entry.
+                    //Perhaps do it when the popup closes instead?
+                    $.event.trigger('get-exercise-entries-for-the-day');
+                    $.event.trigger('provide-feedback', ['Entry deleted', 'success']);
+                    $.event.trigger('hide-loading');
+                })
+                .error(function (response) {
+                    this.handleResponseError(response);
+                });
             }
         },
 

@@ -39,6 +39,7 @@ class ExerciseEntryTransformer extends TransformerAbstract
     public function transform(Entry $entry)
     {
         $array = [
+            'id' => $entry->id,
             'date' => $entry->date,
             'daysAgo' => $entry->days_ago,
             'unit' => [
