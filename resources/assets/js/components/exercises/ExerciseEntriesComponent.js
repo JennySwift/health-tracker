@@ -2,7 +2,7 @@ var ExerciseEntries = Vue.component('exercise-entries', {
     template: '#exercise-entries-template',
     data: function () {
         return {
-            exerciseEntries: exerciseEntries,
+            exerciseEntries: [],
             showExerciseEntryInputs: false,
             selectedExercise: {
                 unit: {}
@@ -100,5 +100,6 @@ var ExerciseEntries = Vue.component('exercise-entries', {
     ],
     ready: function () {
         this.listen();
+        this.getEntriesForTheDay();
     }
 });

@@ -66,12 +66,6 @@ class PagesController extends Controller
         $date = Carbon::today()->format('Y-m-d');
 
         JavaScript::put([
-            "exerciseEntries" => transform(
-                createCollection(
-                    $this->exerciseEntriesRepository->getEntriesForTheDay($date),
-                    new ExerciseEntryTransformer
-                )
-            )['data'],
             "menuEntries" => $this->menuEntriesRepository->getEntriesForTheDay($date),
             "foodUnits" => $this->unitsRepository->getFoodUnits(),
             "caloriesForTheDay" => $this->caloriesRepository->getCaloriesForDay($date),
