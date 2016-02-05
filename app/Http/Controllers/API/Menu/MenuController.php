@@ -34,6 +34,7 @@ class MenuController extends Controller
     {
         $typing = '%' . $request->get('typing') . '%';
         $foods = $this->foods($typing);
+        //I didn't transform this because I only need the id and name
         $recipes = $this->recipes($typing)->toArray();
 
         $foods = $this->transform($this->createCollection($foods, new FoodTransformer), ['units'])['data'];
