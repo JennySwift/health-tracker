@@ -21,6 +21,12 @@ class MenuController extends Controller
      * @VP: I feel like I should transform the foods and recipes here,
      * to be consistent, but then there would be so much stuff I don't need.
      * (For example, I only need the name and id for the recipes.)
+     *
+     * So I did use transformers, but it's a bit of a mess,
+     * and I suppose there's a better way to write this code,
+     * since I'm adding the
+     * data attribute at the end just so it's consistent with
+     * my other autocomplete responses.
      * @param Request $request
      * @return mixed
      */
@@ -48,7 +54,13 @@ class MenuController extends Controller
             return strcmp($a["name"], $b["name"]);
         });
 
-        return response($menu, Response::HTTP_OK);
+        //So that for populating the autocomplete, there is a
+        //data attribute like the food and exercise autocomplete responses
+        $response = [
+            'data' => $menu
+        ];
+
+        return response($response, Response::HTTP_OK);
     }
 
     /**

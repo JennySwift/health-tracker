@@ -17,7 +17,7 @@ class MenuAutocompleteTest extends TestCase
         $this->logInUser();
 
         $response = $this->apiCall('GET', '/api/menu?typing=t');
-        $content = json_decode($response->getContent(), true);
+        $content = json_decode($response->getContent(), true)['data'];
 //        dd($content);
 
         //They should be in this order (fruit salad first, watermelon second)
