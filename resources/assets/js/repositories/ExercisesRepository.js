@@ -14,9 +14,15 @@ var ExercisesRepository = {
             default_quantity: exercise.defaultQuantity,
             target: exercise.target,
             program_id: exercise.program.id,
-            series_id: exercise.series.id,
-            default_unit_id: exercise.defaultUnit.data.id,
+            series_id: exercise.series.id
         };
+
+        if (exercise.defaultUnit.data) {
+            data.default_unit_id = exercise.defaultUnit.data.id;
+        }
+        else {
+            data.default_unit_id = exercise.defaultUnit.id;
+        }
 
         return data;
     },
