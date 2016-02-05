@@ -16,25 +16,25 @@
 
             <tr v-for="entry in exerciseEntries">
                 <td
-                        v-on:click="getSpecificExerciseEntries(entry)"
+                        v-on:click="getEntriesForSpecificExerciseAndDateAndUnit(entry)"
                         class="pointer"
                 >
                     @{{ entry.exercise.data.name }}
                 </td>
                 <td
-                        v-on:click="getSpecificExerciseEntries(entry)"
+                        v-on:click="getEntriesForSpecificExerciseAndDateAndUnit(entry)"
                         class="pointer"
                 >
                     @{{ entry.exercise.data.description }}
                 </td>
                 <td
-                        v-on:click="getSpecificExerciseEntries(entry)"
+                        v-on:click="getEntriesForSpecificExerciseAndDateAndUnit(entry)"
                         class="pointer"
                 >
                     @{{ entry.sets }}
                 </td>
                 <td
-                        v-on:click="getSpecificExerciseEntries(entry)"
+                        v-on:click="getEntriesForSpecificExerciseAndDateAndUnit(entry)"
                         class="pointer"
                 >
                     @{{ entry.total }} @{{ entry.unit.name }}

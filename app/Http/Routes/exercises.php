@@ -21,7 +21,7 @@ Route::resource('seriesEntries', 'Exercises\SeriesEntriesController', ['only' =>
  * Entries
  */
 //this one is more complicated
-Route::post('select/specificExerciseEntries', 'Exercises\ExerciseEntriesController@getSpecificExerciseEntries');
+Route::get('exerciseEntries/specificExerciseAndDateAndUnit', 'Exercises\ExerciseEntriesController@getEntriesForSpecificExerciseAndDateAndUnit');
 
 //Index method, passing the date as a parameter
 Route::get('exerciseEntries/{date}', ['as' => 'api.exerciseEntries.index', 'uses' => 'Exercises\ExerciseEntriesController@index']);

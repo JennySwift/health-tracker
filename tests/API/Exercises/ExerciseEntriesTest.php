@@ -63,6 +63,30 @@ class ExerciseEntriesTest extends TestCase {
      * @test
      * @return void
      */
+    public function it_gets_entries_for_a_specific_exercise_and_date_and_unit()
+    {
+        $this->logInUser();
+
+        $date = Carbon::today()->format('Y-m-d');
+        $response = $this->call('GET', '/api/exerciseEntries/specificExerciseAndDateAndUnit?exercise_id=1&exercise_unit_id=1&date=' . $date);
+        $content = json_decode($response->getContent(), true);
+//        dd($content);
+
+        $this->checkExerciseEntryKeysExist($content[0]);
+        
+        foreach ($content as $entry) {
+            $this->assertEquals($date, $entry['date']);
+            $this->assertEquals(1, $entry['unit']['id']);
+            $this->assertEquals(1, $entry['exercise']['data']['id']);
+        }
+
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    /**
+     * @test
+     * @return void
+     */
     public function it_can_add_a_new_exercise_entry()
     {
         $this->logInUser();

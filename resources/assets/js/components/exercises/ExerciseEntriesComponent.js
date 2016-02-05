@@ -39,16 +39,16 @@ var ExerciseEntries = Vue.component('exercise-entries', {
          * with a particular unit on a particular date.
          * @param entry
          */
-        getSpecificExerciseEntries: function (entry) {
+        getEntriesForSpecificExerciseAndDateAndUnit: function (entry) {
             $.event.trigger('show-loading');
 
             var data = {
                 date: this.date.sql,
-                exercise_id: entry.exercise.id,
+                exercise_id: entry.exercise.data.id,
                 exercise_unit_id: entry.unit.id
             };
 
-            this.$http.get('api/select/specificExerciseEntries', function (response) {
+            this.$http.get('api/exerciseEntries/specificExerciseAndDateAndUnit', data, function (response) {
                 this.showSpecificExerciseEntriesPopup = true;
                 this.selectedExercise = response;
                 $.event.trigger('hide-loading');

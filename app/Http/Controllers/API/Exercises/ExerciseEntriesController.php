@@ -57,7 +57,7 @@ class ExerciseEntriesController extends Controller
      * @param Request $request
      * @return array
      */
-    public function getSpecificExerciseEntries(Request $request)
+    public function getEntriesForSpecificExerciseAndDateAndUnit(Request $request)
     {
         $exercise = Exercise::find($request->get('exercise_id'));
         $entries = Entry::where('exercise_id', $exercise->id)
@@ -66,7 +66,7 @@ class ExerciseEntriesController extends Controller
             ->with('exercise')
             ->get();
 
-        return $entries;
+        return transform(createCollection($entries, new ExerciseEntryTransformer))['data'];
     }
 
     /**
