@@ -2,24 +2,22 @@
 
 	<div v-show="showPopup" v-on:click="closePopup($event)" class="popup-outer">
 
-		<div class="popup-inner">
+		<div v-if="entries[0] && entries[0].exercise" class="popup-inner">
 
-			<h1>hehe</h1>
+			<table class="table table-bordered">
+				<caption class="bg-blue">Entries for @{{ entries[0].exercise.data.name }} with @{{ entries[0].unit.name }} on @{{ date.typed }}</caption>
+				<tr>
+					<th>exercise</th>
+					<th>quantity</th>
+					<th>x</th>
+				</tr>
 
-			{{--<table class="table table-bordered">--}}
-				{{--<caption class="bg-blue">Entries for @{{ selectedExercise.name }} with @{{ selectedExercise.unit.name }} on @{{ date.typed }}</caption>--}}
-				{{--<tr>--}}
-					{{--<th>exercise</th>--}}
-					{{--<th>quantity</th>--}}
-					{{--<th>x</th>--}}
-				{{--</tr>--}}
-
-				{{--<tr v-for="entry in selectedExercise.entries">--}}
-					{{--<td>@{{ entry.exercise.name }}</td>--}}
-					{{--<td>@{{ entry.quantity }}</td>--}}
-					{{--<td><i v-on:click="deleteExerciseEntry(entry)" class="delete-item fa fa-times"></i></td>--}}
-				{{--</tr>--}}
-			{{--</table>--}}
+				<tr v-for="entry in entries">
+					<td>@{{ entry.exercise.data.name }}</td>
+					<td>@{{ entry.quantity }}</td>
+					<td><i v-on:click="deleteExerciseEntry(entry)" class="delete-item fa fa-times"></i></td>
+				</tr>
+			</table>
 
 		</div>
 

@@ -70,7 +70,7 @@ class ExerciseEntriesTest extends TestCase {
         $date = Carbon::today()->format('Y-m-d');
         $response = $this->call('GET', '/api/exerciseEntries/specificExerciseAndDateAndUnit?exercise_id=1&exercise_unit_id=1&date=' . $date);
         $content = json_decode($response->getContent(), true);
-//        dd($content);
+        dd($content);
 
         $this->checkExerciseEntryKeysExist($content[0]);
         

@@ -23255,7 +23255,7 @@ var EntriesForSpecificExerciseAndDateAndUnitPopup = Vue.component('entries-for-s
     data: function () {
         return {
             showPopup: false,
-            selectedExercise: {}
+            entries: {}
         };
     },
     components: {},
@@ -23276,7 +23276,7 @@ var EntriesForSpecificExerciseAndDateAndUnitPopup = Vue.component('entries-for-s
             };
 
             this.$http.get('api/exerciseEntries/specificExerciseAndDateAndUnit', data, function (response) {
-                    this.selectedExercise = response;
+                    this.entries = response;
                     this.showPopup = true;
                     $.event.trigger('hide-loading');
                 })
@@ -23292,7 +23292,7 @@ var EntriesForSpecificExerciseAndDateAndUnitPopup = Vue.component('entries-for-s
             if (confirm("Are you sure?")) {
                 $.event.trigger('show-loading');
                 this.$http.delete('/api/exerciseEntries/' + entry.id, function (response) {
-                        this.selectedExercise.entries = _.without(this.selectedExercise.entries, entry);
+                        this.entries = _.without(this.entries, entry);
                         $.event.trigger('provide-feedback', ['Entry deleted', 'success']);
                         $.event.trigger('hide-loading');
                     })
