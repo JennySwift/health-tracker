@@ -50,6 +50,7 @@ class MenuController extends Controller
         }
 
         //Sort by name and change the array indexes so they are ordered correctly, too
+        //(Having the indexes ordered correctly makes it easier to test the ordering is correct)
         usort($menu, function($a, $b) {
             return strcmp($a["name"], $b["name"]);
         });
