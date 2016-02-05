@@ -1,6 +1,7 @@
 <?php
 
 use App\User;
+use Carbon\Carbon;
 
 class TestCase extends Illuminate\Foundation\Testing\TestCase {
 
@@ -115,6 +116,15 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
         $this->assertArrayHasKey('quantity', $entry);
         $this->assertArrayHasKey('date', $entry);
         $this->assertArrayHasKey('daysAgo', $entry);
+        $this->assertArrayHasKey('createdAt', $entry);
+
+        $this->assertTrue(is_string($entry['createdAt']));
+        //Test 'createdAt' is in the correct format
+        /**
+         * @VP:
+         * Is there a nicer way to test this? Like $this->assertDateFormat()?
+         */
+        Carbon::createFromFormat('h:ia', $entry['createdAt']);
     }
 
     /**

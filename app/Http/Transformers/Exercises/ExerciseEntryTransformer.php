@@ -49,6 +49,7 @@ class ExerciseEntryTransformer extends TransformerAbstract
             'sets' => $entry->sets,
             'total' => $entry->total,
             'quantity' => $entry->quantity,
+            'createdAt' => $entry->created_at->format('h:ia')
         ];
 
         return $array;

@@ -9,12 +9,14 @@
 				<tr>
 					<th>exercise</th>
 					<th>quantity</th>
+					<th>created at</th>
 					<th>x</th>
 				</tr>
 
 				<tr v-for="entry in entries">
 					<td>@{{ entry.exercise.data.name }}</td>
 					<td>@{{ entry.quantity }}</td>
+					<td>@{{ entry.createdAt }}</td>
 					<td><i v-on:click="deleteExerciseEntry(entry)" class="delete-item fa fa-times"></i></td>
 				</tr>
 			</table>
