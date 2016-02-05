@@ -1,7 +1,10 @@
 <script id="exercise-entries-template" type="x-template">
 
 <div>
-    <specific-exercise-entries-popup></specific-exercise-entries-popup>
+    <entries-for-specific-exercise-and-date-and-unit-popup
+            :date="date"
+    >
+    </entries-for-specific-exercise-and-date-and-unit-popup>
 
     <div>
         <table class="table table-bordered">
@@ -16,25 +19,25 @@
 
             <tr v-for="entry in exerciseEntries">
                 <td
-                        v-on:click="getEntriesForSpecificExerciseAndDateAndUnit(entry)"
+                        v-on:click="showEntriesForSpecificExerciseAndDateAndUnitPopup(entry)"
                         class="pointer"
                 >
                     @{{ entry.exercise.data.name }}
                 </td>
                 <td
-                        v-on:click="getEntriesForSpecificExerciseAndDateAndUnit(entry)"
+                        v-on:click="showEntriesForSpecificExerciseAndDateAndUnitPopup(entry)"
                         class="pointer"
                 >
                     @{{ entry.exercise.data.description }}
                 </td>
                 <td
-                        v-on:click="getEntriesForSpecificExerciseAndDateAndUnit(entry)"
+                        v-on:click="showEntriesForSpecificExerciseAndDateAndUnitPopup(entry)"
                         class="pointer"
                 >
                     @{{ entry.sets }}
                 </td>
                 <td
-                        v-on:click="getEntriesForSpecificExerciseAndDateAndUnit(entry)"
+                        v-on:click="showEntriesForSpecificExerciseAndDateAndUnitPopup(entry)"
                         class="pointer"
                 >
                     @{{ entry.total }} @{{ entry.unit.name }}

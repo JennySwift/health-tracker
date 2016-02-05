@@ -7,7 +7,6 @@ var ExerciseEntries = Vue.component('exercise-entries', {
             selectedExercise: {
                 unit: {}
             },
-            showSpecificExerciseEntriesPopup: false,
         };
     },
     components: {},
@@ -15,9 +14,10 @@ var ExerciseEntries = Vue.component('exercise-entries', {
 
         /**
          *
+         * @param entry
          */
-        closeSpecificExerciseEntriesPopup: function () {
-            this.showSpecificExerciseEntriesPopup = false;
+        showEntriesForSpecificExerciseAndDateAndUnitPopup: function (entry) {
+            $.event.trigger('show-entries-for-specific-exercise-and-date-and-unit-popup', [entry]);
         },
 
         /**
@@ -27,30 +27,6 @@ var ExerciseEntries = Vue.component('exercise-entries', {
             $.event.trigger('show-loading');
             this.$http.get('/api/exerciseEntries/' + this.date.sql, function (response) {
                 this.exerciseEntries = response;
-                $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
-                this.handleResponseError(response);
-            });
-        },
-
-        /**
-         * Get all the the user's entries for a particular exercise
-         * with a particular unit on a particular date.
-         * @param entry
-         */
-        getEntriesForSpecificExerciseAndDateAndUnit: function (entry) {
-            $.event.trigger('show-loading');
-
-            var data = {
-                date: this.date.sql,
-                exercise_id: entry.exercise.data.id,
-                exercise_unit_id: entry.unit.id
-            };
-
-            this.$http.get('api/exerciseEntries/specificExerciseAndDateAndUnit', data, function (response) {
-                this.showSpecificExerciseEntriesPopup = true;
-                this.selectedExercise = response;
                 $.event.trigger('hide-loading');
             })
             .error(function (response) {
@@ -80,23 +56,6 @@ var ExerciseEntries = Vue.component('exercise-entries', {
             .error(function (response) {
                 this.handleResponseError(response);
             });
-        },
-
-        /**
-        *
-        */
-        deleteExerciseEntry: function (entry) {
-            if (confirm("Are you sure?")) {
-                $.event.trigger('show-loading');
-                this.$http.delete('/api/exerciseEntries/' + entry.id, function (response) {
-                    this.selectedExercise.entries = _.without(this.selectedExercise.entries, entry);
-                    $.event.trigger('provide-feedback', ['Entry deleted', 'success']);
-                    $.event.trigger('hide-loading');
-                })
-                .error(function (response) {
-                    this.handleResponseError(response);
-                });
-            }
         },
 
         /**

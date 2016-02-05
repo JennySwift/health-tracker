@@ -1,8 +1,10 @@
-<script id="specific-exercise-entries-popup-template" type="x-template">
+<script id="entries-for-specific-exercise-and-date-and-unit-popup-template" type="x-template">
 
 	<div v-show="showPopup" v-on:click="closePopup($event)" class="popup-outer">
 
 		<div class="popup-inner">
+
+			<h1>hehe</h1>
 
 			{{--<table class="table table-bordered">--}}
 				{{--<caption class="bg-blue">Entries for @{{ selectedExercise.name }} with @{{ selectedExercise.unit.name }} on @{{ date.typed }}</caption>--}}

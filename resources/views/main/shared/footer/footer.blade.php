@@ -25,7 +25,7 @@
 @include('main.exercises.series-exercises-component')
 @include('main.exercises.exercise-entries-component')
 @include('main.exercises.new-exercise-entry-component')
-@include('main.exercises.specific-exercise-entries-popup-component')
+@include('main.exercises.entries-for-specific-exercise-and-date-and-unit-popup-component')
 
 {{--Menu--}}
 @include('main.menu.recipes.recipes-page-component')
