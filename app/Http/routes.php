@@ -27,9 +27,6 @@ Route::group(['namespace' => 'API', 'prefix' => 'api'], function () {
 
     //Journal
     Route::resource('journal', 'Journal\JournalController', ['only' => ['index', 'show', 'store', 'update']]);
-
-    //Autocomplete-selects rows from both foods and recipes table
-    Route::post('autocomplete/menu', 'Search\AutocompleteController@autocompleteMenu');
 });
 
 

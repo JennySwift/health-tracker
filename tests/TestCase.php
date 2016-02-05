@@ -143,6 +143,17 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
 
     /**
      *
+     * @param $unit
+     */
+    protected function checkFoodUnitKeysExist($unit)
+    {
+        $this->assertArrayHasKey('id', $unit);
+        $this->assertArrayHasKey('name', $unit);
+        $this->assertArrayNotHasKey('created_at', $unit);
+    }
+
+    /**
+     *
      * @param $tag
      */
     protected function checkTagKeysExist($tag)

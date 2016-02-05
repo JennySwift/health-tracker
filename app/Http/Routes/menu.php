@@ -1,6 +1,7 @@
 <?php
 
 Route::resource('foods', 'Menu\FoodsController', ['only' => ['index', 'show', 'store', 'update', 'destroy']]);
+Route::resource('menu', 'Menu\MenuController', ['only' => ['index']]);
 
 //Index method, passing the date as a parameter
 Route::get('menuEntries/{date}', ['as' => 'api.menuEntries.index', 'uses' => 'Menu\MenuEntriesController@index']);
