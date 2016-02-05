@@ -26,12 +26,12 @@
 
 				<tr v-for="entriesForDay in exerciseSeriesHistory | filter: {exercise: {name: seriesHistoryFilter}}">
 					<td>@{{ entriesForDay.date }}</td>
-					<td>@{{ entriesForDay.days_ago }}</td>
-					<td>@{{ entriesForDay.exercise.name }}</td>
-					<!-- <td>@{{ exercise.description }}</td> -->
-					<td>@{{ entriesForDay.exercise.step_number }}</td>
+					<td>@{{ entriesForDay.daysAgo }}</td>
+					<td>@{{ entriesForDay.exercise.data.name }}</td>
+					<!-- <td>@{{ exercise.data.description }}</td> -->
+					<td>@{{ entriesForDay.exercise.data.stepNumber }}</td>
 					<td>@{{ entriesForDay.sets }}</td>
-					<td>@{{ entriesForDay.total }} @{{ entriesForDay.unit_name }}</td>
+					<td>@{{ entriesForDay.total }} @{{ entriesForDay.unit.name }}</td>
 				</tr>
 			</table>
 

@@ -12,6 +12,8 @@ class SeriesEntriesTest extends TestCase {
     use DatabaseTransactions;
 
     /**
+     * For displaying the history of entries
+     * of all exercises in a series
      * @test
      * @return void
      */
