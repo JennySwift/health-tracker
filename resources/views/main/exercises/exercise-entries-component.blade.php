@@ -19,13 +19,13 @@
                         v-on:click="getSpecificExerciseEntries(entry)"
                         class="pointer"
                 >
-                    @{{ entry.exercise.name }}
+                    @{{ entry.exercise.data.name }}
                 </td>
                 <td
                         v-on:click="getSpecificExerciseEntries(entry)"
                         class="pointer"
                 >
-                    @{{ entry.exercise.description }}
+                    @{{ entry.exercise.data.description }}
                 </td>
                 <td
                         v-on:click="getSpecificExerciseEntries(entry)"
@@ -41,10 +41,10 @@
                 </td>
                 <td>
                     <button
-                            v-if="entry.unit.id === entry.exercise.defaultUnit.id"
+                            v-if="entry.exercise.data.defaultUnit && entry.unit.id === entry.exercise.data.defaultUnit.data.id"
                             v-on:click="insertExerciseSet(entry.exercise)"
                             class="btn-xs">
-                        <i class="fa fa-plus"></i> @{{ entry.exercise.defaultQuantity }} @{{ entry.exercise.defaultUnit.name }}
+                        <i class="fa fa-plus"></i> @{{ entry.exercise.data.defaultQuantity }} @{{ entry.exercise.data.defaultUnit.data.name }}
                     </button>
                 </td>
             </tr>
