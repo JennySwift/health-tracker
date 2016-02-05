@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Transformers;
+namespace App\Http\Transformers\Exercises;
 
 use App\Models\Exercises\ExerciseProgram;
 use League\Fractal\TransformerAbstract;

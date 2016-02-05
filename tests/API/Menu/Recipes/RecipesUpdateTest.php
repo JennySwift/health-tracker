@@ -39,6 +39,7 @@ class RecipeUpdateTest extends TestCase
 
         //Todo: check other attributes are correct
         $this->assertEquals('numbat', $content['name']);
+        //Todo: this fails sometimes depending on the seeder
         $this->assertEquals([1,3], $content['tag_ids']);
         $this->checkIngredientKeysExist($content['ingredients'][0]);
         $this->assertEquals(2, $content['ingredients'][0]['food_id']);

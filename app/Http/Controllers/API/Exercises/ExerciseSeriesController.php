@@ -2,10 +2,8 @@
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
-use App\Http\Transformers\SeriesTransformer;
-use App\Models\Exercises\Exercise;
+use App\Http\Transformers\Exercises\SeriesTransformer;
 use App\Models\Exercises\Series;
-use App\Models\Exercises\Workout;
 use App\Repositories\ExerciseSeriesRepository;
 use App\Repositories\WorkoutsRepository;
 use Auth;
@@ -31,8 +29,10 @@ class ExerciseSeriesController extends Controller
      * @param ExerciseSeriesRepository $exerciseSeriesRepository
      * @param WorkoutsRepository $workoutsRepository
      */
-    public function __construct(ExerciseSeriesRepository $exerciseSeriesRepository, WorkoutsRepository $workoutsRepository)
-    {
+    public function __construct(
+        ExerciseSeriesRepository $exerciseSeriesRepository,
+        WorkoutsRepository $workoutsRepository
+    ) {
         $this->exerciseSeriesRepository = $exerciseSeriesRepository;
         $this->workoutsRepository = $workoutsRepository;
     }
@@ -43,7 +43,8 @@ class ExerciseSeriesController extends Controller
      */
     public function index()
     {
-        return transform(createCollection($this->exerciseSeriesRepository->getExerciseSeries(), new SeriesTransformer))['data'];
+        return transform(createCollection($this->exerciseSeriesRepository->getExerciseSeries(),
+            new SeriesTransformer))['data'];
     }
 
     /**
@@ -82,7 +83,8 @@ class ExerciseSeriesController extends Controller
     {
         // Create an array with the new fields merged
         $data = array_compare($series->toArray(), $request->only([
-            'name', 'priority'
+            'name',
+            'priority'
         ]));
 //        dd($data);
 
@@ -106,9 +108,9 @@ class ExerciseSeriesController extends Controller
     {
         try {
             $series->delete();
+
             return $this->responseNoContent();
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             //Integrity constraint violation
             if ($e->getCode() === '23000') {
                 $message = 'Series could not be deleted. It is in use.';
@@ -116,6 +118,7 @@ class ExerciseSeriesController extends Controller
             else {
                 $message = 'There was an error';
             }
+
             return response([
                 'error' => $message,
                 'status' => Response::HTTP_BAD_REQUEST

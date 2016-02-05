@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\API\Exercises;
 
-use App\Http\Transformers\ExerciseProgramTransformer;
+use App\Http\Transformers\Exercises\ExerciseProgramTransformer;
 use App\Models\Exercises\ExerciseProgram;
 use Illuminate\Http\Request;
 use App\Http\Requests;

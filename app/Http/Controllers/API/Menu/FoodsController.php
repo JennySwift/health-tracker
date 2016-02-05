@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
-use App\Http\Transformers\FoodTransformer;
+use App\Http\Transformers\Menu\FoodTransformer;
 use App\Models\Menu\Food;
 use App\Models\Units\Unit;
 use App\Repositories\FoodsRepository;

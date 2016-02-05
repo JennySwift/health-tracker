@@ -2,8 +2,8 @@
 
 namespace App\Repositories;
 
-use App\Http\Transformers\RecipeTransformer;
-use App\Http\Transformers\RecipeWithIngredientsTransformer;
+use App\Http\Transformers\Menu\RecipeWithIngredientsTransformer;
+use App\Http\Transformers\Menu\RecipeTransformer;
 use App\Models\Menu\Food;
 use App\Models\Menu\Recipe;
 use App\Models\Menu\RecipeMethod;

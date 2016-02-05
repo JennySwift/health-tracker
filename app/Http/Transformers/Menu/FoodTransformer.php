@@ -1,5 +1,6 @@
-<?php namespace App\Http\Transformers;
+<?php namespace App\Http\Transformers\Menu;
 
+use App\Http\Transformers\UnitTransformer;
 use App\Models\Menu\Food;
 use League\Fractal\TransformerAbstract;
 

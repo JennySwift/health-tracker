@@ -1,7 +1,7 @@
 <?php namespace App\Http\Controllers;
 
 use App\Http\Requests;
-use App\Http\Transformers\ExerciseEntryTransformer;
+use App\Http\Transformers\Exercises\ExerciseEntryTransformer;
 use App\Repositories\CaloriesRepository;
 use App\Repositories\ExerciseEntriesRepository;
 use App\Repositories\MenuEntriesRepository;
@@ -43,8 +43,12 @@ class PagesController extends Controller
      * @param MenuEntriesRepository $menuEntriesRepository
      * @param CaloriesRepository $caloriesRepository
      */
-    public function __construct(UnitsRepository $unitsRepository, CaloriesRepository $caloriesRepository, ExerciseEntriesRepository $exerciseEntriesRepository, MenuEntriesRepository $menuEntriesRepository)
-    {
+    public function __construct(
+        UnitsRepository $unitsRepository,
+        CaloriesRepository $caloriesRepository,
+        ExerciseEntriesRepository $exerciseEntriesRepository,
+        MenuEntriesRepository $menuEntriesRepository
+    ) {
         $this->middleware('auth');
         $this->unitsRepository = $unitsRepository;
         $this->caloriesRepository = $caloriesRepository;

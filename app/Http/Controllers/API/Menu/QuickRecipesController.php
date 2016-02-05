@@ -2,8 +2,7 @@
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
-use App\Http\Transformers\RecipeTransformer;
-use App\Http\Transformers\RecipeWithIngredientsTransformer;
+use App\Http\Transformers\Menu\RecipeTransformer;
 use App\Repositories\QuickRecipesRepository;
 use App\Repositories\RecipesRepository;
 use Auth;
@@ -54,7 +53,8 @@ class QuickRecipesController extends Controller
      */
     public function store(Request $request)
     {
-        $recipe = $this->recipesRepository->insert($request->get('name'), $request->get('ingredients'), $request->get('steps'));
+        $recipe = $this->recipesRepository->insert($request->get('name'), $request->get('ingredients'),
+            $request->get('steps'));
 
         return $this->responseCreatedWithTransformer($recipe, new RecipeTransformer);
     }

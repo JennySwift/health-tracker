@@ -2,10 +2,8 @@
 
 namespace App\Repositories;
 
-use App\Http\Transformers\MenuEntryTransformer;
+use App\Http\Transformers\Menu\MenuEntryTransformer;
 use App\Models\Menu\Entry;
-use App\Models\Menu\Food;
-use Carbon\Carbon;
 use Auth;
 
 /**

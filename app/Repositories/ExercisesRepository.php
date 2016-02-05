@@ -2,9 +2,8 @@
 
 namespace App\Repositories;
 
-use App\Http\Transformers\ExerciseTransformer;
+use App\Http\Transformers\Exercises\ExerciseTransformer;
 use App\Models\Exercises\Exercise;
-use App\Models\Exercises\Series;
 
 /**
  * Class ExercisesRepository

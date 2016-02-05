@@ -2,11 +2,10 @@
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
-use App\Http\Transformers\RecipeTransformer;
-use App\Http\Transformers\RecipeWithIngredientsTransformer;
+use App\Http\Transformers\Menu\RecipeTransformer;
+use App\Http\Transformers\Menu\RecipeWithIngredientsTransformer;
 use App\Models\Menu\Recipe;
 use App\Models\Menu\RecipeMethod;
-use App\Models\Tags\Tag;
 use App\Repositories\RecipesRepository;
 use Auth;
 use DB;
@@ -76,11 +75,11 @@ class RecipesController extends Controller
     }
 
     /**
-    * UPDATE /api/recipes/{recipes}
-    * @param Request $request
-    * @param Recipe $recipe
-    * @return Response
-    */
+     * UPDATE /api/recipes/{recipes}
+     * @param Request $request
+     * @param Recipe $recipe
+     * @return Response
+     */
     public function update(Request $request, Recipe $recipe)
     {
         if ($request->get('removeIngredient')) {
@@ -91,59 +90,62 @@ class RecipesController extends Controller
                 ->where('unit_id', $request->get('unit_id'))
                 ->delete();
         }
-        else if ($request->get('addIngredient')) {
-            $recipe->foods()->attach($request->get('food_id'), [
-                'unit_id' => $request->get('unit_id'),
-                'quantity' => $request->get('quantity'),
-                'description' => $request->get('description')
-            ]);
-        }
         else {
-            // Create an array with the new fields merged
-            $data = array_compare($recipe->toArray(), $request->only([
-                'name'
-            ]));
-
-            $recipe->update($data);
-
-            if ($request->has('tag_ids')) {
-                $ids = $request->get('tag_ids');
-                $pivotData = array_fill(0, count($ids), ['taggable_type' => 'recipe']);
-                $syncData  = array_combine($ids, $pivotData);
-                $recipe->tags()->sync($syncData);
+            if ($request->get('addIngredient')) {
+                $recipe->foods()->attach($request->get('food_id'), [
+                    'unit_id' => $request->get('unit_id'),
+                    'quantity' => $request->get('quantity'),
+                    'description' => $request->get('description')
+                ]);
             }
+            else {
+                // Create an array with the new fields merged
+                $data = array_compare($recipe->toArray(), $request->only([
+                    'name'
+                ]));
 
-            if ($request->has('steps')) {
-                //Remove the existing steps from the recipe
-                $currentSteps = $recipe->steps()->delete();
+                $recipe->update($data);
 
-                //Attach the updated steps to the recipe
-                $count = 0;
-                foreach ($request->get('steps') as $step) {
-                    $count++;
-                    $step = new RecipeMethod([
-                        'step' => $count,
-                        'text' => $step
-                    ]);
-                    $step->user()->associate(Auth::user());
-                    $step->recipe()->associate($recipe);
-                    $step->save();
+                if ($request->has('tag_ids')) {
+                    $ids = $request->get('tag_ids');
+                    $pivotData = array_fill(0, count($ids), ['taggable_type' => 'recipe']);
+                    $syncData = array_combine($ids, $pivotData);
+                    $recipe->tags()->sync($syncData);
                 }
-            }
 
-            if ($request->has('ingredients')) {
-                //Remove the existing ingredients from the recipe
-                $currentFoodIds = $recipe->foods()->lists('id')->all();
-                $recipe->foods()->detach($currentFoodIds);
+                if ($request->has('steps')) {
+                    //Remove the existing steps from the recipe
+                    $currentSteps = $recipe->steps()->delete();
 
-                //Attach the updated ingredients to the recipe
-                foreach ($request->get('ingredients') as $ingredient) {
-                    $recipe->foods()->attach([$ingredient['food_id'] => ['unit_id' => $ingredient['unit_id']]]);
+                    //Attach the updated steps to the recipe
+                    $count = 0;
+                    foreach ($request->get('steps') as $step) {
+                        $count++;
+                        $step = new RecipeMethod([
+                            'step' => $count,
+                            'text' => $step
+                        ]);
+                        $step->user()->associate(Auth::user());
+                        $step->recipe()->associate($recipe);
+                        $step->save();
+                    }
+                }
+
+                if ($request->has('ingredients')) {
+                    //Remove the existing ingredients from the recipe
+                    $currentFoodIds = $recipe->foods()->lists('id')->all();
+                    $recipe->foods()->detach($currentFoodIds);
+
+                    //Attach the updated ingredients to the recipe
+                    foreach ($request->get('ingredients') as $ingredient) {
+                        $recipe->foods()->attach([$ingredient['food_id'] => ['unit_id' => $ingredient['unit_id']]]);
+                    }
                 }
             }
         }
 
         $recipe = $this->transform($this->createItem($recipe, new RecipeWithIngredientsTransformer))['data'];
+
         return response($recipe, Response::HTTP_OK);
     }
 

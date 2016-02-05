@@ -2,11 +2,10 @@
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
-use App\Http\Transformers\ExerciseTransformer;
+use App\Http\Transformers\Exercises\ExerciseTransformer;
 use App\Models\Exercises\Exercise;
 use App\Models\Exercises\ExerciseProgram;
 use App\Models\Exercises\Series;
-use App\Models\Tags\Tag;
 use App\Models\Units\Unit;
 use App\Repositories\ExercisesRepository;
 use Auth;
@@ -50,6 +49,7 @@ class ExercisesController extends Controller
             $exercises = Exercise::forCurrentUser()
                 ->where('name', 'LIKE', '%' . $request->get('typing') . '%')
                 ->get();
+
             return $this->transform($this->createCollection($exercises, new ExerciseTransformer));
         }
 
@@ -88,6 +88,7 @@ class ExercisesController extends Controller
         $exercise->save();
 
         $exercise = $this->transform($this->createItem($exercise, new ExerciseTransformer))['data'];
+
         return response($exercise, Response::HTTP_CREATED);
     }
 
@@ -101,7 +102,12 @@ class ExercisesController extends Controller
     {
         // Create an array with the new fields merged
         $data = array_compare($exercise->toArray(), $request->only([
-            'name', 'step_number', 'default_quantity', 'description', 'target', 'priority'
+            'name',
+            'step_number',
+            'default_quantity',
+            'description',
+            'target',
+            'priority'
         ]));
 
         $exercise->update($data);
@@ -145,5 +151,5 @@ class ExercisesController extends Controller
         $exercise->delete();
 
         return $this->responseNoContent();
-	}
+    }
 }

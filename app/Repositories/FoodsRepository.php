@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-use App\Http\Transformers\FoodTransformer;
+use App\Http\Transformers\Menu\FoodTransformer;
 use App\Models\Menu\Food;
 use Auth;
 

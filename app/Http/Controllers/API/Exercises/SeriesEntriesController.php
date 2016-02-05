@@ -2,8 +2,7 @@
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
-use App\Http\Transformers\SeriesEntriesTransformer;
-use App\Http\Transformers\SeriesEntryTransformer;
+use App\Http\Transformers\Exercises\ExerciseEntryTransformer;
 use App\Models\Exercises\Series;
 use App\Repositories\ExerciseSeriesRepository;
 use Illuminate\Http\Request;
@@ -42,7 +41,7 @@ class SeriesEntriesController extends Controller
 
         return transform(createCollection(
             $this->exerciseSeriesRepository->getExerciseSeriesHistory($series),
-            new SeriesEntryTransformer
+            new ExerciseEntryTransformer
         ))['data'];
     }
 }

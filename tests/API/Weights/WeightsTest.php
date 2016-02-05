@@ -20,7 +20,7 @@ class WeightsTest extends TestCase {
 
         $response = $this->call('GET', '/api/weights/' . $date);
         $content = json_decode($response->getContent(), true);
-        dd($content);
+//        dd($content);
 
         $this->checkWeightKeysExist($content);
 

@@ -104,7 +104,7 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
      */
     protected function checkExerciseEntryKeysExist($entry)
     {
-        $this->checkBasicExerciseKeysExist($entry['exercise']);
+        $this->checkExerciseKeysExist($entry['exercise']['data']);
         $this->checkExerciseUnitKeysExist($entry['unit']);
 
         $this->assertArrayHasKey('exercise', $entry);
@@ -112,6 +112,21 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
         $this->assertArrayHasKey('sets', $entry);
         $this->assertArrayHasKey('total', $entry);
         $this->assertArrayHasKey('quantity', $entry);
+        $this->assertArrayHasKey('date', $entry);
+        $this->assertArrayHasKey('daysAgo', $entry);
+    }
+
+    /**
+     *
+     * @param $series
+     */
+    protected function checkSeriesKeysExist($series)
+    {
+        $this->assertArrayHasKey('id', $series);
+        $this->assertArrayHasKey('name', $series);
+        $this->assertArrayHasKey('priority', $series);
+//        $this->assertArrayHasKey('workout_ids', $series);
+        $this->assertArrayHasKey('lastDone', $series);
     }
 
     /**

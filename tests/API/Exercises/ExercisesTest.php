@@ -30,17 +30,15 @@ class ExercisesTest extends TestCase {
         $this->assertEquals(1, $content[0]['id']);
         $this->assertEquals('kneeling pushups', $content[0]['name']);
         $this->assertEquals(1, $content[0]['stepNumber']);
-        $this->assertEquals(5, $content[0]['defaultQuantity']);
+        $this->assertEquals(20, $content[0]['defaultQuantity']);
 
         $this->assertEquals([
             'id' => 1,
             'name' => 'pushup'
         ], $content[0]['series']);
 
-        $this->assertEquals([
-            'id' => 1,
-            'name' => 'reps'
-        ], $content[0]['defaultUnit']);
+        $this->assertEquals(1, $content[0]['defaultUnit']['data']['id']);
+        $this->assertEquals('reps', $content[0]['defaultUnit']['data']['name']);
 
         $this->assertEquals(200, $response->getStatusCode());
     }
@@ -59,7 +57,7 @@ class ExercisesTest extends TestCase {
 
         $this->checkExerciseKeysExist($content[0]);
 
-        $this->assertEquals(1, $content[0]['defaultUnit']['id']);
+        $this->assertEquals(1, $content[0]['defaultUnit']['data']['id']);
 
         foreach ($content as $exercise) {
             $this->assertContains('p', $exercise['name']);
@@ -105,7 +103,7 @@ class ExercisesTest extends TestCase {
         $this->assertEquals(2, $content['series']['id']);
         $this->assertEquals(2, $content['stepNumber']);
         $this->assertEquals(2, $content['defaultQuantity']);
-        $this->assertEquals(2, $content['defaultUnit']['id']);
+        $this->assertEquals(2, $content['defaultUnit']['data']['id']);
         $this->assertEquals('2 reps', $content['target']);
 
         $this->assertEquals(Response::HTTP_CREATED, $response->getStatusCode());
@@ -128,17 +126,15 @@ class ExercisesTest extends TestCase {
         $this->assertEquals(1, $content['id']);
         $this->assertEquals('kneeling pushups', $content['name']);
         $this->assertEquals(1, $content['stepNumber']);
-        $this->assertEquals(5, $content['defaultQuantity']);
+        $this->assertEquals(20, $content['defaultQuantity']);
 
         $this->assertEquals([
             'id' => 1,
             'name' => 'pushup'
         ], $content['series']);
 
-        $this->assertEquals([
-            'id' => 1,
-            'name' => 'reps'
-        ], $content['defaultUnit']);
+        $this->assertEquals(1, $content['defaultUnit']['data']['id']);
+        $this->assertEquals('reps', $content['defaultUnit']['data']['name']);
 
         //Todo: make seeder static for this
 //        $this->assertEquals('kneeling pushups', $content['tag_ids']);
@@ -188,10 +184,8 @@ class ExercisesTest extends TestCase {
             'name' => 'pullup'
         ], $content['series']);
 
-        $this->assertEquals([
-            'id' => 2,
-            'name' => 'minutes'
-        ], $content['defaultUnit']);
+        $this->assertEquals(2, $content['defaultUnit']['data']['id']);
+        $this->assertEquals('minutes', $content['defaultUnit']['data']['name']);
 
         //Todo: check tags
 
@@ -226,10 +220,8 @@ class ExercisesTest extends TestCase {
             'name' => 'pushup'
         ], $content['series']);
 
-        $this->assertEquals([
-            'id' => 1,
-            'name' => 'reps'
-        ], $content['defaultUnit']);
+        $this->assertEquals(1, $content['defaultUnit']['data']['id']);
+        $this->assertEquals('reps', $content['defaultUnit']['data']['name']);
 
         $this->assertEquals(200, $response->getStatusCode());
     }

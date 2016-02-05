@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Transformers;
+namespace App\Http\Transformers\Exercises;
 
 use App\Models\Exercises\Series;
 use League\Fractal\TransformerAbstract;
@@ -14,7 +14,7 @@ class SeriesTransformer extends TransformerAbstract
      * Todo: This isn't needed all the time
      * @var array
      */
-    protected $defaultIncludes = ['workouts', 'exercises'];
+    protected $defaultIncludes = ['exercises'];
 
     /**
      * @return array
@@ -30,16 +30,6 @@ class SeriesTransformer extends TransformerAbstract
         ];
 
         return $array;
-    }
-
-    /**
-     *
-     * @param Series $series
-     * @return \League\Fractal\Resource\Collection
-     */
-    public function includeWorkouts(Series $series)
-    {
-        return createCollection($series->workouts, new WorkoutTransformer);
     }
 
     /**

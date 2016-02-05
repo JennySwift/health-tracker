@@ -30,10 +30,10 @@ class ExerciseEntriesTest extends TestCase {
 
         $this->checkExerciseEntryKeysExist($content[0]);
 
-        $this->assertEquals(1, $content[0]['exercise']['id']);
-        $this->assertEquals('kneeling pushups', $content[0]['exercise']['name']);
-        $this->assertEquals('1.00', $content[0]['exercise']['stepNumber']);
-        $this->assertEquals(1, $content[0]['exercise']['defaultUnit']['id']);
+        $this->assertEquals(1, $content[0]['exercise']['data']['id']);
+        $this->assertEquals('kneeling pushups', $content[0]['exercise']['data']['name']);
+        $this->assertEquals('1.00', $content[0]['exercise']['data']['stepNumber']);
+        $this->assertEquals(1, $content[0]['exercise']['data']['defaultUnit']['data']['id']);
 
         /**
          * @VP:
@@ -81,14 +81,14 @@ class ExerciseEntriesTest extends TestCase {
 
         $this->checkExerciseEntryKeysExist($content[0]);
 
-        $this->assertEquals(1, $content[0]['exercise']['id']);
-        $this->assertEquals('kneeling pushups', $content[0]['exercise']['name']);
-        $this->assertEquals('1.00', $content[0]['exercise']['stepNumber']);
+        $this->assertEquals(1, $content[0]['exercise']['data']['id']);
+        $this->assertEquals('kneeling pushups', $content[0]['exercise']['data']['name']);
+        $this->assertEquals('1.00', $content[0]['exercise']['data']['stepNumber']);
 
         $this->assertEquals(1, $content[0]['unit']['id']);
         $this->assertEquals('reps', $content[0]['unit']['name']);
 
-        $this->assertEquals(1, $content[0]['exercise']['defaultUnit']['id']);
+        $this->assertEquals(1, $content[0]['exercise']['data']['defaultUnit']['data']['id']);
         $this->assertEquals(3, $content[0]['sets']);
         $this->assertEquals(15, $content[0]['total']);
         $this->assertEquals(5, $content[0]['quantity']);
@@ -117,16 +117,18 @@ class ExerciseEntriesTest extends TestCase {
 
         $this->checkExerciseEntryKeysExist($content[0]);
 
-        $this->assertEquals(1, $content[0]['exercise']['id']);
-        $this->assertEquals('kneeling pushups', $content[0]['exercise']['name']);
-        $this->assertEquals('1.00', $content[0]['exercise']['stepNumber']);
-        $this->assertEquals(1, $content[0]['exercise']['defaultUnit']['id']);
+        $this->assertEquals(1, $content[0]['exercise']['data']['id']);
+        $this->assertEquals('kneeling pushups', $content[0]['exercise']['data']['name']);
+        $this->assertEquals('1.00', $content[0]['exercise']['data']['stepNumber']);
+        $this->assertEquals(1, $content[0]['exercise']['data']['defaultUnit']['data']['id']);
 
         $this->assertEquals(1, $content[0]['unit']['id']);
         $this->assertEquals('reps', $content[0]['unit']['name']);
 
         $this->assertEquals(3, $content[0]['sets']);
-        $this->assertEquals(15, $content[0]['total']);
+        //2 * 5 reps from seeder, plus one set of 20 from the 'add set' function
+        $this->assertEquals(30, $content[0]['total']);
+        //Not sure why this should equal 5 since the last set added was 20
         $this->assertEquals(5, $content[0]['quantity']);
         $this->assertCount(2, $content);
 

@@ -1,5 +1,7 @@
-<?php namespace App\Http\Transformers;
+<?php namespace App\Http\Transformers\Exercises;
 
+use App\Http\Transformers\TagTransformer;
+use App\Http\Transformers\UnitTransformer;
 use App\Models\Exercises\Exercise;
 use League\Fractal\TransformerAbstract;
 

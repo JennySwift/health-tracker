@@ -29,30 +29,6 @@ class ExerciseEntriesRepository
     }
 
     /**
-     * Get all entries for one exercise with a particular unit on a particular date.
-     * Get exercise name, quantity, and entry id.
-     * @param $date
-     * @param $exercise
-     * @param $exercise_unit_id
-     * @return array
-     */
-    public function getSpecificExerciseEntries($date, $exercise, $exercise_unit_id) {
-        $entries = Entry::where('exercise_id', $exercise->id)
-            ->where('date', $date)
-            ->where('exercise_unit_id', $exercise_unit_id)
-            ->with('exercise')
-            ->get();
-
-        $unit = Unit::find($exercise_unit_id);
-
-        return [
-            'entries' => $entries,
-            'exercise' => $exercise,
-            'unit' => $unit
-        ];
-    }
-
-    /**
      * If entries share the same exercise, date, and unit,
      * compact them into one item.
      * Include the default unit id so I can show the 'add set' button only if the entry uses the default unit.

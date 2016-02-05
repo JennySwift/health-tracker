@@ -1,5 +1,6 @@
-<?php namespace App\Http\Transformers;
+<?php namespace App\Http\Transformers\Menu;
 
+use App\Http\Transformers\TagTransformer;
 use App\Models\Menu\Recipe;
 use League\Fractal\TransformerAbstract;
 

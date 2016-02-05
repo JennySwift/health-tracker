@@ -27,14 +27,12 @@ class ExerciseSeriesTest extends TestCase {
 
         $this->checkExerciseEntryKeysExist($content[0]);
 
-        $this->assertArrayHasKey('date', $content[0]);
-        $this->assertArrayHasKey('daysAgo', $content[0]);
+        $this->assertEquals(1, $content[0]['exercise']['data']['id']);
+        $this->assertEquals('kneeling pushups', $content[0]['exercise']['data']['name']);
+        $this->assertEquals('1.00', $content[0]['exercise']['data']['stepNumber']);
+        $this->assertEquals(1, $content[0]['exercise']['data']['defaultUnit']['data']['id']);
 
-        $this->assertEquals(1, $content[0]['exercise']['id']);
-        $this->assertEquals('kneeling pushups', $content[0]['exercise']['name']);
-        $this->assertEquals('1.00', $content[0]['exercise']['stepNumber']);
-        $this->assertEquals(1, $content[0]['exercise']['defaultUnit']['id']);
-
+        //Check the kneeling pushups done today with reps
         $this->assertEquals(1, $content[0]['unit']['id']);
         $this->assertEquals('reps', $content[0]['unit']['name']);
 
@@ -42,8 +40,22 @@ class ExerciseSeriesTest extends TestCase {
         $this->assertEquals(10, $content[0]['total']);
         $this->assertEquals(5, $content[0]['quantity']);
         $this->assertEquals(0, $content[0]['daysAgo']);
-        $this->assertEquals(1, $content[2]['daysAgo']);
         $this->assertEquals(Carbon::today()->format('d/m/y'), $content[0]['date']);
+
+        //Check the kneeling pushups done today with minutes
+        $this->assertEquals(2, $content[1]['unit']['id']);
+        $this->assertEquals('minutes', $content[1]['unit']['name']);
+
+        $this->assertEquals(1, $content[1]['sets']);
+        $this->assertEquals(10, $content[1]['total']);
+        $this->assertEquals(10, $content[1]['quantity']);
+        $this->assertEquals(0, $content[1]['daysAgo']);
+        $this->assertEquals(Carbon::today()->format('d/m/y'), $content[1]['date']);
+
+        //Check the kneeling pushups done yesterday with reps
+        $this->assertEquals(1, $content[2]['daysAgo']);
+
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
     }
 
     /**
@@ -73,22 +85,10 @@ class ExerciseSeriesTest extends TestCase {
         $content = json_decode($response->getContent(), true);
 //        dd($content);
 
-        $this->assertArrayHasKey('id', $content[0]);
-        $this->assertArrayHasKey('name', $content[0]);
-        $this->assertArrayHasKey('priority', $content[0]);
-        $this->assertArrayHasKey('workout_ids', $content[0]);
-        $this->assertArrayHasKey('workouts', $content[0]);
-        $this->assertArrayHasKey('lastDone', $content[0]);
+        $this->checkSeriesKeysExist($content[0]);
 
         $this->assertEquals(2, $content[0]['id']);
         $this->assertEquals('pullup', $content[0]['name']);
-
-        $this->assertEquals(1, $content[0]['workouts']['data'][0]['id']);
-        $this->assertEquals('day one', $content[0]['workouts']['data'][0]['name']);
-
-        $this->assertEquals([
-            1
-        ], $content[0]['workout_ids']);
 
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
 
@@ -106,15 +106,10 @@ class ExerciseSeriesTest extends TestCase {
         $response = $this->call('GET', '/api/exerciseSeries/' . $series->id);
         $content = json_decode($response->getContent(), true);
 
-        $this->assertArrayHasKey('id', $content);
-        $this->assertArrayHasKey('name', $content);
-        $this->assertArrayHasKey('workout_ids', $content);
+        $this->checkSeriesKeysExist($content);
 
         $this->assertEquals(1, $content['id']);
         $this->assertEquals('pushup', $content['name']);
-        $this->assertEquals([
-            1
-        ], $content['workout_ids']);
 
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
 
@@ -138,10 +133,7 @@ class ExerciseSeriesTest extends TestCase {
         $content = json_decode($response->getContent(), true)['data'];
 //        dd($content);
 
-        $this->assertArrayHasKey('id', $content);
-        $this->assertArrayHasKey('name', $content);
-        $this->assertArrayHasKey('priority', $content);
-        $this->assertArrayHasKey('workout_ids', $content);
+        $this->checkSeriesKeysExist($content);
 
         $this->assertEquals(1, $content['id']);
         $this->assertEquals('numbat', $content['name']);
@@ -162,20 +154,16 @@ class ExerciseSeriesTest extends TestCase {
         $series = Series::forCurrentUser()->first();
 
         $response = $this->call('PUT', '/api/exerciseSeries/'.$series->id, [
-            'name' => 'numbat',
-            'workout_ids' => [2,3]
+            'name' => 'numbat'
         ]);
 //        dd($response);
         $content = json_decode($response->getContent(), true)['data'];
 //        dd($content);
 
-        $this->assertArrayHasKey('id', $content);
-        $this->assertArrayHasKey('name', $content);
-        $this->assertArrayHasKey('workout_ids', $content);
+        $this->checkSeriesKeysExist($content);
 
         $this->assertEquals(1, $content['id']);
         $this->assertEquals('numbat', $content['name']);
-        $this->assertEquals([2,3], $content['workout_ids']);
 
         $this->assertEquals(200, $response->getStatusCode());
     }
@@ -219,9 +207,7 @@ class ExerciseSeriesTest extends TestCase {
         $content = json_decode($response->getContent(), true)['data'];
 //        dd($content);
 
-        $this->assertArrayHasKey('id', $content);
-        $this->assertArrayHasKey('name', $content);
-        $this->assertArrayHasKey('workout_ids', $content);
+        $this->checkSeriesKeysExist($content);
 
         $this->assertEquals('kangaroo', $content['name']);
 
@@ -242,19 +228,19 @@ class ExerciseSeriesTest extends TestCase {
 
         $series->user()->associate($this->user);
         $series->save();
-        $series->workouts()->sync([1,2]);
+//        $series->workouts()->sync([1,2]);
 
         $this->seeInDatabase('exercise_series', ['name' => 'echidna']);
-        $this->seeInDatabase('series_workout', ['series_id' => $series->id, 'workout_id' => 1]);
-        $this->seeInDatabase('series_workout', ['series_id' => $series->id, 'workout_id' => 2]);
+//        $this->seeInDatabase('series_workout', ['series_id' => $series->id, 'workout_id' => 1]);
+//        $this->seeInDatabase('series_workout', ['series_id' => $series->id, 'workout_id' => 2]);
 
         $response = $this->call('DELETE', '/api/exerciseSeries/'.$series->id);
         $this->assertEquals(204, $response->getStatusCode());
         $this->missingFromDatabase('exercise_series', ['name' => 'echidna']);
 
         //Check the rows were deleted in the series_workout pivot table
-        $this->missingFromDatabase('series_workout', ['series_id' => $series->id, 'workout_id' => 1]);
-        $this->missingFromDatabase('series_workout', ['series_id' => $series->id, 'workout_id' => 2]);
+//        $this->missingFromDatabase('series_workout', ['series_id' => $series->id, 'workout_id' => 1]);
+//        $this->missingFromDatabase('series_workout', ['series_id' => $series->id, 'workout_id' => 2]);
 
         $response = $this->call('DELETE', '/api/exerciseSeries/'.$series->id);
         $this->assertEquals(404, $response->getStatusCode());

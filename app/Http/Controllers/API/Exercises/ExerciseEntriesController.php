@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
-use App\Http\Transformers\ExerciseEntryTransformer;
+use App\Http\Transformers\Exercises\ExerciseEntryTransformer;
 use App\Models\Exercises\Entry;
 use App\Models\Exercises\Exercise;
 use App\Models\Units\Unit;
@@ -51,16 +51,22 @@ class ExerciseEntriesController extends Controller
     /**
      * Returns all entries for an exercise on a specific date
      * where the exercise has the specified unit
+     *
+     * Get all entries for one exercise with a particular unit on a particular date.
+     * Get exercise name, quantity, and entry id.
      * @param Request $request
      * @return array
      */
     public function getSpecificExerciseEntries(Request $request)
     {
-        return $this->exerciseEntriesRepository->getSpecificExerciseEntries(
-            $request->get('date'),
-            Exercise::find($request->get('exercise_id')),
-            $request->get('exercise_unit_id')
-        );
+        $exercise = Exercise::find($request->get('exercise_id'));
+        $entries = Entry::where('exercise_id', $exercise->id)
+            ->where('date', $request->get('date'))
+            ->where('exercise_unit_id', $request->get('exercise_unit_id'))
+            ->with('exercise')
+            ->get();
+
+        return $entries;
     }
 
     /**
