@@ -29,7 +29,7 @@
                 <td v-on:click="showExercisePopup(exercise)">@{{ exercise.target }}</td>
                 <td v-on:click="showExercisePopup(exercise)">@{{ exercise.lastDone }}</td>
                 <td>
-                    <button v-on:click="insertExerciseSet(exercise)" class="btn btn-default btn-xs"><i class="fa fa-plus"></i> @{{ exercise.defaultQuantity }} @{{ exercise.defaultUnit.name }}</button>
+                    <button v-on:click="insertExerciseSet(exercise)" class="btn btn-default btn-xs"><i class="fa fa-plus"></i> @{{ exercise.defaultQuantity }} @{{ exercise.defaultUnit.data.name }}</button>
                 </td>
             </tr>
         </table>

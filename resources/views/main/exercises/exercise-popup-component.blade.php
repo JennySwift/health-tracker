@@ -101,8 +101,8 @@
 					<li
 							v-for="unit in units"
 							class="list-group-item hover pointer"
-							v-bind:class="{'selected': unit.id ===  selectedExercise.defaultUnit.id}"
-							v-on:click=" selectedExercise.defaultUnit.id = unit.id">
+							v-bind:class="{'selected': unit.id ===  selectedExercise.defaultUnit.data.id}"
+							v-on:click=" selectedExercise.defaultUnit.data.id = unit.id">
 						@{{ unit.name }}
 					</li>
 				</div>

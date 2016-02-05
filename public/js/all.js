@@ -22419,7 +22419,7 @@ var ExercisesRepository = {
             target: exercise.target,
             program_id: exercise.program.id,
             series_id: exercise.series.id,
-            default_unit_id: exercise.defaultUnit.id,
+            default_unit_id: exercise.defaultUnit.data.id,
         };
 
         return data;
@@ -22427,7 +22427,9 @@ var ExercisesRepository = {
     selectedExercise: {
         program: {},
         series: {},
-        defaultUnit: {}
+        defaultUnit: {
+            data: {}
+        }
     }
 };
 var FiltersRepository = {
