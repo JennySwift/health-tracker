@@ -23,6 +23,7 @@ class ExercisesTest extends TestCase {
 
         $response = $this->apiCall('GET', '/api/exercises');
         $content = json_decode($response->getContent(), true);
+//        dd($content);
 
         $this->checkExerciseKeysExist($content[0]);
 

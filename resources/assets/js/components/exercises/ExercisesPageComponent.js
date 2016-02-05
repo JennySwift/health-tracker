@@ -20,8 +20,17 @@ var ExercisesPage = Vue.component('exercises-page', {
         exercisesFilter: function (exercises) {
             var that = this;
             return exercises.filter(function (exercise) {
-                //Name and description filters
-                var show = exercise.name.indexOf(that.filterByName) !== -1 && exercise.description.indexOf(that.filterByDescription) !== -1;
+                //Name filter
+                var show = exercise.name.indexOf(that.filterByName) !== -1;
+
+                //Description filter
+                if (exercise.description && exercise.description.indexOf(that.filterByDescription) === -1) {
+                    show = false;
+                }
+
+                else if (!exercise.description && that.filterByDescription !== '') {
+                    show = false;
+                }
 
                 //Priority filter
                 if (that.filterByPriority && exercise.priority != that.filterByPriority) {

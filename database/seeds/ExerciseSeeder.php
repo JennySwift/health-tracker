@@ -14,13 +14,54 @@ use Illuminate\Support\Facades\Auth;
 class ExerciseSeeder extends Seeder {
 
     private $user;
+    private $faker;
 
     public function run()
 	{
 		Exercise::truncate();
+        $this->faker = Faker::create();
 
-		$pushups = ['kneeling pushups', 'pushups', 'one-arm pushups'];
-		$squats = ['assisted squats', 'squats', 'one-legged-squats'];
+		$pushups = [
+            [
+                'name' => 'kneeling pushups',
+                'defaultQuantity' => 20,
+                'description' => $this->faker->word,
+                'priority' => 2
+            ],
+            [
+                'name' => 'pushups',
+                'defaultQuantity' => 10,
+                'description' => $this->faker->word,
+                'priority' => 1
+            ],
+            [
+                'name' => 'one-arm pushups',
+                'defaultQuantity' => 2,
+                'description' => $this->faker->word,
+                'priority' => 1
+            ]
+        ];
+
+		$squats = [
+            [
+                'name' => 'assisted squats',
+                'defaultQuantity' => 50,
+                'description' => $this->faker->word,
+                'priority' => 3
+            ],
+            [
+                'name' => 'squats',
+                'defaultQuantity' => 30,
+                'description' => '',
+                'priority' => 2
+            ],
+            [
+                'name' => 'one-legged-squats',
+                'defaultQuantity' => 5,
+                'description' => $this->faker->word,
+                'priority' => 1
+            ]
+        ];
 
         $users = User::all();
 
@@ -50,24 +91,25 @@ class ExerciseSeeder extends Seeder {
 
     /**
      *
-     * @param $series
+     * @param $exercises
+     * @param Unit $unit
+     * @param Series $series
      */
-    private function insertExercisesInSeries($exercises, $unit, $series)
+    private function insertExercisesInSeries($exercises, Unit $unit, Series $series)
     {
         $index = 0;
-        $faker = Faker::create();
 
 //        $series_ids = Series::where('user_id', $this->user->id)->lists('id')->all();
 
         foreach ($exercises as $exercise) {
             $index++;
             $exercise = new Exercise([
-                'name' => $exercise,
-                'description' => $faker->word,
-                'default_quantity' => 5,
+                'name' => $exercise['name'],
+                'description' => $exercise['description'],
+                'default_quantity' => $exercise['defaultQuantity'],
                 'step_number' => $index,
                 'target' => 'something',
-                'priority' => $faker->numberBetween(1,5)
+                'priority' => $exercise['priority']
             ]);
 
             $exercise->user()->associate($this->user);

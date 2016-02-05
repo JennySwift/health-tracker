@@ -54,7 +54,7 @@
                 <td v-on:click="showExercisePopup(exercise)" class="pointer">@{{ exercise.stepNumber }}</td>
                 <td v-on:click="showExercisePopup(exercise)" class="pointer">@{{ exercise.series.name }}</td>
                 <td v-on:click="showExercisePopup(exercise)" class="pointer">@{{ exercise.defaultQuantity }}</td>
-                <td v-on:click="showExercisePopup(exercise)" class="pointer">@{{ exercise.defaultUnit.name }}</td>
+                <td v-on:click="showExercisePopup(exercise)" class="pointer">@{{ exercise.defaultUnit.data.name }}</td>
                 <td v-on:click="showExercisePopup(exercise)" class="pointer">@{{ exercise.target }}</td>
                 <td v-on:click="showExercisePopup(exercise)" class="pointer">@{{ exercise.priority }}</td>
                 <td v-on:click="showExercisePopup(exercise)" class="pointer">@{{ exercise.program.name }}</td>
