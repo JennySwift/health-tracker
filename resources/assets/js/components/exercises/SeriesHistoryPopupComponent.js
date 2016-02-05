@@ -2,10 +2,19 @@ var SeriesHistoryPopup = Vue.component('series-history-popup', {
     template: '#series-history-popup-template',
     data: function () {
         return {
-            showPopup: false
+            showPopup: false,
+            filterByExercise: ''
         };
     },
     components: {},
+    filters: {
+        exerciseFilter: function (entries) {
+            var that = this;
+            return entries.filter(function (entriesForDay) {
+                return entriesForDay.exercise.data.name.indexOf(that.filterByExercise) !== -1;
+            });
+        }
+    },
     methods: {
 
         /**

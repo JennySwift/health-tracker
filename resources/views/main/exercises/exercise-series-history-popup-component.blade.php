@@ -7,7 +7,11 @@
 			<h3>History of entries in the @{{ selectedSeries.name }} series</h3>
 
 			<div class="filters">
-				<input v-model="seriesHistoryFilter" type="text" placeholder="filter by exercise">
+				<input
+					v-model="filterByExercise"
+					type="text"
+					placeholder="filter by exercise"
+				>
 			</div>
 
 			<div v-if="exerciseSeriesHistory.length === 0">No entries to show</div>
@@ -24,7 +28,7 @@
 					<th>total</th>
 				</tr>
 
-				<tr v-for="entriesForDay in exerciseSeriesHistory | filter: {exercise: {name: seriesHistoryFilter}}">
+				<tr v-for="entriesForDay in exerciseSeriesHistory | exerciseFilter">
 					<td>@{{ entriesForDay.date }}</td>
 					<td>@{{ entriesForDay.daysAgo }}</td>
 					<td>@{{ entriesForDay.exercise.data.name }}</td>
