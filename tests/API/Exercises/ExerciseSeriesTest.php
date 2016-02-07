@@ -17,50 +17,6 @@ class ExerciseSeriesTest extends TestCase {
     /**
      * @test
      */
-    public function it_can_display_the_history_for_a_series()
-    {
-        $this->logInUser();
-
-        $response = $this->apiCall('GET', '/api/seriesEntries/1');
-        $content = json_decode($response->getContent(), true);
-//        dd($content);
-
-        $this->checkExerciseEntryKeysExist($content[0]);
-
-        $this->assertEquals(1, $content[0]['exercise']['data']['id']);
-        $this->assertEquals('kneeling pushups', $content[0]['exercise']['data']['name']);
-        $this->assertEquals('1.00', $content[0]['exercise']['data']['stepNumber']);
-        $this->assertEquals(1, $content[0]['exercise']['data']['defaultUnit']['data']['id']);
-
-        //Check the kneeling pushups done today with reps
-        $this->assertEquals(1, $content[0]['unit']['id']);
-        $this->assertEquals('reps', $content[0]['unit']['name']);
-
-        $this->assertEquals(2, $content[0]['sets']);
-        $this->assertEquals(10, $content[0]['total']);
-        $this->assertEquals(5, $content[0]['quantity']);
-        $this->assertEquals(0, $content[0]['daysAgo']);
-        $this->assertEquals(Carbon::today()->format('d/m/y'), $content[0]['date']);
-
-        //Check the kneeling pushups done today with minutes
-        $this->assertEquals(2, $content[1]['unit']['id']);
-        $this->assertEquals('minutes', $content[1]['unit']['name']);
-
-        $this->assertEquals(1, $content[1]['sets']);
-        $this->assertEquals(10, $content[1]['total']);
-        $this->assertEquals(10, $content[1]['quantity']);
-        $this->assertEquals(0, $content[1]['daysAgo']);
-        $this->assertEquals(Carbon::today()->format('d/m/y'), $content[1]['date']);
-
-        //Check the kneeling pushups done yesterday with reps
-        $this->assertEquals(1, $content[2]['daysAgo']);
-
-        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
-    }
-
-    /**
-     * @test
-     */
     public function it_can_show_the_exercises_in_a_series()
     {
         $this->logInUser();
@@ -87,8 +43,7 @@ class ExerciseSeriesTest extends TestCase {
 
         $this->checkSeriesKeysExist($content[0]);
 
-        $this->assertEquals(2, $content[0]['id']);
-        $this->assertEquals('pullup', $content[0]['name']);
+        $this->assertEquals('gymnastic rings', $content[0]['name']);
 
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
 

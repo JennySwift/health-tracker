@@ -47,15 +47,15 @@ class ExerciseSeriesRepository
     {
         //get all entries in the series
         $entries = $series->entries()
-            ->select(
-                'date',
-                'exercises.id as exercise_id',
-                'exercises.name',
-                'exercises.description',
-                'exercises.step_number',
-                'quantity',
-                'exercise_unit_id'
-            )
+//            ->select(
+//                'date',
+//                'exercises.id as exercise_id',
+//                'exercises.name',
+//                'exercises.description',
+//                'exercises.step_number',
+//                'quantity',
+//                'exercise_unit_id'
+//            )
             ->with(['unit' => function($query) {
                 $query->select('name', 'id');
             }])
