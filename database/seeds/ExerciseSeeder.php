@@ -63,6 +63,15 @@ class ExerciseSeeder extends Seeder {
             ]
         ];
 
+        $gymnasticRings = [
+            [
+                'name' => 'back lever',
+                'defaultQuantity' => 30,
+                'description' => $this->faker->word,
+                'priority' => 1
+            ],
+        ];
+
         $users = User::all();
 
         foreach($users as $user) {
@@ -83,6 +92,12 @@ class ExerciseSeeder extends Seeder {
                 $squats,
                 Unit::find($exercise_unit_ids[1]),
                 Series::where('user_id', $this->user->id)->where('name', 'squat')->first()
+            );
+
+            $this->insertExercisesInSeries(
+                $gymnasticRings,
+                Unit::find($exercise_unit_ids[1]),
+                Series::where('user_id', $this->user->id)->where('name', 'gymnastic rings')->first()
             );
 
         }

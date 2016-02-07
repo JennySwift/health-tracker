@@ -24135,7 +24135,21 @@ var SeriesPage = Vue.component('series-page', {
             var that = this;
 
             //Sort
-            series = _.chain(series).sortBy('priority').sortBy('lastDone').partition('lastDone').flatten().value();
+            series = _.chain(series)
+                .sortBy('priority')
+                .sortBy('lastDone')
+                .value();
+
+            /**
+             * @VP:
+             * This method feels like a lot of code for just
+             * a simple thing-ordering series by their lastDone value,
+             * putting those with a null lastDone value on the end.
+             * I tried underscore.js _.partition with _.flatten,
+             * but it put 0 values on the end,
+             * (I had trouble getting the predicate parameter of the _.partition method to work.)
+             */
+            series = this.moveLastDoneNullToEnd(series);
 
             //Filter
             return series.filter(function (thisSeries) {
@@ -24151,6 +24165,32 @@ var SeriesPage = Vue.component('series-page', {
         }
     },
     methods: {
+
+        /**
+         * For the series filter
+         * @param series
+         * @returns {*}
+         */
+        moveLastDoneNullToEnd: function (series) {
+            //Get the series that have lastDone null values
+            var seriesWithNullLastDone = _.filter(series, function (oneSeries) {
+                return oneSeries.lastDone == null;
+            });
+
+            //Remove the series that have lastDone null values
+            for (var i = 0; i < seriesWithNullLastDone.length; i++) {
+                var index = _.indexOf(series, _.findWhere(series, {id: seriesWithNullLastDone[i].id}));
+                series = _.without(series, series[index]);
+            }
+
+            //Add the series that have lastDone null values back on the
+            //end of the series array
+            for (var i = 0; i < seriesWithNullLastDone.length; i++) {
+                series.push(seriesWithNullLastDone[i]);
+            }
+
+            return series;
+        },
 
         /**
         *

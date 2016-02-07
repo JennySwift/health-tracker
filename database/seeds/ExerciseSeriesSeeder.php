@@ -32,6 +32,12 @@ class ExerciseSeriesSeeder extends Seeder {
                 'user_id' => $user->id,
                 'priority' => 2
             ]);
+
+            DB::table('exercise_series')->insert([
+                'name' => 'gymnastic rings',
+                'user_id' => $user->id,
+                'priority' => 1
+            ]);
         }
 
 
