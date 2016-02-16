@@ -110,7 +110,7 @@ class QuickRecipesTest extends TestCase
 
         $this->checkStepsWereInserted($content);
 
-        $this->checkIngredientKeysExist($content['ingredients'][0]);
+        $this->checkIngredientKeysExist($content['ingredients']['data'][0]);
         $this->checkIngredientsWereInserted($content);
 
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
@@ -122,19 +122,21 @@ class QuickRecipesTest extends TestCase
      */
     private function checkIngredientsWereInserted($content)
     {
-        $this->assertEquals(1, $content['ingredients'][0]['food_id']);
-        $this->assertEquals('apple', $content['ingredients'][0]['name']);
-        $this->assertEquals('small', $content['ingredients'][0]['unit_name']);
-        $this->assertEquals(3, $content['ingredients'][0]['unit_id']);
-        $this->assertEquals('1.00', $content['ingredients'][0]['quantity']);
-        $this->assertEquals('chopped', $content['ingredients'][0]['description']);
+        $ingredients = $content['ingredients']['data'];
 
-        $this->assertEquals(2, $content['ingredients'][1]['food_id']);
-        $this->assertEquals('banana', $content['ingredients'][1]['name']);
-        $this->assertEquals('large', $content['ingredients'][1]['unit_name']);
-        $this->assertEquals(5, $content['ingredients'][1]['unit_id']);
-        $this->assertEquals('2.00', $content['ingredients'][1]['quantity']);
-        $this->assertEquals('', $content['ingredients'][1]['description']);
+        $this->assertEquals(1, $ingredients[0]['food']['data']['id']);
+        $this->assertEquals('apple', $ingredients[0]['food']['data']['name']);
+        $this->assertEquals('small', $ingredients[0]['unit']['data']['name']);
+        $this->assertEquals(3, $ingredients[0]['unit']['data']['id']);
+        $this->assertEquals('1.00', $ingredients[0]['quantity']);
+        $this->assertEquals('chopped', $ingredients[0]['description']);
+
+        $this->assertEquals(2, $ingredients[1]['food']['data']['id']);
+        $this->assertEquals('banana', $ingredients[1]['food']['data']['name']);
+        $this->assertEquals('large', $ingredients[1]['unit']['data']['name']);
+        $this->assertEquals(5, $ingredients[1]['unit']['data']['id']);
+        $this->assertEquals('2.00', $ingredients[1]['quantity']);
+        $this->assertEquals('', $ingredients[1]['description']);
     }
 
     /**

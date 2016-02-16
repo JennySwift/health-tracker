@@ -201,7 +201,7 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
      *
      * @param $entry
      */
-    protected function checkMenuEntryKeysExist($entry)
+    protected function checkFoodEntryKeysExist($entry)
     {
         $this->assertArrayHasKey('id', $entry);
         $this->assertArrayHasKey('date', $entry);
@@ -209,6 +209,15 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
         $this->assertArrayHasKey('calories', $entry);
         $this->assertArrayHasKey('food', $entry);
         $this->assertArrayHasKey('unit', $entry);
+    }
+
+    /**
+     *
+     * @param $entry
+     */
+    protected function checkRecipeEntryKeysExist($entry)
+    {
+        $this->checkFoodEntryKeysExist($entry);
         $this->assertArrayHasKey('recipe', $entry);
     }
 
@@ -218,13 +227,15 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
      */
     protected function checkIngredientKeysExist($ingredient)
     {
-        $this->assertArrayHasKey('food_id', $ingredient);
-        $this->assertArrayHasKey('name', $ingredient);
-        $this->assertArrayHasKey('unit_name', $ingredient);
-        $this->assertArrayHasKey('unit_id', $ingredient);
+        $this->assertArrayHasKey('food', $ingredient);
+        $this->assertArrayHasKey('id', $ingredient['food']['data']);
+        $this->assertArrayHasKey('name', $ingredient['food']['data']);
+        $this->assertArrayHasKey('unit', $ingredient);
+        $this->assertArrayHasKey('id', $ingredient['unit']['data']);
+        $this->assertArrayHasKey('name', $ingredient['unit']['data']);
         $this->assertArrayHasKey('quantity', $ingredient);
         $this->assertArrayHasKey('description', $ingredient);
-        $this->assertArrayHasKey('units', $ingredient);
+        $this->assertArrayHasKey('units', $ingredient['food']['data']);
     }
 
 

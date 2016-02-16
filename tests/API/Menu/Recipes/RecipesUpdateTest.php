@@ -41,10 +41,10 @@ class RecipeUpdateTest extends TestCase
         $this->assertEquals('numbat', $content['name']);
         //Todo: this fails sometimes depending on the seeder
         $this->assertEquals([1,3], $content['tag_ids']);
-        $this->checkIngredientKeysExist($content['ingredients'][0]);
-        $this->assertEquals(2, $content['ingredients'][0]['food_id']);
-        $this->assertEquals(4, $content['ingredients'][1]['food_id']);
-        $this->assertCount(2, $content['ingredients']);
+        $this->checkIngredientKeysExist($content['ingredients']['data'][0]);
+        $this->assertEquals(2, $content['ingredients']['data'][0]['food']['data']['id']);
+        $this->assertEquals(4, $content['ingredients']['data'][1]['food']['data']['id']);
+        $this->assertCount(2, $content['ingredients']['data']);
 
         //Check the steps are correct
         $this->assertEquals(1, $content['steps'][0]['step']);
@@ -102,8 +102,8 @@ class RecipeUpdateTest extends TestCase
 
         $this->checkRecipeKeysExist($content);
 
-        $this->checkIngredientKeysExist($content['ingredients'][0]);
-        $this->assertCount($foodCount -1, $content['ingredients']);
+        $this->checkIngredientKeysExist($content['ingredients']['data'][0]);
+        $this->assertCount($foodCount -1, $content['ingredients']['data']);
 
         $this->assertEquals(200, $response->getStatusCode());
 
@@ -149,8 +149,8 @@ class RecipeUpdateTest extends TestCase
 
         $this->checkRecipeKeysExist($content);
 
-        $this->checkIngredientKeysExist($content['ingredients'][0]);
-        $this->assertCount($foodCount + 1, $content['ingredients']);
+        $this->checkIngredientKeysExist($content['ingredients']['data'][0]);
+        $this->assertCount($foodCount + 1, $content['ingredients']['data']);
 
         $this->assertEquals(200, $response->getStatusCode());
 

@@ -78,7 +78,7 @@ class MenuEntriesTest extends TestCase {
         $content = json_decode($response->getContent(), true);
 //dd($content);
 
-        $this->checkMenuEntryKeysExist($content);
+        $this->checkFoodEntryKeysExist($content);
 
         $this->assertEquals('2010-05-01', $content['date']);
         $this->assertEquals(4, $content['quantity']);
@@ -112,7 +112,7 @@ class MenuEntriesTest extends TestCase {
         $content = json_decode($response->getContent(), true);
 //dd($content);
 
-        $this->checkMenuEntryKeysExist($content);
+        $this->checkRecipeEntryKeysExist($content);
 
         $this->assertEquals('2010-05-01', $content['date']);
         $this->assertEquals(2, $content['recipe']['id']);
