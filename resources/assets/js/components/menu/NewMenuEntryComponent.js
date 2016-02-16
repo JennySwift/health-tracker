@@ -33,10 +33,6 @@ var NewMenuEntry = Vue.component('new-menu-entry', {
 
             $.event.trigger('get-entries');
 
-            //if (this.temporaryRecipePopup.contents) {
-            //    this.temporaryRecipePopup.contents.length = 0;
-            //}
-
             $("#new-menu-entry-food").focus();
 
             this.$http.post('/api/menuEntries', data, function (response) {
@@ -49,6 +45,54 @@ var NewMenuEntry = Vue.component('new-menu-entry', {
             })
             .error(function (response) {
                 this.handleResponseError(response);
+            });
+        },
+
+        /**
+         *
+         * @param ingredient
+         * @param recipeId
+         */
+        insertEntry: function (ingredient, recipeId) {
+            var data = {
+                date: this.date.sql,
+                food_id: ingredient.food.data.id,
+                recipe_id: recipeId,
+                unit_id: ingredient.unit.data.id,
+                quantity: ingredient.quantity,
+            };
+
+            this.$http.post('/api/menuEntries', data, function (response) {
+                $.event.trigger('provide-feedback', ['Recipe entries created', 'success']);
+                //$.event.trigger('menu-entry-added', [response]);
+                //$.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
+        },
+
+        /**
+         * Insert each entry for a recipe, one at a time
+         * @param recipe
+         */
+        insertEntriesForRecipe: function (recipe) {
+            console.log(recipe);
+            $.event.trigger('show-loading');
+
+            for (var i = 0; i < recipe.ingredients.data.length; i++) {
+                this.insertEntry(recipe.ingredients.data[i], recipe.id);
+            }
+            $.event.trigger('hide-loading');
+        },
+
+        /**
+         *
+         */
+        listen: function () {
+            var that = this;
+            $(document).on('insert-entries-for-recipe', function (event, recipe) {
+                that.insertEntriesForRecipe(recipe);
             });
         },
 
@@ -80,6 +124,6 @@ var NewMenuEntry = Vue.component('new-menu-entry', {
         }
     },
     ready: function () {
-
+        this.listen();
     }
 });

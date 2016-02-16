@@ -76,6 +76,14 @@ var TemporaryRecipePopup = Vue.component('temporary-recipe-popup', {
         /**
          *
          */
+        insertEntriesForRecipe: function () {
+            $.event.trigger('insert-entries-for-recipe', [this.recipe]);
+            this.showPopup = false;
+        },
+
+        /**
+         *
+         */
         listen: function () {
             var that = this;
             $(document).on('show-temporary-recipe-popup', function (event, recipe) {
@@ -94,7 +102,7 @@ var TemporaryRecipePopup = Vue.component('temporary-recipe-popup', {
         }
     },
     props: [
-        //data to be received from parent
+        //'insertEntriesForRecipe'
     ],
     ready: function () {
         this.listen();

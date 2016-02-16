@@ -2,7 +2,10 @@
 
     <div class="margin-bottom">
 
-        <temporary-recipe-popup></temporary-recipe-popup>
+        <temporary-recipe-popup
+            {{--:insert-entries-for-recipe="insertEntriesForRecipe"--}}
+        >
+        </temporary-recipe-popup>
 
         <autocomplete
                 :insert-item-function="insertMenuEntry"

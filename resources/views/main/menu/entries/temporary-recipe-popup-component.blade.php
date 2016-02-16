@@ -80,7 +80,7 @@
 				</button>
 
 				<button
-						v-on:click="insertRecipeEntry()"
+						v-on:click="insertEntriesForRecipe()"
 						class="btn btn-default"
 				>
 					Enter
