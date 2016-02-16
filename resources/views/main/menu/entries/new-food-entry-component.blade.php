@@ -42,7 +42,7 @@
             </select>
         </div>
 
-        <div class="form-group">
+        <div v-if="!recipeIsTemporary" class="form-group">
             <label for="new-ingredient-description">Description</label>
             <input
                     v-model="newIngredient.description"

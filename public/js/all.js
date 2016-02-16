@@ -24742,29 +24742,34 @@ var NewFoodEntry = Vue.component('new-food-entry', {
          *
          */
         addIngredientToRecipe: function () {
-            $.event.trigger('show-loading');
+            if (this.recipeIsTemporary) {
+                $.event.trigger('add-ingredient-to-temporary-recipe', [this.newIngredient]);
+            }
+            else {
+                $.event.trigger('show-loading');
 
-            var data = {
-                addIngredient: true,
-                food_id: this.newIngredient.food.id,
-                unit_id: this.newIngredient.unit.id,
-                quantity: this.newIngredient.quantity,
-                description: this.newIngredient.description
-            };
+                var data = {
+                    addIngredient: true,
+                    food_id: this.newIngredient.food.id,
+                    unit_id: this.newIngredient.unit.id,
+                    quantity: this.newIngredient.quantity,
+                    description: this.newIngredient.description
+                };
 
-            this.$http.put('/api/recipes/' + this.selectedRecipe.id, data, function (response) {
-                    this.selectedRecipe.ingredients.push({
-                        name: this.newIngredient.food.name,
-                        unit_name: this.newIngredient.unit.name,
-                        quantity: this.newIngredient.quantity,
-                        description: this.newIngredient.description,
+                this.$http.put('/api/recipes/' + this.selectedRecipe.id, data, function (response) {
+                        this.selectedRecipe.ingredients.push({
+                            name: this.newIngredient.food.name,
+                            unit_name: this.newIngredient.unit.name,
+                            quantity: this.newIngredient.quantity,
+                            description: this.newIngredient.description,
+                        });
+                        $.event.trigger('provide-feedback', ['Food added', 'success']);
+                        $.event.trigger('hide-loading');
+                    })
+                    .error(function (response) {
+                        this.handleResponseError(response);
                     });
-                    $.event.trigger('provide-feedback', ['Food added', 'success']);
-                    $.event.trigger('hide-loading');
-                })
-                .error(function (response) {
-                    this.handleResponseError(response);
-                });
+            }
         },
 
 
@@ -24779,7 +24784,8 @@ var NewFoodEntry = Vue.component('new-food-entry', {
     },
     props: [
         'date',
-        'selectedRecipe'
+        'selectedRecipe',
+        'recipeIsTemporary'
     ],
     events: {
         'option-chosen': function (option) {
@@ -25691,6 +25697,22 @@ var TemporaryRecipePopup = Vue.component('temporary-recipe-popup', {
             $(document).on('show-temporary-recipe-popup', function (event, recipe) {
                 that.getRecipe(recipe);
                 that.showPopup = true;
+            });
+            $(document).on('add-ingredient-to-temporary-recipe', function (event, ingredient) {
+                console.log(ingredient);
+                console.log(that.recipe.ingredients.data[0]);
+                that.recipe.ingredients.data.push({
+                    food: {
+                        data: {
+                            id: ingredient.food.id,
+                            name: ingredient.food.name,
+                            units: {data: ingredient.food.units.data},
+                            defaultUnit: ingredient.food.defaultUnit,
+                        }
+                    },
+                    unit: {data: ingredient.unit},
+                    quantity: ingredient.quantity
+                });
             });
         },
 

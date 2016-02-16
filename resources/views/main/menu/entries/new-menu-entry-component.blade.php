@@ -3,6 +3,7 @@
     <div class="margin-bottom">
 
         <temporary-recipe-popup
+                :date="date"
             {{--:insert-entries-for-recipe="insertEntriesForRecipe"--}}
         >
         </temporary-recipe-popup>

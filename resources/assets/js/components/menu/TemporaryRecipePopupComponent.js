@@ -97,6 +97,22 @@ var TemporaryRecipePopup = Vue.component('temporary-recipe-popup', {
                 that.getRecipe(recipe);
                 that.showPopup = true;
             });
+            $(document).on('add-ingredient-to-temporary-recipe', function (event, ingredient) {
+                console.log(ingredient);
+                console.log(that.recipe.ingredients.data[0]);
+                that.recipe.ingredients.data.push({
+                    food: {
+                        data: {
+                            id: ingredient.food.id,
+                            name: ingredient.food.name,
+                            units: {data: ingredient.food.units.data},
+                            defaultUnit: ingredient.food.defaultUnit,
+                        }
+                    },
+                    unit: {data: ingredient.unit},
+                    quantity: ingredient.quantity
+                });
+            });
         },
 
         /**

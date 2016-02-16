@@ -11,6 +11,7 @@
 
 			<h4 class="center">@{{ recipe.name }}</h4>
 			<p class="col-sm-12">Editing your recipe here will not change the default contents of your recipe.</p>
+
 			<div class="row margin-bottom">
 				<div class="col-sm-10 col-sm-offset-1">
 
@@ -27,6 +28,17 @@
 				</div>
 			</div>
 
+			<h3>Add ingredient</h3>
+
+			<new-food-entry
+					:date="date"
+					:selected-recipe.sync="recipe"
+					:recipe-is-temporary="true"
+			>
+			</new-food-entry>
+
+			<h3>Ingredients</h3>
+
 			<table class="table table-bordered">
 
 				<tr>
@@ -42,11 +54,6 @@
 					<td>
 						<input v-model="ingredient.quantity" type="text">
 					</td>
-					
-					{{--<td>--}}
-						{{--<pre>@{{ingredient | json}}</pre>--}}
-{{--						<pre>@{{$data.ingredient.units | json}}</pre>--}}
-					{{--</td>--}}
 
 					<td>
 						<select
