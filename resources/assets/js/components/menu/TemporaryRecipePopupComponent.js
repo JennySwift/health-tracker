@@ -33,6 +33,13 @@ var TemporaryRecipePopup = Vue.component('temporary-recipe-popup', {
         /**
          *
          */
+        deleteIngredientFromTemporaryRecipe: function (ingredient) {
+            this.recipe.ingredients.data = _.without(this.recipe.ingredients.data, ingredient);
+        },
+
+        /**
+         *
+         */
         closePopup: function ($event) {
             if ($event.target.className === 'popup-outer') {
                 this.showPopup = false;

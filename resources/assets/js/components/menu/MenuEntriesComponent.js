@@ -79,13 +79,6 @@ var MenuEntriesComponent = Vue.component('menu-entries', {
             $("#temporary-recipe-food-input").val("").focus();
         },
 
-        /**
-         *
-         */
-        deleteFromTemporaryRecipe: function ($item) {
-            this.temporaryRecipePopup.contents = _.without(this.temporaryRecipePopup.contents, $item);
-        },
-
         showDeleteFoodOrRecipeEntryPopup: function ($entry_id, $recipe_id) {
             this.show.popups.delete_food_or_recipe_entry = true;
             this.selected.entry = {

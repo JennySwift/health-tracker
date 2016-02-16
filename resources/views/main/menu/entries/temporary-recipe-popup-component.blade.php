@@ -62,7 +62,7 @@
 
 					<td>
 						<i
-							v-on:click="deleteFromTemporaryRecipe(item)"
+							v-on:click="deleteIngredientFromTemporaryRecipe(ingredient)"
 							class="delete-item fa fa-times"
 						>
 						</i>
