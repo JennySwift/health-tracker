@@ -33,6 +33,33 @@ var TemporaryRecipePopup = Vue.component('temporary-recipe-popup', {
         /**
          *
          */
+        insertFoodIntoTemporaryRecipe: function () {
+            //we are adding a food to a temporary recipe
+            var $unit_name = $("#temporary-recipe-popup-unit option:selected").text();
+            this.temporaryRecipePopup.contents.push({
+                "food_id": this.temporaryRecipePopup.food.id,
+                "name": this.temporaryRecipePopup.food.name,
+                "quantity": this.temporaryRecipePopup.quantity,
+                "unit_id": $("#temporary-recipe-popup-unit").val(),
+                "unit_name": $unit_name,
+                "units": this.temporaryRecipePopup.food.units
+            });
+
+            $("#temporary-recipe-food-input").val("").focus();
+        },
+
+        //this.$watch('recipe.portion', function (newValue, oldValue) {
+//    $(this.temporaryRecipePopup.contents).each(function () {
+//        if (this.original_quantity) {
+//            //making sure we don't alter the quantity of a food that has been added to the temporary recipe (by doing the if check)
+//            this.quantity = this.original_quantity * newValue;
+//        }
+//    });
+//});
+
+        /**
+         *
+         */
         deleteIngredientFromTemporaryRecipe: function (ingredient) {
             this.recipe.ingredients.data = _.without(this.recipe.ingredients.data, ingredient);
         },

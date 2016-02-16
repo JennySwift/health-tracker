@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
+use App\Http\Transformers\Menu\MenuEntryTransformer;
 use App\Models\Menu\Entry;
 use App\Models\Menu\Food;
 use App\Models\Menu\Recipe;
@@ -41,6 +42,11 @@ class MenuEntriesController extends Controller
     }
 
     /**
+     * Entry can be either just a food, or part of a recipe.
+     * When part of a recipe, the store method inserts just one food at a time,
+     * so that the store method is RESTful.
+     * So lots of ajax requests will be made to insert
+     * all the entries for a whole recipe.
      * POST /api/menuEntries
      * @param Request $request
      * @return Response
@@ -52,17 +58,16 @@ class MenuEntriesController extends Controller
         ]));
         $entry->user()->associate(Auth::user());
 
+        $entry->food()->associate(Food::find($request->get('food_id')));
+
         if ($request->get('recipe_id')) {
             $entry->recipe()->associate(Recipe::find($request->get('recipe_id')));
-        }
-        else if ($request->get('food_id')) {
-            $entry->food()->associate(Food::find($request->get('food_id')));
         }
 
         $entry->unit()->associate(Unit::find($request->get('unit_id')));
         $entry->save();
 
-//        $entry = $this->transform($this->createItem($entry, new EntryTransformer))['data'];
+        $entry = $this->transform($this->createItem($entry, new MenuEntryTransformer))['data'];
         return response($entry, Response::HTTP_CREATED);
     }
 

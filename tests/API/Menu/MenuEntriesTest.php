@@ -63,7 +63,7 @@ class MenuEntriesTest extends TestCase {
      * @test
      * @return void
      */
-    public function it_can_add_a_new_menu_entry()
+    public function it_can_add_a_new_food_entry()
     {
         $this->logInUser();
 
@@ -78,15 +78,44 @@ class MenuEntriesTest extends TestCase {
         $content = json_decode($response->getContent(), true);
 //dd($content);
 
-        $this->assertArrayHasKey('date', $content);
-        $this->assertArrayHasKey('quantity', $content);
-        $this->assertArrayHasKey('food_id', $content);
-        $this->assertArrayHasKey('unit_id', $content);
-        $this->assertArrayHasKey('id', $content);
-        $this->assertArrayHasKey('food', $content);
-        $this->assertArrayHasKey('unit', $content);
+        $this->checkMenuEntryKeysExist($content);
 
         $this->assertEquals('2010-05-01', $content['date']);
+        $this->assertEquals(4, $content['quantity']);
+        $this->assertEquals(2, $content['unit']['id']);
+        $this->assertEquals(3, $content['food']['id']);
+
+        $this->assertEquals(Response::HTTP_CREATED, $response->getStatusCode());
+    }
+
+    /**
+     * Just one food should be inserted into the database,
+     * so that the store method is RESTful.
+     * So lots of ajax requests will be made to insert
+     * all the entries for the whole recipe.
+     * @test
+     * @return void
+     */
+    public function it_can_add_a_new_recipe_entry()
+    {
+        $this->logInUser();
+
+        $entry = [
+            'date' => '2010-05-01',
+            'food_id' => 3,
+            'recipe_id' => 2,
+            'quantity' => 4,
+            'unit_id' => 2,
+        ];
+
+        $response = $this->call('POST', '/api/menuEntries', $entry);
+        $content = json_decode($response->getContent(), true);
+//dd($content);
+
+        $this->checkMenuEntryKeysExist($content);
+
+        $this->assertEquals('2010-05-01', $content['date']);
+        $this->assertEquals(2, $content['recipe']['id']);
         $this->assertEquals(4, $content['quantity']);
         $this->assertEquals(2, $content['unit']['id']);
         $this->assertEquals(3, $content['food']['id']);

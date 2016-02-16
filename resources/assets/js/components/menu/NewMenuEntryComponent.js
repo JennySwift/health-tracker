@@ -54,29 +54,6 @@ var NewMenuEntry = Vue.component('new-menu-entry', {
 
         /**
          *
-         */
-        insertRecipeEntry: function () {
-            $.event.trigger('show-loading');
-            var data = {
-                date: this.date.sql,
-                recipe_id: this.selected.menu.id,
-                recipe_contents: this.temporaryRecipePopup.contents
-            };
-
-            this.$http.post('/insert/recipeEntry', data, function (response) {
-                    this.entries.menu = response.data;
-                    this.show.popups.temporary_recipe = false;
-                    $("#menu").val("").focus();
-                    $.event.trigger('provide-feedback', ['Recipe created', 'success']);
-                    $.event.trigger('hide-loading');
-                })
-                .error(function (response) {
-                    this.handleResponseError(response);
-                });
-        },
-
-        /**
-         *
          * @param response
          */
         handleResponseError: function (response) {
