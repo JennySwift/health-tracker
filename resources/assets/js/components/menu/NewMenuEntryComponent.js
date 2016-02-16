@@ -13,7 +13,9 @@ var NewMenuEntry = Vue.component('new-menu-entry', {
                 },
                 unit: {},
                 type: ''
-            }
+            },
+            recipeEntry: {},
+            entryNumberForRecipe: 0
         };
     },
     components: {},
@@ -51,21 +53,27 @@ var NewMenuEntry = Vue.component('new-menu-entry', {
         /**
          *
          * @param ingredient
-         * @param recipeId
          */
-        insertEntry: function (ingredient, recipeId) {
+        insertEntry: function (ingredient) {
             var data = {
                 date: this.date.sql,
                 food_id: ingredient.food.data.id,
-                recipe_id: recipeId,
+                recipe_id: this.recipeEntry.id,
                 unit_id: ingredient.unit.data.id,
                 quantity: ingredient.quantity,
             };
 
             this.$http.post('/api/menuEntries', data, function (response) {
-                $.event.trigger('provide-feedback', ['Recipe entries created', 'success']);
-                //$.event.trigger('menu-entry-added', [response]);
-                //$.event.trigger('hide-loading');
+                //This adds the entry to the entries with the JS
+                $.event.trigger('menu-entry-added', [response]);
+                this.entryNumberForRecipe++;
+                //If it's the last of the entries for the recipe being added, do stuff
+                if (this.entryNumberForRecipe == this.recipeEntry.ingredients.data.length) {
+                    $.event.trigger('provide-feedback', ['Recipe entries created', 'success']);
+                    //I think this just updates the calorie info for the day
+                    $.event.trigger('get-entries');
+                    $.event.trigger('hide-loading');
+                }
             })
             .error(function (response) {
                 this.handleResponseError(response);
@@ -77,13 +85,14 @@ var NewMenuEntry = Vue.component('new-menu-entry', {
          * @param recipe
          */
         insertEntriesForRecipe: function (recipe) {
-            console.log(recipe);
             $.event.trigger('show-loading');
 
+            this.entryNumberForRecipe = 0;
+            this.recipeEntry = recipe;
+
             for (var i = 0; i < recipe.ingredients.data.length; i++) {
-                this.insertEntry(recipe.ingredients.data[i], recipe.id);
+                this.insertEntry(recipe.ingredients.data[i]);
             }
-            $.event.trigger('hide-loading');
         },
 
         /**

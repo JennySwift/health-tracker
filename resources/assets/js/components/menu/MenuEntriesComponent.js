@@ -81,6 +81,9 @@ var MenuEntriesComponent = Vue.component('menu-entries', {
             $(document).on('date-changed', function (event) {
                 that.getEntriesForTheDay();
             });
+            //$(document).on('get-menu-entries', function (event) {
+            //    that.getEntriesForTheDay();
+            //});
         },
 
         /**
