@@ -75,26 +75,26 @@ class FoodsTest extends TestCase {
      * @test
      * @return void
      */
-    public function it_can_add_a_new_food()
+    public function it_can_create_a_food()
     {
+        DB::beginTransaction();
         $this->logInUser();
 
         $food = [
-            'name' => 'kangaroo'
+            'name' => 'koala'
         ];
 
         $response = $this->call('POST', '/api/foods', $food);
-        $content = json_decode($response->getContent(), true)['data'];
+        $content = json_decode($response->getContent(), true);
+//      dd($content);
 
-        $this->assertArrayHasKey('id', $content);
-        $this->assertArrayHasKey('name', $content);
-        $this->assertArrayHasKey('path', $content);
-        $this->assertArrayHasKey('defaultCalories', $content);
-//        $this->assertArrayHasKey('defaultUnit', $content);
+        $this->checkFoodKeysExistWithoutDefaultUnit($content);
 
-        $this->assertEquals('kangaroo', $content['name']);
+        $this->assertEquals('koala', $content['name']);
 
         $this->assertEquals(Response::HTTP_CREATED, $response->getStatusCode());
+
+        DB::rollBack();
     }
 
     /**

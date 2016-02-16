@@ -5,7 +5,8 @@ var FoodsPage = Vue.component('foods-page', {
             calories: {},
             newItem: {},
             foods: [],
-            foodsFilter: ''
+            foodsFilter: '',
+            newFood: {}
         };
     },
     components: {},
@@ -25,11 +26,14 @@ var FoodsPage = Vue.component('foods-page', {
             });
         },
 
-        getMenu: function () {
-            if ($scope.foods.length > 0 && $scope.recipes.length > 0) {
-                $scope.menu = select.getMenu($scope.foods, $scope.recipes);
-            }
-        },
+        /**
+         *
+         */
+        //getMenu: function () {
+        //    if ($scope.foods.length > 0 && $scope.recipes.length > 0) {
+        //        $scope.menu = select.getMenu($scope.foods, $scope.recipes);
+        //    }
+        //},
 
         getFoodInfo: function ($food) {
             //for popup where user selects units for food and enters calories
@@ -63,19 +67,23 @@ var FoodsPage = Vue.component('foods-page', {
             }
         },
 
-        insertFood: function ($keycode) {
-            if ($keycode === 13) {
-                $rootScope.showLoading();
-                FoodsFactory.insertFood()
-                    .then(function (response) {
-                        $scope.foods.push(response.data.data);
-                        $rootScope.$broadcast('provideFeedback', 'Food created');
-                        $rootScope.hideLoading();
-                    })
-                    .catch(function (response) {
-                        $rootScope.responseError(response);
-                    });
-            }
+        /**
+        *
+        */
+        insertFood: function () {
+            $.event.trigger('show-loading');
+            var data = {
+                name: this.newFood.name
+            };
+
+            this.$http.post('/api/foods', data, function (response) {
+                this.foods.push(response);
+                $.event.trigger('provide-feedback', ['Food created', 'success']);
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
         },
 
         updateCalories: function ($keycode, $unit_id, $calories) {

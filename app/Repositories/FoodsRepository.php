@@ -64,20 +64,4 @@ class FoodsRepository
         return $foods['data'];
     }
 
-    /**
-     *
-     * @param $name
-     * @return Food
-     */
-    public function insert($name)
-    {
-        $food = new Food([
-            'name' => $name
-        ]);
-        $food->user()->associate(Auth::user());
-        $food->save();
-
-        return $food;
-    }
-
 }

@@ -8,20 +8,31 @@
         <div class="flex">
 
             <div>
-                <input
-                        v-on:keyup="insertFood($event.keyCode)"
-                        type="text"
-                        placeholder="add a new food"
-                        id="create-new-food"
-                        class="form-control"
-                >
 
-                <input
+                <div class="form-group">
+                    <label for="new-food-name">New Food</label>
+                    <input
+                        v-model="newFood.name"
+                        v-on:keyup.13="insertFood()"
+                        type="text"
+                        id="new-food-name"
+                        name="new-food-name"
+                        placeholder="name"
+                        class="form-control"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="foods-filter">Filter foods</label>
+                    <input
                         v-model="foodsFilter"
                         type="text"
+                        id="foods-filter"
+                        name="foods-filter"
                         placeholder="filter foods"
                         class="form-control"
-                >
+                    >
+                </div>
 
                 <hr>
                 <div>
@@ -34,7 +45,7 @@
                         </tr>
                         <tr v-for="food in foods">
                             <td v-on:click="getFoodInfo(food)" class="pointer">@{{ food.name }}</td>
-                            <td>@{{ food.defaultUnit.data.name }}</td>
+                            <td><span v-if="food.defaultUnit">@{{ food.defaultUnit.data.name }}</span></td>
                             <td>@{{ food.defaultCalories }}</td>
                             <td><i v-on:click="deleteFood(food)" class="delete-item fa fa-times"></i></td>
                         </tr>

@@ -69,6 +69,18 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
     }
 
     /**
+     * Because a newly created food doesn't yet have a default unit
+     * @param $food
+     */
+    protected function checkFoodKeysExistWithoutDefaultUnit($food)
+    {
+        $this->assertArrayHasKey('id', $food);
+        $this->assertArrayHasKey('name', $food);
+        $this->assertArrayHasKey('path', $food);
+        $this->assertArrayHasKey('defaultCalories', $food);
+    }
+
+    /**
      *
      * @param $exercise
      */

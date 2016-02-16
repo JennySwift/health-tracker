@@ -10,6 +10,7 @@ use Auth;
 use DB;
 use Debugbar;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 /**
  * Class FoodsController
@@ -64,15 +65,20 @@ class FoodsController extends Controller
     }
 
     /**
-     * POST api/foods
+     * POST /api/foods
      * @param Request $request
-     * @return mixed
+     * @return Response
      */
     public function store(Request $request)
     {
-        $food = $this->foodsRepository->insert($request->get('name'));
+        $food = new Food($request->only([
+            'name'
+        ]));
+        $food->user()->associate(Auth::user());
+        $food->save();
 
-        return $this->responseCreatedWithTransformer($food, new FoodTransformer);
+        $food = $this->transform($this->createItem($food, new FoodTransformer))['data'];
+        return response($food, Response::HTTP_CREATED);
     }
 
     /**
