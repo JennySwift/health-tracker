@@ -92,12 +92,12 @@ var RecipePopup = Vue.component('recipe-popup', {
 
             var data = {
                 removeIngredient: true,
-                food_id: ingredient.food_id,
-                unit_id: ingredient.unit_id
+                food_id: ingredient.food.data.id,
+                unit_id: ingredient.unit.data.id
             };
 
             this.$http.put('/api/recipes/' + this.selectedRecipe.id, data, function (response) {
-                this.selectedRecipe.ingredients = _.without(this.selectedRecipe.ingredients, ingredient);
+                this.selectedRecipe.ingredients.data = _.without(this.selectedRecipe.ingredients.data, ingredient);
                 $.event.trigger('provide-feedback', ['Ingredient removed from recipe', 'success']);
                 $.event.trigger('hide-loading');
             })

@@ -23258,6 +23258,1617 @@ var Weight = Vue.component('weight', {
     }
 });
 
+var FoodPopup = Vue.component('food-popup', {
+    template: '#food-popup-template',
+    data: function () {
+        return {
+            selectedFood: {
+                food: {}
+            }
+        };
+    },
+    components: {},
+    methods: {
+        /**
+         *
+         * @param response
+         */
+        handleResponseError: function (response) {
+            this.$broadcast('response-error', response);
+            this.showLoading = false;
+        }
+    },
+    props: [
+        //data to be received from parent
+    ],
+    ready: function () {
+
+    }
+});
+
+var FoodUnitsPage = Vue.component('food-units-page', {
+    template: '#food-units-page-template',
+    data: function () {
+        return {
+            units: [],
+            newUnit: {}
+        };
+    },
+    components: {},
+    methods: {
+
+        /**
+        *
+        */
+        getUnits: function () {
+            $.event.trigger('show-loading');
+            this.$http.get('/api/foodUnits', function (response) {
+                this.units = response;
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
+        },
+
+        /**
+        *
+        */
+        insertUnit: function () {
+            $.event.trigger('show-loading');
+            var data = {
+                name: this.newUnit.name
+            };
+
+            this.$http.post('/api/foodUnits', data, function (response) {
+                this.units.push(response.data);
+                $.event.trigger('provide-feedback', ['Unit created', 'success']);
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
+        },
+
+        /**
+        *
+        */
+        deleteUnit: function (unit) {
+            if (confirm("Are you sure?")) {
+                $.event.trigger('show-loading');
+                this.$http.delete('/api/foodUnits/' + unit.id, function (response) {
+                    this.units = _.without(this.units, unit);
+                    //var index = _.indexOf(this.units, _.findWhere(this.units, {id: this.unit.id}));
+                    //this.units = _.without(this.units, this.units[index]);
+                    $.event.trigger('provide-feedback', ['Unit deleted', 'success']);
+                    $.event.trigger('hide-loading');
+                })
+                .error(function (response) {
+                    this.handleResponseError(response);
+                });
+            }
+        },
+
+        /**
+         *
+         * @param response
+         */
+        handleResponseError: function (response) {
+            this.$broadcast('response-error', response);
+            this.showLoading = false;
+        }
+    },
+    props: [
+        //data to be received from parent
+    ],
+    ready: function () {
+        this.getUnits();
+    }
+});
+
+
+var FoodsPage = Vue.component('foods-page', {
+    template: '#foods-page-template',
+    data: function () {
+        return {
+            calories: {},
+            newItem: {},
+            foods: [],
+            foodsFilter: ''
+        };
+    },
+    components: {},
+    methods: {
+
+        /**
+        *
+        */
+        getFoods: function () {
+            $.event.trigger('show-loading');
+            this.$http.get('/api/foods', function (response) {
+                this.foods = response;
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
+        },
+
+        getMenu: function () {
+            if ($scope.foods.length > 0 && $scope.recipes.length > 0) {
+                $scope.menu = select.getMenu($scope.foods, $scope.recipes);
+            }
+        },
+
+        getFoodInfo: function ($food) {
+            //for popup where user selects units for food and enters calories
+            $scope.food_popup.id = $food.id;
+            $scope.food_popup.name = $food.name;
+            $scope.show.popups.food_info = true;
+            FoodsFactory.getFoodInfo($food).then(function (response) {
+                $scope.food_popup = response.data;
+            });
+
+        },
+
+        /**
+         * Add a unit to a food or remove the unit from the food.
+         * The method name is old and should probably be changed.
+         * @param $unit_id
+         */
+        insertOrDeleteUnitInCalories: function ($unit_id) {
+            //Check if the checkbox is checked
+            if ($scope.food_popup.food_units.indexOf($unit_id) === -1) {
+                //It is now unchecked. Remove the unit from the food.
+                FoodsFactory.deleteUnitFromCalories($scope.food_popup.food.id, $unit_id).then(function (response) {
+                    $scope.food_popup = response.data;
+                });
+            }
+            else {
+                // It is now checked. Add the unit to the food.
+                FoodsFactory.insertUnitInCalories($scope.food_popup.food.id, $unit_id).then(function (response) {
+                    $scope.food_popup = response.data;
+                });
+            }
+        },
+
+        insertFood: function ($keycode) {
+            if ($keycode === 13) {
+                $rootScope.showLoading();
+                FoodsFactory.insertFood()
+                    .then(function (response) {
+                        $scope.foods.push(response.data.data);
+                        $rootScope.$broadcast('provideFeedback', 'Food created');
+                        $rootScope.hideLoading();
+                    })
+                    .catch(function (response) {
+                        $rootScope.responseError(response);
+                    });
+            }
+        },
+
+        updateCalories: function ($keycode, $unit_id, $calories) {
+            if ($keycode === 13) {
+                FoodsFactory.updateCalories($scope.food_popup.food.id, $unit_id, $calories).then(function (response) {
+                    $scope.food_popup = response.data;
+                });
+            }
+        },
+
+        updateDefaultUnit: function ($food_id, $unit_id) {
+            FoodsFactory.updateDefaultUnit($food_id, $unit_id).then(function (response) {
+                $scope.food_popup = response.data;
+            });
+        },
+
+        deleteFood: function ($food) {
+            $rootScope.showLoading();
+            FoodsFactory.destroy($food)
+                .then(function (response) {
+                    $scope.foods = _.without($scope.foods, $food);
+                    $rootScope.$broadcast('provideFeedback', 'Food deleted');
+                    $rootScope.hideLoading();
+                })
+                .catch(function (response) {
+                    $rootScope.responseError(response);
+                });
+        },
+
+        /**
+         *
+         * @param response
+         */
+        handleResponseError: function (response) {
+            this.$broadcast('response-error', response);
+            this.showLoading = false;
+        }
+    },
+    props: [
+        //data to be received from parent
+    ],
+    ready: function () {
+        $(".wysiwyg").wysiwyg();
+        this.getFoods();
+    }
+});
+
+
+
+
+
+
+
+
+var MenuEntriesComponent = Vue.component('menu-entries', {
+    template: '#menu-entries-template',
+    data: function () {
+        return {
+            menuEntries: menuEntries,
+            temporaryRecipePopup: {},
+            selected: {
+                dropdown_item: {},
+                food: {},
+                unit: {}
+            }
+        };
+    },
+    components: {},
+    methods: {
+
+        /**
+        *
+        */
+        deleteMenuEntry: function (entry) {
+            if (confirm("Are you sure?")) {
+                $.event.trigger('show-loading');
+                this.$http.delete('/api/menuEntries/' + entry.id, function (response) {
+                    this.menuEntries = _.without(this.menuEntries, entry);
+                    $.event.trigger('provide-feedback', ['MenuEntry deleted', 'success']);
+                    $.event.trigger('menu-entry-deleted');
+                    $.event.trigger('hide-loading');
+                })
+                .error(function (response) {
+                    this.handleResponseError(response);
+                });
+            }
+        },
+
+        /**
+        *
+        */
+        getEntriesForTheDay: function () {
+            $.event.trigger('show-loading');
+            this.$http.get('/api/menuEntries/' + this.date.sql, function (response) {
+                this.menuEntries = response;
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
+        },
+
+        /**
+         *
+         */
+        listen: function () {
+            var that = this;
+            $(document).on('menu-entry-added', function (event, entry) {
+                $.event.trigger('show-loading');
+                if (entry.date === that.date.sql) {
+                    that.menuEntries.push(entry)
+                }
+            });
+            $(document).on('date-changed', function (event) {
+                that.getEntriesForTheDay();
+            });
+        },
+
+        /**
+         *
+         * @param response
+         */
+        handleResponseError: function (response) {
+            this.$broadcast('response-error', response);
+            this.showLoading = false;
+        }
+    },
+    props: [
+        'date'
+    ],
+    ready: function () {
+        this.listen();
+    }
+});
+
+
+
+var NewFoodEntry = Vue.component('new-food-entry', {
+    template: '#new-food-entry-template',
+    data: function () {
+        return {
+            newIngredient: {
+                food: {
+                    units: {
+                        data: []
+                    },
+                    defaultUnit: {
+                        data: {}
+                    }
+                },
+                unit: {}
+            }
+        };
+    },
+    components: {},
+    methods: {
+
+        /**
+         *
+         */
+        addIngredientToRecipe: function () {
+            if (this.recipeIsTemporary) {
+                $.event.trigger('add-ingredient-to-temporary-recipe', [this.newIngredient]);
+            }
+            else {
+                $.event.trigger('show-loading');
+
+                var data = {
+                    addIngredient: true,
+                    food_id: this.newIngredient.food.id,
+                    unit_id: this.newIngredient.unit.id,
+                    quantity: this.newIngredient.quantity,
+                    description: this.newIngredient.description
+                };
+
+                this.$http.put('/api/recipes/' + this.selectedRecipe.id, data, function (response) {
+                        this.selectedRecipe.ingredients.push({
+                            name: this.newIngredient.food.name,
+                            unit_name: this.newIngredient.unit.name,
+                            quantity: this.newIngredient.quantity,
+                            description: this.newIngredient.description,
+                        });
+                        $.event.trigger('provide-feedback', ['Food added', 'success']);
+                        $.event.trigger('hide-loading');
+                    })
+                    .error(function (response) {
+                        this.handleResponseError(response);
+                    });
+            }
+        },
+
+
+        /**
+         *
+         * @param response
+         */
+        handleResponseError: function (response) {
+            this.$broadcast('response-error', response);
+            this.showLoading = false;
+        }
+    },
+    props: [
+        'date',
+        'selectedRecipe',
+        'recipeIsTemporary'
+    ],
+    events: {
+        'option-chosen': function (option) {
+            this.newIngredient.food = option;
+            this.newIngredient.unit = option.defaultUnit.data;
+        }
+    },
+    ready: function () {
+
+    }
+});
+var NewMenuEntry = Vue.component('new-menu-entry', {
+    template: '#new-menu-entry-template',
+    data: function () {
+        return {
+            newIngredient: {
+                food: {
+                    units: {
+                        data: []
+                    },
+                    defaultUnit: {
+                        data: {}
+                    }
+                },
+                unit: {},
+                type: ''
+            },
+            recipeEntry: {},
+            entryNumberForRecipe: 0
+        };
+    },
+    components: {},
+    methods: {
+
+        /**
+         *
+         */
+        insertMenuEntry: function () {
+            $.event.trigger('show-loading');
+            var data = {
+                date: this.date.sql,
+                food_id: this.newIngredient.food.id,
+                unit_id: this.newIngredient.unit.id,
+                quantity: this.newIngredient.quantity,
+            };
+
+            $.event.trigger('get-entries');
+
+            $("#new-menu-entry-food").focus();
+
+            this.$http.post('/api/menuEntries', data, function (response) {
+                this.newIngredient.description = '';
+                this.newIngredient.quantity = '';
+                $("#new-ingredient-food-name").focus();
+                $.event.trigger('provide-feedback', ['Menu entry created', 'success']);
+                $.event.trigger('menu-entry-added', [response]);
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
+        },
+
+        /**
+         *
+         * @param ingredient
+         */
+        insertEntry: function (ingredient) {
+            var data = {
+                date: this.date.sql,
+                food_id: ingredient.food.data.id,
+                recipe_id: this.recipeEntry.id,
+                unit_id: ingredient.unit.data.id,
+                quantity: ingredient.quantity,
+            };
+
+            this.$http.post('/api/menuEntries', data, function (response) {
+                //This adds the entry to the entries with the JS
+                $.event.trigger('menu-entry-added', [response]);
+                this.entryNumberForRecipe++;
+                //If it's the last of the entries for the recipe being added, do stuff
+                if (this.entryNumberForRecipe == this.recipeEntry.ingredients.data.length) {
+                    $.event.trigger('provide-feedback', ['Recipe entries created', 'success']);
+                    //I think this just updates the calorie info for the day
+                    $.event.trigger('get-entries');
+                    $.event.trigger('hide-loading');
+                }
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
+        },
+
+        /**
+         * Insert each entry for a recipe, one at a time
+         * @param recipe
+         */
+        insertEntriesForRecipe: function (recipe) {
+            $.event.trigger('show-loading');
+
+            this.entryNumberForRecipe = 0;
+            this.recipeEntry = recipe;
+
+            for (var i = 0; i < recipe.ingredients.data.length; i++) {
+                this.insertEntry(recipe.ingredients.data[i]);
+            }
+        },
+
+        /**
+         *
+         */
+        listen: function () {
+            var that = this;
+            $(document).on('insert-entries-for-recipe', function (event, recipe) {
+                that.insertEntriesForRecipe(recipe);
+            });
+        },
+
+        /**
+         *
+         * @param response
+         */
+        handleResponseError: function (response) {
+            this.$broadcast('response-error', response);
+            this.showLoading = false;
+        }
+    },
+    props: [
+        'date'
+    ],
+    events: {
+        'option-chosen': function (option) {
+            if (option.type === 'food') {
+                this.newIngredient.food = option;
+                this.newIngredient.type = 'food';
+                if (option.defaultUnit) {
+                    this.newIngredient.unit = option.defaultUnit.data;
+                }
+            }
+            else if (option.type === 'recipe') {
+                this.newIngredient = option;
+                $.event.trigger('show-temporary-recipe-popup', [option]);
+            }
+        }
+    },
+    ready: function () {
+        this.listen();
+    }
+});
+var NewQuickRecipe = Vue.component('new-quick-recipe', {
+    template: '#new-quick-recipe-template',
+    data: function () {
+        return {
+            errors: {},
+            showPopup: false,
+            showHelp: false,
+            newRecipe: {
+                similarNames: []
+            },
+            similarNames: [],
+        };
+    },
+    components: {},
+    methods: {
+
+        /**
+         *
+         */
+        toggleHelp: function () {
+            this.showHelp = !this.showHelp;
+        },
+
+        /**
+         * End goal of the function:
+         * Call RecipesFactory.insertQuickRecipe, with $check_similar_names as true.
+         * Send the contents, steps, and name of new recipe.
+         *
+         * The PHP checks for similar names and returns similar names if found.
+         * The JS checks for similar names in the response.
+         *
+         * If they exist, a popup shows.
+         * From there, the user can click a button
+         * which fires quickRecipeFinish,
+         * sending the recipe info again
+         * but this time without the similar name check.
+         *
+         * If none exist, the recipe should have been entered with the PHP
+         * and things should update accordingly on the page.
+         */
+        respondToEnterRecipeBtnClick: function () {
+            //remove any previous error styling so it doesn't wreck up the html
+            $("#quick-recipe > *").removeAttr("style");
+            $("#quick-recipe-errors").hide();
+
+            var arrayOfIngredientsAndSteps = RecipesRepository.getArrayOfIngredientsAndSteps();
+
+            this.addPropertiesToRecipe(arrayOfIngredientsAndSteps);
+            RecipesRepository.modifyQuickRecipeHtml(arrayOfIngredientsAndSteps);
+            this.checkForAndHandleErrors();
+
+            if (this.errors.length < 1) {
+                //Prompt the user for the recipe name
+                this.newRecipe.name = prompt('name your recipe');
+
+                //If the user changes their mind and cancels
+                if (!this.newRecipe.name) {
+                    return;
+                }
+
+                this.checkForSimilarNames();
+            }
+            else {
+                $("#quick-recipe-errors").show();
+            }
+        },
+
+        /**
+        *
+        */
+        showNewRecipeFields: function () {
+            this.addingNewRecipe = true;
+            this.editingRecipe = false;
+        },
+
+        /**
+         *
+         */
+        checkForSimilarNames: function () {
+            $.event.trigger('show-loading');
+
+            var data = {
+                ingredients: this.newRecipe.ingredients
+            };
+
+            this.$http.get('/api/quickRecipes/checkForSimilarNames', data, function (response) {
+                $.event.trigger('hide-loading');
+                this.similarNames = response;
+
+                if (response.units || response.foods) {
+                    $.event.trigger('provide-feedback', ['Similar names were found', 'success']);
+                    this.showPopup = true;
+                }
+                else {
+                    this.insertRecipe();
+                }
+
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
+        },
+
+        /**
+         *
+         */
+        insertRecipe: function () {
+            $.event.trigger('show-loading');
+            if (this.similarNames.foods || this.similarNames.units) {
+                this.chooseCorrectFoodName();
+                this.chooseCorrectUnitName();
+                this.showPopup = false;
+            }
+
+            var data = {
+                name: this.newRecipe.name,
+                ingredients: this.newRecipe.ingredients,
+                steps: this.newRecipe.steps,
+                checkForSimilarNames: this.checkForSimilarNames
+            };
+
+            this.$http.post('/api/quickRecipes', data, function (response) {
+                    $.event.trigger('provide-feedback', ['Recipe created', 'success']);
+                    $.event.trigger('hide-loading');
+                    this.recipes.push(response.data);
+                })
+                .error(function (response) {
+                    this.handleResponseError(response);
+                });
+        },
+
+        /**
+         *
+         */
+        chooseCorrectFoodName: function () {
+            var that = this;
+            $(this.similarNames.foods).each(function () {
+                if (this.selected === this.existingFood.name) {
+                    // Use the existing food rather than creating a new food.
+                    that.newRecipe.ingredients[this.index].food = this.existingFood.name;
+                }
+            });
+        },
+
+        /**
+         *
+         */
+        chooseCorrectUnitName: function () {
+            var that = this;
+            $(this.newRecipe.similarNames.units).each(function () {
+                if (this.selected === this.existingUnit.name) {
+                    //Use the existing unit rather than creating a new unit
+                     that.newRecipe.ingredients[this.index].unit = this.existingUnit.name;
+                }
+            });
+        },
+
+        /**
+         *
+         */
+        checkForAndHandleErrors: function () {
+            this.errors = [];
+            this.errors = RecipesRepository.checkIngredientsForErrors(this.newRecipe.ingredients);
+        },
+
+        /**
+         *
+         */
+        addPropertiesToRecipe: function (arrayOfIngredientsAndSteps) {
+            this.newRecipe.ingredients = RecipesRepository.getIngredients(arrayOfIngredientsAndSteps);
+            this.newRecipe.steps = RecipesRepository.getSteps(arrayOfIngredientsAndSteps);
+            this.newRecipe.ingredients = RecipesRepository.convertIngredientStringsToObjects(this.newRecipe.ingredients);
+        },
+
+        /**
+         *
+         */
+        closePopup: function ($event) {
+            if ($event.target.className === 'popup-outer') {
+                this.showPopup = false;
+            }
+        },
+
+        /**
+         *
+         * @param response
+         */
+        handleResponseError: function (response) {
+            this.$broadcast('response-error', response);
+            this.showLoading = false;
+        }
+    },
+    props: [
+        'recipes'
+    ],
+    ready: function () {
+
+    }
+});
+
+var RecipePopup = Vue.component('recipe-popup', {
+    template: '#recipe-popup-template',
+    data: function () {
+        return {
+            showRecipePopup: false,
+            selectedRecipe: {
+                steps: [],
+                ingredients: []
+            },
+            newIngredient: {
+                food: {}
+            },
+            editingMethod: false
+        };
+    },
+    components: {},
+    methods: {
+
+        /**
+         *
+         */
+        listen: function () {
+            var that = this;
+            $(document).on('show-recipe-popup', function (event, recipe) {
+                that.showPopup(recipe);
+            });
+            $(document).on('add-ingredient-to-recipe', function (event, ingredient) {
+                that.addIngredientToRecipe(ingredient);
+            });
+        },
+
+        /**
+         *
+         */
+        showPopup: function (recipe) {
+            this.selectedRecipe = recipe;
+            this.showRecipePopup = true;
+            //$(".wysiwyg").wysiwyg();
+        },
+
+        /**
+         *
+         */
+        closePopup: function ($event) {
+            if ($event.target.className === 'popup-outer') {
+                this.showRecipePopup = false;
+            }
+        },
+        
+        /**
+        *
+        */
+        updateRecipe: function () {
+            $.event.trigger('show-loading');
+
+            var string = $("#edit-recipe-method").html();
+            var lines = RecipesRepository.formatString(string, $("#edit-recipe-method")).items;
+            var steps = [];
+
+            $(lines).each(function () {
+                steps.push(this);
+            });
+
+            this.selectedRecipe.steps = steps;
+
+            var data = {
+                name: this.selectedRecipe.name,
+                steps: this.selectedRecipe.steps,
+                tag_ids: this.selectedRecipe.tag_ids
+            };
+
+            this.$http.put('/api/recipes/' + this.selectedRecipe.id, data, function (response) {
+                var index = _.indexOf(this.recipes, _.findWhere(this.recipes, {id: this.selectedRecipe.id}));
+                this.recipes[index].name = response.name;
+                this.recipes[index].tags = response.tags;
+                this.recipes[index].tag_ds = response.tag_ids;
+                this.editingMethod = false;
+                this.showRecipePopup = false;
+                $.event.trigger('provide-feedback', ['Recipe updated', 'success']);
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
+        },
+
+        /**
+        *
+        */
+        deleteIngredientFromRecipe: function (ingredient) {
+            $.event.trigger('show-loading');
+
+            var data = {
+                removeIngredient: true,
+                food_id: ingredient.food.data.id,
+                unit_id: ingredient.unit.data.id
+            };
+
+            this.$http.put('/api/recipes/' + this.selectedRecipe.id, data, function (response) {
+                this.selectedRecipe.ingredients.data = _.without(this.selectedRecipe.ingredients.data, ingredient);
+                $.event.trigger('provide-feedback', ['Ingredient removed from recipe', 'success']);
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
+        },
+
+        /**
+         *
+         */
+        toggleEditMethod: function () {
+            //Toggle the visibility of the wysywig
+            this.editingMethod = !this.editingMethod;
+
+            //If we are editing the recipe, prepare the html of the wysiwyg
+            if (this.editingMethod) {
+                var text;
+                var string = "";
+
+                //convert the array into a string so I can make the wysiwyg display the steps
+                $(this.selectedRecipe.steps).each(function () {
+                    text = this.text;
+                    text = text + '<br>';
+                    string+= text;
+                });
+                $("#edit-recipe-method").html(string);
+            }
+        },
+
+        /**
+         *
+         * @param response
+         */
+        handleResponseError: function (response) {
+            this.$broadcast('response-error', response);
+            this.showLoading = false;
+        }
+    },
+    props: [
+        'tags',
+        'recipes'
+    ],
+    ready: function () {
+        this.listen();
+    }
+});
+
+var RecipeTags = Vue.component('recipe-tags', {
+    template: '#recipe-tags-template',
+    data: function () {
+        return {
+            newTag: {}
+        };
+    },
+    components: {},
+
+    methods: {
+
+        /**
+        *
+        */
+        insertTag: function () {
+            $.event.trigger('show-loading');
+            var data = {
+                name: this.newTag.name
+            };
+
+            this.$http.post('/api/recipeTags', data, function (response) {
+                this.tags.push(response.data);
+                $.event.trigger('provide-feedback', ['Tag created', 'success']);
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
+        },
+
+        /**
+        *
+        */
+        deleteTag: function (tag) {
+            if (confirm("Are you sure?")) {
+                $.event.trigger('show-loading');
+                this.$http.delete('/api/recipeTags/' + tag.id, function (response) {
+                    this.tags = _.without(this.tags, tag);
+                    $.event.trigger('provide-feedback', ['Tag deleted', 'success']);
+                    //this.$broadcast('provide-feedback', 'Tag deleted', 'success');
+                    $.event.trigger('hide-loading');
+                })
+                .error(function (response) {
+                    this.handleResponseError(response);
+                });
+            }
+        },
+
+        /**
+         *
+         * @param response
+         */
+        handleResponseError: function (response) {
+            this.$broadcast('response-error', response);
+            this.showLoading = false;
+        }
+    },
+    props: [
+        'tags',
+        'recipesTagFilter'
+    ],
+    ready: function () {
+
+    }
+});
+
+var Recipes = Vue.component('recipes', {
+    template: '#recipes-template',
+    data: function () {
+        return {
+            newRecipe: {},
+            recipesNameFilter: '',
+            //recipesTagFilter: ''
+        };
+    },
+    components: {},
+    filters: {
+        recipesFilter: function (recipes) {
+            var that = this;
+
+            return recipes.filter(function (recipe) {
+                var containsName = recipe.name.indexOf(that.recipesNameFilter) !== -1;
+                var containsTags = true;
+                var tagIdsForRecipe = _.pluck(recipe.tags.data, 'id');
+                var count = 0;
+
+                if (that.recipesTagFilter.length > 0) {
+                    containsTags = false;
+                    for (var i = 0; i < that.recipesTagFilter.length; i++) {
+                        if (tagIdsForRecipe.indexOf(that.recipesTagFilter[i]) !== -1) {
+                            //Recipe contains the tag
+                            count++;
+                        }
+                    }
+                    if (count === that.recipesTagFilter.length) {
+                        containsTags = true;
+                    }
+                }
+
+                return containsName && containsTags;
+            });
+        }
+    },
+    methods: {
+
+        /**
+         *
+         * @param recipe
+         */
+        showRecipePopup: function (recipe) {
+            $.event.trigger('show-loading');
+            this.$http.get('/api/recipes/' + recipe.id, function (response) {
+                    $.event.trigger('show-recipe-popup', [response]);
+                    $.event.trigger('hide-loading');
+                })
+                .error(function (response) {
+                    this.handleResponseError(response);
+                });
+        },
+
+        /**
+        *
+        */
+        insertRecipe: function () {
+            $.event.trigger('show-loading');
+            var data = {
+                name: this.newRecipe.name
+            };
+
+            this.$http.post('/api/recipes', data, function (response) {
+                this.recipes.push(response.data);
+                $.event.trigger('provide-feedback', ['Recipe created', 'success']);
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
+        },
+
+        /**
+        *
+        */
+        showNewRecipeFields: function () {
+            this.addingNewRecipe = true;
+            this.editingRecipe = false;
+        },
+
+        /**
+        *
+        */
+        deleteRecipe: function (recipe) {
+            if (confirm("Are you sure?")) {
+                $.event.trigger('show-loading');
+                this.$http.delete('/api/recipes/' + recipe.id, function (response) {
+                    this.recipes = _.without(this.recipes, recipe);
+                    $.event.trigger('provide-feedback', ['Recipe deleted', 'success']);
+                    $.event.trigger('hide-loading');
+                })
+                .error(function (response) {
+                    this.handleResponseError(response);
+                });
+            }
+        },
+
+        /**
+         *
+         * @param response
+         */
+        handleResponseError: function (response) {
+            this.$broadcast('response-error', response);
+            this.showLoading = false;
+        }
+    },
+    props: [
+        'tags',
+        'recipesTagFilter',
+        'recipes'
+    ],
+    ready: function () {
+        $(".wysiwyg").wysiwyg();
+    }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//$scope.getMenu = function () {
+//    if ($scope.foods.length > 0 && $scope.recipes.length > 0) {
+//        $scope.menu = select.getMenu($scope.foods, $scope.recipes);
+//    }
+//};
+
+
+
+
+
+
+//
+//
+///**
+// * Add a unit to a food or remove the unit from the food.
+// * The method name is old and should probably be changed.
+// * @param $unit_id
+// */
+//$scope.insertOrDeleteUnitInCalories = function ($unit_id) {
+//    //Check if the checkbox is checked
+//    if ($scope.food_popup.food_units.indexOf($unit_id) === -1) {
+//        //It is now unchecked. Remove the unit from the food.
+//        FoodsFactory.deleteUnitFromCalories($scope.food_popup.food.id, $unit_id).then(function (response) {
+//            $scope.food_popup = response.data;
+//        });
+//    }
+//    else {
+//        // It is now checked. Add the unit to the food.
+//        FoodsFactory.insertUnitInCalories($scope.food_popup.food.id, $unit_id).then(function (response) {
+//            $scope.food_popup = response.data;
+//        });
+//    }
+//};
+//
+///**
+// * update
+// */
+//
+
+//
+//$scope.updateCalories = function ($keycode, $unit_id, $calories) {
+//    if ($keycode === 13) {
+//        FoodsFactory.updateCalories($scope.food_popup.food.id, $unit_id, $calories).then(function (response) {
+//            $scope.food_popup = response.data;
+//        });
+//    }
+//};
+//
+//$scope.updateDefaultUnit = function ($food_id, $unit_id) {
+//    FoodUnitsFactory.updateDefaultUnit($food_id, $unit_id).then(function (response) {
+//        $scope.food_popup = response.data;
+//    });
+//};
+
+
+
+var RecipesPage = Vue.component('recipes-page', {
+    template: '#recipes-page-template',
+    data: function () {
+        return {
+            tags: [],
+            recipes: [],
+            recipesTagFilter: []
+        };
+    },
+    components: {},
+    computed: {
+        //recipesTagFilter: function () {
+        //    return _.pluck(this.tags, 'id');
+        //}
+    },
+    methods: {
+
+        /**
+        *
+        */
+        getTags: function () {
+            $.event.trigger('show-loading');
+            this.$http.get('/api/recipeTags', function (response) {
+                this.tags = response;
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
+        },
+
+        /**
+        *
+        */
+        getRecipes: function () {
+            $.event.trigger('show-loading');
+            this.$http.get('/api/recipes', function (response) {
+                this.recipes = response;
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
+        },
+
+        /**
+         *
+         * @param response
+         */
+        handleResponseError: function (response) {
+            this.$broadcast('response-error', response);
+            this.showLoading = false;
+        }
+    },
+    props: [
+        //data to be received from parent
+    ],
+    ready: function () {
+        this.getRecipes();
+        this.getTags();
+    }
+});
+
+var TemporaryRecipePopup = Vue.component('temporary-recipe-popup', {
+    template: '#temporary-recipe-popup-template',
+    data: function () {
+        return {
+            showPopup: false,
+            portion: 1,
+            recipe: {
+                ingredients: {}
+            }
+        };
+    },
+    components: {},
+    methods: {
+
+        /**
+        *
+        */
+        getRecipe: function (recipe) {
+            $.event.trigger('show-loading');
+            this.$http.get('/api/recipes/' + recipe.id, function (response) {
+                this.recipe = response;
+
+                $(this.recipe.ingredients.data).each(function () {
+                    this.originalQuantity = this.quantity;
+                });
+
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
+        },
+
+        /**
+         *
+         */
+        insertFoodIntoTemporaryRecipe: function () {
+            //we are adding a food to a temporary recipe
+            var $unit_name = $("#temporary-recipe-popup-unit option:selected").text();
+            this.temporaryRecipePopup.contents.push({
+                "food_id": this.temporaryRecipePopup.food.id,
+                "name": this.temporaryRecipePopup.food.name,
+                "quantity": this.temporaryRecipePopup.quantity,
+                "unit_id": $("#temporary-recipe-popup-unit").val(),
+                "unit_name": $unit_name,
+                "units": this.temporaryRecipePopup.food.units
+            });
+
+            $("#temporary-recipe-food-input").val("").focus();
+        },
+
+        /**
+         *
+         */
+        setRecipePortion: function () {
+            var that = this;
+            $(this.recipe.ingredients.data).each(function () {
+                if (this.originalQuantity) {
+                    //making sure we don't alter the quantity of a food
+                    //that has been added to the temporary recipe
+                    //(by doing the if check)
+                    this.quantity = this.originalQuantity * that.portion;
+                }
+            });
+        },
+
+        /**
+         *
+         */
+        deleteIngredientFromTemporaryRecipe: function (ingredient) {
+            this.recipe.ingredients.data = _.without(this.recipe.ingredients.data, ingredient);
+        },
+
+        /**
+         *
+         */
+        closePopup: function ($event) {
+            if ($event.target.className === 'popup-outer') {
+                this.showPopup = false;
+            }
+        },
+
+        /**
+         *
+         */
+        insertEntriesForRecipe: function () {
+            $.event.trigger('insert-entries-for-recipe', [this.recipe]);
+            this.showPopup = false;
+        },
+
+        /**
+         *
+         */
+        listen: function () {
+            var that = this;
+            $(document).on('show-temporary-recipe-popup', function (event, recipe) {
+                that.getRecipe(recipe);
+                that.showPopup = true;
+            });
+            $(document).on('add-ingredient-to-temporary-recipe', function (event, ingredient) {
+                console.log(ingredient);
+                console.log(that.recipe.ingredients.data[0]);
+                that.recipe.ingredients.data.push({
+                    food: {
+                        data: {
+                            id: ingredient.food.id,
+                            name: ingredient.food.name,
+                            units: {data: ingredient.food.units.data},
+                            defaultUnit: ingredient.food.defaultUnit,
+                        }
+                    },
+                    unit: {data: ingredient.unit},
+                    quantity: ingredient.quantity
+                });
+            });
+        },
+
+        /**
+         *
+         * @param response
+         */
+        handleResponseError: function (response) {
+            this.$broadcast('response-error', response);
+            this.showLoading = false;
+        }
+    },
+    props: [
+        //'insertEntriesForRecipe'
+    ],
+    ready: function () {
+        this.listen();
+    }
+});
+
+var Autocomplete = Vue.component('autocomplete', {
+    template: '#autocomplete-template',
+    data: function () {
+        return {
+            autocompleteOptions: [],
+            chosenOption: {
+                name: ''
+            },
+            showDropdown: false,
+            currentIndex: 0
+        };
+    },
+    components: {},
+    methods: {
+
+        /**
+         *
+         * @param keycode
+         */
+        respondToKeyup: function (keycode) {
+            if (keycode !== 13 && keycode !== 38 && keycode !== 40 && keycode !== 39 && keycode !== 37) {
+                //not enter, up, down, right or left arrows
+                this.populateOptions();
+            }
+            else if (keycode === 38) {
+                //up arrow pressed
+                if (this.currentIndex !== 0) {
+                    this.currentIndex--;
+                }
+            }
+            else if (keycode === 40) {
+                //down arrow pressed
+                if (this.autocompleteOptions.length - 1 !== this.currentIndex) {
+                    this.currentIndex++;
+                }
+            }
+            else if (keycode === 13) {
+                this.respondToEnter();
+            }
+        },
+
+        /**
+         *
+         */
+        populateOptions: function () {
+            //fill the dropdown
+            $.event.trigger('show-loading');
+            this.$http.get(this.url + '?typing=' + this.chosenOption.name, function (response) {
+                    this.autocompleteOptions = response.data;
+                    this.showDropdown = true;
+                    this.currentIndex = 0;
+                    $.event.trigger('hide-loading');
+                })
+                .error(function (response) {
+                    this.handleResponseError(response);
+                });
+        },
+
+        /**
+         *
+         */
+        respondToEnter: function () {
+            if (this.showDropdown) {
+                //enter is for the autocomplete
+                this.selectOption();
+            }
+            else {
+                //enter is to add the entry
+                this.insertItemFunction();
+            }
+        },
+
+        /**
+         *
+         */
+        selectOption: function () {
+            this.chosenOption = this.autocompleteOptions[this.currentIndex];
+            this.showDropdown = false;
+            if (this.idToFocusAfterAutocomplete) {
+                var that = this;
+                setTimeout(function () {
+                    $("#" + that.idToFocusAfterAutocomplete).focus();
+                }, 100);
+            }
+            this.$dispatch('option-chosen', this.chosenOption);
+        },
+
+        /**
+         *
+         * @param response
+         */
+        handleResponseError: function (response) {
+            this.$broadcast('response-error', response);
+            this.showLoading = false;
+        }
+    },
+    props: [
+        'url',
+        'autocompleteField',
+        'insertItemFunction',
+        'idToFocusAfterAutocomplete'
+    ],
+    ready: function () {
+
+    }
+});
+
+var DateNavigation = Vue.component('date-navigation', {
+    template: '#date-navigation-template',
+    data: function () {
+        return {
+
+        };
+    },
+    components: {},
+    watch: {
+        'date.typed': function (newValue, oldValue) {
+            this.date.sql = Date.parse(this.date.typed).toString('yyyy-MM-dd');
+            this.date.long = Date.parse(this.date.typed).toString('ddd dd MMM yyyy');
+            $("#date").val(this.date.typed);
+            $.event.trigger('date-changed');
+        }
+    },
+    methods: {
+        /**
+         *
+         * @param $number
+         */
+        goToDate: function ($number) {
+            this.date.typed = DatesRepository.goToDate(this.date.typed, $number);
+        },
+
+        /**
+         *
+         */
+        goToToday: function () {
+            this.date.typed = DatesRepository.today();
+        },
+
+        /**
+         *
+         * @param date
+         * @returns {boolean}
+         */
+        changeDate: function (date) {
+            var date = date || $("#date").val();
+            this.date.typed = DatesRepository.changeDate(date);
+        },
+
+        /**
+         *
+         * @param response
+         */
+        handleResponseError: function (response) {
+            this.$broadcast('response-error', response);
+            this.showLoading = false;
+        }
+
+    },
+    props: [
+        'date'
+    ],
+    ready: function () {
+
+    }
+
+});
+
+
+Vue.component('feedback', {
+    template: "#feedback-template",
+    data: function () {
+        return {
+            feedbackMessages: []
+        };
+    },
+    methods: {
+        listen: function () {
+            var that = this;
+            $(document).on('provide-feedback', function (event, message, type) {
+                that.provideFeedback(message, type);
+            });
+        },
+        provideFeedback: function (message, type) {
+            var newMessage = {
+                message: message,
+                type: type
+            };
+
+            var that = this;
+
+            this.feedbackMessages.push(newMessage);
+
+            setTimeout(function () {
+                that.feedbackMessages = _.without(that.feedbackMessages, newMessage);
+            }, 3000);
+        },
+        handleResponseError: function (response) {
+            if (typeof response !== "undefined") {
+                var $message;
+
+                switch(response.status) {
+                    case 503:
+                        $message = 'Sorry, application under construction. Please try again later.';
+                        break;
+                    case 401:
+                        $message = 'You are not logged in';
+                        break;
+                    case 422:
+                        var html = "<ul>";
+
+                        for (var i = 0; i < response.length; i++) {
+                            var error = response[i];
+                            for (var j = 0; j < error.length; j++) {
+                                html += '<li>' + error[j] + '</li>';
+                            }
+                        }
+
+                        html += "</ul>";
+                        $message = html;
+                        break;
+                    default:
+                        $message = response.error;
+                        break;
+                }
+            }
+            else {
+                $message = 'There was an error';
+            }
+
+            return $message;
+
+        }
+    },
+    events: {
+        'provide-feedback': function (message, type) {
+            this.provideFeedback(message, type);
+        },
+        'response-error': function (response) {
+            this.provideFeedback(this.handleResponseError(response), 'error');
+        }
+    },
+    ready: function () {
+        this.listen();
+    },
+});
+Vue.component('loading', {
+    data: function () {
+        return {
+            showLoading: false
+        };
+    },
+    template: "#loading-template",
+    props: [
+        //'showLoading'
+    ],
+    methods: {
+        listen: function () {
+            var that = this;
+            $(document).on('show-loading', function (event, message, type) {
+                that.showLoading = true;
+            });
+            $(document).on('hide-loading', function (event, message, type) {
+                that.showLoading = false;
+            });
+        }
+    },
+    ready: function () {
+        this.listen();
+    }
+});
 var EntriesForSpecificExerciseAndDateAndUnitPopup = Vue.component('entries-for-specific-exercise-and-date-and-unit-popup', {
     template: '#entries-for-specific-exercise-and-date-and-unit-popup-template',
     data: function () {
@@ -24394,1617 +26005,6 @@ var SeriesPopup = Vue.component('series-popup', {
     }
 });
 
-var FoodPopup = Vue.component('food-popup', {
-    template: '#food-popup-template',
-    data: function () {
-        return {
-            selectedFood: {
-                food: {}
-            }
-        };
-    },
-    components: {},
-    methods: {
-        /**
-         *
-         * @param response
-         */
-        handleResponseError: function (response) {
-            this.$broadcast('response-error', response);
-            this.showLoading = false;
-        }
-    },
-    props: [
-        //data to be received from parent
-    ],
-    ready: function () {
-
-    }
-});
-
-var FoodUnitsPage = Vue.component('food-units-page', {
-    template: '#food-units-page-template',
-    data: function () {
-        return {
-            units: [],
-            newUnit: {}
-        };
-    },
-    components: {},
-    methods: {
-
-        /**
-        *
-        */
-        getUnits: function () {
-            $.event.trigger('show-loading');
-            this.$http.get('/api/foodUnits', function (response) {
-                this.units = response;
-                $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
-                this.handleResponseError(response);
-            });
-        },
-
-        /**
-        *
-        */
-        insertUnit: function () {
-            $.event.trigger('show-loading');
-            var data = {
-                name: this.newUnit.name
-            };
-
-            this.$http.post('/api/foodUnits', data, function (response) {
-                this.units.push(response.data);
-                $.event.trigger('provide-feedback', ['Unit created', 'success']);
-                $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
-                this.handleResponseError(response);
-            });
-        },
-
-        /**
-        *
-        */
-        deleteUnit: function (unit) {
-            if (confirm("Are you sure?")) {
-                $.event.trigger('show-loading');
-                this.$http.delete('/api/foodUnits/' + unit.id, function (response) {
-                    this.units = _.without(this.units, unit);
-                    //var index = _.indexOf(this.units, _.findWhere(this.units, {id: this.unit.id}));
-                    //this.units = _.without(this.units, this.units[index]);
-                    $.event.trigger('provide-feedback', ['Unit deleted', 'success']);
-                    $.event.trigger('hide-loading');
-                })
-                .error(function (response) {
-                    this.handleResponseError(response);
-                });
-            }
-        },
-
-        /**
-         *
-         * @param response
-         */
-        handleResponseError: function (response) {
-            this.$broadcast('response-error', response);
-            this.showLoading = false;
-        }
-    },
-    props: [
-        //data to be received from parent
-    ],
-    ready: function () {
-        this.getUnits();
-    }
-});
-
-
-var FoodsPage = Vue.component('foods-page', {
-    template: '#foods-page-template',
-    data: function () {
-        return {
-            calories: {},
-            newItem: {},
-            foods: [],
-            foodsFilter: ''
-        };
-    },
-    components: {},
-    methods: {
-
-        /**
-        *
-        */
-        getFoods: function () {
-            $.event.trigger('show-loading');
-            this.$http.get('/api/foods', function (response) {
-                this.foods = response;
-                $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
-                this.handleResponseError(response);
-            });
-        },
-
-        getMenu: function () {
-            if ($scope.foods.length > 0 && $scope.recipes.length > 0) {
-                $scope.menu = select.getMenu($scope.foods, $scope.recipes);
-            }
-        },
-
-        getFoodInfo: function ($food) {
-            //for popup where user selects units for food and enters calories
-            $scope.food_popup.id = $food.id;
-            $scope.food_popup.name = $food.name;
-            $scope.show.popups.food_info = true;
-            FoodsFactory.getFoodInfo($food).then(function (response) {
-                $scope.food_popup = response.data;
-            });
-
-        },
-
-        /**
-         * Add a unit to a food or remove the unit from the food.
-         * The method name is old and should probably be changed.
-         * @param $unit_id
-         */
-        insertOrDeleteUnitInCalories: function ($unit_id) {
-            //Check if the checkbox is checked
-            if ($scope.food_popup.food_units.indexOf($unit_id) === -1) {
-                //It is now unchecked. Remove the unit from the food.
-                FoodsFactory.deleteUnitFromCalories($scope.food_popup.food.id, $unit_id).then(function (response) {
-                    $scope.food_popup = response.data;
-                });
-            }
-            else {
-                // It is now checked. Add the unit to the food.
-                FoodsFactory.insertUnitInCalories($scope.food_popup.food.id, $unit_id).then(function (response) {
-                    $scope.food_popup = response.data;
-                });
-            }
-        },
-
-        insertFood: function ($keycode) {
-            if ($keycode === 13) {
-                $rootScope.showLoading();
-                FoodsFactory.insertFood()
-                    .then(function (response) {
-                        $scope.foods.push(response.data.data);
-                        $rootScope.$broadcast('provideFeedback', 'Food created');
-                        $rootScope.hideLoading();
-                    })
-                    .catch(function (response) {
-                        $rootScope.responseError(response);
-                    });
-            }
-        },
-
-        updateCalories: function ($keycode, $unit_id, $calories) {
-            if ($keycode === 13) {
-                FoodsFactory.updateCalories($scope.food_popup.food.id, $unit_id, $calories).then(function (response) {
-                    $scope.food_popup = response.data;
-                });
-            }
-        },
-
-        updateDefaultUnit: function ($food_id, $unit_id) {
-            FoodsFactory.updateDefaultUnit($food_id, $unit_id).then(function (response) {
-                $scope.food_popup = response.data;
-            });
-        },
-
-        deleteFood: function ($food) {
-            $rootScope.showLoading();
-            FoodsFactory.destroy($food)
-                .then(function (response) {
-                    $scope.foods = _.without($scope.foods, $food);
-                    $rootScope.$broadcast('provideFeedback', 'Food deleted');
-                    $rootScope.hideLoading();
-                })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
-                });
-        },
-
-        /**
-         *
-         * @param response
-         */
-        handleResponseError: function (response) {
-            this.$broadcast('response-error', response);
-            this.showLoading = false;
-        }
-    },
-    props: [
-        //data to be received from parent
-    ],
-    ready: function () {
-        $(".wysiwyg").wysiwyg();
-        this.getFoods();
-    }
-});
-
-
-
-
-
-
-
-
-var MenuEntriesComponent = Vue.component('menu-entries', {
-    template: '#menu-entries-template',
-    data: function () {
-        return {
-            menuEntries: menuEntries,
-            temporaryRecipePopup: {},
-            selected: {
-                dropdown_item: {},
-                food: {},
-                unit: {}
-            }
-        };
-    },
-    components: {},
-    methods: {
-
-        /**
-        *
-        */
-        deleteMenuEntry: function (entry) {
-            if (confirm("Are you sure?")) {
-                $.event.trigger('show-loading');
-                this.$http.delete('/api/menuEntries/' + entry.id, function (response) {
-                    this.menuEntries = _.without(this.menuEntries, entry);
-                    $.event.trigger('provide-feedback', ['MenuEntry deleted', 'success']);
-                    $.event.trigger('menu-entry-deleted');
-                    $.event.trigger('hide-loading');
-                })
-                .error(function (response) {
-                    this.handleResponseError(response);
-                });
-            }
-        },
-
-        /**
-        *
-        */
-        getEntriesForTheDay: function () {
-            $.event.trigger('show-loading');
-            this.$http.get('/api/menuEntries/' + this.date.sql, function (response) {
-                this.menuEntries = response;
-                $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
-                this.handleResponseError(response);
-            });
-        },
-
-        /**
-         *
-         */
-        listen: function () {
-            var that = this;
-            $(document).on('menu-entry-added', function (event, entry) {
-                $.event.trigger('show-loading');
-                if (entry.date === that.date.sql) {
-                    that.menuEntries.push(entry)
-                }
-            });
-            $(document).on('date-changed', function (event) {
-                that.getEntriesForTheDay();
-            });
-        },
-
-        /**
-         *
-         * @param response
-         */
-        handleResponseError: function (response) {
-            this.$broadcast('response-error', response);
-            this.showLoading = false;
-        }
-    },
-    props: [
-        'date'
-    ],
-    ready: function () {
-        this.listen();
-    }
-});
-
-
-
-var NewFoodEntry = Vue.component('new-food-entry', {
-    template: '#new-food-entry-template',
-    data: function () {
-        return {
-            newIngredient: {
-                food: {
-                    units: {
-                        data: []
-                    },
-                    defaultUnit: {
-                        data: {}
-                    }
-                },
-                unit: {}
-            }
-        };
-    },
-    components: {},
-    methods: {
-
-        /**
-         *
-         */
-        addIngredientToRecipe: function () {
-            if (this.recipeIsTemporary) {
-                $.event.trigger('add-ingredient-to-temporary-recipe', [this.newIngredient]);
-            }
-            else {
-                $.event.trigger('show-loading');
-
-                var data = {
-                    addIngredient: true,
-                    food_id: this.newIngredient.food.id,
-                    unit_id: this.newIngredient.unit.id,
-                    quantity: this.newIngredient.quantity,
-                    description: this.newIngredient.description
-                };
-
-                this.$http.put('/api/recipes/' + this.selectedRecipe.id, data, function (response) {
-                        this.selectedRecipe.ingredients.push({
-                            name: this.newIngredient.food.name,
-                            unit_name: this.newIngredient.unit.name,
-                            quantity: this.newIngredient.quantity,
-                            description: this.newIngredient.description,
-                        });
-                        $.event.trigger('provide-feedback', ['Food added', 'success']);
-                        $.event.trigger('hide-loading');
-                    })
-                    .error(function (response) {
-                        this.handleResponseError(response);
-                    });
-            }
-        },
-
-
-        /**
-         *
-         * @param response
-         */
-        handleResponseError: function (response) {
-            this.$broadcast('response-error', response);
-            this.showLoading = false;
-        }
-    },
-    props: [
-        'date',
-        'selectedRecipe',
-        'recipeIsTemporary'
-    ],
-    events: {
-        'option-chosen': function (option) {
-            this.newIngredient.food = option;
-            this.newIngredient.unit = option.defaultUnit.data;
-        }
-    },
-    ready: function () {
-
-    }
-});
-var NewMenuEntry = Vue.component('new-menu-entry', {
-    template: '#new-menu-entry-template',
-    data: function () {
-        return {
-            newIngredient: {
-                food: {
-                    units: {
-                        data: []
-                    },
-                    defaultUnit: {
-                        data: {}
-                    }
-                },
-                unit: {},
-                type: ''
-            },
-            recipeEntry: {},
-            entryNumberForRecipe: 0
-        };
-    },
-    components: {},
-    methods: {
-
-        /**
-         *
-         */
-        insertMenuEntry: function () {
-            $.event.trigger('show-loading');
-            var data = {
-                date: this.date.sql,
-                food_id: this.newIngredient.food.id,
-                unit_id: this.newIngredient.unit.id,
-                quantity: this.newIngredient.quantity,
-            };
-
-            $.event.trigger('get-entries');
-
-            $("#new-menu-entry-food").focus();
-
-            this.$http.post('/api/menuEntries', data, function (response) {
-                this.newIngredient.description = '';
-                this.newIngredient.quantity = '';
-                $("#new-ingredient-food-name").focus();
-                $.event.trigger('provide-feedback', ['Menu entry created', 'success']);
-                $.event.trigger('menu-entry-added', [response]);
-                $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
-                this.handleResponseError(response);
-            });
-        },
-
-        /**
-         *
-         * @param ingredient
-         */
-        insertEntry: function (ingredient) {
-            var data = {
-                date: this.date.sql,
-                food_id: ingredient.food.data.id,
-                recipe_id: this.recipeEntry.id,
-                unit_id: ingredient.unit.data.id,
-                quantity: ingredient.quantity,
-            };
-
-            this.$http.post('/api/menuEntries', data, function (response) {
-                //This adds the entry to the entries with the JS
-                $.event.trigger('menu-entry-added', [response]);
-                this.entryNumberForRecipe++;
-                //If it's the last of the entries for the recipe being added, do stuff
-                if (this.entryNumberForRecipe == this.recipeEntry.ingredients.data.length) {
-                    $.event.trigger('provide-feedback', ['Recipe entries created', 'success']);
-                    //I think this just updates the calorie info for the day
-                    $.event.trigger('get-entries');
-                    $.event.trigger('hide-loading');
-                }
-            })
-            .error(function (response) {
-                this.handleResponseError(response);
-            });
-        },
-
-        /**
-         * Insert each entry for a recipe, one at a time
-         * @param recipe
-         */
-        insertEntriesForRecipe: function (recipe) {
-            $.event.trigger('show-loading');
-
-            this.entryNumberForRecipe = 0;
-            this.recipeEntry = recipe;
-
-            for (var i = 0; i < recipe.ingredients.data.length; i++) {
-                this.insertEntry(recipe.ingredients.data[i]);
-            }
-        },
-
-        /**
-         *
-         */
-        listen: function () {
-            var that = this;
-            $(document).on('insert-entries-for-recipe', function (event, recipe) {
-                that.insertEntriesForRecipe(recipe);
-            });
-        },
-
-        /**
-         *
-         * @param response
-         */
-        handleResponseError: function (response) {
-            this.$broadcast('response-error', response);
-            this.showLoading = false;
-        }
-    },
-    props: [
-        'date'
-    ],
-    events: {
-        'option-chosen': function (option) {
-            if (option.type === 'food') {
-                this.newIngredient.food = option;
-                this.newIngredient.type = 'food';
-                if (option.defaultUnit) {
-                    this.newIngredient.unit = option.defaultUnit.data;
-                }
-            }
-            else if (option.type === 'recipe') {
-                this.newIngredient = option;
-                $.event.trigger('show-temporary-recipe-popup', [option]);
-            }
-        }
-    },
-    ready: function () {
-        this.listen();
-    }
-});
-var NewQuickRecipe = Vue.component('new-quick-recipe', {
-    template: '#new-quick-recipe-template',
-    data: function () {
-        return {
-            errors: {},
-            showPopup: false,
-            showHelp: false,
-            newRecipe: {
-                similarNames: []
-            },
-            similarNames: [],
-        };
-    },
-    components: {},
-    methods: {
-
-        /**
-         *
-         */
-        toggleHelp: function () {
-            this.showHelp = !this.showHelp;
-        },
-
-        /**
-         * End goal of the function:
-         * Call RecipesFactory.insertQuickRecipe, with $check_similar_names as true.
-         * Send the contents, steps, and name of new recipe.
-         *
-         * The PHP checks for similar names and returns similar names if found.
-         * The JS checks for similar names in the response.
-         *
-         * If they exist, a popup shows.
-         * From there, the user can click a button
-         * which fires quickRecipeFinish,
-         * sending the recipe info again
-         * but this time without the similar name check.
-         *
-         * If none exist, the recipe should have been entered with the PHP
-         * and things should update accordingly on the page.
-         */
-        respondToEnterRecipeBtnClick: function () {
-            //remove any previous error styling so it doesn't wreck up the html
-            $("#quick-recipe > *").removeAttr("style");
-            $("#quick-recipe-errors").hide();
-
-            var arrayOfIngredientsAndSteps = RecipesRepository.getArrayOfIngredientsAndSteps();
-
-            this.addPropertiesToRecipe(arrayOfIngredientsAndSteps);
-            RecipesRepository.modifyQuickRecipeHtml(arrayOfIngredientsAndSteps);
-            this.checkForAndHandleErrors();
-
-            if (this.errors.length < 1) {
-                //Prompt the user for the recipe name
-                this.newRecipe.name = prompt('name your recipe');
-
-                //If the user changes their mind and cancels
-                if (!this.newRecipe.name) {
-                    return;
-                }
-
-                this.checkForSimilarNames();
-            }
-            else {
-                $("#quick-recipe-errors").show();
-            }
-        },
-
-        /**
-        *
-        */
-        showNewRecipeFields: function () {
-            this.addingNewRecipe = true;
-            this.editingRecipe = false;
-        },
-
-        /**
-         *
-         */
-        checkForSimilarNames: function () {
-            $.event.trigger('show-loading');
-
-            var data = {
-                ingredients: this.newRecipe.ingredients
-            };
-
-            this.$http.get('/api/quickRecipes/checkForSimilarNames', data, function (response) {
-                $.event.trigger('hide-loading');
-                this.similarNames = response;
-
-                if (response.units || response.foods) {
-                    $.event.trigger('provide-feedback', ['Similar names were found', 'success']);
-                    this.showPopup = true;
-                }
-                else {
-                    this.insertRecipe();
-                }
-
-            })
-            .error(function (response) {
-                this.handleResponseError(response);
-            });
-        },
-
-        /**
-         *
-         */
-        insertRecipe: function () {
-            $.event.trigger('show-loading');
-            if (this.similarNames.foods || this.similarNames.units) {
-                this.chooseCorrectFoodName();
-                this.chooseCorrectUnitName();
-                this.showPopup = false;
-            }
-
-            var data = {
-                name: this.newRecipe.name,
-                ingredients: this.newRecipe.ingredients,
-                steps: this.newRecipe.steps,
-                checkForSimilarNames: this.checkForSimilarNames
-            };
-
-            this.$http.post('/api/quickRecipes', data, function (response) {
-                    $.event.trigger('provide-feedback', ['Recipe created', 'success']);
-                    $.event.trigger('hide-loading');
-                    this.recipes.push(response.data);
-                })
-                .error(function (response) {
-                    this.handleResponseError(response);
-                });
-        },
-
-        /**
-         *
-         */
-        chooseCorrectFoodName: function () {
-            var that = this;
-            $(this.similarNames.foods).each(function () {
-                if (this.selected === this.existingFood.name) {
-                    // Use the existing food rather than creating a new food.
-                    that.newRecipe.ingredients[this.index].food = this.existingFood.name;
-                }
-            });
-        },
-
-        /**
-         *
-         */
-        chooseCorrectUnitName: function () {
-            var that = this;
-            $(this.newRecipe.similarNames.units).each(function () {
-                if (this.selected === this.existingUnit.name) {
-                    //Use the existing unit rather than creating a new unit
-                     that.newRecipe.ingredients[this.index].unit = this.existingUnit.name;
-                }
-            });
-        },
-
-        /**
-         *
-         */
-        checkForAndHandleErrors: function () {
-            this.errors = [];
-            this.errors = RecipesRepository.checkIngredientsForErrors(this.newRecipe.ingredients);
-        },
-
-        /**
-         *
-         */
-        addPropertiesToRecipe: function (arrayOfIngredientsAndSteps) {
-            this.newRecipe.ingredients = RecipesRepository.getIngredients(arrayOfIngredientsAndSteps);
-            this.newRecipe.steps = RecipesRepository.getSteps(arrayOfIngredientsAndSteps);
-            this.newRecipe.ingredients = RecipesRepository.convertIngredientStringsToObjects(this.newRecipe.ingredients);
-        },
-
-        /**
-         *
-         */
-        closePopup: function ($event) {
-            if ($event.target.className === 'popup-outer') {
-                this.showPopup = false;
-            }
-        },
-
-        /**
-         *
-         * @param response
-         */
-        handleResponseError: function (response) {
-            this.$broadcast('response-error', response);
-            this.showLoading = false;
-        }
-    },
-    props: [
-        'recipes'
-    ],
-    ready: function () {
-
-    }
-});
-
-var RecipePopup = Vue.component('recipe-popup', {
-    template: '#recipe-popup-template',
-    data: function () {
-        return {
-            showRecipePopup: false,
-            selectedRecipe: {
-                steps: [],
-                ingredients: []
-            },
-            newIngredient: {
-                food: {}
-            },
-            editingMethod: false
-        };
-    },
-    components: {},
-    methods: {
-
-        /**
-         *
-         */
-        listen: function () {
-            var that = this;
-            $(document).on('show-recipe-popup', function (event, recipe) {
-                that.showPopup(recipe);
-            });
-            $(document).on('add-ingredient-to-recipe', function (event, ingredient) {
-                that.addIngredientToRecipe(ingredient);
-            });
-        },
-
-        /**
-         *
-         */
-        showPopup: function (recipe) {
-            this.selectedRecipe = recipe;
-            this.showRecipePopup = true;
-            //$(".wysiwyg").wysiwyg();
-        },
-
-        /**
-         *
-         */
-        closePopup: function ($event) {
-            if ($event.target.className === 'popup-outer') {
-                this.showRecipePopup = false;
-            }
-        },
-        
-        /**
-        *
-        */
-        updateRecipe: function () {
-            $.event.trigger('show-loading');
-
-            var string = $("#edit-recipe-method").html();
-            var lines = RecipesRepository.formatString(string, $("#edit-recipe-method")).items;
-            var steps = [];
-
-            $(lines).each(function () {
-                steps.push(this);
-            });
-
-            this.selectedRecipe.steps = steps;
-
-            var data = {
-                name: this.selectedRecipe.name,
-                steps: this.selectedRecipe.steps,
-                tag_ids: this.selectedRecipe.tag_ids
-            };
-
-            this.$http.put('/api/recipes/' + this.selectedRecipe.id, data, function (response) {
-                var index = _.indexOf(this.recipes, _.findWhere(this.recipes, {id: this.selectedRecipe.id}));
-                this.recipes[index].name = response.name;
-                this.recipes[index].tags = response.tags;
-                this.recipes[index].tag_ds = response.tag_ids;
-                this.editingMethod = false;
-                this.showRecipePopup = false;
-                $.event.trigger('provide-feedback', ['Recipe updated', 'success']);
-                $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
-                this.handleResponseError(response);
-            });
-        },
-
-        /**
-        *
-        */
-        deleteIngredientFromRecipe: function (ingredient) {
-            $.event.trigger('show-loading');
-
-            var data = {
-                removeIngredient: true,
-                food_id: ingredient.food_id,
-                unit_id: ingredient.unit_id
-            };
-
-            this.$http.put('/api/recipes/' + this.selectedRecipe.id, data, function (response) {
-                this.selectedRecipe.ingredients = _.without(this.selectedRecipe.ingredients, ingredient);
-                $.event.trigger('provide-feedback', ['Ingredient removed from recipe', 'success']);
-                $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
-                this.handleResponseError(response);
-            });
-        },
-
-        /**
-         *
-         */
-        toggleEditMethod: function () {
-            //Toggle the visibility of the wysywig
-            this.editingMethod = !this.editingMethod;
-
-            //If we are editing the recipe, prepare the html of the wysiwyg
-            if (this.editingMethod) {
-                var text;
-                var string = "";
-
-                //convert the array into a string so I can make the wysiwyg display the steps
-                $(this.selectedRecipe.steps).each(function () {
-                    text = this.text;
-                    text = text + '<br>';
-                    string+= text;
-                });
-                $("#edit-recipe-method").html(string);
-            }
-        },
-
-        /**
-         *
-         * @param response
-         */
-        handleResponseError: function (response) {
-            this.$broadcast('response-error', response);
-            this.showLoading = false;
-        }
-    },
-    props: [
-        'tags',
-        'recipes'
-    ],
-    ready: function () {
-        this.listen();
-    }
-});
-
-var RecipeTags = Vue.component('recipe-tags', {
-    template: '#recipe-tags-template',
-    data: function () {
-        return {
-            newTag: {}
-        };
-    },
-    components: {},
-
-    methods: {
-
-        /**
-        *
-        */
-        insertTag: function () {
-            $.event.trigger('show-loading');
-            var data = {
-                name: this.newTag.name
-            };
-
-            this.$http.post('/api/recipeTags', data, function (response) {
-                this.tags.push(response.data);
-                $.event.trigger('provide-feedback', ['Tag created', 'success']);
-                $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
-                this.handleResponseError(response);
-            });
-        },
-
-        /**
-        *
-        */
-        deleteTag: function (tag) {
-            if (confirm("Are you sure?")) {
-                $.event.trigger('show-loading');
-                this.$http.delete('/api/recipeTags/' + tag.id, function (response) {
-                    this.tags = _.without(this.tags, tag);
-                    $.event.trigger('provide-feedback', ['Tag deleted', 'success']);
-                    //this.$broadcast('provide-feedback', 'Tag deleted', 'success');
-                    $.event.trigger('hide-loading');
-                })
-                .error(function (response) {
-                    this.handleResponseError(response);
-                });
-            }
-        },
-
-        /**
-         *
-         * @param response
-         */
-        handleResponseError: function (response) {
-            this.$broadcast('response-error', response);
-            this.showLoading = false;
-        }
-    },
-    props: [
-        'tags',
-        'recipesTagFilter'
-    ],
-    ready: function () {
-
-    }
-});
-
-var Recipes = Vue.component('recipes', {
-    template: '#recipes-template',
-    data: function () {
-        return {
-            newRecipe: {},
-            recipesNameFilter: '',
-            //recipesTagFilter: ''
-        };
-    },
-    components: {},
-    filters: {
-        recipesFilter: function (recipes) {
-            var that = this;
-
-            return recipes.filter(function (recipe) {
-                var containsName = recipe.name.indexOf(that.recipesNameFilter) !== -1;
-                var containsTags = true;
-                var tagIdsForRecipe = _.pluck(recipe.tags.data, 'id');
-                var count = 0;
-
-                if (that.recipesTagFilter.length > 0) {
-                    containsTags = false;
-                    for (var i = 0; i < that.recipesTagFilter.length; i++) {
-                        if (tagIdsForRecipe.indexOf(that.recipesTagFilter[i]) !== -1) {
-                            //Recipe contains the tag
-                            count++;
-                        }
-                    }
-                    if (count === that.recipesTagFilter.length) {
-                        containsTags = true;
-                    }
-                }
-
-                return containsName && containsTags;
-            });
-        }
-    },
-    methods: {
-
-        /**
-         *
-         * @param recipe
-         */
-        showRecipePopup: function (recipe) {
-            $.event.trigger('show-loading');
-            this.$http.get('/api/recipes/' + recipe.id, function (response) {
-                    $.event.trigger('show-recipe-popup', [response]);
-                    $.event.trigger('hide-loading');
-                })
-                .error(function (response) {
-                    this.handleResponseError(response);
-                });
-        },
-
-        /**
-        *
-        */
-        insertRecipe: function () {
-            $.event.trigger('show-loading');
-            var data = {
-                name: this.newRecipe.name
-            };
-
-            this.$http.post('/api/recipes', data, function (response) {
-                this.recipes.push(response.data);
-                $.event.trigger('provide-feedback', ['Recipe created', 'success']);
-                $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
-                this.handleResponseError(response);
-            });
-        },
-
-        /**
-        *
-        */
-        showNewRecipeFields: function () {
-            this.addingNewRecipe = true;
-            this.editingRecipe = false;
-        },
-
-        /**
-        *
-        */
-        deleteRecipe: function (recipe) {
-            if (confirm("Are you sure?")) {
-                $.event.trigger('show-loading');
-                this.$http.delete('/api/recipes/' + recipe.id, function (response) {
-                    this.recipes = _.without(this.recipes, recipe);
-                    $.event.trigger('provide-feedback', ['Recipe deleted', 'success']);
-                    $.event.trigger('hide-loading');
-                })
-                .error(function (response) {
-                    this.handleResponseError(response);
-                });
-            }
-        },
-
-        /**
-         *
-         * @param response
-         */
-        handleResponseError: function (response) {
-            this.$broadcast('response-error', response);
-            this.showLoading = false;
-        }
-    },
-    props: [
-        'tags',
-        'recipesTagFilter',
-        'recipes'
-    ],
-    ready: function () {
-        $(".wysiwyg").wysiwyg();
-    }
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//$scope.getMenu = function () {
-//    if ($scope.foods.length > 0 && $scope.recipes.length > 0) {
-//        $scope.menu = select.getMenu($scope.foods, $scope.recipes);
-//    }
-//};
-
-
-
-
-
-
-//
-//
-///**
-// * Add a unit to a food or remove the unit from the food.
-// * The method name is old and should probably be changed.
-// * @param $unit_id
-// */
-//$scope.insertOrDeleteUnitInCalories = function ($unit_id) {
-//    //Check if the checkbox is checked
-//    if ($scope.food_popup.food_units.indexOf($unit_id) === -1) {
-//        //It is now unchecked. Remove the unit from the food.
-//        FoodsFactory.deleteUnitFromCalories($scope.food_popup.food.id, $unit_id).then(function (response) {
-//            $scope.food_popup = response.data;
-//        });
-//    }
-//    else {
-//        // It is now checked. Add the unit to the food.
-//        FoodsFactory.insertUnitInCalories($scope.food_popup.food.id, $unit_id).then(function (response) {
-//            $scope.food_popup = response.data;
-//        });
-//    }
-//};
-//
-///**
-// * update
-// */
-//
-
-//
-//$scope.updateCalories = function ($keycode, $unit_id, $calories) {
-//    if ($keycode === 13) {
-//        FoodsFactory.updateCalories($scope.food_popup.food.id, $unit_id, $calories).then(function (response) {
-//            $scope.food_popup = response.data;
-//        });
-//    }
-//};
-//
-//$scope.updateDefaultUnit = function ($food_id, $unit_id) {
-//    FoodUnitsFactory.updateDefaultUnit($food_id, $unit_id).then(function (response) {
-//        $scope.food_popup = response.data;
-//    });
-//};
-
-
-
-var RecipesPage = Vue.component('recipes-page', {
-    template: '#recipes-page-template',
-    data: function () {
-        return {
-            tags: [],
-            recipes: [],
-            recipesTagFilter: []
-        };
-    },
-    components: {},
-    computed: {
-        //recipesTagFilter: function () {
-        //    return _.pluck(this.tags, 'id');
-        //}
-    },
-    methods: {
-
-        /**
-        *
-        */
-        getTags: function () {
-            $.event.trigger('show-loading');
-            this.$http.get('/api/recipeTags', function (response) {
-                this.tags = response;
-                $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
-                this.handleResponseError(response);
-            });
-        },
-
-        /**
-        *
-        */
-        getRecipes: function () {
-            $.event.trigger('show-loading');
-            this.$http.get('/api/recipes', function (response) {
-                this.recipes = response;
-                $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
-                this.handleResponseError(response);
-            });
-        },
-
-        /**
-         *
-         * @param response
-         */
-        handleResponseError: function (response) {
-            this.$broadcast('response-error', response);
-            this.showLoading = false;
-        }
-    },
-    props: [
-        //data to be received from parent
-    ],
-    ready: function () {
-        this.getRecipes();
-        this.getTags();
-    }
-});
-
-var TemporaryRecipePopup = Vue.component('temporary-recipe-popup', {
-    template: '#temporary-recipe-popup-template',
-    data: function () {
-        return {
-            showPopup: false,
-            portion: 1,
-            recipe: {
-                ingredients: {}
-            }
-        };
-    },
-    components: {},
-    methods: {
-
-        /**
-        *
-        */
-        getRecipe: function (recipe) {
-            $.event.trigger('show-loading');
-            this.$http.get('/api/recipes/' + recipe.id, function (response) {
-                this.recipe = response;
-
-                $(this.recipe.ingredients.data).each(function () {
-                    this.originalQuantity = this.quantity;
-                });
-
-                $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
-                this.handleResponseError(response);
-            });
-        },
-
-        /**
-         *
-         */
-        insertFoodIntoTemporaryRecipe: function () {
-            //we are adding a food to a temporary recipe
-            var $unit_name = $("#temporary-recipe-popup-unit option:selected").text();
-            this.temporaryRecipePopup.contents.push({
-                "food_id": this.temporaryRecipePopup.food.id,
-                "name": this.temporaryRecipePopup.food.name,
-                "quantity": this.temporaryRecipePopup.quantity,
-                "unit_id": $("#temporary-recipe-popup-unit").val(),
-                "unit_name": $unit_name,
-                "units": this.temporaryRecipePopup.food.units
-            });
-
-            $("#temporary-recipe-food-input").val("").focus();
-        },
-
-        /**
-         *
-         */
-        setRecipePortion: function () {
-            var that = this;
-            $(this.recipe.ingredients.data).each(function () {
-                if (this.originalQuantity) {
-                    //making sure we don't alter the quantity of a food
-                    //that has been added to the temporary recipe
-                    //(by doing the if check)
-                    this.quantity = this.originalQuantity * that.portion;
-                }
-            });
-        },
-
-        /**
-         *
-         */
-        deleteIngredientFromTemporaryRecipe: function (ingredient) {
-            this.recipe.ingredients.data = _.without(this.recipe.ingredients.data, ingredient);
-        },
-
-        /**
-         *
-         */
-        closePopup: function ($event) {
-            if ($event.target.className === 'popup-outer') {
-                this.showPopup = false;
-            }
-        },
-
-        /**
-         *
-         */
-        insertEntriesForRecipe: function () {
-            $.event.trigger('insert-entries-for-recipe', [this.recipe]);
-            this.showPopup = false;
-        },
-
-        /**
-         *
-         */
-        listen: function () {
-            var that = this;
-            $(document).on('show-temporary-recipe-popup', function (event, recipe) {
-                that.getRecipe(recipe);
-                that.showPopup = true;
-            });
-            $(document).on('add-ingredient-to-temporary-recipe', function (event, ingredient) {
-                console.log(ingredient);
-                console.log(that.recipe.ingredients.data[0]);
-                that.recipe.ingredients.data.push({
-                    food: {
-                        data: {
-                            id: ingredient.food.id,
-                            name: ingredient.food.name,
-                            units: {data: ingredient.food.units.data},
-                            defaultUnit: ingredient.food.defaultUnit,
-                        }
-                    },
-                    unit: {data: ingredient.unit},
-                    quantity: ingredient.quantity
-                });
-            });
-        },
-
-        /**
-         *
-         * @param response
-         */
-        handleResponseError: function (response) {
-            this.$broadcast('response-error', response);
-            this.showLoading = false;
-        }
-    },
-    props: [
-        //'insertEntriesForRecipe'
-    ],
-    ready: function () {
-        this.listen();
-    }
-});
-
-var Autocomplete = Vue.component('autocomplete', {
-    template: '#autocomplete-template',
-    data: function () {
-        return {
-            autocompleteOptions: [],
-            chosenOption: {
-                name: ''
-            },
-            showDropdown: false,
-            currentIndex: 0
-        };
-    },
-    components: {},
-    methods: {
-
-        /**
-         *
-         * @param keycode
-         */
-        respondToKeyup: function (keycode) {
-            if (keycode !== 13 && keycode !== 38 && keycode !== 40 && keycode !== 39 && keycode !== 37) {
-                //not enter, up, down, right or left arrows
-                this.populateOptions();
-            }
-            else if (keycode === 38) {
-                //up arrow pressed
-                if (this.currentIndex !== 0) {
-                    this.currentIndex--;
-                }
-            }
-            else if (keycode === 40) {
-                //down arrow pressed
-                if (this.autocompleteOptions.length - 1 !== this.currentIndex) {
-                    this.currentIndex++;
-                }
-            }
-            else if (keycode === 13) {
-                this.respondToEnter();
-            }
-        },
-
-        /**
-         *
-         */
-        populateOptions: function () {
-            //fill the dropdown
-            $.event.trigger('show-loading');
-            this.$http.get(this.url + '?typing=' + this.chosenOption.name, function (response) {
-                    this.autocompleteOptions = response.data;
-                    this.showDropdown = true;
-                    this.currentIndex = 0;
-                    $.event.trigger('hide-loading');
-                })
-                .error(function (response) {
-                    this.handleResponseError(response);
-                });
-        },
-
-        /**
-         *
-         */
-        respondToEnter: function () {
-            if (this.showDropdown) {
-                //enter is for the autocomplete
-                this.selectOption();
-            }
-            else {
-                //enter is to add the entry
-                this.insertItemFunction();
-            }
-        },
-
-        /**
-         *
-         */
-        selectOption: function () {
-            this.chosenOption = this.autocompleteOptions[this.currentIndex];
-            this.showDropdown = false;
-            if (this.idToFocusAfterAutocomplete) {
-                var that = this;
-                setTimeout(function () {
-                    $("#" + that.idToFocusAfterAutocomplete).focus();
-                }, 100);
-            }
-            this.$dispatch('option-chosen', this.chosenOption);
-        },
-
-        /**
-         *
-         * @param response
-         */
-        handleResponseError: function (response) {
-            this.$broadcast('response-error', response);
-            this.showLoading = false;
-        }
-    },
-    props: [
-        'url',
-        'autocompleteField',
-        'insertItemFunction',
-        'idToFocusAfterAutocomplete'
-    ],
-    ready: function () {
-
-    }
-});
-
-var DateNavigation = Vue.component('date-navigation', {
-    template: '#date-navigation-template',
-    data: function () {
-        return {
-
-        };
-    },
-    components: {},
-    watch: {
-        'date.typed': function (newValue, oldValue) {
-            this.date.sql = Date.parse(this.date.typed).toString('yyyy-MM-dd');
-            this.date.long = Date.parse(this.date.typed).toString('ddd dd MMM yyyy');
-            $("#date").val(this.date.typed);
-            $.event.trigger('date-changed');
-        }
-    },
-    methods: {
-        /**
-         *
-         * @param $number
-         */
-        goToDate: function ($number) {
-            this.date.typed = DatesRepository.goToDate(this.date.typed, $number);
-        },
-
-        /**
-         *
-         */
-        goToToday: function () {
-            this.date.typed = DatesRepository.today();
-        },
-
-        /**
-         *
-         * @param date
-         * @returns {boolean}
-         */
-        changeDate: function (date) {
-            var date = date || $("#date").val();
-            this.date.typed = DatesRepository.changeDate(date);
-        },
-
-        /**
-         *
-         * @param response
-         */
-        handleResponseError: function (response) {
-            this.$broadcast('response-error', response);
-            this.showLoading = false;
-        }
-
-    },
-    props: [
-        'date'
-    ],
-    ready: function () {
-
-    }
-
-});
-
-
-Vue.component('feedback', {
-    template: "#feedback-template",
-    data: function () {
-        return {
-            feedbackMessages: []
-        };
-    },
-    methods: {
-        listen: function () {
-            var that = this;
-            $(document).on('provide-feedback', function (event, message, type) {
-                that.provideFeedback(message, type);
-            });
-        },
-        provideFeedback: function (message, type) {
-            var newMessage = {
-                message: message,
-                type: type
-            };
-
-            var that = this;
-
-            this.feedbackMessages.push(newMessage);
-
-            setTimeout(function () {
-                that.feedbackMessages = _.without(that.feedbackMessages, newMessage);
-            }, 3000);
-        },
-        handleResponseError: function (response) {
-            if (typeof response !== "undefined") {
-                var $message;
-
-                switch(response.status) {
-                    case 503:
-                        $message = 'Sorry, application under construction. Please try again later.';
-                        break;
-                    case 401:
-                        $message = 'You are not logged in';
-                        break;
-                    case 422:
-                        var html = "<ul>";
-
-                        for (var i = 0; i < response.length; i++) {
-                            var error = response[i];
-                            for (var j = 0; j < error.length; j++) {
-                                html += '<li>' + error[j] + '</li>';
-                            }
-                        }
-
-                        html += "</ul>";
-                        $message = html;
-                        break;
-                    default:
-                        $message = response.error;
-                        break;
-                }
-            }
-            else {
-                $message = 'There was an error';
-            }
-
-            return $message;
-
-        }
-    },
-    events: {
-        'provide-feedback': function (message, type) {
-            this.provideFeedback(message, type);
-        },
-        'response-error': function (response) {
-            this.provideFeedback(this.handleResponseError(response), 'error');
-        }
-    },
-    ready: function () {
-        this.listen();
-    },
-});
-Vue.component('loading', {
-    data: function () {
-        return {
-            showLoading: false
-        };
-    },
-    template: "#loading-template",
-    props: [
-        //'showLoading'
-    ],
-    methods: {
-        listen: function () {
-            var that = this;
-            $(document).on('show-loading', function (event, message, type) {
-                that.showLoading = true;
-            });
-            $(document).on('hide-loading', function (event, message, type) {
-                that.showLoading = false;
-            });
-        }
-    },
-    ready: function () {
-        this.listen();
-    }
-});
 var ActivitiesPage = Vue.component('activities-page', {
     template: '#activities-page-template',
     data: function () {
