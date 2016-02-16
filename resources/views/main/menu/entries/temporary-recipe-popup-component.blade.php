@@ -14,10 +14,13 @@
 			<div class="row margin-bottom">
 				<div class="col-sm-10 col-sm-offset-1">
 
+					<label>How many portions? 1 for the full recipe, .5 for half, etc.</label>
+
 					<input
-							v-model="recipe.portion"
+							v-model="portion"
+							v-on:keyup="setRecipePortion()"
 							type="text"
-							placeholder="how many portions? 1 for the full recipe, .5 for half, etc."
+							placeholder="portion"
 							class="form-control"
 					>
 

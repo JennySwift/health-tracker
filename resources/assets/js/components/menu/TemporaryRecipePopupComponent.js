@@ -3,6 +3,7 @@ var TemporaryRecipePopup = Vue.component('temporary-recipe-popup', {
     data: function () {
         return {
             showPopup: false,
+            portion: 1,
             recipe: {
                 ingredients: {}
             }
@@ -19,9 +20,9 @@ var TemporaryRecipePopup = Vue.component('temporary-recipe-popup', {
             this.$http.get('/api/recipes/' + recipe.id, function (response) {
                 this.recipe = response;
 
-                //$(this.recipe.contents).each(function () {
-                //    this.originalQuantity = this.quantity;
-                //});
+                $(this.recipe.ingredients.data).each(function () {
+                    this.originalQuantity = this.quantity;
+                });
 
                 $.event.trigger('hide-loading');
             })
@@ -48,14 +49,20 @@ var TemporaryRecipePopup = Vue.component('temporary-recipe-popup', {
             $("#temporary-recipe-food-input").val("").focus();
         },
 
-        //this.$watch('recipe.portion', function (newValue, oldValue) {
-//    $(this.temporaryRecipePopup.contents).each(function () {
-//        if (this.original_quantity) {
-//            //making sure we don't alter the quantity of a food that has been added to the temporary recipe (by doing the if check)
-//            this.quantity = this.original_quantity * newValue;
-//        }
-//    });
-//});
+        /**
+         *
+         */
+        setRecipePortion: function () {
+            var that = this;
+            $(this.recipe.ingredients.data).each(function () {
+                if (this.originalQuantity) {
+                    //making sure we don't alter the quantity of a food
+                    //that has been added to the temporary recipe
+                    //(by doing the if check)
+                    this.quantity = this.originalQuantity * that.portion;
+                }
+            });
+        },
 
         /**
          *
