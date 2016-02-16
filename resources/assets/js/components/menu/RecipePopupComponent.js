@@ -4,7 +4,8 @@ var RecipePopup = Vue.component('recipe-popup', {
         return {
             showRecipePopup: false,
             selectedRecipe: {
-                steps: []
+                steps: [],
+                ingredients: []
             },
             newIngredient: {
                 food: {}
