@@ -32,27 +32,6 @@ var MenuEntriesComponent = Vue.component('menu-entries', {
             }
         },
 
-        showDeleteFoodOrRecipeEntryPopup: function ($entry_id, $recipe_id) {
-            this.show.popups.delete_food_or_recipe_entry = true;
-            this.selected.entry = {
-                id: $entry_id
-            };
-            this.selected.recipe = {
-                id: $recipe_id
-            };
-        },
-
-        //Todo: get food entries, calories for the day and calories for the week
-        //after deleting
-        //deleteRecipeEntry: function () {
-        //    RecipeEntriesFactory.deleteRecipeEntry(this.date.sql, this.selected.recipe.id).then(function (response) {
-        //        this.entries.menu = response.data.food_entries;
-        //        this.calories.day = response.data.calories_for_the_day;
-        //        this.calories.week_avg = response.data.calories_for_the_week;
-        //        this.show.popups.delete_food_or_recipe_entry = false;
-        //    });
-        //},
-
         /**
         *
         */
@@ -81,9 +60,6 @@ var MenuEntriesComponent = Vue.component('menu-entries', {
             $(document).on('date-changed', function (event) {
                 that.getEntriesForTheDay();
             });
-            //$(document).on('get-menu-entries', function (event) {
-            //    that.getEntriesForTheDay();
-            //});
         },
 
         /**

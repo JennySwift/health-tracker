@@ -33,15 +33,8 @@
                 </td>
                 <td>
                     <i
-                            v-if="!entry.recipe"
                             v-on:click="deleteMenuEntry(entry)"
                             class="delete-item fa fa-times">
-                    </i>
-                    <i
-                            v-if="entry.recipe"
-                            v-on:click="showDeleteFoodOrRecipeEntryPopup(entry.id, entry.recipe.id)"
-                            class="delete-item fa fa-times"
-                    >
                     </i>
                 </td>
             </tr>
