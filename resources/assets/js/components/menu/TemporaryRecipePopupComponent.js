@@ -3,7 +3,9 @@ var TemporaryRecipePopup = Vue.component('temporary-recipe-popup', {
     data: function () {
         return {
             showPopup: false,
-            recipe: {}
+            recipe: {
+                ingredients: {}
+            }
         };
     },
     components: {},

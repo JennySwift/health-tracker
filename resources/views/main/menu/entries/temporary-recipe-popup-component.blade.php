@@ -32,27 +32,27 @@
 					<th>unit</th>
 				</tr>
 
-				<tr v-for="ingredient in recipe.ingredients">
+				<tr v-for="ingredient in recipe.ingredients.data">
 
-					<td>@{{ ingredient.name }}</td>
+					<td>@{{ ingredient.food.data.name }}</td>
 
 					<td>
 						<input v-model="ingredient.quantity" type="text">
 					</td>
 					
-					<td>
-						<pre>@{{ingredient | json}}</pre>
+					{{--<td>--}}
+						{{--<pre>@{{ingredient | json}}</pre>--}}
 {{--						<pre>@{{$data.ingredient.units | json}}</pre>--}}
-					</td>
+					{{--</td>--}}
 
 					<td>
 						<select
-								v-model="ingredient.unit"
+								v-model="ingredient.unit.data"
 								id="unit"
 								class="form-control"
 						>
 							<option
-									v-for="unit in ingredient.units"
+									v-for="unit in ingredient.food.data.units.data"
 									v-bind:value="unit"
 							>
 								@{{ unit.name }}
