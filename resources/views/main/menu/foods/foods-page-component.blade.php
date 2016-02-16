@@ -43,7 +43,7 @@
                             <th>calories</th>
                             <th></th>
                         </tr>
-                        <tr v-for="food in foods">
+                        <tr v-for="food in foods | filterBy foodsFilter in 'name'">
                             <td v-on:click="getFoodInfo(food)" class="pointer">@{{ food.name }}</td>
                             <td><span v-if="food.defaultUnit">@{{ food.defaultUnit.data.name }}</span></td>
                             <td>@{{ food.defaultCalories }}</td>
