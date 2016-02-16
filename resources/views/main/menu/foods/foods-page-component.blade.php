@@ -34,7 +34,7 @@
                         </tr>
                         <tr v-for="food in foods">
                             <td v-on:click="getFoodInfo(food)" class="pointer">@{{ food.name }}</td>
-                            <td>@{{ food.defaultUnit.name }}</td>
+                            <td>@{{ food.defaultUnit.data.name }}</td>
                             <td>@{{ food.defaultCalories }}</td>
                             <td><i v-on:click="deleteFood(food)" class="delete-item fa fa-times"></i></td>
                         </tr>
