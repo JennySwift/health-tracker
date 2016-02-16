@@ -77,13 +77,7 @@ class Recipe extends Model {
             ->where('recipe_id', $this->id)
             ->join('foods', 'food_id', '=', 'foods.id')
             ->join('units', 'unit_id', '=', 'units.id')
-            ->select('foods.id as food_id', 'foods.name', 'units.name as unit_name', 'units.id as unit_id', 'quantity', 'description')
             ->get();
-
-        //Add the units to all the foods in $ingredients
-        foreach ($ingredients as $ingredient) {
-            $ingredient->units = Food::find($ingredient->food_id)->units;
-        }
 
         return $ingredients;
     }

@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Http\Transformers\Menu\RecipeWithIngredientsTransformer;
 use App\Http\Transformers\Menu\RecipeTransformer;
+use App\Http\Transformers\UnitTransformer;
 use App\Models\Menu\Food;
 use App\Models\Menu\Recipe;
 use App\Models\Menu\RecipeMethod;
@@ -208,7 +209,17 @@ class RecipesRepository {
      */
     public function getRecipeInfo($recipe)
     {
-        return transform(createItem($recipe, new RecipeWithIngredientsTransformer))['data'];
+        $recipe = transform(createItem($recipe, new RecipeWithIngredientsTransformer))['data'];
+
+        //For some reason the units for each food aren't being added to the food
+        //from my IngredientTransformer, so add them here
+        foreach ($recipe['ingredients']['data'] as $index => $ingredient) {
+            $units = Food::find($ingredient['food']['data']['id'])->units;
+            $units = transform(createCollection($units, new UnitTransformer));
+            $recipe['ingredients']['data'][$index]['food']['data']['units'] = $units;
+        }
+
+        return $recipe;
     }
 
     /**

@@ -54,6 +54,7 @@ class RecipesTest extends TestCase {
 //        dd($content);
 
         $this->checkRecipeKeysExist($content);
+        $this->checkFoodUnitKeysExist($content['ingredients']['data'][0]['food']['data']['units']['data'][0]);
 
         $this->assertEquals(1, $content['id']);
         $this->assertEquals('delicious recipe', $content['name']);

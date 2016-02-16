@@ -69,9 +69,17 @@ class FoodTransformer extends TransformerAbstract
             'defaultCalories' => $food->getDefaultCalories(),
         ];
 
-//        if (isset($this->params['units'])) {
-//            $array['units'] = $food->units;
-//        }
+        /**
+         * @VP:
+         * I'm doing this here so I can include the units from my IngredientTransformer.
+         * What's the proper way of doing this?
+         * Actually, $array['units'] is an empty array here. Why?
+         * It should be populated, and if I dd what includeUnits returns,
+         * the data looks correct.
+         */
+        if (isset($this->params['units'])) {
+            $array['units'] = $this->includeUnits($food);
+        }
 
 //        if ($food->default_unit_id) {
 //            $array['defaultUnit'] = [

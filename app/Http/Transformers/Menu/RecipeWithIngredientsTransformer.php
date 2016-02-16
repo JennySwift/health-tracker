@@ -9,7 +9,7 @@ use League\Fractal\TransformerAbstract;
  */
 class RecipeWithIngredientsTransformer extends TransformerAbstract
 {
-    protected $defaultIncludes = ['tags'];
+    protected $defaultIncludes = ['tags', 'ingredients'];
 
     /**
      * @VP:
@@ -31,10 +31,21 @@ class RecipeWithIngredientsTransformer extends TransformerAbstract
             'name' => $recipe->name,
             'steps' => $recipe->steps,
             'tag_ids' => $recipe->tags->lists('id'),
-            'ingredients' => $recipe->getIngredients()
         ];
 
         return $array;
+    }
+
+    /**
+     *
+     * @param Recipe $recipe
+     * @return \League\Fractal\Resource\Collection
+     */
+    public function includeIngredients(Recipe $recipe)
+    {
+        $ingredients = $recipe->getIngredients();
+
+        return createCollection($ingredients, new IngredientTransformer);
     }
 
     /**

@@ -7,7 +7,7 @@
         <autocomplete
                 :insert-item-function="insertMenuEntry"
                 url="/api/menu"
-                autocomplete-field="food"
+                autocomplete-field="food or recipe"
                 id-to-focus-after-autocomplete="new-ingredient-quantity"
                 autocomplete-field-id="new-menu-entry-food"
         >

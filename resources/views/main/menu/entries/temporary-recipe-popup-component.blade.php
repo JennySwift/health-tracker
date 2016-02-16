@@ -39,6 +39,11 @@
 					<td>
 						<input v-model="ingredient.quantity" type="text">
 					</td>
+					
+					<td>
+						<pre>@{{ingredient | json}}</pre>
+{{--						<pre>@{{$data.ingredient.units | json}}</pre>--}}
+					</td>
 
 					<td>
 						<select
