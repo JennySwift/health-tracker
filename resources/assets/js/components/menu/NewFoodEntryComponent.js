@@ -37,9 +37,17 @@ var NewFoodEntry = Vue.component('new-food-entry', {
                 };
 
                 this.$http.put('/api/recipes/' + this.selectedRecipe.id, data, function (response) {
-                        this.selectedRecipe.ingredients.push({
-                            name: this.newIngredient.food.name,
-                            unit_name: this.newIngredient.unit.name,
+                        this.selectedRecipe.ingredients.data.push({
+                            food: {
+                                data: {
+                                    name: this.newIngredient.food.name
+                                }
+                            },
+                            unit: {
+                                data: {
+                                    name: this.newIngredient.unit.name
+                                }
+                            },
                             quantity: this.newIngredient.quantity,
                             description: this.newIngredient.description,
                         });
