@@ -73,7 +73,7 @@
 
 			<div class="buttons">
 				<button
-						v-on:click="show.popups.temporary_recipe = false"
+						v-on:click="showPopup = false"
 						class="close-popup btn btn-sm"
 				>
 					Cancel
