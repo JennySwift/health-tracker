@@ -36,6 +36,7 @@
 @include('main.menu.foods.foods-page-component')
 @include('main.menu.foods.food-units-page-component')
 @include('main.menu.foods.food-popup-component')
+@include('main.menu.entries.temporary-recipe-popup-component')
 
 {{--Shared--}}
 @include('main.menu.entries.new-menu-entry-component')

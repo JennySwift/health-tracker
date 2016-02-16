@@ -2,8 +2,6 @@
 
 <div>
 
-{{--    @include('pages.entries.index')--}}
-
     <date-navigation
         :date.sync="date"
     >

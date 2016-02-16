@@ -11,7 +11,8 @@ var NewMenuEntry = Vue.component('new-menu-entry', {
                         data: {}
                     }
                 },
-                unit: {}
+                unit: {},
+                type: ''
             }
         };
     },
@@ -76,20 +77,6 @@ var NewMenuEntry = Vue.component('new-menu-entry', {
 
         /**
          *
-         */
-        showTemporaryRecipePopup: function () {
-            this.show.popups.temporary_recipe = true;
-            FoodsFactory.getRecipeContents(this.selected.menu.id).then(function (response) {
-                this.temporaryRecipePopup = response.data;
-
-                $(this.temporaryRecipePopup.contents).each(function () {
-                    this.original_quantity = this.quantity;
-                });
-            });
-        },
-
-        /**
-         *
          * @param response
          */
         handleResponseError: function (response) {
@@ -102,8 +89,17 @@ var NewMenuEntry = Vue.component('new-menu-entry', {
     ],
     events: {
         'option-chosen': function (option) {
-            this.newIngredient.food = option;
-            this.newIngredient.unit = option.defaultUnit.data;
+            if (option.type === 'food') {
+                this.newIngredient.food = option;
+                this.newIngredient.type = 'food';
+                if (option.defaultUnit) {
+                    this.newIngredient.unit = option.defaultUnit.data;
+                }
+            }
+            else if (option.type === 'recipe') {
+                this.newIngredient = option;
+                $.event.trigger('show-temporary-recipe-popup', [option]);
+            }
         }
     },
     ready: function () {

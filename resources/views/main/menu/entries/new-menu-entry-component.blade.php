@@ -2,6 +2,8 @@
 
     <div class="margin-bottom">
 
+        <temporary-recipe-popup></temporary-recipe-popup>
+
         <autocomplete
                 :insert-item-function="insertMenuEntry"
                 url="/api/menu"
@@ -11,7 +13,7 @@
         >
         </autocomplete>
 
-        <div class="form-group">
+        <div v-if="newIngredient.type === 'food'" class="form-group">
             <label for="new-ingredient-quantity">Quantity</label>
             <input
                     v-model="newIngredient.quantity"
@@ -24,7 +26,7 @@
             >
         </div>
 
-        <div class="form-group">
+        <div v-if="newIngredient.type === 'food'" class="form-group">
             <label for="new-ingredient-unit-name">Unit</label>
 
             <select
