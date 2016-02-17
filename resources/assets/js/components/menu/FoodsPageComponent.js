@@ -100,17 +100,21 @@ var FoodsPage = Vue.component('foods-page', {
             });
         },
 
-        deleteFood: function ($food) {
-            $rootScope.showLoading();
-            FoodsFactory.destroy($food)
-                .then(function (response) {
-                    $scope.foods = _.without($scope.foods, $food);
-                    $rootScope.$broadcast('provideFeedback', 'Food deleted');
-                    $rootScope.hideLoading();
+        /**
+        *
+        */
+        deleteFood: function (food) {
+            if (confirm("Are you sure?")) {
+                $.event.trigger('show-loading');
+                this.$http.delete('/api/foods/' + food.id, function (response) {
+                    this.foods = _.without(this.foods, food);
+                    $.event.trigger('provide-feedback', ['Food deleted', 'success']);
+                    $.event.trigger('hide-loading');
                 })
-                .catch(function (response) {
-                    $rootScope.responseError(response);
+                .error(function (response) {
+                    this.handleResponseError(response);
                 });
+            }
         },
 
         /**
