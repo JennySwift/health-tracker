@@ -67,6 +67,7 @@ class FoodTransformer extends TransformerAbstract
             'name' => $food->name,
             'path' => $food->path,
             'defaultCalories' => $food->getDefaultCalories(),
+            'unitIds' => $food->units()->lists('unit_id')
         ];
 
         /**

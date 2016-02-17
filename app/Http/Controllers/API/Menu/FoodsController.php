@@ -35,15 +35,14 @@ class FoodsController extends Controller
     }
 
     /**
-     * GET api/foods/{foods}
-     * @param $id
-     * @return array
+     * GET /api/foods/{foods}
+     * @param Food $food
+     * @return Response
      */
-    public function show($id)
+    public function show(Food $food)
     {
-        $food = Food::find($id);
-
-        return $this->foodsRepository->getFoodInfo($food);
+        $food = $this->transform($this->createItem($food, new FoodTransformer))['data'];
+        return response($food, Response::HTTP_OK);
     }
 
     /**

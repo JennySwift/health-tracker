@@ -99,6 +99,27 @@ class FoodsTest extends TestCase {
 
     /**
      * @test
+     */
+    public function it_can_show_a_food()
+    {
+        $this->logInUser();
+
+        $food = Food::forCurrentUser()->first();
+
+        $response = $this->call('GET', '/api/foods/' . $food->id);
+        $content = json_decode($response->getContent(), true);
+//        dd($content);
+
+        $this->checkFoodKeysExist($content);
+
+        $this->assertEquals(1, $content['id']);
+
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+
+    }
+
+    /**
+     * @test
      * @return void
      */
 //    public function it_can_update_a_food()

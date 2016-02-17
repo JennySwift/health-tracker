@@ -25,27 +25,7 @@ class FoodsRepository
         $this->unitsRepository = $unitsRepository;
     }
 
-    /**
-     * Get all food units that belong to the user,
-     * as well as all units that belong to the particular food.
-     *
-     * For when user clicks on a food in the foods table
-     * A popup is displayed, showing all food units
-     * with the units for that food checked
-     * and the option to set the default unit for the food
-     * and the option to set the calories for each of the food's units
-     */
-    public function getFoodInfo($food)
-    {
-        $all_food_units = $this->unitsRepository->getFoodUnitsWithCalories($food);
-        $food_units = $food->units()->lists('unit_id');
 
-        return [
-            "all_food_units" => $all_food_units,
-            "food" => $food,
-            "food_units" => $food_units
-        ];
-    }
 
     /**
      * Get all foods, along with their default unit, default calories,

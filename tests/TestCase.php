@@ -66,6 +66,7 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
         $this->assertArrayHasKey('path', $food);
         $this->assertArrayHasKey('defaultCalories', $food);
         $this->assertArrayHasKey('defaultUnit', $food);
+        $this->assertArrayHasKey('unitIds', $food);
     }
 
     /**

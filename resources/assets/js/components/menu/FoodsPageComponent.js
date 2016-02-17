@@ -35,36 +35,18 @@ var FoodsPage = Vue.component('foods-page', {
         //    }
         //},
 
-        getFoodInfo: function ($food) {
-            //for popup where user selects units for food and enters calories
-            $scope.food_popup.id = $food.id;
-            $scope.food_popup.name = $food.name;
-            $scope.show.popups.food_info = true;
-            FoodsFactory.getFoodInfo($food).then(function (response) {
-                $scope.food_popup = response.data;
-            });
-
-        },
-
         /**
-         * Add a unit to a food or remove the unit from the food.
-         * The method name is old and should probably be changed.
-         * @param $unit_id
-         */
-        insertOrDeleteUnitInCalories: function ($unit_id) {
-            //Check if the checkbox is checked
-            if ($scope.food_popup.food_units.indexOf($unit_id) === -1) {
-                //It is now unchecked. Remove the unit from the food.
-                FoodsFactory.deleteUnitFromCalories($scope.food_popup.food.id, $unit_id).then(function (response) {
-                    $scope.food_popup = response.data;
-                });
-            }
-            else {
-                // It is now checked. Add the unit to the food.
-                FoodsFactory.insertUnitInCalories($scope.food_popup.food.id, $unit_id).then(function (response) {
-                    $scope.food_popup = response.data;
-                });
-            }
+        *
+        */
+        getFood: function (food) {
+            $.event.trigger('show-loading');
+            this.$http.get('/api/foods/' + food.id, function (response) {
+                $.event.trigger('show-food-popup', [response]);
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
         },
 
         /**
@@ -83,20 +65,6 @@ var FoodsPage = Vue.component('foods-page', {
             })
             .error(function (response) {
                 this.handleResponseError(response);
-            });
-        },
-
-        updateCalories: function ($keycode, $unit_id, $calories) {
-            if ($keycode === 13) {
-                FoodsFactory.updateCalories($scope.food_popup.food.id, $unit_id, $calories).then(function (response) {
-                    $scope.food_popup = response.data;
-                });
-            }
-        },
-
-        updateDefaultUnit: function ($food_id, $unit_id) {
-            FoodsFactory.updateDefaultUnit($food_id, $unit_id).then(function (response) {
-                $scope.food_popup = response.data;
             });
         },
 

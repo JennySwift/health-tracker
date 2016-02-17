@@ -6,7 +6,7 @@
 
 			<div class="popup-inner">
 
-				<h3 class="center">@{{ selectedFood.food.name }}</h3>
+				<h3 class="center">@{{ selectedFood.name }}</h3>
 
 				<table class="table">
 					<tr>
@@ -15,12 +15,12 @@
 						<th>default</th>
 					</tr>
 					<tr
-							v-for="unit in selectedFood.all_food_units"
-							v-class="{'default-unit': unit.id === selectedFood.food.default_unit_id}"
+							v-for="unit in units"
+							v-bind: class="{'default-unit': unit.id === selectedFood.defaultUnit.data.id}"
 					>
 						<td>
 							<input
-									checklist-model="selectedFood.food_units"
+									checklist-model="selectedFood.units"
 									checklist-value="unit.id"
 									v-on:click="insertOrDeleteUnitInCalories(unit.id)"
 									type="checkbox">
@@ -38,7 +38,7 @@
 						</td>
 						<td>
 							<button
-									v-if="unit.id === selectedFood.food.default_unit_id"
+									v-if="unit.id === selectedFood.defaultUnit.data.id"
 									class="btn btn-sm default"
 									disabled
 							>
@@ -46,8 +46,8 @@
 							</button>
 
 							<button
-									v-if="unit.id !== selectedFood.food.default_unit_id && selectedFood.food_units.indexOf(unit.id) !== -1"
-									v-on:click="updateDefaultUnit(selectedFood.food.id, unit.id)"
+									v-if="unit.id !== selectedFood.defaultUnit.data.id && selectedFood.units.indexOf(unit.id) !== -1"
+									v-on:click="updateDefaultUnit(selectedFood.id, unit.id)"
 									class="btn btn-sm make-default show-hover-item"
 							>
 								make default
