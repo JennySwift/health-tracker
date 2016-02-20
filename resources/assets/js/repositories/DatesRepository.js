@@ -6,7 +6,7 @@ var DatesRepository = {
         if (date.typed === undefined) {
             date.typed = Date.parse('today').toString('dd/MM/yyyy');
         }
-        date.long = Date.parse(date.typed).toString('dd MMM yyyy');
+        date.long = Date.parse(date.typed).toString('ddd dd MMM yyyy');
         date.sql = Date.parse(date.typed).toString('yyyy-MM-dd');
 
         return date;
