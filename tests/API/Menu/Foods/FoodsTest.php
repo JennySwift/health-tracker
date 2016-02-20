@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Menu\Food;
+use App\Models\Units\Unit;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Http\Response;
 
@@ -122,25 +123,33 @@ class FoodsTest extends TestCase {
      * @test
      * @return void
      */
-//    public function it_can_update_a_food()
-//    {
-//        $this->logInUser();
-//
-//        $unit = Unit::forCurrentUser()->where('for', 'food')->first();
-//
-//        $response = $this->call('PUT', '/api/foodUnits/'.$unit->id, [
-//            'name' => 'numbat'
-//        ]);
-//        $content = json_decode($response->getContent(), true)['data'];
-//
-//        $this->assertArrayHasKey('id', $content);
-//        $this->assertArrayHasKey('name', $content);
-//        $this->assertArrayHasKey('for', $content);
-//
-//        $this->assertEquals('numbat', $content['name']);
-//
-//        $this->assertEquals(200, $response->getStatusCode());
-//    }
+    public function it_can_update_a_food()
+    {
+        DB::beginTransaction();
+        $this->logInUser();
+
+        $food = Food::forCurrentUser()->first();
+        $defaultUnit = Unit::forCurrentUser()->where('for', 'food')->where('id', '!=', $food->defaultUnit->id)->first();
+        $unitIds = Unit::forCurrentUser()->where('for', 'food')->limit(2)->offset(1)->lists('id')->all();
+
+        $response = $this->call('PUT', '/api/foods/'.$food->id, [
+            'name' => 'numbat',
+            'default_unit_id' => $defaultUnit->id,
+            'unit_ids' => $unitIds
+        ]);
+        $content = json_decode($response->getContent(), true);
+//        dd($content);
+
+        $this->checkFoodKeysExist($content);
+
+        $this->assertEquals('numbat', $content['name']);
+        $this->assertEquals($unitIds, $content['unitIds']);
+        $this->assertEquals($defaultUnit->id, $content['defaultUnit']['data']['id']);
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        DB::rollBack();
+    }
 
     /**
      * @test

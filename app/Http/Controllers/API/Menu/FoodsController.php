@@ -81,18 +81,31 @@ class FoodsController extends Controller
     }
 
     /**
-     * PUT api/foods/{foods}
-     * @param Food $food
-     * @param Request $request
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Food $food, Request $request)
+    * UPDATE /api/foods/{foods}
+    * @param Request $request
+    * @param Food $food
+    * @return Response
+    */
+    public function update(Request $request, Food $food)
     {
-        $unit = Unit::find($request->get('default_unit_id'));
-        $food->defaultUnit()->associate($unit);
-        $food->save();
+        // Create an array with the new fields merged
+        $data = array_compare($food->toArray(), $request->only([
+            'name'
+        ]));
 
-        return $this->responseOk($food);
+        $food->update($data);
+
+        if ($request->has('default_unit_id')) {
+            $food->defaultUnit()->associate(Unit::findOrFail($request->get('default_unit_id')));
+            $food->save();
+        }
+
+        if ($request->has('unit_ids')) {
+            $food->units()->sync($request->get('unit_ids'));
+        }
+
+        $food = $this->transform($this->createItem($food, new FoodTransformer))['data'];
+        return response($food, Response::HTTP_OK);
     }
 
     /**
