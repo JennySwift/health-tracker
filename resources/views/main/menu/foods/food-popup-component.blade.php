@@ -16,9 +16,10 @@
 						<th>calories</th>
 						<th>default</th>
 					</tr>
+
 					<tr
-							v-for="unit in units"
-							v-bind: class="{'default-unit': unit.id === selectedFood.defaultUnit.data.id}"
+						v-for="unit in units"
+						v-bind: class="{'default-unit': unit.id === selectedFood.defaultUnit.data.id}"
 					>
 						<td>
 							<input
@@ -28,29 +29,30 @@
 								type="checkbox"
 							>
 							@{{ unit.name }}
-
 						</td>
+
 						<td>
 							<input
-									v-model="unit.calories"
-									v-on:keyup="updateCalories($event.keyCode, unit.id, unit.calories)"
-									type="text"
-									placeholder="calories"
-									id="food-unit-calories"
-									class="form-control"
+								v-model="unit.calories"
+								v-on:keyup="updateCalories($event.keyCode, unit.id, unit.calories)"
+								type="text"
+								placeholder="calories"
+								id="food-unit-calories"
+								class="form-control"
 							>
 						</td>
+
 						<td>
 							<button
-									v-if="selectedFood.defaultUnit && unit.id === selectedFood.defaultUnit.data.id"
-									class="btn btn-sm default"
-									disabled
+								v-if="selectedFood.defaultUnit && unit.id === selectedFood.defaultUnit.data.id"
+								class="btn btn-sm default"
+								disabled
 							>
 								Default
 							</button>
 
 							<button
-									{{--v-if="unit.id !== selectedFood.defaultUnit.data.id && selectedFood.units.indexOf(unit.id) !== -1"--}}
+									v-if="unit.id !== selectedFood.defaultUnit.data.id && selectedFood.unitIds.indexOf(unit.id) !== -1"
 									v-on:click="updateDefaultUnit(selectedFood.id, unit.id)"
 									class="btn btn-sm make-default show-hover-item"
 							>
