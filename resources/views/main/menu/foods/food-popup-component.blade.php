@@ -25,7 +25,7 @@
 							<input
 								v-model="selectedFood.unitIds"
 								v-on:click="insertOrDeleteUnitInCalories(unit.id)"
-								value="unit.id"
+								:value="unit.id"
 								type="checkbox"
 							>
 							@{{ unit.name }}
