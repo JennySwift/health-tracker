@@ -7,6 +7,8 @@
 			<div class="popup-inner">
 
 				<h3 class="center">@{{ selectedFood.name }}</h3>
+				
+				<pre>@{{$data | json}}</pre>
 
 				<table class="table">
 					<tr>
@@ -20,11 +22,13 @@
 					>
 						<td>
 							<input
-									checklist-model="selectedFood.units"
-									checklist-value="unit.id"
-									v-on:click="insertOrDeleteUnitInCalories(unit.id)"
-									type="checkbox">
+								v-model="selectedFood.unitIds"
+								v-on:click="insertOrDeleteUnitInCalories(unit.id)"
+								value="unit.id"
+								type="checkbox"
+							>
 							@{{ unit.name }}
+
 						</td>
 						<td>
 							<input
@@ -38,25 +42,25 @@
 						</td>
 						<td>
 							<button
-									v-if="unit.id === selectedFood.defaultUnit.data.id"
+									v-if="selectedFood.defaultUnit && unit.id === selectedFood.defaultUnit.data.id"
 									class="btn btn-sm default"
 									disabled
 							>
-								default
+								Default
 							</button>
 
 							<button
-									v-if="unit.id !== selectedFood.defaultUnit.data.id && selectedFood.units.indexOf(unit.id) !== -1"
+									{{--v-if="unit.id !== selectedFood.defaultUnit.data.id && selectedFood.units.indexOf(unit.id) !== -1"--}}
 									v-on:click="updateDefaultUnit(selectedFood.id, unit.id)"
 									class="btn btn-sm make-default show-hover-item"
 							>
-								make default
+								Make default
 							</button>
 						</td>
 					</tr>
 				</table>
 
-				<button v-on:click="show.popups.food_info = false" class="close-popup btn btn-sm">close</button>
+				<button v-on:click="showPopup = false" class="close-popup btn btn-sm">close</button>
 
 			</div>
 

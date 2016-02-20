@@ -6,6 +6,7 @@ use App\Http\Transformers\UnitTransformer;
 use App\Models\Units\Unit;
 use App\Repositories\UnitsRepository;
 use Auth;
+use DB;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -32,44 +33,70 @@ class FoodUnitsController extends Controller
     }
 
     /**
-     *
-     * @return mixed
+     * GET /api/units
+     * @param Request $request
+     * @return Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return $this->unitsRepository->getFoodUnits();
+        $units = Unit::forCurrentUser()
+            ->where('for', 'food')
+            ->orderBy('name', 'asc')
+            ->get();
+
+        $units = $this->transform($this->createCollection($units, new UnitTransformer))['data'];
+
+        if ($request->get('includeCaloriesForSpecificFood')) {
+            //Add the calories for a specific food to each unit, if the calories exist
+            foreach ($units as $index => $unit) {
+                $calories = DB::table('food_unit')
+                    ->where('food_id', $request->get('food_id'))
+                    ->where('unit_id', $unit['id'])
+                    ->pluck('calories');
+
+                $units[$index]['calories'] = $calories;
+            }
+        }
+
+        return response($units, Response::HTTP_OK);
     }
 
     /**
-     *
+     * POST /api/units
      * @param Request $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
-        $unit = new Unit([
-            'name' => $request->get('name'),
-            'for' => 'food'
-        ]);
+        $unit = new Unit($request->only([
+            'name'
+        ]));
+        $unit->for = 'food';
 
         $unit->user()->associate(Auth::user());
         $unit->save();
 
-        return $this->responseCreatedWithTransformer($unit, new UnitTransformer);
+        $unit = $this->transform($this->createItem($unit, new UnitTransformer))['data'];
+        return response($unit, Response::HTTP_CREATED);
     }
 
     /**
-     *
-     * @param Unit $unit
-     * @param Request $request
-     * @return mixed
-     */
-    public function update(Unit $unit, Request $request)
+    * UPDATE /api/Units/{Units}
+    * @param Request $request
+    * @param Unit $unit
+    * @return Response
+    */
+    public function update(Request $request, Unit $unit)
     {
-        $unit->name = $request->get('name');
-        $unit->save();
+        // Create an array with the new fields merged
+        $data = array_compare($unit->toArray(), $request->only([
+            'name'
+        ]));
 
-        return $this->responseOkWithTransformer($unit, new UnitTransformer);
+        $unit->update($data);
+
+        $unit = $this->transform($this->createItem($unit, new UnitTransformer))['data'];
+        return response($unit, Response::HTTP_OK);
     }
 
     /**

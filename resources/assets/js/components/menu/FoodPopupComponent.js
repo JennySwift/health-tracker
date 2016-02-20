@@ -4,8 +4,12 @@ var FoodPopup = Vue.component('food-popup', {
         return {
             showPopup: false,
             selectedFood: {
-                food: {}
-            }
+                food: {},
+                defaultUnit: {
+                    data: {}
+                }
+            },
+            units: []
         };
     },
     components: {},
@@ -47,6 +51,20 @@ var FoodPopup = Vue.component('food-popup', {
         },
 
         /**
+        *
+        */
+        getUnits: function () {
+            $.event.trigger('show-loading');
+            this.$http.get('/api/foodUnits?includeCaloriesForSpecificFood=true&food_id=' + this.selectedFood.id, function (response) {
+                this.units = response;
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
+        },
+
+        /**
          *
          * @param $event
          */
@@ -63,6 +81,7 @@ var FoodPopup = Vue.component('food-popup', {
             var that = this;
             $(document).on('show-food-popup', function (event, food) {
                 that.selectedFood = food;
+                that.getUnits();
                 that.showPopup = true;
             });
         },

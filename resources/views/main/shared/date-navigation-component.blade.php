@@ -3,7 +3,7 @@
 <div>
 
     <h1 class="center">@{{ date.long }}</h1>
-    
+
     <div id="date-navigation" class="margin-bottom">
 
         <div class="my-btn-group">

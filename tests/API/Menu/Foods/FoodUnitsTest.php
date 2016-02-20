@@ -10,6 +10,7 @@ class FoodUnitsTest extends TestCase {
 
     /**
      * It lists the food units for the user
+     * @todo: check all units belong to the user?
      * @test
      * @return void
      */
@@ -19,16 +20,40 @@ class FoodUnitsTest extends TestCase {
 
         $response = $this->apiCall('GET', '/api/foodUnits');
         $content = json_decode($response->getContent(), true);
+//        dd($content);
 
-        $this->assertArrayHasKey('id', $content[0]);
-        $this->assertArrayHasKey('name', $content[0]);
-        $this->assertArrayHasKey('user_id', $content[0]);
-        $this->assertArrayHasKey('for', $content[0]);
+        $this->checkFoodUnitKeysExist($content[0]);
 
         $this->assertEquals(6, $content[0]['id']);
-        $this->assertEquals(1, $content[0]['user_id']);
         $this->assertEquals('grams', $content[0]['name']);
         $this->assertEquals('food', $content[0]['for']);
+
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    /**
+     * It lists the food units for the user,
+     * and for each unit, includes the calories for a specific food,
+     * if the calories for that food exist
+     * @todo: check all units belong to the user?
+     * @test
+     * @return void
+     */
+    public function it_lists_all_food_units_and_includes_calories_for_a_specific_food()
+    {
+        $this->logInUser();
+
+        $response = $this->apiCall('GET', '/api/foodUnits?includeCaloriesForSpecificFood=true&food_id=2');
+        $content = json_decode($response->getContent(), true);
+//        dd($content);
+
+        $this->checkFoodUnitKeysExist($content[0]);
+
+        $this->assertEquals(6, $content[0]['id']);
+        $this->assertEquals('grams', $content[0]['name']);
+        $this->assertEquals('food', $content[0]['for']);
+        $this->assertNull($content[0]['calories']);
+        $this->assertEquals('5.00', $content[1]['calories']);
 
         $this->assertEquals(200, $response->getStatusCode());
     }
@@ -37,24 +62,26 @@ class FoodUnitsTest extends TestCase {
      * @test
      * @return void
      */
-    public function it_can_add_a_new_unit()
+    public function it_can_create_a_unit()
     {
+        DB::beginTransaction();
         $this->logInUser();
 
         $unit = [
-            'name' => 'kangaroo'
+            'name' => 'koala'
         ];
 
         $response = $this->call('POST', '/api/foodUnits', $unit);
-        $content = json_decode($response->getContent(), true)['data'];
+        $content = json_decode($response->getContent(), true);
+     // dd($content);
 
-        $this->assertArrayHasKey('id', $content);
-        $this->assertArrayHasKey('name', $content);
-        $this->assertArrayHasKey('for', $content);
+        $this->checkFoodUnitKeysExist($content);
 
-        $this->assertContains($unit['name'], $content);
+        $this->assertEquals('koala', $content['name']);
 
         $this->assertEquals(Response::HTTP_CREATED, $response->getStatusCode());
+
+        DB::rollBack();
     }
 
     /**
@@ -63,6 +90,7 @@ class FoodUnitsTest extends TestCase {
      */
     public function it_can_update_a_unit()
     {
+        DB::beginTransaction();
         $this->logInUser();
 
         $unit = Unit::forCurrentUser()->where('for', 'food')->first();
@@ -70,15 +98,16 @@ class FoodUnitsTest extends TestCase {
         $response = $this->call('PUT', '/api/foodUnits/'.$unit->id, [
             'name' => 'numbat'
         ]);
-        $content = json_decode($response->getContent(), true)['data'];
+        $content = json_decode($response->getContent(), true);
+        //dd($content);
 
-        $this->assertArrayHasKey('id', $content);
-        $this->assertArrayHasKey('name', $content);
-        $this->assertArrayHasKey('for', $content);
+        $this->checkFoodUnitKeysExist($content);
 
         $this->assertEquals('numbat', $content['name']);
 
         $this->assertEquals(200, $response->getStatusCode());
+
+        DB::rollBack();
     }
 
     /**
