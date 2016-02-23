@@ -6,7 +6,7 @@ var FiltersRepository = {
      * @returns {*}
      */
     formatDuration: function (minutes) {
-        if (!minutes) {
+        if (!minutes && minutes != 0) {
             return '-';
         }
 
