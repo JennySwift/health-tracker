@@ -42,7 +42,7 @@ var SeriesHistoryPopup = Vue.component('series-history-popup', {
          * @param response
          */
         handleResponseError: function (response) {
-            this.$broadcast('response-error', response);
+            $.event.trigger('response-error', [response]);
             this.showLoading = false;
         }
     },

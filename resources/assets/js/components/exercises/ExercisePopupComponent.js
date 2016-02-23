@@ -37,7 +37,7 @@ var ExercisePopup = Vue.component('exercise-popup', {
                     $("#exercise-step-number").val("");
                 })
                 .error(function (response) {
-                    this.handleResponseError(response);
+                    HelpersRepository.handleResponseError(response);
                 });
         },
 
@@ -55,7 +55,7 @@ var ExercisePopup = Vue.component('exercise-popup', {
                     $.event.trigger('hide-loading');
                 })
                 .error(function (response) {
-                    this.handleResponseError(response);
+                    HelpersRepository.handleResponseError(response);
                 });
             }
         },
@@ -84,7 +84,7 @@ var ExercisePopup = Vue.component('exercise-popup', {
          * @param response
          */
         handleResponseError: function (response) {
-            this.$broadcast('response-error', response);
+            $.event.trigger('response-error', [response]);
             this.showLoading = false;
         }
     },

@@ -55,7 +55,7 @@ var NewFoodEntry = Vue.component('new-food-entry', {
                         $.event.trigger('hide-loading');
                     })
                     .error(function (response) {
-                        this.handleResponseError(response);
+                        HelpersRepository.handleResponseError(response);
                     });
             }
         },
@@ -66,7 +66,7 @@ var NewFoodEntry = Vue.component('new-food-entry', {
          * @param response
          */
         handleResponseError: function (response) {
-            this.$broadcast('response-error', response);
+            $.event.trigger('response-error', [response]);
             this.showLoading = false;
         }
     },

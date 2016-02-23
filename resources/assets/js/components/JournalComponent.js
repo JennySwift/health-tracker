@@ -22,7 +22,7 @@ var JournalPage = Vue.component('journal-page', {
                 $.event.trigger('hide-loading');
             })
             .error(function (response) {
-                this.handleResponseError(response);
+                HelpersRepository.handleResponseError(response);
             });
         },
 
@@ -38,7 +38,7 @@ var JournalPage = Vue.component('journal-page', {
                 $.event.trigger('hide-loading');
             })
             .error(function (response) {
-                this.handleResponseError(response);
+                HelpersRepository.handleResponseError(response);
             });
         },
 
@@ -80,7 +80,7 @@ var JournalPage = Vue.component('journal-page', {
                 $.event.trigger('hide-loading');
             })
             .error(function (response) {
-                this.handleResponseError(response);
+                HelpersRepository.handleResponseError(response);
             });
         },
 
@@ -100,7 +100,7 @@ var JournalPage = Vue.component('journal-page', {
                 $.event.trigger('hide-loading');
             })
             .error(function (response) {
-                this.handleResponseError(response);
+                HelpersRepository.handleResponseError(response);
             });
         },
 
@@ -116,7 +116,7 @@ var JournalPage = Vue.component('journal-page', {
                 $.event.trigger('hide-loading');
             })
             .error(function (response) {
-                this.handleResponseError(response);
+                HelpersRepository.handleResponseError(response);
             });
         },
 
@@ -135,7 +135,7 @@ var JournalPage = Vue.component('journal-page', {
          * @param response
          */
         handleResponseError: function (response) {
-            this.$broadcast('response-error', response);
+            $.event.trigger('response-error', [response]);
             this.showLoading = false;
         }
     },

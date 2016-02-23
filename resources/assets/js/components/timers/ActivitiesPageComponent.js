@@ -26,7 +26,7 @@ var ActivitiesPage = Vue.component('activities-page', {
                 $.event.trigger('hide-loading');
             })
             .error(function (response) {
-                this.handleResponseError(response);
+                HelpersRepository.handleResponseError(response);
             });
         },
 
@@ -46,7 +46,7 @@ var ActivitiesPage = Vue.component('activities-page', {
                 $.event.trigger('hide-loading');
             })
             .error(function (response) {
-                this.handleResponseError(response);
+                HelpersRepository.handleResponseError(response);
             });
         },
 
@@ -69,7 +69,7 @@ var ActivitiesPage = Vue.component('activities-page', {
                 $.event.trigger('hide-loading');
             })
             .error(function (response) {
-                this.handleResponseError(response);
+                HelpersRepository.handleResponseError(response);
             });
         },
 
@@ -94,7 +94,7 @@ var ActivitiesPage = Vue.component('activities-page', {
                     $.event.trigger('hide-loading');
                 })
                 .error(function (response) {
-                    this.handleResponseError(response);
+                    HelpersRepository.handleResponseError(response);
                 });
             }
         },
@@ -104,7 +104,7 @@ var ActivitiesPage = Vue.component('activities-page', {
          * @param response
          */
         handleResponseError: function (response) {
-            this.$broadcast('response-error', response);
+            $.event.trigger('response-error', [response]);
             this.showLoading = false;
         }
     },

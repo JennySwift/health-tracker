@@ -26,7 +26,7 @@ var NewExercise = Vue.component('new-exercise', {
                 $.event.trigger('hide-loading');
                 })
                 .error(function (response) {
-                    this.handleResponseError(response);
+                    HelpersRepository.handleResponseError(response);
                 });
         },
 
@@ -35,7 +35,7 @@ var NewExercise = Vue.component('new-exercise', {
          * @param response
          */
         handleResponseError: function (response) {
-            this.$broadcast('response-error', response);
+            $.event.trigger('response-error', [response]);
             this.showLoading = false;
         }
     },

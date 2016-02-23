@@ -97,7 +97,7 @@ var NewQuickRecipe = Vue.component('new-quick-recipe', {
 
             })
             .error(function (response) {
-                this.handleResponseError(response);
+                HelpersRepository.handleResponseError(response);
             });
         },
 
@@ -125,7 +125,7 @@ var NewQuickRecipe = Vue.component('new-quick-recipe', {
                     this.recipes.push(response.data);
                 })
                 .error(function (response) {
-                    this.handleResponseError(response);
+                    HelpersRepository.handleResponseError(response);
                 });
         },
 
@@ -186,7 +186,7 @@ var NewQuickRecipe = Vue.component('new-quick-recipe', {
          * @param response
          */
         handleResponseError: function (response) {
-            this.$broadcast('response-error', response);
+            $.event.trigger('response-error', [response]);
             this.showLoading = false;
         }
     },

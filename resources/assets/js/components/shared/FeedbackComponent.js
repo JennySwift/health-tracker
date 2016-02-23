@@ -12,6 +12,9 @@ Vue.component('feedback', {
             $(document).on('provide-feedback', function (event, message, type) {
                 that.provideFeedback(message, type);
             });
+            $(document).on('response-error', function (event, response) {
+                that.provideFeedback(that.handleResponseError(response), 'error');
+            })
         },
         provideFeedback: function (message, type) {
             var newMessage = {

@@ -18,7 +18,7 @@ var ExerciseUnitsPage = Vue.component('exercise-units-page', {
                 $.event.trigger('hide-loading');
             })
             .error(function (response) {
-                this.handleResponseError(response);
+                HelpersRepository.handleResponseError(response);
             });
         },
 
@@ -39,7 +39,7 @@ var ExerciseUnitsPage = Vue.component('exercise-units-page', {
                 $("#create-new-exercise-unit").val("");
             })
             .error(function (response) {
-                this.handleResponseError(response);
+                HelpersRepository.handleResponseError(response);
             });
         },
 
@@ -58,19 +58,10 @@ var ExerciseUnitsPage = Vue.component('exercise-units-page', {
 
                     })
                 .error(function (response) {
-                    this.handleResponseError(response);
+                    HelpersRepository.handleResponseError(response);
                 });
             }
         },
-
-        /**
-         *
-         * @param response
-         */
-        handleResponseError: function (response) {
-            this.$broadcast('response-error', response);
-            this.showLoading = false;
-        }
     },
     props: [
         //data to be received from parent

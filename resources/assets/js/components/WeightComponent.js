@@ -45,7 +45,7 @@ var Weight = Vue.component('weight', {
                 $.event.trigger('hide-loading');
             })
             .error(function (response) {
-                this.handleResponseError(response);
+                HelpersRepository.handleResponseError(response);
             });
         },
 
@@ -66,7 +66,7 @@ var Weight = Vue.component('weight', {
                 $.event.trigger('hide-loading');
             })
             .error(function (response) {
-                this.handleResponseError(response);
+                HelpersRepository.handleResponseError(response);
             });
         },
 
@@ -99,7 +99,7 @@ var Weight = Vue.component('weight', {
                     $.event.trigger('hide-loading');
                 })
                 .error(function (response) {
-                    this.handleResponseError(response);
+                    HelpersRepository.handleResponseError(response);
                 });
         },
 
@@ -121,7 +121,7 @@ var Weight = Vue.component('weight', {
          * @param response
          */
         handleResponseError: function (response) {
-            this.$broadcast('response-error', response);
+            $.event.trigger('response-error', [response]);
             this.showLoading = false;
         }
     },

@@ -22,7 +22,7 @@ var FoodsPage = Vue.component('foods-page', {
                 $.event.trigger('hide-loading');
             })
             .error(function (response) {
-                this.handleResponseError(response);
+                HelpersRepository.handleResponseError(response);
             });
         },
 
@@ -45,7 +45,7 @@ var FoodsPage = Vue.component('foods-page', {
                 $.event.trigger('hide-loading');
             })
             .error(function (response) {
-                this.handleResponseError(response);
+                HelpersRepository.handleResponseError(response);
             });
         },
 
@@ -64,7 +64,7 @@ var FoodsPage = Vue.component('foods-page', {
                 $.event.trigger('hide-loading');
             })
             .error(function (response) {
-                this.handleResponseError(response);
+                HelpersRepository.handleResponseError(response);
             });
         },
 
@@ -80,7 +80,7 @@ var FoodsPage = Vue.component('foods-page', {
                     $.event.trigger('hide-loading');
                 })
                 .error(function (response) {
-                    this.handleResponseError(response);
+                    HelpersRepository.handleResponseError(response);
                 });
             }
         },
@@ -103,7 +103,7 @@ var FoodsPage = Vue.component('foods-page', {
          * @param response
          */
         handleResponseError: function (response) {
-            this.$broadcast('response-error', response);
+            $.event.trigger('response-error', [response]);
             this.showLoading = false;
         }
     },

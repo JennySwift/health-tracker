@@ -137,4 +137,26 @@ class FoodUnitsTest extends TestCase {
         $response = $this->call('DELETE', '/api/units/0');
         $this->assertEquals(404, $response->getStatusCode());
     }
+
+    /**
+     * @test
+     * @return void
+     */
+    public function it_cannot_delete_a_food_unit_that_is_in_use()
+    {
+        DB::beginTransaction();
+        $this->logInUser();
+
+        $unit = Unit::where('for', 'food')->first();
+
+        $response = $this->call('DELETE', '/api/foodUnits/'.$unit->id);
+        $content = json_decode($response->getContent(), true);
+
+        $this->assertArrayHasKey('error', $content);
+
+        $this->assertEquals('Unit could not be deleted. It is in use.', $content['error']);
+        $this->assertEquals(400, $response->getStatusCode());
+
+        DB::rollBack();
+    }
 }

@@ -29,7 +29,7 @@ var SeriesPopup = Vue.component('series-popup', {
                     $.event.trigger('hide-loading');
                 })
                 .error(function (response) {
-                    this.handleResponseError(response);
+                    HelpersRepository.handleResponseError(response);
                 });
         },
 
@@ -48,7 +48,7 @@ var SeriesPopup = Vue.component('series-popup', {
                         $.event.trigger('hide-loading');
                     })
                     .error(function (response) {
-                        this.handleResponseError(response);
+                        HelpersRepository.handleResponseError(response);
                     });
             }
         },
@@ -78,7 +78,7 @@ var SeriesPopup = Vue.component('series-popup', {
          * @param response
          */
         handleResponseError: function (response) {
-            this.$broadcast('response-error', response);
+            $.event.trigger('response-error', [response]);
             this.showLoading = false;
         }
     },

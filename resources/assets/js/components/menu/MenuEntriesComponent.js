@@ -27,7 +27,7 @@ var MenuEntriesComponent = Vue.component('menu-entries', {
                     $.event.trigger('hide-loading');
                 })
                 .error(function (response) {
-                    this.handleResponseError(response);
+                    HelpersRepository.handleResponseError(response);
                 });
             }
         },
@@ -42,7 +42,7 @@ var MenuEntriesComponent = Vue.component('menu-entries', {
                 $.event.trigger('hide-loading');
             })
             .error(function (response) {
-                this.handleResponseError(response);
+                HelpersRepository.handleResponseError(response);
             });
         },
 
@@ -67,7 +67,7 @@ var MenuEntriesComponent = Vue.component('menu-entries', {
          * @param response
          */
         handleResponseError: function (response) {
-            this.$broadcast('response-error', response);
+            $.event.trigger('response-error', [response]);
             this.showLoading = false;
         }
     },

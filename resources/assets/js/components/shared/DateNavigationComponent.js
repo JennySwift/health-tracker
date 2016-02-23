@@ -45,7 +45,7 @@ var DateNavigation = Vue.component('date-navigation', {
          * @param response
          */
         handleResponseError: function (response) {
-            this.$broadcast('response-error', response);
+            $.event.trigger('response-error', [response]);
             this.showLoading = false;
         }
 

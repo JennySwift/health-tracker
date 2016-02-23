@@ -29,7 +29,7 @@ var EntriesForSpecificExerciseAndDateAndUnitPopup = Vue.component('entries-for-s
                     $.event.trigger('hide-loading');
                 })
                 .error(function (response) {
-                    this.handleResponseError(response);
+                    HelpersRepository.handleResponseError(response);
                 });
         },
 
@@ -49,7 +49,7 @@ var EntriesForSpecificExerciseAndDateAndUnitPopup = Vue.component('entries-for-s
                     $.event.trigger('hide-loading');
                 })
                 .error(function (response) {
-                    this.handleResponseError(response);
+                    HelpersRepository.handleResponseError(response);
                 });
             }
         },
@@ -78,7 +78,8 @@ var EntriesForSpecificExerciseAndDateAndUnitPopup = Vue.component('entries-for-s
          * @param response
          */
         handleResponseError: function (response) {
-            this.$broadcast('response-error', response);
+            $.event.trigger('response-error', [response]);
+            $.event.trigger('response-error', [response]);
             this.showLoading = false;
         }
     },
