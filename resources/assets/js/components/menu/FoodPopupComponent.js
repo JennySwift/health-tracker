@@ -4,10 +4,11 @@ var FoodPopup = Vue.component('food-popup', {
         return {
             showPopup: false,
             selectedFood: {
-                food: {},
+                //food: {},
                 defaultUnit: {
                     data: {}
-                }
+                },
+                unitIds: []
             },
             units: []
         };
@@ -16,24 +17,31 @@ var FoodPopup = Vue.component('food-popup', {
     methods: {
 
         /**
-         * Add a unit to a food or remove the unit from the food.
-         * The method name is old and should probably be changed.
-         * @param $unit_id
-         */
-        insertOrDeleteUnitInCalories: function ($unit_id) {
-            //Check if the checkbox is checked
-            if ($scope.food_popup.food_units.indexOf($unit_id) === -1) {
-                //It is now unchecked. Remove the unit from the food.
-                FoodsFactory.deleteUnitFromCalories($scope.food_popup.food.id, $unit_id).then(function (response) {
-                    $scope.food_popup = response.data;
-                });
-            }
-            else {
-                // It is now checked. Add the unit to the food.
-                FoodsFactory.insertUnitInCalories($scope.food_popup.food.id, $unit_id).then(function (response) {
-                    $scope.food_popup = response.data;
-                });
-            }
+        *
+        */
+        updateFood: function (food) {
+            $.event.trigger('show-loading');
+
+            var data = {
+                name: this.selectedFood.name,
+                default_unit_id: this.selectedFood.defaultUnit.data.id,
+                unit_ids: this.selectedFood.unitIds,
+            };
+
+            var that = this;
+
+            setTimeout(function () {
+                that.$http.put('/api/foods/' + that.selectedFood.id, data, function (response) {
+                        that.selectedFood = response;
+                        $.event.trigger('provide-feedback', ['Food updated', 'success']);
+                        $.event.trigger('hide-loading');
+                    })
+                    .error(function (response) {
+                        that.handleResponseError(response);
+                    });
+            }, 1000);
+
+
         },
 
         updateCalories: function ($keycode, $unit_id, $calories) {

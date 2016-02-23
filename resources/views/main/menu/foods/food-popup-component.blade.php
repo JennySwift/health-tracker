@@ -24,7 +24,7 @@
 						<td>
 							<input
 								v-model="selectedFood.unitIds"
-								v-on:click="insertOrDeleteUnitInCalories(unit.id)"
+								v-on:click="updateFood()"
 								:value="unit.id"
 								type="checkbox"
 							>
