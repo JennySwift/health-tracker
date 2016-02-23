@@ -155,6 +155,46 @@ class FoodsTest extends TestCase {
      * @test
      * @return void
      */
+    public function it_can_update_the_calories_for_a_food_and_one_of_its_units()
+    {
+        DB::beginTransaction();
+        $this->logInUser();
+
+        $food = Food::forCurrentUser()->first();
+        $unit = $food->units()->orderBy('name', 'desc')->first();
+
+        $response = $this->call('PUT', '/api/foods/'.$food->id, [
+            'updatingCalories' => true,
+            'unit_id' => $unit->id,
+            'calories' => 69
+        ]);
+        $content = json_decode($response->getContent(), true);
+//        dd($content);
+
+        $this->checkFoodKeysExist($content);
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+
+        //Check calories
+        $response = $this->apiCall('GET', '/api/foodUnits?includeCaloriesForSpecificFood=true&food_id=' . $food->id);
+        $content = json_decode($response->getContent(), true);
+//        dd($content);
+
+        $this->checkFoodUnitKeysExist($content[0]);
+
+        $this->assertEquals($unit->id, $content[3]['id']);
+        $this->assertEquals($unit->name, $content[3]['name']);
+        $this->assertEquals('food', $content[3]['for']);
+        $this->assertEquals(69, $content[3]['calories']);
+
+        DB::rollBack();
+    }
+
+    /**
+     * @test
+     * @return void
+     */
     public function it_can_delete_a_food()
     {
         $this->logInUser();
