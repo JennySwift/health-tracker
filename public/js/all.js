@@ -24428,13 +24428,14 @@ var FoodPopup = Vue.component('food-popup', {
 
             setTimeout(function () {
                 that.$http.put('/api/foods/' + that.selectedFood.id, data, function (response) {
-                        that.selectedFood = response;
-                        $.event.trigger('provide-feedback', ['Food updated', 'success']);
-                        $.event.trigger('hide-loading');
-                    })
-                    .error(function (response) {
-                        that.handleResponseError(response);
-                    });
+                    that.selectedFood = response;
+                    $.event.trigger('provide-feedback', ['Food updated', 'success']);
+                    $.event.trigger('food-updated', [response]);
+                    $.event.trigger('hide-loading');
+                })
+                .error(function (response) {
+                    that.handleResponseError(response);
+                });
             }, 1000);
         },
 
@@ -24445,7 +24446,7 @@ var FoodPopup = Vue.component('food-popup', {
             $.event.trigger('show-loading');
 
             this.selectedFood.defaultUnit.data = unit;
-            
+
             var data = {
                 default_unit_id: this.selectedFood.defaultUnit.data.id,
             };
@@ -24453,6 +24454,7 @@ var FoodPopup = Vue.component('food-popup', {
             this.$http.put('/api/foods/' + this.selectedFood.id, data, function (response) {
                 this.selectedFood = response;
                 $.event.trigger('provide-feedback', ['Food updated', 'success']);
+                $.event.trigger('food-updated', [response]);
                 $.event.trigger('hide-loading');
             })
             .error(function (response) {
@@ -24691,6 +24693,19 @@ var FoodsPage = Vue.component('foods-page', {
 
         /**
          *
+         */
+        listen: function () {
+            var that = this;
+            $(document).on('food-updated', function (event, food) {
+                var index = _.indexOf(that.foods, _.findWhere(that.foods, {id: food.id}));
+                that.foods[index].name = food.name;
+                that.foods[index].defaultUnit = food.defaultUnit;
+                that.foods[index].defaultCalories = food.defaultCalories;
+            });
+        },
+
+        /**
+         *
          * @param response
          */
         handleResponseError: function (response) {
@@ -24704,6 +24719,7 @@ var FoodsPage = Vue.component('foods-page', {
     ready: function () {
         $(".wysiwyg").wysiwyg();
         this.getFoods();
+        this.listen();
     }
 });
 

@@ -87,6 +87,19 @@ var FoodsPage = Vue.component('foods-page', {
 
         /**
          *
+         */
+        listen: function () {
+            var that = this;
+            $(document).on('food-updated', function (event, food) {
+                var index = _.indexOf(that.foods, _.findWhere(that.foods, {id: food.id}));
+                that.foods[index].name = food.name;
+                that.foods[index].defaultUnit = food.defaultUnit;
+                that.foods[index].defaultCalories = food.defaultCalories;
+            });
+        },
+
+        /**
+         *
          * @param response
          */
         handleResponseError: function (response) {
@@ -100,6 +113,7 @@ var FoodsPage = Vue.component('foods-page', {
     ready: function () {
         $(".wysiwyg").wysiwyg();
         this.getFoods();
+        this.listen();
     }
 });
 
