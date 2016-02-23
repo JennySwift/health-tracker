@@ -7,7 +7,7 @@
 			<div class="popup-inner">
 
 				<h3 class="center">@{{ selectedFood.name }}</h3>
-				
+
 				<table class="table">
 					<tr>
 						<th>unit</th>
