@@ -58,20 +58,20 @@ class TimersController extends Controller
      */
     public function store(Request $request)
     {
-        $sleep = new Timer($request->only(['start', 'finish']));
-        $sleep->user()->associate(Auth::user());
+        $timer = new Timer($request->only(['start', 'finish']));
+        $timer->user()->associate(Auth::user());
 
         $activity = Activity::find($request->get('activity_id'));
         if (!$activity) {
             $activity = Activity::forCurrentUser()->where('name', 'sleep')->first();
         }
 
-        $sleep->activity()->associate($activity);
-        $sleep->save();
+        $timer->activity()->associate($activity);
+        $timer->save();
 
-        $sleep = $this->transform($this->createItem($sleep, new TimerTransformer))['data'];
+        $timer = $this->transform($this->createItem($timer, new TimerTransformer))['data'];
 
-        return response($sleep, Response::HTTP_CREATED);
+        return response($timer, Response::HTTP_CREATED);
     }
 
     /**
