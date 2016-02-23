@@ -8,8 +8,6 @@
 
 				<h3 class="center">@{{ selectedFood.name }}</h3>
 				
-				<pre>@{{$data | json}}</pre>
-
 				<table class="table">
 					<tr>
 						<th>unit</th>
@@ -34,7 +32,8 @@
 						<td>
 							<input
 								v-model="unit.calories"
-								v-on:keyup="updateCalories($event.keyCode, unit.id, unit.calories)"
+								v-if="selectedFood.unitIds.indexOf(unit.id) !== -1"
+								v-on:keyup.13="updateCalories(unit)"
 								type="text"
 								placeholder="calories"
 								id="food-unit-calories"

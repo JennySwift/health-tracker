@@ -66,12 +66,26 @@ var FoodPopup = Vue.component('food-popup', {
             });
         },
 
-        updateCalories: function ($keycode, $unit_id, $calories) {
-            if ($keycode === 13) {
-                FoodsFactory.updateCalories($scope.food_popup.food.id, $unit_id, $calories).then(function (response) {
-                    $scope.food_popup = response.data;
-                });
-            }
+        /**
+         *
+         */
+        updateCalories: function (unit) {
+            $.event.trigger('show-loading');
+
+            var data = {
+                updatingCalories: true,
+                unit_id: unit.id,
+                calories: unit.calories
+            };
+
+            this.$http.put('/api/foods/' + this.selectedFood.id, data, function (response) {
+                $.event.trigger('provide-feedback', ['Calories updated', 'success']);
+                $.event.trigger('food-updated', [response]);
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
         },
 
         /**
