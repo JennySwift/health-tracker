@@ -53,7 +53,7 @@
 
 							<button
 									v-if="unit.id !== selectedFood.defaultUnit.data.id && selectedFood.unitIds.indexOf(unit.id) !== -1"
-									v-on:click="updateDefaultUnit(selectedFood.id, unit.id)"
+									v-on:click="updateDefaultUnit(unit)"
 									class="btn btn-sm make-default show-hover-item"
 							>
 								Make default

@@ -19,7 +19,7 @@ var FoodPopup = Vue.component('food-popup', {
         /**
         *
         */
-        updateFood: function (food) {
+        updateFood: function () {
             $.event.trigger('show-loading');
 
             var data = {
@@ -40,8 +40,28 @@ var FoodPopup = Vue.component('food-popup', {
                         that.handleResponseError(response);
                     });
             }, 1000);
+        },
 
+        /**
+         *
+         */
+        updateDefaultUnit: function (unit) {
+            $.event.trigger('show-loading');
 
+            this.selectedFood.defaultUnit.data = unit;
+            
+            var data = {
+                default_unit_id: this.selectedFood.defaultUnit.data.id,
+            };
+
+            this.$http.put('/api/foods/' + this.selectedFood.id, data, function (response) {
+                this.selectedFood = response;
+                $.event.trigger('provide-feedback', ['Food updated', 'success']);
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                this.handleResponseError(response);
+            });
         },
 
         updateCalories: function ($keycode, $unit_id, $calories) {
@@ -50,12 +70,6 @@ var FoodPopup = Vue.component('food-popup', {
                     $scope.food_popup = response.data;
                 });
             }
-        },
-
-        updateDefaultUnit: function ($food_id, $unit_id) {
-            FoodsFactory.updateDefaultUnit($food_id, $unit_id).then(function (response) {
-                $scope.food_popup = response.data;
-            });
         },
 
         /**
