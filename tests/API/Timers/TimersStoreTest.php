@@ -78,4 +78,36 @@ class TimersStoreTest extends TestCase
 
         DB::rollBack();
     }
+
+    /**
+     * For when the user gives both start and finish times
+     * @test
+     * @return void
+     */
+    public function it_can_insert_a_manual_timer_entry()
+    {
+        DB::beginTransaction();
+        $this->logInUser();
+
+        $timer = [
+            'start' => '2015-12-01 21:00:00',
+            'finish' => '2015-12-01 22:10:05',
+            'activity_id' => Activity::where('name', 'work')->first()->id
+        ];
+
+        $response = $this->call('POST', '/api/timers', $timer);
+//        dd($response);
+        $content = json_decode($response->getContent(), true);
+//      dd($content);
+
+        $this->checkTimerKeysExist($content);
+
+        $this->assertEquals('2015-12-01 21:00:00', $content['start']);
+        $this->assertEquals('2015-12-01 22:10:05', $content['finish']);
+        $this->assertEquals('01/12/15', $content['startDate']);
+
+        $this->assertEquals(Response::HTTP_CREATED, $response->getStatusCode());
+
+        DB::rollBack();
+    }
 }

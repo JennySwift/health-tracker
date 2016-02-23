@@ -29,12 +29,7 @@ class TimersUpdateTest extends TestCase
         $content = json_decode($response->getContent(), true);
 //        dd($content);
 
-        $this->assertArrayHasKey('id', $content);
-        $this->assertArrayHasKey('start', $content);
-        $this->assertArrayHasKey('startDate', $content);
-        $this->assertArrayHasKey('hours', $content);
-        $this->assertArrayHasKey('minutes', $content);
-        $this->assertArrayHasKey('durationInMinutesForDay', $content);
+        $this->checkTimerKeysExist($content);
 
         //Todo: test values are correct
         $this->assertEquals($finish, $content['finish']);

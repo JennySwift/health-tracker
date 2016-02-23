@@ -251,5 +251,20 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
         $this->assertArrayHasKey('units', $ingredient['food']['data']);
     }
 
+    /**
+     *
+     * @param $timer
+     */
+    protected function checkTimerKeysExist($timer)
+    {
+        $this->assertArrayHasKey('id', $timer);
+        $this->assertArrayHasKey('start', $timer);
+        $this->assertArrayHasKey('startDate', $timer);
+        $this->assertArrayHasKey('hours', $timer);
+        $this->assertArrayHasKey('minutes', $timer);
+        $this->assertArrayHasKey('activity', $timer);
+        $this->assertArrayHasKey('durationInMinutesForDay', $timer);
+    }
+
 
 }

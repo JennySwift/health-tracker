@@ -58,7 +58,11 @@ class TimersController extends Controller
      */
     public function store(Request $request)
     {
-        $timer = new Timer($request->only(['start', 'finish']));
+        $timer = new Timer($request->only([
+            'start',
+            'finish'
+        ]));
+
         $timer->user()->associate(Auth::user());
 
         $activity = Activity::find($request->get('activity_id'));
@@ -69,7 +73,7 @@ class TimersController extends Controller
         $timer->activity()->associate($activity);
         $timer->save();
 
-        $timer = $this->transform($this->createItem($timer, new TimerTransformer))['data'];
+        $timer = $this->transform($this->createItem($timer, new TimerTransformer(['date' => $this->calculateFinishDate($timer)])))['data'];
 
         return response($timer, Response::HTTP_CREATED);
     }
@@ -97,6 +101,20 @@ class TimersController extends Controller
 
 //        dd($timer);
 
+        $finishDate = $this->calculateFinishDate($timer);
+
+        $timer = $this->transform($this->createItem($timer, new TimerTransformer(['date' => $finishDate])))['data'];
+
+        return response($timer, Response::HTTP_OK);
+    }
+
+    /**
+     *
+     * @param Timer $timer
+     * @return null|string
+     */
+    private function calculateFinishDate(Timer $timer)
+    {
         if ($timer->finish) {
             $finishDate = Carbon::createFromFormat('Y-m-d H:i:s', $timer->finish)->format('Y-m-d');
         }
@@ -104,10 +122,7 @@ class TimersController extends Controller
             $finishDate = null;
         }
 
-
-        $timer = $this->transform($this->createItem($timer, new TimerTransformer(['date' => $finishDate])))['data'];
-
-        return response($timer, Response::HTTP_OK);
+        return $finishDate;
     }
 
     /**

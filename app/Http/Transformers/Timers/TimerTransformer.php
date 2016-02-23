@@ -54,6 +54,7 @@ class TimerTransformer extends TransformerAbstract
             $array['hours'] = $timer->hours;
             $array['minutes'] = $timer->minutes;
             $array['durationInMinutes'] = $timer->totalMinutes;
+
             if (isset($this->params['date'])) {
                 $array['durationInMinutesForDay'] = $timer->getTotalMinutesForDay(Carbon::createFromFormat('Y-m-d', $this->params['date']));
             }

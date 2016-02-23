@@ -54,13 +54,7 @@ class TimersIndexTest extends TestCase
         $content = json_decode($response->getContent(), true);
 //      dd($content);
 
-        $this->assertArrayHasKey('id', $content[0]);
-        $this->assertArrayHasKey('start', $content[0]);
-        $this->assertArrayHasKey('startDate', $content[0]);
-        $this->assertArrayHasKey('hours', $content[0]);
-        $this->assertArrayHasKey('minutes', $content[0]);
-        $this->assertArrayHasKey('activity', $content[0]);
-        $this->assertArrayHasKey('durationInMinutesForDay', $content[0]);
+        $this->checkTimerKeysExist($content[0]);
 
         $this->assertEquals(75, $content[0]['durationInMinutesForDay']);
         $this->assertEquals(180, $content[1]['durationInMinutesForDay']);
