@@ -4,7 +4,7 @@
 
         <h3>New activity</h3>
 
-        <form id="new-activity">
+        <div id="new-activity">
 
             <div>
                 <label for="new-activity-name">Name</label>
@@ -20,7 +20,7 @@
                 <button v-on:click="insertActivity()" class="btn btn-success">Save</button>
             </div>
 
-        </form>
+        </div>
 
         <h3>Activities</h3>
 
