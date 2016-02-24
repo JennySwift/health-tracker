@@ -7,6 +7,7 @@
 			<div class="popup-inner">
 
 				<h3 class="center">@{{ selectedFood.name }}</h3>
+				<h5>Select the units to be available for use with this food. To edit the calories for a unit, type in the field and press enter. Choosing a default unit will allow for quicker entries.</h5>
 
 				<table class="table">
 					<tr>
