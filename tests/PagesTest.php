@@ -68,7 +68,7 @@ class PagesTest extends TestCase {
         $this->logInUser();
 
         $this->visit('/#/recipes')
-            ->see('delicious recipe');
+            ->see('fruit salad');
         //This should be there too, but perhaps it is failing because
         //it takes a little while to appear?
 //            ->see('soup');

@@ -44,6 +44,20 @@ return [
             ],
             'defaultUnit' => 'medium'
         ],
+        [
+            'name' => 'carrot',
+            'units' => [
+                'medium'
+            ],
+            'defaultUnit' => 'medium'
+        ],
+        [
+            'name' => 'lettuce',
+            'units' => [
+                'grams'
+            ],
+            'defaultUnit' => 'grams'
+        ],
 //        'pear',
 //        'peach',
 //        'nectarine',

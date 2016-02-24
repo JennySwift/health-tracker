@@ -71,7 +71,9 @@ class FoodEntrySeeder extends Seeder
     {
         if ($date === Carbon::today()->format('Y-m-d') && $index === 1) {
             $recipe_ids = Recipe::where('user_id', $this->user->id)->lists('id')->all();
-            $entry->recipe()->associate(Recipe::find($recipe_ids[0]));
+            if ($recipe_ids) {
+                $entry->recipe()->associate(Recipe::find($recipe_ids[0]));
+            }
         }
     }
 
