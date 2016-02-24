@@ -5,6 +5,8 @@
 
     <div id="foods">
 
+        <h5>Calories for example only :)</h5>
+
         <div class="flex">
 
             <div>

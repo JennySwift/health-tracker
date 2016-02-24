@@ -41,9 +41,9 @@ class ExerciseProgramSeeder extends Seeder {
      */
     private function createPrograms()
     {
-        foreach (range(0,1) as $index) {
+        foreach (Config::get('programs') as $tempProgram) {
             $program = new ExerciseProgram([
-                'name' => $this->faker->word
+                'name' => $tempProgram
             ]);
             $program->user()->associate($this->user);
             $program->save();

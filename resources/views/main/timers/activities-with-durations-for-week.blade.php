@@ -1,5 +1,5 @@
 <div id="activities-with-durations-for-week">
-
+    
     <table class="table table-bordered">
         <thead>
             <tr>
@@ -17,7 +17,7 @@
                 <td>
                     <span
                         v-bind:style="{'background': activity.color}"
-                        class="label"
+                        class="label label-default"
                     >
                         @{{ activity.name }}
                     </span>
@@ -28,6 +28,7 @@
                     <div v-if="activity.totalMinutesForAllTime">
                         @{{ activity.totalMinutesForAllTime | formatDuration }}
                     </div>
+                    <div v-else>-</div>
                 </td>
             </tr>
         </tbody>

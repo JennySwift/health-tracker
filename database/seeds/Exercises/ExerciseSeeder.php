@@ -25,19 +25,19 @@ class ExerciseSeeder extends Seeder {
             [
                 'name' => 'kneeling pushups',
                 'defaultQuantity' => 20,
-                'description' => $this->faker->word,
+                'description' => '',
                 'priority' => 2
             ],
             [
                 'name' => 'pushups',
                 'defaultQuantity' => 10,
-                'description' => $this->faker->word,
+                'description' => 'hands shoulder width',
                 'priority' => 1
             ],
             [
                 'name' => 'one-arm pushups',
                 'defaultQuantity' => 2,
-                'description' => $this->faker->word,
+                'description' => 'free hand behind back',
                 'priority' => 1
             ]
         ];
@@ -46,19 +46,19 @@ class ExerciseSeeder extends Seeder {
             [
                 'name' => 'assisted squats',
                 'defaultQuantity' => 50,
-                'description' => $this->faker->word,
+                'description' => 'hold onto something',
                 'priority' => 3
             ],
             [
                 'name' => 'squats',
                 'defaultQuantity' => 30,
-                'description' => '',
+                'description' => 'feet shoulder width',
                 'priority' => 2
             ],
             [
                 'name' => 'one-legged-squats',
                 'defaultQuantity' => 5,
-                'description' => $this->faker->word,
+                'description' => '',
                 'priority' => 1
             ]
         ];
@@ -67,7 +67,7 @@ class ExerciseSeeder extends Seeder {
             [
                 'name' => 'back lever',
                 'defaultQuantity' => 30,
-                'description' => $this->faker->word,
+                'description' => '',
                 'priority' => 1
             ],
         ];
@@ -123,7 +123,7 @@ class ExerciseSeeder extends Seeder {
                 'description' => $exercise['description'],
                 'default_quantity' => $exercise['defaultQuantity'],
                 'step_number' => $index,
-                'target' => 'something',
+                'target' => '3 * 10',
                 'priority' => $exercise['priority']
             ]);
 
