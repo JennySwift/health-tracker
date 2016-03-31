@@ -46,6 +46,9 @@
 @include('main.shared.autocomplete-component')
 @include('main.shared.date-navigation-component')
 
+{{--Google Analytics--}}
+@include('main.shared.analytics-tracking')
+
 <script type="text/javascript" src="{{ elixir("js/all.js") }}"></script>
 
 {{--<script type="text/javascript" src="/jasmine/lib/jasmine-2.3.4/jasmine.js"></script>--}}
