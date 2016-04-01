@@ -46,6 +46,7 @@
         <label for="new-manual-timer-start">Start</label>
         <input
             v-model="newManualTimer.start"
+            v-on:keyup.13="insertManualTimer()"
             type="text"
             id="new-manual-timer-start"
             name="new-manual-timer-start"
@@ -58,6 +59,7 @@
         <label for="new-manual-timer-finish">Finish</label>
         <input
             v-model="newManualTimer.finish"
+            v-on:keyup.13="insertManualTimer()"
             type="text"
             id="new-manual-timer-finish"
             name="new-manual-timer-finish"
