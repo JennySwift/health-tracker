@@ -1,16 +1,16 @@
 
 <div id="new-sleep-entry">
     <div>
-        <input v-model="newSleepEntry.start" type="text" placeholder="start">
+        <input v-model="newSleepEntry.start" v-on:keyup.13="insertSleepEntry()" type="text" placeholder="start">
     </div>
 
     <div>
         <label>Started yesterday</label>
-        <input v-model="newSleepEntry.startedYesterday" type="checkbox">
+        <input v-model="newSleepEntry.startedYesterday" v-on:keyup.13="insertSleepEntry()" type="checkbox">
     </div>
 
     <div>
-        <input v-model="newSleepEntry.finish" type="text" placeholder="finish">
+        <input v-model="newSleepEntry.finish" v-on:keyup.13="insertSleepEntry()" type="text" placeholder="finish">
     </div>
 
     <div>
