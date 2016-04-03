@@ -37,6 +37,19 @@
 	background: #b5b5b5;
 }
 
+.checkbox-container {
+	display: flex;
+	align-items: center;
+	margin-bottom: 4px;
+	label {
+		margin-bottom: 0;
+		font-weight: normal;
+	}
+	input {
+		margin-right: 5px;
+	}
+}
+
 //to get a button like Bootstrap's button
 .my-btn {
 	// display: block;

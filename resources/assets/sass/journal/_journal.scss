@@ -1,16 +1,22 @@
 #new-sleep-entry {
     display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: center;
     margin: 5px 0;
     > * {
-        display: flex;
-        align-items: center;
+        //display: flex;
+        //align-items: center;
         margin: 0 5px;
-        input[type="checkbox"] {
-            margin: 0 7px;
+        input {
+            max-width: 90px;
         }
-        button {
-            margin: 0;
-        }
+        //input[type="checkbox"] {
+        //    margin: 0 7px;
+        //}
+        //button {
+        //    margin: 0;
+        //}
     }
 }
 

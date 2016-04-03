@@ -1,6 +1,6 @@
 <script id="date-navigation-template" type="x-template">
 
-<div>
+<div id="date-navigation-container">
 
     <h1 class="center">@{{ date.long }}</h1>
 
