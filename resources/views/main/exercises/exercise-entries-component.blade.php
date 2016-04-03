@@ -14,7 +14,6 @@
                 <th>description</th>
                 <th>sets</th>
                 <th>total</th>
-                <th></th>
             </tr>
 
             <tr v-for="entry in exerciseEntries">

@@ -10,7 +10,6 @@
                 <th>unit</th>
                 <th>calories</th>
                 <th>recipe</th>
-                <th></th>
             </tr>
 
             <tr v-for="entry in menuEntries">

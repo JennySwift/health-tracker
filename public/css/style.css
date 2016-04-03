@@ -87,13 +87,13 @@ input {
 input[type="checkbox"] {
   margin: 0; }
 
-th, table {
+table {
   text-align: center; }
-  th td, table td {
+  table td {
     vertical-align: middle !important; }
   @media (max-width: 600px) {
-    th, table {
-      font-size: 7px; } }
+    table th {
+      font-size: 11px; } }
 
 caption {
   padding: 8px;
