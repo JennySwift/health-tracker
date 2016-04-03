@@ -1,15 +1,28 @@
 #activities {
     #new-activity {
-        display: flex;
-        justify-content: center;
-        align-items: flex-end;
-        margin-bottom: 40px;
-        > * {
-            margin: 0 10px;
+        //display: flex;
+        //justify-content: center;
+        //align-items: flex-end;
+        //flex-wrap: wrap;
+        max-width: 400px;
+        margin: auto;
+        button {
+            width: 100%;
+        }
+        //> * {
+        //    margin: 0 10px;
+        //}
+        @media (max-width: 320px) {
+            .form-group {
+                width: 100%;
+            }
         }
     }
     .activity {
         cursor: pointer;
+        .activity-column {
+            @include activityColumn;
+        }
     }
     #edit-activity {
         button {

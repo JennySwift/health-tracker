@@ -6,17 +6,33 @@
 
         <div id="new-activity">
 
-            <div>
+            <div class="form-group">
                 <label for="new-activity-name">Name</label>
-                <input v-model="newActivity.name" type="text" id="new-activity-name" name="new-activity-name" placeholder="name" class="form-control"/>
+                <input
+                    v-model="newActivity.name"
+                    v-on:keyup.13="insertActivity()"
+                    type="text"
+                    id="new-activity-name"
+                    name="new-activity-name"
+                    placeholder="name"
+                    class="form-control"
+                >
             </div>
 
-            <div>
+            <div class="form-group">
                 <label for="new-activity-color">Color</label>
-                <input v-model="newActivity.color" type="text" id="new-activity-color" name="new-activity-color" placeholder="color" class="form-control"/>
+                <input
+                    v-model="newActivity.color"
+                    v-on:keyup.13="insertActivity()"
+                    type="text"
+                    id="new-activity-color"
+                    name="new-activity-color"
+                    placeholder="color"
+                    class="form-control"
+                >
             </div>
 
-            <div>
+            <div class="form-group">
                 <button v-on:click="insertActivity()" class="btn btn-success">Save</button>
             </div>
 
@@ -32,7 +48,7 @@
             </tr>
 
             <tr v-for="activity in activities" v-on:click="showEditActivity(activity)" class="activity">
-                <td><span v-bind:style="{'background': activity.color}" class="label label-default">@{{ activity.name }}</span></td>
+                <td class="activity-column"><span v-bind:style="{'background': activity.color}" class="label label-default">@{{ activity.name }}</span></td>
                 <td>@{{ activity.color }}</td>
                 <td>@{{ activity.totalMinutes | formatDuration }}</td>
             </tr>

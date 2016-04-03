@@ -5,6 +5,14 @@
 	height: 20px;
 }
 
+@mixin activityColumn {
+	text-align: left;
+	@media (max-width: 320px) {
+		max-width: 80px;
+		overflow: scroll;
+	}
+}
+
 @mixin newExercise {
 	.new-exercise {
 		.flex {

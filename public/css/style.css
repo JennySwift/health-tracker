@@ -747,21 +747,22 @@ body.browser-height {
   visibility: visible; }
 
 #activities #new-activity {
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  -webkit-align-items: flex-end;
-  -ms-flex-align: end;
-  align-items: flex-end;
-  margin-bottom: 40px; }
-  #activities #new-activity > * {
-    margin: 0 10px; }
+  max-width: 400px;
+  margin: auto; }
+  #activities #new-activity button {
+    width: 100%; }
+  @media (max-width: 320px) {
+    #activities #new-activity .form-group {
+      width: 100%; } }
 
 #activities .activity {
   cursor: pointer; }
+  #activities .activity .activity-column {
+    text-align: left; }
+    @media (max-width: 320px) {
+      #activities .activity .activity-column {
+        max-width: 80px;
+        overflow: scroll; } }
 
 #activities #edit-activity button {
   margin-top: 20px; }

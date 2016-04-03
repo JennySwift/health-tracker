@@ -25,11 +25,7 @@
             td {
                 text-align: right;
                 &.activity {
-                    text-align: left;
-                    @media (max-width: 320px) {
-                        max-width: 80px;
-                        overflow: scroll;
-                    }
+                    @include activityColumn;
                 }
             }
         }
