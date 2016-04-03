@@ -6,6 +6,7 @@
 #entries {
 	display: flex;
 	justify-content: space-around;
+	flex-wrap: wrap;
     .entry-inputs {
         margin-bottom: 30px;
     }
