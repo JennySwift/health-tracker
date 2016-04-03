@@ -678,7 +678,10 @@ body.browser-height {
   display: flex;
   -webkit-justify-content: center;
   -ms-flex-pack: center;
-  justify-content: center; }
+  justify-content: center;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap; }
   #timers-page #activities-and-timers-container > * {
     margin: 0px 40px; }
   #timers-page #activities-and-timers-container table td, #timers-page #activities-and-timers-container table th {
@@ -687,6 +690,10 @@ body.browser-height {
     #timers-page #activities-and-timers-container table td .seconds, #timers-page #activities-and-timers-container table th .seconds {
       font-weight: lighter;
       margin-left: 3px; }
+  @media (max-width: 320px) {
+    #timers-page #activities-and-timers-container > * {
+      margin: 0;
+      width: 100%; } }
 
 #timers-page #timer-in-progress {
   display: -webkit-flex;
@@ -708,11 +715,22 @@ body.browser-height {
   justify-content: center;
   -webkit-align-items: flex-end;
   -ms-flex-align: end;
-  align-items: flex-end; }
+  align-items: flex-end;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap; }
   #timers-page #new-timer > *, #timers-page #new-manual-timer > * {
-    margin: 0px 20px; }
+    margin-right: 5px; }
   #timers-page #new-timer select, #timers-page #new-manual-timer select {
     max-width: 300px; }
+  @media (max-width: 320px) {
+    #timers-page #new-timer .form-group, #timers-page #new-manual-timer .form-group {
+      width: 100%;
+      margin-right: 0; }
+      #timers-page #new-timer .form-group button, #timers-page #new-manual-timer .form-group button {
+        width: 100%; }
+    #timers-page #new-timer select, #timers-page #new-manual-timer select {
+      max-width: inherit; } }
 
 #timers-page #timers .timer .fa-times {
   visibility: hidden; }

@@ -10,6 +10,7 @@
     #activities-and-timers-container {
         display: flex;
         justify-content: center;
+        flex-wrap: wrap;
         > * {
             margin: 0px 40px;
         }
@@ -20,6 +21,12 @@
                 .seconds {
                     @include seconds;
                 }
+            }
+        }
+        @media (max-width: 320px) {
+            > * {
+                margin: 0;
+                width: 100%;
             }
         }
     }
@@ -35,11 +42,24 @@
         display: flex;
         justify-content: center;
         align-items: flex-end;
+        flex-wrap: wrap;
         > * {
-            margin: 0px 20px;
+            margin-right: 5px;
         }
         select {
             max-width: 300px;
+        }
+        @media (max-width: 320px) {
+            .form-group {
+                width: 100%;
+                margin-right: 0;
+                button {
+                    width: 100%;
+                }
+            }
+            select {
+                max-width: inherit;
+            }
         }
     }
     #timers {
