@@ -746,6 +746,9 @@ body.browser-height {
 #timers-page #timers .timer:hover .fa-times {
   visibility: visible; }
 
+#activities td {
+  text-align: right; }
+
 #activities #new-activity {
   max-width: 400px;
   margin: auto; }
