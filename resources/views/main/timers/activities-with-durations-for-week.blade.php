@@ -14,7 +14,7 @@
                 v-for="activity in activitiesWithDurationsForTheWeek
                     | filterBy activitiesFilter in 'name'"
             >
-                <td>
+                <td class="activity">
                     <span
                         v-bind:style="{'background': activity.color}"
                         class="label label-default"

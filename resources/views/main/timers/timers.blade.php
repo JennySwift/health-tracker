@@ -18,7 +18,7 @@
                 | orderBy 'start' -1"
             class="timer"
         >
-            <td>
+            <td class="activity">
                 <i v-on:click="deleteTimer(timer)" class="fa fa-times .delete"></i>
                 <span v-bind:style="{'background': timer.activity.data.color}" class="label">@{{ timer.activity.data.name }}</span>
             </td>

@@ -690,6 +690,14 @@ body.browser-height {
     #timers-page #activities-and-timers-container table td .seconds, #timers-page #activities-and-timers-container table th .seconds {
       font-weight: lighter;
       margin-left: 3px; }
+  #timers-page #activities-and-timers-container table td {
+    text-align: right; }
+    #timers-page #activities-and-timers-container table td.activity {
+      text-align: left; }
+      @media (max-width: 320px) {
+        #timers-page #activities-and-timers-container table td.activity {
+          max-width: 80px;
+          overflow: scroll; } }
   @media (max-width: 320px) {
     #timers-page #activities-and-timers-container > * {
       margin: 0;
