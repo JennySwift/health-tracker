@@ -9,30 +9,41 @@
     background: black;
     padding: 0;
     margin: 0;
+    @media (max-width: 320px) {
+        .big-screens {
+            display: none;
+        }
+    }
+    .dropdown-menu {
+        min-width: inherit;
+        a {
+            padding: 0 8px;
+        }
+    }
     > li {
         display: flex;
         align-items: center;
         justify-content: center;
         position: relative;
         height: 44px;
-        min-width: 70px;
+        //min-width: 70px;
         > a {
             transition: all .5s ease;
         }
         &:hover {
             > a {
-                font-size: 25px;
+                //font-size: 25px;
             }
         }
         .fa-heart {
-            color: red;
+            //color: red;
         }
     }
     a {
         color: #337ab7;
     }
     .gravatar-li {
-        min-width: 160px;
+        //min-width: 160px;
         .gravatar-container {
             margin-left: 5px;
             display: flex;

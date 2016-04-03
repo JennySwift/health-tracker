@@ -739,6 +739,13 @@ body.browser-height {
   background: black;
   padding: 0;
   margin: 0; }
+  @media (max-width: 320px) {
+    #navbar .big-screens {
+      display: none; } }
+  #navbar .dropdown-menu {
+    min-width: inherit; }
+    #navbar .dropdown-menu a {
+      padding: 0 8px; }
   #navbar > li {
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -750,29 +757,22 @@ body.browser-height {
     -ms-flex-pack: center;
     justify-content: center;
     position: relative;
-    height: 44px;
-    min-width: 70px; }
+    height: 44px; }
     #navbar > li > a {
       transition: all 0.5s ease; }
-    #navbar > li:hover > a {
-      font-size: 25px; }
-    #navbar > li .fa-heart {
-      color: red; }
   #navbar a {
     color: #337ab7; }
-  #navbar .gravatar-li {
-    min-width: 160px; }
-    #navbar .gravatar-li .gravatar-container {
-      margin-left: 5px;
-      display: -webkit-flex;
-      display: -ms-flexbox;
-      display: flex;
-      -webkit-align-items: center;
-      -ms-flex-align: center;
-      align-items: center; }
-      #navbar .gravatar-li .gravatar-container .gravatar {
-        border-radius: 8px;
-        height: 32px; }
+  #navbar .gravatar-li .gravatar-container {
+    margin-left: 5px;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center; }
+    #navbar .gravatar-li .gravatar-container .gravatar {
+      border-radius: 8px;
+      height: 32px; }
 
 .popup-outer {
   position: fixed;

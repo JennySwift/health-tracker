@@ -1,7 +1,7 @@
 
 <ul id="navbar" style="z-index:1000">
 
-    <li><a href="http://jennyswiftcreations.com">jennyswiftcreations</a></li>
+    <li class="big-screens"><a href="http://jennyswiftcreations.com">jennyswiftcreations</a></li>
 
     @if (Auth::guest())
         <li>
@@ -24,11 +24,11 @@
         <li class="iphone"><a ng-click="changeTab('food_entries')" href="">food log</a></li>
         <li class="iphone"><a ng-click="changeTab('exercise_entries')" href="">exercise log</a></li> -->
 
-        <li><a v-link="{path: '/'}" href="#">entries</a></li>
+        <li><a v-link="{path: '/'}" href="#" class="fa fa-home"></a></li>
 
         <li id="menu-dropdown" class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                <span>foods</span>
+                <span class="fa fa-cutlery"></span>
                 <span class="caret"></span>
             </a>
             <ul class="dropdown-menu" role="menu">
@@ -40,7 +40,7 @@
 
         <li id="menu-dropdown" class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                <span>exercises</span>
+                <span class="fa fa-heart"></span>
                 <span class="caret"></span>
             </a>
             <ul class="dropdown-menu" role="menu">
@@ -50,11 +50,13 @@
             </ul>
         </li>
 
-        <li><a v-link="{path: '/journal'}" href="#">journal</a></li>
+        <li>
+            <a v-link="{path: '/journal'}" href="#" class="fa fa-pencil"></a>
+        </li>
 
         <li id="menu-dropdown" class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                <span>timers</span>
+                <span class="fa fa-clock-o"></span>
                 <span class="caret"></span>
             </a>
             <ul class="dropdown-menu" role="menu">
