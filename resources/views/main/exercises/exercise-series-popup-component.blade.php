@@ -4,24 +4,28 @@
 
 		<div class="popup-inner">
 
-			<h3 class="popup-title">@{{ selectedSeries.name }} series</h3>
+			<div class="content">
+				<h3 class="popup-title">@{{ selectedSeries.name }} series</h3>
 
-			<label for="seriesName">Name your series</label>
-			<input v-model="selectedSeries.name" type="text" name="seriesName" placeholder="name"/>
+				<label for="seriesName">Name your series</label>
+				<input v-model="selectedSeries.name" type="text" name="seriesName" placeholder="name"/>
 
-			<div>
-				<label for="exericise-series-priority"></label>
-				<input
-						v-model="selectedSeries.priority"
-						type="text"
-						id="exercise-series-priority"
-						name="exercise-series-priority"
-						placeholder="priority"
-						class="form-control"
-				/>
+				<div>
+					<label for="exericise-series-priority"></label>
+					<input
+							v-model="selectedSeries.priority"
+							type="text"
+							id="exercise-series-priority"
+							name="exercise-series-priority"
+							placeholder="priority"
+							class="form-control"
+					/>
+				</div>
 			</div>
 
 			<div class="buttons">
+				<button v-on:click="showPopup = false" class="btn btn-default">Close</button>
+
 				<button
 						v-on:click="deleteSeries()"
 						class="btn btn-danger"
