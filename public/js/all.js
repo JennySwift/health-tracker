@@ -26420,9 +26420,11 @@ var NewManualTimer = Vue.component('new-manual-timer', {
 
             this.$http.post('/api/timers/', data, function (response) {
                     this.timers.push(response);
+                console.log(router);
                     $.event.trigger('manual-timer-created');
                     $.event.trigger('provide-feedback', ['Manual entry created', 'success']);
                     $.event.trigger('hide-loading');
+                    router.go('/timers');
                 })
                 .error(function (response) {
                     HelpersRepository.handleResponseError(response);
