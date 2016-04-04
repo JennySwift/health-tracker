@@ -33,7 +33,7 @@ var FoodUnitsPage = Vue.component('food-units-page', {
             };
 
             this.$http.post('/api/foodUnits', data, function (response) {
-                this.units.push(response.data);
+                this.units.push(response);
                 $.event.trigger('provide-feedback', ['Unit created', 'success']);
                 $.event.trigger('hide-loading');
             })
