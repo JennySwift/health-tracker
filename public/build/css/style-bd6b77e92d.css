@@ -739,9 +739,6 @@ body.browser-height {
         max-width: 80px;
         overflow: scroll; } }
 
-#activities #edit-activity button {
-  margin-top: 20px; }
-
 #navbar {
   display: -webkit-flex;
   display: -ms-flexbox;

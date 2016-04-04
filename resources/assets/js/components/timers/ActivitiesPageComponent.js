@@ -4,8 +4,6 @@ var ActivitiesPage = Vue.component('activities-page', {
         return {
             activities: [],
             newActivity: {},
-            editingActivity: false,
-            selectedActivity: {}
         };
     },
     components: {},
@@ -51,52 +49,11 @@ var ActivitiesPage = Vue.component('activities-page', {
         },
 
         /**
-        *
-        */
-        updateActivity: function (activity) {
-            $.event.trigger('show-loading');
-
-            var data = {
-                name: activity.name,
-                color: activity.color
-            };
-
-            this.$http.put('/api/activities/' + activity.id, data, function (response) {
-                var index = _.indexOf(this.activities, _.findWhere(this.activities, {id: activity.id}));
-                this.activities[index] = response;
-                this.editingActivity = false;
-                $.event.trigger('provide-feedback', ['Activity updated', 'success']);
-                $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
-        },
-
-        /**
          *
          * @param activity
          */
-        showEditActivity: function (activity) {
-            this.editingActivity = true;
-            this.selectedActivity = activity;
-        },
-
-        /**
-        *
-        */
-        deleteActivity: function (activity) {
-            if (confirm("Are you sure? The timers for the activity will be deleted, too!")) {
-                $.event.trigger('show-loading');
-                this.$http.delete('/api/activities/' + activity.id, function (response) {
-                    this.activities = _.without(this.activities, activity);
-                    $.event.trigger('provide-feedback', ['Activity deleted', 'success']);
-                    $.event.trigger('hide-loading');
-                })
-                .error(function (response) {
-                    HelpersRepository.handleResponseError(response);
-                });
-            }
+        showActivityPopup: function (activity) {
+            $.event.trigger('show-activity-popup', [activity]);
         },
 
         /**

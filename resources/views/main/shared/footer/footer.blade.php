@@ -13,6 +13,7 @@
 @include('main.timers.timers-page-component')
 @include('main.timers.graphs-page-component')
 @include('main.timers.activities-page-component')
+@include('main.timers.activity-popup-component')
 @include('main.timers.timer-popup-component')
 @include('main.timers.new-timer-component')
 @include('main.timers.new-manual-timer-component')
