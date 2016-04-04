@@ -31,7 +31,7 @@
             <div id="filter-results">
                 <div
                         v-for="entry in filterResults"
-                        v-on:click="changeDate(entry.date)"
+                        v-on:click="selectJournalEntryFromFilterResults(entry)"
                         class="hover pointer"
                 >
                     <span class="badge">@{{ entry.date }}</span>

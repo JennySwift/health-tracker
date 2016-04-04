@@ -24,6 +24,18 @@ var JournalPage = Vue.component('journal-page', {
         },
 
         /**
+         *
+         * @param entry
+         */
+        selectJournalEntryFromFilterResults: function (entry) {
+            this.date = {
+                typed: entry.date,
+                sql: moment(entry.date, 'DD/MM/YY').format('YYYY-MM-DD HH:mm:ss')
+            }
+            this.getJournalEntry();
+        },
+
+        /**
         *
         */
         filterJournalEntries: function () {
