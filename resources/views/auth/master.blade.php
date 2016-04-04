@@ -17,7 +17,7 @@
 </head>
 
 <body>
-    @include('main.shared.header.header')
+    @include('main.shared.header.navbar-component')
     <div class="main">
         @section('content')
         @show

@@ -133,6 +133,16 @@ var TimersPage = Vue.component('timers-page', {
             });
         },
 
+        ///**
+        // *
+        // */
+        //showNewManualTimerPopup: function () {
+        //    $.event.trigger('show-new-manual-timer-popup');
+        //},
+
+        /**
+         *
+         */
         listen: function () {
             var that = this;
             $(document).on('date-changed', function (event) {

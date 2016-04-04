@@ -7,7 +7,7 @@
 </head>
 <body>
 
-@include('main.shared.header.header')
+<navbar></navbar>
 <feedback></feedback>
 <loading></loading>
 

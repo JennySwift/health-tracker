@@ -4,7 +4,8 @@ var NewManualTimer = Vue.component('new-manual-timer', {
         return {
             newManualTimer: {
                 activity: {}
-            }
+            },
+            showPopup: true
         };
     },
     components: {},
@@ -37,6 +38,13 @@ var NewManualTimer = Vue.component('new-manual-timer', {
         },
 
         /**
+        *
+        */
+        closePopup: function ($event) {
+            HelpersRepository.closePopup($event, this);
+        },
+
+        /**
          *
          */
         listen: function () {
@@ -45,6 +53,19 @@ var NewManualTimer = Vue.component('new-manual-timer', {
                 setTimeout(function () {
                     that.setDefaultActivity();
                 }, 500);
+            });
+
+            $(document).on('show-new-manual-timer-popup', function (event) {
+                if (that.$route.path.indexOf('/timers') !== -1) {
+                    //We're on the timers page so we can show the popup
+                    that.showPopup = true;
+                }
+                else {
+                    //Wait for the timers page to load before showing the popup
+                    setTimeout(function () {
+                        that.showPopup = true;
+                    }, 5000);
+                }
             });
         }
 

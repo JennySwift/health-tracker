@@ -49,6 +49,7 @@
 @include('main.shared.loading-component')
 @include('main.shared.autocomplete-component')
 @include('main.shared.date-navigation-component')
+@include('main.shared.header.navbar-component')
 
 {{--Google Analytics--}}
 @include('main.shared.analytics-tracking')

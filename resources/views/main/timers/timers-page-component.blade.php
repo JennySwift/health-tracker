@@ -17,12 +17,20 @@
         >
         </new-timer>
 
-        <new-manual-timer
+        {{--<button v-on:click="showNewManualTimerPopup()" class="btn btn-default">Manual Timer</button>--}}
+
+        <router-view
                 :activities="activities"
                 :timers.sync="timers"
                 :date="date"
         >
-        </new-manual-timer>
+        </router-view>
+        {{--<new-manual-timer--}}
+                {{--:activities="activities"--}}
+                {{--:timers.sync="timers"--}}
+                {{--:date="date"--}}
+        {{-->--}}
+        {{--</new-manual-timer>--}}
 
         @include('main.timers.activities-with-durations-for-day')
         @include('main.timers.activities-filter')

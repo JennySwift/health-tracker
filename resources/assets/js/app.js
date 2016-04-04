@@ -58,13 +58,9 @@ router.map({
             //'/': {
             //    component: TimersPage
             //},
-            //'/timers': {
-            //    component: TimersPage
-            //},
-
-            //'/graphs': {
-            //    component: GraphsPage
-            //}
+            '/new-manual': {
+                component: NewManualTimer
+            }
         }
     },
     '/activities': {
