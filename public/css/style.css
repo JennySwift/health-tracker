@@ -710,12 +710,6 @@ body.browser-height {
     #timers-page #new-timer select, #timers-page #new-manual-timer select {
       max-width: inherit; } }
 
-#timers-page #timers .timer .fa-times {
-  visibility: hidden; }
-
-#timers-page #timers .timer:hover .fa-times {
-  visibility: visible; }
-
 #activities td {
   text-align: right; }
 

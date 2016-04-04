@@ -69,6 +69,14 @@ var TimersPage = Vue.component('timers-page', {
         },
 
         /**
+         *
+         * @param timer
+         */
+        showTimerPopup: function (timer) {
+            $.event.trigger('show-timer-popup', [timer]);
+        },
+
+        /**
          * Instead of starting and stopping the timer,
          * enter the start and stop times manually
          */
@@ -223,29 +231,16 @@ var TimersPage = Vue.component('timers-page', {
             });
         },
 
-        /**
-        *
-        */
-        deleteTimer: function (timer) {
-            if (confirm("Are you sure?")) {
-                $.event.trigger('show-loading');
-                this.$http.delete('/api/timers/' + timer.id, function (response) {
-                    this.timers = _.without(this.timers, timer);
-                    this.getTotalMinutesForActivitiesForTheDay();
-                    this.getTotalMinutesForActivitiesForTheWeek();
-                    $.event.trigger('provide-feedback', ['Timer deleted', 'success']);
-                    $.event.trigger('hide-loading');
-                })
-                .error(function (response) {
-                    HelpersRepository.handleResponseError(response);
-                });
-            }
-        },
-
         listen: function () {
             var that = this;
             $(document).on('date-changed', function (event) {
                 that.getTimers();
+                that.getTotalMinutesForActivitiesForTheDay();
+                that.getTotalMinutesForActivitiesForTheWeek();
+            });
+
+            $(document).on('timer-deleted', function (event, timer) {
+                that.timers = _.without(that.timers, timer);
                 that.getTotalMinutesForActivitiesForTheDay();
                 that.getTotalMinutesForActivitiesForTheWeek();
             });

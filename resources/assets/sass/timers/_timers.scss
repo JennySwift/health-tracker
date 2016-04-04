@@ -70,21 +70,7 @@
     }
     #timers {
         .timer {
-            //display: flex;
-            //justify-content: space-between;
-            //.duration {
-            //    display: flex;
-            //    justify-content: flex-end;
-            //    width: 50px;
-            //}
-            .fa-times {
-                visibility: hidden;
-            }
-            &:hover {
-                .fa-times {
-                    visibility: visible;
-                }
-            }
+
         }
     }
 }

@@ -16,10 +16,10 @@
             v-for="timer in timers
                 | filterBy activitiesFilter in 'activity.data.name'
                 | orderBy 'start' -1"
-            class="timer"
+            v-on:click="showTimerPopup(timer)"
+            class="timer pointer"
         >
             <td class="activity">
-                <i v-on:click="deleteTimer(timer)" class="fa fa-times .delete"></i>
                 <span v-bind:style="{'background': timer.activity.data.color}" class="label">@{{ timer.activity.data.name }}</span>
             </td>
 

@@ -7,6 +7,8 @@
         >
         </date-navigation>
 
+        <timer-popup></timer-popup>
+
         @include('main.timers.new-timer')
         @include('main.timers.timer-in-progress')
         @include('main.timers.activities-with-durations-for-day')
