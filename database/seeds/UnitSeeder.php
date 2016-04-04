@@ -57,6 +57,30 @@ class UnitSeeder extends Seeder {
                 'for' => 'food',
                 'user_id' => $user->id
             ]);
+
+            Unit::create([
+                'name' => 'ounces',
+                'for' => 'food',
+                'user_id' => $user->id
+            ]);
+
+            Unit::create([
+                'name' => 'kgs',
+                'for' => 'food',
+                'user_id' => $user->id
+            ]);
+
+            Unit::create([
+                'name' => 'pounds',
+                'for' => 'food',
+                'user_id' => $user->id
+            ]);
+
+            Unit::create([
+                'name' => 'bunch',
+                'for' => 'food',
+                'user_id' => $user->id
+            ]);
         }
 		
 

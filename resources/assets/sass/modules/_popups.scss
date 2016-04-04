@@ -17,12 +17,15 @@
 		max-height: calc(100% - 48px);
 		padding: 25px;
 		margin: 0 30px;
-		display: flex;
-		flex-direction: column;
-		justify-content: space-between;
+		//display: flex;
+		//flex-direction: column;
+		//justify-content: space-between;
 		.popup-title {
 			margin-bottom: 30px;
 			margin-top: 0;
+		}
+		.content {
+			min-height: calc(100% - 48px);
 		}
 		.buttons {
 			display: flex;
@@ -42,7 +45,7 @@
 			justify-content: space-between;
 			margin-bottom: 30px;
 		}
-		@media (max-width: 320px) {
+		@media (max-width: $breakpoint2) {
 			border-radius: 0;
 			max-height: inherit;
 			width: 100%;

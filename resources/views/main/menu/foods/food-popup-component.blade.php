@@ -66,7 +66,7 @@
 				</div>
 
 				<div class="buttons">
-					<button v-on:click="showPopup = false" class="btn btn-default">close</button>
+					<button v-on:click="showPopup = false" class="btn btn-default">Close</button>
 				</div>
 
 			</div>

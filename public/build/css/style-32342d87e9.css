@@ -813,19 +813,12 @@ body.browser-height {
     overflow: scroll;
     max-height: calc(100% - 48px);
     padding: 25px;
-    margin: 0 30px;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-flex-direction: column;
-    -ms-flex-direction: column;
-    flex-direction: column;
-    -webkit-justify-content: space-between;
-    -ms-flex-pack: justify;
-    justify-content: space-between; }
+    margin: 0 30px; }
     .popup-outer .popup-inner .popup-title {
       margin-bottom: 30px;
       margin-top: 0; }
+    .popup-outer .popup-inner .content {
+      min-height: calc(100% - 48px); }
     .popup-outer .popup-inner .buttons {
       display: -webkit-flex;
       display: -ms-flexbox;
@@ -846,7 +839,7 @@ body.browser-height {
       -ms-flex-pack: justify;
       justify-content: space-between;
       margin-bottom: 30px; }
-    @media (max-width: 320px) {
+    @media (max-width: 768px) {
       .popup-outer .popup-inner {
         border-radius: 0;
         max-height: inherit;
