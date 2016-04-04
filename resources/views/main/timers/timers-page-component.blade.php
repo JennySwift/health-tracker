@@ -15,9 +15,8 @@
         @include('main.timers.activities-filter')
 
         <div id="activities-and-timers-container">
-            @include('main.timers.activities-with-durations-for-week')
-                    {{--@include('pages.timers.timer-filter')--}}
             @include('main.timers.timers')
+            @include('main.timers.activities-with-durations-for-week')
         </div>
 
     </div>
