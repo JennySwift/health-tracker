@@ -5,9 +5,6 @@ var JournalPage = Vue.component('journal-page', {
             date: DatesRepository.setDate(this.date),
             filterResults: [],
             journalEntry: {},
-            newSleepEntry: {
-                startedYesterday: true
-            }
         };
     },
     components: {},
@@ -97,22 +94,6 @@ var JournalPage = Vue.component('journal-page', {
             this.$http.post('/api/journal', data, function (response) {
                 this.journalEntry = response.data;
                 $.event.trigger('provide-feedback', ['Entry created', 'success']);
-                $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
-        },
-
-        /**
-        *
-        */
-        insertSleepEntry: function () {
-            $.event.trigger('show-loading');
-            var data = TimersRepository.setData(this.newSleepEntry, this.date.sql);
-
-            this.$http.post('/api/timers', data, function (response) {
-                $.event.trigger('provide-feedback', ['Sleep entry created', 'success']);
                 $.event.trigger('hide-loading');
             })
             .error(function (response) {

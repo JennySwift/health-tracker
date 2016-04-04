@@ -15,7 +15,7 @@
                 class="margin-bottom"
         />
 
-        @include('main.new-sleep-entry')
+        <new-sleep-entry></new-sleep-entry>
 
         <div
                 v-show="filterResults.length > 0"
