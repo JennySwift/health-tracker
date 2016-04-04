@@ -60,6 +60,12 @@ var JournalPage = Vue.component('journal-page', {
             }
         },
 
+        /**
+         *
+         */
+        showNewSleepEntryPopup: function () {
+            $.event.trigger('show-new-sleep-entry-popup');
+        },
 
         /**
         *

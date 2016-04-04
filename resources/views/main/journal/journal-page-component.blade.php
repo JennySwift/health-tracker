@@ -15,6 +15,11 @@
                 class="margin-bottom"
         />
 
+        <button v-on:click="showNewSleepEntryPopup()" class="btn btn-default">
+            <span class="fa fa-plus-circle"></span>
+            <span>Sleep</span>
+        </button>
+
         <new-sleep-entry></new-sleep-entry>
 
         <div

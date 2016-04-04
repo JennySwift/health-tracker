@@ -22529,7 +22529,16 @@ var HelpersRepository = {
     handleResponseError: function (response) {
         $.event.trigger('response-error', [response]);
         $.event.trigger('hide-loading');
-    }
+    },
+
+    /**
+     *
+     */
+    closePopup: function ($event, that) {
+        if ($event.target.className === 'popup-outer') {
+            that.showPopup = false;
+        }
+    },
 };
 var RecipesRepository = {
 
@@ -23083,6 +23092,12 @@ var JournalPage = Vue.component('journal-page', {
             }
         },
 
+        /**
+         *
+         */
+        showNewSleepEntryPopup: function () {
+            $.event.trigger('show-new-sleep-entry-popup');
+        },
 
         /**
         *
@@ -23161,7 +23176,8 @@ var NewSleepEntry = Vue.component('new-sleep-entry', {
             date: DatesRepository.setDate(this.date),
             newSleepEntry: {
                 startedYesterday: true
-            }
+            },
+            showPopup: false
         };
     },
     components: {},
@@ -23174,6 +23190,7 @@ var NewSleepEntry = Vue.component('new-sleep-entry', {
             var data = TimersRepository.setData(this.newSleepEntry, this.date.sql);
 
             this.$http.post('/api/timers', data, function (response) {
+                    this.showPopup = false;
                     $.event.trigger('provide-feedback', ['Sleep entry created', 'success']);
                     $.event.trigger('hide-loading');
                 })
@@ -23181,12 +23198,29 @@ var NewSleepEntry = Vue.component('new-sleep-entry', {
                     HelpersRepository.handleResponseError(response);
                 });
         },
+
+        /**
+        *
+        */
+        closePopup: function ($event) {
+            HelpersRepository.closePopup($event, this);
+        },
+
+        /**
+         *
+         */
+        listen: function () {
+            var that = this;
+            $(document).on('show-new-sleep-entry-popup', function (event) {
+                that.showPopup = true;
+            });
+        }
     },
     props: [
         //data to be received from parent
     ],
     ready: function () {
-
+        this.listen();
     }
 });
 
