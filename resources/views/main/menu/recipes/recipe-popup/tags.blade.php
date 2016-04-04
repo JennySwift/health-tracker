@@ -13,7 +13,6 @@
         </li>
     </ul>
 
-    <button v-on:click="updateRecipe()" class="margin-bottom btn btn-success">Save</button>
     <div>@{{ selectedRecipe.notification }}</div>
 
 </div>

@@ -510,13 +510,8 @@ body.browser-height {
 #food-info-popup input {
   background: #FEE6BE; }
 
-#recipe-popup button, #recipe-popup ul {
+#recipe-popup ul {
   width: 100%; }
-
-#recipe-popup > div {
-  margin-bottom: 100px; }
-  #recipe-popup > div:last-child {
-    margin-bottom: 10px; }
 
 #recipe-popup #steps-table td {
   text-align: left; }
@@ -850,7 +845,7 @@ body.browser-height {
       -webkit-justify-content: space-between;
       -ms-flex-pack: justify;
       justify-content: space-between;
-      margin-top: 30px; }
+      min-height: 34px; }
       .popup-outer .popup-inner .buttons button {
         margin-right: 5px; }
         .popup-outer .popup-inner .buttons button:last-child {

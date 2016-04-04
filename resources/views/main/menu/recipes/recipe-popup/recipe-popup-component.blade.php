@@ -1,7 +1,7 @@
 <script id="recipe-popup-template" type="x-template">
 
-    <div v-show="showRecipePopup"
-         v-on:click="closePopup($event, 'recipePopup')"
+    <div v-show="showPopup"
+         v-on:click="closePopup($event)"
          class="popup-outer"
     >
 
@@ -35,6 +35,7 @@
 
             <div class="buttons">
                 <button v-on:click="showPopup = false" class="btn btn-default">Close</button>
+                <button v-on:click="updateRecipe()" class="btn btn-success">Save</button>
             </div>
 
         </div>

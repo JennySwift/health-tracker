@@ -25351,7 +25351,7 @@ var RecipePopup = Vue.component('recipe-popup', {
     template: '#recipe-popup-template',
     data: function () {
         return {
-            showRecipePopup: false,
+            showPopup: false,
             selectedRecipe: {
                 steps: [],
                 ingredients: []
@@ -25371,7 +25371,8 @@ var RecipePopup = Vue.component('recipe-popup', {
         listen: function () {
             var that = this;
             $(document).on('show-recipe-popup', function (event, recipe) {
-                that.showPopup(recipe);
+                that.selectedRecipe = recipe;
+                that.showPopup = true;
             });
             $(document).on('add-ingredient-to-recipe', function (event, ingredient) {
                 that.addIngredientToRecipe(ingredient);
@@ -25379,21 +25380,10 @@ var RecipePopup = Vue.component('recipe-popup', {
         },
 
         /**
-         *
-         */
-        showPopup: function (recipe) {
-            this.selectedRecipe = recipe;
-            this.showRecipePopup = true;
-            //$(".wysiwyg").wysiwyg();
-        },
-
-        /**
-         *
-         */
+        *
+        */
         closePopup: function ($event) {
-            if ($event.target.className === 'popup-outer') {
-                this.showRecipePopup = false;
-            }
+            HelpersRepository.closePopup($event, this);
         },
         
         /**
@@ -25424,7 +25414,7 @@ var RecipePopup = Vue.component('recipe-popup', {
                 this.recipes[index].tags = response.tags;
                 this.recipes[index].tag_ds = response.tag_ids;
                 this.editingMethod = false;
-                this.showRecipePopup = false;
+                this.showPopup = false;
                 $.event.trigger('provide-feedback', ['Recipe updated', 'success']);
                 $.event.trigger('hide-loading');
             })

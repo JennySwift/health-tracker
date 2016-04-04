@@ -27,7 +27,8 @@
 		.buttons {
 			display: flex;
 			justify-content: space-between;
-			margin-top: 30px;
+			min-height: 34px;
+			//margin-top: 30px;
 			button {
 				margin-right: 5px;
 				&:last-child {

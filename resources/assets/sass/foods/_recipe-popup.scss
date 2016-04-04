@@ -1,18 +1,7 @@
 #recipe-popup {
-	// display: flex;
-	// flex-direction: column;
-	// display: -webkit-flex;
-	// flex-direction: -webkit-column;
-	button, ul {
+	ul {
 		width: 100%;
 	}
-	> div {
-		margin-bottom: 100px;
-		&:last-child {
-			margin-bottom: 10px;
-		}
-	}
-
 	#steps-table {
 		td {
 			text-align: left;
@@ -37,11 +26,8 @@
 
 	.flex {
 		display: flex;
-		// display: -webkit-flex;
 		flex-direction: column;
-		// flex-direction: -webkit-column;
 		align-items: center;
-		// align-items: -webkit-center;
 	}
 	.transition {
 	  opacity: 1;
