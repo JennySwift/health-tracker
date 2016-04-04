@@ -571,10 +571,11 @@ body.browser-height {
   -ms-flex-pack: center;
   justify-content: center;
   margin: 5px 0; }
-  #new-sleep-entry > * {
-    margin: 0 5px; }
-    #new-sleep-entry > * input {
-      max-width: 90px; }
+  @media (max-width: 320px) {
+    #new-sleep-entry .form-group {
+      width: 100%; }
+      #new-sleep-entry .form-group input, #new-sleep-entry .form-group button {
+        width: 100%; } }
 
 #journal {
   display: -webkit-flex;
