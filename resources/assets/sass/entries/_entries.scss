@@ -19,27 +19,9 @@
 	}
 }
 
-.row {
-	@media (max-width: 320px) {
-		max-width: 300px;
-	}
-}
-
 .container {
 	@media (max-width: 320px) {
 		padding: 0 5px;
-	}
-}
-
-body {
-	@media (max-width: 320px) {
-		max-width: 280px;
-	}
-}
-
-html {
-	@media (max-width: 320px) {
-		max-width: 280px;
 	}
 }
 
