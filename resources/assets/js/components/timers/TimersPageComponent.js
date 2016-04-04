@@ -3,20 +3,14 @@ var TimersPage = Vue.component('timers-page', {
     data: function () {
         return {
             date: DatesRepository.setDate(this.date),
-            timerInProgress: false,
-            newTimer: {
-                activity: {}
-            },
-            newManualTimer: {
-                activity: {}
-            },
-            showTimerInProgress: true,
             timers: [],
             activities: [],
             timersFilter: false,
             activitiesFilter: '',
             activitiesWithDurationsForTheWeek: [],
-            activitiesWithDurationsForTheDay: []
+            activitiesWithDurationsForTheDay: [],
+            timerInProgress: false,
+            showTimerInProgress: true,
         };
     },
     filters: {
@@ -51,50 +45,11 @@ var TimersPage = Vue.component('timers-page', {
     methods: {
 
         /**
-        *
-        */
-        startTimer: function () {
-            $.event.trigger('show-loading');
-            var data = TimersRepository.setData(this.newTimer);
-            $('#timer-clock').timer({format: '%H:%M:%S'});
-
-            this.$http.post('/api/timers/', data, function (response) {
-                this.timerInProgress = response;
-                $.event.trigger('provide-feedback', ['Timer started', 'success']);
-                $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
-        },
-
-        /**
          *
          * @param timer
          */
         showTimerPopup: function (timer) {
             $.event.trigger('show-timer-popup', [timer]);
-        },
-
-        /**
-         * Instead of starting and stopping the timer,
-         * enter the start and stop times manually
-         */
-        insertManualTimer: function () {
-            $.event.trigger('show-loading');
-            var data = TimersRepository.setData(this.newManualTimer, this.date.sql);
-            $('#timer-clock').timer({format: '%H:%M:%S'});
-
-            this.$http.post('/api/timers/', data, function (response) {
-                this.timers.push(response);
-                this.getTotalMinutesForActivitiesForTheDay();
-                this.getTotalMinutesForActivitiesForTheWeek();
-                $.event.trigger('provide-feedback', ['Manual entry created', 'success']);
-                $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
         },
 
         /**
@@ -104,30 +59,7 @@ var TimersPage = Vue.component('timers-page', {
             $.event.trigger('show-loading');
             this.$http.get('/api/activities', function (response) {
                 this.activities = response;
-                $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
-        },
-
-        /**
-        *
-        */
-        stopTimer: function (timer) {
-            $.event.trigger('show-loading');
-            $('#timer-clock').timer('remove');
-
-            var data = {
-                finish: TimersRepository.calculateFinishTime(this.timerInProgress)
-            };
-
-            this.$http.put('/api/timers/' + this.timerInProgress.id, data, function (response) {
-                this.timerInProgress = false;
-                this.timers.push(response);
-                this.getTotalMinutesForActivitiesForTheDay();
-                this.getTotalMinutesForActivitiesForTheWeek();
-                $.event.trigger('provide-feedback', ['Timer updated', 'success']);
+                $.event.trigger('activities-loaded');
                 $.event.trigger('hide-loading');
             })
             .error(function (response) {
@@ -176,36 +108,6 @@ var TimersPage = Vue.component('timers-page', {
         /**
         *
         */
-        checkForTimerInProgress: function () {
-            $.event.trigger('show-loading');
-            this.$http.get('/api/timers/checkForTimerInProgress', function (response) {
-                if (response.activity) {
-                    this.resumeTimerOnPageLoad(response);
-                }
-                $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
-        },
-
-        /**
-         *
-         * @param timer
-         */
-        resumeTimerOnPageLoad: function (timer) {
-            this.timerInProgress = timer;
-            var seconds = moment().diff(moment(timer.start, 'YYYY-MM-DD HH:mm:ss'), 'seconds');
-            $('#timer-clock').timer({
-                format: '%H:%M:%S',
-                //The timer has already started
-                seconds: seconds
-            });
-        },
-
-        /**
-        *
-        */
         getTotalMinutesForActivitiesForTheDay: function () {
             $.event.trigger('show-loading');
             this.$http.get('/api/activities/getTotalMinutesForDay?date=' + this.date.sql, function (response) {
@@ -244,6 +146,11 @@ var TimersPage = Vue.component('timers-page', {
                 that.getTotalMinutesForActivitiesForTheDay();
                 that.getTotalMinutesForActivitiesForTheWeek();
             });
+            
+            $(document).on('timer-stopped, manual-timer-created', function (event) {
+                that.getTotalMinutesForActivitiesForTheDay();
+                that.getTotalMinutesForActivitiesForTheWeek();
+            });
         },
 
         /**
@@ -259,7 +166,6 @@ var TimersPage = Vue.component('timers-page', {
         //data to be received from parent
     ],
     ready: function () {
-        this.checkForTimerInProgress();
         this.getActivities();
         this.getTimers();
         this.getTotalMinutesForActivitiesForTheDay();

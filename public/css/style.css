@@ -708,7 +708,7 @@ body.browser-height {
   #timers-page #new-timer > *, #timers-page #new-manual-timer > * {
     margin-right: 5px; }
   #timers-page #new-timer select, #timers-page #new-manual-timer select {
-    max-width: 300px; }
+    max-width: 400px; }
   @media (max-width: 320px) {
     #timers-page #new-timer .form-group, #timers-page #new-manual-timer .form-group {
       width: 100%;

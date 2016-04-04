@@ -25936,493 +25936,6 @@ var TemporaryRecipePopup = Vue.component('temporary-recipe-popup', {
     }
 });
 
-var ActivitiesPage = Vue.component('activities-page', {
-    template: '#activities-page-template',
-    data: function () {
-        return {
-            activities: [],
-            newActivity: {},
-            editingActivity: false,
-            selectedActivity: {}
-        };
-    },
-    components: {},
-    filters: {
-        formatDuration: function (minutes) {
-            return FiltersRepository.formatDuration(minutes);
-        }
-    },
-    methods: {
-
-        /**
-        *
-        */
-        getActivities: function () {
-            $.event.trigger('show-loading');
-            this.$http.get('/api/activities', function (response) {
-                this.activities = response;
-                $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
-        },
-
-        /**
-        *
-        */
-        insertActivity: function () {
-            $.event.trigger('show-loading');
-            var data = {
-                name: this.newActivity.name,
-                color: this.newActivity.color
-            };
-
-            this.$http.post('/api/activities', data, function (response) {
-                this.activities.push(response);
-                $.event.trigger('provide-feedback', ['Activity created', 'success']);
-                $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
-        },
-
-        /**
-        *
-        */
-        updateActivity: function (activity) {
-            $.event.trigger('show-loading');
-
-            var data = {
-                name: activity.name,
-                color: activity.color
-            };
-
-            this.$http.put('/api/activities/' + activity.id, data, function (response) {
-                var index = _.indexOf(this.activities, _.findWhere(this.activities, {id: activity.id}));
-                this.activities[index] = response;
-                this.editingActivity = false;
-                $.event.trigger('provide-feedback', ['Activity updated', 'success']);
-                $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
-        },
-
-        /**
-         *
-         * @param activity
-         */
-        showEditActivity: function (activity) {
-            this.editingActivity = true;
-            this.selectedActivity = activity;
-        },
-
-        /**
-        *
-        */
-        deleteActivity: function (activity) {
-            if (confirm("Are you sure? The timers for the activity will be deleted, too!")) {
-                $.event.trigger('show-loading');
-                this.$http.delete('/api/activities/' + activity.id, function (response) {
-                    this.activities = _.without(this.activities, activity);
-                    $.event.trigger('provide-feedback', ['Activity deleted', 'success']);
-                    $.event.trigger('hide-loading');
-                })
-                .error(function (response) {
-                    HelpersRepository.handleResponseError(response);
-                });
-            }
-        },
-
-        /**
-         *
-         * @param response
-         */
-        handleResponseError: function (response) {
-            $.event.trigger('response-error', [response]);
-            this.showLoading = false;
-        }
-    },
-    props: [
-        //data to be received from parent
-    ],
-    ready: function () {
-        this.getActivities();
-    }
-});
-
-var GraphsPage = Vue.component('graphs-page', {
-    template: '#graphs-page-template',
-    data: function () {
-        return {
-            date: DatesRepository.setDate(this.date),
-            timers: []
-        };
-    },
-    components: {},
-    methods: {
-
-        /**
-         *
-         */
-        getTimers: function () {
-            $.event.trigger('show-loading');
-            var url = TimersRepository.calculateUrl(false, this.date.sql);
-
-            this.$http.get(url, function (response) {
-                    this.timers = response;
-                    $.event.trigger('hide-loading');
-                })
-                .error(function (response) {
-                    HelpersRepository.handleResponseError(response);
-                });
-        },
-
-        /**
-         *
-         * @param response
-         */
-        handleResponseError: function (response) {
-            $.event.trigger('response-error', [response]);
-            this.showLoading = false;
-        }
-    },
-    props: [
-        //data to be received from parent
-    ],
-    ready: function () {
-        this.getTimers();
-    }
-});
-
-
-var TimerPopup = Vue.component('timer-popup', {
-    template: '#timer-popup-template',
-    data: function () {
-        return {
-            showPopup: false,
-            selectedTimer: {}
-        };
-    },
-    components: {},
-    methods: {
-
-        /**
-         *
-         */
-        deleteTimer: function () {
-            if (confirm("Are you sure?")) {
-                $.event.trigger('show-loading');
-                this.$http.delete('/api/timers/' + this.selectedTimer.id, function (response) {
-                    $.event.trigger('timer-deleted', [this.selectedTimer]);
-                    this.showPopup = false;
-                    $.event.trigger('provide-feedback', ['Timer deleted', 'success']);
-                    $.event.trigger('hide-loading');
-                })
-                .error(function (response) {
-                    HelpersRepository.handleResponseError(response);
-                });
-            }
-        },
-
-        /**
-        *
-        */
-        closePopup: function ($event) {
-            HelpersRepository.closePopup($event, this);
-        },
-
-        /**
-         *
-         */
-        listen: function () {
-            var that = this;
-            $(document).on('show-timer-popup', function (event, timer) {
-                that.selectedTimer = timer;
-                that.showPopup = true;
-            });
-        }
-    },
-    props: [
-        //data to be received from parent
-    ],
-    ready: function () {
-        this.listen();
-    }
-});
-
-var TimersPage = Vue.component('timers-page', {
-    template: '#timers-page-template',
-    data: function () {
-        return {
-            date: DatesRepository.setDate(this.date),
-            timerInProgress: false,
-            newTimer: {
-                activity: {}
-            },
-            newManualTimer: {
-                activity: {}
-            },
-            showTimerInProgress: true,
-            timers: [],
-            activities: [],
-            timersFilter: false,
-            activitiesFilter: '',
-            activitiesWithDurationsForTheWeek: [],
-            activitiesWithDurationsForTheDay: []
-        };
-    },
-    filters: {
-        formatDateTime: function (dateTime, format) {
-            if (!format) {
-                return moment(dateTime, 'YYYY-MM-DD HH:mm:ss').format('hh:mm:ssa DD/MM');
-            }
-            else if (format === 'seconds') {
-                return moment(dateTime, 'YYYY-MM-DD HH:mm:ss').format('ss a DD/MM');
-            }
-            else if (format === 'hoursAndMinutes') {
-                return moment(dateTime, 'YYYY-MM-DD HH:mm:ss').format('hh:mm');
-            }
-            else if (format === 'object') {
-                return {
-                    seconds: moment(dateTime, 'YYYY-MM-DD HH:mm:ss').format('ss')
-                };
-            }
-        },
-        doubleDigits: function (number) {
-            if (number < 10) {
-                return '0' + number;
-            }
-
-            return number;
-        },
-        formatDuration: function (minutes) {
-            return FiltersRepository.formatDuration(minutes);
-        }
-    },
-    components: {},
-    methods: {
-
-        /**
-        *
-        */
-        startTimer: function () {
-            $.event.trigger('show-loading');
-            var data = TimersRepository.setData(this.newTimer);
-            $('#timer-clock').timer({format: '%H:%M:%S'});
-
-            this.$http.post('/api/timers/', data, function (response) {
-                this.timerInProgress = response;
-                $.event.trigger('provide-feedback', ['Timer started', 'success']);
-                $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
-        },
-
-        /**
-         *
-         * @param timer
-         */
-        showTimerPopup: function (timer) {
-            $.event.trigger('show-timer-popup', [timer]);
-        },
-
-        /**
-         * Instead of starting and stopping the timer,
-         * enter the start and stop times manually
-         */
-        insertManualTimer: function () {
-            $.event.trigger('show-loading');
-            var data = TimersRepository.setData(this.newManualTimer, this.date.sql);
-            $('#timer-clock').timer({format: '%H:%M:%S'});
-
-            this.$http.post('/api/timers/', data, function (response) {
-                this.timers.push(response);
-                this.getTotalMinutesForActivitiesForTheDay();
-                this.getTotalMinutesForActivitiesForTheWeek();
-                $.event.trigger('provide-feedback', ['Manual entry created', 'success']);
-                $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
-        },
-
-        /**
-        *
-        */
-        getActivities: function () {
-            $.event.trigger('show-loading');
-            this.$http.get('/api/activities', function (response) {
-                this.activities = response;
-                $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
-        },
-
-        /**
-        *
-        */
-        stopTimer: function (timer) {
-            $.event.trigger('show-loading');
-            $('#timer-clock').timer('remove');
-
-            var data = {
-                finish: TimersRepository.calculateFinishTime(this.timerInProgress)
-            };
-
-            this.$http.put('/api/timers/' + this.timerInProgress.id, data, function (response) {
-                this.timerInProgress = false;
-                this.timers.push(response);
-                this.getTotalMinutesForActivitiesForTheDay();
-                this.getTotalMinutesForActivitiesForTheWeek();
-                $.event.trigger('provide-feedback', ['Timer updated', 'success']);
-                $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
-        },
-
-        /**
-        *
-        */
-        getTimers: function () {
-            $.event.trigger('show-loading');
-            var url = TimersRepository.calculateUrl(false, this.date.sql);
-
-            this.$http.get(url, function (response) {
-                this.timers = response;
-                $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
-        },
-
-        /**
-         *
-         * @param timer
-         * @returns {boolean}
-         */
-        filterTimers: function (timer) {
-            if (this.timersFilter) {
-                return timer.activity.data.name.indexOf(this.timersFilter) !== -1;
-            }
-            return true;
-
-        },
-
-        /**
-         *
-         * @param minutes
-         * @returns {number}
-         */
-        formatMinutes: function (minutes) {
-            return minutes * 10;
-        },
-
-        /**
-        *
-        */
-        checkForTimerInProgress: function () {
-            $.event.trigger('show-loading');
-            this.$http.get('/api/timers/checkForTimerInProgress', function (response) {
-                if (response.activity) {
-                    this.resumeTimerOnPageLoad(response);
-                }
-                $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
-        },
-
-        /**
-         *
-         * @param timer
-         */
-        resumeTimerOnPageLoad: function (timer) {
-            this.timerInProgress = timer;
-            var seconds = moment().diff(moment(timer.start, 'YYYY-MM-DD HH:mm:ss'), 'seconds');
-            $('#timer-clock').timer({
-                format: '%H:%M:%S',
-                //The timer has already started
-                seconds: seconds
-            });
-        },
-
-        /**
-        *
-        */
-        getTotalMinutesForActivitiesForTheDay: function () {
-            $.event.trigger('show-loading');
-            this.$http.get('/api/activities/getTotalMinutesForDay?date=' + this.date.sql, function (response) {
-                this.activitiesWithDurationsForTheDay = response;
-                $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
-        },
-
-        /**
-        *
-        */
-        getTotalMinutesForActivitiesForTheWeek: function () {
-            $.event.trigger('show-loading');
-            this.$http.get('/api/activities/getTotalMinutesForWeek?date=' + this.date.sql, function (response) {
-                this.activitiesWithDurationsForTheWeek = response;
-                $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
-        },
-
-        listen: function () {
-            var that = this;
-            $(document).on('date-changed', function (event) {
-                that.getTimers();
-                that.getTotalMinutesForActivitiesForTheDay();
-                that.getTotalMinutesForActivitiesForTheWeek();
-            });
-
-            $(document).on('timer-deleted', function (event, timer) {
-                that.timers = _.without(that.timers, timer);
-                that.getTotalMinutesForActivitiesForTheDay();
-                that.getTotalMinutesForActivitiesForTheWeek();
-            });
-        },
-
-        /**
-         *
-         * @param response
-         */
-        handleResponseError: function (response) {
-            $.event.trigger('response-error', [response]);
-            $.event.trigger('hide-loading');
-        }
-    },
-    props: [
-        //data to be received from parent
-    ],
-    ready: function () {
-        this.checkForTimerInProgress();
-        this.getActivities();
-        this.getTimers();
-        this.getTotalMinutesForActivitiesForTheDay();
-        this.getTotalMinutesForActivitiesForTheWeek();
-        this.listen();
-    }
-});
 var Autocomplete = Vue.component('autocomplete', {
     template: '#autocomplete-template',
     data: function () {
@@ -26694,6 +26207,575 @@ Vue.component('loading', {
         }
     },
     ready: function () {
+        this.listen();
+    }
+});
+var ActivitiesPage = Vue.component('activities-page', {
+    template: '#activities-page-template',
+    data: function () {
+        return {
+            activities: [],
+            newActivity: {},
+            editingActivity: false,
+            selectedActivity: {}
+        };
+    },
+    components: {},
+    filters: {
+        formatDuration: function (minutes) {
+            return FiltersRepository.formatDuration(minutes);
+        }
+    },
+    methods: {
+
+        /**
+        *
+        */
+        getActivities: function () {
+            $.event.trigger('show-loading');
+            this.$http.get('/api/activities', function (response) {
+                this.activities = response;
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                HelpersRepository.handleResponseError(response);
+            });
+        },
+
+        /**
+        *
+        */
+        insertActivity: function () {
+            $.event.trigger('show-loading');
+            var data = {
+                name: this.newActivity.name,
+                color: this.newActivity.color
+            };
+
+            this.$http.post('/api/activities', data, function (response) {
+                this.activities.push(response);
+                $.event.trigger('provide-feedback', ['Activity created', 'success']);
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                HelpersRepository.handleResponseError(response);
+            });
+        },
+
+        /**
+        *
+        */
+        updateActivity: function (activity) {
+            $.event.trigger('show-loading');
+
+            var data = {
+                name: activity.name,
+                color: activity.color
+            };
+
+            this.$http.put('/api/activities/' + activity.id, data, function (response) {
+                var index = _.indexOf(this.activities, _.findWhere(this.activities, {id: activity.id}));
+                this.activities[index] = response;
+                this.editingActivity = false;
+                $.event.trigger('provide-feedback', ['Activity updated', 'success']);
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                HelpersRepository.handleResponseError(response);
+            });
+        },
+
+        /**
+         *
+         * @param activity
+         */
+        showEditActivity: function (activity) {
+            this.editingActivity = true;
+            this.selectedActivity = activity;
+        },
+
+        /**
+        *
+        */
+        deleteActivity: function (activity) {
+            if (confirm("Are you sure? The timers for the activity will be deleted, too!")) {
+                $.event.trigger('show-loading');
+                this.$http.delete('/api/activities/' + activity.id, function (response) {
+                    this.activities = _.without(this.activities, activity);
+                    $.event.trigger('provide-feedback', ['Activity deleted', 'success']);
+                    $.event.trigger('hide-loading');
+                })
+                .error(function (response) {
+                    HelpersRepository.handleResponseError(response);
+                });
+            }
+        },
+
+        /**
+         *
+         * @param response
+         */
+        handleResponseError: function (response) {
+            $.event.trigger('response-error', [response]);
+            this.showLoading = false;
+        }
+    },
+    props: [
+        //data to be received from parent
+    ],
+    ready: function () {
+        this.getActivities();
+    }
+});
+
+var GraphsPage = Vue.component('graphs-page', {
+    template: '#graphs-page-template',
+    data: function () {
+        return {
+            date: DatesRepository.setDate(this.date),
+            timers: []
+        };
+    },
+    components: {},
+    methods: {
+
+        /**
+         *
+         */
+        getTimers: function () {
+            $.event.trigger('show-loading');
+            var url = TimersRepository.calculateUrl(false, this.date.sql);
+
+            this.$http.get(url, function (response) {
+                    this.timers = response;
+                    $.event.trigger('hide-loading');
+                })
+                .error(function (response) {
+                    HelpersRepository.handleResponseError(response);
+                });
+        },
+
+        /**
+         *
+         * @param response
+         */
+        handleResponseError: function (response) {
+            $.event.trigger('response-error', [response]);
+            this.showLoading = false;
+        }
+    },
+    props: [
+        //data to be received from parent
+    ],
+    ready: function () {
+        this.getTimers();
+    }
+});
+
+
+var NewManualTimer = Vue.component('new-manual-timer', {
+    template: '#new-manual-timer-template',
+    data: function () {
+        return {
+            newManualTimer: {
+                activity: {}
+            }
+        };
+    },
+    components: {},
+    methods: {
+        /**
+         * Instead of starting and stopping the timer,
+         * enter the start and stop times manually
+         */
+        insertManualTimer: function () {
+            $.event.trigger('show-loading');
+            var data = TimersRepository.setData(this.newManualTimer, this.date.sql);
+            $('#timer-clock').timer({format: '%H:%M:%S'});
+
+            this.$http.post('/api/timers/', data, function (response) {
+                    this.timers.push(response);
+                    $.event.trigger('manual-timer-created');
+                    $.event.trigger('provide-feedback', ['Manual entry created', 'success']);
+                    $.event.trigger('hide-loading');
+                })
+                .error(function (response) {
+                    HelpersRepository.handleResponseError(response);
+                });
+        },
+
+        /**
+         *
+         */
+        setDefaultActivity: function () {
+            this.newManualTimer.activity = this.activities[0];
+        },
+
+        /**
+         *
+         */
+        listen: function () {
+            var that = this;
+            $(document).on('activities-loaded', function (event) {
+                setTimeout(function () {
+                    that.setDefaultActivity();
+                }, 500);
+            });
+        }
+
+    },
+    props: [
+        'activities',
+        'date',
+        'timers'
+    ],
+    ready: function () {
+        this.listen();
+    }
+});
+
+var NewTimer = Vue.component('new-timer', {
+    template: '#new-timer-template',
+    data: function () {
+        return {
+            newTimer: {
+                activity: {}
+            },
+        };
+    },
+    components: {},
+    methods: {
+
+        /**
+         *
+         */
+        startTimer: function () {
+            $.event.trigger('show-loading');
+            var data = TimersRepository.setData(this.newTimer);
+            $('#timer-clock').timer({format: '%H:%M:%S'});
+
+            this.$http.post('/api/timers/', data, function (response) {
+                    this.timerInProgress = response;
+                    $.event.trigger('provide-feedback', ['Timer started', 'success']);
+                    $.event.trigger('hide-loading');
+                })
+                .error(function (response) {
+                    HelpersRepository.handleResponseError(response);
+                });
+        },
+
+        /**
+         *
+         */
+        stopTimer: function () {
+            $.event.trigger('show-loading');
+            $('#timer-clock').timer('remove');
+
+            var data = {
+                finish: TimersRepository.calculateFinishTime(this.timerInProgress)
+            };
+
+            this.$http.put('/api/timers/' + this.timerInProgress.id, data, function (response) {
+                    this.timerInProgress = false;
+                    this.timers.push(response);
+                    $.event.trigger('timer-stopped');
+                    $.event.trigger('provide-feedback', ['Timer updated', 'success']);
+                    $.event.trigger('hide-loading');
+                })
+                .error(function (response) {
+                    HelpersRepository.handleResponseError(response);
+                });
+        },
+
+        /**
+         *
+         */
+        setDefaultActivity: function () {
+            this.newTimer.activity = this.activities[0];
+        },
+
+        /**
+         *
+         */
+        checkForTimerInProgress: function () {
+            $.event.trigger('show-loading');
+            this.$http.get('/api/timers/checkForTimerInProgress', function (response) {
+                    if (response.activity) {
+                        this.resumeTimerOnPageLoad(response);
+                    }
+                    $.event.trigger('hide-loading');
+                })
+                .error(function (response) {
+                    HelpersRepository.handleResponseError(response);
+                });
+        },
+
+        /**
+         *
+         * @param timer
+         */
+        resumeTimerOnPageLoad: function (timer) {
+            this.timerInProgress = timer;
+            var seconds = moment().diff(moment(timer.start, 'YYYY-MM-DD HH:mm:ss'), 'seconds');
+            $('#timer-clock').timer({
+                format: '%H:%M:%S',
+                //The timer has already started
+                seconds: seconds
+            });
+        },
+
+        /**
+         *
+         */
+        listen: function () {
+            var that = this;
+            $(document).on('activities-loaded', function (event) {
+                setTimeout(function () {
+                    that.setDefaultActivity();
+                }, 500);
+            });
+        }
+
+    },
+    props: [
+        'activities',
+        'timerInProgress',
+        'showTimerInProgress',
+        'timers'
+    ],
+    ready: function () {
+        this.listen();
+        this.checkForTimerInProgress();
+    }
+});
+
+var TimerPopup = Vue.component('timer-popup', {
+    template: '#timer-popup-template',
+    data: function () {
+        return {
+            showPopup: false,
+            selectedTimer: {}
+        };
+    },
+    components: {},
+    methods: {
+
+        /**
+         *
+         */
+        deleteTimer: function () {
+            if (confirm("Are you sure?")) {
+                $.event.trigger('show-loading');
+                this.$http.delete('/api/timers/' + this.selectedTimer.id, function (response) {
+                    $.event.trigger('timer-deleted', [this.selectedTimer]);
+                    this.showPopup = false;
+                    $.event.trigger('provide-feedback', ['Timer deleted', 'success']);
+                    $.event.trigger('hide-loading');
+                })
+                .error(function (response) {
+                    HelpersRepository.handleResponseError(response);
+                });
+            }
+        },
+
+        /**
+        *
+        */
+        closePopup: function ($event) {
+            HelpersRepository.closePopup($event, this);
+        },
+
+        /**
+         *
+         */
+        listen: function () {
+            var that = this;
+            $(document).on('show-timer-popup', function (event, timer) {
+                that.selectedTimer = timer;
+                that.showPopup = true;
+            });
+        }
+    },
+    props: [
+        //data to be received from parent
+    ],
+    ready: function () {
+        this.listen();
+    }
+});
+
+var TimersPage = Vue.component('timers-page', {
+    template: '#timers-page-template',
+    data: function () {
+        return {
+            date: DatesRepository.setDate(this.date),
+            timers: [],
+            activities: [],
+            timersFilter: false,
+            activitiesFilter: '',
+            activitiesWithDurationsForTheWeek: [],
+            activitiesWithDurationsForTheDay: [],
+            timerInProgress: false,
+            showTimerInProgress: true,
+        };
+    },
+    filters: {
+        formatDateTime: function (dateTime, format) {
+            if (!format) {
+                return moment(dateTime, 'YYYY-MM-DD HH:mm:ss').format('hh:mm:ssa DD/MM');
+            }
+            else if (format === 'seconds') {
+                return moment(dateTime, 'YYYY-MM-DD HH:mm:ss').format('ss a DD/MM');
+            }
+            else if (format === 'hoursAndMinutes') {
+                return moment(dateTime, 'YYYY-MM-DD HH:mm:ss').format('hh:mm');
+            }
+            else if (format === 'object') {
+                return {
+                    seconds: moment(dateTime, 'YYYY-MM-DD HH:mm:ss').format('ss')
+                };
+            }
+        },
+        doubleDigits: function (number) {
+            if (number < 10) {
+                return '0' + number;
+            }
+
+            return number;
+        },
+        formatDuration: function (minutes) {
+            return FiltersRepository.formatDuration(minutes);
+        }
+    },
+    components: {},
+    methods: {
+
+        /**
+         *
+         * @param timer
+         */
+        showTimerPopup: function (timer) {
+            $.event.trigger('show-timer-popup', [timer]);
+        },
+
+        /**
+        *
+        */
+        getActivities: function () {
+            $.event.trigger('show-loading');
+            this.$http.get('/api/activities', function (response) {
+                this.activities = response;
+                $.event.trigger('activities-loaded');
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                HelpersRepository.handleResponseError(response);
+            });
+        },
+
+        /**
+        *
+        */
+        getTimers: function () {
+            $.event.trigger('show-loading');
+            var url = TimersRepository.calculateUrl(false, this.date.sql);
+
+            this.$http.get(url, function (response) {
+                this.timers = response;
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                HelpersRepository.handleResponseError(response);
+            });
+        },
+
+        /**
+         *
+         * @param timer
+         * @returns {boolean}
+         */
+        filterTimers: function (timer) {
+            if (this.timersFilter) {
+                return timer.activity.data.name.indexOf(this.timersFilter) !== -1;
+            }
+            return true;
+
+        },
+
+        /**
+         *
+         * @param minutes
+         * @returns {number}
+         */
+        formatMinutes: function (minutes) {
+            return minutes * 10;
+        },
+
+        /**
+        *
+        */
+        getTotalMinutesForActivitiesForTheDay: function () {
+            $.event.trigger('show-loading');
+            this.$http.get('/api/activities/getTotalMinutesForDay?date=' + this.date.sql, function (response) {
+                this.activitiesWithDurationsForTheDay = response;
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                HelpersRepository.handleResponseError(response);
+            });
+        },
+
+        /**
+        *
+        */
+        getTotalMinutesForActivitiesForTheWeek: function () {
+            $.event.trigger('show-loading');
+            this.$http.get('/api/activities/getTotalMinutesForWeek?date=' + this.date.sql, function (response) {
+                this.activitiesWithDurationsForTheWeek = response;
+                $.event.trigger('hide-loading');
+            })
+            .error(function (response) {
+                HelpersRepository.handleResponseError(response);
+            });
+        },
+
+        listen: function () {
+            var that = this;
+            $(document).on('date-changed', function (event) {
+                that.getTimers();
+                that.getTotalMinutesForActivitiesForTheDay();
+                that.getTotalMinutesForActivitiesForTheWeek();
+            });
+
+            $(document).on('timer-deleted', function (event, timer) {
+                that.timers = _.without(that.timers, timer);
+                that.getTotalMinutesForActivitiesForTheDay();
+                that.getTotalMinutesForActivitiesForTheWeek();
+            });
+            
+            $(document).on('timer-stopped, manual-timer-created', function (event) {
+                that.getTotalMinutesForActivitiesForTheDay();
+                that.getTotalMinutesForActivitiesForTheWeek();
+            });
+        },
+
+        /**
+         *
+         * @param response
+         */
+        handleResponseError: function (response) {
+            $.event.trigger('response-error', [response]);
+            $.event.trigger('hide-loading');
+        }
+    },
+    props: [
+        //data to be received from parent
+    ],
+    ready: function () {
+        this.getActivities();
+        this.getTimers();
+        this.getTotalMinutesForActivitiesForTheDay();
+        this.getTotalMinutesForActivitiesForTheWeek();
         this.listen();
     }
 });

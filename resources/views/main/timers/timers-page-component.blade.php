@@ -9,8 +9,21 @@
 
         <timer-popup></timer-popup>
 
-        @include('main.timers.new-timer')
-        @include('main.timers.timer-in-progress')
+        <new-timer
+                :activities="activities"
+                :timer-in-progress="timerInProgress"
+                :show-timer-in-progress="showTimerInProgress"
+                :timers.sync="timers"
+        >
+        </new-timer>
+
+        <new-manual-timer
+                :activities="activities"
+                :timers.sync="timers"
+                :date="date"
+        >
+        </new-manual-timer>
+
         @include('main.timers.activities-with-durations-for-day')
         @include('main.timers.activities-filter')
 

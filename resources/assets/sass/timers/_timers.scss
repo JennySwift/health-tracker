@@ -57,7 +57,7 @@
             margin-right: 5px;
         }
         select {
-            max-width: 300px;
+            max-width: 400px;
         }
         @media (max-width: 320px) {
             .form-group {
@@ -70,11 +70,6 @@
             select {
                 max-width: inherit;
             }
-        }
-    }
-    #timers {
-        .timer {
-
         }
     }
 }
