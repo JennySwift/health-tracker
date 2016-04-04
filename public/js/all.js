@@ -26476,6 +26476,7 @@ var NewManualTimer = Vue.component('new-manual-timer', {
     ],
     ready: function () {
         this.listen();
+        this.setDefaultActivity();
     }
 });
 
