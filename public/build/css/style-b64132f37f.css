@@ -680,9 +680,17 @@ body.browser-height {
   -webkit-justify-content: center;
   -ms-flex-pack: center;
   justify-content: center;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
   font-size: 30px; }
   #timers-page #timer-in-progress > * {
     margin: 0 20px; }
+  @media (max-width: 320px) {
+    #timers-page #timer-in-progress {
+      -webkit-justify-content: space-between;
+      -ms-flex-pack: justify;
+      justify-content: space-between; } }
 
 #timers-page #new-timer, #timers-page #new-manual-timer {
   display: -webkit-flex;
