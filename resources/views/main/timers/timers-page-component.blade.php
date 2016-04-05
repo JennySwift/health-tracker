@@ -7,7 +7,11 @@
         >
         </date-navigation>
 
-        <timer-popup></timer-popup>
+        <timer-popup
+                :activities="activities"
+                :timers.sync="timers"
+        >
+        </timer-popup>
 
         <new-timer
                 :activities="activities"
