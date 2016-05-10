@@ -33,8 +33,6 @@
                     class="form-control"
                 >
             </div>
-            
-            <pre>@{{$data.selectedTimer.activity | json}}</pre>
 
             <div class="form-group">
                 <label for="selected-timer-activity">Activity</label>

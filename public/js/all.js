@@ -22539,6 +22539,16 @@ var HelpersRepository = {
             that.showPopup = false;
         }
     },
+
+    /**
+     *
+     * @param array
+     * @param id
+     * @returns {*}
+     */
+    findIndexById: function (array, id) {
+        return _.indexOf(array, _.findWhere(array, {id: id}));
+    },
 };
 var RecipesRepository = {
 
@@ -26891,7 +26901,8 @@ var TimersPage = Vue.component('timers-page', {
             });
 
             $(document).on('timer-deleted', function (event, timer) {
-                that.timers = _.without(that.timers, timer);
+                var index = HelpersRepository.findIndexById(that.timers, timer.id);
+                that.timers = _.without(that.timers, that.timers[index]);
                 that.getTotalMinutesForActivitiesForTheDay();
                 that.getTotalMinutesForActivitiesForTheWeek();
             });

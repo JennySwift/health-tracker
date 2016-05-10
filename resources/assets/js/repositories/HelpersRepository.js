@@ -17,4 +17,14 @@ var HelpersRepository = {
             that.showPopup = false;
         }
     },
+
+    /**
+     *
+     * @param array
+     * @param id
+     * @returns {*}
+     */
+    findIndexById: function (array, id) {
+        return _.indexOf(array, _.findWhere(array, {id: id}));
+    },
 };
