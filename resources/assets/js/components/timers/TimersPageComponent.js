@@ -158,7 +158,12 @@ var TimersPage = Vue.component('timers-page', {
                 that.getTotalMinutesForActivitiesForTheWeek();
             });
             
-            $(document).on('timer-stopped, manual-timer-created', function (event) {
+            $(document).on('timer-stopped', function (event) {
+                that.getTotalMinutesForActivitiesForTheDay();
+                that.getTotalMinutesForActivitiesForTheWeek();
+            });
+
+            $(document).on('manual-timer-created', function (event) {
                 that.getTotalMinutesForActivitiesForTheDay();
                 that.getTotalMinutesForActivitiesForTheWeek();
             });
