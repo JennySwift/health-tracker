@@ -48,9 +48,7 @@ var ExerciseEntries = Vue.component('exercise-entries', {
             this.$http.post('/api/exerciseEntries', data, function (response) {
                 $.event.trigger('provide-feedback', ['Set added', 'success']);
                 this.getEntriesForTheDay();
-                //$.event.trigger('get-exercise-entries', [response.data]);
-                this.newSeries.name = '';
-                this.exerciseEntries = response.data;
+                this.exerciseEntries = response;
                 $.event.trigger('hide-loading');
             })
             .error(function (response) {
