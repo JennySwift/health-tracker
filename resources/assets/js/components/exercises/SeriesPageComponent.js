@@ -5,7 +5,7 @@ var SeriesPage = Vue.component('series-page', {
             date: DatesRepository.setDate(this.date),
             exerciseSeries: [],
             exerciseSeriesHistory: [],
-            priorityFilter: 1,
+            priorityFilter: '',
             showNewSeriesFields: false,
             showNewExerciseFields: false,
             selectedSeries: {
@@ -23,27 +23,69 @@ var SeriesPage = Vue.component('series-page', {
     },
     components: {},
     computed: {
-        exercisesBySeries: function () {
-            var that = this;
-            var groupedExercises = this.filterExercises(this.shared.exercises);
-
-            if (!this.showStretches) {
-                groupedExercises = _.filter(groupedExercises, function (exercise) {
-                    return !exercise.stretch;
-                });
-            }
-
-            groupedExercises = _.groupBy(groupedExercises, function (exercise) {
-                return exercise.series.name;
-            });
-
-
-
-            console.log(groupedExercises);
-            return groupedExercises;
-        },
+        // exercisesBySeries: function () {
+        //     var that = this;
+        //     var groupedExercises = this.filterExercises(this.shared.exercises);
+        //
+        //     if (!this.showStretches) {
+        //         groupedExercises = _.filter(groupedExercises, function (exercise) {
+        //             return !exercise.stretch;
+        //         });
+        //     }
+        //
+        //     groupedExercises = _.groupBy(groupedExercises, function (exercise) {
+        //         return exercise.series.name;
+        //     });
+        //
+        //     return groupedExercises;
+        // },
     },
     filters: {
+        filterExercises: function (exercises) {
+            var that = this;
+
+            // exercises = exercises.sort(
+            //     firstBy(function (exercise) {
+            //         return exercise.stepNumber;
+            //     })
+            //         // .thenBy("population")
+            //         // .thenBy("id")
+            // );
+
+            // exercises = exercises.sort(function (exercise) {
+            //     return exercise.lastDone;
+            // });
+            //
+            //Sort
+            exercises = _.chain(exercises)
+                .sortBy(function (exercise) {return exercise.stepNumber})
+                .sortBy('priority')
+                .sortBy(function (exercise) {
+                    return exercise.lastDone * -1
+                })
+                .partition(function (exercise) {
+                    return exercise.lastDone === null;
+                })
+                .flatten()
+                .value();
+
+            //Filter
+            return exercises.filter(function (exercise) {
+                var filteredIn = true;
+
+                //Priority filter
+                if (that.priorityFilter && exercise.priority != that.priorityFilter) {
+                    filteredIn = false;
+                }
+
+                if (!that.showStretches && exercise.stretch) {
+                    filteredIn = false;
+                }
+
+                return filteredIn;
+            });
+        },
+        
         filterSeries: function (series) {
             var that = this;
 
@@ -78,25 +120,6 @@ var SeriesPage = Vue.component('series-page', {
         },
     },
     methods: {
-
-        filterExercises: function (exercises) {
-            var that = this;
-
-            //Sort
-            exercises = _.chain(exercises).sortBy('stepNumber').sortBy('priority').sortBy('lastDone').value();
-
-            //Filter
-            return exercises.filter(function (exercise) {
-                var filteredIn = true;
-
-                //Priority filter
-                if (that.priorityFilter && exercise.priority != that.priorityFilter) {
-                    filteredIn = false;
-                }
-
-                return filteredIn;
-            });
-        },
 
         /**
          *
