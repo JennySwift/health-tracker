@@ -108,20 +108,6 @@ class PagesTest extends TestCase {
      * @test
      * @return void
      */
-    public function it_can_display_the_exercise_series_page()
-    {
-        $this->logInUser();
-
-        $this->visit('/#/series');
-//            ->see('pushup');
-
-        $this->assertEquals(Response::HTTP_OK, $this->apiCall('GET', '/')->getStatusCode());
-    }
-
-    /**
-     * @test
-     * @return void
-     */
     public function it_can_display_the_exercise_units_page()
     {
         $this->logInUser();

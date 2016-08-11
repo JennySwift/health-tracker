@@ -19,7 +19,6 @@
 @include('main.timers.new-manual-timer-component')
 
 {{--Exercises--}}
-@include('main.exercises.series-page-component')
 @include('main.exercises.exercises-page-component')
 @include('main.exercises.new-exercise-component')
 @include('main.exercises.new-series-component')

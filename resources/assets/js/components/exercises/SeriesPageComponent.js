@@ -1,5 +1,5 @@
-var SeriesPage = Vue.component('series-page', {
-    template: '#series-page-template',
+var ExercisesPage = Vue.component('exercises-page', {
+    template: '#exercises-page-template',
     data: function () {
         return {
             date: DatesRepository.setDate(this.date),
@@ -18,7 +18,11 @@ var SeriesPage = Vue.component('series-page', {
             programs: [],
             shared: store.state,
             selectedExercise: ExercisesRepository.selectedExercise,
-            showStretches: false
+            showStretches: false,
+            // filterByName: '',
+            // filterByDescription: '',
+            // filterByPriority: '',
+            // filterBySeries: '',
         };
     },
     components: {},
@@ -86,6 +90,35 @@ var SeriesPage = Vue.component('series-page', {
                 return filteredIn;
             });
         },
+
+        // exercisesFilter: function (exercises) {
+        //     var that = this;
+        //     return exercises.filter(function (exercise) {
+        //         //Name filter
+        //         var show = exercise.name.indexOf(that.filterByName) !== -1;
+        //
+        //         //Description filter
+        //         if (exercise.description && exercise.description.indexOf(that.filterByDescription) === -1) {
+        //             show = false;
+        //         }
+        //
+        //         else if (!exercise.description && that.filterByDescription !== '') {
+        //             show = false;
+        //         }
+        //
+        //         //Priority filter
+        //         if (that.filterByPriority && exercise.priority != that.filterByPriority) {
+        //             show = false;
+        //         }
+        //
+        //         //Series filter
+        //         if (that.filterBySeries && exercise.series.name != that.filterBySeries) {
+        //             show = false;
+        //         }
+        //
+        //         return show;
+        //     });
+        // },
         
         filterSeries: function (series) {
             var that = this;

@@ -46,7 +46,6 @@
                 </a>
                 <ul class="dropdown-menu" role="menu">
                     <li><a v-link="{path: '/exercises'}" href="#">Exercises</a></li>
-                    <li><a v-link="{path: '/series'}" href="#">Series</a></li>
                     <li><a v-link="{path: '/exercise-units'}" href="#">Units</a></li>
                 </ul>
             </li>

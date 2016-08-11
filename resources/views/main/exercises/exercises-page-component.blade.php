@@ -1,67 +1,68 @@
 <script id="exercises-page-template" type="x-template">
 
-<div id="exercises">
-    
-    <exercise-popup
-            :selected-exercise="selectedExercise"
-            :exercises.sync="exercises"
-            :exercise-series="exerciseSeries"
-            :programs="programs"
-            :units="units"
-    >
-    </exercise-popup>
+    <div id="exercise-series">
 
-    <div>
+        {{--@include('main.exercises.exercise-filters')--}}
 
-        @include('main.exercises.exercise-filters')
+        <series-history-popup
+                :exercise-series-history="exerciseSeriesHistory"
+                :selected-series="selectedSeries"
+        >
+        </series-history-popup>
 
-        <div class="new-exercise-container">
-            <button
-                    v-on:click="showNewExerciseFields = !showNewExerciseFields"
-                    class="btn btn-default"
-            >
-                New
-            </button>
+        <series-popup
+                :selected-series="selectedSeries"
+                :exercise-series.sync="exerciseSeries"
+        >
+        </series-popup>
 
-            <new-exercise
-                    :show-new-exercise-fields.sync="showNewExerciseFields"
-                    :exercises.sync="exercises"
-                    :programs="programs"
-                    :exercise-series="exerciseSeries"
-                    :units="units"
-            >
-            </new-exercise>
+        <div>
+            @include('main.exercises.series-top-row')
         </div>
+
+        <exercise-popup
+                :selected-exercise="selectedExercise"
+                :exercises.sync="shared.exercises"
+                :exercise-series="exerciseSeries"
+                :programs="programs"
+                :units="units"
+        >
+        </exercise-popup>
+
 
         <table class="table table-bordered">
             <tr>
-                <th>name</th>
-                <th>description</th>
-                <th>step</th>
-                <th>series</th>
-                <th>default quantity</th>
-                <th>default unit</th>
-                <th>target</th>
-                <th>priority</th>
-                <th>program</th>
+                <th class="big-screens">Step</th>
+                <th>Name</th>
+                <th class="big-screens"><span class="fa fa-exclamation"></span></th>
+                <th class="big-screens">Target</th>
+                <th>Last</th>
+                <th>Add</th>
             </tr>
             <tr
-                v-for="exercise in shared.exercises | exercisesFilter"
-                class="hover"
+                    v-for="exercise in shared.exercises | filterExercises"
+                    v-bind:class="{'stretch': exercise.stretch}"
+                    class="hover pointer"
             >
-                <td v-on:click="showExercisePopup(exercise)" class="pointer">@{{ exercise.name }}</td>
-                <td v-on:click="showExercisePopup(exercise)" class="pointer">@{{ exercise.description }}</td>
-                <td v-on:click="showExercisePopup(exercise)" class="pointer">@{{ exercise.stepNumber }}</td>
-                <td v-on:click="showExercisePopup(exercise)" class="pointer">@{{ exercise.series.name }}</td>
-                <td v-on:click="showExercisePopup(exercise)" class="pointer">@{{ exercise.defaultQuantity }}</td>
-                <td v-on:click="showExercisePopup(exercise)" class="pointer">@{{ exercise.defaultUnit.data.name }}</td>
-                <td v-on:click="showExercisePopup(exercise)" class="pointer">@{{ exercise.target }}</td>
-                <td v-on:click="showExercisePopup(exercise)" class="pointer">@{{ exercise.priority }}</td>
-                <td v-on:click="showExercisePopup(exercise)" class="pointer">@{{ exercise.program.name }}</td>
+                <td v-on:click="showExercisePopup(exercise)" class="big-screens">@{{ exercise.stepNumber }}</td>
+                <td v-on:click="showExercisePopup(exercise)">@{{ exercise.name }}</td>
+                <td v-on:click="showExercisePopup(exercise)" class="big-screens">@{{ exercise.priority }}</td>
+                <td v-on:click="showExercisePopup(exercise)" class="big-screens">@{{ exercise.target }}</td>
+                <td v-on:click="showExercisePopup(exercise)">@{{ exercise.lastDone }}</td>
+                <td>
+                    <button
+                        v-on:click="insertExerciseSet(exercise)"
+                        class="btn btn-default btn-xs"
+                    >
+                        <i class="fa fa-plus"></i>
+                        @{{ exercise.defaultQuantity }}
+                        @{{ exercise.defaultUnit.data.name }}
+                    </button>
+                </td>
             </tr>
         </table>
+
     </div>
 
-</div>
 
 </script>
