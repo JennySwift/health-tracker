@@ -48,7 +48,7 @@
                     </td>
                 </tr>
                 <tr
-                        v-for="exercise in series | filterExercises"
+                        v-for="exercise in series"
                         v-bind:class="{'stretch': exercise.stretch}"
                         class="hover pointer"
                 >

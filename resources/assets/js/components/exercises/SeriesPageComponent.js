@@ -25,7 +25,7 @@ var SeriesPage = Vue.component('series-page', {
     computed: {
         exercisesBySeries: function () {
             var that = this;
-            var groupedExercises = this.shared.exercises;
+            var groupedExercises = this.filterExercises(this.shared.exercises);
 
             if (!this.showStretches) {
                 groupedExercises = _.filter(groupedExercises, function (exercise) {
@@ -76,12 +76,14 @@ var SeriesPage = Vue.component('series-page', {
                 return filteredIn;
             });
         },
+    },
+    methods: {
 
         filterExercises: function (exercises) {
             var that = this;
 
             //Sort
-            exercises = _.chain(exercises).sortBy('priority').sortBy('stepNumber').value();
+            exercises = _.chain(exercises).sortBy('stepNumber').sortBy('priority').sortBy('lastDone').value();
 
             //Filter
             return exercises.filter(function (exercise) {
@@ -94,9 +96,7 @@ var SeriesPage = Vue.component('series-page', {
 
                 return filteredIn;
             });
-        }
-    },
-    methods: {
+        },
 
         /**
          *
