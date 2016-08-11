@@ -24314,6 +24314,7 @@ var SeriesPage = Vue.component('series-page', {
             };
 
             this.$http.post('/api/exerciseEntries', data, function (response) {
+                exercise.lastDone = 0;
                 $.event.trigger('provide-feedback', ['Set added', 'success']);
                 $.event.trigger('get-exercise-entries-for-the-day');
                 $.event.trigger('hide-loading');
