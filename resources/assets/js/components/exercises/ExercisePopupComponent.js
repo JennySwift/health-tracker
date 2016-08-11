@@ -18,17 +18,7 @@ var ExercisePopup = Vue.component('exercise-popup', {
 
             this.$http.put('/api/exercises/' + this.selectedExercise.id, data, function (response) {
                     this.selectedExercise = response.data;
-                    var index = _.indexOf(this.exercises, _.findWhere(this.exercises, {id: this.selectedExercise.id}));
-
-                    this.exercises[index].name = response.data.name;
-                    this.exercises[index].description = response.data.description;
-                    this.exercises[index].step = response.data.step;
-                    this.exercises[index].series = response.data.series;
-                    this.exercises[index].defaultQuantity = response.data.defaultQuantity;
-                    this.exercises[index].defaultUnit = response.data.defaultUnit;
-                    this.exercises[index].target = response.data.target;
-                    this.exercises[index].priority = response.data.priority;
-                    this.exercises[index].program = response.data.program;
+                    store.updateExercise(response.data);
 
 
                     this.showPopup = false;

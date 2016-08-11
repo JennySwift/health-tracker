@@ -20,7 +20,7 @@
 
         <exercise-popup
                 :selected-exercise="selectedExercise"
-                :exercises.sync="selectedSeries.exercises.data"
+                :exercises.sync="shared.exercises"
                 :exercise-series="exerciseSeries"
                 :programs="programs"
                 :units="units"
@@ -49,7 +49,7 @@
                 </tr>
                 <tr
                         v-for="exercise in series | filterExercises"
-                        class="hover"
+                        class="hover pointer"
                 >
                     <td v-on:click="showExercisePopup(exercise)">@{{ exercise.stepNumber }}</td>
                     <td v-on:click="showExercisePopup(exercise)">@{{ exercise.name }}</td>

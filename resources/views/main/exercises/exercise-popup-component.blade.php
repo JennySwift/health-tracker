@@ -130,6 +130,7 @@
 
 			<div class="buttons">
 				<button v-on:click="deleteExercise()" class="btn btn-danger save">Delete</button>
+				<button v-on:click="showPopup = false" class="btn btn-default">Cancel</button>
 				<button v-on:click="updateExercise()" class="btn btn-success save">Save</button>
 			</div>
 
