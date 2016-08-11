@@ -84,7 +84,8 @@ class ExercisesTest extends TestCase {
             'step_number' => 2,
             'default_quantity' => 2,
             'default_unit_id' => 2,
-            'target' => '2 reps'
+            'target' => '2 reps',
+            'stretch' => 1
         ];
 
         $response = $this->call('POST', '/api/exercises', $exercise);
@@ -99,6 +100,7 @@ class ExercisesTest extends TestCase {
         $this->assertEquals('kangaroo', $content['name']);
         $this->assertEquals('koala', $content['description']);
         $this->assertEquals(2, $content['priority']);
+        $this->assertEquals(1, $content['stretch']);
         $this->assertEquals(2, $content['program']['id']);
         $this->assertEquals(2, $content['series']['id']);
         $this->assertEquals(2, $content['stepNumber']);
@@ -162,7 +164,8 @@ class ExercisesTest extends TestCase {
             'default_unit_id' => 2,
             'program_id' => 2,
             'target' => 'something else',
-            'priority' => 9
+            'priority' => 9,
+            'stretch' => 1
         ]);
 //        dd($response);
         $content = json_decode($response->getContent(), true)['data'];
@@ -172,6 +175,7 @@ class ExercisesTest extends TestCase {
 
         $this->assertEquals(1, $content['id']);
         $this->assertEquals('numbat', $content['name']);
+        $this->assertEquals(1, $content['stretch']);
         $this->assertEquals(2, $content['program']['id']);
         $this->assertEquals('frog', $content['description']);
         $this->assertEquals(2, $content['stepNumber']);
@@ -191,6 +195,31 @@ class ExercisesTest extends TestCase {
 
         $this->assertEquals(200, $response->getStatusCode());
     }
+
+    /**
+     * @test
+     * @return void
+     */
+    public function it_can_set_stretch_to_false_for_an_exercise()
+    {
+        $this->logInUser();
+
+        $exercise = Exercise::forCurrentUser()->where('stretch', 1)->first();
+
+        $response = $this->call('PUT', '/api/exercises/'.$exercise->id, [
+            'stretch' => 0
+        ]);
+//        dd($response);
+        $content = json_decode($response->getContent(), true)['data'];
+//        dd($content);
+
+        $this->checkExerciseKeysExist($content);
+
+        $this->assertEquals(0, $content['stretch']);
+
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
 
     /**
      * @test

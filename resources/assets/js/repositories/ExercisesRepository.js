@@ -14,7 +14,8 @@ var ExercisesRepository = {
             default_quantity: exercise.defaultQuantity,
             target: exercise.target,
             program_id: exercise.program.id,
-            series_id: exercise.series.id
+            series_id: exercise.series.id,
+            stretch: HelpersRepository.convertBooleanToInteger(exercise.stretch)
         };
 
         if (exercise.defaultUnit.data) {

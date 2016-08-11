@@ -27,4 +27,16 @@ var HelpersRepository = {
     findIndexById: function (array, id) {
         return _.indexOf(array, _.findWhere(array, {id: id}));
     },
+
+    /**
+     *
+     * @param boolean
+     * @returns {number}
+     */
+    convertBooleanToInteger: function (boolean) {
+        if (boolean) {
+            return 1;
+        }
+        return 0;
+    },
 };

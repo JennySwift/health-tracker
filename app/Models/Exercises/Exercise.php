@@ -22,7 +22,7 @@ class Exercise extends Model {
     /**
      * @var array
      */
-    protected $fillable = ['name', 'default_unit_id', 'description', 'default_quantity', 'step_number', 'series_id', 'target', 'priority'];
+    protected $fillable = ['name', 'default_unit_id', 'description', 'default_quantity', 'step_number', 'series_id', 'target', 'priority', 'stretch'];
 
     /**
      * @var array

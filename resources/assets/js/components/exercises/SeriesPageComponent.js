@@ -18,15 +18,27 @@ var SeriesPage = Vue.component('series-page', {
             programs: [],
             shared: store.state,
             selectedExercise: ExercisesRepository.selectedExercise,
+            showStretches: false
         };
     },
     components: {},
     computed: {
         exercisesBySeries: function () {
             var that = this;
-            var groupedExercises = _.groupBy(this.shared.exercises, function (exercise) {
+            var groupedExercises = this.shared.exercises;
+
+            if (!this.showStretches) {
+                groupedExercises = _.filter(groupedExercises, function (exercise) {
+                    return !exercise.stretch;
+                });
+            }
+
+            groupedExercises = _.groupBy(groupedExercises, function (exercise) {
                 return exercise.series.name;
             });
+
+
+
             console.log(groupedExercises);
             return groupedExercises;
         },

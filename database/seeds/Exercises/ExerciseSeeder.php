@@ -72,6 +72,23 @@ class ExerciseSeeder extends Seeder {
             ],
         ];
 
+        $flexibility = [
+            [
+                'name' => 'hamstrings',
+                'defaultQuantity' => 20,
+                'description' => '',
+                'priority' => 2,
+                'stretch' => 1
+            ],
+            [
+                'name' => 'calves',
+                'defaultQuantity' => 10,
+                'description' => 'great stretch',
+                'priority' => 1,
+                'stretch' => 1
+            ]
+        ];
+
         $users = User::all();
 
         foreach($users as $user) {
@@ -100,6 +117,12 @@ class ExerciseSeeder extends Seeder {
                 Series::where('user_id', $this->user->id)->where('name', 'gymnastic rings')->first()
             );
 
+            $this->insertExercisesInSeries(
+                $flexibility,
+                Unit::find($exercise_unit_ids[1]),
+                Series::where('user_id', $this->user->id)->where('name', 'flexibility')->first()
+            );
+
         }
 
 	}
@@ -118,13 +141,15 @@ class ExerciseSeeder extends Seeder {
 
         foreach ($exercises as $exercise) {
             $index++;
+            $stretch = isset($exercise['stretch']) ? 1 : 0;
             $exercise = new Exercise([
                 'name' => $exercise['name'],
                 'description' => $exercise['description'],
                 'default_quantity' => $exercise['defaultQuantity'],
                 'step_number' => $index,
                 'target' => '3 * 10',
-                'priority' => $exercise['priority']
+                'priority' => $exercise['priority'],
+                'stretch' => $stretch
             ]);
 
             $exercise->user()->associate($this->user);

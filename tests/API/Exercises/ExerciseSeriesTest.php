@@ -43,7 +43,7 @@ class ExerciseSeriesTest extends TestCase {
 
         $this->checkSeriesKeysExist($content[0]);
 
-        $this->assertEquals('gymnastic rings', $content[0]['name']);
+        $this->assertEquals('flexibility', $content[0]['name']);
 
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
 

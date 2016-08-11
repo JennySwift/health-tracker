@@ -67,6 +67,14 @@
 								class="form-control">
 					</div>
 
+					<div>
+						<h5 class="center">Stretch</h5>
+						<input
+								v-model="selectedExercise.stretch"
+								type="checkbox"
+								class="form-control">
+					</div>
+
 				</div>
 
 				<div class="flex">

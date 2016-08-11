@@ -97,6 +97,7 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
         $this->assertArrayHasKey('lastDone', $exercise);
         $this->assertArrayHasKey('priority', $exercise);
         $this->assertArrayHasKey('target', $exercise);
+        $this->assertArrayHasKey('stretch', $exercise);
     }
 
     /**
