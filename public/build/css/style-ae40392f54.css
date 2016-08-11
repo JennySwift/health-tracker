@@ -390,6 +390,8 @@ body.browser-height {
       border-top-right-radius: 4px; }
 
 @media (max-width: 320px) {
+  #exercise-series .series-name td {
+    padding: 3px 0; }
   #exercise-series td {
     padding: 1px 0; }
   #exercise-series .big-screens {
