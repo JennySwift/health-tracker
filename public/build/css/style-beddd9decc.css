@@ -355,6 +355,11 @@ body.browser-height {
   background: black;
   color: white;
   font-weight: bold; }
+  #exercise-series .series-name td {
+    text-align: center; }
+
+#exercise-series td {
+  text-align: left; }
 
 #exercise-series .series-exercises-container {
   display: -webkit-flex;
@@ -383,7 +388,9 @@ body.browser-height {
 
 @media (max-width: 320px) {
   #exercise-series td {
-    padding: 1px 0; } }
+    padding: 1px 0; }
+  #exercise-series .big-screens {
+    display: none; } }
 
 #exercise-popup h3:first-child {
   margin-top: 0;

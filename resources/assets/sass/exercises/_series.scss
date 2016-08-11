@@ -16,6 +16,12 @@
         background: black;
         color: white;
         font-weight: bold;
+        td {
+            text-align: center;
+        }
+    }
+    td {
+        text-align: left;
     }
     .series-exercises-container {
         display: flex;
@@ -62,6 +68,9 @@
     @media (max-width: $breakpoint1) {
         td {
             padding: 1px 0;
+        }
+        .big-screens {
+            display: none;
         }
     }
 }

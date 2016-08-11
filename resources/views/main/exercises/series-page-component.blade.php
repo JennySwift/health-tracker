@@ -33,7 +33,7 @@
                 <th>Step</th>
                 <th>Name</th>
                 <th><span class="fa fa-exclamation"></span></th>
-                <th>Target</th>
+                <th class="big-screens">Target</th>
                 <th>Last</th>
                 <th>Add</th>
             </tr>
@@ -54,7 +54,7 @@
                     <td v-on:click="showExercisePopup(exercise)">@{{ exercise.stepNumber }}</td>
                     <td v-on:click="showExercisePopup(exercise)">@{{ exercise.name }}</td>
                     <td v-on:click="showExercisePopup(exercise)">@{{ exercise.priority }}</td>
-                    <td v-on:click="showExercisePopup(exercise)">@{{ exercise.target }}</td>
+                    <td v-on:click="showExercisePopup(exercise)" class="big-screens">@{{ exercise.target }}</td>
                     <td v-on:click="showExercisePopup(exercise)">@{{ exercise.lastDone }}</td>
                     <td>
                         <button
