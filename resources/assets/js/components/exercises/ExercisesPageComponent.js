@@ -5,7 +5,6 @@ var ExercisesPage = Vue.component('exercises-page', {
             date: DatesRepository.setDate(this.date),
             exerciseSeries: [],
             exerciseSeriesHistory: [],
-            priorityFilter: 1,
             showNewSeriesFields: false,
             showNewExerciseFields: false,
             selectedSeries: {
@@ -19,10 +18,10 @@ var ExercisesPage = Vue.component('exercises-page', {
             shared: store.state,
             selectedExercise: ExercisesRepository.selectedExercise,
             showStretches: false,
-            // filterByName: '',
-            // filterByDescription: '',
-            // filterByPriority: '',
-            // filterBySeries: '',
+            filterByName: '',
+            filterByDescription: '',
+            filterByPriority: 1,
+            filterBySeries: '',
         };
     },
     components: {},
@@ -48,18 +47,6 @@ var ExercisesPage = Vue.component('exercises-page', {
         filterExercises: function (exercises) {
             var that = this;
 
-            // exercises = exercises.sort(
-            //     firstBy(function (exercise) {
-            //         return exercise.stepNumber;
-            //     })
-            //         // .thenBy("population")
-            //         // .thenBy("id")
-            // );
-
-            // exercises = exercises.sort(function (exercise) {
-            //     return exercise.lastDone;
-            // });
-            //
             //Sort
             exercises = _.chain(exercises)
                 .sortBy(function (exercise) {return exercise.stepNumber})
@@ -79,46 +66,37 @@ var ExercisesPage = Vue.component('exercises-page', {
                 var filteredIn = true;
 
                 //Priority filter
-                if (that.priorityFilter && exercise.priority != that.priorityFilter) {
+                if (that.filterByPriority && exercise.priority != that.filterByPriority) {
                     filteredIn = false;
                 }
 
+                //Name filter
+                if (that.filterByName && exercise.name.indexOf(that.filterByName) === -1) {
+                    filteredIn = false;
+                }
+
+                //Description filter
+                if (exercise.description && exercise.description.indexOf(that.filterByDescription) === -1) {
+                    filteredIn = false;
+                }
+
+                else if (!exercise.description && that.filterByDescription !== '') {
+                    filteredIn = false;
+                }
+
+                //Stretches files
                 if (!that.showStretches && exercise.stretch) {
+                    filteredIn = false;
+                }
+
+                //Series filter
+                if (that.filterBySeries && exercise.series.name != that.filterBySeries && that.filterBySeries !== 'all') {
                     filteredIn = false;
                 }
 
                 return filteredIn;
             });
         },
-
-        // exercisesFilter: function (exercises) {
-        //     var that = this;
-        //     return exercises.filter(function (exercise) {
-        //         //Name filter
-        //         var show = exercise.name.indexOf(that.filterByName) !== -1;
-        //
-        //         //Description filter
-        //         if (exercise.description && exercise.description.indexOf(that.filterByDescription) === -1) {
-        //             show = false;
-        //         }
-        //
-        //         else if (!exercise.description && that.filterByDescription !== '') {
-        //             show = false;
-        //         }
-        //
-        //         //Priority filter
-        //         if (that.filterByPriority && exercise.priority != that.filterByPriority) {
-        //             show = false;
-        //         }
-        //
-        //         //Series filter
-        //         if (that.filterBySeries && exercise.series.name != that.filterBySeries) {
-        //             show = false;
-        //         }
-        //
-        //         return show;
-        //     });
-        // },
         
         filterSeries: function (series) {
             var that = this;

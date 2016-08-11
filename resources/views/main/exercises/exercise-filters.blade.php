@@ -35,11 +35,12 @@
                 id="filter-by-series"
                 class="form-control"
             >
+                <option value="all">All</option>
                 <option
-                    v-for="series in series"
-                    v-bind:value="series"
+                    v-for="series in exerciseSeries"
+                    v-bind:value="series.name"
                 >
-                    @{{ series }}
+                    @{{ series.name }}
                 </option>
             </select>
         </div>
@@ -54,6 +55,17 @@
                 placeholder="priority"
                 class="form-control"
             >
+        </div>
+
+        <div class="form-group">
+            <div class="checkbox-container">
+                <input
+                        v-model="showStretches"
+                        id="show-stretches"
+                        type="checkbox"
+                >
+                <label for="show-stretches-">Show stretches</label>
+            </div>
         </div>
 
     </div>

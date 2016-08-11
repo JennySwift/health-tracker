@@ -38,19 +38,6 @@
     >
     </new-exercise>
 
-    <div class="filters">
-        <input v-model="priorityFilter" type="text" placeholder="filter by priority">
-
-        <div class="checkbox-container">
-            <input
-                v-model="showStretches"
-                id="show-stretches"
-                type="checkbox"
-            >
-            <label for="show-stretches-">Show stretches</label>
-        </div>
-    </div>
-
 </div>
 
 <div>

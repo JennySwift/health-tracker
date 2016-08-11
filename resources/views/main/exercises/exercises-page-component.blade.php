@@ -2,7 +2,7 @@
 
     <div id="exercise-series">
 
-        {{--@include('main.exercises.exercise-filters')--}}
+        @include('main.exercises.exercise-filters')
 
         <series-history-popup
                 :exercise-series-history="exerciseSeriesHistory"
