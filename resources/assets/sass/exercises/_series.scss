@@ -58,4 +58,10 @@
             //}
         }
     }
+
+    @media (max-width: $breakpoint1) {
+        td {
+            padding: 1px 0;
+        }
+    }
 }

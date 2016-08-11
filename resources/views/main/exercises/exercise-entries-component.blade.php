@@ -10,10 +10,11 @@
         <table class="table table-bordered">
             <caption>exercise entries</caption>
             <tr>
-                <th>exercise</th>
-                <th>description</th>
-                <th>sets</th>
-                <th>total</th>
+                <th>Exercise</th>
+                <th>Description</th>
+                <th>Sets</th>
+                <th>Total</th>
+                <th>Add</th>
             </tr>
 
             <tr v-for="entry in exerciseEntries">

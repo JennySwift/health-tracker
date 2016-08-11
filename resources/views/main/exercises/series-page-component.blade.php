@@ -32,9 +32,9 @@
             <tr>
                 <th>Step</th>
                 <th>Name</th>
-                <th>Priority</th>
+                <th><span class="fa fa-exclamation"></span></th>
                 <th>Target</th>
-                <th>Days ago</th>
+                <th>Last</th>
                 <th>Add</th>
             </tr>
             <tbody v-for="series in exercisesBySeries">
@@ -57,7 +57,13 @@
                     <td v-on:click="showExercisePopup(exercise)">@{{ exercise.target }}</td>
                     <td v-on:click="showExercisePopup(exercise)">@{{ exercise.lastDone }}</td>
                     <td>
-                        <button v-on:click="insertExerciseSet(exercise)" class="btn btn-default btn-xs"><i class="fa fa-plus"></i> @{{ exercise.defaultQuantity }} @{{ exercise.defaultUnit.data.name }}</button>
+                        <button
+                            v-on:click="insertExerciseSet(exercise)"
+                            class="btn btn-default btn-xs">
+                            <i class="fa fa-plus"></i>
+                            @{{ exercise.defaultQuantity }}
+                            @{{ exercise.defaultUnit.data.name }}
+                        </button>
                     </td>
                 </tr>
             </tbody>
