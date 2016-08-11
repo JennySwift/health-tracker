@@ -1,7 +1,7 @@
 <div id="exercise-filters" class="margin-bottom">
-    <h5>Filters</h5>
+    <button v-on:click="showFilters = !showFilters" class="btn btn-default btn-sm">Filters</button>
     
-    <div class="flex">
+    <div v-show="showFilters" class="flex">
 
         <div class="form-group">
             <label for="filter-by-name">Name</label>

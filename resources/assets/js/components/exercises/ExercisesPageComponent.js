@@ -22,6 +22,7 @@ var ExercisesPage = Vue.component('exercises-page', {
             filterByDescription: '',
             filterByPriority: 1,
             filterBySeries: '',
+            showFilters: false
         };
     },
     components: {},
