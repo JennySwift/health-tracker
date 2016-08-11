@@ -12,7 +12,8 @@ var ExercisesPage = Vue.component('exercises-page', {
             filterByName: '',
             filterByDescription: '',
             filterByPriority: '',
-            filterBySeries: ''
+            filterBySeries: '',
+            shared: store.state
         };
     },
     components: {},
@@ -56,20 +57,6 @@ var ExercisesPage = Vue.component('exercises-page', {
             this.$http.get('/api/exerciseSeries', function (response) {
                 this.series = _.pluck(response, 'name');
                 this.exerciseSeries = response;
-                $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
-        },
-
-        /**
-        *
-        */
-        getExercises: function () {
-            $.event.trigger('show-loading');
-            this.$http.get('/api/exercises', function (response) {
-                this.exercises = response;
                 $.event.trigger('hide-loading');
             })
             .error(function (response) {
@@ -143,6 +130,5 @@ var ExercisesPage = Vue.component('exercises-page', {
         this.getSeries();
         this.getPrograms();
         this.getUnits();
-        this.getExercises();
     }
 });

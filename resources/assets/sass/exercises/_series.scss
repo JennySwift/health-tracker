@@ -12,6 +12,11 @@
             cursor: pointer;
         }
     }
+    .series-name {
+        background: black;
+        color: white;
+        font-weight: bold;
+    }
     .series-exercises-container {
         display: flex;
         justify-content: center;

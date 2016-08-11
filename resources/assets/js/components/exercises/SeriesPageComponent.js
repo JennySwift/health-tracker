@@ -15,10 +15,22 @@ var SeriesPage = Vue.component('series-page', {
             },
             showExerciseEntryInputs: false,
             units: [],
-            programs: []
+            programs: [],
+            shared: store.state,
+            selectedExercise: ExercisesRepository.selectedExercise,
         };
     },
     components: {},
+    computed: {
+        exercisesBySeries: function () {
+            var that = this;
+            var groupedExercises = _.groupBy(this.shared.exercises, function (exercise) {
+                return exercise.series.name;
+            });
+            console.log(groupedExercises);
+            return groupedExercises;
+        },
+    },
     filters: {
         filterSeries: function (series) {
             var that = this;
@@ -51,9 +63,64 @@ var SeriesPage = Vue.component('series-page', {
 
                 return filteredIn;
             });
+        },
+
+        filterExercises: function (exercises) {
+            var that = this;
+
+            //Sort
+            exercises = _.chain(exercises).sortBy('priority').sortBy('stepNumber').value();
+
+            //Filter
+            return exercises.filter(function (exercise) {
+                var filteredIn = true;
+
+                //Priority filter
+                if (that.priorityFilter && exercise.priority != that.priorityFilter) {
+                    filteredIn = false;
+                }
+
+                return filteredIn;
+            });
         }
     },
     methods: {
+
+        /**
+         *
+         */
+        insertExerciseSet: function (exercise) {
+            $.event.trigger('show-loading');
+            var data = {
+                date: moment().format('YYYY-MM-DD'),
+                exercise_id: exercise.id,
+                exerciseSet: true
+            };
+
+            this.$http.post('/api/exerciseEntries', data, function (response) {
+                $.event.trigger('provide-feedback', ['Set added', 'success']);
+                $.event.trigger('get-exercise-entries-for-the-day');
+                $.event.trigger('hide-loading');
+            })
+                .error(function (response) {
+                    HelpersRepository.handleResponseError(response);
+                });
+        },
+
+        /**
+         *
+         */
+        showExercisePopup: function (exercise) {
+            $.event.trigger('show-loading');
+            this.$http.get('/api/exercises/' + exercise.id, function (response) {
+                this.selectedExercise = response;
+                $.event.trigger('show-exercise-popup');
+                $.event.trigger('hide-loading');
+            })
+                .error(function (response) {
+                    HelpersRepository.handleResponseError(response);
+                });
+        },
 
         /**
          * For the series filter
@@ -98,8 +165,13 @@ var SeriesPage = Vue.component('series-page', {
         /**
         *
         */
-        getExerciseSeriesHistory: function (series) {
+        getExerciseSeriesHistory: function (key) {
             $.event.trigger('show-loading');
+
+            //Find the series. The exercises were grouped according to series, so all we have is the series name (key).
+            var series = _.find(this.exerciseSeries, function (series) {
+                return series.name === key;
+            });
 
             this.$http.get('api/seriesEntries/' + series.id, function (response) {
                 //For displaying the name of the series in the popup
@@ -130,7 +202,12 @@ var SeriesPage = Vue.component('series-page', {
         /**
         *
         */
-        showExerciseSeriesPopup: function (series) {
+        showExerciseSeriesPopup: function (key) {
+            //Find the series. The exercises were grouped according to series, so all we have is the series name (key).
+            var series = _.find(this.exerciseSeries, function (series) {
+                return series.name === key;
+            });
+
             $.event.trigger('show-loading');
             this.$http.get('/api/exerciseSeries/' + series.id, function (response) {
                 this.selectedSeries = response;

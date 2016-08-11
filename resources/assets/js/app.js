@@ -1,5 +1,7 @@
 var App = Vue.component('app', {
-
+    ready: function () {
+        store.getExercises(this);
+    }
 });
 
 var router = new VueRouter({

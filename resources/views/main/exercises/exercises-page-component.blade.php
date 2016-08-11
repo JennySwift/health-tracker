@@ -46,7 +46,7 @@
                 <th>program</th>
             </tr>
             <tr
-                v-for="exercise in exercises | exercisesFilter"
+                v-for="exercise in shared.exercises | exercisesFilter"
                 class="hover"
             >
                 <td v-on:click="showExercisePopup(exercise)" class="pointer">@{{ exercise.name }}</td>

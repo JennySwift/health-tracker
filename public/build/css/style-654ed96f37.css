@@ -351,6 +351,11 @@ body.browser-height {
 #exercise-series .dropdown-menu a {
   cursor: pointer; }
 
+#exercise-series .series-name {
+  background: black;
+  color: white;
+  font-weight: bold; }
+
 #exercise-series .series-exercises-container {
   display: -webkit-flex;
   display: -ms-flexbox;
