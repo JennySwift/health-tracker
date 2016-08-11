@@ -30,7 +30,7 @@
 
         <table class="table table-bordered">
             <tr>
-                <th>Step</th>
+                <th class="big-screens">Step</th>
                 <th>Name</th>
                 <th><span class="fa fa-exclamation"></span></th>
                 <th class="big-screens">Target</th>
@@ -52,7 +52,7 @@
                         v-bind:class="{'stretch': exercise.stretch}"
                         class="hover pointer"
                 >
-                    <td v-on:click="showExercisePopup(exercise)">@{{ exercise.stepNumber }}</td>
+                    <td v-on:click="showExercisePopup(exercise)" class="big-screens">@{{ exercise.stepNumber }}</td>
                     <td v-on:click="showExercisePopup(exercise)">@{{ exercise.name }}</td>
                     <td v-on:click="showExercisePopup(exercise)">@{{ exercise.priority }}</td>
                     <td v-on:click="showExercisePopup(exercise)" class="big-screens">@{{ exercise.target }}</td>
