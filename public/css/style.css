@@ -361,6 +361,9 @@ body.browser-height {
 #exercise-series td {
   text-align: left; }
 
+#exercise-series .stretch {
+  background: #ffcab6; }
+
 #exercise-series .series-exercises-container {
   display: -webkit-flex;
   display: -ms-flexbox;

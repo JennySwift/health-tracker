@@ -49,6 +49,7 @@
                 </tr>
                 <tr
                         v-for="exercise in series | filterExercises"
+                        v-bind:class="{'stretch': exercise.stretch}"
                         class="hover pointer"
                 >
                     <td v-on:click="showExercisePopup(exercise)">@{{ exercise.stepNumber }}</td>
