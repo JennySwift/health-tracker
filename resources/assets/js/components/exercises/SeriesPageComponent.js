@@ -5,7 +5,7 @@ var SeriesPage = Vue.component('series-page', {
             date: DatesRepository.setDate(this.date),
             exerciseSeries: [],
             exerciseSeriesHistory: [],
-            priorityFilter: '',
+            priorityFilter: 1,
             showNewSeriesFields: false,
             showNewExerciseFields: false,
             selectedSeries: {
