@@ -23288,7 +23288,9 @@ var NewSleepEntry = Vue.component('new-sleep-entry', {
     }
 });
 
-var Weight = Vue.component('weight', {
+var Vue = require('vue');
+
+module.exports = {
     template: '#weight-template',
     data: function () {
         return {
@@ -23319,8 +23321,8 @@ var Weight = Vue.component('weight', {
         },
 
         /**
-        *
-        */
+         *
+         */
         insertWeight: function () {
             $.event.trigger('show-loading');
             var data = {
@@ -23334,14 +23336,14 @@ var Weight = Vue.component('weight', {
                 $.event.trigger('provide-feedback', ['Weight created', 'success']);
                 $.event.trigger('hide-loading');
             })
-            .error(function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
+                .error(function (response) {
+                    HelpersRepository.handleResponseError(response);
+                });
         },
 
         /**
-        *
-        */
+         *
+         */
         updateWeight: function () {
             $.event.trigger('show-loading');
 
@@ -23355,9 +23357,9 @@ var Weight = Vue.component('weight', {
                 $.event.trigger('provide-feedback', ['Weight updated', 'success']);
                 $.event.trigger('hide-loading');
             })
-            .error(function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
+                .error(function (response) {
+                    HelpersRepository.handleResponseError(response);
+                });
         },
 
         /**
@@ -23385,9 +23387,9 @@ var Weight = Vue.component('weight', {
         getWeightForTheDay: function () {
             $.event.trigger('show-loading');
             this.$http.get('api/weights/' + this.date.sql, function (response) {
-                    this.weight = response;
-                    $.event.trigger('hide-loading');
-                })
+                this.weight = response;
+                $.event.trigger('hide-loading');
+            })
                 .error(function (response) {
                     HelpersRepository.handleResponseError(response);
                 });
@@ -23423,7 +23425,7 @@ var Weight = Vue.component('weight', {
         this.getWeightForTheDay();
         this.listen();
     }
-});
+};
 
 var EntriesForSpecificExerciseAndDateAndUnitPopup = Vue.component('entries-for-specific-exercise-and-date-and-unit-popup', {
     template: '#entries-for-specific-exercise-and-date-and-unit-popup-template',
@@ -25902,280 +25904,6 @@ var TemporaryRecipePopup = Vue.component('temporary-recipe-popup', {
     }
 });
 
-var Autocomplete = Vue.component('autocomplete', {
-    template: '#autocomplete-template',
-    data: function () {
-        return {
-            autocompleteOptions: [],
-            chosenOption: {
-                name: ''
-            },
-            showDropdown: false,
-            currentIndex: 0
-        };
-    },
-    components: {},
-    methods: {
-
-        /**
-         *
-         * @param keycode
-         */
-        respondToKeyup: function (keycode) {
-            if (keycode !== 13 && keycode !== 38 && keycode !== 40 && keycode !== 39 && keycode !== 37) {
-                //not enter, up, down, right or left arrows
-                this.populateOptions();
-            }
-            else if (keycode === 38) {
-                //up arrow pressed
-                if (this.currentIndex !== 0) {
-                    this.currentIndex--;
-                }
-            }
-            else if (keycode === 40) {
-                //down arrow pressed
-                if (this.autocompleteOptions.length - 1 !== this.currentIndex) {
-                    this.currentIndex++;
-                }
-            }
-            else if (keycode === 13) {
-                this.respondToEnter();
-            }
-        },
-
-        /**
-         *
-         */
-        populateOptions: function () {
-            //fill the dropdown
-            $.event.trigger('show-loading');
-            this.$http.get(this.url + '?typing=' + this.chosenOption.name, function (response) {
-                    this.autocompleteOptions = response.data;
-                    this.showDropdown = true;
-                    this.currentIndex = 0;
-                    $.event.trigger('hide-loading');
-                })
-                .error(function (response) {
-                    HelpersRepository.handleResponseError(response);
-                });
-        },
-
-        /**
-         *
-         */
-        respondToEnter: function () {
-            if (this.showDropdown) {
-                //enter is for the autocomplete
-                this.selectOption();
-            }
-            else {
-                //enter is to add the entry
-                this.insertItemFunction();
-            }
-        },
-
-        /**
-         *
-         */
-        selectOption: function () {
-            this.chosenOption = this.autocompleteOptions[this.currentIndex];
-            this.showDropdown = false;
-            if (this.idToFocusAfterAutocomplete) {
-                var that = this;
-                setTimeout(function () {
-                    $("#" + that.idToFocusAfterAutocomplete).focus();
-                }, 100);
-            }
-            this.$dispatch('option-chosen', this.chosenOption);
-        },
-
-        /**
-         *
-         * @param response
-         */
-        handleResponseError: function (response) {
-            $.event.trigger('response-error', [response]);
-            this.showLoading = false;
-        }
-    },
-    props: [
-        'url',
-        'autocompleteField',
-        'insertItemFunction',
-        'idToFocusAfterAutocomplete'
-    ],
-    ready: function () {
-
-    }
-});
-
-var DateNavigation = Vue.component('date-navigation', {
-    template: '#date-navigation-template',
-    data: function () {
-        return {
-
-        };
-    },
-    components: {},
-    watch: {
-        'date.typed': function (newValue, oldValue) {
-            this.date.sql = Date.parse(this.date.typed).toString('yyyy-MM-dd');
-            this.date.long = Date.parse(this.date.typed).toString('ddd dd MMM yyyy');
-            $("#date").val(this.date.typed);
-            $.event.trigger('date-changed');
-        }
-    },
-    methods: {
-        /**
-         *
-         * @param $number
-         */
-        goToDate: function ($number) {
-            this.date.typed = DatesRepository.goToDate(this.date.typed, $number);
-        },
-
-        /**
-         *
-         */
-        goToToday: function () {
-            this.date.typed = DatesRepository.today();
-        },
-
-        /**
-         *
-         * @param date
-         * @returns {boolean}
-         */
-        changeDate: function (date) {
-            var date = date || $("#date").val();
-            this.date.typed = DatesRepository.changeDate(date);
-        },
-
-        /**
-         *
-         * @param response
-         */
-        handleResponseError: function (response) {
-            $.event.trigger('response-error', [response]);
-            this.showLoading = false;
-        }
-
-    },
-    props: [
-        'date'
-    ],
-    ready: function () {
-
-    }
-
-});
-
-
-Vue.component('feedback', {
-    template: "#feedback-template",
-    data: function () {
-        return {
-            feedbackMessages: []
-        };
-    },
-    methods: {
-        listen: function () {
-            var that = this;
-            $(document).on('provide-feedback', function (event, message, type) {
-                that.provideFeedback(message, type);
-            });
-            $(document).on('response-error', function (event, response) {
-                that.provideFeedback(that.handleResponseError(response), 'error');
-            })
-        },
-        provideFeedback: function (message, type) {
-            var newMessage = {
-                message: message,
-                type: type
-            };
-
-            var that = this;
-
-            this.feedbackMessages.push(newMessage);
-
-            setTimeout(function () {
-                that.feedbackMessages = _.without(that.feedbackMessages, newMessage);
-            }, 3000);
-        },
-        handleResponseError: function (response) {
-            if (typeof response !== "undefined") {
-                var $message;
-
-                switch(response.status) {
-                    case 503:
-                        $message = 'Sorry, application under construction. Please try again later.';
-                        break;
-                    case 401:
-                        $message = 'You are not logged in';
-                        break;
-                    case 422:
-                        var html = "<ul>";
-
-                        for (var i = 0; i < response.length; i++) {
-                            var error = response[i];
-                            for (var j = 0; j < error.length; j++) {
-                                html += '<li>' + error[j] + '</li>';
-                            }
-                        }
-
-                        html += "</ul>";
-                        $message = html;
-                        break;
-                    default:
-                        $message = response.error;
-                        break;
-                }
-            }
-            else {
-                $message = 'There was an error';
-            }
-
-            return $message;
-
-        }
-    },
-    events: {
-        'provide-feedback': function (message, type) {
-            this.provideFeedback(message, type);
-        },
-        'response-error': function (response) {
-            this.provideFeedback(this.handleResponseError(response), 'error');
-        }
-    },
-    ready: function () {
-        this.listen();
-    },
-});
-Vue.component('loading', {
-    data: function () {
-        return {
-            showLoading: false
-        };
-    },
-    template: "#loading-template",
-    props: [
-        //'showLoading'
-    ],
-    methods: {
-        listen: function () {
-            var that = this;
-            $(document).on('show-loading', function (event, message, type) {
-                that.showLoading = true;
-            });
-            $(document).on('hide-loading', function (event, message, type) {
-                that.showLoading = false;
-            });
-        }
-    },
-    ready: function () {
-        this.listen();
-    }
-});
 var ActivitiesPage = Vue.component('activities-page', {
     template: '#activities-page-template',
     data: function () {
@@ -26858,6 +26586,282 @@ var TimersPage = Vue.component('timers-page', {
         this.listen();
     }
 });
+var Autocomplete = Vue.component('autocomplete', {
+    template: '#autocomplete-template',
+    data: function () {
+        return {
+            autocompleteOptions: [],
+            chosenOption: {
+                name: ''
+            },
+            showDropdown: false,
+            currentIndex: 0
+        };
+    },
+    components: {},
+    methods: {
+
+        /**
+         *
+         * @param keycode
+         */
+        respondToKeyup: function (keycode) {
+            if (keycode !== 13 && keycode !== 38 && keycode !== 40 && keycode !== 39 && keycode !== 37) {
+                //not enter, up, down, right or left arrows
+                this.populateOptions();
+            }
+            else if (keycode === 38) {
+                //up arrow pressed
+                if (this.currentIndex !== 0) {
+                    this.currentIndex--;
+                }
+            }
+            else if (keycode === 40) {
+                //down arrow pressed
+                if (this.autocompleteOptions.length - 1 !== this.currentIndex) {
+                    this.currentIndex++;
+                }
+            }
+            else if (keycode === 13) {
+                this.respondToEnter();
+            }
+        },
+
+        /**
+         *
+         */
+        populateOptions: function () {
+            //fill the dropdown
+            $.event.trigger('show-loading');
+            this.$http.get(this.url + '?typing=' + this.chosenOption.name, function (response) {
+                    this.autocompleteOptions = response.data;
+                    this.showDropdown = true;
+                    this.currentIndex = 0;
+                    $.event.trigger('hide-loading');
+                })
+                .error(function (response) {
+                    HelpersRepository.handleResponseError(response);
+                });
+        },
+
+        /**
+         *
+         */
+        respondToEnter: function () {
+            if (this.showDropdown) {
+                //enter is for the autocomplete
+                this.selectOption();
+            }
+            else {
+                //enter is to add the entry
+                this.insertItemFunction();
+            }
+        },
+
+        /**
+         *
+         */
+        selectOption: function () {
+            this.chosenOption = this.autocompleteOptions[this.currentIndex];
+            this.showDropdown = false;
+            if (this.idToFocusAfterAutocomplete) {
+                var that = this;
+                setTimeout(function () {
+                    $("#" + that.idToFocusAfterAutocomplete).focus();
+                }, 100);
+            }
+            this.$dispatch('option-chosen', this.chosenOption);
+        },
+
+        /**
+         *
+         * @param response
+         */
+        handleResponseError: function (response) {
+            $.event.trigger('response-error', [response]);
+            this.showLoading = false;
+        }
+    },
+    props: [
+        'url',
+        'autocompleteField',
+        'insertItemFunction',
+        'idToFocusAfterAutocomplete'
+    ],
+    ready: function () {
+
+    }
+});
+
+var DateNavigation = Vue.component('date-navigation', {
+    template: '#date-navigation-template',
+    data: function () {
+        return {
+
+        };
+    },
+    components: {},
+    watch: {
+        'date.typed': function (newValue, oldValue) {
+            this.date.sql = Date.parse(this.date.typed).toString('yyyy-MM-dd');
+            this.date.long = Date.parse(this.date.typed).toString('ddd dd MMM yyyy');
+            $("#date").val(this.date.typed);
+            $.event.trigger('date-changed');
+        }
+    },
+    methods: {
+        /**
+         *
+         * @param $number
+         */
+        goToDate: function ($number) {
+            this.date.typed = DatesRepository.goToDate(this.date.typed, $number);
+        },
+
+        /**
+         *
+         */
+        goToToday: function () {
+            this.date.typed = DatesRepository.today();
+        },
+
+        /**
+         *
+         * @param date
+         * @returns {boolean}
+         */
+        changeDate: function (date) {
+            var date = date || $("#date").val();
+            this.date.typed = DatesRepository.changeDate(date);
+        },
+
+        /**
+         *
+         * @param response
+         */
+        handleResponseError: function (response) {
+            $.event.trigger('response-error', [response]);
+            this.showLoading = false;
+        }
+
+    },
+    props: [
+        'date'
+    ],
+    ready: function () {
+
+    }
+
+});
+
+
+Vue.component('feedback', {
+    template: "#feedback-template",
+    data: function () {
+        return {
+            feedbackMessages: []
+        };
+    },
+    methods: {
+        listen: function () {
+            var that = this;
+            $(document).on('provide-feedback', function (event, message, type) {
+                that.provideFeedback(message, type);
+            });
+            $(document).on('response-error', function (event, response) {
+                that.provideFeedback(that.handleResponseError(response), 'error');
+            })
+        },
+        provideFeedback: function (message, type) {
+            var newMessage = {
+                message: message,
+                type: type
+            };
+
+            var that = this;
+
+            this.feedbackMessages.push(newMessage);
+
+            setTimeout(function () {
+                that.feedbackMessages = _.without(that.feedbackMessages, newMessage);
+            }, 3000);
+        },
+        handleResponseError: function (response) {
+            if (typeof response !== "undefined") {
+                var $message;
+
+                switch(response.status) {
+                    case 503:
+                        $message = 'Sorry, application under construction. Please try again later.';
+                        break;
+                    case 401:
+                        $message = 'You are not logged in';
+                        break;
+                    case 422:
+                        var html = "<ul>";
+
+                        for (var i = 0; i < response.length; i++) {
+                            var error = response[i];
+                            for (var j = 0; j < error.length; j++) {
+                                html += '<li>' + error[j] + '</li>';
+                            }
+                        }
+
+                        html += "</ul>";
+                        $message = html;
+                        break;
+                    default:
+                        $message = response.error;
+                        break;
+                }
+            }
+            else {
+                $message = 'There was an error';
+            }
+
+            return $message;
+
+        }
+    },
+    events: {
+        'provide-feedback': function (message, type) {
+            this.provideFeedback(message, type);
+        },
+        'response-error': function (response) {
+            this.provideFeedback(this.handleResponseError(response), 'error');
+        }
+    },
+    ready: function () {
+        this.listen();
+    },
+});
+Vue.component('loading', {
+    data: function () {
+        return {
+            showLoading: false
+        };
+    },
+    template: "#loading-template",
+    props: [
+        //'showLoading'
+    ],
+    methods: {
+        listen: function () {
+            var that = this;
+            $(document).on('show-loading', function (event, message, type) {
+                that.showLoading = true;
+            });
+            $(document).on('hide-loading', function (event, message, type) {
+                that.showLoading = false;
+            });
+        }
+    },
+    ready: function () {
+        this.listen();
+    }
+});
+var Vue = require('vue');
+
 var App = Vue.component('app', {
     ready: function () {
         store.getExercises(this);

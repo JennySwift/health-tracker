@@ -1,3 +1,5 @@
+var Vue = require('vue');
+
 var App = Vue.component('app', {
     ready: function () {
         store.getExercises(this);

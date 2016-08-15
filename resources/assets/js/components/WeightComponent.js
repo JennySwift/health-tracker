@@ -1,4 +1,6 @@
-var Weight = Vue.component('weight', {
+var Vue = require('vue');
+
+module.exports = {
     template: '#weight-template',
     data: function () {
         return {
@@ -29,8 +31,8 @@ var Weight = Vue.component('weight', {
         },
 
         /**
-        *
-        */
+         *
+         */
         insertWeight: function () {
             $.event.trigger('show-loading');
             var data = {
@@ -44,14 +46,14 @@ var Weight = Vue.component('weight', {
                 $.event.trigger('provide-feedback', ['Weight created', 'success']);
                 $.event.trigger('hide-loading');
             })
-            .error(function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
+                .error(function (response) {
+                    HelpersRepository.handleResponseError(response);
+                });
         },
 
         /**
-        *
-        */
+         *
+         */
         updateWeight: function () {
             $.event.trigger('show-loading');
 
@@ -65,9 +67,9 @@ var Weight = Vue.component('weight', {
                 $.event.trigger('provide-feedback', ['Weight updated', 'success']);
                 $.event.trigger('hide-loading');
             })
-            .error(function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
+                .error(function (response) {
+                    HelpersRepository.handleResponseError(response);
+                });
         },
 
         /**
@@ -95,9 +97,9 @@ var Weight = Vue.component('weight', {
         getWeightForTheDay: function () {
             $.event.trigger('show-loading');
             this.$http.get('api/weights/' + this.date.sql, function (response) {
-                    this.weight = response;
-                    $.event.trigger('hide-loading');
-                })
+                this.weight = response;
+                $.event.trigger('hide-loading');
+            })
                 .error(function (response) {
                     HelpersRepository.handleResponseError(response);
                 });
@@ -133,4 +135,4 @@ var Weight = Vue.component('weight', {
         this.getWeightForTheDay();
         this.listen();
     }
-});
+};
