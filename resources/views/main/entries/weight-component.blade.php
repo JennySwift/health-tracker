@@ -11,7 +11,7 @@
                 v-if="weight.weight"
                 class="badge"
             >
-				@{{ weight.weight | roundNumber 'one' }}
+				@{{ weight.weight | roundNumber 1' }}
 			</span>
             <span
                 v-if="!weight.weight"

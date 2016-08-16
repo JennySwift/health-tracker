@@ -38506,10 +38506,9 @@
 	        if (!howManyDecimals) {
 	            return Math.round(number);
 	        }
-	        else if (howManyDecimals === 'one') {
-	            var multiplyAndDivideBy = 10;
-	            return Math.round(number * multiplyAndDivideBy) / multiplyAndDivideBy;
-	        }
+	
+	        var multiplyAndDivideBy = Math.pow(10, howManyDecimals);
+	        return Math.round(number * multiplyAndDivideBy) / multiplyAndDivideBy;
 	    }
 	};
 
@@ -38664,7 +38663,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var DatesRepository = __webpack_require__(20);
-	__webpack_require__(8);
+	// require('sugar');
 	
 	module.exports = {
 	    template: '#date-navigation-template',
@@ -38734,17 +38733,15 @@
 	
 	module.exports = {
 	    changeDate: function (date) {
-	        // return Date.parseExact(date, ['d MMM yyyy', 'd/M/yyyy', 'd MMM yy', 'd/M/yy']).toString('dd/MM/yyyy');
 	        var date = Date.create(date).format('{yyyy}-{MM}-{dd}');
+	        console.log('date is: ' + date);
 	        store.setDate(date);
 	    },
 	    today: function () {
-	        // return Date.parse('today').toString('dd/MM/yyyy');
 	        var date = Date.create('today').format('{yyyy}-{MM}-{dd}');
 	        store.setDate(date);
 	    },
 	    goToDate: function (number) {
-	        // return Date.parse(previousDate).addDays(number).toString('dd/MM/yyyy');
 	        var date = Date.create(store.state.date.typed).addDays(number).format('{yyyy}-{MM}-{dd}');
 	        store.setDate(date);
 	    }
@@ -38887,6 +38884,7 @@
 	    components: {},
 	    filters: {
 	        roundNumber: function (number, howManyDecimals) {
+	            console.log('hello: ' + number);
 	            return FiltersRepository.roundNumber(number, howManyDecimals);
 	        }
 	    },
