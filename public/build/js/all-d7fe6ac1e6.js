@@ -22510,10 +22510,9 @@ module.exports = {
         if (!howManyDecimals) {
             return Math.round(number);
         }
-        else if (howManyDecimals === 'one') {
-            var multiplyAndDivideBy = 10;
-            return Math.round(number * multiplyAndDivideBy) / multiplyAndDivideBy;
-        }
+
+        var multiplyAndDivideBy = Math.pow(10, howManyDecimals);
+        return Math.round(number * multiplyAndDivideBy) / multiplyAndDivideBy;
     }
 };
 require('sugar');
@@ -23335,6 +23334,7 @@ module.exports = {
     components: {},
     filters: {
         roundNumber: function (number, howManyDecimals) {
+            console.log('hello: ' + number);
             return FiltersRepository.roundNumber(number, howManyDecimals);
         }
     },
@@ -23457,76 +23457,90 @@ module.exports = {
 };
 
 module.exports = {
-    template: '#entries-for-specific-exercise-and-date-and-unit-popup-template',
+    template: '#autocomplete-template',
     data: function () {
         return {
-            showPopup: false,
-            entries: {}
+            autocompleteOptions: [],
+            chosenOption: {
+                name: ''
+            },
+            showDropdown: false,
+            currentIndex: 0
         };
     },
     components: {},
     methods: {
 
         /**
-         * Get all the the user's entries for a particular exercise
-         * with a particular unit on a particular date.
-         * @param entry
+         *
+         * @param keycode
          */
-        getEntriesForSpecificExerciseAndDateAndUnit: function (entry) {
-            $.event.trigger('show-loading');
-
-            var data = {
-                date: this.date.sql,
-                exercise_id: entry.exercise.data.id,
-                exercise_unit_id: entry.unit.id
-            };
-
-            this.$http.get('api/exerciseEntries/specificExerciseAndDateAndUnit', data).then(function (response) {
-                this.entries = response;
-                this.showPopup = true;
-                $.event.trigger('hide-loading');
-            }, function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
+        respondToKeyup: function (keycode) {
+            if (keycode !== 13 && keycode !== 38 && keycode !== 40 && keycode !== 39 && keycode !== 37) {
+                //not enter, up, down, right or left arrows
+                this.populateOptions();
+            }
+            else if (keycode === 38) {
+                //up arrow pressed
+                if (this.currentIndex !== 0) {
+                    this.currentIndex--;
+                }
+            }
+            else if (keycode === 40) {
+                //down arrow pressed
+                if (this.autocompleteOptions.length - 1 !== this.currentIndex) {
+                    this.currentIndex++;
+                }
+            }
+            else if (keycode === 13) {
+                this.respondToEnter();
+            }
         },
 
         /**
          *
          */
-        deleteExerciseEntry: function (entry) {
-            if (confirm("Are you sure?")) {
-                $.event.trigger('show-loading');
-                this.$http.delete('/api/exerciseEntries/' + entry.id).then(function (response) {
-                    this.entries = _.without(this.entries, entry);
-                    //This might be unnecessary to do each time, and it fetches a lot
-                    //of data for just deleting one entry.
-                    //Perhaps do it when the popup closes instead?
-                    $.event.trigger('get-exercise-entries-for-the-day');
-                    $.event.trigger('provide-feedback', ['Entry deleted', 'success']);
-                    $.event.trigger('hide-loading');
-                }, function (response) {
+        populateOptions: function () {
+            //fill the dropdown
+            $.event.trigger('show-loading');
+            this.$http.get(this.url + '?typing=' + this.chosenOption.name, function (response) {
+                this.autocompleteOptions = response.data;
+                this.showDropdown = true;
+                this.currentIndex = 0;
+                $.event.trigger('hide-loading');
+            })
+                .error(function (response) {
                     HelpersRepository.handleResponseError(response);
                 });
+        },
+
+        /**
+         *
+         */
+        respondToEnter: function () {
+            if (this.showDropdown) {
+                //enter is for the autocomplete
+                this.selectOption();
+            }
+            else {
+                //enter is to add the entry
+                this.insertItemFunction();
             }
         },
 
         /**
          *
          */
-        closePopup: function ($event) {
-            if ($event.target.className === 'popup-outer') {
-                this.showPopup = false;
+        selectOption: function () {
+            this.chosenOption = this.autocompleteOptions[this.currentIndex];
+            this.showDropdown = false;
+            if (this.idToFocusAfterAutocomplete) {
+                var that = this;
+                setTimeout(function () {
+                    $("#" + that.idToFocusAfterAutocomplete).focus();
+                }, 100);
             }
-        },
-
-        /**
-         *
-         */
-        listen: function () {
-            var that = this;
-            $(document).on('show-entries-for-specific-exercise-and-date-and-unit-popup', function (event, entry) {
-                that.getEntriesForSpecificExerciseAndDateAndUnit(entry);
-            });
+            this.$dispatch('option-chosen', this.chosenOption);
         },
 
         /**
@@ -23535,47 +23549,209 @@ module.exports = {
          */
         handleResponseError: function (response) {
             $.event.trigger('response-error', [response]);
-            $.event.trigger('response-error', [response]);
             this.showLoading = false;
         }
     },
     props: [
-        'date'
+        'url',
+        'autocompleteField',
+        'insertItemFunction',
+        'idToFocusAfterAutocomplete'
     ],
     ready: function () {
-        this.listen();
+
     }
+};
+var DatesRepository = require('../../repositories/DatesRepository');
+// require('sugar');
+
+module.exports = {
+    template: '#date-navigation-template',
+    data: function () {
+        return {
+            date: store.state.date
+        };
+    },
+    components: {},
+    watch: {
+        'date.typed': function (newValue, oldValue) {
+            $("#date").val(this.date.typed);
+            $.event.trigger('date-changed');
+        }
+    },
+    methods: {
+        /**
+         *
+         * @param $number
+         */
+        goToDate: function ($number) {
+            DatesRepository.goToDate($number);
+        },
+
+        /**
+         *
+         */
+        goToToday: function () {
+            DatesRepository.today();
+        },
+
+        /**
+         *
+         * @param date
+         * @returns {boolean}
+         */
+        changeDate: function (date) {
+            var date = date || $("#date").val();
+            DatesRepository.changeDate(date);
+        },
+
+        /**
+         *
+         * @param response
+         */
+        handleResponseError: function (response) {
+            $.event.trigger('response-error', [response]);
+            this.showLoading = false;
+        }
+
+    },
+    props: [
+
+    ],
+    ready: function () {
+
+    }
+
 };
 
 module.exports = {
-    template: '#exercise-entries-template',
+    template: "#feedback-template",
     data: function () {
         return {
-            exerciseEntries: [],
-            showExerciseEntryInputs: false,
-            selectedExercise: {
-                unit: {}
-            },
+            feedbackMessages: []
+        };
+    },
+    methods: {
+        listen: function () {
+            var that = this;
+            $(document).on('provide-feedback', function (event, message, type) {
+                that.provideFeedback(message, type);
+            });
+            $(document).on('response-error', function (event, response) {
+                that.provideFeedback(that.handleResponseError(response), 'error');
+            })
+        },
+        provideFeedback: function (message, type) {
+            var newMessage = {
+                message: message,
+                type: type
+            };
+
+            var that = this;
+
+            this.feedbackMessages.push(newMessage);
+
+            setTimeout(function () {
+                that.feedbackMessages = _.without(that.feedbackMessages, newMessage);
+            }, 3000);
+        },
+        handleResponseError: function (response) {
+            if (typeof response !== "undefined") {
+                var $message;
+
+                switch(response.status) {
+                    case 503:
+                        $message = 'Sorry, application under construction. Please try again later.';
+                        break;
+                    case 401:
+                        $message = 'You are not logged in';
+                        break;
+                    case 422:
+                        var html = "<ul>";
+
+                        for (var i = 0; i < response.length; i++) {
+                            var error = response[i];
+                            for (var j = 0; j < error.length; j++) {
+                                html += '<li>' + error[j] + '</li>';
+                            }
+                        }
+
+                        html += "</ul>";
+                        $message = html;
+                        break;
+                    default:
+                        $message = response.error;
+                        break;
+                }
+            }
+            else {
+                $message = 'There was an error';
+            }
+
+            return $message;
+
+        }
+    },
+    events: {
+        'provide-feedback': function (message, type) {
+            this.provideFeedback(message, type);
+        },
+        'response-error': function (response) {
+            this.provideFeedback(this.handleResponseError(response), 'error');
+        }
+    },
+    ready: function () {
+        this.listen();
+    },
+};
+module.exports = {
+    data: function () {
+        return {
+            showLoading: false
+        };
+    },
+    template: "#loading-template",
+    props: [
+        //'showLoading'
+    ],
+    methods: {
+        listen: function () {
+            var that = this;
+            $(document).on('show-loading', function (event, message, type) {
+                that.showLoading = true;
+            });
+            $(document).on('hide-loading', function (event, message, type) {
+                that.showLoading = false;
+            });
+        }
+    },
+    ready: function () {
+        this.listen();
+    }
+};
+module.exports = {
+    template: '#activities-page-template',
+    data: function () {
+        return {
+            activities: [],
+            newActivity: {},
         };
     },
     components: {},
+    filters: {
+        formatDuration: function (minutes) {
+            return FiltersRepository.formatDuration(minutes);
+        }
+    },
     methods: {
 
         /**
          *
-         * @param entry
          */
-        showEntriesForSpecificExerciseAndDateAndUnitPopup: function (entry) {
-            $.event.trigger('show-entries-for-specific-exercise-and-date-and-unit-popup', [entry]);
-        },
-
-        /**
-         *
-         */
-        getEntriesForTheDay: function () {
+        getActivities: function () {
             $.event.trigger('show-loading');
-            this.$http.get('/api/exerciseEntries/' + this.date.sql).then(function (response) {
-                this.exerciseEntries = response.data;
+            this.$http.get('/api/activities').then(function (response) {
+                this.activities = response;
                 $.event.trigger('hide-loading');
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
@@ -23583,20 +23759,18 @@ module.exports = {
         },
 
         /**
-         * Similar method to this in SeriesExercisesComponent
+         *
          */
-        insertExerciseSet: function (exercise) {
+        insertActivity: function () {
             $.event.trigger('show-loading');
             var data = {
-                date: this.date.sql,
-                exercise_id: exercise.data.id,
-                exerciseSet: true
+                name: this.newActivity.name,
+                color: this.newActivity.color
             };
 
-            this.$http.post('/api/exerciseEntries', data).then(function (response) {
-                $.event.trigger('provide-feedback', ['Set added', 'success']);
-                this.getEntriesForTheDay();
-                this.exerciseEntries = response;
+            this.$http.post('/api/activities', data).then(function (response) {
+                this.activities.push(response);
+                $.event.trigger('provide-feedback', ['Activity created', 'success']);
                 $.event.trigger('hide-loading');
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
@@ -23605,30 +23779,10 @@ module.exports = {
 
         /**
          *
+         * @param activity
          */
-        listen: function () {
-            var that = this;
-            /**
-             * For updating the exercise entries from the
-             * series controller on the series page
-             */
-            $(document).on('get-exercise-entries-for-the-day', function (event) {
-                that.getEntriesForTheDay();
-            });
-            $(document).on('date-changed', function (event) {
-                that.getEntriesForTheDay();
-            });
-            $(document).on('exercise-entry-added', function (event, data) {
-                //Todo: all the entries I think are actually in the data (unnecessarily)
-                that.getEntriesForTheDay();
-            });
-            /**
-             * For updating the exercise entries from the
-             * series controller on the series page
-             */
-            //$(document).on('getExerciseEntries', function (event, data) {
-            //    that.exerciseEntries = data;
-            //});
+        showActivityPopup: function (activity) {
+            $.event.trigger('show-activity-popup', [activity]);
         },
 
         /**
@@ -23641,18 +23795,19 @@ module.exports = {
         }
     },
     props: [
-        'date'
+        //data to be received from parent
     ],
     ready: function () {
-        this.listen();
-        this.getEntriesForTheDay();
+        this.getActivities();
     }
 };
-var ExercisePopup = Vue.component('exercise-popup', {
-    template: '#exercise-popup-template',
+
+var ActivityPopup = Vue.component('activity-popup', {
+    template: '#activity-popup-template',
     data: function () {
         return {
-            showPopup: false
+            showPopup: false,
+            selectedActivity: {}
         };
     },
     components: {},
@@ -23661,20 +23816,20 @@ var ExercisePopup = Vue.component('exercise-popup', {
         /**
          *
          */
-        updateExercise: function () {
+        updateActivity: function () {
             $.event.trigger('show-loading');
 
-            var data = ExercisesRepository.setData(this.selectedExercise);
+            var data = {
+                name: this.selectedActivity.name,
+                color: this.selectedActivity.color
+            };
 
-            this.$http.put('/api/exercises/' + this.selectedExercise.id, data).then(function (response) {
-                this.selectedExercise = response.data;
-                store.updateExercise(response.data);
-
-
+            this.$http.put('/api/activities/' + this.selectedActivity.id, data).then(function (response) {
+                var index = _.indexOf(this.activities, _.findWhere(this.activities, {id: this.selectedActivity.id}));
+                this.activities[index] = response;
                 this.showPopup = false;
-                $.event.trigger('provide-feedback', ['Exercise updated', 'success']);
+                $.event.trigger('provide-feedback', ['Activity updated', 'success']);
                 $.event.trigger('hide-loading');
-                $("#exercise-step-number").val("");
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
@@ -23683,14 +23838,13 @@ var ExercisePopup = Vue.component('exercise-popup', {
         /**
          *
          */
-        deleteExercise: function () {
-            if (confirm("Are you sure?")) {
+        deleteActivity: function () {
+            if (confirm("Are you sure? The timers for the activity will be deleted, too!")) {
                 $.event.trigger('show-loading');
-                this.$http.delete('/api/exercises/' + this.selectedExercise.id).then(function (response) {
-                    var index = _.indexOf(this.exercises, _.findWhere(this.exercises, {id: this.selectedExercise.id}));
-                    this.exercises = _.without(this.exercises, this.exercises[index]);
-                    $.event.trigger('provide-feedback', ['Exercise deleted', 'success']);
+                this.$http.delete('/api/activities/' + this.selectedActivity.id).then(function (response) {
+                    this.activities = _.without(this.activities, this.selectedActivity);
                     this.showPopup = false;
+                    $.event.trigger('provide-feedback', ['Activity deleted', 'success']);
                     $.event.trigger('hide-loading');
                 }, function (response) {
                     HelpersRepository.handleResponseError(response);
@@ -23702,9 +23856,7 @@ var ExercisePopup = Vue.component('exercise-popup', {
         *
         */
         closePopup: function ($event) {
-            if ($event.target.className === 'popup-outer') {
-                this.showPopup = false;
-            }
+            HelpersRepository.closePopup($event, this);
         },
 
         /**
@@ -23712,508 +23864,94 @@ var ExercisePopup = Vue.component('exercise-popup', {
          */
         listen: function () {
             var that = this;
-            $(document).on('show-exercise-popup', function (event) {
+            $(document).on('show-activity-popup', function (event, activity) {
+                that.selectedActivity = activity;
                 that.showPopup = true;
             });
-        },
-
-        /**
-         *
-         * @param response
-         */
-        handleResponseError: function (response) {
-            $.event.trigger('response-error', [response]);
-            this.showLoading = false;
         }
     },
     props: [
-        'selectedExercise',
-        'exercises',
-        'exerciseSeries',
-        'programs',
-        'units'
+        'activities'
     ],
     ready: function () {
         this.listen();
     }
 });
 
+var DatesRepository = require('../../repositories/DatesRepository');
+
 module.exports = {
-    template: '#exercise-units-page-template',
-    data: function () {
-        return {
-            units: [],
-            newUnit: {}
-        };
-    },
-    components: {},
-    methods: {
-        /**
-         *
-         */
-        getUnits: function () {
-            $.event.trigger('show-loading');
-            this.$http.get('/api/exerciseUnits').then(function (response) {
-                this.units = response;
-                $.event.trigger('hide-loading');
-            }, function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
-        },
-
-        /**
-         *
-         */
-        insertUnit: function () {
-            $.event.trigger('show-loading');
-            var data = {
-                name: this.newUnit.name
-            };
-
-            this.$http.post('/api/exerciseUnits', data).then(function (response) {
-                this.units.push(response.data);
-                $.event.trigger('provide-feedback', ['Unit created', 'success']);
-                //this.$broadcast('provide-feedback', 'Unit created', 'success');
-                $.event.trigger('hide-loading');
-                $("#create-new-exercise-unit").val("");
-            }, function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
-        },
-
-        /**
-         *
-         * @param unit
-         */
-        deleteUnit: function (unit) {
-            if (confirm("Are you sure?")) {
-                $.event.trigger('show-loading');
-                this.$http.delete('/api/exerciseUnits/' + unit.id).then(function (response) {
-                    this.units = _.without(this.units, unit);
-                    $.event.trigger('provide-feedback', ['Unit deleted', 'success']);
-                    //this.$broadcast('provide-feedback', 'Unit deleted', 'success');
-                    $.event.trigger('hide-loading');
-
-                }, function (response) {
-                    HelpersRepository.handleResponseError(response);
-                });
-            }
-        },
-    },
-    props: [
-        //data to be received from parent
-    ],
-    ready: function () {
-        this.getUnits();
-    }
-};
-module.exports = {
-    template: '#exercises-page-template',
+    template: '#graphs-page-template',
     data: function () {
         return {
             date: store.state.date,
-            exerciseSeries: [],
-            exerciseSeriesHistory: [],
-            showNewSeriesFields: false,
-            showNewExerciseFields: false,
-            selectedSeries: {
-                exercises: {
-                    data: []
-                }
+            timers: []
+        };
+    },
+    components: {},
+    methods: {
+
+        /**
+         *
+         */
+        getTimers: function () {
+            $.event.trigger('show-loading');
+            var url = TimersRepository.calculateUrl(false, this.date.sql);
+
+            this.$http.get(url).then(function (response) {
+                this.timers = response;
+                $.event.trigger('hide-loading');
+            }, function (response) {
+                HelpersRepository.handleResponseError(response);
+            });
+        },
+
+        /**
+         *
+         * @param response
+         */
+        handleResponseError: function (response) {
+            $.event.trigger('response-error', [response]);
+            this.showLoading = false;
+        }
+    },
+    props: [
+        //data to be received from parent
+    ],
+    ready: function () {
+        this.getTimers();
+    }
+};
+
+
+module.exports = {
+    template: '#new-manual-timer-template',
+    data: function () {
+        return {
+            newManualTimer: {
+                activity: {}
             },
-            showExerciseEntryInputs: false,
-            units: [],
-            programs: [],
-            shared: store.state,
-            selectedExercise: ExercisesRepository.selectedExercise,
-            showStretches: false,
-            filterByName: '',
-            filterByDescription: '',
-            filterByPriority: 1,
-            filterBySeries: '',
-            showFilters: false
-        };
-    },
-    components: {},
-    computed: {
-        // exercisesBySeries: function () {
-        //     var that = this;
-        //     var groupedExercises = this.filterExercises(this.shared.exercises);
-        //
-        //     if (!this.showStretches) {
-        //         groupedExercises = _.filter(groupedExercises, function (exercise) {
-        //             return !exercise.stretch;
-        //         });
-        //     }
-        //
-        //     groupedExercises = _.groupBy(groupedExercises, function (exercise) {
-        //         return exercise.series.name;
-        //     });
-        //
-        //     return groupedExercises;
-        // },
-    },
-    filters: {
-        filterExercises: function (exercises) {
-            var that = this;
-
-            //Sort
-            exercises = _.chain(exercises)
-                .sortBy(function (exercise) {return exercise.stepNumber})
-                .sortBy(function (exercise) {return exercise.series.id})
-                .sortBy('priority')
-                .sortBy(function (exercise) {
-                    return exercise.lastDone * -1
-                })
-                .partition(function (exercise) {
-                    return exercise.lastDone === null;
-                })
-                .flatten()
-                .value();
-
-            //Filter
-            return exercises.filter(function (exercise) {
-                var filteredIn = true;
-
-                //Priority filter
-                if (that.filterByPriority && exercise.priority != that.filterByPriority) {
-                    filteredIn = false;
-                }
-
-                //Name filter
-                if (that.filterByName && exercise.name.indexOf(that.filterByName) === -1) {
-                    filteredIn = false;
-                }
-
-                //Description filter
-                if (exercise.description && exercise.description.indexOf(that.filterByDescription) === -1) {
-                    filteredIn = false;
-                }
-
-                else if (!exercise.description && that.filterByDescription !== '') {
-                    filteredIn = false;
-                }
-
-                //Stretches files
-                if (!that.showStretches && exercise.stretch) {
-                    filteredIn = false;
-                }
-
-                //Series filter
-                if (that.filterBySeries && exercise.series.name != that.filterBySeries && that.filterBySeries !== 'all') {
-                    filteredIn = false;
-                }
-
-                return filteredIn;
-            });
-        },
-
-        filterSeries: function (series) {
-            var that = this;
-
-            //Sort
-            series = _.chain(series)
-                .sortBy('priority')
-                .sortBy('lastDone')
-                .value();
-
-            /**
-             * @VP:
-             * This method feels like a lot of code for just
-             * a simple thing-ordering series by their lastDone value,
-             * putting those with a null lastDone value on the end.
-             * I tried underscore.js _.partition with _.flatten,
-             * but it put 0 values on the end,
-             * (I had trouble getting the predicate parameter of the _.partition method to work.)
-             */
-            series = this.moveLastDoneNullToEnd(series);
-
-            //Filter
-            return series.filter(function (thisSeries) {
-                var filteredIn = true;
-
-                //Priority filter
-                if (that.priorityFilter && thisSeries.priority != that.priorityFilter) {
-                    filteredIn = false;
-                }
-
-                return filteredIn;
-            });
-        },
-    },
-    methods: {
-
-        /**
-         *
-         */
-        insertExerciseSet: function (exercise) {
-            $.event.trigger('show-loading');
-            var data = {
-                date: moment().format('YYYY-MM-DD'),
-                exercise_id: exercise.id,
-                exerciseSet: true
-            };
-
-            this.$http.post('/api/exerciseEntries', data).then(function (response) {
-                exercise.lastDone = 0;
-                $.event.trigger('provide-feedback', ['Set added', 'success']);
-                $.event.trigger('get-exercise-entries-for-the-day');
-                $.event.trigger('hide-loading');
-            }, function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
-        },
-
-        /**
-         *
-         */
-        showExercisePopup: function (exercise) {
-            $.event.trigger('show-loading');
-            this.$http.get('/api/exercises/' + exercise.id).then(function (response) {
-                this.selectedExercise = response;
-                $.event.trigger('show-exercise-popup');
-                $.event.trigger('hide-loading');
-            }, function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
-        },
-
-        /**
-         * For the series filter
-         * @param series
-         * @returns {*}
-         */
-        moveLastDoneNullToEnd: function (series) {
-            //Get the series that have lastDone null values
-            var seriesWithNullLastDone = _.filter(series, function (oneSeries) {
-                return oneSeries.lastDone == null;
-            });
-
-            //Remove the series that have lastDone null values
-            for (var i = 0; i < seriesWithNullLastDone.length; i++) {
-                var index = _.indexOf(series, _.findWhere(series, {id: seriesWithNullLastDone[i].id}));
-                series = _.without(series, series[index]);
-            }
-
-            //Add the series that have lastDone null values back on the
-            //end of the series array
-            for (var i = 0; i < seriesWithNullLastDone.length; i++) {
-                series.push(seriesWithNullLastDone[i]);
-            }
-
-            return series;
-        },
-
-        /**
-         *
-         */
-        getSeries: function () {
-            $.event.trigger('show-loading');
-            this.$http.get('/api/exerciseSeries').then(function (response) {
-                this.exerciseSeries = response;
-                $.event.trigger('hide-loading');
-            }, function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
-        },
-
-        /**
-         *
-         */
-        getExerciseSeriesHistory: function (key) {
-            $.event.trigger('show-loading');
-
-            //Find the series. The exercises were grouped according to series, so all we have is the series name (key).
-            var series = _.find(this.exerciseSeries, function (series) {
-                return series.name === key;
-            });
-
-            this.$http.get('api/seriesEntries/' + series.id).then(function (response) {
-                //For displaying the name of the series in the popup
-                this.selectedSeries = series;
-                this.exerciseSeriesHistory = response;
-                $.event.trigger('show-series-history-popup');
-                $.event.trigger('hide-loading');
-            }, function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
-        },
-
-        /**
-         *
-         */
-        getExercisesInSeries: function (series) {
-            $.event.trigger('show-loading');
-            this.$http.get('/api/exerciseSeries/' + series.id).then(function (response) {
-                this.selectedSeries = response;
-                $.event.trigger('hide-loading');
-            }, function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
-        },
-
-        /**
-         *
-         */
-        showExerciseSeriesPopup: function (key) {
-            //Find the series. The exercises were grouped according to series, so all we have is the series name (key).
-            var series = _.find(this.exerciseSeries, function (series) {
-                return series.name === key;
-            });
-
-            $.event.trigger('show-loading');
-            this.$http.get('/api/exerciseSeries/' + series.id).then(function (response) {
-                this.selectedSeries = response;
-                $.event.trigger('show-series-popup');
-                $.event.trigger('hide-loading');
-            }, function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
-        },
-
-        /**
-         *
-         */
-        getPrograms: function () {
-            $.event.trigger('show-loading');
-            this.$http.get('/api/exercisePrograms').then(function (response) {
-                this.programs = response;
-                $.event.trigger('hide-loading');
-            }, function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
-        },
-
-        /**
-         *
-         */
-        getUnits: function () {
-            $.event.trigger('show-loading');
-            this.$http.get('/api/exerciseUnits').then(function (response) {
-                this.units = response;
-                $.event.trigger('hide-loading');
-            }, function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
-        },
-
-        /**
-         *
-         * @param response
-         */
-        handleResponseError: function (response) {
-            $.event.trigger('response-error', [response]);
-            this.showLoading = false;
-        }
-    },
-    props: [
-        //data to be received from parent
-    ],
-    ready: function () {
-        this.getPrograms();
-        this.getUnits();
-        this.getSeries();
-    }
-};
-
-
-var $ = require('jquery');
-
-module.exports = {
-    template: '#navbar-template',
-    data: function () {
-        return {
-
+            showPopup: true
         };
     },
     components: {},
     methods: {
         /**
-         *
+         * Instead of starting and stopping the timer,
+         * enter the start and stop times manually
          */
-        showNewManualTimerPopup: function () {
-            $.event.trigger('show-new-manual-timer-popup');
-        },
-    },
-    props: [
-        //data to be received from parent
-    ],
-    ready: function () {
-
-    }
-};
-
-module.exports = {
-    template: '#new-exercise-template',
-    data: function () {
-        return {
-            newExercise: {}
-        };
-    },
-    components: {},
-    methods: {
-
-        /**
-         *
-         */
-        insertExercise: function () {
+        insertManualTimer: function () {
             $.event.trigger('show-loading');
-            var data = ExercisesRepository.setData(this.newExercise);
+            var data = TimersRepository.setData(this.newManualTimer, this.date.sql);
+            $('#timer-clock').timer({format: '%H:%M:%S'});
 
-            this.$http.post('/api/exercises', data).then(function (response) {
-                if (this.exercises) {
-                    //If adding new exercise from the series page,
-                    //this.exercises isn't specified
-                    this.exercises.push(response);
-                }
-
-                $.event.trigger('provide-feedback', ['Exercise created', 'success']);
+            this.$http.post('/api/timers/', data).then(function (response) {
+                this.timers.push(response);
+                console.log(router);
+                $.event.trigger('manual-timer-created');
+                $.event.trigger('provide-feedback', ['Manual entry created', 'success']);
                 $.event.trigger('hide-loading');
-            }, function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
-        },
-
-        /**
-         *
-         * @param response
-         */
-        handleResponseError: function (response) {
-            $.event.trigger('response-error', [response]);
-            this.showLoading = false;
-        }
-    },
-    props: [
-        'showNewExerciseFields',
-        'exercises',
-        'programs',
-        'exerciseSeries',
-        'units'
-    ],
-    ready: function () {
-
-    }
-};
-
-module.exports = {
-    template: '#new-exercise-entry-template',
-    data: function () {
-        return {
-            newEntry: {},
-            units: []
-        };
-    },
-    components: {},
-    methods: {
-
-        /**
-         *
-         */
-        getUnits: function () {
-            $.event.trigger('show-loading');
-            this.$http.get('/api/exerciseUnits').then(function (response) {
-                this.units = response;
-                $.event.trigger('hide-loading');
+                router.go('/timers');
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
@@ -24222,126 +23960,15 @@ module.exports = {
         /**
          *
          */
-        insertEntry: function () {
-            $.event.trigger('show-loading');
-
-            //this.newEntry.exercise.unit_id = $("#exercise-unit").val();
-            //$("#exercise").val("").focus();
-
-            var data = {
-                date: this.date.sql,
-                exercise_id: this.newEntry.id,
-                quantity: this.newEntry.quantity,
-                unit_id: this.newEntry.unit.id
-            };
-
-            this.$http.post('/api/exerciseEntries', data).then(function (response) {
-                //this.exerciseEntries = response;
-                $.event.trigger('exercise-entry-added', [response]);
-                $.event.trigger('provide-feedback', ['Entry created', 'success']);
-                $.event.trigger('hide-loading');
-            }, function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
+        setDefaultActivity: function () {
+            this.newManualTimer.activity = this.activities[0];
         },
 
         /**
          *
-         * @param response
          */
-        handleResponseError: function (response) {
-            $.event.trigger('response-error', [response]);
-            this.showLoading = false;
-        }
-    },
-    props: [
-        'date'
-    ],
-    events: {
-        'option-chosen': function (option) {
-            this.newEntry = option;
-            this.newEntry.unit = option.defaultUnit.data;
-            this.newEntry.quantity = option.defaultQuantity;
-        }
-    },
-    ready: function () {
-        this.getUnits();
-    }
-};
-var NewSeries = Vue.component('new-series', {
-    template: '#new-series-template',
-    data: function () {
-        return {
-            newSeries: {}
-        };
-    },
-    components: {},
-    methods: {
-
-        /**
-         *
-         */
-        insertSeries: function () {
-            $.event.trigger('show-loading');
-            var data = {
-                name: this.newSeries.name
-            };
-
-            this.$http.post('/api/exerciseSeries', data).then(function (response) {
-                this.exerciseSeries.push(response.data);
-                $.event.trigger('provide-feedback', ['Series created', 'success']);
-                this.showLoading = false;
-                this.newSeries.name = '';
-                $.event.trigger('hide-loading');
-            }, function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
-        },
-
-        /**
-         *
-         * @param response
-         */
-        handleResponseError: function (response) {
-            $.event.trigger('response-error', [response]);
-            this.showLoading = false;
-        }
-    },
-    props: [
-        'showNewSeriesFields',
-        'exerciseSeries'
-    ],
-    ready: function () {
-
-    }
-});
-
-var SeriesHistoryPopup = Vue.component('series-history-popup', {
-    template: '#series-history-popup-template',
-    data: function () {
-        return {
-            showPopup: false,
-            filterByExercise: ''
-        };
-    },
-    components: {},
-    filters: {
-        exerciseFilter: function (entries) {
-            var that = this;
-            return entries.filter(function (entriesForDay) {
-                return entriesForDay.exercise.data.name.indexOf(that.filterByExercise) !== -1;
-            });
-        }
-    },
-    methods: {
-
-        /**
-        *
-        */
         closePopup: function ($event) {
-            if ($event.target.className === 'popup-outer') {
-                this.showPopup = false;
-            }
+            HelpersRepository.closePopup($event, this);
         },
 
         /**
@@ -24349,35 +23976,45 @@ var SeriesHistoryPopup = Vue.component('series-history-popup', {
          */
         listen: function () {
             var that = this;
-            $(document).on('show-series-history-popup', function (event, series) {
-                that.selectedSeries = series;
-                that.showPopup = true;
+            $(document).on('activities-loaded', function (event) {
+                setTimeout(function () {
+                    that.setDefaultActivity();
+                }, 500);
             });
-        },
 
-        /**
-         *
-         * @param response
-         */
-        handleResponseError: function (response) {
-            $.event.trigger('response-error', [response]);
-            this.showLoading = false;
+            $(document).on('show-new-manual-timer-popup', function (event) {
+                if (that.$route.path.indexOf('/timers') !== -1) {
+                    //We're on the timers page so we can show the popup
+                    that.showPopup = true;
+                }
+                else {
+                    //Wait for the timers page to load before showing the popup
+                    setTimeout(function () {
+                        that.showPopup = true;
+                    }, 5000);
+                }
+            });
         }
+
     },
     props: [
-        'exerciseSeriesHistory',
-        'selectedSeries'
+        'activities',
+        'date',
+        'timers'
     ],
     ready: function () {
         this.listen();
+        this.setDefaultActivity();
     }
-});
+};
 
-var SeriesPopup = Vue.component('series-popup', {
-    template: '#series-popup-template',
+var NewTimer = Vue.component('new-timer', {
+    template: '#new-timer-template',
     data: function () {
         return {
-            showPopup: false
+            newTimer: {
+                activity: {}
+            },
         };
     },
     components: {},
@@ -24386,21 +24023,14 @@ var SeriesPopup = Vue.component('series-popup', {
         /**
          *
          */
-        updateSeries: function () {
+        startTimer: function () {
             $.event.trigger('show-loading');
+            var data = TimersRepository.setData(this.newTimer);
+            $('#timer-clock').timer({format: '%H:%M:%S'});
 
-            var data = {
-                name: this.selectedSeries.name,
-                priority: this.selectedSeries.priority,
-                workout_ids: this.selectedSeries.workout_ids
-            };
-
-            this.$http.put('/api/exerciseSeries/' + this.selectedSeries.id, data).then(function (response) {
-                var index = _.indexOf(this.exerciseSeries, _.findWhere(this.exerciseSeries, {id: this.selectedSeries.id}));
-                this.exerciseSeries[index].name = response.data.name;
-                this.exerciseSeries[index].priority = response.data.priority;
-                this.showPopup = false;
-                $.event.trigger('provide-feedback', ['Series updated', 'success']);
+            this.$http.post('/api/timers/', data).then(function (response) {
+                this.timerInProgress = response;
+                $.event.trigger('provide-feedback', ['Timer started', 'success']);
                 $.event.trigger('hide-loading');
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
@@ -24410,15 +24040,139 @@ var SeriesPopup = Vue.component('series-popup', {
         /**
          *
          */
-        deleteSeries: function () {
+        stopTimer: function () {
+            $.event.trigger('show-loading');
+            $('#timer-clock').timer('remove');
+
+            var data = {
+                finish: TimersRepository.calculateFinishTime(this.timerInProgress)
+            };
+
+            this.$http.put('/api/timers/' + this.timerInProgress.id, data).then(function (response) {
+                this.timerInProgress = false;
+                this.timers.push(response);
+                $.event.trigger('timer-stopped');
+                $.event.trigger('provide-feedback', ['Timer updated', 'success']);
+                $.event.trigger('hide-loading');
+            }, function (response) {
+                HelpersRepository.handleResponseError(response);
+            });
+        },
+
+        /**
+         *
+         */
+        setDefaultActivity: function () {
+            this.newTimer.activity = this.activities[0];
+        },
+
+        /**
+         *
+         */
+        checkForTimerInProgress: function () {
+            $.event.trigger('show-loading');
+            this.$http.get('/api/timers/checkForTimerInProgress').then(function (response) {
+                if (response.activity) {
+                    this.resumeTimerOnPageLoad(response);
+                }
+                $.event.trigger('hide-loading');
+            }, function (response) {
+                HelpersRepository.handleResponseError(response);
+            });
+        },
+
+        /**
+         *
+         * @param timer
+         */
+        resumeTimerOnPageLoad: function (timer) {
+            this.timerInProgress = timer;
+            var seconds = moment().diff(moment(timer.start, 'YYYY-MM-DD HH:mm:ss'), 'seconds');
+            $('#timer-clock').timer({
+                format: '%H:%M:%S',
+                //The timer has already started
+                seconds: seconds
+            });
+        },
+
+        /**
+         *
+         */
+        listen: function () {
+            var that = this;
+            $(document).on('activities-loaded', function (event) {
+                setTimeout(function () {
+                    that.setDefaultActivity();
+                }, 500);
+            });
+        }
+
+    },
+    props: [
+        'activities',
+        'timerInProgress',
+        'showTimerInProgress',
+        'timers'
+    ],
+    ready: function () {
+        this.listen();
+        this.checkForTimerInProgress();
+    }
+});
+
+var TimerPopup = Vue.component('timer-popup', {
+    template: '#timer-popup-template',
+    data: function () {
+        return {
+            showPopup: false,
+            selectedTimer: {
+                id: '',
+                start: '',
+                finish: '',
+                activity: {
+                    data: {}
+                }
+            }
+        };
+    },
+    components: {},
+    methods: {
+
+        /**
+        *
+        */
+        updateTimer: function () {
+            $.event.trigger('show-loading');
+
+            var data = {
+                start: this.selectedTimer.start,
+                finish: this.selectedTimer.finish,
+                activity_id: this.selectedTimer.activity.data.id
+            };
+
+            this.$http.put('/api/timers/' + this.selectedTimer.id, data).then(function (response) {
+                var index = _.indexOf(this.timers, _.findWhere(this.timers, {id: this.selectedTimer.id}));
+                this.timers[index].start = response.start;
+                this.timers[index].finish = response.finish;
+                this.timers[index].activity = response.activity;
+                $.event.trigger('provide-feedback', ['Timer updated', 'success']);
+                this.showPopup = false;
+                $.event.trigger('hide-loading');
+            }, function (data, status, response) {
+                HelpersRepository.handleResponseError(data, status, response);
+            });
+        },
+
+        /**
+         *
+         */
+        deleteTimer: function () {
             if (confirm("Are you sure?")) {
                 $.event.trigger('show-loading');
-                this.$http.delete('/api/exerciseSeries/' + this.selectedSeries.id).then(function (response) {
-                    //this.exerciseSeries = _.without(this.exerciseSeries, this.selectedSeries);
-                    var index = _.indexOf(this.exerciseSeries, _.findWhere(this.exerciseSeries, {id: this.selectedSeries.id}));
-                    this.exerciseSeries = _.without(this.exerciseSeries, this.exerciseSeries[index]);
+                this.$http.delete('/api/timers/' + this.selectedTimer.id).then(function (response) {
+                    $.event.trigger('timer-deleted', [this.selectedTimer]);
                     this.showPopup = false;
-                    $.event.trigger('provide-feedback', ['Series deleted', 'success']);
+                    $.event.trigger('provide-feedback', ['Timer deleted', 'success']);
                     $.event.trigger('hide-loading');
                 }, function (response) {
                     HelpersRepository.handleResponseError(response);
@@ -24430,9 +24184,7 @@ var SeriesPopup = Vue.component('series-popup', {
         *
         */
         closePopup: function ($event) {
-            if ($event.target.className === 'popup-outer') {
-                this.showPopup = false;
-            }
+            HelpersRepository.closePopup($event, this);
         },
 
         /**
@@ -24440,9 +24192,189 @@ var SeriesPopup = Vue.component('series-popup', {
          */
         listen: function () {
             var that = this;
-            $(document).on('show-series-popup', function (event, series) {
-                that.selectedSeries = series;
+            $(document).on('show-timer-popup', function (event, timer) {
+                //So that the timer doesn't appear updated if the user closes the popup without saving
+                that.selectedTimer.id = timer.id;
+                that.selectedTimer.start = timer.start;
+                that.selectedTimer.finish = timer.finish;
+                that.selectedTimer.activity = timer.activity;
                 that.showPopup = true;
+            });
+        }
+    },
+    props: [
+        'activities',
+        'timers'
+    ],
+    ready: function () {
+        this.listen();
+    }
+});
+
+module.exports = {
+    template: '#timers-page-template',
+    data: function () {
+        return {
+            date: store.state.date,
+            timers: [],
+            activities: [],
+            timersFilter: false,
+            activitiesFilter: '',
+            activitiesWithDurationsForTheWeek: [],
+            activitiesWithDurationsForTheDay: [],
+            timerInProgress: false,
+            showTimerInProgress: true,
+        };
+    },
+    filters: {
+        formatDateTime: function (dateTime, format) {
+            if (!format) {
+                return moment(dateTime, 'YYYY-MM-DD HH:mm:ss').format('hh:mm:ssa DD/MM');
+            }
+            else if (format === 'seconds') {
+                return moment(dateTime, 'YYYY-MM-DD HH:mm:ss').format('ss a DD/MM');
+            }
+            else if (format === 'hoursAndMinutes') {
+                return moment(dateTime, 'YYYY-MM-DD HH:mm:ss').format('hh:mm');
+            }
+            else if (format === 'object') {
+                return {
+                    seconds: moment(dateTime, 'YYYY-MM-DD HH:mm:ss').format('ss')
+                };
+            }
+        },
+        doubleDigits: function (number) {
+            if (number < 10) {
+                return '0' + number;
+            }
+
+            return number;
+        },
+        formatDuration: function (minutes) {
+            return FiltersRepository.formatDuration(minutes);
+        }
+    },
+    components: {},
+    methods: {
+
+        /**
+         *
+         * @param timer
+         */
+        showTimerPopup: function (timer) {
+            $.event.trigger('show-timer-popup', [timer]);
+        },
+
+        /**
+         *
+         */
+        getActivities: function () {
+            $.event.trigger('show-loading');
+            this.$http.get('/api/activities').then(function (response) {
+                this.activities = response;
+                $.event.trigger('activities-loaded');
+                $.event.trigger('hide-loading');
+            }, function (response) {
+                HelpersRepository.handleResponseError(response);
+            });
+        },
+
+        /**
+         *
+         */
+        getTimers: function () {
+            $.event.trigger('show-loading');
+            var url = TimersRepository.calculateUrl(false, this.date.sql);
+
+            this.$http.get(url).then(function (response) {
+                this.timers = response;
+                $.event.trigger('hide-loading');
+            }, function (response) {
+                HelpersRepository.handleResponseError(response);
+            });
+        },
+
+        /**
+         *
+         * @param timer
+         * @returns {boolean}
+         */
+        filterTimers: function (timer) {
+            if (this.timersFilter) {
+                return timer.activity.data.name.indexOf(this.timersFilter) !== -1;
+            }
+            return true;
+
+        },
+
+        /**
+         *
+         * @param minutes
+         * @returns {number}
+         */
+        formatMinutes: function (minutes) {
+            return minutes * 10;
+        },
+
+        /**
+         *
+         */
+        getTotalMinutesForActivitiesForTheDay: function () {
+            $.event.trigger('show-loading');
+            this.$http.get('/api/activities/getTotalMinutesForDay?date=' + this.date.sql).then(function (response) {
+                this.activitiesWithDurationsForTheDay = response;
+                $.event.trigger('hide-loading');
+            }, function (response) {
+                HelpersRepository.handleResponseError(response);
+            });
+        },
+
+        /**
+         *
+         */
+        getTotalMinutesForActivitiesForTheWeek: function () {
+            $.event.trigger('show-loading');
+            this.$http.get('/api/activities/getTotalMinutesForWeek?date=' + this.date.sql).then(function (response) {
+                this.activitiesWithDurationsForTheWeek = response;
+                $.event.trigger('hide-loading');
+            }, function (response) {
+                HelpersRepository.handleResponseError(response);
+            });
+        },
+
+        ///**
+        // *
+        // */
+        //showNewManualTimerPopup: function () {
+        //    $.event.trigger('show-new-manual-timer-popup');
+        //},
+
+        /**
+         *
+         */
+        listen: function () {
+            var that = this;
+            $(document).on('date-changed', function (event) {
+                that.getTimers();
+                that.getTotalMinutesForActivitiesForTheDay();
+                that.getTotalMinutesForActivitiesForTheWeek();
+            });
+
+            $(document).on('timer-deleted', function (event, timer) {
+                var index = HelpersRepository.findIndexById(that.timers, timer.id);
+                that.timers = _.without(that.timers, that.timers[index]);
+                that.getTotalMinutesForActivitiesForTheDay();
+                that.getTotalMinutesForActivitiesForTheWeek();
+            });
+
+            $(document).on('timer-stopped', function (event) {
+                that.getTotalMinutesForActivitiesForTheDay();
+                that.getTotalMinutesForActivitiesForTheWeek();
+            });
+
+            $(document).on('manual-timer-created', function (event) {
+                that.getTotalMinutesForActivitiesForTheDay();
+                that.getTotalMinutesForActivitiesForTheWeek();
             });
         },
 
@@ -24452,18 +24384,20 @@ var SeriesPopup = Vue.component('series-popup', {
          */
         handleResponseError: function (response) {
             $.event.trigger('response-error', [response]);
-            this.showLoading = false;
+            $.event.trigger('hide-loading');
         }
     },
     props: [
-        'selectedSeries',
-        'exerciseSeries'
+        //data to be received from parent
     ],
     ready: function () {
+        this.getActivities();
+        this.getTimers();
+        this.getTotalMinutesForActivitiesForTheDay();
+        this.getTotalMinutesForActivitiesForTheWeek();
         this.listen();
     }
-});
-
+};
 var FoodPopup = Vue.component('food-popup', {
     template: '#food-popup-template',
     data: function () {
@@ -25883,378 +25817,33 @@ module.exports = {
 };
 
 module.exports = {
-    template: '#autocomplete-template',
-    data: function () {
-        return {
-            autocompleteOptions: [],
-            chosenOption: {
-                name: ''
-            },
-            showDropdown: false,
-            currentIndex: 0
-        };
-    },
-    components: {},
-    methods: {
-
-        /**
-         *
-         * @param keycode
-         */
-        respondToKeyup: function (keycode) {
-            if (keycode !== 13 && keycode !== 38 && keycode !== 40 && keycode !== 39 && keycode !== 37) {
-                //not enter, up, down, right or left arrows
-                this.populateOptions();
-            }
-            else if (keycode === 38) {
-                //up arrow pressed
-                if (this.currentIndex !== 0) {
-                    this.currentIndex--;
-                }
-            }
-            else if (keycode === 40) {
-                //down arrow pressed
-                if (this.autocompleteOptions.length - 1 !== this.currentIndex) {
-                    this.currentIndex++;
-                }
-            }
-            else if (keycode === 13) {
-                this.respondToEnter();
-            }
-        },
-
-        /**
-         *
-         */
-        populateOptions: function () {
-            //fill the dropdown
-            $.event.trigger('show-loading');
-            this.$http.get(this.url + '?typing=' + this.chosenOption.name, function (response) {
-                this.autocompleteOptions = response.data;
-                this.showDropdown = true;
-                this.currentIndex = 0;
-                $.event.trigger('hide-loading');
-            })
-                .error(function (response) {
-                    HelpersRepository.handleResponseError(response);
-                });
-        },
-
-        /**
-         *
-         */
-        respondToEnter: function () {
-            if (this.showDropdown) {
-                //enter is for the autocomplete
-                this.selectOption();
-            }
-            else {
-                //enter is to add the entry
-                this.insertItemFunction();
-            }
-        },
-
-        /**
-         *
-         */
-        selectOption: function () {
-            this.chosenOption = this.autocompleteOptions[this.currentIndex];
-            this.showDropdown = false;
-            if (this.idToFocusAfterAutocomplete) {
-                var that = this;
-                setTimeout(function () {
-                    $("#" + that.idToFocusAfterAutocomplete).focus();
-                }, 100);
-            }
-            this.$dispatch('option-chosen', this.chosenOption);
-        },
-
-        /**
-         *
-         * @param response
-         */
-        handleResponseError: function (response) {
-            $.event.trigger('response-error', [response]);
-            this.showLoading = false;
-        }
-    },
-    props: [
-        'url',
-        'autocompleteField',
-        'insertItemFunction',
-        'idToFocusAfterAutocomplete'
-    ],
-    ready: function () {
-
-    }
-};
-var DatesRepository = require('../../repositories/DatesRepository');
-// require('sugar');
-
-module.exports = {
-    template: '#date-navigation-template',
-    data: function () {
-        return {
-            date: store.state.date
-        };
-    },
-    components: {},
-    watch: {
-        'date.typed': function (newValue, oldValue) {
-            $("#date").val(this.date.typed);
-            $.event.trigger('date-changed');
-        }
-    },
-    methods: {
-        /**
-         *
-         * @param $number
-         */
-        goToDate: function ($number) {
-            DatesRepository.goToDate($number);
-        },
-
-        /**
-         *
-         */
-        goToToday: function () {
-            DatesRepository.today();
-        },
-
-        /**
-         *
-         * @param date
-         * @returns {boolean}
-         */
-        changeDate: function (date) {
-            var date = date || $("#date").val();
-            DatesRepository.changeDate(date);
-        },
-
-        /**
-         *
-         * @param response
-         */
-        handleResponseError: function (response) {
-            $.event.trigger('response-error', [response]);
-            this.showLoading = false;
-        }
-
-    },
-    props: [
-
-    ],
-    ready: function () {
-
-    }
-
-};
-
-module.exports = {
-    template: "#feedback-template",
-    data: function () {
-        return {
-            feedbackMessages: []
-        };
-    },
-    methods: {
-        listen: function () {
-            var that = this;
-            $(document).on('provide-feedback', function (event, message, type) {
-                that.provideFeedback(message, type);
-            });
-            $(document).on('response-error', function (event, response) {
-                that.provideFeedback(that.handleResponseError(response), 'error');
-            })
-        },
-        provideFeedback: function (message, type) {
-            var newMessage = {
-                message: message,
-                type: type
-            };
-
-            var that = this;
-
-            this.feedbackMessages.push(newMessage);
-
-            setTimeout(function () {
-                that.feedbackMessages = _.without(that.feedbackMessages, newMessage);
-            }, 3000);
-        },
-        handleResponseError: function (response) {
-            if (typeof response !== "undefined") {
-                var $message;
-
-                switch(response.status) {
-                    case 503:
-                        $message = 'Sorry, application under construction. Please try again later.';
-                        break;
-                    case 401:
-                        $message = 'You are not logged in';
-                        break;
-                    case 422:
-                        var html = "<ul>";
-
-                        for (var i = 0; i < response.length; i++) {
-                            var error = response[i];
-                            for (var j = 0; j < error.length; j++) {
-                                html += '<li>' + error[j] + '</li>';
-                            }
-                        }
-
-                        html += "</ul>";
-                        $message = html;
-                        break;
-                    default:
-                        $message = response.error;
-                        break;
-                }
-            }
-            else {
-                $message = 'There was an error';
-            }
-
-            return $message;
-
-        }
-    },
-    events: {
-        'provide-feedback': function (message, type) {
-            this.provideFeedback(message, type);
-        },
-        'response-error': function (response) {
-            this.provideFeedback(this.handleResponseError(response), 'error');
-        }
-    },
-    ready: function () {
-        this.listen();
-    },
-};
-module.exports = {
-    data: function () {
-        return {
-            showLoading: false
-        };
-    },
-    template: "#loading-template",
-    props: [
-        //'showLoading'
-    ],
-    methods: {
-        listen: function () {
-            var that = this;
-            $(document).on('show-loading', function (event, message, type) {
-                that.showLoading = true;
-            });
-            $(document).on('hide-loading', function (event, message, type) {
-                that.showLoading = false;
-            });
-        }
-    },
-    ready: function () {
-        this.listen();
-    }
-};
-module.exports = {
-    template: '#activities-page-template',
-    data: function () {
-        return {
-            activities: [],
-            newActivity: {},
-        };
-    },
-    components: {},
-    filters: {
-        formatDuration: function (minutes) {
-            return FiltersRepository.formatDuration(minutes);
-        }
-    },
-    methods: {
-
-        /**
-         *
-         */
-        getActivities: function () {
-            $.event.trigger('show-loading');
-            this.$http.get('/api/activities').then(function (response) {
-                this.activities = response;
-                $.event.trigger('hide-loading');
-            }, function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
-        },
-
-        /**
-         *
-         */
-        insertActivity: function () {
-            $.event.trigger('show-loading');
-            var data = {
-                name: this.newActivity.name,
-                color: this.newActivity.color
-            };
-
-            this.$http.post('/api/activities', data).then(function (response) {
-                this.activities.push(response);
-                $.event.trigger('provide-feedback', ['Activity created', 'success']);
-                $.event.trigger('hide-loading');
-            }, function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
-        },
-
-        /**
-         *
-         * @param activity
-         */
-        showActivityPopup: function (activity) {
-            $.event.trigger('show-activity-popup', [activity]);
-        },
-
-        /**
-         *
-         * @param response
-         */
-        handleResponseError: function (response) {
-            $.event.trigger('response-error', [response]);
-            this.showLoading = false;
-        }
-    },
-    props: [
-        //data to be received from parent
-    ],
-    ready: function () {
-        this.getActivities();
-    }
-};
-
-var ActivityPopup = Vue.component('activity-popup', {
-    template: '#activity-popup-template',
+    template: '#entries-for-specific-exercise-and-date-and-unit-popup-template',
     data: function () {
         return {
             showPopup: false,
-            selectedActivity: {}
+            entries: {}
         };
     },
     components: {},
     methods: {
 
         /**
-         *
+         * Get all the the user's entries for a particular exercise
+         * with a particular unit on a particular date.
+         * @param entry
          */
-        updateActivity: function () {
+        getEntriesForSpecificExerciseAndDateAndUnit: function (entry) {
             $.event.trigger('show-loading');
 
             var data = {
-                name: this.selectedActivity.name,
-                color: this.selectedActivity.color
+                date: this.date.sql,
+                exercise_id: entry.exercise.data.id,
+                exercise_unit_id: entry.unit.id
             };
 
-            this.$http.put('/api/activities/' + this.selectedActivity.id, data).then(function (response) {
-                var index = _.indexOf(this.activities, _.findWhere(this.activities, {id: this.selectedActivity.id}));
-                this.activities[index] = response;
-                this.showPopup = false;
-                $.event.trigger('provide-feedback', ['Activity updated', 'success']);
+            this.$http.get('api/exerciseEntries/specificExerciseAndDateAndUnit', data).then(function (response) {
+                this.entries = response;
+                this.showPopup = true;
                 $.event.trigger('hide-loading');
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
@@ -26264,341 +25853,204 @@ var ActivityPopup = Vue.component('activity-popup', {
         /**
          *
          */
-        deleteActivity: function () {
-            if (confirm("Are you sure? The timers for the activity will be deleted, too!")) {
-                $.event.trigger('show-loading');
-                this.$http.delete('/api/activities/' + this.selectedActivity.id).then(function (response) {
-                    this.activities = _.without(this.activities, this.selectedActivity);
-                    this.showPopup = false;
-                    $.event.trigger('provide-feedback', ['Activity deleted', 'success']);
-                    $.event.trigger('hide-loading');
-                }, function (response) {
-                    HelpersRepository.handleResponseError(response);
-                });
-            }
-        },
-
-        /**
-        *
-        */
-        closePopup: function ($event) {
-            HelpersRepository.closePopup($event, this);
-        },
-
-        /**
-         *
-         */
-        listen: function () {
-            var that = this;
-            $(document).on('show-activity-popup', function (event, activity) {
-                that.selectedActivity = activity;
-                that.showPopup = true;
-            });
-        }
-    },
-    props: [
-        'activities'
-    ],
-    ready: function () {
-        this.listen();
-    }
-});
-
-var DatesRepository = require('../../repositories/DatesRepository');
-
-module.exports = {
-    template: '#graphs-page-template',
-    data: function () {
-        return {
-            date: store.state.date,
-            timers: []
-        };
-    },
-    components: {},
-    methods: {
-
-        /**
-         *
-         */
-        getTimers: function () {
-            $.event.trigger('show-loading');
-            var url = TimersRepository.calculateUrl(false, this.date.sql);
-
-            this.$http.get(url).then(function (response) {
-                this.timers = response;
-                $.event.trigger('hide-loading');
-            }, function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
-        },
-
-        /**
-         *
-         * @param response
-         */
-        handleResponseError: function (response) {
-            $.event.trigger('response-error', [response]);
-            this.showLoading = false;
-        }
-    },
-    props: [
-        //data to be received from parent
-    ],
-    ready: function () {
-        this.getTimers();
-    }
-};
-
-
-module.exports = {
-    template: '#new-manual-timer-template',
-    data: function () {
-        return {
-            newManualTimer: {
-                activity: {}
-            },
-            showPopup: true
-        };
-    },
-    components: {},
-    methods: {
-        /**
-         * Instead of starting and stopping the timer,
-         * enter the start and stop times manually
-         */
-        insertManualTimer: function () {
-            $.event.trigger('show-loading');
-            var data = TimersRepository.setData(this.newManualTimer, this.date.sql);
-            $('#timer-clock').timer({format: '%H:%M:%S'});
-
-            this.$http.post('/api/timers/', data).then(function (response) {
-                this.timers.push(response);
-                console.log(router);
-                $.event.trigger('manual-timer-created');
-                $.event.trigger('provide-feedback', ['Manual entry created', 'success']);
-                $.event.trigger('hide-loading');
-                router.go('/timers');
-            }, function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
-        },
-
-        /**
-         *
-         */
-        setDefaultActivity: function () {
-            this.newManualTimer.activity = this.activities[0];
-        },
-
-        /**
-         *
-         */
-        closePopup: function ($event) {
-            HelpersRepository.closePopup($event, this);
-        },
-
-        /**
-         *
-         */
-        listen: function () {
-            var that = this;
-            $(document).on('activities-loaded', function (event) {
-                setTimeout(function () {
-                    that.setDefaultActivity();
-                }, 500);
-            });
-
-            $(document).on('show-new-manual-timer-popup', function (event) {
-                if (that.$route.path.indexOf('/timers') !== -1) {
-                    //We're on the timers page so we can show the popup
-                    that.showPopup = true;
-                }
-                else {
-                    //Wait for the timers page to load before showing the popup
-                    setTimeout(function () {
-                        that.showPopup = true;
-                    }, 5000);
-                }
-            });
-        }
-
-    },
-    props: [
-        'activities',
-        'date',
-        'timers'
-    ],
-    ready: function () {
-        this.listen();
-        this.setDefaultActivity();
-    }
-};
-
-var NewTimer = Vue.component('new-timer', {
-    template: '#new-timer-template',
-    data: function () {
-        return {
-            newTimer: {
-                activity: {}
-            },
-        };
-    },
-    components: {},
-    methods: {
-
-        /**
-         *
-         */
-        startTimer: function () {
-            $.event.trigger('show-loading');
-            var data = TimersRepository.setData(this.newTimer);
-            $('#timer-clock').timer({format: '%H:%M:%S'});
-
-            this.$http.post('/api/timers/', data).then(function (response) {
-                this.timerInProgress = response;
-                $.event.trigger('provide-feedback', ['Timer started', 'success']);
-                $.event.trigger('hide-loading');
-            }, function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
-        },
-
-        /**
-         *
-         */
-        stopTimer: function () {
-            $.event.trigger('show-loading');
-            $('#timer-clock').timer('remove');
-
-            var data = {
-                finish: TimersRepository.calculateFinishTime(this.timerInProgress)
-            };
-
-            this.$http.put('/api/timers/' + this.timerInProgress.id, data).then(function (response) {
-                this.timerInProgress = false;
-                this.timers.push(response);
-                $.event.trigger('timer-stopped');
-                $.event.trigger('provide-feedback', ['Timer updated', 'success']);
-                $.event.trigger('hide-loading');
-            }, function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
-        },
-
-        /**
-         *
-         */
-        setDefaultActivity: function () {
-            this.newTimer.activity = this.activities[0];
-        },
-
-        /**
-         *
-         */
-        checkForTimerInProgress: function () {
-            $.event.trigger('show-loading');
-            this.$http.get('/api/timers/checkForTimerInProgress').then(function (response) {
-                if (response.activity) {
-                    this.resumeTimerOnPageLoad(response);
-                }
-                $.event.trigger('hide-loading');
-            }, function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
-        },
-
-        /**
-         *
-         * @param timer
-         */
-        resumeTimerOnPageLoad: function (timer) {
-            this.timerInProgress = timer;
-            var seconds = moment().diff(moment(timer.start, 'YYYY-MM-DD HH:mm:ss'), 'seconds');
-            $('#timer-clock').timer({
-                format: '%H:%M:%S',
-                //The timer has already started
-                seconds: seconds
-            });
-        },
-
-        /**
-         *
-         */
-        listen: function () {
-            var that = this;
-            $(document).on('activities-loaded', function (event) {
-                setTimeout(function () {
-                    that.setDefaultActivity();
-                }, 500);
-            });
-        }
-
-    },
-    props: [
-        'activities',
-        'timerInProgress',
-        'showTimerInProgress',
-        'timers'
-    ],
-    ready: function () {
-        this.listen();
-        this.checkForTimerInProgress();
-    }
-});
-
-var TimerPopup = Vue.component('timer-popup', {
-    template: '#timer-popup-template',
-    data: function () {
-        return {
-            showPopup: false,
-            selectedTimer: {
-                id: '',
-                start: '',
-                finish: '',
-                activity: {
-                    data: {}
-                }
-            }
-        };
-    },
-    components: {},
-    methods: {
-
-        /**
-        *
-        */
-        updateTimer: function () {
-            $.event.trigger('show-loading');
-
-            var data = {
-                start: this.selectedTimer.start,
-                finish: this.selectedTimer.finish,
-                activity_id: this.selectedTimer.activity.data.id
-            };
-
-            this.$http.put('/api/timers/' + this.selectedTimer.id, data).then(function (response) {
-                var index = _.indexOf(this.timers, _.findWhere(this.timers, {id: this.selectedTimer.id}));
-                this.timers[index].start = response.start;
-                this.timers[index].finish = response.finish;
-                this.timers[index].activity = response.activity;
-                $.event.trigger('provide-feedback', ['Timer updated', 'success']);
-                this.showPopup = false;
-                $.event.trigger('hide-loading');
-            }, function (data, status, response) {
-                HelpersRepository.handleResponseError(data, status, response);
-            });
-        },
-
-        /**
-         *
-         */
-        deleteTimer: function () {
+        deleteExerciseEntry: function (entry) {
             if (confirm("Are you sure?")) {
                 $.event.trigger('show-loading');
-                this.$http.delete('/api/timers/' + this.selectedTimer.id).then(function (response) {
-                    $.event.trigger('timer-deleted', [this.selectedTimer]);
+                this.$http.delete('/api/exerciseEntries/' + entry.id).then(function (response) {
+                    this.entries = _.without(this.entries, entry);
+                    //This might be unnecessary to do each time, and it fetches a lot
+                    //of data for just deleting one entry.
+                    //Perhaps do it when the popup closes instead?
+                    $.event.trigger('get-exercise-entries-for-the-day');
+                    $.event.trigger('provide-feedback', ['Entry deleted', 'success']);
+                    $.event.trigger('hide-loading');
+                }, function (response) {
+                    HelpersRepository.handleResponseError(response);
+                });
+            }
+        },
+
+        /**
+         *
+         */
+        closePopup: function ($event) {
+            if ($event.target.className === 'popup-outer') {
+                this.showPopup = false;
+            }
+        },
+
+        /**
+         *
+         */
+        listen: function () {
+            var that = this;
+            $(document).on('show-entries-for-specific-exercise-and-date-and-unit-popup', function (event, entry) {
+                that.getEntriesForSpecificExerciseAndDateAndUnit(entry);
+            });
+        },
+
+        /**
+         *
+         * @param response
+         */
+        handleResponseError: function (response) {
+            $.event.trigger('response-error', [response]);
+            $.event.trigger('response-error', [response]);
+            this.showLoading = false;
+        }
+    },
+    props: [
+        'date'
+    ],
+    ready: function () {
+        this.listen();
+    }
+};
+
+module.exports = {
+    template: '#exercise-entries-template',
+    data: function () {
+        return {
+            exerciseEntries: [],
+            showExerciseEntryInputs: false,
+            selectedExercise: {
+                unit: {}
+            },
+        };
+    },
+    components: {},
+    methods: {
+
+        /**
+         *
+         * @param entry
+         */
+        showEntriesForSpecificExerciseAndDateAndUnitPopup: function (entry) {
+            $.event.trigger('show-entries-for-specific-exercise-and-date-and-unit-popup', [entry]);
+        },
+
+        /**
+         *
+         */
+        getEntriesForTheDay: function () {
+            $.event.trigger('show-loading');
+            this.$http.get('/api/exerciseEntries/' + this.date.sql).then(function (response) {
+                this.exerciseEntries = response.data;
+                $.event.trigger('hide-loading');
+            }, function (response) {
+                HelpersRepository.handleResponseError(response);
+            });
+        },
+
+        /**
+         * Similar method to this in SeriesExercisesComponent
+         */
+        insertExerciseSet: function (exercise) {
+            $.event.trigger('show-loading');
+            var data = {
+                date: this.date.sql,
+                exercise_id: exercise.data.id,
+                exerciseSet: true
+            };
+
+            this.$http.post('/api/exerciseEntries', data).then(function (response) {
+                $.event.trigger('provide-feedback', ['Set added', 'success']);
+                this.getEntriesForTheDay();
+                this.exerciseEntries = response;
+                $.event.trigger('hide-loading');
+            }, function (response) {
+                HelpersRepository.handleResponseError(response);
+            });
+        },
+
+        /**
+         *
+         */
+        listen: function () {
+            var that = this;
+            /**
+             * For updating the exercise entries from the
+             * series controller on the series page
+             */
+            $(document).on('get-exercise-entries-for-the-day', function (event) {
+                that.getEntriesForTheDay();
+            });
+            $(document).on('date-changed', function (event) {
+                that.getEntriesForTheDay();
+            });
+            $(document).on('exercise-entry-added', function (event, data) {
+                //Todo: all the entries I think are actually in the data (unnecessarily)
+                that.getEntriesForTheDay();
+            });
+            /**
+             * For updating the exercise entries from the
+             * series controller on the series page
+             */
+            //$(document).on('getExerciseEntries', function (event, data) {
+            //    that.exerciseEntries = data;
+            //});
+        },
+
+        /**
+         *
+         * @param response
+         */
+        handleResponseError: function (response) {
+            $.event.trigger('response-error', [response]);
+            this.showLoading = false;
+        }
+    },
+    props: [
+        'date'
+    ],
+    ready: function () {
+        this.listen();
+        this.getEntriesForTheDay();
+    }
+};
+var ExercisePopup = Vue.component('exercise-popup', {
+    template: '#exercise-popup-template',
+    data: function () {
+        return {
+            showPopup: false
+        };
+    },
+    components: {},
+    methods: {
+
+        /**
+         *
+         */
+        updateExercise: function () {
+            $.event.trigger('show-loading');
+
+            var data = ExercisesRepository.setData(this.selectedExercise);
+
+            this.$http.put('/api/exercises/' + this.selectedExercise.id, data).then(function (response) {
+                this.selectedExercise = response.data;
+                store.updateExercise(response.data);
+
+
+                this.showPopup = false;
+                $.event.trigger('provide-feedback', ['Exercise updated', 'success']);
+                $.event.trigger('hide-loading');
+                $("#exercise-step-number").val("");
+            }, function (response) {
+                HelpersRepository.handleResponseError(response);
+            });
+        },
+
+        /**
+         *
+         */
+        deleteExercise: function () {
+            if (confirm("Are you sure?")) {
+                $.event.trigger('show-loading');
+                this.$http.delete('/api/exercises/' + this.selectedExercise.id).then(function (response) {
+                    var index = _.indexOf(this.exercises, _.findWhere(this.exercises, {id: this.selectedExercise.id}));
+                    this.exercises = _.without(this.exercises, this.exercises[index]);
+                    $.event.trigger('provide-feedback', ['Exercise deleted', 'success']);
                     this.showPopup = false;
-                    $.event.trigger('provide-feedback', ['Timer deleted', 'success']);
                     $.event.trigger('hide-loading');
                 }, function (response) {
                     HelpersRepository.handleResponseError(response);
@@ -26610,7 +26062,9 @@ var TimerPopup = Vue.component('timer-popup', {
         *
         */
         closePopup: function ($event) {
-            HelpersRepository.closePopup($event, this);
+            if ($event.target.className === 'popup-outer') {
+                this.showPopup = false;
+            }
         },
 
         /**
@@ -26618,189 +26072,8 @@ var TimerPopup = Vue.component('timer-popup', {
          */
         listen: function () {
             var that = this;
-            $(document).on('show-timer-popup', function (event, timer) {
-                //So that the timer doesn't appear updated if the user closes the popup without saving
-                that.selectedTimer.id = timer.id;
-                that.selectedTimer.start = timer.start;
-                that.selectedTimer.finish = timer.finish;
-                that.selectedTimer.activity = timer.activity;
+            $(document).on('show-exercise-popup', function (event) {
                 that.showPopup = true;
-            });
-        }
-    },
-    props: [
-        'activities',
-        'timers'
-    ],
-    ready: function () {
-        this.listen();
-    }
-});
-
-module.exports = {
-    template: '#timers-page-template',
-    data: function () {
-        return {
-            date: store.state.date,
-            timers: [],
-            activities: [],
-            timersFilter: false,
-            activitiesFilter: '',
-            activitiesWithDurationsForTheWeek: [],
-            activitiesWithDurationsForTheDay: [],
-            timerInProgress: false,
-            showTimerInProgress: true,
-        };
-    },
-    filters: {
-        formatDateTime: function (dateTime, format) {
-            if (!format) {
-                return moment(dateTime, 'YYYY-MM-DD HH:mm:ss').format('hh:mm:ssa DD/MM');
-            }
-            else if (format === 'seconds') {
-                return moment(dateTime, 'YYYY-MM-DD HH:mm:ss').format('ss a DD/MM');
-            }
-            else if (format === 'hoursAndMinutes') {
-                return moment(dateTime, 'YYYY-MM-DD HH:mm:ss').format('hh:mm');
-            }
-            else if (format === 'object') {
-                return {
-                    seconds: moment(dateTime, 'YYYY-MM-DD HH:mm:ss').format('ss')
-                };
-            }
-        },
-        doubleDigits: function (number) {
-            if (number < 10) {
-                return '0' + number;
-            }
-
-            return number;
-        },
-        formatDuration: function (minutes) {
-            return FiltersRepository.formatDuration(minutes);
-        }
-    },
-    components: {},
-    methods: {
-
-        /**
-         *
-         * @param timer
-         */
-        showTimerPopup: function (timer) {
-            $.event.trigger('show-timer-popup', [timer]);
-        },
-
-        /**
-         *
-         */
-        getActivities: function () {
-            $.event.trigger('show-loading');
-            this.$http.get('/api/activities').then(function (response) {
-                this.activities = response;
-                $.event.trigger('activities-loaded');
-                $.event.trigger('hide-loading');
-            }, function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
-        },
-
-        /**
-         *
-         */
-        getTimers: function () {
-            $.event.trigger('show-loading');
-            var url = TimersRepository.calculateUrl(false, this.date.sql);
-
-            this.$http.get(url).then(function (response) {
-                this.timers = response;
-                $.event.trigger('hide-loading');
-            }, function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
-        },
-
-        /**
-         *
-         * @param timer
-         * @returns {boolean}
-         */
-        filterTimers: function (timer) {
-            if (this.timersFilter) {
-                return timer.activity.data.name.indexOf(this.timersFilter) !== -1;
-            }
-            return true;
-
-        },
-
-        /**
-         *
-         * @param minutes
-         * @returns {number}
-         */
-        formatMinutes: function (minutes) {
-            return minutes * 10;
-        },
-
-        /**
-         *
-         */
-        getTotalMinutesForActivitiesForTheDay: function () {
-            $.event.trigger('show-loading');
-            this.$http.get('/api/activities/getTotalMinutesForDay?date=' + this.date.sql).then(function (response) {
-                this.activitiesWithDurationsForTheDay = response;
-                $.event.trigger('hide-loading');
-            }, function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
-        },
-
-        /**
-         *
-         */
-        getTotalMinutesForActivitiesForTheWeek: function () {
-            $.event.trigger('show-loading');
-            this.$http.get('/api/activities/getTotalMinutesForWeek?date=' + this.date.sql).then(function (response) {
-                this.activitiesWithDurationsForTheWeek = response;
-                $.event.trigger('hide-loading');
-            }, function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
-        },
-
-        ///**
-        // *
-        // */
-        //showNewManualTimerPopup: function () {
-        //    $.event.trigger('show-new-manual-timer-popup');
-        //},
-
-        /**
-         *
-         */
-        listen: function () {
-            var that = this;
-            $(document).on('date-changed', function (event) {
-                that.getTimers();
-                that.getTotalMinutesForActivitiesForTheDay();
-                that.getTotalMinutesForActivitiesForTheWeek();
-            });
-
-            $(document).on('timer-deleted', function (event, timer) {
-                var index = HelpersRepository.findIndexById(that.timers, timer.id);
-                that.timers = _.without(that.timers, that.timers[index]);
-                that.getTotalMinutesForActivitiesForTheDay();
-                that.getTotalMinutesForActivitiesForTheWeek();
-            });
-
-            $(document).on('timer-stopped', function (event) {
-                that.getTotalMinutesForActivitiesForTheDay();
-                that.getTotalMinutesForActivitiesForTheWeek();
-            });
-
-            $(document).on('manual-timer-created', function (event) {
-                that.getTotalMinutesForActivitiesForTheDay();
-                that.getTotalMinutesForActivitiesForTheWeek();
             });
         },
 
@@ -26810,20 +26083,747 @@ module.exports = {
          */
         handleResponseError: function (response) {
             $.event.trigger('response-error', [response]);
-            $.event.trigger('hide-loading');
+            this.showLoading = false;
+        }
+    },
+    props: [
+        'selectedExercise',
+        'exercises',
+        'exerciseSeries',
+        'programs',
+        'units'
+    ],
+    ready: function () {
+        this.listen();
+    }
+});
+
+module.exports = {
+    template: '#exercise-units-page-template',
+    data: function () {
+        return {
+            units: [],
+            newUnit: {}
+        };
+    },
+    components: {},
+    methods: {
+        /**
+         *
+         */
+        getUnits: function () {
+            $.event.trigger('show-loading');
+            this.$http.get('/api/exerciseUnits').then(function (response) {
+                this.units = response;
+                $.event.trigger('hide-loading');
+            }, function (response) {
+                HelpersRepository.handleResponseError(response);
+            });
+        },
+
+        /**
+         *
+         */
+        insertUnit: function () {
+            $.event.trigger('show-loading');
+            var data = {
+                name: this.newUnit.name
+            };
+
+            this.$http.post('/api/exerciseUnits', data).then(function (response) {
+                this.units.push(response.data);
+                $.event.trigger('provide-feedback', ['Unit created', 'success']);
+                //this.$broadcast('provide-feedback', 'Unit created', 'success');
+                $.event.trigger('hide-loading');
+                $("#create-new-exercise-unit").val("");
+            }, function (response) {
+                HelpersRepository.handleResponseError(response);
+            });
+        },
+
+        /**
+         *
+         * @param unit
+         */
+        deleteUnit: function (unit) {
+            if (confirm("Are you sure?")) {
+                $.event.trigger('show-loading');
+                this.$http.delete('/api/exerciseUnits/' + unit.id).then(function (response) {
+                    this.units = _.without(this.units, unit);
+                    $.event.trigger('provide-feedback', ['Unit deleted', 'success']);
+                    //this.$broadcast('provide-feedback', 'Unit deleted', 'success');
+                    $.event.trigger('hide-loading');
+
+                }, function (response) {
+                    HelpersRepository.handleResponseError(response);
+                });
+            }
+        },
+    },
+    props: [
+        //data to be received from parent
+    ],
+    ready: function () {
+        this.getUnits();
+    }
+};
+module.exports = {
+    template: '#exercises-page-template',
+    data: function () {
+        return {
+            date: store.state.date,
+            exerciseSeries: [],
+            exerciseSeriesHistory: [],
+            showNewSeriesFields: false,
+            showNewExerciseFields: false,
+            selectedSeries: {
+                exercises: {
+                    data: []
+                }
+            },
+            showExerciseEntryInputs: false,
+            units: [],
+            programs: [],
+            shared: store.state,
+            selectedExercise: ExercisesRepository.selectedExercise,
+            showStretches: false,
+            filterByName: '',
+            filterByDescription: '',
+            filterByPriority: 1,
+            filterBySeries: '',
+            showFilters: false
+        };
+    },
+    components: {},
+    computed: {
+        // exercisesBySeries: function () {
+        //     var that = this;
+        //     var groupedExercises = this.filterExercises(this.shared.exercises);
+        //
+        //     if (!this.showStretches) {
+        //         groupedExercises = _.filter(groupedExercises, function (exercise) {
+        //             return !exercise.stretch;
+        //         });
+        //     }
+        //
+        //     groupedExercises = _.groupBy(groupedExercises, function (exercise) {
+        //         return exercise.series.name;
+        //     });
+        //
+        //     return groupedExercises;
+        // },
+    },
+    filters: {
+        filterExercises: function (exercises) {
+            var that = this;
+
+            //Sort
+            exercises = _.chain(exercises)
+                .sortBy(function (exercise) {return exercise.stepNumber})
+                .sortBy(function (exercise) {return exercise.series.id})
+                .sortBy('priority')
+                .sortBy(function (exercise) {
+                    return exercise.lastDone * -1
+                })
+                .partition(function (exercise) {
+                    return exercise.lastDone === null;
+                })
+                .flatten()
+                .value();
+
+            //Filter
+            return exercises.filter(function (exercise) {
+                var filteredIn = true;
+
+                //Priority filter
+                if (that.filterByPriority && exercise.priority != that.filterByPriority) {
+                    filteredIn = false;
+                }
+
+                //Name filter
+                if (that.filterByName && exercise.name.indexOf(that.filterByName) === -1) {
+                    filteredIn = false;
+                }
+
+                //Description filter
+                if (exercise.description && exercise.description.indexOf(that.filterByDescription) === -1) {
+                    filteredIn = false;
+                }
+
+                else if (!exercise.description && that.filterByDescription !== '') {
+                    filteredIn = false;
+                }
+
+                //Stretches files
+                if (!that.showStretches && exercise.stretch) {
+                    filteredIn = false;
+                }
+
+                //Series filter
+                if (that.filterBySeries && exercise.series.name != that.filterBySeries && that.filterBySeries !== 'all') {
+                    filteredIn = false;
+                }
+
+                return filteredIn;
+            });
+        },
+
+        filterSeries: function (series) {
+            var that = this;
+
+            //Sort
+            series = _.chain(series)
+                .sortBy('priority')
+                .sortBy('lastDone')
+                .value();
+
+            /**
+             * @VP:
+             * This method feels like a lot of code for just
+             * a simple thing-ordering series by their lastDone value,
+             * putting those with a null lastDone value on the end.
+             * I tried underscore.js _.partition with _.flatten,
+             * but it put 0 values on the end,
+             * (I had trouble getting the predicate parameter of the _.partition method to work.)
+             */
+            series = this.moveLastDoneNullToEnd(series);
+
+            //Filter
+            return series.filter(function (thisSeries) {
+                var filteredIn = true;
+
+                //Priority filter
+                if (that.priorityFilter && thisSeries.priority != that.priorityFilter) {
+                    filteredIn = false;
+                }
+
+                return filteredIn;
+            });
+        },
+    },
+    methods: {
+
+        /**
+         *
+         */
+        insertExerciseSet: function (exercise) {
+            $.event.trigger('show-loading');
+            var data = {
+                date: moment().format('YYYY-MM-DD'),
+                exercise_id: exercise.id,
+                exerciseSet: true
+            };
+
+            this.$http.post('/api/exerciseEntries', data).then(function (response) {
+                exercise.lastDone = 0;
+                $.event.trigger('provide-feedback', ['Set added', 'success']);
+                $.event.trigger('get-exercise-entries-for-the-day');
+                $.event.trigger('hide-loading');
+            }, function (response) {
+                HelpersRepository.handleResponseError(response);
+            });
+        },
+
+        /**
+         *
+         */
+        showExercisePopup: function (exercise) {
+            $.event.trigger('show-loading');
+            this.$http.get('/api/exercises/' + exercise.id).then(function (response) {
+                this.selectedExercise = response;
+                $.event.trigger('show-exercise-popup');
+                $.event.trigger('hide-loading');
+            }, function (response) {
+                HelpersRepository.handleResponseError(response);
+            });
+        },
+
+        /**
+         * For the series filter
+         * @param series
+         * @returns {*}
+         */
+        moveLastDoneNullToEnd: function (series) {
+            //Get the series that have lastDone null values
+            var seriesWithNullLastDone = _.filter(series, function (oneSeries) {
+                return oneSeries.lastDone == null;
+            });
+
+            //Remove the series that have lastDone null values
+            for (var i = 0; i < seriesWithNullLastDone.length; i++) {
+                var index = _.indexOf(series, _.findWhere(series, {id: seriesWithNullLastDone[i].id}));
+                series = _.without(series, series[index]);
+            }
+
+            //Add the series that have lastDone null values back on the
+            //end of the series array
+            for (var i = 0; i < seriesWithNullLastDone.length; i++) {
+                series.push(seriesWithNullLastDone[i]);
+            }
+
+            return series;
+        },
+
+        /**
+         *
+         */
+        getSeries: function () {
+            $.event.trigger('show-loading');
+            this.$http.get('/api/exerciseSeries').then(function (response) {
+                this.exerciseSeries = response;
+                $.event.trigger('hide-loading');
+            }, function (response) {
+                HelpersRepository.handleResponseError(response);
+            });
+        },
+
+        /**
+         *
+         */
+        getExerciseSeriesHistory: function (key) {
+            $.event.trigger('show-loading');
+
+            //Find the series. The exercises were grouped according to series, so all we have is the series name (key).
+            var series = _.find(this.exerciseSeries, function (series) {
+                return series.name === key;
+            });
+
+            this.$http.get('api/seriesEntries/' + series.id).then(function (response) {
+                //For displaying the name of the series in the popup
+                this.selectedSeries = series;
+                this.exerciseSeriesHistory = response;
+                $.event.trigger('show-series-history-popup');
+                $.event.trigger('hide-loading');
+            }, function (response) {
+                HelpersRepository.handleResponseError(response);
+            });
+        },
+
+        /**
+         *
+         */
+        getExercisesInSeries: function (series) {
+            $.event.trigger('show-loading');
+            this.$http.get('/api/exerciseSeries/' + series.id).then(function (response) {
+                this.selectedSeries = response;
+                $.event.trigger('hide-loading');
+            }, function (response) {
+                HelpersRepository.handleResponseError(response);
+            });
+        },
+
+        /**
+         *
+         */
+        showExerciseSeriesPopup: function (key) {
+            //Find the series. The exercises were grouped according to series, so all we have is the series name (key).
+            var series = _.find(this.exerciseSeries, function (series) {
+                return series.name === key;
+            });
+
+            $.event.trigger('show-loading');
+            this.$http.get('/api/exerciseSeries/' + series.id).then(function (response) {
+                this.selectedSeries = response;
+                $.event.trigger('show-series-popup');
+                $.event.trigger('hide-loading');
+            }, function (response) {
+                HelpersRepository.handleResponseError(response);
+            });
+        },
+
+        /**
+         *
+         */
+        getPrograms: function () {
+            $.event.trigger('show-loading');
+            this.$http.get('/api/exercisePrograms').then(function (response) {
+                this.programs = response;
+                $.event.trigger('hide-loading');
+            }, function (response) {
+                HelpersRepository.handleResponseError(response);
+            });
+        },
+
+        /**
+         *
+         */
+        getUnits: function () {
+            $.event.trigger('show-loading');
+            this.$http.get('/api/exerciseUnits').then(function (response) {
+                this.units = response;
+                $.event.trigger('hide-loading');
+            }, function (response) {
+                HelpersRepository.handleResponseError(response);
+            });
+        },
+
+        /**
+         *
+         * @param response
+         */
+        handleResponseError: function (response) {
+            $.event.trigger('response-error', [response]);
+            this.showLoading = false;
         }
     },
     props: [
         //data to be received from parent
     ],
     ready: function () {
-        this.getActivities();
-        this.getTimers();
-        this.getTotalMinutesForActivitiesForTheDay();
-        this.getTotalMinutesForActivitiesForTheWeek();
-        this.listen();
+        this.getPrograms();
+        this.getUnits();
+        this.getSeries();
     }
 };
+
+
+var $ = require('jquery');
+
+module.exports = {
+    template: '#navbar-template',
+    data: function () {
+        return {
+
+        };
+    },
+    components: {},
+    methods: {
+        /**
+         *
+         */
+        showNewManualTimerPopup: function () {
+            $.event.trigger('show-new-manual-timer-popup');
+        },
+    },
+    props: [
+        //data to be received from parent
+    ],
+    ready: function () {
+
+    }
+};
+
+module.exports = {
+    template: '#new-exercise-template',
+    data: function () {
+        return {
+            newExercise: {}
+        };
+    },
+    components: {},
+    methods: {
+
+        /**
+         *
+         */
+        insertExercise: function () {
+            $.event.trigger('show-loading');
+            var data = ExercisesRepository.setData(this.newExercise);
+
+            this.$http.post('/api/exercises', data).then(function (response) {
+                if (this.exercises) {
+                    //If adding new exercise from the series page,
+                    //this.exercises isn't specified
+                    this.exercises.push(response);
+                }
+
+                $.event.trigger('provide-feedback', ['Exercise created', 'success']);
+                $.event.trigger('hide-loading');
+            }, function (response) {
+                HelpersRepository.handleResponseError(response);
+            });
+        },
+
+        /**
+         *
+         * @param response
+         */
+        handleResponseError: function (response) {
+            $.event.trigger('response-error', [response]);
+            this.showLoading = false;
+        }
+    },
+    props: [
+        'showNewExerciseFields',
+        'exercises',
+        'programs',
+        'exerciseSeries',
+        'units'
+    ],
+    ready: function () {
+
+    }
+};
+
+module.exports = {
+    template: '#new-exercise-entry-template',
+    data: function () {
+        return {
+            newEntry: {},
+            units: []
+        };
+    },
+    components: {},
+    methods: {
+
+        /**
+         *
+         */
+        getUnits: function () {
+            $.event.trigger('show-loading');
+            this.$http.get('/api/exerciseUnits').then(function (response) {
+                this.units = response;
+                $.event.trigger('hide-loading');
+            }, function (response) {
+                HelpersRepository.handleResponseError(response);
+            });
+        },
+
+        /**
+         *
+         */
+        insertEntry: function () {
+            $.event.trigger('show-loading');
+
+            //this.newEntry.exercise.unit_id = $("#exercise-unit").val();
+            //$("#exercise").val("").focus();
+
+            var data = {
+                date: this.date.sql,
+                exercise_id: this.newEntry.id,
+                quantity: this.newEntry.quantity,
+                unit_id: this.newEntry.unit.id
+            };
+
+            this.$http.post('/api/exerciseEntries', data).then(function (response) {
+                //this.exerciseEntries = response;
+                $.event.trigger('exercise-entry-added', [response]);
+                $.event.trigger('provide-feedback', ['Entry created', 'success']);
+                $.event.trigger('hide-loading');
+            }, function (response) {
+                HelpersRepository.handleResponseError(response);
+            });
+        },
+
+        /**
+         *
+         * @param response
+         */
+        handleResponseError: function (response) {
+            $.event.trigger('response-error', [response]);
+            this.showLoading = false;
+        }
+    },
+    props: [
+        'date'
+    ],
+    events: {
+        'option-chosen': function (option) {
+            this.newEntry = option;
+            this.newEntry.unit = option.defaultUnit.data;
+            this.newEntry.quantity = option.defaultQuantity;
+        }
+    },
+    ready: function () {
+        this.getUnits();
+    }
+};
+var NewSeries = Vue.component('new-series', {
+    template: '#new-series-template',
+    data: function () {
+        return {
+            newSeries: {}
+        };
+    },
+    components: {},
+    methods: {
+
+        /**
+         *
+         */
+        insertSeries: function () {
+            $.event.trigger('show-loading');
+            var data = {
+                name: this.newSeries.name
+            };
+
+            this.$http.post('/api/exerciseSeries', data).then(function (response) {
+                this.exerciseSeries.push(response.data);
+                $.event.trigger('provide-feedback', ['Series created', 'success']);
+                this.showLoading = false;
+                this.newSeries.name = '';
+                $.event.trigger('hide-loading');
+            }, function (response) {
+                HelpersRepository.handleResponseError(response);
+            });
+        },
+
+        /**
+         *
+         * @param response
+         */
+        handleResponseError: function (response) {
+            $.event.trigger('response-error', [response]);
+            this.showLoading = false;
+        }
+    },
+    props: [
+        'showNewSeriesFields',
+        'exerciseSeries'
+    ],
+    ready: function () {
+
+    }
+});
+
+var SeriesHistoryPopup = Vue.component('series-history-popup', {
+    template: '#series-history-popup-template',
+    data: function () {
+        return {
+            showPopup: false,
+            filterByExercise: ''
+        };
+    },
+    components: {},
+    filters: {
+        exerciseFilter: function (entries) {
+            var that = this;
+            return entries.filter(function (entriesForDay) {
+                return entriesForDay.exercise.data.name.indexOf(that.filterByExercise) !== -1;
+            });
+        }
+    },
+    methods: {
+
+        /**
+        *
+        */
+        closePopup: function ($event) {
+            if ($event.target.className === 'popup-outer') {
+                this.showPopup = false;
+            }
+        },
+
+        /**
+         *
+         */
+        listen: function () {
+            var that = this;
+            $(document).on('show-series-history-popup', function (event, series) {
+                that.selectedSeries = series;
+                that.showPopup = true;
+            });
+        },
+
+        /**
+         *
+         * @param response
+         */
+        handleResponseError: function (response) {
+            $.event.trigger('response-error', [response]);
+            this.showLoading = false;
+        }
+    },
+    props: [
+        'exerciseSeriesHistory',
+        'selectedSeries'
+    ],
+    ready: function () {
+        this.listen();
+    }
+});
+
+var SeriesPopup = Vue.component('series-popup', {
+    template: '#series-popup-template',
+    data: function () {
+        return {
+            showPopup: false
+        };
+    },
+    components: {},
+    methods: {
+
+        /**
+         *
+         */
+        updateSeries: function () {
+            $.event.trigger('show-loading');
+
+            var data = {
+                name: this.selectedSeries.name,
+                priority: this.selectedSeries.priority,
+                workout_ids: this.selectedSeries.workout_ids
+            };
+
+            this.$http.put('/api/exerciseSeries/' + this.selectedSeries.id, data).then(function (response) {
+                var index = _.indexOf(this.exerciseSeries, _.findWhere(this.exerciseSeries, {id: this.selectedSeries.id}));
+                this.exerciseSeries[index].name = response.data.name;
+                this.exerciseSeries[index].priority = response.data.priority;
+                this.showPopup = false;
+                $.event.trigger('provide-feedback', ['Series updated', 'success']);
+                $.event.trigger('hide-loading');
+            }, function (response) {
+                HelpersRepository.handleResponseError(response);
+            });
+        },
+
+        /**
+         *
+         */
+        deleteSeries: function () {
+            if (confirm("Are you sure?")) {
+                $.event.trigger('show-loading');
+                this.$http.delete('/api/exerciseSeries/' + this.selectedSeries.id).then(function (response) {
+                    //this.exerciseSeries = _.without(this.exerciseSeries, this.selectedSeries);
+                    var index = _.indexOf(this.exerciseSeries, _.findWhere(this.exerciseSeries, {id: this.selectedSeries.id}));
+                    this.exerciseSeries = _.without(this.exerciseSeries, this.exerciseSeries[index]);
+                    this.showPopup = false;
+                    $.event.trigger('provide-feedback', ['Series deleted', 'success']);
+                    $.event.trigger('hide-loading');
+                }, function (response) {
+                    HelpersRepository.handleResponseError(response);
+                });
+            }
+        },
+
+        /**
+        *
+        */
+        closePopup: function ($event) {
+            if ($event.target.className === 'popup-outer') {
+                this.showPopup = false;
+            }
+        },
+
+        /**
+         *
+         */
+        listen: function () {
+            var that = this;
+            $(document).on('show-series-popup', function (event, series) {
+                that.selectedSeries = series;
+                that.showPopup = true;
+            });
+        },
+
+        /**
+         *
+         * @param response
+         */
+        handleResponseError: function (response) {
+            $.event.trigger('response-error', [response]);
+            this.showLoading = false;
+        }
+    },
+    props: [
+        'selectedSeries',
+        'exerciseSeries'
+    ],
+    ready: function () {
+        this.listen();
+    }
+});
+
 
 var Vue = require('vue');
 var VueRouter = require('vue-router');

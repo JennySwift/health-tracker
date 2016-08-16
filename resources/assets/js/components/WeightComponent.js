@@ -19,6 +19,7 @@ module.exports = {
     components: {},
     filters: {
         roundNumber: function (number, howManyDecimals) {
+            console.log('hello: ' + number);
             return FiltersRepository.roundNumber(number, howManyDecimals);
         }
     },

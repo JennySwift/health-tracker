@@ -33,9 +33,8 @@ module.exports = {
         if (!howManyDecimals) {
             return Math.round(number);
         }
-        else if (howManyDecimals === 'one') {
-            var multiplyAndDivideBy = 10;
-            return Math.round(number * multiplyAndDivideBy) / multiplyAndDivideBy;
-        }
+
+        var multiplyAndDivideBy = Math.pow(10, howManyDecimals);
+        return Math.round(number * multiplyAndDivideBy) / multiplyAndDivideBy;
     }
 };
