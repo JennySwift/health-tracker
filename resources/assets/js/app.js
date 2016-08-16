@@ -1,3 +1,4 @@
+
 var Vue = require('vue');
 var VueRouter = require('vue-router');
 Vue.use(VueRouter);
@@ -94,11 +95,6 @@ router.map({
 
 router.start(App, 'body');
 
-//new Vue({
-//    el: 'body',
-//    events: {
-//
-//    }
-//});
+
 
 

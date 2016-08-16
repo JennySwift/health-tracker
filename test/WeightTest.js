@@ -1,5 +1,7 @@
 var expect = require('chai').expect;
 var Vue = require('vue');
+global.store = require('../resources/assets/js/repositories/SharedRepository.js');
+// require('../resources/assets/js/app.js');
 
 describe('weight component', function () {
     var Weight;
