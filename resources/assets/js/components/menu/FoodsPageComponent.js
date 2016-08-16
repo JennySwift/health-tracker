@@ -1,4 +1,4 @@
-var FoodsPage = Vue.component('foods-page', {
+module.exports = {
     template: '#foods-page-template',
     data: function () {
         return {
@@ -13,15 +13,14 @@ var FoodsPage = Vue.component('foods-page', {
     methods: {
 
         /**
-        *
-        */
+         *
+         */
         getFoods: function () {
             $.event.trigger('show-loading');
-            this.$http.get('/api/foods', function (response) {
+            this.$http.get('/api/foods').then(function (response) {
                 this.foods = response;
                 $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
+            }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
         },
@@ -36,50 +35,47 @@ var FoodsPage = Vue.component('foods-page', {
         //},
 
         /**
-        *
-        */
+         *
+         */
         getFood: function (food) {
             $.event.trigger('show-loading');
-            this.$http.get('/api/foods/' + food.id, function (response) {
+            this.$http.get('/api/foods/' + food.id).then(function (response) {
                 $.event.trigger('show-food-popup', [response]);
                 $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
+            }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
         },
 
         /**
-        *
-        */
+         *
+         */
         insertFood: function () {
             $.event.trigger('show-loading');
             var data = {
                 name: this.newFood.name
             };
 
-            this.$http.post('/api/foods', data, function (response) {
+            this.$http.post('/api/foods', data).then(function (response) {
                 this.foods.push(response);
                 $.event.trigger('provide-feedback', ['Food created', 'success']);
                 $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
+            }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
         },
 
         /**
-        *
-        */
+         *
+         */
         deleteFood: function (food) {
             if (confirm("Are you sure?")) {
                 $.event.trigger('show-loading');
-                this.$http.delete('/api/foods/' + food.id, function (response) {
+                this.$http.delete('/api/foods/' + food.id).then(function (response) {
                     this.foods = _.without(this.foods, food);
                     $.event.trigger('provide-feedback', ['Food deleted', 'success']);
                     $.event.trigger('hide-loading');
-                })
-                .error(function (response) {
+                }, function (response) {
                     HelpersRepository.handleResponseError(response);
                 });
             }
@@ -115,8 +111,7 @@ var FoodsPage = Vue.component('foods-page', {
         this.getFoods();
         this.listen();
     }
-});
-
+};
 
 
 

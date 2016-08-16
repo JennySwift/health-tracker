@@ -43,13 +43,12 @@ var Recipes = Vue.component('recipes', {
          */
         showRecipePopup: function (recipe) {
             $.event.trigger('show-loading');
-            this.$http.get('/api/recipes/' + recipe.id, function (response) {
-                    $.event.trigger('show-recipe-popup', [response]);
-                    $.event.trigger('hide-loading');
-                })
-                .error(function (response) {
-                    HelpersRepository.handleResponseError(response);
-                });
+            this.$http.get('/api/recipes/' + recipe.id).then(function (response) {
+                $.event.trigger('show-recipe-popup', [response]);
+                $.event.trigger('hide-loading');
+            }, function (response) {
+                HelpersRepository.handleResponseError(response);
+            });
         },
 
         /**
@@ -61,12 +60,11 @@ var Recipes = Vue.component('recipes', {
                 name: this.newRecipe.name
             };
 
-            this.$http.post('/api/recipes', data, function (response) {
+            this.$http.post('/api/recipes', data).then(function (response) {
                 this.recipes.push(response.data);
                 $.event.trigger('provide-feedback', ['Recipe created', 'success']);
                 $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
+            }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
         },
@@ -85,12 +83,11 @@ var Recipes = Vue.component('recipes', {
         deleteRecipe: function (recipe) {
             if (confirm("Are you sure?")) {
                 $.event.trigger('show-loading');
-                this.$http.delete('/api/recipes/' + recipe.id, function (response) {
+                this.$http.delete('/api/recipes/' + recipe.id).then(function (response) {
                     this.recipes = _.without(this.recipes, recipe);
                     $.event.trigger('provide-feedback', ['Recipe deleted', 'success']);
                     $.event.trigger('hide-loading');
-                })
-                .error(function (response) {
+                }, function (response) {
                     HelpersRepository.handleResponseError(response);
                 });
             }

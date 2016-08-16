@@ -1,4 +1,4 @@
-var ExerciseEntries = Vue.component('exercise-entries', {
+module.exports = {
     template: '#exercise-entries-template',
     data: function () {
         return {
@@ -21,15 +21,14 @@ var ExerciseEntries = Vue.component('exercise-entries', {
         },
 
         /**
-        *
-        */
+         *
+         */
         getEntriesForTheDay: function () {
             $.event.trigger('show-loading');
-            this.$http.get('/api/exerciseEntries/' + this.date.sql, function (response) {
-                this.exerciseEntries = response;
+            this.$http.get('/api/exerciseEntries/' + this.date.sql).then(function (response) {
+                this.exerciseEntries = response.data;
                 $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
+            }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
         },
@@ -45,13 +44,12 @@ var ExerciseEntries = Vue.component('exercise-entries', {
                 exerciseSet: true
             };
 
-            this.$http.post('/api/exerciseEntries', data, function (response) {
+            this.$http.post('/api/exerciseEntries', data).then(function (response) {
                 $.event.trigger('provide-feedback', ['Set added', 'success']);
                 this.getEntriesForTheDay();
                 this.exerciseEntries = response;
                 $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
+            }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
         },
@@ -100,4 +98,4 @@ var ExerciseEntries = Vue.component('exercise-entries', {
         this.listen();
         this.getEntriesForTheDay();
     }
-});
+};

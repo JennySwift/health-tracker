@@ -1,4 +1,4 @@
-var TemporaryRecipePopup = Vue.component('temporary-recipe-popup', {
+module.exports = {
     template: '#temporary-recipe-popup-template',
     data: function () {
         return {
@@ -13,11 +13,11 @@ var TemporaryRecipePopup = Vue.component('temporary-recipe-popup', {
     methods: {
 
         /**
-        *
-        */
+         *
+         */
         getRecipe: function (recipe) {
             $.event.trigger('show-loading');
-            this.$http.get('/api/recipes/' + recipe.id, function (response) {
+            this.$http.get('/api/recipes/' + recipe.id).then(function (response) {
                 this.recipe = response;
 
                 $(this.recipe.ingredients.data).each(function () {
@@ -25,8 +25,7 @@ var TemporaryRecipePopup = Vue.component('temporary-recipe-popup', {
                 });
 
                 $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
+            }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
         },
@@ -130,4 +129,4 @@ var TemporaryRecipePopup = Vue.component('temporary-recipe-popup', {
     ready: function () {
         this.listen();
     }
-});
+};

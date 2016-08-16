@@ -1,6 +1,8 @@
 <script id="date-navigation-template" type="x-template">
 
 <div id="date-navigation-container">
+    
+    {{--<pre>@{{$data.date | json}}</pre>--}}
 
     <h1 class="center">@{{ date.long }}</h1>
 

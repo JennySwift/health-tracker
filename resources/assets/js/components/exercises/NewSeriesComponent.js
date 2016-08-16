@@ -17,16 +17,15 @@ var NewSeries = Vue.component('new-series', {
                 name: this.newSeries.name
             };
 
-            this.$http.post('/api/exerciseSeries', data, function (response) {
-                    this.exerciseSeries.push(response.data);
-                    $.event.trigger('provide-feedback', ['Series created', 'success']);
-                    this.showLoading = false;
-                    this.newSeries.name = '';
-                    $.event.trigger('hide-loading');
-                })
-                .error(function (response) {
-                    HelpersRepository.handleResponseError(response);
-                });
+            this.$http.post('/api/exerciseSeries', data).then(function (response) {
+                this.exerciseSeries.push(response.data);
+                $.event.trigger('provide-feedback', ['Series created', 'success']);
+                this.showLoading = false;
+                this.newSeries.name = '';
+                $.event.trigger('hide-loading');
+            }, function (response) {
+                HelpersRepository.handleResponseError(response);
+            });
         },
 
         /**

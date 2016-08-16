@@ -83,7 +83,7 @@ var NewQuickRecipe = Vue.component('new-quick-recipe', {
                 ingredients: this.newRecipe.ingredients
             };
 
-            this.$http.get('/api/quickRecipes/checkForSimilarNames', data, function (response) {
+            this.$http.get('/api/quickRecipes/checkForSimilarNames', data).then(function (response) {
                 $.event.trigger('hide-loading');
                 this.similarNames = response;
 
@@ -95,8 +95,7 @@ var NewQuickRecipe = Vue.component('new-quick-recipe', {
                     this.insertRecipe();
                 }
 
-            })
-            .error(function (response) {
+            }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
         },
@@ -119,14 +118,13 @@ var NewQuickRecipe = Vue.component('new-quick-recipe', {
                 checkForSimilarNames: this.checkForSimilarNames
             };
 
-            this.$http.post('/api/quickRecipes', data, function (response) {
-                    $.event.trigger('provide-feedback', ['Recipe created', 'success']);
-                    $.event.trigger('hide-loading');
-                    this.recipes.push(response.data);
-                })
-                .error(function (response) {
-                    HelpersRepository.handleResponseError(response);
-                });
+            this.$http.post('/api/quickRecipes', data).then(function (response) {
+                $.event.trigger('provide-feedback', ['Recipe created', 'success']);
+                $.event.trigger('hide-loading');
+                this.recipes.push(response.data);
+            }, function (response) {
+                HelpersRepository.handleResponseError(response);
+            });
         },
 
         /**

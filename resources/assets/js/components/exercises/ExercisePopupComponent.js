@@ -16,19 +16,18 @@ var ExercisePopup = Vue.component('exercise-popup', {
 
             var data = ExercisesRepository.setData(this.selectedExercise);
 
-            this.$http.put('/api/exercises/' + this.selectedExercise.id, data, function (response) {
-                    this.selectedExercise = response.data;
-                    store.updateExercise(response.data);
+            this.$http.put('/api/exercises/' + this.selectedExercise.id, data).then(function (response) {
+                this.selectedExercise = response.data;
+                store.updateExercise(response.data);
 
 
-                    this.showPopup = false;
-                    $.event.trigger('provide-feedback', ['Exercise updated', 'success']);
-                    $.event.trigger('hide-loading');
-                    $("#exercise-step-number").val("");
-                })
-                .error(function (response) {
-                    HelpersRepository.handleResponseError(response);
-                });
+                this.showPopup = false;
+                $.event.trigger('provide-feedback', ['Exercise updated', 'success']);
+                $.event.trigger('hide-loading');
+                $("#exercise-step-number").val("");
+            }, function (response) {
+                HelpersRepository.handleResponseError(response);
+            });
         },
 
         /**
@@ -37,14 +36,13 @@ var ExercisePopup = Vue.component('exercise-popup', {
         deleteExercise: function () {
             if (confirm("Are you sure?")) {
                 $.event.trigger('show-loading');
-                this.$http.delete('/api/exercises/' + this.selectedExercise.id, function (response) {
+                this.$http.delete('/api/exercises/' + this.selectedExercise.id).then(function (response) {
                     var index = _.indexOf(this.exercises, _.findWhere(this.exercises, {id: this.selectedExercise.id}));
                     this.exercises = _.without(this.exercises, this.exercises[index]);
                     $.event.trigger('provide-feedback', ['Exercise deleted', 'success']);
                     this.showPopup = false;
                     $.event.trigger('hide-loading');
-                })
-                .error(function (response) {
+                }, function (response) {
                     HelpersRepository.handleResponseError(response);
                 });
             }

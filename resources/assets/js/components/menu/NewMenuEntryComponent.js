@@ -1,4 +1,4 @@
-var NewMenuEntry = Vue.component('new-menu-entry', {
+module.exports = {
     template: '#new-menu-entry-template',
     data: function () {
         return {
@@ -37,15 +37,14 @@ var NewMenuEntry = Vue.component('new-menu-entry', {
 
             $("#new-menu-entry-food").focus();
 
-            this.$http.post('/api/menuEntries', data, function (response) {
+            this.$http.post('/api/menuEntries', data).then(function (response) {
                 this.newIngredient.description = '';
                 this.newIngredient.quantity = '';
                 $("#new-ingredient-food-name").focus();
                 $.event.trigger('provide-feedback', ['Menu entry created', 'success']);
                 $.event.trigger('menu-entry-added', [response]);
                 $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
+            }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
         },
@@ -63,7 +62,7 @@ var NewMenuEntry = Vue.component('new-menu-entry', {
                 quantity: ingredient.quantity,
             };
 
-            this.$http.post('/api/menuEntries', data, function (response) {
+            this.$http.post('/api/menuEntries', data).then(function (response) {
                 //This adds the entry to the entries with the JS
                 $.event.trigger('menu-entry-added', [response]);
                 this.entryNumberForRecipe++;
@@ -74,8 +73,7 @@ var NewMenuEntry = Vue.component('new-menu-entry', {
                     $.event.trigger('get-entries');
                     $.event.trigger('hide-loading');
                 }
-            })
-            .error(function (response) {
+            }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
         },
@@ -135,4 +133,4 @@ var NewMenuEntry = Vue.component('new-menu-entry', {
     ready: function () {
         this.listen();
     }
-});
+};

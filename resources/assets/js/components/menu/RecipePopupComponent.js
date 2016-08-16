@@ -59,7 +59,7 @@ var RecipePopup = Vue.component('recipe-popup', {
                 tag_ids: this.selectedRecipe.tag_ids
             };
 
-            this.$http.put('/api/recipes/' + this.selectedRecipe.id, data, function (response) {
+            this.$http.put('/api/recipes/' + this.selectedRecipe.id, data).then(function (response) {
                 var index = _.indexOf(this.recipes, _.findWhere(this.recipes, {id: this.selectedRecipe.id}));
                 this.recipes[index].name = response.name;
                 this.recipes[index].tags = response.tags;
@@ -68,8 +68,7 @@ var RecipePopup = Vue.component('recipe-popup', {
                 this.showPopup = false;
                 $.event.trigger('provide-feedback', ['Recipe updated', 'success']);
                 $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
+            }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
         },
@@ -86,12 +85,11 @@ var RecipePopup = Vue.component('recipe-popup', {
                 unit_id: ingredient.unit.data.id
             };
 
-            this.$http.put('/api/recipes/' + this.selectedRecipe.id, data, function (response) {
+            this.$http.put('/api/recipes/' + this.selectedRecipe.id, data).then(function (response) {
                 this.selectedRecipe.ingredients.data = _.without(this.selectedRecipe.ingredients.data, ingredient);
                 $.event.trigger('provide-feedback', ['Ingredient removed from recipe', 'success']);
                 $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
+            }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
         },

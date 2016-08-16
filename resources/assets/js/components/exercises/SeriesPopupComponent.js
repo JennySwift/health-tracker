@@ -20,17 +20,16 @@ var SeriesPopup = Vue.component('series-popup', {
                 workout_ids: this.selectedSeries.workout_ids
             };
 
-            this.$http.put('/api/exerciseSeries/' + this.selectedSeries.id, data, function (response) {
-                    var index = _.indexOf(this.exerciseSeries, _.findWhere(this.exerciseSeries, {id: this.selectedSeries.id}));
-                    this.exerciseSeries[index].name = response.data.name;
-                    this.exerciseSeries[index].priority = response.data.priority;
-                    this.showPopup = false;
-                    $.event.trigger('provide-feedback', ['Series updated', 'success']);
-                    $.event.trigger('hide-loading');
-                })
-                .error(function (response) {
-                    HelpersRepository.handleResponseError(response);
-                });
+            this.$http.put('/api/exerciseSeries/' + this.selectedSeries.id, data).then(function (response) {
+                var index = _.indexOf(this.exerciseSeries, _.findWhere(this.exerciseSeries, {id: this.selectedSeries.id}));
+                this.exerciseSeries[index].name = response.data.name;
+                this.exerciseSeries[index].priority = response.data.priority;
+                this.showPopup = false;
+                $.event.trigger('provide-feedback', ['Series updated', 'success']);
+                $.event.trigger('hide-loading');
+            }, function (response) {
+                HelpersRepository.handleResponseError(response);
+            });
         },
 
         /**
@@ -39,17 +38,16 @@ var SeriesPopup = Vue.component('series-popup', {
         deleteSeries: function () {
             if (confirm("Are you sure?")) {
                 $.event.trigger('show-loading');
-                this.$http.delete('/api/exerciseSeries/' + this.selectedSeries.id, function (response) {
+                this.$http.delete('/api/exerciseSeries/' + this.selectedSeries.id).then(function (response) {
                     //this.exerciseSeries = _.without(this.exerciseSeries, this.selectedSeries);
                     var index = _.indexOf(this.exerciseSeries, _.findWhere(this.exerciseSeries, {id: this.selectedSeries.id}));
                     this.exerciseSeries = _.without(this.exerciseSeries, this.exerciseSeries[index]);
                     this.showPopup = false;
                     $.event.trigger('provide-feedback', ['Series deleted', 'success']);
-                        $.event.trigger('hide-loading');
-                    })
-                    .error(function (response) {
-                        HelpersRepository.handleResponseError(response);
-                    });
+                    $.event.trigger('hide-loading');
+                }, function (response) {
+                    HelpersRepository.handleResponseError(response);
+                });
             }
         },
 

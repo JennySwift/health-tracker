@@ -1,4 +1,4 @@
-var Autocomplete = Vue.component('autocomplete', {
+module.exports = {
     template: '#autocomplete-template',
     data: function () {
         return {
@@ -46,11 +46,11 @@ var Autocomplete = Vue.component('autocomplete', {
             //fill the dropdown
             $.event.trigger('show-loading');
             this.$http.get(this.url + '?typing=' + this.chosenOption.name, function (response) {
-                    this.autocompleteOptions = response.data;
-                    this.showDropdown = true;
-                    this.currentIndex = 0;
-                    $.event.trigger('hide-loading');
-                })
+                this.autocompleteOptions = response.data;
+                this.showDropdown = true;
+                this.currentIndex = 0;
+                $.event.trigger('hide-loading');
+            })
                 .error(function (response) {
                     HelpersRepository.handleResponseError(response);
                 });
@@ -103,4 +103,4 @@ var Autocomplete = Vue.component('autocomplete', {
     ready: function () {
 
     }
-});
+};

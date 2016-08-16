@@ -1,5 +1,4 @@
-
-Vue.component('feedback', {
+module.exports = {
     template: "#feedback-template",
     data: function () {
         return {
@@ -78,4 +77,4 @@ Vue.component('feedback', {
     ready: function () {
         this.listen();
     },
-});
+};

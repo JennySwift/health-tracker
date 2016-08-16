@@ -1,8 +1,11 @@
-var EntriesPage = Vue.component('entries-page', {
+var DatesRepository = require('../repositories/DatesRepository');
+var FiltersRepository = require('../repositories/FiltersRepository');
+
+module.exports = {
     template: '#entries-page-template',
     data: function () {
         return {
-            date: DatesRepository.setDate(this.date),
+            date: store.state.date,
             calories: {
                 day: caloriesForTheDay,
                 averageFor7Days: calorieAverageFor7Days,
@@ -20,14 +23,14 @@ var EntriesPage = Vue.component('entries-page', {
          *
          */
         mediaQueries: function () {
-            enquire.register("screen and (max-width: 890px", {
-                match: function () {
-                    $("#avg-calories-for-the-week-text").text('Avg: ');
-                },
-                unmatch: function () {
-                    $("#avg-calories-for-the-week-text").text('Avg calories (last 7 days): ');
-                }
-            });
+            // enquire.register("screen and (max-width: 890px", {
+            //     match: function () {
+            //         $("#avg-calories-for-the-week-text").text('Avg: ');
+            //     },
+            //     unmatch: function () {
+            //         $("#avg-calories-for-the-week-text").text('Avg calories (last 7 days): ');
+            //     }
+            // });
         },
 
         /**
@@ -47,14 +50,13 @@ var EntriesPage = Vue.component('entries-page', {
          */
         getCalorieInfoForTheDay: function () {
             $.event.trigger('show-loading');
-            this.$http.get('api/calories/' + this.date.sql, function (response) {
-                    this.calories.day = response.forTheDay;
-                    this.calories.averageFor7Days = response.averageFor7Days;
-                    $.event.trigger('hide-loading');
-                })
-                .error(function (response) {
-                    HelpersRepository.handleResponseError(response);
-                });
+            this.$http.get('api/calories/' + this.date.sql).then(function (response) {
+                this.calories.day = response.data.forTheDay;
+                this.calories.averageFor7Days = response.data.averageFor7Days;
+                $.event.trigger('hide-loading');
+            }, function (response) {
+                HelpersRepository.handleResponseError(response);
+            });
         },
 
         /**
@@ -90,4 +92,4 @@ var EntriesPage = Vue.component('entries-page', {
         this.mediaQueries();
         this.listen();
     }
-});
+};

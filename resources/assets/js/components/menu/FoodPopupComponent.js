@@ -31,13 +31,12 @@ var FoodPopup = Vue.component('food-popup', {
             var that = this;
 
             setTimeout(function () {
-                that.$http.put('/api/foods/' + that.selectedFood.id, data, function (response) {
+                that.$http.put('/api/foods/' + that.selectedFood.id, data).then(function (response) {
                     that.selectedFood = response;
                     $.event.trigger('provide-feedback', ['Food updated', 'success']);
                     $.event.trigger('food-updated', [response]);
                     $.event.trigger('hide-loading');
-                })
-                .error(function (response) {
+                }, function (response) {
                     that.handleResponseError(response);
                 });
             }, 1000);
@@ -55,13 +54,12 @@ var FoodPopup = Vue.component('food-popup', {
                 default_unit_id: this.selectedFood.defaultUnit.data.id,
             };
 
-            this.$http.put('/api/foods/' + this.selectedFood.id, data, function (response) {
+            this.$http.put('/api/foods/' + this.selectedFood.id, data).then(function (response) {
                 this.selectedFood = response;
                 $.event.trigger('provide-feedback', ['Food updated', 'success']);
                 $.event.trigger('food-updated', [response]);
                 $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
+            }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
         },
@@ -78,12 +76,11 @@ var FoodPopup = Vue.component('food-popup', {
                 calories: unit.calories
             };
 
-            this.$http.put('/api/foods/' + this.selectedFood.id, data, function (response) {
+            this.$http.put('/api/foods/' + this.selectedFood.id, data).then(function (response) {
                 $.event.trigger('provide-feedback', ['Calories updated', 'success']);
                 $.event.trigger('food-updated', [response]);
                 $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
+            }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
         },
@@ -93,11 +90,10 @@ var FoodPopup = Vue.component('food-popup', {
         */
         getUnits: function () {
             $.event.trigger('show-loading');
-            this.$http.get('/api/foodUnits?includeCaloriesForSpecificFood=true&food_id=' + this.selectedFood.id, function (response) {
+            this.$http.get('/api/foodUnits?includeCaloriesForSpecificFood=true&food_id=' + this.selectedFood.id).then(function (response) {
                 this.units = response;
                 $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
+            }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
         },

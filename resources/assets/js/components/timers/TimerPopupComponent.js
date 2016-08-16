@@ -28,7 +28,7 @@ var TimerPopup = Vue.component('timer-popup', {
                 activity_id: this.selectedTimer.activity.data.id
             };
 
-            this.$http.put('/api/timers/' + this.selectedTimer.id, data, function (response) {
+            this.$http.put('/api/timers/' + this.selectedTimer.id, data).then(function (response) {
                 var index = _.indexOf(this.timers, _.findWhere(this.timers, {id: this.selectedTimer.id}));
                 this.timers[index].start = response.start;
                 this.timers[index].finish = response.finish;
@@ -36,8 +36,7 @@ var TimerPopup = Vue.component('timer-popup', {
                 $.event.trigger('provide-feedback', ['Timer updated', 'success']);
                 this.showPopup = false;
                 $.event.trigger('hide-loading');
-            })
-            .error(function (data, status, response) {
+            }, function (data, status, response) {
                 HelpersRepository.handleResponseError(data, status, response);
             });
         },
@@ -48,13 +47,12 @@ var TimerPopup = Vue.component('timer-popup', {
         deleteTimer: function () {
             if (confirm("Are you sure?")) {
                 $.event.trigger('show-loading');
-                this.$http.delete('/api/timers/' + this.selectedTimer.id, function (response) {
+                this.$http.delete('/api/timers/' + this.selectedTimer.id).then(function (response) {
                     $.event.trigger('timer-deleted', [this.selectedTimer]);
                     this.showPopup = false;
                     $.event.trigger('provide-feedback', ['Timer deleted', 'success']);
                     $.event.trigger('hide-loading');
-                })
-                .error(function (response) {
+                }, function (response) {
                     HelpersRepository.handleResponseError(response);
                 });
             }

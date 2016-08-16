@@ -1,4 +1,4 @@
-var RecipesPage = Vue.component('recipes-page', {
+module.exports = {
     template: '#recipes-page-template',
     data: function () {
         return {
@@ -16,29 +16,27 @@ var RecipesPage = Vue.component('recipes-page', {
     methods: {
 
         /**
-        *
-        */
+         *
+         */
         getTags: function () {
             $.event.trigger('show-loading');
-            this.$http.get('/api/recipeTags', function (response) {
+            this.$http.get('/api/recipeTags').then(function (response) {
                 this.tags = response;
                 $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
+            }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
         },
 
         /**
-        *
-        */
+         *
+         */
         getRecipes: function () {
             $.event.trigger('show-loading');
-            this.$http.get('/api/recipes', function (response) {
+            this.$http.get('/api/recipes').then(function (response) {
                 this.recipes = response;
                 $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
+            }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
         },
@@ -59,4 +57,4 @@ var RecipesPage = Vue.component('recipes-page', {
         this.getRecipes();
         this.getTags();
     }
-});
+};

@@ -1,4 +1,4 @@
-var FiltersRepository = {
+module.exports = {
 
     /**
      *

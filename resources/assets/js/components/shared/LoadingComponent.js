@@ -1,4 +1,4 @@
-Vue.component('loading', {
+module.exports = {
     data: function () {
         return {
             showLoading: false
@@ -22,4 +22,4 @@ Vue.component('loading', {
     ready: function () {
         this.listen();
     }
-});
+};

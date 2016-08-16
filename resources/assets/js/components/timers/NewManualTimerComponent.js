@@ -1,4 +1,4 @@
-var NewManualTimer = Vue.component('new-manual-timer', {
+module.exports = {
     template: '#new-manual-timer-template',
     data: function () {
         return {
@@ -19,17 +19,16 @@ var NewManualTimer = Vue.component('new-manual-timer', {
             var data = TimersRepository.setData(this.newManualTimer, this.date.sql);
             $('#timer-clock').timer({format: '%H:%M:%S'});
 
-            this.$http.post('/api/timers/', data, function (response) {
-                    this.timers.push(response);
+            this.$http.post('/api/timers/', data).then(function (response) {
+                this.timers.push(response);
                 console.log(router);
-                    $.event.trigger('manual-timer-created');
-                    $.event.trigger('provide-feedback', ['Manual entry created', 'success']);
-                    $.event.trigger('hide-loading');
-                    router.go('/timers');
-                })
-                .error(function (response) {
-                    HelpersRepository.handleResponseError(response);
-                });
+                $.event.trigger('manual-timer-created');
+                $.event.trigger('provide-feedback', ['Manual entry created', 'success']);
+                $.event.trigger('hide-loading');
+                router.go('/timers');
+            }, function (response) {
+                HelpersRepository.handleResponseError(response);
+            });
         },
 
         /**
@@ -40,8 +39,8 @@ var NewManualTimer = Vue.component('new-manual-timer', {
         },
 
         /**
-        *
-        */
+         *
+         */
         closePopup: function ($event) {
             HelpersRepository.closePopup($event, this);
         },
@@ -81,4 +80,4 @@ var NewManualTimer = Vue.component('new-manual-timer', {
         this.listen();
         this.setDefaultActivity();
     }
-});
+};

@@ -1,4 +1,4 @@
-var NewExercise = Vue.component('new-exercise', {
+module.exports = {
     template: '#new-exercise-template',
     data: function () {
         return {
@@ -15,7 +15,7 @@ var NewExercise = Vue.component('new-exercise', {
             $.event.trigger('show-loading');
             var data = ExercisesRepository.setData(this.newExercise);
 
-            this.$http.post('/api/exercises', data, function (response) {
+            this.$http.post('/api/exercises', data).then(function (response) {
                 if (this.exercises) {
                     //If adding new exercise from the series page,
                     //this.exercises isn't specified
@@ -24,10 +24,9 @@ var NewExercise = Vue.component('new-exercise', {
 
                 $.event.trigger('provide-feedback', ['Exercise created', 'success']);
                 $.event.trigger('hide-loading');
-                })
-                .error(function (response) {
-                    HelpersRepository.handleResponseError(response);
-                });
+            }, function (response) {
+                HelpersRepository.handleResponseError(response);
+            });
         },
 
         /**
@@ -49,4 +48,4 @@ var NewExercise = Vue.component('new-exercise', {
     ready: function () {
 
     }
-});
+};

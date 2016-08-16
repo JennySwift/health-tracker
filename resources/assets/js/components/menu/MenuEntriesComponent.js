@@ -1,4 +1,4 @@
-var MenuEntriesComponent = Vue.component('menu-entries', {
+module.exports = {
     template: '#menu-entries-template',
     data: function () {
         return {
@@ -15,33 +15,31 @@ var MenuEntriesComponent = Vue.component('menu-entries', {
     methods: {
 
         /**
-        *
-        */
+         *
+         */
         deleteMenuEntry: function (entry) {
             if (confirm("Are you sure?")) {
                 $.event.trigger('show-loading');
-                this.$http.delete('/api/menuEntries/' + entry.id, function (response) {
+                this.$http.delete('/api/menuEntries/' + entry.id).then(function (response) {
                     this.menuEntries = _.without(this.menuEntries, entry);
                     $.event.trigger('provide-feedback', ['MenuEntry deleted', 'success']);
                     $.event.trigger('menu-entry-deleted');
                     $.event.trigger('hide-loading');
-                })
-                .error(function (response) {
+                }, function (response) {
                     HelpersRepository.handleResponseError(response);
                 });
             }
         },
 
         /**
-        *
-        */
+         *
+         */
         getEntriesForTheDay: function () {
             $.event.trigger('show-loading');
-            this.$http.get('/api/menuEntries/' + this.date.sql, function (response) {
-                this.menuEntries = response;
+            this.$http.get('/api/menuEntries/' + this.date.sql).then(function (response) {
+                this.menuEntries = response.data;
                 $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
+            }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
         },
@@ -77,6 +75,6 @@ var MenuEntriesComponent = Vue.component('menu-entries', {
     ready: function () {
         this.listen();
     }
-});
+};
 
 

@@ -1,8 +1,10 @@
-var GraphsPage = Vue.component('graphs-page', {
+var DatesRepository = require('../../repositories/DatesRepository');
+
+module.exports = {
     template: '#graphs-page-template',
     data: function () {
         return {
-            date: DatesRepository.setDate(this.date),
+            date: store.state.date,
             timers: []
         };
     },
@@ -16,13 +18,12 @@ var GraphsPage = Vue.component('graphs-page', {
             $.event.trigger('show-loading');
             var url = TimersRepository.calculateUrl(false, this.date.sql);
 
-            this.$http.get(url, function (response) {
-                    this.timers = response;
-                    $.event.trigger('hide-loading');
-                })
-                .error(function (response) {
-                    HelpersRepository.handleResponseError(response);
-                });
+            this.$http.get(url).then(function (response) {
+                this.timers = response;
+                $.event.trigger('hide-loading');
+            }, function (response) {
+                HelpersRepository.handleResponseError(response);
+            });
         },
 
         /**
@@ -40,5 +41,5 @@ var GraphsPage = Vue.component('graphs-page', {
     ready: function () {
         this.getTimers();
     }
-});
+};
 

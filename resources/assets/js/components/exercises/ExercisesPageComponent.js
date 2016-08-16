@@ -1,8 +1,8 @@
-var ExercisesPage = Vue.component('exercises-page', {
+module.exports = {
     template: '#exercises-page-template',
     data: function () {
         return {
-            date: DatesRepository.setDate(this.date),
+            date: store.state.date,
             exerciseSeries: [],
             exerciseSeriesHistory: [],
             showNewSeriesFields: false,
@@ -98,7 +98,7 @@ var ExercisesPage = Vue.component('exercises-page', {
                 return filteredIn;
             });
         },
-        
+
         filterSeries: function (series) {
             var that = this;
 
@@ -145,15 +145,14 @@ var ExercisesPage = Vue.component('exercises-page', {
                 exerciseSet: true
             };
 
-            this.$http.post('/api/exerciseEntries', data, function (response) {
+            this.$http.post('/api/exerciseEntries', data).then(function (response) {
                 exercise.lastDone = 0;
                 $.event.trigger('provide-feedback', ['Set added', 'success']);
                 $.event.trigger('get-exercise-entries-for-the-day');
                 $.event.trigger('hide-loading');
-            })
-                .error(function (response) {
-                    HelpersRepository.handleResponseError(response);
-                });
+            }, function (response) {
+                HelpersRepository.handleResponseError(response);
+            });
         },
 
         /**
@@ -161,14 +160,13 @@ var ExercisesPage = Vue.component('exercises-page', {
          */
         showExercisePopup: function (exercise) {
             $.event.trigger('show-loading');
-            this.$http.get('/api/exercises/' + exercise.id, function (response) {
+            this.$http.get('/api/exercises/' + exercise.id).then(function (response) {
                 this.selectedExercise = response;
                 $.event.trigger('show-exercise-popup');
                 $.event.trigger('hide-loading');
-            })
-                .error(function (response) {
-                    HelpersRepository.handleResponseError(response);
-                });
+            }, function (response) {
+                HelpersRepository.handleResponseError(response);
+            });
         },
 
         /**
@@ -198,22 +196,21 @@ var ExercisesPage = Vue.component('exercises-page', {
         },
 
         /**
-        *
-        */
+         *
+         */
         getSeries: function () {
             $.event.trigger('show-loading');
-            this.$http.get('/api/exerciseSeries', function (response) {
+            this.$http.get('/api/exerciseSeries').then(function (response) {
                 this.exerciseSeries = response;
                 $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
+            }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
         },
 
         /**
-        *
-        */
+         *
+         */
         getExerciseSeriesHistory: function (key) {
             $.event.trigger('show-loading');
 
@@ -222,35 +219,33 @@ var ExercisesPage = Vue.component('exercises-page', {
                 return series.name === key;
             });
 
-            this.$http.get('api/seriesEntries/' + series.id, function (response) {
+            this.$http.get('api/seriesEntries/' + series.id).then(function (response) {
                 //For displaying the name of the series in the popup
                 this.selectedSeries = series;
                 this.exerciseSeriesHistory = response;
                 $.event.trigger('show-series-history-popup');
                 $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
+            }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
         },
 
         /**
-        *
-        */
+         *
+         */
         getExercisesInSeries: function (series) {
             $.event.trigger('show-loading');
-            this.$http.get('/api/exerciseSeries/' + series.id, function (response) {
+            this.$http.get('/api/exerciseSeries/' + series.id).then(function (response) {
                 this.selectedSeries = response;
                 $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
+            }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
         },
 
         /**
-        *
-        */
+         *
+         */
         showExerciseSeriesPopup: function (key) {
             //Find the series. The exercises were grouped according to series, so all we have is the series name (key).
             var series = _.find(this.exerciseSeries, function (series) {
@@ -258,26 +253,24 @@ var ExercisesPage = Vue.component('exercises-page', {
             });
 
             $.event.trigger('show-loading');
-            this.$http.get('/api/exerciseSeries/' + series.id, function (response) {
+            this.$http.get('/api/exerciseSeries/' + series.id).then(function (response) {
                 this.selectedSeries = response;
                 $.event.trigger('show-series-popup');
                 $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
+            }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
         },
 
         /**
-        *
-        */
+         *
+         */
         getPrograms: function () {
             $.event.trigger('show-loading');
-            this.$http.get('/api/exercisePrograms', function (response) {
+            this.$http.get('/api/exercisePrograms').then(function (response) {
                 this.programs = response;
                 $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
+            }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
         },
@@ -287,13 +280,12 @@ var ExercisesPage = Vue.component('exercises-page', {
          */
         getUnits: function () {
             $.event.trigger('show-loading');
-            this.$http.get('/api/exerciseUnits', function (response) {
-                    this.units = response;
-                    $.event.trigger('hide-loading');
-                })
-                .error(function (response) {
-                    HelpersRepository.handleResponseError(response);
-                });
+            this.$http.get('/api/exerciseUnits').then(function (response) {
+                this.units = response;
+                $.event.trigger('hide-loading');
+            }, function (response) {
+                HelpersRepository.handleResponseError(response);
+            });
         },
 
         /**
@@ -313,5 +305,5 @@ var ExercisesPage = Vue.component('exercises-page', {
         this.getUnits();
         this.getSeries();
     }
-});
+};
 

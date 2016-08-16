@@ -1,15 +1,16 @@
-var DateNavigation = Vue.component('date-navigation', {
+var DatesRepository = require('../../repositories/DatesRepository');
+require('sugar');
+
+module.exports = {
     template: '#date-navigation-template',
     data: function () {
         return {
-
+            date: store.state.date
         };
     },
     components: {},
     watch: {
         'date.typed': function (newValue, oldValue) {
-            this.date.sql = Date.parse(this.date.typed).toString('yyyy-MM-dd');
-            this.date.long = Date.parse(this.date.typed).toString('ddd dd MMM yyyy');
             $("#date").val(this.date.typed);
             $.event.trigger('date-changed');
         }
@@ -20,14 +21,14 @@ var DateNavigation = Vue.component('date-navigation', {
          * @param $number
          */
         goToDate: function ($number) {
-            this.date.typed = DatesRepository.goToDate(this.date.typed, $number);
+            DatesRepository.goToDate($number);
         },
 
         /**
          *
          */
         goToToday: function () {
-            this.date.typed = DatesRepository.today();
+            DatesRepository.today();
         },
 
         /**
@@ -37,7 +38,7 @@ var DateNavigation = Vue.component('date-navigation', {
          */
         changeDate: function (date) {
             var date = date || $("#date").val();
-            this.date.typed = DatesRepository.changeDate(date);
+            DatesRepository.changeDate(date);
         },
 
         /**
@@ -51,10 +52,10 @@ var DateNavigation = Vue.component('date-navigation', {
 
     },
     props: [
-        'date'
+
     ],
     ready: function () {
 
     }
 
-});
+};

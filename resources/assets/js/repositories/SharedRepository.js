@@ -1,7 +1,15 @@
-var store = {
+var HelpersRepository = require('./HelpersRepository');
+require('sugar');
+
+module.exports = {
 
     state: {
-        exercises: []
+        exercises: [],
+        date: {
+            typed: Date.create('today').format('{dd}/{MM}/{yyyy}'),
+            long: HelpersRepository.formatDateToLong('today'),
+            sql: HelpersRepository.formatDateToSql('today')
+        }
     },
 
     /**
@@ -9,13 +17,18 @@ var store = {
      */
     getExercises: function (that) {
         $.event.trigger('show-loading');
-        that.$http.get('/api/exercises', function (response) {
+        that.$http.get('/api/exercises').then(function (response) {
             store.state.exercises = response;
             $.event.trigger('hide-loading');
-        })
-        .error(function (response) {
+        }, function (response) {
             HelpersRepository.handleResponseError(response);
         });
+        // that.$http.get('/api/exercises', function (response) {
+        //
+        // })
+        // .error(function (response) {
+        //
+        // });
     },
 
     /**
@@ -26,4 +39,14 @@ var store = {
         var index = HelpersRepository.findIndexById(this.state.exercises, exercise.id);
         this.state.exercises.$set(index, exercise);
     },
+
+    /**
+     * 
+     * @param date
+     */
+    setDate: function (date) {
+        this.state.date.typed = Date.create(date).format('{dd}/{MM}/{yyyy}');
+        this.state.date.long = HelpersRepository.formatDateToLong(date);
+        this.state.date.sql = HelpersRepository.formatDateToSql(date);
+    }
 };

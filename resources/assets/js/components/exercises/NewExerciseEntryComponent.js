@@ -1,4 +1,4 @@
-var NewExerciseEntry = Vue.component('new-exercise-entry', {
+module.exports = {
     template: '#new-exercise-entry-template',
     data: function () {
         return {
@@ -10,15 +10,14 @@ var NewExerciseEntry = Vue.component('new-exercise-entry', {
     methods: {
 
         /**
-        *
-        */
+         *
+         */
         getUnits: function () {
             $.event.trigger('show-loading');
-            this.$http.get('/api/exerciseUnits', function (response) {
+            this.$http.get('/api/exerciseUnits').then(function (response) {
                 this.units = response;
                 $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
+            }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
         },
@@ -39,15 +38,14 @@ var NewExerciseEntry = Vue.component('new-exercise-entry', {
                 unit_id: this.newEntry.unit.id
             };
 
-            this.$http.post('/api/exerciseEntries', data, function (response) {
-                    //this.exerciseEntries = response;
-                    $.event.trigger('exercise-entry-added', [response]);
-                    $.event.trigger('provide-feedback', ['Entry created', 'success']);
-                    $.event.trigger('hide-loading');
-                })
-                .error(function (response) {
-                    HelpersRepository.handleResponseError(response);
-                });
+            this.$http.post('/api/exerciseEntries', data).then(function (response) {
+                //this.exerciseEntries = response;
+                $.event.trigger('exercise-entry-added', [response]);
+                $.event.trigger('provide-feedback', ['Entry created', 'success']);
+                $.event.trigger('hide-loading');
+            }, function (response) {
+                HelpersRepository.handleResponseError(response);
+            });
         },
 
         /**
@@ -72,4 +70,4 @@ var NewExerciseEntry = Vue.component('new-exercise-entry', {
     ready: function () {
         this.getUnits();
     }
-});
+};

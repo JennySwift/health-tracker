@@ -1,23 +1,19 @@
-var DatesRepository = {
-    setDate: function (date) {
-        if (date === undefined) {
-            var date = {};
-        }
-        if (date.typed === undefined) {
-            date.typed = Date.parse('today').toString('dd/MM/yyyy');
-        }
-        date.long = Date.parse(date.typed).toString('ddd dd MMM yyyy');
-        date.sql = Date.parse(date.typed).toString('yyyy-MM-dd');
+require('sugar');
 
-        return date;
-    },
+module.exports = {
     changeDate: function (date) {
-        return Date.parseExact(date, ['d MMM yyyy', 'd/M/yyyy', 'd MMM yy', 'd/M/yy']).toString('dd/MM/yyyy');
+        // return Date.parseExact(date, ['d MMM yyyy', 'd/M/yyyy', 'd MMM yy', 'd/M/yy']).toString('dd/MM/yyyy');
+        var date = Date.create(date).format('{yyyy}-{MM}-{dd}');
+        store.setDate(date);
     },
     today: function () {
-        return Date.parse('today').toString('dd/MM/yyyy');
+        // return Date.parse('today').toString('dd/MM/yyyy');
+        var date = Date.create('today').format('{yyyy}-{MM}-{dd}');
+        store.setDate(date);
     },
-    goToDate: function (previousDate, number) {
-        return Date.parse(previousDate).addDays(number).toString('dd/MM/yyyy');
+    goToDate: function (number) {
+        // return Date.parse(previousDate).addDays(number).toString('dd/MM/yyyy');
+        var date = Date.create(store.state.date.typed).addDays(number).format('{yyyy}-{MM}-{dd}');
+        store.setDate(date);
     }
 };

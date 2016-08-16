@@ -1,4 +1,4 @@
-var NewFoodEntry = Vue.component('new-food-entry', {
+module.exports = {
     template: '#new-food-entry-template',
     data: function () {
         return {
@@ -36,27 +36,26 @@ var NewFoodEntry = Vue.component('new-food-entry', {
                     description: this.newIngredient.description
                 };
 
-                this.$http.put('/api/recipes/' + this.selectedRecipe.id, data, function (response) {
-                        this.selectedRecipe.ingredients.data.push({
-                            food: {
-                                data: {
-                                    name: this.newIngredient.food.name
-                                }
-                            },
-                            unit: {
-                                data: {
-                                    name: this.newIngredient.unit.name
-                                }
-                            },
-                            quantity: this.newIngredient.quantity,
-                            description: this.newIngredient.description,
-                        });
-                        $.event.trigger('provide-feedback', ['Food added', 'success']);
-                        $.event.trigger('hide-loading');
-                    })
-                    .error(function (response) {
-                        HelpersRepository.handleResponseError(response);
+                this.$http.put('/api/recipes/' + this.selectedRecipe.id, data).then(function (response) {
+                    this.selectedRecipe.ingredients.data.push({
+                        food: {
+                            data: {
+                                name: this.newIngredient.food.name
+                            }
+                        },
+                        unit: {
+                            data: {
+                                name: this.newIngredient.unit.name
+                            }
+                        },
+                        quantity: this.newIngredient.quantity,
+                        description: this.newIngredient.description,
                     });
+                    $.event.trigger('provide-feedback', ['Food added', 'success']);
+                    $.event.trigger('hide-loading');
+                }, function (response) {
+                    HelpersRepository.handleResponseError(response);
+                });
             }
         },
 
@@ -84,4 +83,4 @@ var NewFoodEntry = Vue.component('new-food-entry', {
     ready: function () {
 
     }
-});
+};

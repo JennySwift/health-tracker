@@ -1,4 +1,6 @@
-var Navbar = Vue.component('navbar', {
+var $ = require('jquery');
+
+module.exports = {
     template: '#navbar-template',
     data: function () {
         return {
@@ -20,4 +22,4 @@ var Navbar = Vue.component('navbar', {
     ready: function () {
 
     }
-});
+};

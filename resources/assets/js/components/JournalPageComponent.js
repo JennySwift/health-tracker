@@ -1,8 +1,8 @@
-var JournalPage = Vue.component('journal-page', {
+module.exports = {
     template: '#journal-page-template',
     data: function () {
         return {
-            date: DatesRepository.setDate(this.date),
+            date: store.state.date,
             filterResults: [],
             journalEntry: {},
         };
@@ -10,15 +10,14 @@ var JournalPage = Vue.component('journal-page', {
     components: {},
     methods: {
         /**
-        *
-        */
+         *
+         */
         getJournalEntry: function () {
             $.event.trigger('show-loading');
-            this.$http.get('api/journal/' + this.date.sql, function (response) {
+            this.$http.get('api/journal/' + this.date.sql).then(function (response) {
                 this.journalEntry = response.data;
                 $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
+            }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
         },
@@ -36,8 +35,8 @@ var JournalPage = Vue.component('journal-page', {
         },
 
         /**
-        *
-        */
+         *
+         */
         filterJournalEntries: function () {
             var typing = $("#filter-journal").val();
 
@@ -46,9 +45,9 @@ var JournalPage = Vue.component('journal-page', {
                 this.filterResults = response.data;
                 $.event.trigger('hide-loading');
             })
-            .error(function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
+                .error(function (response) {
+                    HelpersRepository.handleResponseError(response);
+                });
         },
 
         /**
@@ -80,8 +79,8 @@ var JournalPage = Vue.component('journal-page', {
         },
 
         /**
-        *
-        */
+         *
+         */
         updateEntry: function () {
             $.event.trigger('show-loading');
 
@@ -89,19 +88,18 @@ var JournalPage = Vue.component('journal-page', {
                 text: $("#journal-entry").html()
             };
 
-            this.$http.put('/api/journal/' + this.journalEntry.id, data, function (response) {
+            this.$http.put('/api/journal/' + this.journalEntry.id, data).then(function (response) {
                 this.journalEntry = response.data;
                 $.event.trigger('provide-feedback', ['Entry updated', 'success']);
                 $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
+            }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
         },
 
         /**
-        *
-        */
+         *
+         */
         insertEntry: function () {
             $.event.trigger('show-loading');
             var data = {
@@ -109,12 +107,11 @@ var JournalPage = Vue.component('journal-page', {
                 text: $("#journal-entry").html()
             };
 
-            this.$http.post('/api/journal', data, function (response) {
+            this.$http.post('/api/journal', data).then(function (response) {
                 this.journalEntry = response.data;
                 $.event.trigger('provide-feedback', ['Entry created', 'success']);
                 $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
+            }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
         },
@@ -146,5 +143,5 @@ var JournalPage = Vue.component('journal-page', {
         this.listen();
         this.getJournalEntry();
     }
-});
+};
 

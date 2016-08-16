@@ -1,4 +1,4 @@
-var ActivitiesPage = Vue.component('activities-page', {
+module.exports = {
     template: '#activities-page-template',
     data: function () {
         return {
@@ -15,22 +15,21 @@ var ActivitiesPage = Vue.component('activities-page', {
     methods: {
 
         /**
-        *
-        */
+         *
+         */
         getActivities: function () {
             $.event.trigger('show-loading');
-            this.$http.get('/api/activities', function (response) {
+            this.$http.get('/api/activities').then(function (response) {
                 this.activities = response;
                 $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
+            }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
         },
 
         /**
-        *
-        */
+         *
+         */
         insertActivity: function () {
             $.event.trigger('show-loading');
             var data = {
@@ -38,12 +37,11 @@ var ActivitiesPage = Vue.component('activities-page', {
                 color: this.newActivity.color
             };
 
-            this.$http.post('/api/activities', data, function (response) {
+            this.$http.post('/api/activities', data).then(function (response) {
                 this.activities.push(response);
                 $.event.trigger('provide-feedback', ['Activity created', 'success']);
                 $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
+            }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
         },
@@ -71,4 +69,4 @@ var ActivitiesPage = Vue.component('activities-page', {
     ready: function () {
         this.getActivities();
     }
-});
+};

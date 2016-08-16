@@ -18,14 +18,13 @@ var NewTimer = Vue.component('new-timer', {
             var data = TimersRepository.setData(this.newTimer);
             $('#timer-clock').timer({format: '%H:%M:%S'});
 
-            this.$http.post('/api/timers/', data, function (response) {
-                    this.timerInProgress = response;
-                    $.event.trigger('provide-feedback', ['Timer started', 'success']);
-                    $.event.trigger('hide-loading');
-                })
-                .error(function (response) {
-                    HelpersRepository.handleResponseError(response);
-                });
+            this.$http.post('/api/timers/', data).then(function (response) {
+                this.timerInProgress = response;
+                $.event.trigger('provide-feedback', ['Timer started', 'success']);
+                $.event.trigger('hide-loading');
+            }, function (response) {
+                HelpersRepository.handleResponseError(response);
+            });
         },
 
         /**
@@ -39,16 +38,15 @@ var NewTimer = Vue.component('new-timer', {
                 finish: TimersRepository.calculateFinishTime(this.timerInProgress)
             };
 
-            this.$http.put('/api/timers/' + this.timerInProgress.id, data, function (response) {
-                    this.timerInProgress = false;
-                    this.timers.push(response);
-                    $.event.trigger('timer-stopped');
-                    $.event.trigger('provide-feedback', ['Timer updated', 'success']);
-                    $.event.trigger('hide-loading');
-                })
-                .error(function (response) {
-                    HelpersRepository.handleResponseError(response);
-                });
+            this.$http.put('/api/timers/' + this.timerInProgress.id, data).then(function (response) {
+                this.timerInProgress = false;
+                this.timers.push(response);
+                $.event.trigger('timer-stopped');
+                $.event.trigger('provide-feedback', ['Timer updated', 'success']);
+                $.event.trigger('hide-loading');
+            }, function (response) {
+                HelpersRepository.handleResponseError(response);
+            });
         },
 
         /**
@@ -63,15 +61,14 @@ var NewTimer = Vue.component('new-timer', {
          */
         checkForTimerInProgress: function () {
             $.event.trigger('show-loading');
-            this.$http.get('/api/timers/checkForTimerInProgress', function (response) {
-                    if (response.activity) {
-                        this.resumeTimerOnPageLoad(response);
-                    }
-                    $.event.trigger('hide-loading');
-                })
-                .error(function (response) {
-                    HelpersRepository.handleResponseError(response);
-                });
+            this.$http.get('/api/timers/checkForTimerInProgress').then(function (response) {
+                if (response.activity) {
+                    this.resumeTimerOnPageLoad(response);
+                }
+                $.event.trigger('hide-loading');
+            }, function (response) {
+                HelpersRepository.handleResponseError(response);
+            });
         },
 
         /**

@@ -1,4 +1,6 @@
-var HelpersRepository = {
+require('sugar');
+
+module.exports = {
 
     /**
      *
@@ -39,4 +41,12 @@ var HelpersRepository = {
         }
         return 0;
     },
+
+    formatDateToSql: function (date) {
+        return Date.create(date).format('{yyyy}-{MM}-{dd}');
+    },
+
+    formatDateToLong: function (date) {
+        return Date.create(date).format('{Weekday} {dd} {Month} {yyyy}');
+    }
 };

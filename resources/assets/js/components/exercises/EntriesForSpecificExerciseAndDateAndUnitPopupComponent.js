@@ -1,4 +1,4 @@
-var EntriesForSpecificExerciseAndDateAndUnitPopup = Vue.component('entries-for-specific-exercise-and-date-and-unit-popup', {
+module.exports = {
     template: '#entries-for-specific-exercise-and-date-and-unit-popup-template',
     data: function () {
         return {
@@ -23,14 +23,13 @@ var EntriesForSpecificExerciseAndDateAndUnitPopup = Vue.component('entries-for-s
                 exercise_unit_id: entry.unit.id
             };
 
-            this.$http.get('api/exerciseEntries/specificExerciseAndDateAndUnit', data, function (response) {
-                    this.entries = response;
-                    this.showPopup = true;
-                    $.event.trigger('hide-loading');
-                })
-                .error(function (response) {
-                    HelpersRepository.handleResponseError(response);
-                });
+            this.$http.get('api/exerciseEntries/specificExerciseAndDateAndUnit', data).then(function (response) {
+                this.entries = response;
+                this.showPopup = true;
+                $.event.trigger('hide-loading');
+            }, function (response) {
+                HelpersRepository.handleResponseError(response);
+            });
         },
 
         /**
@@ -39,7 +38,7 @@ var EntriesForSpecificExerciseAndDateAndUnitPopup = Vue.component('entries-for-s
         deleteExerciseEntry: function (entry) {
             if (confirm("Are you sure?")) {
                 $.event.trigger('show-loading');
-                this.$http.delete('/api/exerciseEntries/' + entry.id, function (response) {
+                this.$http.delete('/api/exerciseEntries/' + entry.id).then(function (response) {
                     this.entries = _.without(this.entries, entry);
                     //This might be unnecessary to do each time, and it fetches a lot
                     //of data for just deleting one entry.
@@ -47,8 +46,7 @@ var EntriesForSpecificExerciseAndDateAndUnitPopup = Vue.component('entries-for-s
                     $.event.trigger('get-exercise-entries-for-the-day');
                     $.event.trigger('provide-feedback', ['Entry deleted', 'success']);
                     $.event.trigger('hide-loading');
-                })
-                .error(function (response) {
+                }, function (response) {
                     HelpersRepository.handleResponseError(response);
                 });
             }
@@ -89,4 +87,4 @@ var EntriesForSpecificExerciseAndDateAndUnitPopup = Vue.component('entries-for-s
     ready: function () {
         this.listen();
     }
-});
+};

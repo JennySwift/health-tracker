@@ -7,8 +7,14 @@ module.exports = {
             weight: {},
             editingWeight: false,
             addingNewWeight: false,
-            newWeight: {}
+            newWeight: {},
+            store: store.state
         };
+    },
+    computed: {
+        date: function () {
+          return this.store.date;
+        }
     },
     components: {},
     filters: {
@@ -40,15 +46,14 @@ module.exports = {
                 weight: this.newWeight.weight
             };
 
-            this.$http.post('/api/weights', data, function (response) {
-                this.weight = response;
+            this.$http.post('/api/weights', data).then(function (response) {
+                this.weight = response.data;
                 this.addingNewWeight = false;
                 $.event.trigger('provide-feedback', ['Weight created', 'success']);
                 $.event.trigger('hide-loading');
-            })
-                .error(function (response) {
-                    HelpersRepository.handleResponseError(response);
-                });
+            }, function (response) {
+                HelpersRepository.handleResponseError(response);
+            });
         },
 
         /**
@@ -61,15 +66,14 @@ module.exports = {
                 weight: this.weight.weight
             };
 
-            this.$http.put('/api/weights/' + this.weight.id, data, function (response) {
-                this.weight = response;
+            this.$http.put('/api/weights/' + this.weight.id, data).then(function (response) {
+                this.weight = response.data;
                 this.editingWeight = false;
                 $.event.trigger('provide-feedback', ['Weight updated', 'success']);
                 $.event.trigger('hide-loading');
-            })
-                .error(function (response) {
-                    HelpersRepository.handleResponseError(response);
-                });
+            }, function (response) {
+                HelpersRepository.handleResponseError(response);
+            });
         },
 
         /**
@@ -96,13 +100,12 @@ module.exports = {
          */
         getWeightForTheDay: function () {
             $.event.trigger('show-loading');
-            this.$http.get('api/weights/' + this.date.sql, function (response) {
-                this.weight = response;
+            this.$http.get('api/weights/' + this.date.sql).then(function (response) {
+                this.weight = response.data;
                 $.event.trigger('hide-loading');
-            })
-                .error(function (response) {
-                    HelpersRepository.handleResponseError(response);
-                });
+            }, function (response) {
+                HelpersRepository.handleResponseError(response);
+            });
         },
 
         /**
@@ -128,7 +131,7 @@ module.exports = {
         }
     },
     props: [
-        'date'
+
     ],
     ready: function () {
         $("#weight").val("");

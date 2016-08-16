@@ -18,12 +18,11 @@ var RecipeTags = Vue.component('recipe-tags', {
                 name: this.newTag.name
             };
 
-            this.$http.post('/api/recipeTags', data, function (response) {
+            this.$http.post('/api/recipeTags', data).then(function (response) {
                 this.tags.push(response.data);
                 $.event.trigger('provide-feedback', ['Tag created', 'success']);
                 $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
+            }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
         },
@@ -34,13 +33,12 @@ var RecipeTags = Vue.component('recipe-tags', {
         deleteTag: function (tag) {
             if (confirm("Are you sure?")) {
                 $.event.trigger('show-loading');
-                this.$http.delete('/api/recipeTags/' + tag.id, function (response) {
+                this.$http.delete('/api/recipeTags/' + tag.id).then(function (response) {
                     this.tags = _.without(this.tags, tag);
                     $.event.trigger('provide-feedback', ['Tag deleted', 'success']);
                     //this.$broadcast('provide-feedback', 'Tag deleted', 'success');
                     $.event.trigger('hide-loading');
-                })
-                .error(function (response) {
+                }, function (response) {
                     HelpersRepository.handleResponseError(response);
                 });
             }

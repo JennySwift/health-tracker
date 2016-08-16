@@ -1,8 +1,8 @@
-var TimersPage = Vue.component('timers-page', {
+module.exports = {
     template: '#timers-page-template',
     data: function () {
         return {
-            date: DatesRepository.setDate(this.date),
+            date: store.state.date,
             timers: [],
             activities: [],
             timersFilter: false,
@@ -53,32 +53,30 @@ var TimersPage = Vue.component('timers-page', {
         },
 
         /**
-        *
-        */
+         *
+         */
         getActivities: function () {
             $.event.trigger('show-loading');
-            this.$http.get('/api/activities', function (response) {
+            this.$http.get('/api/activities').then(function (response) {
                 this.activities = response;
                 $.event.trigger('activities-loaded');
                 $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
+            }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
         },
 
         /**
-        *
-        */
+         *
+         */
         getTimers: function () {
             $.event.trigger('show-loading');
             var url = TimersRepository.calculateUrl(false, this.date.sql);
 
-            this.$http.get(url, function (response) {
+            this.$http.get(url).then(function (response) {
                 this.timers = response;
                 $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
+            }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
         },
@@ -106,29 +104,27 @@ var TimersPage = Vue.component('timers-page', {
         },
 
         /**
-        *
-        */
+         *
+         */
         getTotalMinutesForActivitiesForTheDay: function () {
             $.event.trigger('show-loading');
-            this.$http.get('/api/activities/getTotalMinutesForDay?date=' + this.date.sql, function (response) {
+            this.$http.get('/api/activities/getTotalMinutesForDay?date=' + this.date.sql).then(function (response) {
                 this.activitiesWithDurationsForTheDay = response;
                 $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
+            }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
         },
 
         /**
-        *
-        */
+         *
+         */
         getTotalMinutesForActivitiesForTheWeek: function () {
             $.event.trigger('show-loading');
-            this.$http.get('/api/activities/getTotalMinutesForWeek?date=' + this.date.sql, function (response) {
+            this.$http.get('/api/activities/getTotalMinutesForWeek?date=' + this.date.sql).then(function (response) {
                 this.activitiesWithDurationsForTheWeek = response;
                 $.event.trigger('hide-loading');
-            })
-            .error(function (response) {
+            }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
         },
@@ -157,7 +153,7 @@ var TimersPage = Vue.component('timers-page', {
                 that.getTotalMinutesForActivitiesForTheDay();
                 that.getTotalMinutesForActivitiesForTheWeek();
             });
-            
+
             $(document).on('timer-stopped', function (event) {
                 that.getTotalMinutesForActivitiesForTheDay();
                 that.getTotalMinutesForActivitiesForTheWeek();
@@ -188,4 +184,4 @@ var TimersPage = Vue.component('timers-page', {
         this.getTotalMinutesForActivitiesForTheWeek();
         this.listen();
     }
-});
+};
