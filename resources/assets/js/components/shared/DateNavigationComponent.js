@@ -1,5 +1,5 @@
 var DatesRepository = require('../../repositories/DatesRepository');
-require('sugar');
+// require('sugar');
 
 module.exports = {
     template: '#date-navigation-template',

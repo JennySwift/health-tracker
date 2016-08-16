@@ -44,7 +44,8 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {var Vue = __webpack_require__(1);
+	/* WEBPACK VAR INJECTION */(function(global) {
+	var Vue = __webpack_require__(1);
 	var VueRouter = __webpack_require__(3);
 	Vue.use(VueRouter);
 	global.$ = __webpack_require__(4);
@@ -140,12 +141,7 @@
 	
 	router.start(App, 'body');
 	
-	//new Vue({
-	//    el: 'body',
-	//    events: {
-	//
-	//    }
-	//});
+	
 	
 	
 	
