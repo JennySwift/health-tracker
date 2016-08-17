@@ -62,6 +62,23 @@ module.exports = {
     addActivity: function (activity) {
         store.state.activities.push(activity);
     },
+    
+    /**
+    *
+    * @param activity
+    */
+    updateActivity: function (activity) {
+        var index = HelpersRepository.findIndexById(this.state.activities, activity.id);
+        this.state.activities.$set(index, activity);
+    },
+    
+    /**
+    *
+    * @param activity
+    */
+    deleteActivity: function (activity) {
+        this.state.activities = HelpersRepository.deleteById(this.state.activities, activity.id);
+    },
 
     /**
      *

@@ -2,9 +2,14 @@ module.exports = {
     template: '#activities-page-template',
     data: function () {
         return {
-            activities: store.state.activities,
+            shared: store.state,
             newActivity: {},
         };
+    },
+    computed: {
+        activities: function () {
+          return this.shared.activities;
+        }
     },
     components: {},
     filters: {

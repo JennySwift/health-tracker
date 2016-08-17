@@ -1,4 +1,4 @@
-var ActivityPopup = Vue.component('activity-popup', {
+module.exports = {
     template: '#activity-popup-template',
     data: function () {
         return {
@@ -22,7 +22,7 @@ var ActivityPopup = Vue.component('activity-popup', {
 
             this.$http.put('/api/activities/' + this.selectedActivity.id, data).then(function (response) {
                 var index = _.indexOf(this.activities, _.findWhere(this.activities, {id: this.selectedActivity.id}));
-                this.activities[index] = response;
+                store.updateActivity(response.data);
                 this.showPopup = false;
                 $.event.trigger('provide-feedback', ['Activity updated', 'success']);
                 $.event.trigger('hide-loading');
@@ -38,7 +38,7 @@ var ActivityPopup = Vue.component('activity-popup', {
             if (confirm("Are you sure? The timers for the activity will be deleted, too!")) {
                 $.event.trigger('show-loading');
                 this.$http.delete('/api/activities/' + this.selectedActivity.id).then(function (response) {
-                    this.activities = _.without(this.activities, this.selectedActivity);
+                    store.deleteActivity(this.selectedActivity);
                     this.showPopup = false;
                     $.event.trigger('provide-feedback', ['Activity deleted', 'success']);
                     $.event.trigger('hide-loading');
@@ -49,8 +49,8 @@ var ActivityPopup = Vue.component('activity-popup', {
         },
 
         /**
-        *
-        */
+         *
+         */
         closePopup: function ($event) {
             HelpersRepository.closePopup($event, this);
         },
@@ -72,4 +72,4 @@ var ActivityPopup = Vue.component('activity-popup', {
     ready: function () {
         this.listen();
     }
-});
+};

@@ -33,6 +33,18 @@ module.exports = {
 
     /**
      *
+     * @param array
+     * @param id
+     */
+    deleteById: function (array, id) {
+        var index = HelpersRepository.findIndexById(array, id);
+        array = _.without(array, array[index]);
+
+        return array;
+    },
+
+    /**
+     *
      * @param boolean
      * @returns {number}
      */

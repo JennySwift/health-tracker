@@ -47,6 +47,7 @@ Vue.component('new-sleep-entry', require('./components/NewSleepEntryComponent'))
 
 Vue.component('timer-popup', require('./components/timers/TimerPopupComponent'));
 Vue.component('new-timer', require('./components/timers/NewTimerComponent'));
+Vue.component('activity-popup', require('./components/timers/ActivityPopupComponent'));
 
 var router = new VueRouter({
     hashbang: false
