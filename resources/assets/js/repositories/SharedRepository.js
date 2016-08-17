@@ -63,9 +63,7 @@ module.exports = {
      * @param timer
      */
     addTimer: function (timer, timerIsManual) {
-        console.log(obvious('timer here is ' + timer));
         if (store.state.date.sql === HelpersRepository.formatDateToSql() || timerIsManual) {
-            console.log(obvious('did we make it?'));
             //Only add the timer if the date is on today or the timer is a manual entry
             store.state.timers.push(timer);
         }
@@ -138,6 +136,31 @@ module.exports = {
         }, function (response) {
             HelpersRepository.handleResponseError(response);
         });
+    },
+
+    /**
+     *
+     * @param exerciseUnit
+     */
+    addExerciseUnit: function (exerciseUnit) {
+        store.state.exerciseUnits.push(exerciseUnit);
+    },
+
+    /**
+    *
+    * @param exerciseUnit
+    */
+    updateExerciseUnit: function (exerciseUnit) {
+        var index = HelpersRepository.findIndexById(this.state.exerciseUnits, exerciseUnit.id);
+        this.state.exerciseUnits.$set(index, exerciseUnit);
+    },
+
+    /**
+    *
+    * @param exerciseUnit
+    */
+    deleteExerciseUnit: function (exerciseUnit) {
+        this.state.exerciseUnits = HelpersRepository.deleteById(this.state.exerciseUnits, exerciseUnit.id);
     },
 
     /**
