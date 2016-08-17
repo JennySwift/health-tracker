@@ -1,3 +1,8 @@
+var TimersRepository = require('../../repositories/TimersRepository');
+var Vue = require('vue');
+var VueRouter = require('vue-router');
+Vue.use(VueRouter);
+
 module.exports = {
     template: '#new-manual-timer-template',
     data: function () {
@@ -5,8 +10,17 @@ module.exports = {
             newManualTimer: {
                 activity: {}
             },
-            showPopup: true
+            showPopup: true,
+            shared: store.state
         };
+    },
+    computed: {
+        timers: function () {
+          return this.shared.timers;
+        },
+        activities: function () {
+            return this.shared.activities;
+        }
     },
     components: {},
     methods: {
@@ -16,12 +30,10 @@ module.exports = {
          */
         insertManualTimer: function () {
             $.event.trigger('show-loading');
-            var data = TimersRepository.setData(this.newManualTimer, this.date.sql);
-            $('#timer-clock').timer({format: '%H:%M:%S'});
+            var data = TimersRepository.setData(this.newManualTimer, store.state.date.sql);
 
             this.$http.post('/api/timers/', data).then(function (response) {
-                this.timers.push(response);
-                console.log(router);
+                store.addTimer(response.data, true);
                 $.event.trigger('manual-timer-created');
                 $.event.trigger('provide-feedback', ['Manual entry created', 'success']);
                 $.event.trigger('hide-loading');
@@ -72,9 +84,7 @@ module.exports = {
 
     },
     props: [
-        'activities',
-        'date',
-        'timers'
+        
     ],
     ready: function () {
         this.listen();

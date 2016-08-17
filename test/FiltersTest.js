@@ -35,4 +35,9 @@ describe('filters', function () {
         result = HelpersRepository.formatDurationFromSeconds(3665);
         expect(result).to.equal('01:01:05');
     });
+
+    it('can format a time', function () {
+        var result = HelpersRepository.formatTime('4:30pm');
+        expect(result).to.equal('16:30:00');
+    })
 });

@@ -1,4 +1,5 @@
 var HelpersRepository = require('./HelpersRepository');
+var TimersRepository = require('./TimersRepository');
 require('sugar');
 
 module.exports = {
@@ -19,7 +20,8 @@ module.exports = {
         },
         exerciseUnits: [],
         programs: [],
-        activities: []
+        activities: [],
+        timers: []
     },
 
     /**
@@ -39,6 +41,51 @@ module.exports = {
         // .error(function (response) {
         //
         // });
+    },
+
+    /**
+     *
+     */
+    getTimers: function (that) {
+        $.event.trigger('show-loading');
+        var url = TimersRepository.calculateUrl(false, this.state.date.sql);
+
+        that.$http.get(url).then(function (response) {
+            store.state.timers = response.data;
+            $.event.trigger('hide-loading');
+        }, function (response) {
+            HelpersRepository.handleResponseError(response);
+        });
+    },
+    
+    /**
+     * 
+     * @param timer
+     */
+    addTimer: function (timer, timerIsManual) {
+        console.log(obvious('timer here is ' + timer));
+        if (store.state.date.sql === HelpersRepository.formatDateToSql() || timerIsManual) {
+            console.log(obvious('did we make it?'));
+            //Only add the timer if the date is on today or the timer is a manual entry
+            store.state.timers.push(timer);
+        }
+    },
+    
+    /**
+    *
+    * @param timer
+    */
+    deleteTimer: function (timer) {
+        this.state.timers = HelpersRepository.deleteById(this.state.timers, timer.id);
+    },
+
+    /**
+    *
+    * @param timer
+    */
+    updateTimer: function (timer) {
+        var index = HelpersRepository.findIndexById(this.state.timers, timer.id);
+        this.state.timers.$set(index, timer);
     },
 
     /**

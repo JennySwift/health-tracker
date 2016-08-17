@@ -17,6 +17,9 @@ module.exports = {
     computed: {
         activities: function () {
           return this.shared.activities;
+        },
+        timers: function () {
+            return this.shared.timers;
         }
     },
     components: {},
@@ -59,10 +62,7 @@ module.exports = {
 
             this.$http.put('/api/timers/' + this.timerInProgress.id, data).then(function (response) {
                 this.timerInProgress = false;
-                if (store.state.date.sql === HelpersRepository.formatDateToSql()) {
-                    //Only add the timer if the date is on today
-                    this.timers.push(response.data);
-                }
+                store.addTimer(response.data);
 
                 $.event.trigger('timer-stopped');
                 $.event.trigger('provide-feedback', ['Timer updated', 'success']);
@@ -122,7 +122,7 @@ module.exports = {
 
     },
     props: [
-        'timers'
+
     ],
     ready: function () {
         this.listen();

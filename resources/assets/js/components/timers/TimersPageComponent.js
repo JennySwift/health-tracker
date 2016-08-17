@@ -6,7 +6,6 @@ module.exports = {
     data: function () {
         return {
             date: store.state.date,
-            timers: [],
             timersFilter: false,
             activitiesFilter: '',
             activitiesWithDurationsForTheWeek: [],
@@ -17,6 +16,9 @@ module.exports = {
     computed: {
         activities: function () {
           return this.shared.activities;
+        },
+        timers: function () {
+            return this.shared.timers;
         }
     },
     filters: {
@@ -56,21 +58,6 @@ module.exports = {
          */
         showTimerPopup: function (timer) {
             $.event.trigger('show-timer-popup', [timer]);
-        },
-
-        /**
-         *
-         */
-        getTimers: function () {
-            $.event.trigger('show-loading');
-            var url = TimersRepository.calculateUrl(false, this.date.sql);
-
-            this.$http.get(url).then(function (response) {
-                this.timers = response.data;
-                $.event.trigger('hide-loading');
-            }, function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
         },
 
         /**
@@ -121,27 +108,18 @@ module.exports = {
             });
         },
 
-        ///**
-        // *
-        // */
-        //showNewManualTimerPopup: function () {
-        //    $.event.trigger('show-new-manual-timer-popup');
-        //},
-
         /**
          *
          */
         listen: function () {
             var that = this;
             $(document).on('date-changed', function (event) {
-                that.getTimers();
+                store.getTimers(that);
                 that.getTotalMinutesForActivitiesForTheDay();
                 that.getTotalMinutesForActivitiesForTheWeek();
             });
 
             $(document).on('timer-deleted', function (event, timer) {
-                var index = HelpersRepository.findIndexById(that.timers, timer.id);
-                that.timers = _.without(that.timers, that.timers[index]);
                 that.getTotalMinutesForActivitiesForTheDay();
                 that.getTotalMinutesForActivitiesForTheWeek();
             });
@@ -161,7 +139,6 @@ module.exports = {
         //data to be received from parent
     ],
     ready: function () {
-        this.getTimers();
         this.getTotalMinutesForActivitiesForTheDay();
         this.getTotalMinutesForActivitiesForTheWeek();
         this.listen();

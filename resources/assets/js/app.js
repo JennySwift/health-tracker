@@ -13,12 +13,18 @@ global.HelpersRepository = require('./repositories/HelpersRepository');
 global.FiltersRepository = require('./repositories/FiltersRepository');
 Date.setLocale('en-AU');
 
+global.router = new VueRouter({hashbang: false});
+
+global.chalk = require('chalk');
+global.obvious = chalk.green.bgBlack.bold.underline;
+
 var App = Vue.component('app', {
     ready: function () {
         store.getExercises(this);
         store.getExerciseUnits(this);
         store.getExercisePrograms(this);
         store.getActivities(this);
+        store.getTimers(this);
     }
 });
 
@@ -48,10 +54,6 @@ Vue.component('new-sleep-entry', require('./components/NewSleepEntryComponent'))
 Vue.component('timer-popup', require('./components/timers/TimerPopupComponent'));
 Vue.component('new-timer', require('./components/timers/NewTimerComponent'));
 Vue.component('activity-popup', require('./components/timers/ActivityPopupComponent'));
-
-var router = new VueRouter({
-    hashbang: false
-});
 
 router.map({
     '/': {

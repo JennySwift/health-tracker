@@ -59,12 +59,18 @@
 	global.FiltersRepository = __webpack_require__(15);
 	Date.setLocale('en-AU');
 	
+	global.router = new VueRouter({hashbang: false});
+	
+	global.chalk = __webpack_require__(182);
+	global.obvious = chalk.green.bgBlack.bold.underline;
+	
 	var App = Vue.component('app', {
 	    ready: function () {
 	        store.getExercises(this);
 	        store.getExerciseUnits(this);
 	        store.getExercisePrograms(this);
 	        store.getActivities(this);
+	        store.getTimers(this);
 	    }
 	});
 	
@@ -94,10 +100,6 @@
 	Vue.component('timer-popup', __webpack_require__(63));
 	Vue.component('new-timer', __webpack_require__(64));
 	Vue.component('activity-popup', __webpack_require__(169));
-	
-	var router = new VueRouter({
-	    hashbang: false
-	});
 	
 	router.map({
 	    '/': {
@@ -24759,6 +24761,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var HelpersRepository = __webpack_require__(7);
+	var TimersRepository = __webpack_require__(62);
 	__webpack_require__(8);
 	
 	module.exports = {
@@ -24779,7 +24782,8 @@
 	        },
 	        exerciseUnits: [],
 	        programs: [],
-	        activities: []
+	        activities: [],
+	        timers: []
 	    },
 	
 	    /**
@@ -24799,6 +24803,51 @@
 	        // .error(function (response) {
 	        //
 	        // });
+	    },
+	
+	    /**
+	     *
+	     */
+	    getTimers: function (that) {
+	        $.event.trigger('show-loading');
+	        var url = TimersRepository.calculateUrl(false, this.state.date.sql);
+	
+	        that.$http.get(url).then(function (response) {
+	            store.state.timers = response.data;
+	            $.event.trigger('hide-loading');
+	        }, function (response) {
+	            HelpersRepository.handleResponseError(response);
+	        });
+	    },
+	    
+	    /**
+	     * 
+	     * @param timer
+	     */
+	    addTimer: function (timer, timerIsManual) {
+	        console.log(obvious('timer here is ' + timer));
+	        if (store.state.date.sql === HelpersRepository.formatDateToSql() || timerIsManual) {
+	            console.log(obvious('did we make it?'));
+	            //Only add the timer if the date is on today or the timer is a manual entry
+	            store.state.timers.push(timer);
+	        }
+	    },
+	    
+	    /**
+	    *
+	    * @param timer
+	    */
+	    deleteTimer: function (timer) {
+	        this.state.timers = HelpersRepository.deleteById(this.state.timers, timer.id);
+	    },
+	
+	    /**
+	    *
+	    * @param timer
+	    */
+	    updateTimer: function (timer) {
+	        var index = HelpersRepository.findIndexById(this.state.timers, timer.id);
+	        this.state.timers.$set(index, timer);
 	    },
 	
 	    /**
@@ -24956,7 +25005,7 @@
 	    },
 	
 	    formatTime: function (time) {
-	        return Date.create(date).format('{HH}:{mm}:{ss}');
+	        return Date.create(time).format('{HH}:{mm}:{ss}');
 	    },
 	
 	    formatToDateTime: function (time) {
@@ -51413,7 +51462,6 @@
 	    data: function () {
 	        return {
 	            date: store.state.date,
-	            timers: [],
 	            timersFilter: false,
 	            activitiesFilter: '',
 	            activitiesWithDurationsForTheWeek: [],
@@ -51424,6 +51472,9 @@
 	    computed: {
 	        activities: function () {
 	          return this.shared.activities;
+	        },
+	        timers: function () {
+	            return this.shared.timers;
 	        }
 	    },
 	    filters: {
@@ -51463,21 +51514,6 @@
 	         */
 	        showTimerPopup: function (timer) {
 	            $.event.trigger('show-timer-popup', [timer]);
-	        },
-	
-	        /**
-	         *
-	         */
-	        getTimers: function () {
-	            $.event.trigger('show-loading');
-	            var url = TimersRepository.calculateUrl(false, this.date.sql);
-	
-	            this.$http.get(url).then(function (response) {
-	                this.timers = response.data;
-	                $.event.trigger('hide-loading');
-	            }, function (response) {
-	                HelpersRepository.handleResponseError(response);
-	            });
 	        },
 	
 	        /**
@@ -51528,27 +51564,18 @@
 	            });
 	        },
 	
-	        ///**
-	        // *
-	        // */
-	        //showNewManualTimerPopup: function () {
-	        //    $.event.trigger('show-new-manual-timer-popup');
-	        //},
-	
 	        /**
 	         *
 	         */
 	        listen: function () {
 	            var that = this;
 	            $(document).on('date-changed', function (event) {
-	                that.getTimers();
+	                store.getTimers(that);
 	                that.getTotalMinutesForActivitiesForTheDay();
 	                that.getTotalMinutesForActivitiesForTheWeek();
 	            });
 	
 	            $(document).on('timer-deleted', function (event, timer) {
-	                var index = HelpersRepository.findIndexById(that.timers, timer.id);
-	                that.timers = _.without(that.timers, that.timers[index]);
 	                that.getTotalMinutesForActivitiesForTheDay();
 	                that.getTotalMinutesForActivitiesForTheWeek();
 	            });
@@ -51568,7 +51595,6 @@
 	        //data to be received from parent
 	    ],
 	    ready: function () {
-	        this.getTimers();
 	        this.getTotalMinutesForActivitiesForTheDay();
 	        this.getTotalMinutesForActivitiesForTheWeek();
 	        this.listen();
@@ -51577,8 +51603,13 @@
 
 /***/ },
 /* 59 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
+	var TimersRepository = __webpack_require__(62);
+	var Vue = __webpack_require__(1);
+	var VueRouter = __webpack_require__(3);
+	Vue.use(VueRouter);
+	
 	module.exports = {
 	    template: '#new-manual-timer-template',
 	    data: function () {
@@ -51586,8 +51617,17 @@
 	            newManualTimer: {
 	                activity: {}
 	            },
-	            showPopup: true
+	            showPopup: true,
+	            shared: store.state
 	        };
+	    },
+	    computed: {
+	        timers: function () {
+	          return this.shared.timers;
+	        },
+	        activities: function () {
+	            return this.shared.activities;
+	        }
 	    },
 	    components: {},
 	    methods: {
@@ -51597,12 +51637,10 @@
 	         */
 	        insertManualTimer: function () {
 	            $.event.trigger('show-loading');
-	            var data = TimersRepository.setData(this.newManualTimer, this.date.sql);
-	            $('#timer-clock').timer({format: '%H:%M:%S'});
+	            var data = TimersRepository.setData(this.newManualTimer, store.state.date.sql);
 	
 	            this.$http.post('/api/timers/', data).then(function (response) {
-	                this.timers.push(response);
-	                console.log(router);
+	                store.addTimer(response.data, true);
 	                $.event.trigger('manual-timer-created');
 	                $.event.trigger('provide-feedback', ['Manual entry created', 'success']);
 	                $.event.trigger('hide-loading');
@@ -51653,9 +51691,7 @@
 	
 	    },
 	    props: [
-	        'activities',
-	        'date',
-	        'timers'
+	        
 	    ],
 	    ready: function () {
 	        this.listen();
@@ -51919,9 +51955,7 @@
 	
 	            this.$http.put('/api/timers/' + this.selectedTimer.id, data).then(function (response) {
 	                var index = _.indexOf(this.timers, _.findWhere(this.timers, {id: this.selectedTimer.id}));
-	                this.timers[index].start = response.data.start;
-	                this.timers[index].finish = response.data.finish;
-	                this.timers[index].activity = response.data.activity;
+	                store.updateTimer(response.data);
 	                $.event.trigger('provide-feedback', ['Timer updated', 'success']);
 	                this.showPopup = false;
 	                $.event.trigger('hide-loading');
@@ -51937,6 +51971,7 @@
 	            if (confirm("Are you sure?")) {
 	                $.event.trigger('show-loading');
 	                this.$http.delete('/api/timers/' + this.selectedTimer.id).then(function (response) {
+	                    store.deleteTimer(this.selectedTimer);
 	                    $.event.trigger('timer-deleted', [this.selectedTimer]);
 	                    this.showPopup = false;
 	                    $.event.trigger('provide-feedback', ['Timer deleted', 'success']);
@@ -52001,6 +52036,9 @@
 	    computed: {
 	        activities: function () {
 	          return this.shared.activities;
+	        },
+	        timers: function () {
+	            return this.shared.timers;
 	        }
 	    },
 	    components: {},
@@ -52043,10 +52081,7 @@
 	
 	            this.$http.put('/api/timers/' + this.timerInProgress.id, data).then(function (response) {
 	                this.timerInProgress = false;
-	                if (store.state.date.sql === HelpersRepository.formatDateToSql()) {
-	                    //Only add the timer if the date is on today
-	                    this.timers.push(response.data);
-	                }
+	                store.addTimer(response.data);
 	
 	                $.event.trigger('timer-stopped');
 	                $.event.trigger('provide-feedback', ['Timer updated', 'success']);
@@ -52106,7 +52141,7 @@
 	
 	    },
 	    props: [
-	        'timers'
+	
 	    ],
 	    ready: function () {
 	        this.listen();
@@ -66242,6 +66277,319 @@
 	        this.listen();
 	    }
 	};
+
+/***/ },
+/* 170 */,
+/* 171 */,
+/* 172 */,
+/* 173 */,
+/* 174 */,
+/* 175 */,
+/* 176 */,
+/* 177 */,
+/* 178 */,
+/* 179 */,
+/* 180 */,
+/* 181 */,
+/* 182 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
+	var escapeStringRegexp = __webpack_require__(183);
+	var ansiStyles = __webpack_require__(184);
+	var stripAnsi = __webpack_require__(185);
+	var hasAnsi = __webpack_require__(187);
+	var supportsColor = __webpack_require__(188);
+	var defineProps = Object.defineProperties;
+	var isSimpleWindowsTerm = process.platform === 'win32' && !/^xterm/i.test(process.env.TERM);
+	
+	function Chalk(options) {
+		// detect mode if not set manually
+		this.enabled = !options || options.enabled === undefined ? supportsColor : options.enabled;
+	}
+	
+	// use bright blue on Windows as the normal blue color is illegible
+	if (isSimpleWindowsTerm) {
+		ansiStyles.blue.open = '\u001b[94m';
+	}
+	
+	var styles = (function () {
+		var ret = {};
+	
+		Object.keys(ansiStyles).forEach(function (key) {
+			ansiStyles[key].closeRe = new RegExp(escapeStringRegexp(ansiStyles[key].close), 'g');
+	
+			ret[key] = {
+				get: function () {
+					return build.call(this, this._styles.concat(key));
+				}
+			};
+		});
+	
+		return ret;
+	})();
+	
+	var proto = defineProps(function chalk() {}, styles);
+	
+	function build(_styles) {
+		var builder = function () {
+			return applyStyle.apply(builder, arguments);
+		};
+	
+		builder._styles = _styles;
+		builder.enabled = this.enabled;
+		// __proto__ is used because we must return a function, but there is
+		// no way to create a function with a different prototype.
+		/* eslint-disable no-proto */
+		builder.__proto__ = proto;
+	
+		return builder;
+	}
+	
+	function applyStyle() {
+		// support varags, but simply cast to string in case there's only one arg
+		var args = arguments;
+		var argsLen = args.length;
+		var str = argsLen !== 0 && String(arguments[0]);
+	
+		if (argsLen > 1) {
+			// don't slice `arguments`, it prevents v8 optimizations
+			for (var a = 1; a < argsLen; a++) {
+				str += ' ' + args[a];
+			}
+		}
+	
+		if (!this.enabled || !str) {
+			return str;
+		}
+	
+		var nestedStyles = this._styles;
+		var i = nestedStyles.length;
+	
+		// Turns out that on Windows dimmed gray text becomes invisible in cmd.exe,
+		// see https://github.com/chalk/chalk/issues/58
+		// If we're on Windows and we're dealing with a gray color, temporarily make 'dim' a noop.
+		var originalDim = ansiStyles.dim.open;
+		if (isSimpleWindowsTerm && (nestedStyles.indexOf('gray') !== -1 || nestedStyles.indexOf('grey') !== -1)) {
+			ansiStyles.dim.open = '';
+		}
+	
+		while (i--) {
+			var code = ansiStyles[nestedStyles[i]];
+	
+			// Replace any instances already present with a re-opening code
+			// otherwise only the part of the string until said closing code
+			// will be colored, and the rest will simply be 'plain'.
+			str = code.open + str.replace(code.closeRe, code.open) + code.close;
+		}
+	
+		// Reset the original 'dim' if we changed it to work around the Windows dimmed gray issue.
+		ansiStyles.dim.open = originalDim;
+	
+		return str;
+	}
+	
+	function init() {
+		var ret = {};
+	
+		Object.keys(styles).forEach(function (name) {
+			ret[name] = {
+				get: function () {
+					return build.call(this, [name]);
+				}
+			};
+		});
+	
+		return ret;
+	}
+	
+	defineProps(Chalk.prototype, init());
+	
+	module.exports = new Chalk();
+	module.exports.styles = ansiStyles;
+	module.exports.hasColor = hasAnsi;
+	module.exports.stripColor = stripAnsi;
+	module.exports.supportsColor = supportsColor;
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
+
+/***/ },
+/* 183 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	var matchOperatorsRe = /[|\\{}()[\]^$+*?.]/g;
+	
+	module.exports = function (str) {
+		if (typeof str !== 'string') {
+			throw new TypeError('Expected a string');
+		}
+	
+		return str.replace(matchOperatorsRe, '\\$&');
+	};
+
+
+/***/ },
+/* 184 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(module) {'use strict';
+	
+	function assembleStyles () {
+		var styles = {
+			modifiers: {
+				reset: [0, 0],
+				bold: [1, 22], // 21 isn't widely supported and 22 does the same thing
+				dim: [2, 22],
+				italic: [3, 23],
+				underline: [4, 24],
+				inverse: [7, 27],
+				hidden: [8, 28],
+				strikethrough: [9, 29]
+			},
+			colors: {
+				black: [30, 39],
+				red: [31, 39],
+				green: [32, 39],
+				yellow: [33, 39],
+				blue: [34, 39],
+				magenta: [35, 39],
+				cyan: [36, 39],
+				white: [37, 39],
+				gray: [90, 39]
+			},
+			bgColors: {
+				bgBlack: [40, 49],
+				bgRed: [41, 49],
+				bgGreen: [42, 49],
+				bgYellow: [43, 49],
+				bgBlue: [44, 49],
+				bgMagenta: [45, 49],
+				bgCyan: [46, 49],
+				bgWhite: [47, 49]
+			}
+		};
+	
+		// fix humans
+		styles.colors.grey = styles.colors.gray;
+	
+		Object.keys(styles).forEach(function (groupName) {
+			var group = styles[groupName];
+	
+			Object.keys(group).forEach(function (styleName) {
+				var style = group[styleName];
+	
+				styles[styleName] = group[styleName] = {
+					open: '\u001b[' + style[0] + 'm',
+					close: '\u001b[' + style[1] + 'm'
+				};
+			});
+	
+			Object.defineProperty(styles, groupName, {
+				value: group,
+				enumerable: false
+			});
+		});
+	
+		return styles;
+	}
+	
+	Object.defineProperty(module, 'exports', {
+		enumerable: true,
+		get: assembleStyles
+	});
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(66)(module)))
+
+/***/ },
+/* 185 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	var ansiRegex = __webpack_require__(186)();
+	
+	module.exports = function (str) {
+		return typeof str === 'string' ? str.replace(ansiRegex, '') : str;
+	};
+
+
+/***/ },
+/* 186 */
+/***/ function(module, exports) {
+
+	'use strict';
+	module.exports = function () {
+		return /[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
+	};
+
+
+/***/ },
+/* 187 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	var ansiRegex = __webpack_require__(186);
+	var re = new RegExp(ansiRegex().source); // remove the `g` flag
+	module.exports = re.test.bind(re);
+
+
+/***/ },
+/* 188 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
+	var argv = process.argv;
+	
+	var terminator = argv.indexOf('--');
+	var hasFlag = function (flag) {
+		flag = '--' + flag;
+		var pos = argv.indexOf(flag);
+		return pos !== -1 && (terminator !== -1 ? pos < terminator : true);
+	};
+	
+	module.exports = (function () {
+		if ('FORCE_COLOR' in process.env) {
+			return true;
+		}
+	
+		if (hasFlag('no-color') ||
+			hasFlag('no-colors') ||
+			hasFlag('color=false')) {
+			return false;
+		}
+	
+		if (hasFlag('color') ||
+			hasFlag('colors') ||
+			hasFlag('color=true') ||
+			hasFlag('color=always')) {
+			return true;
+		}
+	
+		if (process.stdout && !process.stdout.isTTY) {
+			return false;
+		}
+	
+		if (process.platform === 'win32') {
+			return true;
+		}
+	
+		if ('COLORTERM' in process.env) {
+			return true;
+		}
+	
+		if (process.env.TERM === 'dumb') {
+			return false;
+		}
+	
+		if (/^screen|^xterm|^vt100|color|ansi|cygwin|linux/i.test(process.env.TERM)) {
+			return true;
+		}
+	
+		return false;
+	})();
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }
 /******/ ]);

@@ -64,7 +64,7 @@ module.exports = {
     },
 
     formatTime: function (time) {
-        return Date.create(date).format('{HH}:{mm}:{ss}');
+        return Date.create(time).format('{HH}:{mm}:{ss}');
     },
 
     formatToDateTime: function (time) {

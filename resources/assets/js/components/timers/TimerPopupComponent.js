@@ -30,9 +30,7 @@ module.exports = {
 
             this.$http.put('/api/timers/' + this.selectedTimer.id, data).then(function (response) {
                 var index = _.indexOf(this.timers, _.findWhere(this.timers, {id: this.selectedTimer.id}));
-                this.timers[index].start = response.data.start;
-                this.timers[index].finish = response.data.finish;
-                this.timers[index].activity = response.data.activity;
+                store.updateTimer(response.data);
                 $.event.trigger('provide-feedback', ['Timer updated', 'success']);
                 this.showPopup = false;
                 $.event.trigger('hide-loading');
@@ -48,6 +46,7 @@ module.exports = {
             if (confirm("Are you sure?")) {
                 $.event.trigger('show-loading');
                 this.$http.delete('/api/timers/' + this.selectedTimer.id).then(function (response) {
+                    store.deleteTimer(this.selectedTimer);
                     $.event.trigger('timer-deleted', [this.selectedTimer]);
                     this.showPopup = false;
                     $.event.trigger('provide-feedback', ['Timer deleted', 'success']);
