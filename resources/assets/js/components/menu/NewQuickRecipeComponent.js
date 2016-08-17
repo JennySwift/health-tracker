@@ -77,14 +77,14 @@ var NewQuickRecipe = Vue.component('new-quick-recipe', {
          *
          */
         checkForSimilarNames: function () {
-            $.event.trigger('show-loading');
+            store.showLoading();
 
             var data = {
                 ingredients: this.newRecipe.ingredients
             };
 
             this.$http.get('/api/quickRecipes/checkForSimilarNames', data).then(function (response) {
-                $.event.trigger('hide-loading');
+                store.hideLoading();
                 this.similarNames = response;
 
                 if (response.units || response.foods) {
@@ -104,7 +104,7 @@ var NewQuickRecipe = Vue.component('new-quick-recipe', {
          *
          */
         insertRecipe: function () {
-            $.event.trigger('show-loading');
+            store.showLoading();
             if (this.similarNames.foods || this.similarNames.units) {
                 this.chooseCorrectFoodName();
                 this.chooseCorrectUnitName();
@@ -120,7 +120,7 @@ var NewQuickRecipe = Vue.component('new-quick-recipe', {
 
             this.$http.post('/api/quickRecipes', data).then(function (response) {
                 $.event.trigger('provide-feedback', ['Recipe created', 'success']);
-                $.event.trigger('hide-loading');
+                store.hideLoading();
                 this.recipes.push(response.data);
             }, function (response) {
                 HelpersRepository.handleResponseError(response);

@@ -23,7 +23,7 @@ module.exports = {
          *
          */
         insertActivity: function () {
-            $.event.trigger('show-loading');
+            store.showLoading();
             var data = {
                 name: this.newActivity.name,
                 color: this.newActivity.color
@@ -32,7 +32,7 @@ module.exports = {
             this.$http.post('/api/activities', data).then(function (response) {
                 store.addActivity(response.data);
                 $.event.trigger('provide-feedback', ['Activity created', 'success']);
-                $.event.trigger('hide-loading');
+                store.hideLoading();
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });

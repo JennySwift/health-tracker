@@ -12,7 +12,7 @@ module.exports = {
          *
          */
         updateExercise: function () {
-            $.event.trigger('show-loading');
+            store.showLoading();
 
             var data = ExercisesRepository.setData(this.selectedExercise);
 
@@ -23,7 +23,7 @@ module.exports = {
 
                 this.showPopup = false;
                 $.event.trigger('provide-feedback', ['Exercise updated', 'success']);
-                $.event.trigger('hide-loading');
+                store.hideLoading();
                 $("#exercise-step-number").val("");
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
@@ -35,13 +35,13 @@ module.exports = {
          */
         deleteExercise: function () {
             if (confirm("Are you sure?")) {
-                $.event.trigger('show-loading');
+                store.showLoading();
                 this.$http.delete('/api/exercises/' + this.selectedExercise.id).then(function (response) {
                     var index = _.indexOf(this.exercises, _.findWhere(this.exercises, {id: this.selectedExercise.id}));
                     this.exercises = _.without(this.exercises, this.exercises[index]);
                     $.event.trigger('provide-feedback', ['Exercise deleted', 'success']);
                     this.showPopup = false;
-                    $.event.trigger('hide-loading');
+                    store.hideLoading();
                 }, function (response) {
                     HelpersRepository.handleResponseError(response);
                 });

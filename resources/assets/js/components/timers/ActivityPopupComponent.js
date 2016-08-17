@@ -13,7 +13,7 @@ module.exports = {
          *
          */
         updateActivity: function () {
-            $.event.trigger('show-loading');
+            store.showLoading();
 
             var data = {
                 name: this.selectedActivity.name,
@@ -25,7 +25,7 @@ module.exports = {
                 store.updateActivity(response.data);
                 this.showPopup = false;
                 $.event.trigger('provide-feedback', ['Activity updated', 'success']);
-                $.event.trigger('hide-loading');
+                store.hideLoading();
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
@@ -36,12 +36,12 @@ module.exports = {
          */
         deleteActivity: function () {
             if (confirm("Are you sure? The timers for the activity will be deleted, too!")) {
-                $.event.trigger('show-loading');
+                store.showLoading();
                 this.$http.delete('/api/activities/' + this.selectedActivity.id).then(function (response) {
                     store.deleteActivity(this.selectedActivity);
                     this.showPopup = false;
                     $.event.trigger('provide-feedback', ['Activity deleted', 'success']);
-                    $.event.trigger('hide-loading');
+                    store.hideLoading();
                 }, function (response) {
                     HelpersRepository.handleResponseError(response);
                 });

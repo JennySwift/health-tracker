@@ -44,12 +44,12 @@ module.exports = {
          */
         populateOptions: function () {
             //fill the dropdown
-            $.event.trigger('show-loading');
+            store.showLoading();
             this.$http.get(this.url + '?typing=' + this.chosenOption.name).then(function (response) {
                 this.autocompleteOptions = response.data.data;
                 this.showDropdown = true;
                 this.currentIndex = 0;
-                $.event.trigger('hide-loading');
+                store.hideLoading();
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });

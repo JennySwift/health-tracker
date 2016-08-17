@@ -13,10 +13,10 @@ module.exports = {
          *
          */
         getUnits: function () {
-            $.event.trigger('show-loading');
+            store.showLoading();
             this.$http.get('/api/foodUnits').then(function (response) {
                 this.units = response;
-                $.event.trigger('hide-loading');
+                store.hideLoading();
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
@@ -26,7 +26,7 @@ module.exports = {
          *
          */
         insertUnit: function () {
-            $.event.trigger('show-loading');
+            store.showLoading();
             var data = {
                 name: this.newUnit.name
             };
@@ -34,7 +34,7 @@ module.exports = {
             this.$http.post('/api/foodUnits', data).then(function (response) {
                 this.units.push(response);
                 $.event.trigger('provide-feedback', ['Unit created', 'success']);
-                $.event.trigger('hide-loading');
+                store.hideLoading();
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
@@ -45,13 +45,13 @@ module.exports = {
          */
         deleteUnit: function (unit) {
             if (confirm("Are you sure?")) {
-                $.event.trigger('show-loading');
+                store.showLoading();
                 this.$http.delete('/api/foodUnits/' + unit.id).then(function (response) {
                     this.units = _.without(this.units, unit);
                     //var index = _.indexOf(this.units, _.findWhere(this.units, {id: this.unit.id}));
                     //this.units = _.without(this.units, this.units[index]);
                     $.event.trigger('provide-feedback', ['Unit deleted', 'success']);
-                    $.event.trigger('hide-loading');
+                    store.hideLoading();
                 }, function (response) {
                     HelpersRepository.handleResponseError(response);
                 });

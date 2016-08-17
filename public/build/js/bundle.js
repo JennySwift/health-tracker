@@ -24783,17 +24783,32 @@
 	        exerciseUnits: [],
 	        programs: [],
 	        activities: [],
-	        timers: []
+	        timers: [],
+	        loading: false
+	    },
+	
+	    /**
+	     *
+	     */
+	    showLoading: function () {
+	        this.state.loading = true;
+	    },
+	
+	    /**
+	     *
+	     */
+	    hideLoading: function () {
+	        this.state.loading = false;
 	    },
 	
 	    /**
 	     *
 	     */
 	    getExercises: function (that) {
-	        $.event.trigger('show-loading');
+	        store.showLoading();
 	        that.$http.get('/api/exercises').then(function (response) {
 	            store.state.exercises = response.data;
-	            $.event.trigger('hide-loading');
+	            store.hideLoading();
 	        }, function (response) {
 	            HelpersRepository.handleResponseError(response);
 	        });
@@ -24809,12 +24824,12 @@
 	     *
 	     */
 	    getTimers: function (that) {
-	        $.event.trigger('show-loading');
+	        store.showLoading();
 	        var url = TimersRepository.calculateUrl(false, this.state.date.sql);
 	
 	        that.$http.get(url).then(function (response) {
 	            store.state.timers = response.data;
-	            $.event.trigger('hide-loading');
+	            store.hideLoading();
 	        }, function (response) {
 	            HelpersRepository.handleResponseError(response);
 	        });
@@ -24852,11 +24867,11 @@
 	     *
 	     */
 	    getActivities: function (that) {
-	        $.event.trigger('show-loading');
+	        store.showLoading();
 	        that.$http.get('/api/activities').then(function (response) {
 	            store.state.activities = response.data;
 	            $.event.trigger('activities-loaded');
-	            $.event.trigger('hide-loading');
+	            store.hideLoading();
 	        }, function (response) {
 	            HelpersRepository.handleResponseError(response);
 	        });
@@ -24891,10 +24906,10 @@
 	     *
 	     */
 	    getExerciseUnits: function (that) {
-	        $.event.trigger('show-loading');
+	        store.showLoading();
 	        that.$http.get('/api/exerciseUnits').then(function (response) {
 	            store.state.exerciseUnits = response.data;
-	            $.event.trigger('hide-loading');
+	            store.hideLoading();
 	        }, function (response) {
 	            HelpersRepository.handleResponseError(response);
 	        });
@@ -24929,10 +24944,10 @@
 	     *
 	     */
 	    getExercisePrograms: function (that) {
-	        $.event.trigger('show-loading');
+	        store.showLoading();
 	        that.$http.get('/api/exercisePrograms').then(function (response) {
 	            store.state.programs = response.data;
-	            $.event.trigger('hide-loading');
+	            store.hideLoading();
 	        }, function (response) {
 	            HelpersRepository.handleResponseError(response);
 	        });
@@ -41284,26 +41299,32 @@
 	module.exports = {
 	    data: function () {
 	        return {
-	            showLoading: false
+	            // showLoading: false
+	            shared: store.state
 	        };
 	    },
 	    template: "#loading-template",
+	    computed: {
+	        loading: function () {
+	          return this.shared.loading;
+	        }
+	    },
 	    props: [
 	        //'showLoading'
 	    ],
 	    methods: {
-	        listen: function () {
-	            var that = this;
-	            $(document).on('show-loading', function (event, message, type) {
-	                that.showLoading = true;
-	            });
-	            $(document).on('hide-loading', function (event, message, type) {
-	                that.showLoading = false;
-	            });
-	        }
+	        // listen: function () {
+	        //     var that = this;
+	        //     $(document).on('show-loading', function (event, message, type) {
+	        //         that.showLoading = true;
+	        //     });
+	        //     $(document).on('hide-loading', function (event, message, type) {
+	        //         that.showLoading = false;
+	        //     });
+	        // }
 	    },
 	    ready: function () {
-	        this.listen();
+	        // this.listen();
 	    }
 	};
 
@@ -41553,7 +41574,7 @@
 	         *
 	         */
 	        insertWeight: function () {
-	            $.event.trigger('show-loading');
+	            store.showLoading();
 	            var data = {
 	                date: this.date.sql,
 	                weight: this.newWeight.weight
@@ -41563,7 +41584,7 @@
 	                this.weight = response.data;
 	                this.addingNewWeight = false;
 	                $.event.trigger('provide-feedback', ['Weight created', 'success']);
-	                $.event.trigger('hide-loading');
+	                store.hideLoading();
 	            }, function (response) {
 	                HelpersRepository.handleResponseError(response);
 	            });
@@ -41573,7 +41594,7 @@
 	         *
 	         */
 	        updateWeight: function () {
-	            $.event.trigger('show-loading');
+	            store.showLoading();
 	
 	            var data = {
 	                weight: this.weight.weight
@@ -41583,7 +41604,7 @@
 	                this.weight = response.data;
 	                this.editingWeight = false;
 	                $.event.trigger('provide-feedback', ['Weight updated', 'success']);
-	                $.event.trigger('hide-loading');
+	                store.hideLoading();
 	            }, function (response) {
 	                HelpersRepository.handleResponseError(response);
 	            });
@@ -41612,10 +41633,10 @@
 	         *
 	         */
 	        getWeightForTheDay: function () {
-	            $.event.trigger('show-loading');
+	            store.showLoading();
 	            this.$http.get('api/weights/' + this.date.sql).then(function (response) {
 	                this.weight = response.data;
-	                $.event.trigger('hide-loading');
+	                store.hideLoading();
 	            }, function (response) {
 	                HelpersRepository.handleResponseError(response);
 	            });
@@ -42357,7 +42378,7 @@
 	         * @param entry
 	         */
 	        getEntriesForSpecificExerciseAndDateAndUnit: function (entry) {
-	            $.event.trigger('show-loading');
+	            store.showLoading();
 	
 	            var data = {
 	                date: this.date.sql,
@@ -42368,7 +42389,7 @@
 	            this.$http.get('api/exerciseEntries/specificExerciseAndDateAndUnit', data).then(function (response) {
 	                this.entries = response;
 	                this.showPopup = true;
-	                $.event.trigger('hide-loading');
+	                store.hideLoading();
 	            }, function (response) {
 	                HelpersRepository.handleResponseError(response);
 	            });
@@ -42379,7 +42400,7 @@
 	         */
 	        deleteExerciseEntry: function (entry) {
 	            if (confirm("Are you sure?")) {
-	                $.event.trigger('show-loading');
+	                store.showLoading();
 	                this.$http.delete('/api/exerciseEntries/' + entry.id).then(function (response) {
 	                    this.entries = _.without(this.entries, entry);
 	                    //This might be unnecessary to do each time, and it fetches a lot
@@ -42387,7 +42408,7 @@
 	                    //Perhaps do it when the popup closes instead?
 	                    $.event.trigger('get-exercise-entries-for-the-day');
 	                    $.event.trigger('provide-feedback', ['Entry deleted', 'success']);
-	                    $.event.trigger('hide-loading');
+	                    store.hideLoading();
 	                }, function (response) {
 	                    HelpersRepository.handleResponseError(response);
 	                });
@@ -42493,7 +42514,7 @@
 	         *
 	         */
 	        updateSeries: function () {
-	            $.event.trigger('show-loading');
+	            store.showLoading();
 	
 	            var data = {
 	                name: this.selectedSeries.name,
@@ -42507,7 +42528,7 @@
 	                this.exerciseSeries[index].priority = response.data.priority;
 	                this.showPopup = false;
 	                $.event.trigger('provide-feedback', ['Series updated', 'success']);
-	                $.event.trigger('hide-loading');
+	                store.hideLoading();
 	            }, function (response) {
 	                HelpersRepository.handleResponseError(response);
 	            });
@@ -42518,14 +42539,14 @@
 	         */
 	        deleteSeries: function () {
 	            if (confirm("Are you sure?")) {
-	                $.event.trigger('show-loading');
+	                store.showLoading();
 	                this.$http.delete('/api/exerciseSeries/' + this.selectedSeries.id).then(function (response) {
 	                    //this.exerciseSeries = _.without(this.exerciseSeries, this.selectedSeries);
 	                    var index = _.indexOf(this.exerciseSeries, _.findWhere(this.exerciseSeries, {id: this.selectedSeries.id}));
 	                    this.exerciseSeries = _.without(this.exerciseSeries, this.exerciseSeries[index]);
 	                    this.showPopup = false;
 	                    $.event.trigger('provide-feedback', ['Series deleted', 'success']);
-	                    $.event.trigger('hide-loading');
+	                    store.hideLoading();
 	                }, function (response) {
 	                    HelpersRepository.handleResponseError(response);
 	                });
@@ -42640,7 +42661,7 @@
 	         *
 	         */
 	        updateExercise: function () {
-	            $.event.trigger('show-loading');
+	            store.showLoading();
 	
 	            var data = ExercisesRepository.setData(this.selectedExercise);
 	
@@ -42651,7 +42672,7 @@
 	
 	                this.showPopup = false;
 	                $.event.trigger('provide-feedback', ['Exercise updated', 'success']);
-	                $.event.trigger('hide-loading');
+	                store.hideLoading();
 	                $("#exercise-step-number").val("");
 	            }, function (response) {
 	                HelpersRepository.handleResponseError(response);
@@ -42663,13 +42684,13 @@
 	         */
 	        deleteExercise: function () {
 	            if (confirm("Are you sure?")) {
-	                $.event.trigger('show-loading');
+	                store.showLoading();
 	                this.$http.delete('/api/exercises/' + this.selectedExercise.id).then(function (response) {
 	                    var index = _.indexOf(this.exercises, _.findWhere(this.exercises, {id: this.selectedExercise.id}));
 	                    this.exercises = _.without(this.exercises, this.exercises[index]);
 	                    $.event.trigger('provide-feedback', ['Exercise deleted', 'success']);
 	                    this.showPopup = false;
-	                    $.event.trigger('hide-loading');
+	                    store.hideLoading();
 	                }, function (response) {
 	                    HelpersRepository.handleResponseError(response);
 	                });
@@ -42813,11 +42834,11 @@
 	         * Get calories for the day and average calories for 7 days
 	         */
 	        getCalorieInfoForTheDay: function () {
-	            $.event.trigger('show-loading');
+	            store.showLoading();
 	            this.$http.get('api/calories/' + this.date.sql).then(function (response) {
 	                this.calories.day = response.data.forTheDay;
 	                this.calories.averageFor7Days = response.data.averageFor7Days;
-	                $.event.trigger('hide-loading');
+	                store.hideLoading();
 	            }, function (response) {
 	                HelpersRepository.handleResponseError(response);
 	            });
@@ -42992,7 +43013,7 @@
 	         *
 	         */
 	        insertExerciseSet: function (exercise) {
-	            $.event.trigger('show-loading');
+	            store.showLoading();;
 	            var data = {
 	                date: this.shared.date.sql,
 	                exercise_id: exercise.id,
@@ -43003,7 +43024,7 @@
 	                exercise.lastDone = 0;
 	                $.event.trigger('provide-feedback', ['Set added', 'success']);
 	                $.event.trigger('get-exercise-entries-for-the-day');
-	                $.event.trigger('hide-loading');
+	                store.hideLoading();
 	            }, function (response) {
 	                HelpersRepository.handleResponseError(response);
 	            });
@@ -43013,11 +43034,11 @@
 	         *
 	         */
 	        showExercisePopup: function (exercise) {
-	            $.event.trigger('show-loading');
+	            store.showLoading();
 	            this.$http.get('/api/exercises/' + exercise.id).then(function (response) {
 	                this.selectedExercise = response.data;
 	                $.event.trigger('show-exercise-popup');
-	                $.event.trigger('hide-loading');
+	                store.hideLoading();
 	            }, function (response) {
 	                HelpersRepository.handleResponseError(response);
 	            });
@@ -43053,10 +43074,10 @@
 	         *
 	         */
 	        getSeries: function () {
-	            $.event.trigger('show-loading');
+	            store.showLoading();
 	            this.$http.get('/api/exerciseSeries').then(function (response) {
 	                this.exerciseSeries = response.data;
-	                $.event.trigger('hide-loading');
+	                store.hideLoading();
 	            }, function (response) {
 	                HelpersRepository.handleResponseError(response);
 	            });
@@ -43066,7 +43087,7 @@
 	         *
 	         */
 	        getExerciseSeriesHistory: function (key) {
-	            $.event.trigger('show-loading');
+	            store.showLoading();
 	
 	            //Find the series. The exercises were grouped according to series, so all we have is the series name (key).
 	            var series = _.find(this.exerciseSeries, function (series) {
@@ -43078,7 +43099,7 @@
 	                this.selectedSeries = series;
 	                this.exerciseSeriesHistory = response.data;
 	                $.event.trigger('show-series-history-popup');
-	                $.event.trigger('hide-loading');
+	                store.hideLoading();
 	            }, function (response) {
 	                HelpersRepository.handleResponseError(response);
 	            });
@@ -43088,10 +43109,10 @@
 	         *
 	         */
 	        getExercisesInSeries: function (series) {
-	            $.event.trigger('show-loading');
+	            store.showLoading();
 	            this.$http.get('/api/exerciseSeries/' + series.id).then(function (response) {
 	                this.selectedSeries = response.data;
-	                $.event.trigger('hide-loading');
+	                store.hideLoading();
 	            }, function (response) {
 	                HelpersRepository.handleResponseError(response);
 	            });
@@ -43106,11 +43127,11 @@
 	                return series.name === key;
 	            });
 	
-	            $.event.trigger('show-loading');
+	            store.showLoading();
 	            this.$http.get('/api/exerciseSeries/' + series.id).then(function (response) {
 	                this.selectedSeries = response.data;
 	                $.event.trigger('show-series-popup');
-	                $.event.trigger('hide-loading');
+	                store.hideLoading();
 	            }, function (response) {
 	                HelpersRepository.handleResponseError(response);
 	            });
@@ -43249,10 +43270,10 @@
 	         *
 	         */
 	        getFoods: function () {
-	            $.event.trigger('show-loading');
+	            store.showLoading();
 	            this.$http.get('/api/foods').then(function (response) {
 	                this.foods = response;
-	                $.event.trigger('hide-loading');
+	                store.hideLoading();
 	            }, function (response) {
 	                HelpersRepository.handleResponseError(response);
 	            });
@@ -43271,10 +43292,10 @@
 	         *
 	         */
 	        getFood: function (food) {
-	            $.event.trigger('show-loading');
+	            store.showLoading();
 	            this.$http.get('/api/foods/' + food.id).then(function (response) {
 	                $.event.trigger('show-food-popup', [response]);
-	                $.event.trigger('hide-loading');
+	                store.hideLoading();
 	            }, function (response) {
 	                HelpersRepository.handleResponseError(response);
 	            });
@@ -43284,7 +43305,7 @@
 	         *
 	         */
 	        insertFood: function () {
-	            $.event.trigger('show-loading');
+	            store.showLoading();
 	            var data = {
 	                name: this.newFood.name
 	            };
@@ -43292,7 +43313,7 @@
 	            this.$http.post('/api/foods', data).then(function (response) {
 	                this.foods.push(response);
 	                $.event.trigger('provide-feedback', ['Food created', 'success']);
-	                $.event.trigger('hide-loading');
+	                store.hideLoading();
 	            }, function (response) {
 	                HelpersRepository.handleResponseError(response);
 	            });
@@ -43303,11 +43324,11 @@
 	         */
 	        deleteFood: function (food) {
 	            if (confirm("Are you sure?")) {
-	                $.event.trigger('show-loading');
+	                store.showLoading();
 	                this.$http.delete('/api/foods/' + food.id).then(function (response) {
 	                    this.foods = _.without(this.foods, food);
 	                    $.event.trigger('provide-feedback', ['Food deleted', 'success']);
-	                    $.event.trigger('hide-loading');
+	                    store.hideLoading();
 	                }, function (response) {
 	                    HelpersRepository.handleResponseError(response);
 	                });
@@ -43444,7 +43465,7 @@
 	         *
 	         */
 	        getJournalEntry: function () {
-	            $.event.trigger('show-loading');
+	            store.showLoading();
 	            this.$http.get('api/journal/' + this.date.sql).then(function (response) {
 	                this.journalEntry = response.data.data;
 	                this.$nextTick(function () {
@@ -43453,7 +43474,7 @@
 	                    });
 	                });
 	
-	                $.event.trigger('hide-loading');
+	                store.hideLoading();
 	            }, function (response) {
 	                HelpersRepository.handleResponseError(response);
 	            });
@@ -43477,10 +43498,10 @@
 	        filterJournalEntries: function () {
 	            var typing = $("#filter-journal").val();
 	
-	            $.event.trigger('show-loading');
+	            store.showLoading();
 	            this.$http.get('/api/journal?typing=' + typing, function (response) {
 	                this.filterResults = response.data;
-	                $.event.trigger('hide-loading');
+	                store.hideLoading();
 	            })
 	                .error(function (response) {
 	                    HelpersRepository.handleResponseError(response);
@@ -43519,7 +43540,7 @@
 	         *
 	         */
 	        updateEntry: function () {
-	            $.event.trigger('show-loading');
+	            store.showLoading();
 	
 	            var data = {
 	                text: $("#journal-entry").html()
@@ -43528,7 +43549,7 @@
 	            this.$http.put('/api/journal/' + this.journalEntry.id, data).then(function (response) {
 	                this.journalEntry = response.data.data;
 	                $.event.trigger('provide-feedback', ['Entry updated', 'success']);
-	                $.event.trigger('hide-loading');
+	                store.hideLoading();
 	            }, function (response) {
 	                HelpersRepository.handleResponseError(response);
 	            });
@@ -43538,7 +43559,7 @@
 	         *
 	         */
 	        insertEntry: function () {
-	            $.event.trigger('show-loading');
+	            store.showLoading();
 	            var data = {
 	                date: this.date.sql,
 	                text: $("#journal-entry").html()
@@ -43547,7 +43568,7 @@
 	            this.$http.post('/api/journal', data).then(function (response) {
 	                this.journalEntry = response.data.data;
 	                $.event.trigger('provide-feedback', ['Entry created', 'success']);
-	                $.event.trigger('hide-loading');
+	                store.hideLoading();
 	            }, function (response) {
 	                HelpersRepository.handleResponseError(response);
 	            });
@@ -51388,10 +51409,10 @@
 	         *
 	         */
 	        getUnits: function () {
-	            $.event.trigger('show-loading');
+	            store.showLoading();
 	            this.$http.get('/api/foodUnits').then(function (response) {
 	                this.units = response;
-	                $.event.trigger('hide-loading');
+	                store.hideLoading();
 	            }, function (response) {
 	                HelpersRepository.handleResponseError(response);
 	            });
@@ -51401,7 +51422,7 @@
 	         *
 	         */
 	        insertUnit: function () {
-	            $.event.trigger('show-loading');
+	            store.showLoading();
 	            var data = {
 	                name: this.newUnit.name
 	            };
@@ -51409,7 +51430,7 @@
 	            this.$http.post('/api/foodUnits', data).then(function (response) {
 	                this.units.push(response);
 	                $.event.trigger('provide-feedback', ['Unit created', 'success']);
-	                $.event.trigger('hide-loading');
+	                store.hideLoading();
 	            }, function (response) {
 	                HelpersRepository.handleResponseError(response);
 	            });
@@ -51420,13 +51441,13 @@
 	         */
 	        deleteUnit: function (unit) {
 	            if (confirm("Are you sure?")) {
-	                $.event.trigger('show-loading');
+	                store.showLoading();
 	                this.$http.delete('/api/foodUnits/' + unit.id).then(function (response) {
 	                    this.units = _.without(this.units, unit);
 	                    //var index = _.indexOf(this.units, _.findWhere(this.units, {id: this.unit.id}));
 	                    //this.units = _.without(this.units, this.units[index]);
 	                    $.event.trigger('provide-feedback', ['Unit deleted', 'success']);
-	                    $.event.trigger('hide-loading');
+	                    store.hideLoading();
 	                }, function (response) {
 	                    HelpersRepository.handleResponseError(response);
 	                });
@@ -52055,7 +52076,7 @@
 	         *
 	         */
 	        startTimer: function () {
-	            $.event.trigger('show-loading');
+	            store.showLoading();
 	            var data = TimersRepository.setData(this.newTimer);
 	            //So the previous timer's time isn't displayed at the start
 	            this.time = 0;
@@ -52064,7 +52085,7 @@
 	                this.timerInProgress = response.data;
 	                this.setTimerInProgress();
 	                $.event.trigger('provide-feedback', ['Timer started', 'success']);
-	                $.event.trigger('hide-loading');
+	                store.hideLoading();
 	            }, function (response) {
 	                HelpersRepository.handleResponseError(response);
 	            });
@@ -52074,7 +52095,7 @@
 	         *
 	         */
 	        stopTimer: function () {
-	            $.event.trigger('show-loading');
+	            store.showLoading();
 	            clearInterval(this.secondsInterval);
 	
 	            var data = {
@@ -52087,7 +52108,7 @@
 	
 	                $.event.trigger('timer-stopped');
 	                $.event.trigger('provide-feedback', ['Timer updated', 'success']);
-	                $.event.trigger('hide-loading');
+	                store.hideLoading();
 	            }, function (response) {
 	                HelpersRepository.handleResponseError(response);
 	            });
@@ -52104,13 +52125,13 @@
 	         *
 	         */
 	        checkForTimerInProgress: function () {
-	            $.event.trigger('show-loading');
+	            store.showLoading();
 	            this.$http.get('/api/timers/checkForTimerInProgress').then(function (response) {
 	                if (response.data.activity) {
 	                    this.timerInProgress = response.data;
 	                    this.setTimerInProgress();
 	                }
-	                $.event.trigger('hide-loading');
+	                store.hideLoading();
 	            }, function (response) {
 	                HelpersRepository.handleResponseError(response);
 	            });
@@ -66219,7 +66240,7 @@
 	         *
 	         */
 	        updateActivity: function () {
-	            $.event.trigger('show-loading');
+	            store.showLoading();
 	
 	            var data = {
 	                name: this.selectedActivity.name,
@@ -66231,7 +66252,7 @@
 	                store.updateActivity(response.data);
 	                this.showPopup = false;
 	                $.event.trigger('provide-feedback', ['Activity updated', 'success']);
-	                $.event.trigger('hide-loading');
+	                store.hideLoading();
 	            }, function (response) {
 	                HelpersRepository.handleResponseError(response);
 	            });
@@ -66242,12 +66263,12 @@
 	         */
 	        deleteActivity: function () {
 	            if (confirm("Are you sure? The timers for the activity will be deleted, too!")) {
-	                $.event.trigger('show-loading');
+	                store.showLoading();
 	                this.$http.delete('/api/activities/' + this.selectedActivity.id).then(function (response) {
 	                    store.deleteActivity(this.selectedActivity);
 	                    this.showPopup = false;
 	                    $.event.trigger('provide-feedback', ['Activity deleted', 'success']);
-	                    $.event.trigger('hide-loading');
+	                    store.hideLoading();
 	                }, function (response) {
 	                    HelpersRepository.handleResponseError(response);
 	                });

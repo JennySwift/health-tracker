@@ -20,7 +20,7 @@ var FoodPopup = Vue.component('food-popup', {
         *
         */
         updateFood: function () {
-            $.event.trigger('show-loading');
+            store.showLoading();
 
             var data = {
                 name: this.selectedFood.name,
@@ -35,7 +35,7 @@ var FoodPopup = Vue.component('food-popup', {
                     that.selectedFood = response;
                     $.event.trigger('provide-feedback', ['Food updated', 'success']);
                     $.event.trigger('food-updated', [response]);
-                    $.event.trigger('hide-loading');
+                    store.hideLoading();
                 }, function (response) {
                     that.handleResponseError(response);
                 });
@@ -46,7 +46,7 @@ var FoodPopup = Vue.component('food-popup', {
          *
          */
         updateDefaultUnit: function (unit) {
-            $.event.trigger('show-loading');
+            store.showLoading();
 
             this.selectedFood.defaultUnit.data = unit;
 
@@ -58,7 +58,7 @@ var FoodPopup = Vue.component('food-popup', {
                 this.selectedFood = response;
                 $.event.trigger('provide-feedback', ['Food updated', 'success']);
                 $.event.trigger('food-updated', [response]);
-                $.event.trigger('hide-loading');
+                store.hideLoading();
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
@@ -68,7 +68,7 @@ var FoodPopup = Vue.component('food-popup', {
          *
          */
         updateCalories: function (unit) {
-            $.event.trigger('show-loading');
+            store.showLoading();
 
             var data = {
                 updatingCalories: true,
@@ -79,7 +79,7 @@ var FoodPopup = Vue.component('food-popup', {
             this.$http.put('/api/foods/' + this.selectedFood.id, data).then(function (response) {
                 $.event.trigger('provide-feedback', ['Calories updated', 'success']);
                 $.event.trigger('food-updated', [response]);
-                $.event.trigger('hide-loading');
+                store.hideLoading();
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
@@ -89,10 +89,10 @@ var FoodPopup = Vue.component('food-popup', {
         *
         */
         getUnits: function () {
-            $.event.trigger('show-loading');
+            store.showLoading();
             this.$http.get('/api/foodUnits?includeCaloriesForSpecificFood=true&food_id=' + this.selectedFood.id).then(function (response) {
                 this.units = response;
-                $.event.trigger('hide-loading');
+                store.hideLoading();
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });

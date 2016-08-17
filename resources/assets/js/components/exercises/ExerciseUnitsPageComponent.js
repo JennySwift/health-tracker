@@ -17,7 +17,7 @@ module.exports = {
          *
          */
         insertUnit: function () {
-            $.event.trigger('show-loading');
+            store.showLoading();
             var data = {
                 name: this.newUnit.name
             };
@@ -26,7 +26,7 @@ module.exports = {
                 store.addExerciseUnit(response.data.data);
                 $.event.trigger('provide-feedback', ['Unit created', 'success']);
                 //this.$broadcast('provide-feedback', 'Unit created', 'success');
-                $.event.trigger('hide-loading');
+                store.hideLoading();
                 $("#create-new-exercise-unit").val("");
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
@@ -39,12 +39,12 @@ module.exports = {
          */
         deleteUnit: function (unit) {
             if (confirm("Are you sure?")) {
-                $.event.trigger('show-loading');
+                store.showLoading();
                 this.$http.delete('/api/exerciseUnits/' + unit.id).then(function (response) {
                     store.deleteExerciseUnit(unit);
                     $.event.trigger('provide-feedback', ['Unit deleted', 'success']);
                     //this.$broadcast('provide-feedback', 'Unit deleted', 'success');
-                    $.event.trigger('hide-loading');
+                    store.hideLoading();
 
                 }, function (response) {
                     HelpersRepository.handleResponseError(response);

@@ -19,10 +19,10 @@ module.exports = {
          *
          */
         getTags: function () {
-            $.event.trigger('show-loading');
+            store.showLoading();
             this.$http.get('/api/recipeTags').then(function (response) {
                 this.tags = response;
-                $.event.trigger('hide-loading');
+                store.hideLoading();
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
@@ -32,10 +32,10 @@ module.exports = {
          *
          */
         getRecipes: function () {
-            $.event.trigger('show-loading');
+            store.showLoading();
             this.$http.get('/api/recipes').then(function (response) {
                 this.recipes = response;
-                $.event.trigger('hide-loading');
+                store.hideLoading();
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });

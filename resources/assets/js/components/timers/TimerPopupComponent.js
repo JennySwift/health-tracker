@@ -20,7 +20,7 @@ module.exports = {
          *
          */
         updateTimer: function () {
-            $.event.trigger('show-loading');
+            store.showLoading();
 
             var data = {
                 start: this.selectedTimer.start,
@@ -33,7 +33,7 @@ module.exports = {
                 store.updateTimer(response.data);
                 $.event.trigger('provide-feedback', ['Timer updated', 'success']);
                 this.showPopup = false;
-                $.event.trigger('hide-loading');
+                store.hideLoading();
             }, function (data, status, response) {
                 HelpersRepository.handleResponseError(data, status, response);
             });
@@ -44,13 +44,13 @@ module.exports = {
          */
         deleteTimer: function () {
             if (confirm("Are you sure?")) {
-                $.event.trigger('show-loading');
+                store.showLoading();
                 this.$http.delete('/api/timers/' + this.selectedTimer.id).then(function (response) {
                     store.deleteTimer(this.selectedTimer);
                     $.event.trigger('timer-deleted', [this.selectedTimer]);
                     this.showPopup = false;
                     $.event.trigger('provide-feedback', ['Timer deleted', 'success']);
-                    $.event.trigger('hide-loading');
+                    store.hideLoading();
                 }, function (response) {
                     HelpersRepository.handleResponseError(response);
                 });

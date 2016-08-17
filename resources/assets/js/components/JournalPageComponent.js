@@ -19,7 +19,7 @@ module.exports = {
          *
          */
         getJournalEntry: function () {
-            $.event.trigger('show-loading');
+            store.showLoading();
             this.$http.get('api/journal/' + this.date.sql).then(function (response) {
                 this.journalEntry = response.data.data;
                 this.$nextTick(function () {
@@ -28,7 +28,7 @@ module.exports = {
                     });
                 });
 
-                $.event.trigger('hide-loading');
+                store.hideLoading();
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
@@ -52,10 +52,10 @@ module.exports = {
         filterJournalEntries: function () {
             var typing = $("#filter-journal").val();
 
-            $.event.trigger('show-loading');
+            store.showLoading();
             this.$http.get('/api/journal?typing=' + typing, function (response) {
                 this.filterResults = response.data;
-                $.event.trigger('hide-loading');
+                store.hideLoading();
             })
                 .error(function (response) {
                     HelpersRepository.handleResponseError(response);
@@ -94,7 +94,7 @@ module.exports = {
          *
          */
         updateEntry: function () {
-            $.event.trigger('show-loading');
+            store.showLoading();
 
             var data = {
                 text: $("#journal-entry").html()
@@ -103,7 +103,7 @@ module.exports = {
             this.$http.put('/api/journal/' + this.journalEntry.id, data).then(function (response) {
                 this.journalEntry = response.data.data;
                 $.event.trigger('provide-feedback', ['Entry updated', 'success']);
-                $.event.trigger('hide-loading');
+                store.hideLoading();
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
@@ -113,7 +113,7 @@ module.exports = {
          *
          */
         insertEntry: function () {
-            $.event.trigger('show-loading');
+            store.showLoading();
             var data = {
                 date: this.date.sql,
                 text: $("#journal-entry").html()
@@ -122,7 +122,7 @@ module.exports = {
             this.$http.post('/api/journal', data).then(function (response) {
                 this.journalEntry = response.data.data;
                 $.event.trigger('provide-feedback', ['Entry created', 'success']);
-                $.event.trigger('hide-loading');
+                store.hideLoading();
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });

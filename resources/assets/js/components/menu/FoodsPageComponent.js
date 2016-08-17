@@ -16,10 +16,10 @@ module.exports = {
          *
          */
         getFoods: function () {
-            $.event.trigger('show-loading');
+            store.showLoading();
             this.$http.get('/api/foods').then(function (response) {
                 this.foods = response;
-                $.event.trigger('hide-loading');
+                store.hideLoading();
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
@@ -38,10 +38,10 @@ module.exports = {
          *
          */
         getFood: function (food) {
-            $.event.trigger('show-loading');
+            store.showLoading();
             this.$http.get('/api/foods/' + food.id).then(function (response) {
                 $.event.trigger('show-food-popup', [response]);
-                $.event.trigger('hide-loading');
+                store.hideLoading();
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
@@ -51,7 +51,7 @@ module.exports = {
          *
          */
         insertFood: function () {
-            $.event.trigger('show-loading');
+            store.showLoading();
             var data = {
                 name: this.newFood.name
             };
@@ -59,7 +59,7 @@ module.exports = {
             this.$http.post('/api/foods', data).then(function (response) {
                 this.foods.push(response);
                 $.event.trigger('provide-feedback', ['Food created', 'success']);
-                $.event.trigger('hide-loading');
+                store.hideLoading();
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
@@ -70,11 +70,11 @@ module.exports = {
          */
         deleteFood: function (food) {
             if (confirm("Are you sure?")) {
-                $.event.trigger('show-loading');
+                store.showLoading();
                 this.$http.delete('/api/foods/' + food.id).then(function (response) {
                     this.foods = _.without(this.foods, food);
                     $.event.trigger('provide-feedback', ['Food deleted', 'success']);
-                    $.event.trigger('hide-loading');
+                    store.hideLoading();
                 }, function (response) {
                     HelpersRepository.handleResponseError(response);
                 });

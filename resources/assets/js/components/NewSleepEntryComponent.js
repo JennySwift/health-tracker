@@ -15,13 +15,13 @@ module.exports = {
          *
          */
         insertSleepEntry: function () {
-            $.event.trigger('show-loading');
+            store.showLoading();
             var data = TimersRepository.setData(this.newSleepEntry, this.date.sql);
 
             this.$http.post('/api/timers', data).then(function (response) {
                 this.showPopup = false;
                 $.event.trigger('provide-feedback', ['Sleep entry created', 'success']);
-                $.event.trigger('hide-loading');
+                store.hideLoading();
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });

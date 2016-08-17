@@ -18,7 +18,7 @@ module.exports = {
          *
          */
         insertEntry: function () {
-            $.event.trigger('show-loading');
+            store.showLoading();
 
             var data = {
                 date: this.date.sql,
@@ -30,7 +30,7 @@ module.exports = {
             this.$http.post('/api/exerciseEntries', data).then(function (response) {
                 $.event.trigger('exercise-entry-added', [response]);
                 $.event.trigger('provide-feedback', ['Entry created', 'success']);
-                $.event.trigger('hide-loading');
+                store.hideLoading();
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });

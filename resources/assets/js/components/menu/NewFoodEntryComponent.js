@@ -26,7 +26,7 @@ module.exports = {
                 $.event.trigger('add-ingredient-to-temporary-recipe', [this.newIngredient]);
             }
             else {
-                $.event.trigger('show-loading');
+                store.showLoading();
 
                 var data = {
                     addIngredient: true,
@@ -52,7 +52,7 @@ module.exports = {
                         description: this.newIngredient.description,
                     });
                     $.event.trigger('provide-feedback', ['Food added', 'success']);
-                    $.event.trigger('hide-loading');
+                    store.hideLoading();
                 }, function (response) {
                     HelpersRepository.handleResponseError(response);
                 });

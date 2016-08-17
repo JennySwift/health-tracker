@@ -128,7 +128,7 @@ module.exports = {
          *
          */
         insertExerciseSet: function (exercise) {
-            $.event.trigger('show-loading');
+            store.showLoading();;
             var data = {
                 date: this.shared.date.sql,
                 exercise_id: exercise.id,
@@ -139,7 +139,7 @@ module.exports = {
                 exercise.lastDone = 0;
                 $.event.trigger('provide-feedback', ['Set added', 'success']);
                 $.event.trigger('get-exercise-entries-for-the-day');
-                $.event.trigger('hide-loading');
+                store.hideLoading();
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
@@ -149,11 +149,11 @@ module.exports = {
          *
          */
         showExercisePopup: function (exercise) {
-            $.event.trigger('show-loading');
+            store.showLoading();
             this.$http.get('/api/exercises/' + exercise.id).then(function (response) {
                 this.selectedExercise = response.data;
                 $.event.trigger('show-exercise-popup');
-                $.event.trigger('hide-loading');
+                store.hideLoading();
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
@@ -189,10 +189,10 @@ module.exports = {
          *
          */
         getSeries: function () {
-            $.event.trigger('show-loading');
+            store.showLoading();
             this.$http.get('/api/exerciseSeries').then(function (response) {
                 this.exerciseSeries = response.data;
-                $.event.trigger('hide-loading');
+                store.hideLoading();
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
@@ -202,7 +202,7 @@ module.exports = {
          *
          */
         getExerciseSeriesHistory: function (key) {
-            $.event.trigger('show-loading');
+            store.showLoading();
 
             //Find the series. The exercises were grouped according to series, so all we have is the series name (key).
             var series = _.find(this.exerciseSeries, function (series) {
@@ -214,7 +214,7 @@ module.exports = {
                 this.selectedSeries = series;
                 this.exerciseSeriesHistory = response.data;
                 $.event.trigger('show-series-history-popup');
-                $.event.trigger('hide-loading');
+                store.hideLoading();
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
@@ -224,10 +224,10 @@ module.exports = {
          *
          */
         getExercisesInSeries: function (series) {
-            $.event.trigger('show-loading');
+            store.showLoading();
             this.$http.get('/api/exerciseSeries/' + series.id).then(function (response) {
                 this.selectedSeries = response.data;
-                $.event.trigger('hide-loading');
+                store.hideLoading();
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
@@ -242,11 +242,11 @@ module.exports = {
                 return series.name === key;
             });
 
-            $.event.trigger('show-loading');
+            store.showLoading();
             this.$http.get('/api/exerciseSeries/' + series.id).then(function (response) {
                 this.selectedSeries = response.data;
                 $.event.trigger('show-series-popup');
-                $.event.trigger('hide-loading');
+                store.hideLoading();
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });

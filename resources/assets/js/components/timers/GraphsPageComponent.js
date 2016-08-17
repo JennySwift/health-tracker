@@ -15,12 +15,12 @@ module.exports = {
          *
          */
         getTimers: function () {
-            $.event.trigger('show-loading');
+            store.showLoading();
             var url = TimersRepository.calculateUrl(false, this.date.sql);
 
             this.$http.get(url).then(function (response) {
                 this.timers = response;
-                $.event.trigger('hide-loading');
+                store.hideLoading();
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });

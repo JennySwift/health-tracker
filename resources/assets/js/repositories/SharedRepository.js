@@ -21,17 +21,32 @@ module.exports = {
         exerciseUnits: [],
         programs: [],
         activities: [],
-        timers: []
+        timers: [],
+        loading: false
+    },
+
+    /**
+     *
+     */
+    showLoading: function () {
+        this.state.loading = true;
+    },
+
+    /**
+     *
+     */
+    hideLoading: function () {
+        this.state.loading = false;
     },
 
     /**
      *
      */
     getExercises: function (that) {
-        $.event.trigger('show-loading');
+        store.showLoading();
         that.$http.get('/api/exercises').then(function (response) {
             store.state.exercises = response.data;
-            $.event.trigger('hide-loading');
+            store.hideLoading();
         }, function (response) {
             HelpersRepository.handleResponseError(response);
         });
@@ -47,12 +62,12 @@ module.exports = {
      *
      */
     getTimers: function (that) {
-        $.event.trigger('show-loading');
+        store.showLoading();
         var url = TimersRepository.calculateUrl(false, this.state.date.sql);
 
         that.$http.get(url).then(function (response) {
             store.state.timers = response.data;
-            $.event.trigger('hide-loading');
+            store.hideLoading();
         }, function (response) {
             HelpersRepository.handleResponseError(response);
         });
@@ -90,11 +105,11 @@ module.exports = {
      *
      */
     getActivities: function (that) {
-        $.event.trigger('show-loading');
+        store.showLoading();
         that.$http.get('/api/activities').then(function (response) {
             store.state.activities = response.data;
             $.event.trigger('activities-loaded');
-            $.event.trigger('hide-loading');
+            store.hideLoading();
         }, function (response) {
             HelpersRepository.handleResponseError(response);
         });
@@ -129,10 +144,10 @@ module.exports = {
      *
      */
     getExerciseUnits: function (that) {
-        $.event.trigger('show-loading');
+        store.showLoading();
         that.$http.get('/api/exerciseUnits').then(function (response) {
             store.state.exerciseUnits = response.data;
-            $.event.trigger('hide-loading');
+            store.hideLoading();
         }, function (response) {
             HelpersRepository.handleResponseError(response);
         });
@@ -167,10 +182,10 @@ module.exports = {
      *
      */
     getExercisePrograms: function (that) {
-        $.event.trigger('show-loading');
+        store.showLoading();
         that.$http.get('/api/exercisePrograms').then(function (response) {
             store.state.programs = response.data;
-            $.event.trigger('hide-loading');
+            store.hideLoading();
         }, function (response) {
             HelpersRepository.handleResponseError(response);
         });

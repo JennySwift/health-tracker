@@ -41,7 +41,7 @@ var RecipePopup = Vue.component('recipe-popup', {
         *
         */
         updateRecipe: function () {
-            $.event.trigger('show-loading');
+            store.showLoading();
 
             var string = $("#edit-recipe-method").html();
             var lines = RecipesRepository.formatString(string, $("#edit-recipe-method")).items;
@@ -67,7 +67,7 @@ var RecipePopup = Vue.component('recipe-popup', {
                 this.editingMethod = false;
                 this.showPopup = false;
                 $.event.trigger('provide-feedback', ['Recipe updated', 'success']);
-                $.event.trigger('hide-loading');
+                store.hideLoading();
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
@@ -77,7 +77,7 @@ var RecipePopup = Vue.component('recipe-popup', {
         *
         */
         deleteIngredientFromRecipe: function (ingredient) {
-            $.event.trigger('show-loading');
+            store.showLoading();
 
             var data = {
                 removeIngredient: true,
@@ -88,7 +88,7 @@ var RecipePopup = Vue.component('recipe-popup', {
             this.$http.put('/api/recipes/' + this.selectedRecipe.id, data).then(function (response) {
                 this.selectedRecipe.ingredients.data = _.without(this.selectedRecipe.ingredients.data, ingredient);
                 $.event.trigger('provide-feedback', ['Ingredient removed from recipe', 'success']);
-                $.event.trigger('hide-loading');
+                store.hideLoading();
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });

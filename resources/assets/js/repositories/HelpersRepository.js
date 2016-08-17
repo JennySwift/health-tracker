@@ -9,7 +9,7 @@ module.exports = {
      */
     handleResponseError: function (response) {
         $.event.trigger('response-error', [response]);
-        $.event.trigger('hide-loading');
+        store.hideLoading();
     },
 
     /**

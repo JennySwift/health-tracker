@@ -29,14 +29,14 @@ module.exports = {
          * enter the start and stop times manually
          */
         insertManualTimer: function () {
-            $.event.trigger('show-loading');
+            store.showLoading();
             var data = TimersRepository.setData(this.newManualTimer, store.state.date.sql);
 
             this.$http.post('/api/timers/', data).then(function (response) {
                 store.addTimer(response.data, true);
                 $.event.trigger('manual-timer-created');
                 $.event.trigger('provide-feedback', ['Manual entry created', 'success']);
-                $.event.trigger('hide-loading');
+                store.hideLoading();
                 router.go('/timers');
             }, function (response) {
                 HelpersRepository.handleResponseError(response);

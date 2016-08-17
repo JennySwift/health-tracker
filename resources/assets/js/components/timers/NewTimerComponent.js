@@ -34,7 +34,7 @@ module.exports = {
          *
          */
         startTimer: function () {
-            $.event.trigger('show-loading');
+            store.showLoading();
             var data = TimersRepository.setData(this.newTimer);
             //So the previous timer's time isn't displayed at the start
             this.time = 0;
@@ -43,7 +43,7 @@ module.exports = {
                 this.timerInProgress = response.data;
                 this.setTimerInProgress();
                 $.event.trigger('provide-feedback', ['Timer started', 'success']);
-                $.event.trigger('hide-loading');
+                store.hideLoading();
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
@@ -53,7 +53,7 @@ module.exports = {
          *
          */
         stopTimer: function () {
-            $.event.trigger('show-loading');
+            store.showLoading();
             clearInterval(this.secondsInterval);
 
             var data = {
@@ -66,7 +66,7 @@ module.exports = {
 
                 $.event.trigger('timer-stopped');
                 $.event.trigger('provide-feedback', ['Timer updated', 'success']);
-                $.event.trigger('hide-loading');
+                store.hideLoading();
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
@@ -83,13 +83,13 @@ module.exports = {
          *
          */
         checkForTimerInProgress: function () {
-            $.event.trigger('show-loading');
+            store.showLoading();
             this.$http.get('/api/timers/checkForTimerInProgress').then(function (response) {
                 if (response.data.activity) {
                     this.timerInProgress = response.data;
                     this.setTimerInProgress();
                 }
-                $.event.trigger('hide-loading');
+                store.hideLoading();
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });

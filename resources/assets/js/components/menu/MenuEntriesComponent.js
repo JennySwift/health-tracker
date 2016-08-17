@@ -19,12 +19,12 @@ module.exports = {
          */
         deleteMenuEntry: function (entry) {
             if (confirm("Are you sure?")) {
-                $.event.trigger('show-loading');
+                store.showLoading();
                 this.$http.delete('/api/menuEntries/' + entry.id).then(function (response) {
                     this.menuEntries = _.without(this.menuEntries, entry);
                     $.event.trigger('provide-feedback', ['MenuEntry deleted', 'success']);
                     $.event.trigger('menu-entry-deleted');
-                    $.event.trigger('hide-loading');
+                    store.hideLoading();
                 }, function (response) {
                     HelpersRepository.handleResponseError(response);
                 });
@@ -35,10 +35,10 @@ module.exports = {
          *
          */
         getEntriesForTheDay: function () {
-            $.event.trigger('show-loading');
+            store.showLoading();
             this.$http.get('/api/menuEntries/' + this.date.sql).then(function (response) {
                 this.menuEntries = response.data;
-                $.event.trigger('hide-loading');
+                store.hideLoading();
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
@@ -50,7 +50,7 @@ module.exports = {
         listen: function () {
             var that = this;
             $(document).on('menu-entry-added', function (event, entry) {
-                $.event.trigger('show-loading');
+                store.showLoading();
                 if (entry.date === that.date.sql) {
                     that.menuEntries.push(entry)
                 }

@@ -12,7 +12,7 @@ module.exports = {
          *
          */
         updateSeries: function () {
-            $.event.trigger('show-loading');
+            store.showLoading();
 
             var data = {
                 name: this.selectedSeries.name,
@@ -26,7 +26,7 @@ module.exports = {
                 this.exerciseSeries[index].priority = response.data.priority;
                 this.showPopup = false;
                 $.event.trigger('provide-feedback', ['Series updated', 'success']);
-                $.event.trigger('hide-loading');
+                store.hideLoading();
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
@@ -37,14 +37,14 @@ module.exports = {
          */
         deleteSeries: function () {
             if (confirm("Are you sure?")) {
-                $.event.trigger('show-loading');
+                store.showLoading();
                 this.$http.delete('/api/exerciseSeries/' + this.selectedSeries.id).then(function (response) {
                     //this.exerciseSeries = _.without(this.exerciseSeries, this.selectedSeries);
                     var index = _.indexOf(this.exerciseSeries, _.findWhere(this.exerciseSeries, {id: this.selectedSeries.id}));
                     this.exerciseSeries = _.without(this.exerciseSeries, this.exerciseSeries[index]);
                     this.showPopup = false;
                     $.event.trigger('provide-feedback', ['Series deleted', 'success']);
-                    $.event.trigger('hide-loading');
+                    store.hideLoading();
                 }, function (response) {
                     HelpersRepository.handleResponseError(response);
                 });

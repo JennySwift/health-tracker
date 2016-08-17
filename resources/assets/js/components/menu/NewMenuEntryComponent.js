@@ -25,7 +25,7 @@ module.exports = {
          *
          */
         insertMenuEntry: function () {
-            $.event.trigger('show-loading');
+            store.showLoading();
             var data = {
                 date: this.date.sql,
                 food_id: this.newIngredient.food.id,
@@ -43,7 +43,7 @@ module.exports = {
                 $("#new-ingredient-food-name").focus();
                 $.event.trigger('provide-feedback', ['Menu entry created', 'success']);
                 $.event.trigger('menu-entry-added', [response]);
-                $.event.trigger('hide-loading');
+                store.hideLoading();
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
@@ -71,7 +71,7 @@ module.exports = {
                     $.event.trigger('provide-feedback', ['Recipe entries created', 'success']);
                     //I think this just updates the calorie info for the day
                     $.event.trigger('get-entries');
-                    $.event.trigger('hide-loading');
+                    store.hideLoading();
                 }
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
@@ -83,7 +83,7 @@ module.exports = {
          * @param recipe
          */
         insertEntriesForRecipe: function (recipe) {
-            $.event.trigger('show-loading');
+            store.showLoading();
 
             this.entryNumberForRecipe = 0;
             this.recipeEntry = recipe;

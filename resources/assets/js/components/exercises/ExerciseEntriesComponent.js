@@ -30,10 +30,10 @@ module.exports = {
          *
          */
         getEntriesForTheDay: function () {
-            $.event.trigger('show-loading');
+            store.showLoading();
             this.$http.get('/api/exerciseEntries/' + this.date.sql).then(function (response) {
                 this.exerciseEntries = response.data;
-                $.event.trigger('hide-loading');
+                store.hideLoading();
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
@@ -43,7 +43,7 @@ module.exports = {
          * Similar method to this in SeriesExercisesComponent
          */
         insertExerciseSet: function (exercise) {
-            $.event.trigger('show-loading');
+            store.showLoading();
             var data = {
                 date: this.date.sql,
                 exercise_id: exercise.data.id,
@@ -54,7 +54,7 @@ module.exports = {
                 $.event.trigger('provide-feedback', ['Set added', 'success']);
                 this.getEntriesForTheDay();
                 this.exerciseEntries = response.data;
-                $.event.trigger('hide-loading');
+                store.hideLoading();
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });

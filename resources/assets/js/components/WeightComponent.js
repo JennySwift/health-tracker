@@ -40,7 +40,7 @@ module.exports = {
          *
          */
         insertWeight: function () {
-            $.event.trigger('show-loading');
+            store.showLoading();
             var data = {
                 date: this.date.sql,
                 weight: this.newWeight.weight
@@ -50,7 +50,7 @@ module.exports = {
                 this.weight = response.data;
                 this.addingNewWeight = false;
                 $.event.trigger('provide-feedback', ['Weight created', 'success']);
-                $.event.trigger('hide-loading');
+                store.hideLoading();
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
@@ -60,7 +60,7 @@ module.exports = {
          *
          */
         updateWeight: function () {
-            $.event.trigger('show-loading');
+            store.showLoading();
 
             var data = {
                 weight: this.weight.weight
@@ -70,7 +70,7 @@ module.exports = {
                 this.weight = response.data;
                 this.editingWeight = false;
                 $.event.trigger('provide-feedback', ['Weight updated', 'success']);
-                $.event.trigger('hide-loading');
+                store.hideLoading();
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
@@ -99,10 +99,10 @@ module.exports = {
          *
          */
         getWeightForTheDay: function () {
-            $.event.trigger('show-loading');
+            store.showLoading();
             this.$http.get('api/weights/' + this.date.sql).then(function (response) {
                 this.weight = response.data;
-                $.event.trigger('hide-loading');
+                store.hideLoading();
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });

@@ -16,7 +16,7 @@ module.exports = {
          *
          */
         getRecipe: function (recipe) {
-            $.event.trigger('show-loading');
+            store.showLoading();
             this.$http.get('/api/recipes/' + recipe.id).then(function (response) {
                 this.recipe = response;
 
@@ -24,7 +24,7 @@ module.exports = {
                     this.originalQuantity = this.quantity;
                 });
 
-                $.event.trigger('hide-loading');
+                store.hideLoading();
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });

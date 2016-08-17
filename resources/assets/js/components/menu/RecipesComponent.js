@@ -42,10 +42,10 @@ var Recipes = Vue.component('recipes', {
          * @param recipe
          */
         showRecipePopup: function (recipe) {
-            $.event.trigger('show-loading');
+            store.showLoading();
             this.$http.get('/api/recipes/' + recipe.id).then(function (response) {
                 $.event.trigger('show-recipe-popup', [response]);
-                $.event.trigger('hide-loading');
+                store.hideLoading();
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
@@ -55,7 +55,7 @@ var Recipes = Vue.component('recipes', {
         *
         */
         insertRecipe: function () {
-            $.event.trigger('show-loading');
+            store.showLoading();
             var data = {
                 name: this.newRecipe.name
             };
@@ -63,7 +63,7 @@ var Recipes = Vue.component('recipes', {
             this.$http.post('/api/recipes', data).then(function (response) {
                 this.recipes.push(response.data);
                 $.event.trigger('provide-feedback', ['Recipe created', 'success']);
-                $.event.trigger('hide-loading');
+                store.hideLoading();
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
@@ -82,11 +82,11 @@ var Recipes = Vue.component('recipes', {
         */
         deleteRecipe: function (recipe) {
             if (confirm("Are you sure?")) {
-                $.event.trigger('show-loading');
+                store.showLoading();
                 this.$http.delete('/api/recipes/' + recipe.id).then(function (response) {
                     this.recipes = _.without(this.recipes, recipe);
                     $.event.trigger('provide-feedback', ['Recipe deleted', 'success']);
-                    $.event.trigger('hide-loading');
+                    store.hideLoading();
                 }, function (response) {
                     HelpersRepository.handleResponseError(response);
                 });

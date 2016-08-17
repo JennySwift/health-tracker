@@ -15,7 +15,7 @@ module.exports = {
          * @param entry
          */
         getEntriesForSpecificExerciseAndDateAndUnit: function (entry) {
-            $.event.trigger('show-loading');
+            store.showLoading();
 
             var data = {
                 date: this.date.sql,
@@ -26,7 +26,7 @@ module.exports = {
             this.$http.get('api/exerciseEntries/specificExerciseAndDateAndUnit', data).then(function (response) {
                 this.entries = response;
                 this.showPopup = true;
-                $.event.trigger('hide-loading');
+                store.hideLoading();
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
@@ -37,7 +37,7 @@ module.exports = {
          */
         deleteExerciseEntry: function (entry) {
             if (confirm("Are you sure?")) {
-                $.event.trigger('show-loading');
+                store.showLoading();
                 this.$http.delete('/api/exerciseEntries/' + entry.id).then(function (response) {
                     this.entries = _.without(this.entries, entry);
                     //This might be unnecessary to do each time, and it fetches a lot
@@ -45,7 +45,7 @@ module.exports = {
                     //Perhaps do it when the popup closes instead?
                     $.event.trigger('get-exercise-entries-for-the-day');
                     $.event.trigger('provide-feedback', ['Entry deleted', 'success']);
-                    $.event.trigger('hide-loading');
+                    store.hideLoading();
                 }, function (response) {
                     HelpersRepository.handleResponseError(response);
                 });

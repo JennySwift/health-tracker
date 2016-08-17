@@ -49,11 +49,11 @@ module.exports = {
          * Get calories for the day and average calories for 7 days
          */
         getCalorieInfoForTheDay: function () {
-            $.event.trigger('show-loading');
+            store.showLoading();
             this.$http.get('api/calories/' + this.date.sql).then(function (response) {
                 this.calories.day = response.data.forTheDay;
                 this.calories.averageFor7Days = response.data.averageFor7Days;
-                $.event.trigger('hide-loading');
+                store.hideLoading();
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });

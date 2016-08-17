@@ -12,7 +12,7 @@ module.exports = {
          *
          */
         insertSeries: function () {
-            $.event.trigger('show-loading');
+            store.showLoading();
             var data = {
                 name: this.newSeries.name
             };
@@ -22,7 +22,7 @@ module.exports = {
                 $.event.trigger('provide-feedback', ['Series created', 'success']);
                 this.showLoading = false;
                 this.newSeries.name = '';
-                $.event.trigger('hide-loading');
+                store.hideLoading();
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });

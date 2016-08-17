@@ -12,7 +12,7 @@ module.exports = {
          *
          */
         insertExercise: function () {
-            $.event.trigger('show-loading');
+            store.showLoading();
             var data = ExercisesRepository.setData(this.newExercise);
 
             this.$http.post('/api/exercises', data).then(function (response) {
@@ -23,7 +23,7 @@ module.exports = {
                 }
 
                 $.event.trigger('provide-feedback', ['Exercise created', 'success']);
-                $.event.trigger('hide-loading');
+                store.hideLoading();
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
