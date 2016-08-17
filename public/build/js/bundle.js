@@ -52008,7 +52008,11 @@
 	
 	            this.$http.put('/api/timers/' + this.timerInProgress.id, data).then(function (response) {
 	                this.timerInProgress = false;
-	                this.timers.push(response.data);
+	                if (store.state.date.sql === HelpersRepository.formatDateToSql()) {
+	                    //Only add the timer if the date is on today
+	                    this.timers.push(response.data);
+	                }
+	
 	                $.event.trigger('timer-stopped');
 	                $.event.trigger('provide-feedback', ['Timer updated', 'success']);
 	                $.event.trigger('hide-loading');
@@ -52046,7 +52050,7 @@
 	        setTimerInProgress: function () {
 	            var seconds;
 	            var that = this;
-	            
+	
 	            this.secondsInterval = setInterval(function () {
 	                seconds = moment().diff(moment(that.timerInProgress.start, 'YYYY-MM-DD HH:mm:ss'), 'seconds');
 	                that.time = seconds;
