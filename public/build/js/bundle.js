@@ -41448,15 +41448,14 @@
 	        populateOptions: function () {
 	            //fill the dropdown
 	            $.event.trigger('show-loading');
-	            this.$http.get(this.url + '?typing=' + this.chosenOption.name, function (response) {
-	                this.autocompleteOptions = response.data;
+	            this.$http.get(this.url + '?typing=' + this.chosenOption.name).then(function (response) {
+	                this.autocompleteOptions = response.data.data;
 	                this.showDropdown = true;
 	                this.currentIndex = 0;
 	                $.event.trigger('hide-loading');
-	            })
-	                .error(function (response) {
-	                    HelpersRepository.handleResponseError(response);
-	                });
+	            }, function (response) {
+	                HelpersRepository.handleResponseError(response);
+	            });
 	        },
 	
 	        /**
@@ -42177,33 +42176,22 @@
 	    data: function () {
 	        return {
 	            newEntry: {},
-	            units: []
+	            shared: store.state
 	        };
 	    },
 	    components: {},
+	    computed: {
+	        units: function () {
+	          return this.shared.exerciseUnits;
+	        }
+	    },
 	    methods: {
-	
-	        /**
-	         *
-	         */
-	        getUnits: function () {
-	            $.event.trigger('show-loading');
-	            this.$http.get('/api/exerciseUnits').then(function (response) {
-	                this.units = response;
-	                $.event.trigger('hide-loading');
-	            }, function (response) {
-	                HelpersRepository.handleResponseError(response);
-	            });
-	        },
 	
 	        /**
 	         *
 	         */
 	        insertEntry: function () {
 	            $.event.trigger('show-loading');
-	
-	            //this.newEntry.exercise.unit_id = $("#exercise-unit").val();
-	            //$("#exercise").val("").focus();
 	
 	            var data = {
 	                date: this.date.sql,
@@ -42213,7 +42201,6 @@
 	            };
 	
 	            this.$http.post('/api/exerciseEntries', data).then(function (response) {
-	                //this.exerciseEntries = response;
 	                $.event.trigger('exercise-entry-added', [response]);
 	                $.event.trigger('provide-feedback', ['Entry created', 'success']);
 	                $.event.trigger('hide-loading');
@@ -42242,7 +42229,7 @@
 	        }
 	    },
 	    ready: function () {
-	        this.getUnits();
+	
 	    }
 	};
 

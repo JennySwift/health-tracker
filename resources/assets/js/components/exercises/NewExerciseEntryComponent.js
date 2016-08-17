@@ -3,33 +3,22 @@ module.exports = {
     data: function () {
         return {
             newEntry: {},
-            units: []
+            shared: store.state
         };
     },
     components: {},
+    computed: {
+        units: function () {
+          return this.shared.exerciseUnits;
+        }
+    },
     methods: {
-
-        /**
-         *
-         */
-        getUnits: function () {
-            $.event.trigger('show-loading');
-            this.$http.get('/api/exerciseUnits').then(function (response) {
-                this.units = response;
-                $.event.trigger('hide-loading');
-            }, function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
-        },
 
         /**
          *
          */
         insertEntry: function () {
             $.event.trigger('show-loading');
-
-            //this.newEntry.exercise.unit_id = $("#exercise-unit").val();
-            //$("#exercise").val("").focus();
 
             var data = {
                 date: this.date.sql,
@@ -39,7 +28,6 @@ module.exports = {
             };
 
             this.$http.post('/api/exerciseEntries', data).then(function (response) {
-                //this.exerciseEntries = response;
                 $.event.trigger('exercise-entry-added', [response]);
                 $.event.trigger('provide-feedback', ['Entry created', 'success']);
                 $.event.trigger('hide-loading');
@@ -68,6 +56,6 @@ module.exports = {
         }
     },
     ready: function () {
-        this.getUnits();
+
     }
 };

@@ -45,15 +45,14 @@ module.exports = {
         populateOptions: function () {
             //fill the dropdown
             $.event.trigger('show-loading');
-            this.$http.get(this.url + '?typing=' + this.chosenOption.name, function (response) {
-                this.autocompleteOptions = response.data;
+            this.$http.get(this.url + '?typing=' + this.chosenOption.name).then(function (response) {
+                this.autocompleteOptions = response.data.data;
                 this.showDropdown = true;
                 this.currentIndex = 0;
                 $.event.trigger('hide-loading');
-            })
-                .error(function (response) {
-                    HelpersRepository.handleResponseError(response);
-                });
+            }, function (response) {
+                HelpersRepository.handleResponseError(response);
+            });
         },
 
         /**
