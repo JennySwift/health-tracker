@@ -1,4 +1,5 @@
 require('sugar');
+var moment = require('moment');
 
 module.exports = {
 
@@ -48,5 +49,43 @@ module.exports = {
 
     formatDateToLong: function (date) {
         return Date.create(date).format('{Weekday} {dd} {Month} {yyyy}');
-    }
+    },
+
+    formatTime: function (time) {
+        return Date.create(date).format('{HH}:{mm}:{ss}');
+    },
+
+    formatToDateTime: function (time) {
+        return Date.create(time).format('{yyyy}-{MM}-{dd} {HH}:{mm}:{ss}');
+    },
+
+    momentFormatToDateTime: function (time) {
+        return moment(time).format('YYYY-MM-DD HH:mm:ss');
+    },
+
+    /**
+     *
+     * @param seconds
+     * @returns {string}
+     */
+    formatDurationFromSeconds: function (seconds) {
+        var hours = Math.floor(seconds / 3600);
+        var minutes = Math.floor(seconds / 60) % 60;
+        seconds = seconds % 60;
+
+        return this.addZeros(hours) + ':' + this.addZeros(minutes) + ':' + this.addZeros(seconds);
+    },
+
+    /**
+     *
+     * @param number
+     * @returns {*}
+     */
+    addZeros: function (number) {
+        if (number < 10) {
+            return '0' + number;
+        }
+
+        return number;
+    },
 };

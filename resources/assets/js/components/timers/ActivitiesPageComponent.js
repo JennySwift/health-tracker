@@ -2,7 +2,7 @@ module.exports = {
     template: '#activities-page-template',
     data: function () {
         return {
-            activities: [],
+            activities: store.state.activities,
             newActivity: {},
         };
     },
@@ -17,19 +17,6 @@ module.exports = {
         /**
          *
          */
-        getActivities: function () {
-            $.event.trigger('show-loading');
-            this.$http.get('/api/activities').then(function (response) {
-                this.activities = response;
-                $.event.trigger('hide-loading');
-            }, function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
-        },
-
-        /**
-         *
-         */
         insertActivity: function () {
             $.event.trigger('show-loading');
             var data = {
@@ -38,7 +25,7 @@ module.exports = {
             };
 
             this.$http.post('/api/activities', data).then(function (response) {
-                this.activities.push(response);
+                store.addActivity(response.data);
                 $.event.trigger('provide-feedback', ['Activity created', 'success']);
                 $.event.trigger('hide-loading');
             }, function (response) {
@@ -67,6 +54,6 @@ module.exports = {
         //data to be received from parent
     ],
     ready: function () {
-        this.getActivities();
+        
     }
 };

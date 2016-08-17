@@ -18,6 +18,7 @@ var App = Vue.component('app', {
         store.getExercises(this);
         store.getExerciseUnits(this);
         store.getExercisePrograms(this);
+        store.getActivities(this);
     }
 });
 
@@ -43,6 +44,9 @@ Vue.component('series-popup', require('./components/exercises/SeriesPopupCompone
 Vue.component('new-series', require('./components/exercises/NewSeriesComponent'));
 Vue.component('exercise-popup', require('./components/exercises/ExercisePopupComponent'));
 Vue.component('new-sleep-entry', require('./components/NewSleepEntryComponent'));
+
+Vue.component('timer-popup', require('./components/timers/TimerPopupComponent'));
+Vue.component('new-timer', require('./components/timers/NewTimerComponent'));
 
 var router = new VueRouter({
     hashbang: false

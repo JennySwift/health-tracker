@@ -1,4 +1,6 @@
-var TimersRepository = {
+var moment = require('moment');
+
+module.exports = {
 
     /**
      *
@@ -48,7 +50,7 @@ var TimersRepository = {
      */
     calculateStartDateTime: function (entry, date) {
         if (date) {
-            return this.calculateStartDate(entry, date) + ' ' + this.calculateStartTime(entry);
+            return this.calculateStartDate(entry, date) + ' ' + HelpersRepository.formatTime(entry.start);
         }
         else {
             //The 'start' timer button has been clicked rather than entering the time manually, so make the start now
@@ -80,21 +82,12 @@ var TimersRepository = {
      */
     calculateFinishTime: function (entry, date) {
         if (entry.finish) {
-            return date + ' ' + Date.parse(entry.finish).toString('HH:mm:ss');
+            return date + ' ' + HelpersRepository.formatTime(entry.finish);
         }
         else {
             //The stop timer button has been pressed. Make the finish time now.
             return moment().format('YYYY-MM-DD HH:mm:ss');
         }
 
-    },
-
-    /**
-     *
-     * @param entry
-     * @returns {string}
-     */
-    calculateStartTime: function (entry) {
-        return Date.parse(entry.start).toString('HH:mm:ss');
     }
 };

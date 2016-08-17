@@ -15,8 +15,6 @@
 
         <new-timer
                 :activities="activities"
-                :timer-in-progress="timerInProgress"
-                :show-timer-in-progress="showTimerInProgress"
                 :timers.sync="timers"
         >
         </new-timer>

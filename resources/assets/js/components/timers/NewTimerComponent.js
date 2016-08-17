@@ -1,13 +1,30 @@
-var NewTimer = Vue.component('new-timer', {
+var TimersRepository = require('../../repositories/TimersRepository');
+var moment = require('moment');
+
+module.exports = {
     template: '#new-timer-template',
     data: function () {
         return {
             newTimer: {
                 activity: {}
             },
+            showTimerInProgress: true,
+            timerInProgress: false,
+            shared: store.state,
+            time: ''
         };
     },
+    computed: {
+        activities: function () {
+          return this.shared.activities;
+        }
+    },
     components: {},
+    filters: {
+        formatDurationFromSeconds: function (seconds) {
+            return HelpersRepository.formatDurationFromSeconds(seconds);
+        }
+    },
     methods: {
 
         /**
@@ -16,10 +33,12 @@ var NewTimer = Vue.component('new-timer', {
         startTimer: function () {
             $.event.trigger('show-loading');
             var data = TimersRepository.setData(this.newTimer);
-            $('#timer-clock').timer({format: '%H:%M:%S'});
+            //So the previous timer's time isn't displayed at the start
+            this.time = 0;
 
             this.$http.post('/api/timers/', data).then(function (response) {
-                this.timerInProgress = response;
+                this.timerInProgress = response.data;
+                this.setTimerInProgress();
                 $.event.trigger('provide-feedback', ['Timer started', 'success']);
                 $.event.trigger('hide-loading');
             }, function (response) {
@@ -32,7 +51,7 @@ var NewTimer = Vue.component('new-timer', {
          */
         stopTimer: function () {
             $.event.trigger('show-loading');
-            $('#timer-clock').timer('remove');
+            clearInterval(this.secondsInterval);
 
             var data = {
                 finish: TimersRepository.calculateFinishTime(this.timerInProgress)
@@ -40,7 +59,7 @@ var NewTimer = Vue.component('new-timer', {
 
             this.$http.put('/api/timers/' + this.timerInProgress.id, data).then(function (response) {
                 this.timerInProgress = false;
-                this.timers.push(response);
+                this.timers.push(response.data);
                 $.event.trigger('timer-stopped');
                 $.event.trigger('provide-feedback', ['Timer updated', 'success']);
                 $.event.trigger('hide-loading');
@@ -62,8 +81,9 @@ var NewTimer = Vue.component('new-timer', {
         checkForTimerInProgress: function () {
             $.event.trigger('show-loading');
             this.$http.get('/api/timers/checkForTimerInProgress').then(function (response) {
-                if (response.activity) {
-                    this.resumeTimerOnPageLoad(response);
+                if (response.data.activity) {
+                    this.timerInProgress = response.data;
+                    this.setTimerInProgress();
                 }
                 $.event.trigger('hide-loading');
             }, function (response) {
@@ -73,16 +93,15 @@ var NewTimer = Vue.component('new-timer', {
 
         /**
          *
-         * @param timer
          */
-        resumeTimerOnPageLoad: function (timer) {
-            this.timerInProgress = timer;
-            var seconds = moment().diff(moment(timer.start, 'YYYY-MM-DD HH:mm:ss'), 'seconds');
-            $('#timer-clock').timer({
-                format: '%H:%M:%S',
-                //The timer has already started
-                seconds: seconds
-            });
+        setTimerInProgress: function () {
+            var seconds;
+            var that = this;
+            
+            this.secondsInterval = setInterval(function () {
+                seconds = moment().diff(moment(that.timerInProgress.start, 'YYYY-MM-DD HH:mm:ss'), 'seconds');
+                that.time = seconds;
+            }, 1000);
         },
 
         /**
@@ -99,13 +118,10 @@ var NewTimer = Vue.component('new-timer', {
 
     },
     props: [
-        'activities',
-        'timerInProgress',
-        'showTimerInProgress',
         'timers'
     ],
     ready: function () {
         this.listen();
         this.checkForTimerInProgress();
     }
-});
+};

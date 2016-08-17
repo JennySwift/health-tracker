@@ -1,17 +1,23 @@
+var TimersRepository = require('../../repositories/TimersRepository');
+var moment = require('moment');
+
 module.exports = {
     template: '#timers-page-template',
     data: function () {
         return {
             date: store.state.date,
             timers: [],
-            activities: [],
             timersFilter: false,
             activitiesFilter: '',
             activitiesWithDurationsForTheWeek: [],
             activitiesWithDurationsForTheDay: [],
-            timerInProgress: false,
-            showTimerInProgress: true,
+            shared: store.state
         };
+    },
+    computed: {
+        activities: function () {
+          return this.shared.activities;
+        }
     },
     filters: {
         formatDateTime: function (dateTime, format) {
@@ -55,26 +61,12 @@ module.exports = {
         /**
          *
          */
-        getActivities: function () {
-            $.event.trigger('show-loading');
-            this.$http.get('/api/activities').then(function (response) {
-                this.activities = response;
-                $.event.trigger('activities-loaded');
-                $.event.trigger('hide-loading');
-            }, function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
-        },
-
-        /**
-         *
-         */
         getTimers: function () {
             $.event.trigger('show-loading');
             var url = TimersRepository.calculateUrl(false, this.date.sql);
 
             this.$http.get(url).then(function (response) {
-                this.timers = response;
+                this.timers = response.data;
                 $.event.trigger('hide-loading');
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
@@ -109,7 +101,7 @@ module.exports = {
         getTotalMinutesForActivitiesForTheDay: function () {
             $.event.trigger('show-loading');
             this.$http.get('/api/activities/getTotalMinutesForDay?date=' + this.date.sql).then(function (response) {
-                this.activitiesWithDurationsForTheDay = response;
+                this.activitiesWithDurationsForTheDay = response.data;
                 $.event.trigger('hide-loading');
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
@@ -122,7 +114,7 @@ module.exports = {
         getTotalMinutesForActivitiesForTheWeek: function () {
             $.event.trigger('show-loading');
             this.$http.get('/api/activities/getTotalMinutesForWeek?date=' + this.date.sql).then(function (response) {
-                this.activitiesWithDurationsForTheWeek = response;
+                this.activitiesWithDurationsForTheWeek = response.data;
                 $.event.trigger('hide-loading');
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
@@ -164,21 +156,11 @@ module.exports = {
                 that.getTotalMinutesForActivitiesForTheWeek();
             });
         },
-
-        /**
-         *
-         * @param response
-         */
-        handleResponseError: function (response) {
-            $.event.trigger('response-error', [response]);
-            $.event.trigger('hide-loading');
-        }
     },
     props: [
         //data to be received from parent
     ],
     ready: function () {
-        this.getActivities();
         this.getTimers();
         this.getTotalMinutesForActivitiesForTheDay();
         this.getTotalMinutesForActivitiesForTheWeek();

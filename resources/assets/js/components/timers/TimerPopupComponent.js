@@ -1,4 +1,4 @@
-var TimerPopup = Vue.component('timer-popup', {
+module.exports = {
     template: '#timer-popup-template',
     data: function () {
         return {
@@ -17,8 +17,8 @@ var TimerPopup = Vue.component('timer-popup', {
     methods: {
 
         /**
-        *
-        */
+         *
+         */
         updateTimer: function () {
             $.event.trigger('show-loading');
 
@@ -30,9 +30,9 @@ var TimerPopup = Vue.component('timer-popup', {
 
             this.$http.put('/api/timers/' + this.selectedTimer.id, data).then(function (response) {
                 var index = _.indexOf(this.timers, _.findWhere(this.timers, {id: this.selectedTimer.id}));
-                this.timers[index].start = response.start;
-                this.timers[index].finish = response.finish;
-                this.timers[index].activity = response.activity;
+                this.timers[index].start = response.data.start;
+                this.timers[index].finish = response.data.finish;
+                this.timers[index].activity = response.data.activity;
                 $.event.trigger('provide-feedback', ['Timer updated', 'success']);
                 this.showPopup = false;
                 $.event.trigger('hide-loading');
@@ -59,8 +59,8 @@ var TimerPopup = Vue.component('timer-popup', {
         },
 
         /**
-        *
-        */
+         *
+         */
         closePopup: function ($event) {
             HelpersRepository.closePopup($event, this);
         },
@@ -87,4 +87,4 @@ var TimerPopup = Vue.component('timer-popup', {
     ready: function () {
         this.listen();
     }
-});
+};

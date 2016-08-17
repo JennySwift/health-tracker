@@ -18,4 +18,21 @@ describe('filters', function () {
         var number = FiltersRepository.roundNumber(10.2469, 3);
         expect(number).to.equal(10.247);
     });
+
+    it('can format the seconds', function () {
+        var result = HelpersRepository.formatDurationFromSeconds(30);
+        expect(result).to.equal('00:00:30');
+
+        result = HelpersRepository.formatDurationFromSeconds(60);
+        expect(result).to.equal('00:01:00');
+
+        result = HelpersRepository.formatDurationFromSeconds(65);
+        expect(result).to.equal('00:01:05');
+
+        result = HelpersRepository.formatDurationFromSeconds(3600);
+        expect(result).to.equal('01:00:00');
+
+        result = HelpersRepository.formatDurationFromSeconds(3665);
+        expect(result).to.equal('01:01:05');
+    });
 });

@@ -18,7 +18,8 @@ module.exports = {
             }
         },
         exerciseUnits: [],
-        programs: []
+        programs: [],
+        activities: []
     },
 
     /**
@@ -38,6 +39,28 @@ module.exports = {
         // .error(function (response) {
         //
         // });
+    },
+
+    /**
+     *
+     */
+    getActivities: function (that) {
+        $.event.trigger('show-loading');
+        that.$http.get('/api/activities').then(function (response) {
+            store.state.activities = response.data;
+            $.event.trigger('activities-loaded');
+            $.event.trigger('hide-loading');
+        }, function (response) {
+            HelpersRepository.handleResponseError(response);
+        });
+    },
+
+    /**
+     * 
+     * @param activity
+     */
+    addActivity: function (activity) {
+        store.state.activities.push(activity);
     },
 
     /**
