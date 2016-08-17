@@ -1,4 +1,4 @@
-var ExercisePopup = Vue.component('exercise-popup', {
+module.exports = {
     template: '#exercise-popup-template',
     data: function () {
         return {
@@ -49,15 +49,6 @@ var ExercisePopup = Vue.component('exercise-popup', {
         },
 
         /**
-        *
-        */
-        closePopup: function ($event) {
-            if ($event.target.className === 'popup-outer') {
-                this.showPopup = false;
-            }
-        },
-
-        /**
          *
          */
         listen: function () {
@@ -65,15 +56,6 @@ var ExercisePopup = Vue.component('exercise-popup', {
             $(document).on('show-exercise-popup', function (event) {
                 that.showPopup = true;
             });
-        },
-
-        /**
-         *
-         * @param response
-         */
-        handleResponseError: function (response) {
-            $.event.trigger('response-error', [response]);
-            this.showLoading = false;
         }
     },
     props: [
@@ -86,4 +68,4 @@ var ExercisePopup = Vue.component('exercise-popup', {
     ready: function () {
         this.listen();
     }
-});
+};

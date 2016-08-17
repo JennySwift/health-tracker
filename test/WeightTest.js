@@ -2,6 +2,7 @@ var expect = require('chai').expect;
 var Vue = require('vue');
 global.store = require('../resources/assets/js/repositories/SharedRepository.js');
 global.FiltersRepository = require('../resources/assets/js/repositories/FiltersRepository.js');
+global.$ = require('jquery');
 // require('../resources/assets/js/app.js');
 
 describe('weight component', function () {
@@ -32,5 +33,10 @@ describe('weight component', function () {
     it('can round a number', function () {
         var number = Weight.$options.filters.roundNumber(10.246, 2);
         expect(number).to.equal(10.25);
+    });
+
+    it('displays a weight on the page', function () {
+        // var html = $(body).html();
+        // console.log(html);
     });
 });

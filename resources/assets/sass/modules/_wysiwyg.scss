@@ -8,6 +8,10 @@
 	background: white;
 	overflow: scroll;
 	border-radius: 8px;
+	p {
+		text-align: left;
+		padding-left: 0;
+	}
 }
 
 .wysiwyg-toolbar {

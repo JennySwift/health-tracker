@@ -1,3 +1,9 @@
+require('bootstrap');
+//This didn't work
+// require('bootstrap-wysiwyg');
+var MediumEditor = require('medium-editor');
+// require('summernote');
+
 module.exports = {
     template: '#journal-page-template',
     data: function () {
@@ -15,7 +21,13 @@ module.exports = {
         getJournalEntry: function () {
             $.event.trigger('show-loading');
             this.$http.get('api/journal/' + this.date.sql).then(function (response) {
-                this.journalEntry = response.data;
+                this.journalEntry = response.data.data;
+                this.$nextTick(function () {
+                    var editor = new MediumEditor('.wysiwyg', {
+                        // placeholder: false
+                    });
+                });
+
                 $.event.trigger('hide-loading');
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
@@ -89,7 +101,7 @@ module.exports = {
             };
 
             this.$http.put('/api/journal/' + this.journalEntry.id, data).then(function (response) {
-                this.journalEntry = response.data;
+                this.journalEntry = response.data.data;
                 $.event.trigger('provide-feedback', ['Entry updated', 'success']);
                 $.event.trigger('hide-loading');
             }, function (response) {
@@ -108,7 +120,7 @@ module.exports = {
             };
 
             this.$http.post('/api/journal', data).then(function (response) {
-                this.journalEntry = response.data;
+                this.journalEntry = response.data.data;
                 $.event.trigger('provide-feedback', ['Entry created', 'success']);
                 $.event.trigger('hide-loading');
             }, function (response) {
@@ -139,7 +151,10 @@ module.exports = {
         //data to be received from parent
     ],
     ready: function () {
-        $(".wysiwyg").wysiwyg();
+        // $(".wysiwyg").wysiwyg();
+
+        // new MediumEditor('.editable');
+        // $('.wysiwyg').summernote();
         this.listen();
         this.getJournalEntry();
     }

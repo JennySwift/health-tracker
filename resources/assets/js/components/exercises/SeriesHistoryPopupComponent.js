@@ -1,4 +1,4 @@
-var SeriesHistoryPopup = Vue.component('series-history-popup', {
+module.exports = {
     template: '#series-history-popup-template',
     data: function () {
         return {
@@ -18,8 +18,8 @@ var SeriesHistoryPopup = Vue.component('series-history-popup', {
     methods: {
 
         /**
-        *
-        */
+         *
+         */
         closePopup: function ($event) {
             if ($event.target.className === 'popup-outer') {
                 this.showPopup = false;
@@ -53,4 +53,4 @@ var SeriesHistoryPopup = Vue.component('series-history-popup', {
     ready: function () {
         this.listen();
     }
-});
+};

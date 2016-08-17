@@ -9,7 +9,16 @@ module.exports = {
             typed: Date.create('today').format('{dd}/{MM}/{yyyy}'),
             long: HelpersRepository.formatDateToLong('today'),
             sql: HelpersRepository.formatDateToSql('today')
-        }
+        },
+        selectedExercise: {
+            program: {},
+            series: {},
+            defaultUnit: {
+                data: {}
+            }
+        },
+        exerciseUnits: [],
+        programs: []
     },
 
     /**
@@ -18,7 +27,7 @@ module.exports = {
     getExercises: function (that) {
         $.event.trigger('show-loading');
         that.$http.get('/api/exercises').then(function (response) {
-            store.state.exercises = response;
+            store.state.exercises = response.data;
             $.event.trigger('hide-loading');
         }, function (response) {
             HelpersRepository.handleResponseError(response);
@@ -29,6 +38,32 @@ module.exports = {
         // .error(function (response) {
         //
         // });
+    },
+
+    /**
+     *
+     */
+    getExerciseUnits: function (that) {
+        $.event.trigger('show-loading');
+        that.$http.get('/api/exerciseUnits').then(function (response) {
+            store.state.exerciseUnits = response.data;
+            $.event.trigger('hide-loading');
+        }, function (response) {
+            HelpersRepository.handleResponseError(response);
+        });
+    },
+
+    /**
+     *
+     */
+    getExercisePrograms: function (that) {
+        $.event.trigger('show-loading');
+        that.$http.get('/api/exercisePrograms').then(function (response) {
+            store.state.programs = response.data;
+            $.event.trigger('hide-loading');
+        }, function (response) {
+            HelpersRepository.handleResponseError(response);
+        });
     },
 
     /**

@@ -3,6 +3,7 @@ var Vue = require('vue');
 var VueRouter = require('vue-router');
 Vue.use(VueRouter);
 global.$ = require('jquery');
+global.jQuery = require('jquery');
 global._ = require('underscore');
 global.store = require('./repositories/SharedRepository');
 var VueResource = require('vue-resource');
@@ -15,6 +16,8 @@ Date.setLocale('en-AU');
 var App = Vue.component('app', {
     ready: function () {
         store.getExercises(this);
+        store.getExerciseUnits(this);
+        store.getExercisePrograms(this);
     }
 });
 
@@ -35,6 +38,11 @@ Vue.component('new-exercise', require('./components/exercises/NewExerciseCompone
 Vue.component('new-exercise-entry', require('./components/exercises/NewExerciseEntryComponent'));
 Vue.component('exercise-entries', require('./components/exercises/ExerciseEntriesComponent'));
 Vue.component('entries-for-specific-exercise-and-date-and-unit-popup', require('./components/exercises/EntriesForSpecificExerciseAndDateAndUnitPopupComponent'));
+Vue.component('series-history-popup', require('./components/exercises/SeriesHistoryPopupComponent'));
+Vue.component('series-popup', require('./components/exercises/SeriesPopupComponent'));
+Vue.component('new-series', require('./components/exercises/NewSeriesComponent'));
+Vue.component('exercise-popup', require('./components/exercises/ExercisePopupComponent'));
+Vue.component('new-sleep-entry', require('./components/NewSleepEntryComponent'));
 
 var router = new VueRouter({
     hashbang: false

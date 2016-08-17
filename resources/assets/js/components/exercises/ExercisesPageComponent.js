@@ -1,3 +1,5 @@
+var ExercisesRepository = require('../../repositories/ExercisesRepository');
+
 module.exports = {
     template: '#exercises-page-template',
     data: function () {
@@ -13,10 +15,8 @@ module.exports = {
                 }
             },
             showExerciseEntryInputs: false,
-            units: [],
-            programs: [],
+            programs: store.state.programs,
             shared: store.state,
-            selectedExercise: ExercisesRepository.selectedExercise,
             showStretches: false,
             filterByName: '',
             filterByDescription: '',
@@ -25,25 +25,15 @@ module.exports = {
             showFilters: false
         };
     },
-    components: {},
     computed: {
-        // exercisesBySeries: function () {
-        //     var that = this;
-        //     var groupedExercises = this.filterExercises(this.shared.exercises);
-        //
-        //     if (!this.showStretches) {
-        //         groupedExercises = _.filter(groupedExercises, function (exercise) {
-        //             return !exercise.stretch;
-        //         });
-        //     }
-        //
-        //     groupedExercises = _.groupBy(groupedExercises, function (exercise) {
-        //         return exercise.series.name;
-        //     });
-        //
-        //     return groupedExercises;
-        // },
+        selectedExercise: function () {
+          return this.shared.selectedExercise;
+        },
+        units: function () {
+            return this.shared.exerciseUnits;
+        }
     },
+    components: {},
     filters: {
         filterExercises: function (exercises) {
             var that = this;
@@ -140,7 +130,7 @@ module.exports = {
         insertExerciseSet: function (exercise) {
             $.event.trigger('show-loading');
             var data = {
-                date: moment().format('YYYY-MM-DD'),
+                date: this.shared.date.sql,
                 exercise_id: exercise.id,
                 exerciseSet: true
             };
@@ -161,7 +151,7 @@ module.exports = {
         showExercisePopup: function (exercise) {
             $.event.trigger('show-loading');
             this.$http.get('/api/exercises/' + exercise.id).then(function (response) {
-                this.selectedExercise = response;
+                this.selectedExercise = response.data;
                 $.event.trigger('show-exercise-popup');
                 $.event.trigger('hide-loading');
             }, function (response) {
@@ -201,7 +191,7 @@ module.exports = {
         getSeries: function () {
             $.event.trigger('show-loading');
             this.$http.get('/api/exerciseSeries').then(function (response) {
-                this.exerciseSeries = response;
+                this.exerciseSeries = response.data;
                 $.event.trigger('hide-loading');
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
@@ -222,7 +212,7 @@ module.exports = {
             this.$http.get('api/seriesEntries/' + series.id).then(function (response) {
                 //For displaying the name of the series in the popup
                 this.selectedSeries = series;
-                this.exerciseSeriesHistory = response;
+                this.exerciseSeriesHistory = response.data;
                 $.event.trigger('show-series-history-popup');
                 $.event.trigger('hide-loading');
             }, function (response) {
@@ -236,7 +226,7 @@ module.exports = {
         getExercisesInSeries: function (series) {
             $.event.trigger('show-loading');
             this.$http.get('/api/exerciseSeries/' + series.id).then(function (response) {
-                this.selectedSeries = response;
+                this.selectedSeries = response.data;
                 $.event.trigger('hide-loading');
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
@@ -254,55 +244,18 @@ module.exports = {
 
             $.event.trigger('show-loading');
             this.$http.get('/api/exerciseSeries/' + series.id).then(function (response) {
-                this.selectedSeries = response;
+                this.selectedSeries = response.data;
                 $.event.trigger('show-series-popup');
                 $.event.trigger('hide-loading');
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
-        },
-
-        /**
-         *
-         */
-        getPrograms: function () {
-            $.event.trigger('show-loading');
-            this.$http.get('/api/exercisePrograms').then(function (response) {
-                this.programs = response;
-                $.event.trigger('hide-loading');
-            }, function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
-        },
-
-        /**
-         *
-         */
-        getUnits: function () {
-            $.event.trigger('show-loading');
-            this.$http.get('/api/exerciseUnits').then(function (response) {
-                this.units = response;
-                $.event.trigger('hide-loading');
-            }, function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
-        },
-
-        /**
-         *
-         * @param response
-         */
-        handleResponseError: function (response) {
-            $.event.trigger('response-error', [response]);
-            this.showLoading = false;
         }
     },
     props: [
         //data to be received from parent
     ],
     ready: function () {
-        this.getPrograms();
-        this.getUnits();
         this.getSeries();
     }
 };

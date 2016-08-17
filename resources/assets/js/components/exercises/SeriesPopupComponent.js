@@ -1,4 +1,4 @@
-var SeriesPopup = Vue.component('series-popup', {
+module.exports = {
     template: '#series-popup-template',
     data: function () {
         return {
@@ -52,8 +52,8 @@ var SeriesPopup = Vue.component('series-popup', {
         },
 
         /**
-        *
-        */
+         *
+         */
         closePopup: function ($event) {
             if ($event.target.className === 'popup-outer') {
                 this.showPopup = false;
@@ -87,4 +87,4 @@ var SeriesPopup = Vue.component('series-popup', {
     ready: function () {
         this.listen();
     }
-});
+};

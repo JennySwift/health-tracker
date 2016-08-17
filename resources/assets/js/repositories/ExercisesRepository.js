@@ -26,12 +26,5 @@ var ExercisesRepository = {
         }
 
         return data;
-    },
-    selectedExercise: {
-        program: {},
-        series: {},
-        defaultUnit: {
-            data: {}
-        }
     }
 };

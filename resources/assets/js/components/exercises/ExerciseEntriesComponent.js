@@ -7,7 +7,13 @@ module.exports = {
             selectedExercise: {
                 unit: {}
             },
+            shared: store.state
         };
+    },
+    computed: {
+        date: function () {
+          return this.shared.date;
+        }
     },
     components: {},
     methods: {
@@ -47,7 +53,7 @@ module.exports = {
             this.$http.post('/api/exerciseEntries', data).then(function (response) {
                 $.event.trigger('provide-feedback', ['Set added', 'success']);
                 this.getEntriesForTheDay();
-                this.exerciseEntries = response;
+                this.exerciseEntries = response.data;
                 $.event.trigger('hide-loading');
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
@@ -80,19 +86,10 @@ module.exports = {
             //$(document).on('getExerciseEntries', function (event, data) {
             //    that.exerciseEntries = data;
             //});
-        },
-
-        /**
-         *
-         * @param response
-         */
-        handleResponseError: function (response) {
-            $.event.trigger('response-error', [response]);
-            this.showLoading = false;
         }
     },
     props: [
-        'date'
+        
     ],
     ready: function () {
         this.listen();

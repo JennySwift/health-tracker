@@ -1,4 +1,4 @@
-var NewSleepEntry = Vue.component('new-sleep-entry', {
+module.exports = {
     template: '#new-sleep-entry-template',
     data: function () {
         return {
@@ -28,8 +28,8 @@ var NewSleepEntry = Vue.component('new-sleep-entry', {
         },
 
         /**
-        *
-        */
+         *
+         */
         closePopup: function ($event) {
             HelpersRepository.closePopup($event, this);
         },
@@ -50,4 +50,4 @@ var NewSleepEntry = Vue.component('new-sleep-entry', {
     ready: function () {
         this.listen();
     }
-});
+};

@@ -888,6 +888,9 @@ body.browser-height {
   background: white;
   overflow: scroll;
   border-radius: 8px; }
+  .wysiwyg p {
+    text-align: left;
+    padding-left: 0; }
 
 .wysiwyg-toolbar {
   display: -webkit-flex;

@@ -1,4 +1,4 @@
-var $ = require('jquery');
+require('bootstrap');
 
 module.exports = {
     template: '#navbar-template',

@@ -2,6 +2,11 @@
 
     <div id="exercise-series">
 
+        <date-navigation
+
+        >
+        </date-navigation>
+
         @include('main.exercises.exercise-filters')
 
         <series-history-popup

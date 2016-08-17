@@ -55,30 +55,11 @@ module.exports = {
         /**
          *
          */
-        closePopup: function ($event) {
-            if ($event.target.className === 'popup-outer') {
-                this.showPopup = false;
-            }
-        },
-
-        /**
-         *
-         */
         listen: function () {
             var that = this;
             $(document).on('show-entries-for-specific-exercise-and-date-and-unit-popup', function (event, entry) {
                 that.getEntriesForSpecificExerciseAndDateAndUnit(entry);
             });
-        },
-
-        /**
-         *
-         * @param response
-         */
-        handleResponseError: function (response) {
-            $.event.trigger('response-error', [response]);
-            $.event.trigger('response-error', [response]);
-            this.showLoading = false;
         }
     },
     props: [

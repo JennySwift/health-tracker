@@ -1,4 +1,4 @@
-var NewSeries = Vue.component('new-series', {
+module.exports = {
     template: '#new-series-template',
     data: function () {
         return {
@@ -44,4 +44,4 @@ var NewSeries = Vue.component('new-series', {
     ready: function () {
 
     }
-});
+};
