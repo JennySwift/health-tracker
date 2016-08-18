@@ -71,6 +71,25 @@ module.exports = {
 
     /**
      *
+     */
+    delete: function (url, feedbackMessage, callback) {
+        if (confirm("Are you sure?")) {
+            store.showLoading();
+            Vue.http.delete(url).then(function (response) {
+                callback(response);
+                store.hideLoading();
+
+                if (feedbackMessage) {
+                    $.event.trigger('provide-feedback', [feedbackMessage, 'success']);
+                }
+            }, function (response) {
+                HelpersRepository.handleResponseError(response);
+            });
+        }
+    },
+
+    /**
+     *
      * @param array
      * @param id
      * @returns {*}

@@ -25083,6 +25083,25 @@
 	
 	    /**
 	     *
+	     */
+	    delete: function (url, feedbackMessage, callback) {
+	        if (confirm("Are you sure?")) {
+	            store.showLoading();
+	            Vue.http.delete(url).then(function (response) {
+	                callback(response);
+	                store.hideLoading();
+	
+	                if (feedbackMessage) {
+	                    $.event.trigger('provide-feedback', [feedbackMessage, 'success']);
+	                }
+	            }, function (response) {
+	                HelpersRepository.handleResponseError(response);
+	            });
+	        }
+	    },
+	
+	    /**
+	     *
 	     * @param array
 	     * @param id
 	     * @returns {*}
@@ -42423,7 +42442,7 @@
 	    },
 	    components: {},
 	    methods: {
-	
+	        
 	        /**
 	         * Get all the the user's entries for a particular exercise
 	         * with a particular unit on a particular date.
@@ -42438,33 +42457,26 @@
 	                exercise_unit_id: entry.unit.id
 	            };
 	
-	            this.$http.get('api/exerciseEntries/specificExerciseAndDateAndUnit', data).then(function (response) {
-	                this.entries = response;
+	            this.$http.get('api/exerciseEntries/specificExerciseAndDateAndUnit', {params:data}).then(function (response) {
+	                this.entries = response.data;
 	                this.showPopup = true;
 	                store.hideLoading();
 	            }, function (response) {
 	                HelpersRepository.handleResponseError(response);
 	            });
 	        },
-	
+	        
 	        /**
-	         *
-	         */
+	        *
+	        */
 	        deleteExerciseEntry: function (entry) {
-	            if (confirm("Are you sure?")) {
-	                store.showLoading();
-	                this.$http.delete('/api/exerciseEntries/' + entry.id).then(function (response) {
-	                    this.entries = _.without(this.entries, entry);
-	                    //This might be unnecessary to do each time, and it fetches a lot
-	                    //of data for just deleting one entry.
-	                    //Perhaps do it when the popup closes instead?
-	                    store.getExerciseEntriesForTheDay();
-	                    $.event.trigger('provide-feedback', ['Entry deleted', 'success']);
-	                    store.hideLoading();
-	                }, function (response) {
-	                    HelpersRepository.handleResponseError(response);
-	                });
-	            }
+	            HelpersRepository.delete('/api/exerciseEntries/' + entry.id, 'Entry deleted', function (response) {
+	                this.entries = _.without(this.entries, entry);
+	                //This might be unnecessary to do each time, and it fetches a lot
+	                //of data for just deleting one entry.
+	                //Perhaps do it when the popup closes instead?
+	                store.getExerciseEntriesForTheDay();
+	            }.bind(this));
 	        },
 	
 	        /**
