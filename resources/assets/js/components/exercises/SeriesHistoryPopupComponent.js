@@ -35,15 +35,6 @@ module.exports = {
                 that.selectedSeries = series;
                 that.showPopup = true;
             });
-        },
-
-        /**
-         *
-         * @param response
-         */
-        handleResponseError: function (response) {
-            $.event.trigger('response-error', [response]);
-            this.showLoading = false;
         }
     },
     props: [

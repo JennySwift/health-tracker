@@ -9,37 +9,21 @@ module.exports = {
     methods: {
 
         /**
-         *
-         */
+        *
+        */
         insertSeries: function () {
-            store.showLoading();
             var data = {
                 name: this.newSeries.name
             };
 
-            this.$http.post('/api/exerciseSeries', data).then(function (response) {
-                this.exerciseSeries.push(response.data);
-                $.event.trigger('provide-feedback', ['Series created', 'success']);
-                this.showLoading = false;
+            HelpersRepository.post('/api/exerciseSeries', data, 'Series created', function (response) {
+                store.addSeries(response.data.data);
                 this.newSeries.name = '';
-                store.hideLoading();
-            }, function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
-        },
-
-        /**
-         *
-         * @param response
-         */
-        handleResponseError: function (response) {
-            $.event.trigger('response-error', [response]);
-            this.showLoading = false;
+            }.bind(this));
         }
     },
     props: [
         'showNewSeriesFields',
-        'exerciseSeries'
     ],
     ready: function () {
 

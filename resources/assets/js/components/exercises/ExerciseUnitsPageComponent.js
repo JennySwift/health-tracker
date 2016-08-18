@@ -13,44 +13,32 @@ module.exports = {
     },
     components: {},
     methods: {
+
         /**
-         *
-         */
+        *
+        */
         insertUnit: function () {
-            store.showLoading();
             var data = {
                 name: this.newUnit.name
             };
 
-            this.$http.post('/api/exerciseUnits', data).then(function (response) {
+            HelpersRepository.post('/api/exerciseUnits', data, 'Unit added', function (response) {
                 store.addExerciseUnit(response.data.data);
-                $.event.trigger('provide-feedback', ['Unit created', 'success']);
-                //this.$broadcast('provide-feedback', 'Unit created', 'success');
-                store.hideLoading();
                 $("#create-new-exercise-unit").val("");
-            }, function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
+                this.clearFields();
+            }.bind(this));
         },
 
         /**
-         *
-         * @param unit
-         */
+        *
+        */
         deleteUnit: function (unit) {
-            if (confirm("Are you sure?")) {
-                store.showLoading();
-                this.$http.delete('/api/exerciseUnits/' + unit.id).then(function (response) {
-                    store.deleteExerciseUnit(unit);
-                    $.event.trigger('provide-feedback', ['Unit deleted', 'success']);
-                    //this.$broadcast('provide-feedback', 'Unit deleted', 'success');
-                    store.hideLoading();
-
-                }, function (response) {
-                    HelpersRepository.handleResponseError(response);
-                });
-            }
-        },
+            HelpersRepository.delete('/api/exerciseUnits/' + unit.id, 'Unit deleted', function (response) {
+                store.deleteExerciseUnit(unit);
+                this.showPopup = false;
+                router.go(this.redirectTo);
+            }.bind(this));
+        }
     },
     props: [
         //data to be received from parent

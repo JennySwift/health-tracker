@@ -171,6 +171,14 @@ module.exports = {
     },
 
     /**
+    *
+    * @param series
+    */
+    deleteExerciseSeries: function (series) {
+        this.state.exerciseSeries = HelpersRepository.deleteById(this.state.exerciseSeries, series.id);
+    },
+
+    /**
      *
      */
     getExerciseUnits: function () {
@@ -218,6 +226,22 @@ module.exports = {
 
     /**
      *
+     * @param exercise
+     */
+    addExercise: function (exercise) {
+        store.state.exercises.push(exercise);
+    },
+
+    /**
+     *
+     * @param series
+     */
+    addSeries: function (series) {
+        store.state.exerciseSeries.push(series);
+    },
+
+    /**
+     *
      */
     getExercisePrograms: function () {
         HelpersRepository.get('/api/exercisePrograms', function (response) {
@@ -232,6 +256,15 @@ module.exports = {
     updateExercise: function (exercise) {
         var index = HelpersRepository.findIndexById(this.state.exercises, exercise.id);
         this.state.exercises.$set(index, exercise);
+    },
+
+    /**
+    *
+    * @param series
+    */
+    updateExerciseSeries: function (series) {
+        var index = HelpersRepository.findIndexById(this.state.exerciseSeries, series.id);
+        this.state.exerciseSeries.$set(index, series);
     },
 
     /**

@@ -3,7 +3,8 @@ module.exports = {
     data: function () {
         return {
             newEntry: {},
-            shared: store.state
+            shared: store.state,
+            date: store.state.date
         };
     },
     components: {},
@@ -24,23 +25,14 @@ module.exports = {
                 quantity: this.newEntry.quantity,
                 unit_id: this.newEntry.unit.id
             };
-            
+
             HelpersRepository.post('/api/exerciseEntries', data, 'Entry created', function (response) {
                 store.getExerciseEntriesForTheDay();
             }.bind(this));
-        },
-
-        /**
-         *
-         * @param response
-         */
-        handleResponseError: function (response) {
-            $.event.trigger('response-error', [response]);
-            this.showLoading = false;
         }
     },
     props: [
-        'date'
+
     ],
     events: {
         'option-chosen': function (option) {

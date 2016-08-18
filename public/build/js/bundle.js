@@ -24933,6 +24933,14 @@
 	    },
 	
 	    /**
+	    *
+	    * @param series
+	    */
+	    deleteExerciseSeries: function (series) {
+	        this.state.exerciseSeries = HelpersRepository.deleteById(this.state.exerciseSeries, series.id);
+	    },
+	
+	    /**
 	     *
 	     */
 	    getExerciseUnits: function () {
@@ -24980,6 +24988,22 @@
 	
 	    /**
 	     *
+	     * @param exercise
+	     */
+	    addExercise: function (exercise) {
+	        store.state.exercises.push(exercise);
+	    },
+	
+	    /**
+	     *
+	     * @param series
+	     */
+	    addSeries: function (series) {
+	        store.state.exerciseSeries.push(series);
+	    },
+	
+	    /**
+	     *
 	     */
 	    getExercisePrograms: function () {
 	        HelpersRepository.get('/api/exercisePrograms', function (response) {
@@ -24994,6 +25018,15 @@
 	    updateExercise: function (exercise) {
 	        var index = HelpersRepository.findIndexById(this.state.exercises, exercise.id);
 	        this.state.exercises.$set(index, exercise);
+	    },
+	
+	    /**
+	    *
+	    * @param series
+	    */
+	    updateExerciseSeries: function (series) {
+	        var index = HelpersRepository.findIndexById(this.state.exerciseSeries, series.id);
+	        this.state.exerciseSeries.$set(index, series);
 	    },
 	
 	    /**
@@ -42279,34 +42312,15 @@
 	    methods: {
 	
 	        /**
-	         *
-	         */
+	        *
+	        */
 	        insertExercise: function () {
-	            store.showLoading();
 	            var data = ExercisesRepository.setData(this.newExercise);
 	
-	            this.$http.post('/api/exercises', data).then(function (response) {
-	                if (this.exercises) {
-	                    //If adding new exercise from the series page,
-	                    //this.exercises isn't specified
-	                    this.exercises.push(response);
-	                }
-	
-	                $.event.trigger('provide-feedback', ['Exercise created', 'success']);
-	                store.hideLoading();
-	            }, function (response) {
-	                HelpersRepository.handleResponseError(response);
-	            });
+	            HelpersRepository.post('/api/exercises', data, 'Exercise created', function (response) {
+	                store.addExercise(response.data);
+	            }.bind(this));
 	        },
-	
-	        /**
-	         *
-	         * @param response
-	         */
-	        handleResponseError: function (response) {
-	            $.event.trigger('response-error', [response]);
-	            this.showLoading = false;
-	        }
 	    },
 	    props: [
 	        'showNewExerciseFields'
@@ -42326,7 +42340,8 @@
 	    data: function () {
 	        return {
 	            newEntry: {},
-	            shared: store.state
+	            shared: store.state,
+	            date: store.state.date
 	        };
 	    },
 	    components: {},
@@ -42347,23 +42362,14 @@
 	                quantity: this.newEntry.quantity,
 	                unit_id: this.newEntry.unit.id
 	            };
-	            
+	
 	            HelpersRepository.post('/api/exerciseEntries', data, 'Entry created', function (response) {
 	                store.getExerciseEntriesForTheDay();
 	            }.bind(this));
-	        },
-	
-	        /**
-	         *
-	         * @param response
-	         */
-	        handleResponseError: function (response) {
-	            $.event.trigger('response-error', [response]);
-	            this.showLoading = false;
 	        }
 	    },
 	    props: [
-	        'date'
+	
 	    ],
 	    events: {
 	        'option-chosen': function (option) {
@@ -42548,15 +42554,6 @@
 	                that.selectedSeries = series;
 	                that.showPopup = true;
 	            });
-	        },
-	
-	        /**
-	         *
-	         * @param response
-	         */
-	        handleResponseError: function (response) {
-	            $.event.trigger('response-error', [response]);
-	            this.showLoading = false;
 	        }
 	    },
 	    props: [
@@ -42577,17 +42574,18 @@
 	    template: '#series-popup-template',
 	    data: function () {
 	        return {
-	            showPopup: false
+	            showPopup: false,
+	            selectedSeries: {}
 	        };
 	    },
 	    components: {},
 	    methods: {
 	
 	        /**
-	         *
-	         */
+	        *
+	        */
 	        updateSeries: function () {
-	            store.showLoading();
+	            $.event.trigger('show-loading');
 	
 	            var data = {
 	                name: this.selectedSeries.name,
@@ -42595,35 +42593,19 @@
 	                workout_ids: this.selectedSeries.workout_ids
 	            };
 	
-	            this.$http.put('/api/exerciseSeries/' + this.selectedSeries.id, data).then(function (response) {
-	                var index = _.indexOf(this.exerciseSeries, _.findWhere(this.exerciseSeries, {id: this.selectedSeries.id}));
-	                this.exerciseSeries[index].name = response.data.name;
-	                this.exerciseSeries[index].priority = response.data.priority;
+	            HelpersRepository.put('/api/exerciseSeries/' + this.selectedSeries.id, data, 'Series updated', function (response) {
+	                store.updateExerciseSeries(response.data);
 	                this.showPopup = false;
-	                $.event.trigger('provide-feedback', ['Series updated', 'success']);
-	                store.hideLoading();
-	            }, function (response) {
-	                HelpersRepository.handleResponseError(response);
-	            });
+	            }.bind(this));
 	        },
 	
 	        /**
-	         *
-	         */
+	        *
+	        */
 	        deleteSeries: function () {
-	            if (confirm("Are you sure?")) {
-	                store.showLoading();
-	                this.$http.delete('/api/exerciseSeries/' + this.selectedSeries.id).then(function (response) {
-	                    //this.exerciseSeries = _.without(this.exerciseSeries, this.selectedSeries);
-	                    var index = _.indexOf(this.exerciseSeries, _.findWhere(this.exerciseSeries, {id: this.selectedSeries.id}));
-	                    this.exerciseSeries = _.without(this.exerciseSeries, this.exerciseSeries[index]);
-	                    this.showPopup = false;
-	                    $.event.trigger('provide-feedback', ['Series deleted', 'success']);
-	                    store.hideLoading();
-	                }, function (response) {
-	                    HelpersRepository.handleResponseError(response);
-	                });
-	            }
+	            HelpersRepository.delete('/api/exerciseSeries/' + this.selectedSeries.id, 'Series deleted', function (response) {
+	                store.deleteExerciseSeries(this.selectedSeries);
+	            }.bind(this));
 	        },
 	
 	        /**
@@ -42644,20 +42626,10 @@
 	                that.selectedSeries = series;
 	                that.showPopup = true;
 	            });
-	        },
-	
-	        /**
-	         *
-	         * @param response
-	         */
-	        handleResponseError: function (response) {
-	            $.event.trigger('response-error', [response]);
-	            this.showLoading = false;
 	        }
 	    },
 	    props: [
-	        'selectedSeries',
-	        'exerciseSeries'
+	
 	    ],
 	    ready: function () {
 	        this.listen();
@@ -42679,37 +42651,21 @@
 	    methods: {
 	
 	        /**
-	         *
-	         */
+	        *
+	        */
 	        insertSeries: function () {
-	            $.event.trigger('show-loading');
 	            var data = {
 	                name: this.newSeries.name
 	            };
 	
-	            this.$http.post('/api/exerciseSeries', data).then(function (response) {
-	                this.exerciseSeries.push(response.data);
-	                $.event.trigger('provide-feedback', ['Series created', 'success']);
-	                this.showLoading = false;
+	            HelpersRepository.post('/api/exerciseSeries', data, 'Series created', function (response) {
+	                store.addSeries(response.data.data);
 	                this.newSeries.name = '';
-	                $.event.trigger('hide-loading');
-	            }, function (response) {
-	                HelpersRepository.handleResponseError(response);
-	            });
-	        },
-	
-	        /**
-	         *
-	         * @param response
-	         */
-	        handleResponseError: function (response) {
-	            $.event.trigger('response-error', [response]);
-	            this.showLoading = false;
+	            }.bind(this));
 	        }
 	    },
 	    props: [
 	        'showNewSeriesFields',
-	        'exerciseSeries'
 	    ],
 	    ready: function () {
 	
@@ -43152,44 +43108,32 @@
 	    },
 	    components: {},
 	    methods: {
+	
 	        /**
-	         *
-	         */
+	        *
+	        */
 	        insertUnit: function () {
-	            $.event.trigger('show-loading');
 	            var data = {
 	                name: this.newUnit.name
 	            };
 	
-	            this.$http.post('/api/exerciseUnits', data).then(function (response) {
+	            HelpersRepository.post('/api/exerciseUnits', data, 'Unit added', function (response) {
 	                store.addExerciseUnit(response.data.data);
-	                $.event.trigger('provide-feedback', ['Unit created', 'success']);
-	                //this.$broadcast('provide-feedback', 'Unit created', 'success');
-	                $.event.trigger('hide-loading');
 	                $("#create-new-exercise-unit").val("");
-	            }, function (response) {
-	                HelpersRepository.handleResponseError(response);
-	            });
+	                this.clearFields();
+	            }.bind(this));
 	        },
 	
 	        /**
-	         *
-	         * @param unit
-	         */
+	        *
+	        */
 	        deleteUnit: function (unit) {
-	            if (confirm("Are you sure?")) {
-	                $.event.trigger('show-loading');
-	                this.$http.delete('/api/exerciseUnits/' + unit.id).then(function (response) {
-	                    store.deleteExerciseUnit(unit);
-	                    $.event.trigger('provide-feedback', ['Unit deleted', 'success']);
-	                    //this.$broadcast('provide-feedback', 'Unit deleted', 'success');
-	                    $.event.trigger('hide-loading');
-	
-	                }, function (response) {
-	                    HelpersRepository.handleResponseError(response);
-	                });
-	            }
-	        },
+	            HelpersRepository.delete('/api/exerciseUnits/' + unit.id, 'Unit deleted', function (response) {
+	                store.deleteExerciseUnit(unit);
+	                this.showPopup = false;
+	                router.go(this.redirectTo);
+	            }.bind(this));
+	        }
 	    },
 	    props: [
 	        //data to be received from parent
