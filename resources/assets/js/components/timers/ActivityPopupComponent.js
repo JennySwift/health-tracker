@@ -10,41 +10,31 @@ module.exports = {
     methods: {
 
         /**
-         *
-         */
+        *
+        */
         updateActivity: function () {
-            store.showLoading();
+            $.event.trigger('show-loading');
 
             var data = {
                 name: this.selectedActivity.name,
                 color: this.selectedActivity.color
             };
 
-            this.$http.put('/api/activities/' + this.selectedActivity.id, data).then(function (response) {
-                var index = _.indexOf(this.activities, _.findWhere(this.activities, {id: this.selectedActivity.id}));
+            HelpersRepository.put('/api/activities/' + this.selectedActivity.id, data, 'Activity updated', function (response) {
                 store.updateActivity(response.data);
                 this.showPopup = false;
-                $.event.trigger('provide-feedback', ['Activity updated', 'success']);
-                store.hideLoading();
-            }, function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
+            }.bind(this));
         },
 
         /**
-         *
-         */
+        * Todo: the timers will be deleted, too.
+        */
         deleteActivity: function () {
-            if (confirm("Are you sure? The timers for the activity will be deleted, too!")) {
-                store.showLoading();
-                this.$http.delete('/api/activities/' + this.selectedActivity.id).then(function (response) {
+            if (confirm("Really? The timers for the activity will be deleted, too.")) {
+                HelpersRepository.delete('/api/activities/' + this.selectedActivity.id, 'Activity deleted', function (response) {
                     store.deleteActivity(this.selectedActivity);
                     this.showPopup = false;
-                    $.event.trigger('provide-feedback', ['Activity deleted', 'success']);
-                    store.hideLoading();
-                }, function (response) {
-                    HelpersRepository.handleResponseError(response);
-                });
+                }.bind(this));
             }
         },
 
@@ -61,13 +51,13 @@ module.exports = {
         listen: function () {
             var that = this;
             $(document).on('show-activity-popup', function (event, activity) {
-                that.selectedActivity = activity;
+                that.selectedActivity = HelpersRepository.clone(activity);
                 that.showPopup = true;
             });
         }
     },
     props: [
-        'activities'
+
     ],
     ready: function () {
         this.listen();

@@ -24,23 +24,19 @@ module.exports = {
     },
     components: {},
     methods: {
+
         /**
          * Instead of starting and stopping the timer,
          * enter the start and stop times manually
          */
         insertManualTimer: function () {
-            store.showLoading();
             var data = TimersRepository.setData(this.newManualTimer, store.state.date.sql);
 
-            this.$http.post('/api/timers/', data).then(function (response) {
+            HelpersRepository.post('/api/timers', data, 'Timer created', function (response) {
                 store.addTimer(response.data, true);
                 $.event.trigger('manual-timer-created');
-                $.event.trigger('provide-feedback', ['Manual entry created', 'success']);
-                store.hideLoading();
                 router.go('/timers');
-            }, function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
+            }.bind(this));
         },
 
         /**

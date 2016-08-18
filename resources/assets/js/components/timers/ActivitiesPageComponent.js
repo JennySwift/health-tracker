@@ -20,22 +20,17 @@ module.exports = {
     methods: {
 
         /**
-         *
-         */
+        *
+        */
         insertActivity: function () {
-            store.showLoading();
             var data = {
                 name: this.newActivity.name,
                 color: this.newActivity.color
             };
 
-            this.$http.post('/api/activities', data).then(function (response) {
+            HelpersRepository.post('/api/activities', data, 'Activity created', function (response) {
                 store.addActivity(response.data);
-                $.event.trigger('provide-feedback', ['Activity created', 'success']);
-                store.hideLoading();
-            }, function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
+            }.bind(this));
         },
 
         /**
@@ -44,15 +39,6 @@ module.exports = {
          */
         showActivityPopup: function (activity) {
             $.event.trigger('show-activity-popup', [activity]);
-        },
-
-        /**
-         *
-         * @param response
-         */
-        handleResponseError: function (response) {
-            $.event.trigger('response-error', [response]);
-            this.showLoading = false;
         }
     },
     props: [

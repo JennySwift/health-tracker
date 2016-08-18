@@ -24801,19 +24801,9 @@
 	     *
 	     */
 	    getExercises: function () {
-	        store.showLoading();
-	        Vue.http.get('/api/exercises').then(function (response) {
+	        HelpersRepository.get('/api/exercises', function (response) {
 	            store.state.exercises = response.data;
-	            store.hideLoading();
-	        }, function (response) {
-	            HelpersRepository.handleResponseError(response);
-	        });
-	        // that.$http.get('/api/exercises', function (response) {
-	        //
-	        // })
-	        // .error(function (response) {
-	        //
-	        // });
+	        }.bind(this));
 	    },
 	
 	    /**
@@ -24854,15 +24844,10 @@
 	     *
 	     */
 	    getTimers: function () {
-	        store.showLoading();
 	        var url = TimersRepository.calculateUrl(false, this.state.date.sql);
-	
-	        Vue.http.get(url).then(function (response) {
+	        HelpersRepository.get(url, function (response) {
 	            store.state.timers = response.data;
-	            store.hideLoading();
-	        }, function (response) {
-	            HelpersRepository.handleResponseError(response);
-	        });
+	        }.bind(this));
 	    },
 	    
 	    /**
@@ -24897,14 +24882,10 @@
 	     *
 	     */
 	    getActivities: function () {
-	        store.showLoading();
-	        Vue.http.get('/api/activities').then(function (response) {
+	        HelpersRepository.get('/api/activities', function (response) {
 	            store.state.activities = response.data;
 	            $.event.trigger('activities-loaded');
-	            store.hideLoading();
-	        }, function (response) {
-	            HelpersRepository.handleResponseError(response);
-	        });
+	        }.bind(this));
 	    },
 	
 	    /**
@@ -24944,13 +24925,9 @@
 	     *
 	     */
 	    getExerciseUnits: function () {
-	        store.showLoading();
-	        Vue.http.get('/api/exerciseUnits').then(function (response) {
+	        HelpersRepository.get('/api/exerciseUnits', function (response) {
 	            store.state.exerciseUnits = response.data;
-	            store.hideLoading();
-	        }, function (response) {
-	            HelpersRepository.handleResponseError(response);
-	        });
+	        }.bind(this));
 	    },
 	
 	    /**
@@ -51497,23 +51474,19 @@
 	    },
 	    components: {},
 	    methods: {
+	
 	        /**
 	         * Instead of starting and stopping the timer,
 	         * enter the start and stop times manually
 	         */
 	        insertManualTimer: function () {
-	            $.event.trigger('show-loading');
 	            var data = TimersRepository.setData(this.newManualTimer, store.state.date.sql);
 	
-	            this.$http.post('/api/timers/', data).then(function (response) {
+	            HelpersRepository.post('/api/timers', data, 'Timer created', function (response) {
 	                store.addTimer(response.data, true);
 	                $.event.trigger('manual-timer-created');
-	                $.event.trigger('provide-feedback', ['Manual entry created', 'success']);
-	                $.event.trigger('hide-loading');
 	                router.go('/timers');
-	            }, function (response) {
-	                HelpersRepository.handleResponseError(response);
-	            });
+	            }.bind(this));
 	        },
 	
 	        /**
@@ -51592,22 +51565,17 @@
 	    methods: {
 	
 	        /**
-	         *
-	         */
+	        *
+	        */
 	        insertActivity: function () {
-	            $.event.trigger('show-loading');
 	            var data = {
 	                name: this.newActivity.name,
 	                color: this.newActivity.color
 	            };
 	
-	            this.$http.post('/api/activities', data).then(function (response) {
+	            HelpersRepository.post('/api/activities', data, 'Activity created', function (response) {
 	                store.addActivity(response.data);
-	                $.event.trigger('provide-feedback', ['Activity created', 'success']);
-	                $.event.trigger('hide-loading');
-	            }, function (response) {
-	                HelpersRepository.handleResponseError(response);
-	            });
+	            }.bind(this));
 	        },
 	
 	        /**
@@ -51616,15 +51584,6 @@
 	         */
 	        showActivityPopup: function (activity) {
 	            $.event.trigger('show-activity-popup', [activity]);
-	        },
-	
-	        /**
-	         *
-	         * @param response
-	         */
-	        handleResponseError: function (response) {
-	            $.event.trigger('response-error', [response]);
-	            this.showLoading = false;
 	        }
 	    },
 	    props: [
@@ -51647,41 +51606,18 @@
 	    data: function () {
 	        return {
 	            date: store.state.date,
-	            timers: []
+	            timers: store.state.timers
 	        };
 	    },
 	    components: {},
 	    methods: {
-	
-	        /**
-	         *
-	         */
-	        getTimers: function () {
-	            $.event.trigger('show-loading');
-	            var url = TimersRepository.calculateUrl(false, this.date.sql);
-	
-	            this.$http.get(url).then(function (response) {
-	                this.timers = response;
-	                $.event.trigger('hide-loading');
-	            }, function (response) {
-	                HelpersRepository.handleResponseError(response);
-	            });
-	        },
-	
-	        /**
-	         *
-	         * @param response
-	         */
-	        handleResponseError: function (response) {
-	            $.event.trigger('response-error', [response]);
-	            this.showLoading = false;
-	        }
+	        
 	    },
 	    props: [
 	        //data to be received from parent
 	    ],
 	    ready: function () {
-	        this.getTimers();
+	
 	    }
 	};
 	
@@ -51808,8 +51744,8 @@
 	    methods: {
 	
 	        /**
-	         *
-	         */
+	        *
+	        */
 	        updateTimer: function () {
 	            $.event.trigger('show-loading');
 	
@@ -51819,33 +51755,21 @@
 	                activity_id: this.selectedTimer.activity.data.id
 	            };
 	
-	            this.$http.put('/api/timers/' + this.selectedTimer.id, data).then(function (response) {
-	                var index = _.indexOf(this.timers, _.findWhere(this.timers, {id: this.selectedTimer.id}));
+	            HelpersRepository.put('/api/timers/' + this.selectedTimer.id, data, 'Timer updated', function (response) {
 	                store.updateTimer(response.data);
-	                $.event.trigger('provide-feedback', ['Timer updated', 'success']);
 	                this.showPopup = false;
-	                $.event.trigger('hide-loading');
-	            }, function (data, status, response) {
-	                HelpersRepository.handleResponseError(data, status, response);
-	            });
+	            }.bind(this));
 	        },
 	
 	        /**
-	         *
-	         */
+	        *
+	        */
 	        deleteTimer: function () {
-	            if (confirm("Are you sure?")) {
-	                $.event.trigger('show-loading');
-	                this.$http.delete('/api/timers/' + this.selectedTimer.id).then(function (response) {
-	                    store.deleteTimer(this.selectedTimer);
-	                    $.event.trigger('timer-deleted', [this.selectedTimer]);
-	                    this.showPopup = false;
-	                    $.event.trigger('provide-feedback', ['Timer deleted', 'success']);
-	                    $.event.trigger('hide-loading');
-	                }, function (response) {
-	                    HelpersRepository.handleResponseError(response);
-	                });
-	            }
+	            HelpersRepository.delete('/api/timers/' + this.selectedTimer.id, 'Timer deleted', function (response) {
+	                store.deleteTimer(this.selectedTimer);
+	                $.event.trigger('timer-deleted', [this.selectedTimer]);
+	                this.showPopup = false;
+	            }.bind(this));
 	        },
 	
 	        /**
@@ -51861,11 +51785,7 @@
 	        listen: function () {
 	            var that = this;
 	            $(document).on('show-timer-popup', function (event, timer) {
-	                //So that the timer doesn't appear updated if the user closes the popup without saving
-	                that.selectedTimer.id = timer.id;
-	                that.selectedTimer.start = timer.start;
-	                that.selectedTimer.finish = timer.finish;
-	                that.selectedTimer.activity = timer.activity;
+	                that.selectedTimer = HelpersRepository.clone();
 	                that.showPopup = true;
 	            });
 	        }
@@ -51878,6 +51798,7 @@
 	        this.listen();
 	    }
 	};
+
 
 /***/ },
 /* 64 */
@@ -51916,45 +51837,33 @@
 	    methods: {
 	
 	        /**
-	         *
-	         */
+	        *
+	        */
 	        startTimer: function () {
-	            store.showLoading();
 	            var data = TimersRepository.setData(this.newTimer);
 	            //So the previous timer's time isn't displayed at the start
 	            this.time = 0;
 	
-	            this.$http.post('/api/timers/', data).then(function (response) {
+	            HelpersRepository.post('/api/timers', data, 'Timer started', function (response) {
 	                this.timerInProgress = response.data;
 	                this.setTimerInProgress();
-	                $.event.trigger('provide-feedback', ['Timer started', 'success']);
-	                store.hideLoading();
-	            }, function (response) {
-	                HelpersRepository.handleResponseError(response);
-	            });
+	            }.bind(this));
 	        },
 	
 	        /**
-	         *
-	         */
+	        *
+	        */
 	        stopTimer: function () {
-	            store.showLoading();
 	            clearInterval(this.secondsInterval);
 	
 	            var data = {
 	                finish: TimersRepository.calculateFinishTime(this.timerInProgress)
 	            };
 	
-	            this.$http.put('/api/timers/' + this.timerInProgress.id, data).then(function (response) {
+	            HelpersRepository.put('/api/timers/' + this.timerInProgress.id, data, 'Timer finished', function (response) {
 	                this.timerInProgress = false;
 	                store.addTimer(response.data);
-	
-	                $.event.trigger('timer-stopped');
-	                $.event.trigger('provide-feedback', ['Timer updated', 'success']);
-	                store.hideLoading();
-	            }, function (response) {
-	                HelpersRepository.handleResponseError(response);
-	            });
+	            }.bind(this));
 	        },
 	
 	        /**
@@ -51965,19 +51874,15 @@
 	        },
 	
 	        /**
-	         *
-	         */
+	        *
+	        */
 	        checkForTimerInProgress: function () {
-	            store.showLoading();
-	            this.$http.get('/api/timers/checkForTimerInProgress').then(function (response) {
+	            HelpersRepository.get('/api/timers/checkForTimerInProgress', function (response) {
 	                if (response.data.activity) {
 	                    this.timerInProgress = response.data;
 	                    this.setTimerInProgress();
 	                }
-	                store.hideLoading();
-	            }, function (response) {
-	                HelpersRepository.handleResponseError(response);
-	            });
+	            }.bind(this));
 	        },
 	
 	        /**
@@ -66080,41 +65985,31 @@
 	    methods: {
 	
 	        /**
-	         *
-	         */
+	        *
+	        */
 	        updateActivity: function () {
-	            store.showLoading();
+	            $.event.trigger('show-loading');
 	
 	            var data = {
 	                name: this.selectedActivity.name,
 	                color: this.selectedActivity.color
 	            };
 	
-	            this.$http.put('/api/activities/' + this.selectedActivity.id, data).then(function (response) {
-	                var index = _.indexOf(this.activities, _.findWhere(this.activities, {id: this.selectedActivity.id}));
+	            HelpersRepository.put('/api/activities/' + this.selectedActivity.id, data, 'Activity updated', function (response) {
 	                store.updateActivity(response.data);
 	                this.showPopup = false;
-	                $.event.trigger('provide-feedback', ['Activity updated', 'success']);
-	                store.hideLoading();
-	            }, function (response) {
-	                HelpersRepository.handleResponseError(response);
-	            });
+	            }.bind(this));
 	        },
 	
 	        /**
-	         *
-	         */
+	        * Todo: the timers will be deleted, too.
+	        */
 	        deleteActivity: function () {
-	            if (confirm("Are you sure? The timers for the activity will be deleted, too!")) {
-	                store.showLoading();
-	                this.$http.delete('/api/activities/' + this.selectedActivity.id).then(function (response) {
+	            if (confirm("Really? The timers for the activity will be deleted, too.")) {
+	                HelpersRepository.delete('/api/activities/' + this.selectedActivity.id, 'Activity deleted', function (response) {
 	                    store.deleteActivity(this.selectedActivity);
 	                    this.showPopup = false;
-	                    $.event.trigger('provide-feedback', ['Activity deleted', 'success']);
-	                    store.hideLoading();
-	                }, function (response) {
-	                    HelpersRepository.handleResponseError(response);
-	                });
+	                }.bind(this));
 	            }
 	        },
 	
@@ -66131,13 +66026,13 @@
 	        listen: function () {
 	            var that = this;
 	            $(document).on('show-activity-popup', function (event, activity) {
-	                that.selectedActivity = activity;
+	                that.selectedActivity = HelpersRepository.clone(activity);
 	                that.showPopup = true;
 	            });
 	        }
 	    },
 	    props: [
-	        'activities'
+	
 	    ],
 	    ready: function () {
 	        this.listen();

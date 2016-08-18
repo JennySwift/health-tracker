@@ -31,45 +31,33 @@ module.exports = {
     methods: {
 
         /**
-         *
-         */
+        *
+        */
         startTimer: function () {
-            store.showLoading();
             var data = TimersRepository.setData(this.newTimer);
             //So the previous timer's time isn't displayed at the start
             this.time = 0;
 
-            this.$http.post('/api/timers/', data).then(function (response) {
+            HelpersRepository.post('/api/timers', data, 'Timer started', function (response) {
                 this.timerInProgress = response.data;
                 this.setTimerInProgress();
-                $.event.trigger('provide-feedback', ['Timer started', 'success']);
-                store.hideLoading();
-            }, function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
+            }.bind(this));
         },
 
         /**
-         *
-         */
+        *
+        */
         stopTimer: function () {
-            store.showLoading();
             clearInterval(this.secondsInterval);
 
             var data = {
                 finish: TimersRepository.calculateFinishTime(this.timerInProgress)
             };
 
-            this.$http.put('/api/timers/' + this.timerInProgress.id, data).then(function (response) {
+            HelpersRepository.put('/api/timers/' + this.timerInProgress.id, data, 'Timer finished', function (response) {
                 this.timerInProgress = false;
                 store.addTimer(response.data);
-
-                $.event.trigger('timer-stopped');
-                $.event.trigger('provide-feedback', ['Timer updated', 'success']);
-                store.hideLoading();
-            }, function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
+            }.bind(this));
         },
 
         /**
@@ -80,19 +68,15 @@ module.exports = {
         },
 
         /**
-         *
-         */
+        *
+        */
         checkForTimerInProgress: function () {
-            store.showLoading();
-            this.$http.get('/api/timers/checkForTimerInProgress').then(function (response) {
+            HelpersRepository.get('/api/timers/checkForTimerInProgress', function (response) {
                 if (response.data.activity) {
                     this.timerInProgress = response.data;
                     this.setTimerInProgress();
                 }
-                store.hideLoading();
-            }, function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
+            }.bind(this));
         },
 
         /**

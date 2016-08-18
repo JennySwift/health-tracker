@@ -39,19 +39,9 @@ module.exports = {
      *
      */
     getExercises: function () {
-        store.showLoading();
-        Vue.http.get('/api/exercises').then(function (response) {
+        HelpersRepository.get('/api/exercises', function (response) {
             store.state.exercises = response.data;
-            store.hideLoading();
-        }, function (response) {
-            HelpersRepository.handleResponseError(response);
-        });
-        // that.$http.get('/api/exercises', function (response) {
-        //
-        // })
-        // .error(function (response) {
-        //
-        // });
+        }.bind(this));
     },
 
     /**
@@ -92,15 +82,10 @@ module.exports = {
      *
      */
     getTimers: function () {
-        store.showLoading();
         var url = TimersRepository.calculateUrl(false, this.state.date.sql);
-
-        Vue.http.get(url).then(function (response) {
+        HelpersRepository.get(url, function (response) {
             store.state.timers = response.data;
-            store.hideLoading();
-        }, function (response) {
-            HelpersRepository.handleResponseError(response);
-        });
+        }.bind(this));
     },
     
     /**
@@ -135,14 +120,10 @@ module.exports = {
      *
      */
     getActivities: function () {
-        store.showLoading();
-        Vue.http.get('/api/activities').then(function (response) {
+        HelpersRepository.get('/api/activities', function (response) {
             store.state.activities = response.data;
             $.event.trigger('activities-loaded');
-            store.hideLoading();
-        }, function (response) {
-            HelpersRepository.handleResponseError(response);
-        });
+        }.bind(this));
     },
 
     /**
@@ -182,13 +163,9 @@ module.exports = {
      *
      */
     getExerciseUnits: function () {
-        store.showLoading();
-        Vue.http.get('/api/exerciseUnits').then(function (response) {
+        HelpersRepository.get('/api/exerciseUnits', function (response) {
             store.state.exerciseUnits = response.data;
-            store.hideLoading();
-        }, function (response) {
-            HelpersRepository.handleResponseError(response);
-        });
+        }.bind(this));
     },
 
     /**
