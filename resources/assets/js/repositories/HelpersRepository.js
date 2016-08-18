@@ -33,10 +33,17 @@ module.exports = {
     /**
      *
      */
-    get: function (url, callback) {
+    get: function (url, callback, propertyToSet) {
         store.showLoading();
         Vue.http.get(url).then(function (response) {
-            callback(response);
+            if (callback) {
+                callback(response);
+            }
+            
+            if (propertyToSet) {
+                store.set(response.data, propertyToSet);
+            }
+
             store.hideLoading();
         }, function (response) {
             HelpersRepository.handleResponseError(response);

@@ -24811,27 +24811,21 @@
 	     *
 	     */
 	    getExercises: function () {
-	        HelpersRepository.get('/api/exercises', function (response) {
-	            store.state.exercises = response.data;
-	        }.bind(this));
+	        HelpersRepository.get('/api/exercises', false, 'exercises');
 	    },
 	
 	    /**
 	     * Todo: all the entries I think are actually in the data (unnecessarily)
 	     */
 	    getExerciseEntriesForTheDay: function () {
-	        HelpersRepository.get('/api/exerciseEntries/' + this.state.date.sql, function (response) {
-	            store.state.exerciseEntries = response.data;
-	        }.bind(this));
+	        HelpersRepository.get('/api/exerciseEntries/' + this.state.date.sql, false, 'exerciseEntries');
 	    },
 	
 	    /**
 	     *
 	     */
 	    getSeries: function () {
-	        HelpersRepository.get('/api/exerciseSeries', function (response) {
-	            store.state.exerciseSeries = response.data;
-	        }.bind(this));
+	        HelpersRepository.get('/api/exerciseSeries', false, 'exerciseSeries');
 	    },
 	
 	    /**
@@ -24839,9 +24833,16 @@
 	     */
 	    getTimers: function () {
 	        var url = TimersRepository.calculateUrl(false, this.state.date.sql);
-	        HelpersRepository.get(url, function (response) {
-	            store.state.timers = response.data;
-	        }.bind(this));
+	        HelpersRepository.get(url, false, 'timers');
+	    },
+	
+	    /**
+	     *
+	     * @param data
+	     * @param propertyName
+	     */
+	    set: function (data, propertyName) {
+	        store.state[propertyName] = data;
 	    },
 	
 	    /**
@@ -24858,9 +24859,7 @@
 	     *
 	     */
 	    getExerciseUnits: function () {
-	        HelpersRepository.get('/api/exerciseUnits', function (response) {
-	            store.state.exerciseUnits = response.data;
-	        }.bind(this));
+	        HelpersRepository.get('/api/exerciseUnits', false, 'exerciseUnits');
 	    },
 	
 	    /**
@@ -24901,7 +24900,7 @@
 	    },
 	
 	    /**
-	     * 
+	     *
 	     * @param item
 	     * @param propertyName
 	     */
@@ -24968,10 +24967,17 @@
 	    /**
 	     *
 	     */
-	    get: function (url, callback) {
+	    get: function (url, callback, propertyToSet) {
 	        store.showLoading();
 	        Vue.http.get(url).then(function (response) {
-	            callback(response);
+	            if (callback) {
+	                callback(response);
+	            }
+	            
+	            if (propertyToSet) {
+	                store.set(response.data, propertyToSet);
+	            }
+	
 	            store.hideLoading();
 	        }, function (response) {
 	            HelpersRepository.handleResponseError(response);

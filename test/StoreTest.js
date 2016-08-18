@@ -65,4 +65,16 @@ describe('filters', function () {
             {name: 'pullup', id: 3}
         ]);
     });
+
+    it('can set a store property', function () {
+        var exercises = [
+            {name: 'pushup', id: 1},
+            {name: 'squat', id: 2},
+            {name: 'pullup', id: 3}
+        ];
+
+        store.set(exercises, 'exercises');
+
+        expect(store.state.exercises).to.eql(exercises);
+    });
 });
