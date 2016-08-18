@@ -1,3 +1,4 @@
+var Vue = require('vue');
 var HelpersRepository = require('./HelpersRepository');
 var TimersRepository = require('./TimersRepository');
 require('sugar');
@@ -6,6 +7,8 @@ module.exports = {
 
     state: {
         exercises: [],
+        exerciseSeries: [],
+        exerciseEntries: [],
         date: {
             typed: Date.create('today').format('{dd}/{MM}/{yyyy}'),
             long: HelpersRepository.formatDateToLong('today'),
@@ -42,9 +45,9 @@ module.exports = {
     /**
      *
      */
-    getExercises: function (that) {
+    getExercises: function () {
         store.showLoading();
-        that.$http.get('/api/exercises').then(function (response) {
+        Vue.http.get('/api/exercises').then(function (response) {
             store.state.exercises = response.data;
             store.hideLoading();
         }, function (response) {
@@ -59,13 +62,47 @@ module.exports = {
     },
 
     /**
+     * Todo: all the entries I think are actually in the data (unnecessarily)
+     */
+    getExerciseEntriesForTheDay: function () {
+        HelpersRepository.get('/api/exerciseEntries/' + this.state.date.sql, function (response) {
+            store.state.exerciseEntries = response.data;
+        }.bind(this));
+    },
+
+    /**
      *
      */
-    getTimers: function (that) {
+    insertExerciseSet: function (exercise) {
+        var data = {
+            date: this.state.date.sql,
+            exercise_id: exercise.id,
+            exerciseSet: true
+        };
+
+        HelpersRepository.post('/api/exerciseEntries', data, 'Set added', function (response) {
+            store.state.exerciseEntries = response.data;
+            exercise.lastDone = 0;
+        }.bind(this));
+    },
+
+    /**
+     *
+     */
+    getSeries: function () {
+        HelpersRepository.get('/api/exerciseSeries', function (response) {
+            store.state.exerciseSeries = response.data;
+        }.bind(this));
+    },
+
+    /**
+     *
+     */
+    getTimers: function () {
         store.showLoading();
         var url = TimersRepository.calculateUrl(false, this.state.date.sql);
 
-        that.$http.get(url).then(function (response) {
+        Vue.http.get(url).then(function (response) {
             store.state.timers = response.data;
             store.hideLoading();
         }, function (response) {
@@ -104,9 +141,9 @@ module.exports = {
     /**
      *
      */
-    getActivities: function (that) {
+    getActivities: function () {
         store.showLoading();
-        that.$http.get('/api/activities').then(function (response) {
+        Vue.http.get('/api/activities').then(function (response) {
             store.state.activities = response.data;
             $.event.trigger('activities-loaded');
             store.hideLoading();
@@ -143,9 +180,9 @@ module.exports = {
     /**
      *
      */
-    getExerciseUnits: function (that) {
+    getExerciseUnits: function () {
         store.showLoading();
-        that.$http.get('/api/exerciseUnits').then(function (response) {
+        Vue.http.get('/api/exerciseUnits').then(function (response) {
             store.state.exerciseUnits = response.data;
             store.hideLoading();
         }, function (response) {
@@ -181,13 +218,9 @@ module.exports = {
     /**
      *
      */
-    getExercisePrograms: function (that) {
-        store.showLoading();
-        that.$http.get('/api/exercisePrograms').then(function (response) {
+    getExercisePrograms: function () {
+        HelpersRepository.get('/api/exercisePrograms', function (response) {
             store.state.programs = response.data;
-            store.hideLoading();
-        }, function (response) {
-            HelpersRepository.handleResponseError(response);
         });
     },
 

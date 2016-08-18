@@ -5,7 +5,6 @@ module.exports = {
     data: function () {
         return {
             date: store.state.date,
-            exerciseSeries: [],
             exerciseSeriesHistory: [],
             showNewSeriesFields: false,
             showNewExerciseFields: false,
@@ -15,7 +14,6 @@ module.exports = {
                 }
             },
             showExerciseEntryInputs: false,
-            programs: store.state.programs,
             shared: store.state,
             showStretches: false,
             filterByName: '',
@@ -31,6 +29,12 @@ module.exports = {
         },
         units: function () {
             return this.shared.exerciseUnits;
+        },
+        programs: function () {
+            return this.shared.programs;
+        },
+        exerciseSeries: function () {
+            return this.shared.exerciseSeries;
         }
     },
     components: {},
@@ -128,35 +132,17 @@ module.exports = {
          *
          */
         insertExerciseSet: function (exercise) {
-            store.showLoading();;
-            var data = {
-                date: this.shared.date.sql,
-                exercise_id: exercise.id,
-                exerciseSet: true
-            };
-
-            this.$http.post('/api/exerciseEntries', data).then(function (response) {
-                exercise.lastDone = 0;
-                $.event.trigger('provide-feedback', ['Set added', 'success']);
-                $.event.trigger('get-exercise-entries-for-the-day');
-                store.hideLoading();
-            }, function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
+            store.insertExerciseSet(exercise);
         },
 
         /**
          *
          */
         showExercisePopup: function (exercise) {
-            store.showLoading();
-            this.$http.get('/api/exercises/' + exercise.id).then(function (response) {
-                this.selectedExercise = response.data;
+            HelpersRepository.get('/api/exercises/' + exercise.id, function (response) {
+                this.selectedSeries = response.data;
                 $.event.trigger('show-exercise-popup');
-                store.hideLoading();
-            }, function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
+            }.bind(this));
         },
 
         /**
@@ -188,49 +174,27 @@ module.exports = {
         /**
          *
          */
-        getSeries: function () {
-            store.showLoading();
-            this.$http.get('/api/exerciseSeries').then(function (response) {
-                this.exerciseSeries = response.data;
-                store.hideLoading();
-            }, function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
-        },
-
-        /**
-         *
-         */
         getExerciseSeriesHistory: function (key) {
-            store.showLoading();
-
             //Find the series. The exercises were grouped according to series, so all we have is the series name (key).
             var series = _.find(this.exerciseSeries, function (series) {
                 return series.name === key;
             });
 
-            this.$http.get('api/seriesEntries/' + series.id).then(function (response) {
+            HelpersRepository.get('api/seriesEntries/' + series.id, function (response) {
                 //For displaying the name of the series in the popup
                 this.selectedSeries = series;
                 this.exerciseSeriesHistory = response.data;
                 $.event.trigger('show-series-history-popup');
-                store.hideLoading();
-            }, function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
+            }.bind(this));
         },
 
         /**
          *
          */
         getExercisesInSeries: function (series) {
-            store.showLoading();
-            this.$http.get('/api/exerciseSeries/' + series.id).then(function (response) {
+            HelpersRepository.get('/api/exerciseSeries/' + series.id, function (response) {
                 this.selectedSeries = response.data;
-                store.hideLoading();
-            }, function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
+            }.bind(this));
         },
 
         /**
@@ -242,21 +206,17 @@ module.exports = {
                 return series.name === key;
             });
 
-            store.showLoading();
-            this.$http.get('/api/exerciseSeries/' + series.id).then(function (response) {
+            HelpersRepository.get('/api/exerciseSeries/' + series.id, function (response) {
                 this.selectedSeries = response.data;
                 $.event.trigger('show-series-popup');
-                store.hideLoading();
-            }, function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
+            }.bind(this));
         }
     },
     props: [
         //data to be received from parent
     ],
     ready: function () {
-        this.getSeries();
+        
     }
 };
 

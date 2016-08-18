@@ -1,3 +1,4 @@
+var Vue = require('vue');
 require('sugar');
 var moment = require('moment');
 
@@ -19,6 +20,36 @@ module.exports = {
         if ($event.target.className === 'popup-outer') {
             that.showPopup = false;
         }
+    },
+
+    /**
+     *
+     */
+    get: function (url, callback) {
+        store.showLoading();
+        Vue.http.get(url).then(function (response) {
+            callback(response);
+            store.hideLoading();
+        }, function (response) {
+            HelpersRepository.handleResponseError(response);
+        });
+    },
+
+    /**
+     *
+     */
+    post: function (url, data, feedbackMessage, callback) {
+        store.showLoading();
+        Vue.http.post(url, data).then(function (response) {
+            callback(response);
+            store.hideLoading();
+
+            if (feedbackMessage) {
+                $.event.trigger('provide-feedback', [feedbackMessage, 'success']);
+            }
+        }, function (response) {
+            HelpersRepository.handleResponseError(response);
+        });
     },
 
     /**

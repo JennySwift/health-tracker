@@ -43,7 +43,7 @@ module.exports = {
                     //This might be unnecessary to do each time, and it fetches a lot
                     //of data for just deleting one entry.
                     //Perhaps do it when the popup closes instead?
-                    $.event.trigger('get-exercise-entries-for-the-day');
+                    store.getExerciseEntriesForTheDay();
                     $.event.trigger('provide-feedback', ['Entry deleted', 'success']);
                     store.hideLoading();
                 }, function (response) {

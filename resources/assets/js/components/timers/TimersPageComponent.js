@@ -86,26 +86,18 @@ module.exports = {
          *
          */
         getTotalMinutesForActivitiesForTheDay: function () {
-            store.showLoading();
-            this.$http.get('/api/activities/getTotalMinutesForDay?date=' + this.date.sql).then(function (response) {
+            HelpersRepository.get('/api/activities/getTotalMinutesForDay?date=' + this.date.sql, function (response) {
                 this.activitiesWithDurationsForTheDay = response.data;
-                store.hideLoading();
-            }, function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
+            }.bind(this));
         },
 
         /**
          *
          */
         getTotalMinutesForActivitiesForTheWeek: function () {
-            store.showLoading();
-            this.$http.get('/api/activities/getTotalMinutesForWeek?date=' + this.date.sql).then(function (response) {
+            HelpersRepository.get('/api/activities/getTotalMinutesForWeek?date=' + this.date.sql, function (response) {
                 this.activitiesWithDurationsForTheWeek = response.data;
-                store.hideLoading();
-            }, function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
+            }.bind(this));
         },
 
         /**

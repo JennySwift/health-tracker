@@ -18,22 +18,16 @@ module.exports = {
          *
          */
         insertEntry: function () {
-            store.showLoading();
-
             var data = {
                 date: this.date.sql,
                 exercise_id: this.newEntry.id,
                 quantity: this.newEntry.quantity,
                 unit_id: this.newEntry.unit.id
             };
-
-            this.$http.post('/api/exerciseEntries', data).then(function (response) {
-                $.event.trigger('exercise-entry-added', [response]);
-                $.event.trigger('provide-feedback', ['Entry created', 'success']);
-                store.hideLoading();
-            }, function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
+            
+            HelpersRepository.post('/api/exerciseEntries', data, 'Entry created', function (response) {
+                store.getExerciseEntriesForTheDay();
+            }.bind(this));
         },
 
         /**

@@ -2,10 +2,22 @@ module.exports = {
     template: '#new-exercise-template',
     data: function () {
         return {
-            newExercise: {}
+            newExercise: {},
+            shared: store.state
         };
     },
     components: {},
+    computed: {
+        units: function () {
+            return this.shared.exerciseUnits;
+        },
+        programs: function () {
+            return this.shared.programs;
+        },
+        exerciseSeries: function () {
+            return this.shared.exerciseSeries;
+        }
+    },
     methods: {
 
         /**
@@ -39,11 +51,7 @@ module.exports = {
         }
     },
     props: [
-        'showNewExerciseFields',
-        'exercises',
-        'programs',
-        'exerciseSeries',
-        'units'
+        'showNewExerciseFields'
     ],
     ready: function () {
 

@@ -20,11 +20,12 @@ global.obvious = chalk.green.bgBlack.bold.underline;
 
 var App = Vue.component('app', {
     ready: function () {
-        store.getExercises(this);
-        store.getExerciseUnits(this);
-        store.getExercisePrograms(this);
-        store.getActivities(this);
-        store.getTimers(this);
+        store.getExercises();
+        store.getExerciseUnits();
+        store.getExercisePrograms();
+        store.getActivities();
+        store.getTimers();
+        store.getSeries();
     }
 });
 
