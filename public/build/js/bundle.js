@@ -42742,7 +42742,6 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var DatesRepository = __webpack_require__(33);
-	var FiltersRepository = __webpack_require__(15);
 	
 	module.exports = {
 	    template: '#entries-page-template',
@@ -42777,29 +42776,13 @@
 	        },
 	
 	        /**
-	         * Get all the user's entries for the current date:
-	         * exercise entries
-	         * menu entries
-	         * weight
-	         * calories for the day
-	         * calorie average for the week
-	         */
-	        //getEntries: function () {
-	        //    $.event.trigger('get-entries');
-	        //},
-	
-	        /**
 	         * Get calories for the day and average calories for 7 days
 	         */
 	        getCalorieInfoForTheDay: function () {
-	            store.showLoading();
-	            this.$http.get('api/calories/' + this.date.sql).then(function (response) {
+	            HelpersRepository.get('api/calories/' + this.date.sql, function (response) {
 	                this.calories.day = response.data.forTheDay;
 	                this.calories.averageFor7Days = response.data.averageFor7Days;
-	                store.hideLoading();
-	            }, function (response) {
-	                HelpersRepository.handleResponseError(response);
-	            });
+	            }.bind(this));
 	        },
 	
 	        /**
@@ -42816,15 +42799,6 @@
 	            $(document).on('menu-entry-added, menu-entry-deleted', function (event) {
 	                that.getCalorieInfoForTheDay();
 	            });
-	        },
-	
-	        /**
-	         *
-	         * @param response
-	         */
-	        handleResponseError: function (response) {
-	            $.event.trigger('response-error', [response]);
-	            this.showLoading = false;
 	        }
 	    },
 	    props: [
