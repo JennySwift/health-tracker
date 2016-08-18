@@ -8,12 +8,12 @@ module.exports = {
             editingWeight: false,
             addingNewWeight: false,
             newWeight: {},
-            store: store.state
+            shared: store.state
         };
     },
     computed: {
         date: function () {
-          return this.store.date;
+          return this.shared.date;
         }
     },
     components: {},
@@ -35,45 +35,34 @@ module.exports = {
                 this.showNewWeightFields();
             }
         },
-
+        
         /**
-         *
-         */
+        *
+        */
         insertWeight: function () {
-            store.showLoading();
             var data = {
                 date: this.date.sql,
                 weight: this.newWeight.weight
             };
 
-            this.$http.post('/api/weights', data).then(function (response) {
+            HelpersRepository.post('/api/weights', data, 'Weight entered', function (response) {
                 this.weight = response.data;
                 this.addingNewWeight = false;
-                $.event.trigger('provide-feedback', ['Weight created', 'success']);
-                store.hideLoading();
-            }, function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
+            }.bind(this));
         },
 
         /**
          *
          */
         updateWeight: function () {
-            store.showLoading();
-
             var data = {
                 weight: this.weight.weight
             };
 
-            this.$http.put('/api/weights/' + this.weight.id, data).then(function (response) {
+            HelpersRepository.put('/api/weights/' + this.weight.id, data, 'Weight entered', function (response) {
                 this.weight = response.data;
                 this.editingWeight = false;
-                $.event.trigger('provide-feedback', ['Weight updated', 'success']);
-                store.hideLoading();
-            }, function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
+            }.bind(this));
         },
 
         /**
@@ -96,16 +85,12 @@ module.exports = {
         },
 
         /**
-         *
-         */
-        getWeightForTheDay: function () {
-            store.showLoading();
-            this.$http.get('api/weights/' + this.date.sql).then(function (response) {
+        * @param weight
+        */
+        getWeightForTheDay: function (weight) {
+            HelpersRepository.get('api/weights/' + this.date.sql, function (response) {
                 this.weight = response.data;
-                store.hideLoading();
-            }, function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
+            }.bind(this));
         },
 
         /**
@@ -120,15 +105,6 @@ module.exports = {
                 that.getWeightForTheDay();
             });
         },
-
-        /**
-         *
-         * @param response
-         */
-        handleResponseError: function (response) {
-            $.event.trigger('response-error', [response]);
-            this.showLoading = false;
-        }
     },
     props: [
 

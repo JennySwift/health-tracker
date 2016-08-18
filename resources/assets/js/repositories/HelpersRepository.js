@@ -54,6 +54,23 @@ module.exports = {
 
     /**
      *
+     */
+    put: function (url, data, feedbackMessage, callback) {
+        store.showLoading();
+        Vue.http.put(url, data).then(function (response) {
+            callback(response);
+            store.hideLoading();
+
+            if (feedbackMessage) {
+                $.event.trigger('provide-feedback', [feedbackMessage, 'success']);
+            }
+        }, function (response) {
+            HelpersRepository.handleResponseError(response);
+        });
+    },
+
+    /**
+     *
      * @param array
      * @param id
      * @returns {*}
