@@ -37,7 +37,7 @@ module.exports = {
 
             HelpersRepository.put('/api/exercises/' + this.selectedExercise.id, data, 'Exercise updated', function (response) {
                 this.selectedExercise = response.data.data;
-                store.updateExercise(response.data.data);
+                store.update(response.data.data, 'exercises');
                 this.showPopup = false;
                 $("#exercise-step-number").val("");
             }.bind(this));
@@ -48,7 +48,7 @@ module.exports = {
         */
         deleteExercise: function () {
             HelpersRepository.delete('/api/exercises/' + this.selectedExercise.id, 'Exercise deleted', function (response) {
-                store.deleteExercise(this.selectedExercise);
+                store.delete(this.selectedExercise, 'exercises');
                 this.showPopup = false;
                 router.go(this.redirectTo);
             }.bind(this));

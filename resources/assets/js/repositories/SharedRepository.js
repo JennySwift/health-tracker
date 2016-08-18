@@ -37,6 +37,16 @@ module.exports = {
 
     /**
      *
+     * @param date
+     */
+    setDate: function (date) {
+        this.state.date.typed = Date.create(date).format('{dd}/{MM}/{yyyy}');
+        this.state.date.long = HelpersRepository.formatDateToLong(date);
+        this.state.date.sql = HelpersRepository.formatDateToSql(date);
+    },
+
+    /**
+     *
      */
     getExercises: function () {
         HelpersRepository.get('/api/exercises', function (response) {
@@ -50,22 +60,6 @@ module.exports = {
     getExerciseEntriesForTheDay: function () {
         HelpersRepository.get('/api/exerciseEntries/' + this.state.date.sql, function (response) {
             store.state.exerciseEntries = response.data;
-        }.bind(this));
-    },
-
-    /**
-     *
-     */
-    insertExerciseSet: function (exercise) {
-        var data = {
-            date: this.state.date.sql,
-            exercise_id: exercise.id,
-            exerciseSet: true
-        };
-
-        HelpersRepository.post('/api/exerciseEntries', data, 'Set added', function (response) {
-            store.state.exerciseEntries = response.data;
-            exercise.lastDone = 0;
         }.bind(this));
     },
 
@@ -87,34 +81,6 @@ module.exports = {
             store.state.timers = response.data;
         }.bind(this));
     },
-    
-    /**
-     * 
-     * @param timer
-     */
-    addTimer: function (timer, timerIsManual) {
-        if (store.state.date.sql === HelpersRepository.formatDateToSql() || timerIsManual) {
-            //Only add the timer if the date is on today or the timer is a manual entry
-            store.state.timers.push(timer);
-        }
-    },
-    
-    /**
-    *
-    * @param timer
-    */
-    deleteTimer: function (timer) {
-        this.state.timers = HelpersRepository.deleteById(this.state.timers, timer.id);
-    },
-
-    /**
-    *
-    * @param timer
-    */
-    updateTimer: function (timer) {
-        var index = HelpersRepository.findIndexById(this.state.timers, timer.id);
-        this.state.timers.$set(index, timer);
-    },
 
     /**
      *
@@ -124,39 +90,6 @@ module.exports = {
             store.state.activities = response.data;
             $.event.trigger('activities-loaded');
         }.bind(this));
-    },
-
-    /**
-     * 
-     * @param activity
-     */
-    addActivity: function (activity) {
-        store.state.activities.push(activity);
-    },
-    
-    /**
-    *
-    * @param activity
-    */
-    updateActivity: function (activity) {
-        var index = HelpersRepository.findIndexById(this.state.activities, activity.id);
-        this.state.activities.$set(index, activity);
-    },
-    
-    /**
-    *
-    * @param activity
-    */
-    deleteActivity: function (activity) {
-        this.state.activities = HelpersRepository.deleteById(this.state.activities, activity.id);
-    },
-
-    /**
-    *
-    * @param series
-    */
-    deleteExerciseSeries: function (series) {
-        this.state.exerciseSeries = HelpersRepository.deleteById(this.state.exerciseSeries, series.id);
     },
 
     /**
@@ -170,55 +103,6 @@ module.exports = {
 
     /**
      *
-     * @param exerciseUnit
-     */
-    addExerciseUnit: function (exerciseUnit) {
-        store.state.exerciseUnits.push(exerciseUnit);
-    },
-
-    /**
-    *
-    * @param exerciseUnit
-    */
-    updateExerciseUnit: function (exerciseUnit) {
-        var index = HelpersRepository.findIndexById(this.state.exerciseUnits, exerciseUnit.id);
-        this.state.exerciseUnits.$set(index, exerciseUnit);
-    },
-
-    /**
-    *
-    * @param exercise
-    */
-    deleteExercise: function (exercise) {
-        this.state.exercises = HelpersRepository.deleteById(this.state.exercises, exercise.id);
-    },
-
-    /**
-    *
-    * @param exerciseUnit
-    */
-    deleteExerciseUnit: function (exerciseUnit) {
-        this.state.exerciseUnits = HelpersRepository.deleteById(this.state.exerciseUnits, exerciseUnit.id);
-    },
-
-    /**
-     *
-     * @param exercise
-     */
-    addExercise: function (exercise) {
-        store.state.exercises.push(exercise);
-    },
-
-    /**
-     *
-     * @param series
-     */
-    addSeries: function (series) {
-        store.state.exerciseSeries.push(series);
-    },
-
-    /**
-     *
      */
     getExercisePrograms: function () {
         HelpersRepository.get('/api/exercisePrograms', function (response) {
@@ -227,30 +111,58 @@ module.exports = {
     },
 
     /**
-    *
-    * @param exercise
-    */
-    updateExercise: function (exercise) {
-        var index = HelpersRepository.findIndexById(this.state.exercises, exercise.id);
-        this.state.exercises.$set(index, exercise);
+     * 
+     * @param timer
+     * @param timerIsManual
+     */
+    addTimer: function (timer, timerIsManual) {
+        if (store.state.date.sql === HelpersRepository.formatDateToSql() || timerIsManual) {
+            //Only add the timer if the date is on today or the timer is a manual entry
+            store.state.timers.push(timer);
+        }
     },
 
     /**
-    *
-    * @param series
-    */
-    updateExerciseSeries: function (series) {
-        var index = HelpersRepository.findIndexById(this.state.exerciseSeries, series.id);
-        this.state.exerciseSeries.$set(index, series);
+     *
+     */
+    insertExerciseSet: function (exercise) {
+        var data = {
+            date: this.state.date.sql,
+            exercise_id: exercise.id,
+            exerciseSet: true
+        };
+
+        HelpersRepository.post('/api/exerciseEntries', data, 'Set added', function (response) {
+            store.state.exerciseEntries = response.data;
+            exercise.lastDone = 0;
+        }.bind(this));
     },
 
     /**
      * 
-     * @param date
+     * @param item
+     * @param propertyName
      */
-    setDate: function (date) {
-        this.state.date.typed = Date.create(date).format('{dd}/{MM}/{yyyy}');
-        this.state.date.long = HelpersRepository.formatDateToLong(date);
-        this.state.date.sql = HelpersRepository.formatDateToSql(date);
+    add: function (item, propertyName) {
+        store.state[propertyName].push(item);
+    },
+
+    /**
+     *
+     * @param item
+     * @param propertyName
+     */
+    update: function (item, propertyName) {
+        var index = HelpersRepository.findIndexById(this.state[propertyName], item.id);
+        this.state[propertyName].$set(index, item);
+    },
+
+    /**
+     *
+     * @param item
+     * @param propertyName
+     */
+    delete: function (item, propertyName) {
+        this.state[propertyName] = HelpersRepository.deleteById(this.state[propertyName], item.id);
     }
 };

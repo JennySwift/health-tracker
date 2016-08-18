@@ -22,7 +22,7 @@ module.exports = {
             };
 
             HelpersRepository.put('/api/exerciseSeries/' + this.selectedSeries.id, data, 'Series updated', function (response) {
-                store.updateExerciseSeries(response.data);
+                store.update(response.data, 'exerciseSeries');
                 this.showPopup = false;
             }.bind(this));
         },
@@ -32,7 +32,7 @@ module.exports = {
         */
         deleteSeries: function () {
             HelpersRepository.delete('/api/exerciseSeries/' + this.selectedSeries.id, 'Series deleted', function (response) {
-                store.deleteExerciseSeries(this.selectedSeries);
+                store.delete(this.selectedSeries, 'exerciseSeries');
             }.bind(this));
         },
 

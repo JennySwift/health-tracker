@@ -24799,6 +24799,16 @@
 	
 	    /**
 	     *
+	     * @param date
+	     */
+	    setDate: function (date) {
+	        this.state.date.typed = Date.create(date).format('{dd}/{MM}/{yyyy}');
+	        this.state.date.long = HelpersRepository.formatDateToLong(date);
+	        this.state.date.sql = HelpersRepository.formatDateToSql(date);
+	    },
+	
+	    /**
+	     *
 	     */
 	    getExercises: function () {
 	        HelpersRepository.get('/api/exercises', function (response) {
@@ -24812,22 +24822,6 @@
 	    getExerciseEntriesForTheDay: function () {
 	        HelpersRepository.get('/api/exerciseEntries/' + this.state.date.sql, function (response) {
 	            store.state.exerciseEntries = response.data;
-	        }.bind(this));
-	    },
-	
-	    /**
-	     *
-	     */
-	    insertExerciseSet: function (exercise) {
-	        var data = {
-	            date: this.state.date.sql,
-	            exercise_id: exercise.id,
-	            exerciseSet: true
-	        };
-	
-	        HelpersRepository.post('/api/exerciseEntries', data, 'Set added', function (response) {
-	            store.state.exerciseEntries = response.data;
-	            exercise.lastDone = 0;
 	        }.bind(this));
 	    },
 	
@@ -24849,34 +24843,6 @@
 	            store.state.timers = response.data;
 	        }.bind(this));
 	    },
-	    
-	    /**
-	     * 
-	     * @param timer
-	     */
-	    addTimer: function (timer, timerIsManual) {
-	        if (store.state.date.sql === HelpersRepository.formatDateToSql() || timerIsManual) {
-	            //Only add the timer if the date is on today or the timer is a manual entry
-	            store.state.timers.push(timer);
-	        }
-	    },
-	    
-	    /**
-	    *
-	    * @param timer
-	    */
-	    deleteTimer: function (timer) {
-	        this.state.timers = HelpersRepository.deleteById(this.state.timers, timer.id);
-	    },
-	
-	    /**
-	    *
-	    * @param timer
-	    */
-	    updateTimer: function (timer) {
-	        var index = HelpersRepository.findIndexById(this.state.timers, timer.id);
-	        this.state.timers.$set(index, timer);
-	    },
 	
 	    /**
 	     *
@@ -24886,39 +24852,6 @@
 	            store.state.activities = response.data;
 	            $.event.trigger('activities-loaded');
 	        }.bind(this));
-	    },
-	
-	    /**
-	     * 
-	     * @param activity
-	     */
-	    addActivity: function (activity) {
-	        store.state.activities.push(activity);
-	    },
-	    
-	    /**
-	    *
-	    * @param activity
-	    */
-	    updateActivity: function (activity) {
-	        var index = HelpersRepository.findIndexById(this.state.activities, activity.id);
-	        this.state.activities.$set(index, activity);
-	    },
-	    
-	    /**
-	    *
-	    * @param activity
-	    */
-	    deleteActivity: function (activity) {
-	        this.state.activities = HelpersRepository.deleteById(this.state.activities, activity.id);
-	    },
-	
-	    /**
-	    *
-	    * @param series
-	    */
-	    deleteExerciseSeries: function (series) {
-	        this.state.exerciseSeries = HelpersRepository.deleteById(this.state.exerciseSeries, series.id);
 	    },
 	
 	    /**
@@ -24932,55 +24865,6 @@
 	
 	    /**
 	     *
-	     * @param exerciseUnit
-	     */
-	    addExerciseUnit: function (exerciseUnit) {
-	        store.state.exerciseUnits.push(exerciseUnit);
-	    },
-	
-	    /**
-	    *
-	    * @param exerciseUnit
-	    */
-	    updateExerciseUnit: function (exerciseUnit) {
-	        var index = HelpersRepository.findIndexById(this.state.exerciseUnits, exerciseUnit.id);
-	        this.state.exerciseUnits.$set(index, exerciseUnit);
-	    },
-	
-	    /**
-	    *
-	    * @param exercise
-	    */
-	    deleteExercise: function (exercise) {
-	        this.state.exercises = HelpersRepository.deleteById(this.state.exercises, exercise.id);
-	    },
-	
-	    /**
-	    *
-	    * @param exerciseUnit
-	    */
-	    deleteExerciseUnit: function (exerciseUnit) {
-	        this.state.exerciseUnits = HelpersRepository.deleteById(this.state.exerciseUnits, exerciseUnit.id);
-	    },
-	
-	    /**
-	     *
-	     * @param exercise
-	     */
-	    addExercise: function (exercise) {
-	        store.state.exercises.push(exercise);
-	    },
-	
-	    /**
-	     *
-	     * @param series
-	     */
-	    addSeries: function (series) {
-	        store.state.exerciseSeries.push(series);
-	    },
-	
-	    /**
-	     *
 	     */
 	    getExercisePrograms: function () {
 	        HelpersRepository.get('/api/exercisePrograms', function (response) {
@@ -24989,31 +24873,59 @@
 	    },
 	
 	    /**
-	    *
-	    * @param exercise
-	    */
-	    updateExercise: function (exercise) {
-	        var index = HelpersRepository.findIndexById(this.state.exercises, exercise.id);
-	        this.state.exercises.$set(index, exercise);
+	     * 
+	     * @param timer
+	     * @param timerIsManual
+	     */
+	    addTimer: function (timer, timerIsManual) {
+	        if (store.state.date.sql === HelpersRepository.formatDateToSql() || timerIsManual) {
+	            //Only add the timer if the date is on today or the timer is a manual entry
+	            store.state.timers.push(timer);
+	        }
 	    },
 	
 	    /**
-	    *
-	    * @param series
-	    */
-	    updateExerciseSeries: function (series) {
-	        var index = HelpersRepository.findIndexById(this.state.exerciseSeries, series.id);
-	        this.state.exerciseSeries.$set(index, series);
+	     *
+	     */
+	    insertExerciseSet: function (exercise) {
+	        var data = {
+	            date: this.state.date.sql,
+	            exercise_id: exercise.id,
+	            exerciseSet: true
+	        };
+	
+	        HelpersRepository.post('/api/exerciseEntries', data, 'Set added', function (response) {
+	            store.state.exerciseEntries = response.data;
+	            exercise.lastDone = 0;
+	        }.bind(this));
 	    },
 	
 	    /**
 	     * 
-	     * @param date
+	     * @param item
+	     * @param propertyName
 	     */
-	    setDate: function (date) {
-	        this.state.date.typed = Date.create(date).format('{dd}/{MM}/{yyyy}');
-	        this.state.date.long = HelpersRepository.formatDateToLong(date);
-	        this.state.date.sql = HelpersRepository.formatDateToSql(date);
+	    add: function (item, propertyName) {
+	        store.state[propertyName].push(item);
+	    },
+	
+	    /**
+	     *
+	     * @param item
+	     * @param propertyName
+	     */
+	    update: function (item, propertyName) {
+	        var index = HelpersRepository.findIndexById(this.state[propertyName], item.id);
+	        this.state[propertyName].$set(index, item);
+	    },
+	
+	    /**
+	     *
+	     * @param item
+	     * @param propertyName
+	     */
+	    delete: function (item, propertyName) {
+	        this.state[propertyName] = HelpersRepository.deleteById(this.state[propertyName], item.id);
 	    }
 	};
 
@@ -42295,7 +42207,7 @@
 	            var data = ExercisesRepository.setData(this.newExercise);
 	
 	            HelpersRepository.post('/api/exercises', data, 'Exercise created', function (response) {
-	                store.addExercise(response.data);
+	                store.add(response.data, 'exercises');
 	            }.bind(this));
 	        },
 	    },
@@ -42571,7 +42483,7 @@
 	            };
 	
 	            HelpersRepository.put('/api/exerciseSeries/' + this.selectedSeries.id, data, 'Series updated', function (response) {
-	                store.updateExerciseSeries(response.data);
+	                store.update(response.data, 'exerciseSeries');
 	                this.showPopup = false;
 	            }.bind(this));
 	        },
@@ -42581,7 +42493,7 @@
 	        */
 	        deleteSeries: function () {
 	            HelpersRepository.delete('/api/exerciseSeries/' + this.selectedSeries.id, 'Series deleted', function (response) {
-	                store.deleteExerciseSeries(this.selectedSeries);
+	                store.delete(this.selectedSeries, 'exerciseSeries');
 	            }.bind(this));
 	        },
 	
@@ -42636,7 +42548,7 @@
 	            };
 	
 	            HelpersRepository.post('/api/exerciseSeries', data, 'Series created', function (response) {
-	                store.addSeries(response.data.data);
+	                store.add(response.data.data, 'exerciseSeries');
 	                this.newSeries.name = '';
 	            }.bind(this));
 	        }
@@ -42692,7 +42604,7 @@
 	
 	            HelpersRepository.put('/api/exercises/' + this.selectedExercise.id, data, 'Exercise updated', function (response) {
 	                this.selectedExercise = response.data.data;
-	                store.updateExercise(response.data.data);
+	                store.update(response.data.data, 'exercises');
 	                this.showPopup = false;
 	                $("#exercise-step-number").val("");
 	            }.bind(this));
@@ -42703,7 +42615,7 @@
 	        */
 	        deleteExercise: function () {
 	            HelpersRepository.delete('/api/exercises/' + this.selectedExercise.id, 'Exercise deleted', function (response) {
-	                store.deleteExercise(this.selectedExercise);
+	                store.delete(this.selectedExercise, 'exercises');
 	                this.showPopup = false;
 	                router.go(this.redirectTo);
 	            }.bind(this));
@@ -43095,7 +43007,7 @@
 	            };
 	
 	            HelpersRepository.post('/api/exerciseUnits', data, 'Unit added', function (response) {
-	                store.addExerciseUnit(response.data.data);
+	                store.add(response.data.data, 'exerciseUnits');
 	                $("#create-new-exercise-unit").val("");
 	                this.clearFields();
 	            }.bind(this));
@@ -43106,7 +43018,7 @@
 	        */
 	        deleteUnit: function (unit) {
 	            HelpersRepository.delete('/api/exerciseUnits/' + unit.id, 'Unit deleted', function (response) {
-	                store.deleteExerciseUnit(unit);
+	                store.delete(unit, 'exerciseUnits');
 	                this.showPopup = false;
 	                router.go(this.redirectTo);
 	            }.bind(this));
@@ -51574,7 +51486,7 @@
 	            };
 	
 	            HelpersRepository.post('/api/activities', data, 'Activity created', function (response) {
-	                store.addActivity(response.data);
+	                store.add(response.data, 'activities');
 	            }.bind(this));
 	        },
 	
@@ -51756,7 +51668,7 @@
 	            };
 	
 	            HelpersRepository.put('/api/timers/' + this.selectedTimer.id, data, 'Timer updated', function (response) {
-	                store.updateTimer(response.data);
+	                store.update(response.data, 'timers');
 	                this.showPopup = false;
 	            }.bind(this));
 	        },
@@ -51766,7 +51678,7 @@
 	        */
 	        deleteTimer: function () {
 	            HelpersRepository.delete('/api/timers/' + this.selectedTimer.id, 'Timer deleted', function (response) {
-	                store.deleteTimer(this.selectedTimer);
+	                store.delete(this.selectedTimer, 'timers');
 	                $.event.trigger('timer-deleted', [this.selectedTimer]);
 	                this.showPopup = false;
 	            }.bind(this));
@@ -65996,7 +65908,7 @@
 	            };
 	
 	            HelpersRepository.put('/api/activities/' + this.selectedActivity.id, data, 'Activity updated', function (response) {
-	                store.updateActivity(response.data);
+	                store.update(response.data, 'activities');
 	                this.showPopup = false;
 	            }.bind(this));
 	        },
@@ -66007,7 +65919,7 @@
 	        deleteActivity: function () {
 	            if (confirm("Really? The timers for the activity will be deleted, too.")) {
 	                HelpersRepository.delete('/api/activities/' + this.selectedActivity.id, 'Activity deleted', function (response) {
-	                    store.deleteActivity(this.selectedActivity);
+	                    store.delete(this.selectedActivity, 'activities');
 	                    this.showPopup = false;
 	                }.bind(this));
 	            }

@@ -29,7 +29,7 @@ module.exports = {
             };
 
             HelpersRepository.post('/api/activities', data, 'Activity created', function (response) {
-                store.addActivity(response.data);
+                store.add(response.data, 'activities');
             }.bind(this));
         },
 

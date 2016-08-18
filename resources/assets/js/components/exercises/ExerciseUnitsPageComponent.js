@@ -23,7 +23,7 @@ module.exports = {
             };
 
             HelpersRepository.post('/api/exerciseUnits', data, 'Unit added', function (response) {
-                store.addExerciseUnit(response.data.data);
+                store.add(response.data.data, 'exerciseUnits');
                 $("#create-new-exercise-unit").val("");
                 this.clearFields();
             }.bind(this));
@@ -34,7 +34,7 @@ module.exports = {
         */
         deleteUnit: function (unit) {
             HelpersRepository.delete('/api/exerciseUnits/' + unit.id, 'Unit deleted', function (response) {
-                store.deleteExerciseUnit(unit);
+                store.delete(unit, 'exerciseUnits');
                 this.showPopup = false;
                 router.go(this.redirectTo);
             }.bind(this));

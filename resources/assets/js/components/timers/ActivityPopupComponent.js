@@ -21,7 +21,7 @@ module.exports = {
             };
 
             HelpersRepository.put('/api/activities/' + this.selectedActivity.id, data, 'Activity updated', function (response) {
-                store.updateActivity(response.data);
+                store.update(response.data, 'activities');
                 this.showPopup = false;
             }.bind(this));
         },
@@ -32,7 +32,7 @@ module.exports = {
         deleteActivity: function () {
             if (confirm("Really? The timers for the activity will be deleted, too.")) {
                 HelpersRepository.delete('/api/activities/' + this.selectedActivity.id, 'Activity deleted', function (response) {
-                    store.deleteActivity(this.selectedActivity);
+                    store.delete(this.selectedActivity, 'activities');
                     this.showPopup = false;
                 }.bind(this));
             }

@@ -29,7 +29,7 @@ module.exports = {
             };
 
             HelpersRepository.put('/api/timers/' + this.selectedTimer.id, data, 'Timer updated', function (response) {
-                store.updateTimer(response.data);
+                store.update(response.data, 'timers');
                 this.showPopup = false;
             }.bind(this));
         },
@@ -39,7 +39,7 @@ module.exports = {
         */
         deleteTimer: function () {
             HelpersRepository.delete('/api/timers/' + this.selectedTimer.id, 'Timer deleted', function (response) {
-                store.deleteTimer(this.selectedTimer);
+                store.delete(this.selectedTimer, 'timers');
                 $.event.trigger('timer-deleted', [this.selectedTimer]);
                 this.showPopup = false;
             }.bind(this));

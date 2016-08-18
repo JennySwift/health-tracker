@@ -27,7 +27,7 @@ module.exports = {
             var data = ExercisesRepository.setData(this.newExercise);
 
             HelpersRepository.post('/api/exercises', data, 'Exercise created', function (response) {
-                store.addExercise(response.data);
+                store.add(response.data, 'exercises');
             }.bind(this));
         },
     },

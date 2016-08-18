@@ -17,7 +17,7 @@ module.exports = {
             };
 
             HelpersRepository.post('/api/exerciseSeries', data, 'Series created', function (response) {
-                store.addSeries(response.data.data);
+                store.add(response.data.data, 'exerciseSeries');
                 this.newSeries.name = '';
             }.bind(this));
         }
