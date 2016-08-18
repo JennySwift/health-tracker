@@ -1,4 +1,4 @@
-var ExercisesRepository = {
+module.exports = {
 
     /**
      *

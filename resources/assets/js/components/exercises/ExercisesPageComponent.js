@@ -140,8 +140,7 @@ module.exports = {
          */
         showExercisePopup: function (exercise) {
             HelpersRepository.get('/api/exercises/' + exercise.id, function (response) {
-                this.selectedSeries = response.data;
-                $.event.trigger('show-exercise-popup');
+                $.event.trigger('show-exercise-popup', response.data);
             }.bind(this));
         },
 

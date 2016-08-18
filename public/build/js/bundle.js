@@ -24776,13 +24776,6 @@
 	            long: HelpersRepository.formatDateToLong('today'),
 	            sql: HelpersRepository.formatDateToSql('today')
 	        },
-	        selectedExercise: {
-	            program: {},
-	            series: {},
-	            defaultUnit: {
-	                data: {}
-	            }
-	        },
 	        exerciseUnits: [],
 	        programs: [],
 	        activities: [],
@@ -24971,6 +24964,14 @@
 	
 	    /**
 	    *
+	    * @param exercise
+	    */
+	    deleteExercise: function (exercise) {
+	        this.state.exercises = HelpersRepository.deleteById(this.state.exercises, exercise.id);
+	    },
+	
+	    /**
+	    *
 	    * @param exerciseUnit
 	    */
 	    deleteExerciseUnit: function (exerciseUnit) {
@@ -25023,6 +25024,14 @@
 	    handleResponseError: function (response) {
 	        $.event.trigger('response-error', [response]);
 	        store.hideLoading();
+	    },
+	
+	    /**
+	     *
+	     * @param object
+	     */
+	    clone: function (object) {
+	        return JSON.parse(JSON.stringify(object))
 	    },
 	
 	    /**
@@ -42709,56 +42718,62 @@
 
 /***/ },
 /* 47 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
+	var ExercisesRepository = __webpack_require__(51);
+	
 	module.exports = {
 	    template: '#exercise-popup-template',
 	    data: function () {
 	        return {
-	            showPopup: false
+	            showPopup: false,
+	            selectedExercise: {
+	                program: {},
+	                series: {},
+	                defaultUnit: {
+	                    data: {}
+	                }
+	            },
+	            shared: store.state
 	        };
+	    },
+	    computed: {
+	        units: function () {
+	          return this.shared.exerciseUnits;
+	        },
+	        programs: function () {
+	            return this.shared.programs;
+	        },
+	        exerciseSeries: function () {
+	            return this.shared.exerciseSeries;
+	        }
 	    },
 	    components: {},
 	    methods: {
 	
 	        /**
-	         *
-	         */
+	        *
+	        */
 	        updateExercise: function () {
-	            store.showLoading();
-	
 	            var data = ExercisesRepository.setData(this.selectedExercise);
 	
-	            this.$http.put('/api/exercises/' + this.selectedExercise.id, data).then(function (response) {
-	                this.selectedExercise = response.data;
-	                store.updateExercise(response.data);
-	
-	
+	            HelpersRepository.put('/api/exercises/' + this.selectedExercise.id, data, 'Exercise updated', function (response) {
+	                this.selectedExercise = response.data.data;
+	                store.updateExercise(response.data.data);
 	                this.showPopup = false;
-	                $.event.trigger('provide-feedback', ['Exercise updated', 'success']);
-	                store.hideLoading();
 	                $("#exercise-step-number").val("");
-	            }, function (response) {
-	                HelpersRepository.handleResponseError(response);
-	            });
+	            }.bind(this));
 	        },
 	
 	        /**
-	         *
-	         */
+	        *
+	        */
 	        deleteExercise: function () {
-	            if (confirm("Are you sure?")) {
-	                store.showLoading();
-	                this.$http.delete('/api/exercises/' + this.selectedExercise.id).then(function (response) {
-	                    var index = _.indexOf(this.exercises, _.findWhere(this.exercises, {id: this.selectedExercise.id}));
-	                    this.exercises = _.without(this.exercises, this.exercises[index]);
-	                    $.event.trigger('provide-feedback', ['Exercise deleted', 'success']);
-	                    this.showPopup = false;
-	                    store.hideLoading();
-	                }, function (response) {
-	                    HelpersRepository.handleResponseError(response);
-	                });
-	            }
+	            HelpersRepository.delete('/api/exercises/' + this.selectedExercise.id, 'Exercise deleted', function (response) {
+	                store.deleteExercise(this.selectedExercise);
+	                this.showPopup = false;
+	                router.go(this.redirectTo);
+	            }.bind(this));
 	        },
 	
 	        /**
@@ -42766,17 +42781,14 @@
 	         */
 	        listen: function () {
 	            var that = this;
-	            $(document).on('show-exercise-popup', function (event) {
+	            $(document).on('show-exercise-popup', function (event, exercise) {
+	                that.selectedExercise = HelpersRepository.clone(exercise);
 	                that.showPopup = true;
 	            });
 	        }
 	    },
 	    props: [
-	        'selectedExercise',
-	        'exercises',
-	        'exerciseSeries',
-	        'programs',
-	        'units'
+	
 	    ],
 	    ready: function () {
 	        this.listen();
@@ -43005,8 +43017,7 @@
 	         */
 	        showExercisePopup: function (exercise) {
 	            HelpersRepository.get('/api/exercises/' + exercise.id, function (response) {
-	                this.selectedSeries = response.data;
-	                $.event.trigger('show-exercise-popup');
+	                $.event.trigger('show-exercise-popup', response.data);
 	            }.bind(this));
 	        },
 	
@@ -43091,7 +43102,7 @@
 /* 51 */
 /***/ function(module, exports) {
 
-	var ExercisesRepository = {
+	module.exports = {
 	
 	    /**
 	     *

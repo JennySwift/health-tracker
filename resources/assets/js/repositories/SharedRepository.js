@@ -14,13 +14,6 @@ module.exports = {
             long: HelpersRepository.formatDateToLong('today'),
             sql: HelpersRepository.formatDateToSql('today')
         },
-        selectedExercise: {
-            program: {},
-            series: {},
-            defaultUnit: {
-                data: {}
-            }
-        },
         exerciseUnits: [],
         programs: [],
         activities: [],
@@ -205,6 +198,14 @@ module.exports = {
     updateExerciseUnit: function (exerciseUnit) {
         var index = HelpersRepository.findIndexById(this.state.exerciseUnits, exerciseUnit.id);
         this.state.exerciseUnits.$set(index, exerciseUnit);
+    },
+
+    /**
+    *
+    * @param exercise
+    */
+    deleteExercise: function (exercise) {
+        this.state.exercises = HelpersRepository.deleteById(this.state.exercises, exercise.id);
     },
 
     /**
