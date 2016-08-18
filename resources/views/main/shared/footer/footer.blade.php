@@ -7,7 +7,6 @@
 
 {{--Journal--}}
 @include('main.journal.journal-page-component')
-@include('main.new-sleep-entry')
 
 {{--Timers--}}
 @include('main.timers.timers-page-component')

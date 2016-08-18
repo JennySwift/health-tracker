@@ -96,7 +96,6 @@
 	Vue.component('series-popup', __webpack_require__(45));
 	Vue.component('new-series', __webpack_require__(46));
 	Vue.component('exercise-popup', __webpack_require__(47));
-	Vue.component('new-sleep-entry', __webpack_require__(48));
 	
 	Vue.component('timer-popup', __webpack_require__(63));
 	Vue.component('new-timer', __webpack_require__(64));
@@ -42738,65 +42737,7 @@
 
 
 /***/ },
-/* 48 */
-/***/ function(module, exports) {
-
-	module.exports = {
-	    template: '#new-sleep-entry-template',
-	    data: function () {
-	        return {
-	            date: store.state.date,
-	            newSleepEntry: {
-	                startedYesterday: true
-	            },
-	            showPopup: false
-	        };
-	    },
-	    components: {},
-	    methods: {
-	        /**
-	         *
-	         */
-	        insertSleepEntry: function () {
-	            $.event.trigger('show-loading');
-	            var data = TimersRepository.setData(this.newSleepEntry, this.date.sql);
-	
-	            this.$http.post('/api/timers', data).then(function (response) {
-	                this.showPopup = false;
-	                $.event.trigger('provide-feedback', ['Sleep entry created', 'success']);
-	                $.event.trigger('hide-loading');
-	            }, function (response) {
-	                HelpersRepository.handleResponseError(response);
-	            });
-	        },
-	
-	        /**
-	         *
-	         */
-	        closePopup: function ($event) {
-	            HelpersRepository.closePopup($event, this);
-	        },
-	
-	        /**
-	         *
-	         */
-	        listen: function () {
-	            var that = this;
-	            $(document).on('show-new-sleep-entry-popup', function (event) {
-	                that.showPopup = true;
-	            });
-	        }
-	    },
-	    props: [
-	        //data to be received from parent
-	    ],
-	    ready: function () {
-	        this.listen();
-	    }
-	};
-
-
-/***/ },
+/* 48 */,
 /* 49 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -43421,11 +43362,7 @@
 /* 55 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(17);
-	//This didn't work
-	// require('bootstrap-wysiwyg');
 	var MediumEditor = __webpack_require__(56);
-	// require('summernote');
 	
 	module.exports = {
 	    template: '#journal-page-template',
@@ -43438,23 +43375,19 @@
 	    },
 	    components: {},
 	    methods: {
+	
 	        /**
 	         *
 	         */
 	        getJournalEntry: function () {
-	            store.showLoading();
-	            this.$http.get('api/journal/' + this.date.sql).then(function (response) {
+	            HelpersRepository.get('api/journal/' + this.date.sql, function (response) {
 	                this.journalEntry = response.data.data;
 	                this.$nextTick(function () {
 	                    var editor = new MediumEditor('.wysiwyg', {
 	                        // placeholder: false
 	                    });
 	                });
-	
-	                store.hideLoading();
-	            }, function (response) {
-	                HelpersRepository.handleResponseError(response);
-	            });
+	            }.bind(this));
 	        },
 	
 	        /**
@@ -43464,8 +43397,8 @@
 	        selectJournalEntryFromFilterResults: function (entry) {
 	            this.date = {
 	                typed: entry.date,
-	                sql: moment(entry.date, 'DD/MM/YY').format('YYYY-MM-DD HH:mm:ss')
-	            }
+	                sql: HelpersRepository.formatToDateTime(entry.date)
+	            };
 	            this.getJournalEntry();
 	        },
 	
@@ -43475,14 +43408,9 @@
 	        filterJournalEntries: function () {
 	            var typing = $("#filter-journal").val();
 	
-	            store.showLoading();
-	            this.$http.get('/api/journal?typing=' + typing, function (response) {
-	                this.filterResults = response.data;
-	                store.hideLoading();
-	            })
-	                .error(function (response) {
-	                    HelpersRepository.handleResponseError(response);
-	                });
+	            HelpersRepository.get('/api/journal?typing=' + typing, function (response) {
+	                this.filterResults = response.data.data;
+	            }.bind(this));
 	        },
 	
 	        /**
@@ -43509,46 +43437,28 @@
 	        /**
 	         *
 	         */
-	        showNewSleepEntryPopup: function () {
-	            $.event.trigger('show-new-sleep-entry-popup');
-	        },
-	
-	        /**
-	         *
-	         */
 	        updateEntry: function () {
-	            store.showLoading();
-	
 	            var data = {
 	                text: $("#journal-entry").html()
 	            };
 	
-	            this.$http.put('/api/journal/' + this.journalEntry.id, data).then(function (response) {
+	            HelpersRepository.put('/api/journal/' + this.journalEntry.id, data, 'Entry updated', function (response) {
 	                this.journalEntry = response.data.data;
-	                $.event.trigger('provide-feedback', ['Entry updated', 'success']);
-	                store.hideLoading();
-	            }, function (response) {
-	                HelpersRepository.handleResponseError(response);
-	            });
+	            }.bind(this));
 	        },
 	
 	        /**
 	         *
 	         */
 	        insertEntry: function () {
-	            store.showLoading();
 	            var data = {
 	                date: this.date.sql,
 	                text: $("#journal-entry").html()
 	            };
 	
-	            this.$http.post('/api/journal', data).then(function (response) {
+	            HelpersRepository.post('/api/journal', data, 'Entry created', function (response) {
 	                this.journalEntry = response.data.data;
-	                $.event.trigger('provide-feedback', ['Entry created', 'success']);
-	                store.hideLoading();
-	            }, function (response) {
-	                HelpersRepository.handleResponseError(response);
-	            });
+	            }.bind(this));
 	        },
 	
 	        /**
@@ -43559,25 +43469,12 @@
 	            $(document).on('date-changed', function (event) {
 	                that.getJournalEntry();
 	            });
-	        },
-	
-	        /**
-	         *
-	         * @param response
-	         */
-	        handleResponseError: function (response) {
-	            $.event.trigger('response-error', [response]);
-	            this.showLoading = false;
 	        }
 	    },
 	    props: [
 	        //data to be received from parent
 	    ],
 	    ready: function () {
-	        // $(".wysiwyg").wysiwyg();
-	
-	        // new MediumEditor('.editable');
-	        // $('.wysiwyg').summernote();
 	        this.listen();
 	        this.getJournalEntry();
 	    }

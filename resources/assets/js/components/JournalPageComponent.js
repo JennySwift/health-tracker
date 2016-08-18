@@ -1,8 +1,4 @@
-require('bootstrap');
-//This didn't work
-// require('bootstrap-wysiwyg');
 var MediumEditor = require('medium-editor');
-// require('summernote');
 
 module.exports = {
     template: '#journal-page-template',
@@ -15,23 +11,19 @@ module.exports = {
     },
     components: {},
     methods: {
+
         /**
          *
          */
         getJournalEntry: function () {
-            store.showLoading();
-            this.$http.get('api/journal/' + this.date.sql).then(function (response) {
+            HelpersRepository.get('api/journal/' + this.date.sql, function (response) {
                 this.journalEntry = response.data.data;
                 this.$nextTick(function () {
                     var editor = new MediumEditor('.wysiwyg', {
                         // placeholder: false
                     });
                 });
-
-                store.hideLoading();
-            }, function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
+            }.bind(this));
         },
 
         /**
@@ -41,8 +33,8 @@ module.exports = {
         selectJournalEntryFromFilterResults: function (entry) {
             this.date = {
                 typed: entry.date,
-                sql: moment(entry.date, 'DD/MM/YY').format('YYYY-MM-DD HH:mm:ss')
-            }
+                sql: HelpersRepository.formatToDateTime(entry.date)
+            };
             this.getJournalEntry();
         },
 
@@ -52,14 +44,9 @@ module.exports = {
         filterJournalEntries: function () {
             var typing = $("#filter-journal").val();
 
-            store.showLoading();
-            this.$http.get('/api/journal?typing=' + typing, function (response) {
-                this.filterResults = response.data;
-                store.hideLoading();
-            })
-                .error(function (response) {
-                    HelpersRepository.handleResponseError(response);
-                });
+            HelpersRepository.get('/api/journal?typing=' + typing, function (response) {
+                this.filterResults = response.data.data;
+            }.bind(this));
         },
 
         /**
@@ -86,46 +73,28 @@ module.exports = {
         /**
          *
          */
-        showNewSleepEntryPopup: function () {
-            $.event.trigger('show-new-sleep-entry-popup');
-        },
-
-        /**
-         *
-         */
         updateEntry: function () {
-            store.showLoading();
-
             var data = {
                 text: $("#journal-entry").html()
             };
 
-            this.$http.put('/api/journal/' + this.journalEntry.id, data).then(function (response) {
+            HelpersRepository.put('/api/journal/' + this.journalEntry.id, data, 'Entry updated', function (response) {
                 this.journalEntry = response.data.data;
-                $.event.trigger('provide-feedback', ['Entry updated', 'success']);
-                store.hideLoading();
-            }, function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
+            }.bind(this));
         },
 
         /**
          *
          */
         insertEntry: function () {
-            store.showLoading();
             var data = {
                 date: this.date.sql,
                 text: $("#journal-entry").html()
             };
 
-            this.$http.post('/api/journal', data).then(function (response) {
+            HelpersRepository.post('/api/journal', data, 'Entry created', function (response) {
                 this.journalEntry = response.data.data;
-                $.event.trigger('provide-feedback', ['Entry created', 'success']);
-                store.hideLoading();
-            }, function (response) {
-                HelpersRepository.handleResponseError(response);
-            });
+            }.bind(this));
         },
 
         /**
@@ -136,25 +105,12 @@ module.exports = {
             $(document).on('date-changed', function (event) {
                 that.getJournalEntry();
             });
-        },
-
-        /**
-         *
-         * @param response
-         */
-        handleResponseError: function (response) {
-            $.event.trigger('response-error', [response]);
-            this.showLoading = false;
         }
     },
     props: [
         //data to be received from parent
     ],
     ready: function () {
-        // $(".wysiwyg").wysiwyg();
-
-        // new MediumEditor('.editable');
-        // $('.wysiwyg').summernote();
         this.listen();
         this.getJournalEntry();
     }
