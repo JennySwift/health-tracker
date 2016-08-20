@@ -58,7 +58,7 @@ module.exports = {
         listen: function () {
             var that = this;
             $(document).on('show-timer-popup', function (event, timer) {
-                that.selectedTimer = HelpersRepository.clone();
+                that.selectedTimer = HelpersRepository.clone(timer);
                 that.showPopup = true;
             });
         }
