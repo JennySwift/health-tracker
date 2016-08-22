@@ -56734,8 +56734,10 @@
 
 /***/ },
 /* 151 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
+	var ExercisesRepository = __webpack_require__(159);
+	
 	module.exports = {
 	    template: '#new-exercise-template',
 	    data: function () {

@@ -1,3 +1,5 @@
+var ExercisesRepository = require('../../repositories/ExercisesRepository');
+
 module.exports = {
     template: '#new-exercise-template',
     data: function () {
