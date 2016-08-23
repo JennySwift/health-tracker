@@ -35,7 +35,7 @@
         </exercise-popup>
 
 
-        <table class="table table-bordered">
+        <table id="exercises-table" class="table table-bordered">
             <tr>
                 <th class="big-screens">Step</th>
                 <th>Name</th>
