@@ -17,9 +17,18 @@
 						<th>x</th>
 					</tr>
 
-					<tr v-for="entry in entries">
+					<tr
+						v-for="entry in entries"
+						{{--is="entry-for-specific-exercise-and-date-and-unit"--}}
+						{{--:entry="entry"--}}
+					>
 						<td>@{{ entry.exercise.data.name }}</td>
-						<td>@{{ entry.quantity }}</td>
+						<td>
+							<input
+								v-model="entry.quantity"
+								v-on:keyup.13="updateExerciseEntry(entry)"
+							>
+						</td>
 						<td>@{{ entry.createdAt }}</td>
 						<td><i v-on:click="deleteExerciseEntry(entry)" class="delete-item fa fa-times"></i></td>
 					</tr>

@@ -161,27 +161,30 @@ class ExerciseEntriesTest extends TestCase {
 
     /**
      * @test
-     * @return void
      */
-//    public function it_can_update_an_exercise_entry()
-//    {
-//        $this->logInUser();
-//
-//        $unit = Unit::forCurrentUser()->where('for', 'food')->first();
-//
-//        $response = $this->call('PUT', '/api/foodUnits/'.$unit->id, [
-//            'name' => 'numbat'
-//        ]);
-//        $content = json_decode($response->getContent(), true)['data'];
-//
-//        $this->assertArrayHasKey('id', $content);
-//        $this->assertArrayHasKey('name', $content);
-//        $this->assertArrayHasKey('for', $content);
-//
-//        $this->assertEquals('numbat', $content['name']);
-//
-//        $this->assertEquals(200, $response->getStatusCode());
-//    }
+    public function it_can_update_an_exercise_entry()
+    {
+        DB::beginTransaction();
+        $this->logInUser();
+
+        $entry = Entry::forCurrentUser()->first();
+        $this->assertEquals(5, $entry->quantity);
+
+        $response = $this->call('PUT', '/api/exerciseEntries/'.$entry->id, [
+            'quantity' => 20
+        ]);
+        
+        $content = json_decode($response->getContent(), true);
+        //dd($content);
+
+        $this->checkExerciseEntryKeysExist($content);
+
+        $this->assertEquals(20, $content['quantity']);
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        DB::rollBack();
+    }
 
     /**
      * @test

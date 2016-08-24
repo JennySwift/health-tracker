@@ -112,6 +112,25 @@ class ExerciseEntriesController extends Controller
     }
 
     /**
+     * UPDATE /api/exerciseEntries/{exerciseEntries}
+     * @param Request $request
+     * @param Entry $entry
+     * @return Response
+     */
+    public function update(Request $request, Entry $entry)
+    {
+        // Create an array with the new fields merged
+        $data = array_compare($entry->toArray(), $request->only([
+            'quantity'
+        ]));
+
+        $entry->update($data);
+
+        $entry = $this->transform($this->createItem($entry, new ExerciseEntryTransformer))['data'];
+        return response($entry, Response::HTTP_OK);
+    }
+
+    /**
      *
      * @param Entry $entry
      * @return \Illuminate\Http\Response

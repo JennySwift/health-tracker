@@ -31,6 +31,21 @@ module.exports = {
                 HelpersRepository.handleResponseError(response);
             });
         },
+
+        /**
+        *
+        */
+        updateExerciseEntry: function (entry) {
+            $.event.trigger('show-loading');
+
+            var data = {
+                quantity: entry.quantity
+            };
+
+            HelpersRepository.put('/api/exerciseEntries/' + entry.id, data, 'Entry updated', function (response) {
+                
+            }.bind(this));
+        },
         
         /**
         *

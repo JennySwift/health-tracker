@@ -86,6 +86,15 @@ class Handler extends ExceptionHandler
             ], Response::HTTP_NOT_FOUND);
         }
 
+        if ($e instanceof Exception) {
+            if (!method_exists($e, 'getResponse') || !$e->getResponse()->getContent()) {
+                return response([
+                    'error' => $e->getMessage(),
+                    'status' => Response::HTTP_UNPROCESSABLE_ENTITY
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
+        }
+
         return parent::render($request, $e);
     }
 

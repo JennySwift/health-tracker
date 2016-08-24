@@ -26,4 +26,4 @@ Route::get('exerciseEntries/specificExerciseAndDateAndUnit', 'Exercises\Exercise
 //Index method, passing the date as a parameter
 Route::get('exerciseEntries/{date}', ['as' => 'api.exerciseEntries.index', 'uses' => 'Exercises\ExerciseEntriesController@index']);
 
-Route::resource('exerciseEntries', 'Exercises\ExerciseEntriesController', ['only' => ['store', 'destroy']]);
+Route::resource('exerciseEntries', 'Exercises\ExerciseEntriesController', ['only' => ['store', 'update', 'destroy']]);
