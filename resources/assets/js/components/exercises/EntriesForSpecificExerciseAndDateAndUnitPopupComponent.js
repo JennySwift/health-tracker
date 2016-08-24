@@ -43,7 +43,7 @@ module.exports = {
             };
 
             HelpersRepository.put('/api/exerciseEntries/' + entry.id, data, 'Entry updated', function (response) {
-                
+
             }.bind(this));
         },
         

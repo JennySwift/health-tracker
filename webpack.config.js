@@ -14,12 +14,23 @@ module.exports = {
     //this will put todo.bundle.js into /public/scripts
     output: {
         path: __dirname + "/public/build/js",
-        filename: "bundle.js"
+        filename: "bundle.js",
+        //For source maps after I started using vue-loader
+        devtoolModuleFilenameTemplate: function (info) {
+            if (info.resource.match(/\.vue$/)) {
+                $filename = info.allLoaders.match(/type=script/)
+                    ? info.resourcePath : 'generated';
+            }
+            else {
+                $filename = info.resourcePath;
+            }
+            return $filename;
+        }
     },
     plugins: [
         // new webpack.optimize.CommonsChunkPlugin(/* chunkName= */"vendor", /* filename= */"vendor.bundle.js")
     ],
-    devtool: 'source-map',
+    devtool: 'eval-source-map',
 
 
     //For vue-loader

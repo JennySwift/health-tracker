@@ -73,7 +73,7 @@ router.map({
         component: require('./components/EntriesPageComponent'),
     },
     '/exercises': {
-        component: require('./components/exercises/ExercisesPageComponent')
+        component: require('./components/exercises/ExercisesPageComponent.vue')
     },
     '/exercise-units': {
         component: require('./components/exercises/ExerciseUnitsPageComponent')
