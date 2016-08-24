@@ -157,6 +157,7 @@ class FoodsTest extends TestCase {
      */
     public function it_can_update_the_calories_for_a_food_and_one_of_its_units()
     {
+        $this->markTestIncomplete();
         DB::beginTransaction();
         $this->logInUser();
 
@@ -179,7 +180,7 @@ class FoodsTest extends TestCase {
         //Check calories
         $response = $this->apiCall('GET', '/api/foodUnits?includeCaloriesForSpecificFood=true&food_id=' . $food->id);
         $content = json_decode($response->getContent(), true);
-//        dd($content);
+        dd($content);
 
         $this->checkFoodUnitKeysExist($content[0]);
 

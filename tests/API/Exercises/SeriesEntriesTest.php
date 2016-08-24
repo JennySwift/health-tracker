@@ -30,8 +30,9 @@ class SeriesEntriesTest extends TestCase {
         $this->assertEquals('kneeling pushups', $content[0]['exercise']['data']['name']);
         $this->assertEquals('1.00', $content[0]['exercise']['data']['stepNumber']);
         $this->assertEquals(1, $content[0]['exercise']['data']['defaultUnit']['data']['id']);
-
+//        dd($content);
         //Check the kneeling pushups done today with reps
+        //Todo: This line fails sometimes, depending on the seeder
         $this->assertEquals(1, $content[0]['unit']['id']);
         $this->assertEquals('reps', $content[0]['unit']['name']);
 
