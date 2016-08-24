@@ -1,13 +1,14 @@
 <script id="exercise-popup-template" type="x-template">
 
-	<div v-show="showPopup" v-on:click="closePopup($event)" class="popup-outer">
-		
-		<div id="exercise-popup" class="popup-inner">
-
-			{{--<pre>@{{$data.exercises | json}}</pre>--}}
-			{{--<pre>@{{$data.selectedExercise | json}}</pre>--}}
-
-			<div class="content">
+	<div>
+		<popup
+		    :show-popup.sync="showPopup"
+		    id="exercise-popup"
+		    :redirect-to="redirectTo"
+		    :update="updateExercise"
+		    :destroy="deleteExercise"
+		>
+		    <div slot="content">
 				<h3 class="center">@{{  selectedExercise.name }}</h3>
 
 				<div class="flex">
@@ -116,34 +117,10 @@
 						</li>
 					</div>
 
-					{{--<div>--}}
-					{{--<h5 class="center">tags</h5>--}}
-
-					{{--<ul class="list-group">--}}
-					{{--<li--}}
-					{{--v-for="tag in exercise_tags"--}}
-					{{--class="list-group-item">--}}
-					{{--<span>@{{ tag.name }}</span>--}}
-
-					{{--<input--}}
-					{{--checklist-model=" selectedExercise.tag_ids"--}}
-					{{--checklist-value="tag.id"--}}
-					{{--type="checkbox">--}}
-					{{--</li>--}}
-					{{--</ul>--}}
-					{{--</div>--}}
-
 				</div>
-			</div>
-
-			<div class="buttons">
-				<button v-on:click="deleteExercise()" class="btn btn-danger save">Delete</button>
-				<button v-on:click="showPopup = false" class="btn btn-default">Cancel</button>
-				<button v-on:click="updateExercise()" class="btn btn-success save">Save</button>
-			</div>
-
-		</div>
-
+		    </div>
+		</popup>
 	</div>
 
 </script>
+

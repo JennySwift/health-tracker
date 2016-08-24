@@ -24960,15 +24960,6 @@
 	    /**
 	     *
 	     */
-	    closePopup: function ($event, that) {
-	        if ($event.target.className === 'popup-outer') {
-	            that.showPopup = false;
-	        }
-	    },
-	
-	    /**
-	     *
-	     */
 	    get: function (url, callback, propertyToSet) {
 	        store.showLoading();
 	        Vue.http.get(url).then(function (response) {
@@ -57420,13 +57411,6 @@
 	                $.event.trigger('timer-deleted', [this.selectedTimer]);
 	                this.showPopup = false;
 	            }.bind(this));
-	        },
-	
-	        /**
-	         *
-	         */
-	        closePopup: function ($event) {
-	            HelpersRepository.closePopup($event, this);
 	        },
 	
 	        /**

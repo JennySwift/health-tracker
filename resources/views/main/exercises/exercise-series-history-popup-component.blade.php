@@ -1,10 +1,12 @@
 <script id="series-history-popup-template" type="x-template">
 
-	<div v-show="showPopup"  v-on:click="closePopup($event)" class="popup-outer">
-
-		<div id="series-history-popup" class="popup-inner">
-
-			<div class="content">
+	<div>
+		<popup
+		    :show-popup.sync="showPopup"
+		    id="series-history-popup"
+		    :redirect-to="redirectTo"
+		>
+		    <div slot="content">
 				<h3>History of entries in the @{{ selectedSeries.name }} series</h3>
 
 				<div class="filters">
@@ -33,21 +35,14 @@
 						<td>@{{ entriesForDay.date }}</td>
 						<td>@{{ entriesForDay.daysAgo }}</td>
 						<td>@{{ entriesForDay.exercise.data.name }}</td>
-						<!-- <td>@{{ exercise.data.description }}</td> -->
+					<!-- <td>@{{ exercise.data.description }}</td> -->
 						<td>@{{ entriesForDay.exercise.data.stepNumber }}</td>
 						<td>@{{ entriesForDay.sets }}</td>
 						<td>@{{ entriesForDay.total }} @{{ entriesForDay.unit.name }}</td>
 					</tr>
 				</table>
-
-			</div>
-
-			<div class="buttons">
-				<button v-on:click="showPopup = false" class="btn btn-default">Close</button>
-			</div>
-
-
-		</div>
+		    </div>
+		</popup>
 
 	</div>
 

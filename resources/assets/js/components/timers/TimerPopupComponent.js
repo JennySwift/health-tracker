@@ -48,13 +48,6 @@ module.exports = {
         /**
          *
          */
-        closePopup: function ($event) {
-            HelpersRepository.closePopup($event, this);
-        },
-
-        /**
-         *
-         */
         listen: function () {
             var that = this;
             $(document).on('show-timer-popup', function (event, timer) {

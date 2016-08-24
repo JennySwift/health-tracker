@@ -25,15 +25,6 @@ module.exports = {
     /**
      *
      */
-    closePopup: function ($event, that) {
-        if ($event.target.className === 'popup-outer') {
-            that.showPopup = false;
-        }
-    },
-
-    /**
-     *
-     */
     get: function (url, callback, propertyToSet) {
         store.showLoading();
         Vue.http.get(url).then(function (response) {
