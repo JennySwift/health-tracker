@@ -24,9 +24,15 @@ module.exports = {
 
             HelpersRepository.post('/api/exerciseUnits', data, 'Unit added', function (response) {
                 store.add(response.data.data, 'exerciseUnits');
-                $("#create-new-exercise-unit").val("");
                 this.clearFields();
             }.bind(this));
+        },
+
+        /**
+         *
+         */
+        clearFields: function () {
+            this.newUnit.name = '';
         },
 
         /**

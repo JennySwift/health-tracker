@@ -1,6 +1,7 @@
 var Vue = require('vue');
 require('sugar');
 var moment = require('moment');
+require('sweetalert2');
 
 module.exports = {
 
@@ -39,7 +40,7 @@ module.exports = {
             if (callback) {
                 callback(response);
             }
-            
+
             if (propertyToSet) {
                 store.set(response.data, propertyToSet);
             }
@@ -88,7 +89,21 @@ module.exports = {
      *
      */
     delete: function (url, feedbackMessage, callback) {
-        if (confirm("Are you sure?")) {
+        swal({
+            title: 'Are you sure?',
+            // text: "",
+            // type: 'warning',
+            showCancelButton: true,
+            // confirmButtonColor: '#3085d6',
+            // cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'Cancel',
+            confirmButtonClass: 'btn btn-danger',
+            cancelButtonClass: 'btn btn-default',
+            buttonsStyling: false,
+            reverseButtons: true,
+            showCloseButton: true
+        }).then(function() {
             store.showLoading();
             Vue.http.delete(url).then(function (response) {
                 callback(response);
@@ -100,7 +115,16 @@ module.exports = {
             }, function (response) {
                 HelpersRepository.handleResponseError(response);
             });
-        }
+        }, function(dismiss) {
+            // dismiss can be 'cancel', 'overlay', 'close', 'timer'
+            // if (dismiss === 'cancel') {
+            //     swal(
+            //         'Cancelled',
+            //         'Your imaginary file is safe :)',
+            //         'error'
+            //     );
+            // }
+        });
     },
 
     /**

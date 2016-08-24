@@ -25,6 +25,7 @@ elixir(function(mix) {
 
     //Copy css for medium-editor from node_modules to my css directory
     mix.copy('node_modules/medium-editor/dist/css/medium-editor.min.css', 'resources/assets/css/medium-editor.min.css');
+    mix.copy('node_modules/sweetalert2/dist/sweetalert2.css', 'resources/assets/css/sweetalert2.css');
 
     mix.stylesIn('resources/assets/css', 'public/css/plugins.css');
 });
