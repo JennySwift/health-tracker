@@ -95,12 +95,13 @@ class ExerciseUnitsTest extends TestCase {
 
         $this->seeInDatabase('units', ['name' => 'echidna']);
 
-        $response = $this->call('DELETE', '/api/exerciseUnits/'.$unit->id);
+        $response = $this->call('DELETE', '/api/exerciseUnits/' .$unit->id);
+
         $this->assertEquals(204, $response->getStatusCode());
         $this->missingFromDatabase('units', ['name' => 'echidna']);
 
         // @TODO Test the 404 for the other methods as well (show, update)
-        $response = $this->call('DELETE', '/api/units/0');
+        $response = $this->call('DELETE', '/api/units/' . $unit->id);
         $this->assertEquals(404, $response->getStatusCode());
     }
 

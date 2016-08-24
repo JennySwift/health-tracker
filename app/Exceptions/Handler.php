@@ -3,8 +3,10 @@
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Exception\HttpResponseException;
 use Illuminate\Http\Response;
 use Redirect;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
 
 class Handler extends ExceptionHandler
@@ -82,6 +84,29 @@ class Handler extends ExceptionHandler
 
             return response([
                 'error' => "{$model} not found.",
+                'status' => Response::HTTP_NOT_FOUND
+            ], Response::HTTP_NOT_FOUND);
+        }
+
+//        if ($e instanceof GeneralException) {
+//            return response([
+//                'error' => $e->errorMessage,
+//                'status' => Response::HTTP_BAD_REQUEST
+//            ], Response::HTTP_BAD_REQUEST);
+//        }
+
+        if ($e instanceof HttpResponseException) {
+            if ($e->getResponse()->getStatusCode() === Response::HTTP_FORBIDDEN) {
+                return response([
+                    'error' => 'Forbidden',
+                    'status' => Response::HTTP_FORBIDDEN
+                ], Response::HTTP_FORBIDDEN);
+            }
+        }
+
+        if ($e instanceof NotFoundHttpException) {
+            return response([
+                'error' => 'Not found',
                 'status' => Response::HTTP_NOT_FOUND
             ], Response::HTTP_NOT_FOUND);
         }
