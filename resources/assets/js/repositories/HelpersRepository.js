@@ -104,7 +104,7 @@ module.exports = {
                     $.event.trigger('provide-feedback', [feedbackMessage, 'success']);
                 }
             }, function (response) {
-                HelpersRepository.handleResponseError(response);
+                HelpersRepository.handleResponseError(response.data);
             });
         }, function(dismiss) {
             // dismiss can be 'cancel', 'overlay', 'close', 'timer'
