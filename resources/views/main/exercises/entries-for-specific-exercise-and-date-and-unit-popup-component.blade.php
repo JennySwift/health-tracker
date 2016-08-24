@@ -5,7 +5,6 @@
 		    :show-popup.sync="showPopup"
 		    id="entries-for-specific-exercise-and-date-and-unit-popup"
 		    :redirect-to="redirectTo"
-		    :destroy="deleteExerciseEntry"
 		>
 		    <div slot="content">
 				<table class="table table-bordered">
@@ -19,8 +18,6 @@
 
 					<tr
 						v-for="entry in entries"
-						{{--is="entry-for-specific-exercise-and-date-and-unit"--}}
-						{{--:entry="entry"--}}
 					>
 						<td>@{{ entry.exercise.data.name }}</td>
 						<td>

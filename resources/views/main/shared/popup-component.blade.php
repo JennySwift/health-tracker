@@ -25,10 +25,12 @@
                             v-link="{path: redirectTo}"
                             class="btn btn-default"
                     >
-                        Cancel
+                        <span v-if="!update && !destroy">Close</span>
+                        <span v-else>Cancel</span>
                     </button>
 
                     <button
+                            v-if="destroy"
                             v-on:click="destroy()"
                             v-link="{path: redirectTo}"
                             class="btn btn-danger"
@@ -37,6 +39,7 @@
                     </button>
 
                     <button
+                            v-if="update"
                             v-on:click="update()"
                             v-link="{path: redirectTo}"
                             class="btn btn-success"
