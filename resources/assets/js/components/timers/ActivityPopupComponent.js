@@ -41,13 +41,6 @@ module.exports = {
         /**
          *
          */
-        closePopup: function ($event) {
-            HelpersRepository.closePopup($event, this);
-        },
-
-        /**
-         *
-         */
         listen: function () {
             var that = this;
             $(document).on('show-activity-popup', function (event, activity) {

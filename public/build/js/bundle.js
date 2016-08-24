@@ -79,6 +79,7 @@
 	Vue.component('navbar', __webpack_require__(128));
 	Vue.component('feedback', __webpack_require__(142));
 	Vue.component('loading', __webpack_require__(143));
+	Vue.component('popup', __webpack_require__(177));
 	Vue.component('date-navigation', __webpack_require__(144));
 	Vue.component('autocomplete', __webpack_require__(146));
 	
@@ -57617,13 +57618,6 @@
 	        /**
 	         *
 	         */
-	        closePopup: function ($event) {
-	            HelpersRepository.closePopup($event, this);
-	        },
-	
-	        /**
-	         *
-	         */
 	        listen: function () {
 	            var that = this;
 	            $(document).on('show-activity-popup', function (event, activity) {
@@ -67897,6 +67891,41 @@
 	  return sweetAlert;
 	
 	}));
+
+/***/ },
+/* 177 */
+/***/ function(module, exports) {
+
+	module.exports = {
+	    template: '#popup-template',
+	    data: function () {
+	        return {
+	
+	        };
+	    },
+	    components: {},
+	    methods: {
+	        /**
+	         *
+	         */
+	        closePopup: function ($event) {
+	            if ($($event.target).hasClass('popup-outer')) {
+	                this.showPopup = false;
+	                router.go(this.redirectTo);
+	            }
+	        },
+	    },
+	    props: [
+	        'showPopup',
+	        'id',
+	        'redirectTo',
+	        'update',
+	        'destroy'
+	    ],
+	    ready: function () {
+	        // HelpersRepository.scrollbars();
+	    }
+	};
 
 /***/ }
 /******/ ]);

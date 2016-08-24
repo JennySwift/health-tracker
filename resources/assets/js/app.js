@@ -33,6 +33,7 @@ var App = Vue.component('app', {
 Vue.component('navbar', require('./components/exercises/NavbarComponent'));
 Vue.component('feedback', require('@jennyswift/feedback'));
 Vue.component('loading', require('./components/shared/LoadingComponent'));
+Vue.component('popup', require('./components/shared/PopupComponent'));
 Vue.component('date-navigation', require('./components/shared/DateNavigationComponent'));
 Vue.component('autocomplete', require('./components/shared/AutocompleteComponent'));
 
