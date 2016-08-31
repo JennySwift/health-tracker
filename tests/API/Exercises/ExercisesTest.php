@@ -41,6 +41,14 @@ class ExercisesTest extends TestCase {
         $this->assertEquals(1, $content[0]['defaultUnit']['data']['id']);
         $this->assertEquals('reps', $content[0]['defaultUnit']['data']['name']);
 
+        $this->assertEquals(1, $content[1]['lastDone']);
+        $this->assertEquals(3, $content[1]['frequency']);
+        $this->assertEquals(2, $content[1]['dueIn']);
+
+        $this->assertEquals(2, $content[2]['lastDone']);
+        $this->assertEquals(4, $content[2]['frequency']);
+        $this->assertEquals(2, $content[2]['dueIn']);
+
         $this->assertEquals(200, $response->getStatusCode());
     }
 
@@ -187,6 +195,7 @@ class ExercisesTest extends TestCase {
         $this->assertEquals('something else', $content['target']);
         $this->assertEquals(9, $content['priority']);
         $this->assertEquals(30, $content['frequency']);
+        $this->assertEquals(30, $content['dueIn']);
 
         $this->assertEquals([
             'id' => 2,

@@ -106,4 +106,17 @@ class Exercise extends Model {
         return null;
     }
 
+    /**
+     * Get how many days ago the exercise was done
+     * @return mixed
+     */
+    public function getDueInAttribute()
+    {
+        if (count($this->entries) < 1) {
+            return 0;
+        }
+
+        return $this->frequency - $this->lastDone;
+    }
+
 }

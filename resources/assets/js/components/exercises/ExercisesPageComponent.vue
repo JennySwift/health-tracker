@@ -171,6 +171,8 @@
                     <th class="big-screens"><span class="fa fa-exclamation"></span></th>
                     <th class="big-screens">Target</th>
                     <th>Last</th>
+                    <th>Frequency</th>
+                    <th>Due</th>
                     <th>Add</th>
                 </tr>
                 <tr
@@ -183,6 +185,8 @@
                     <td v-on:click="showExercisePopup(exercise)" class="big-screens">{{ exercise.priority }}</td>
                     <td v-on:click="showExercisePopup(exercise)" class="big-screens">{{ exercise.target }}</td>
                     <td v-on:click="showExercisePopup(exercise)">{{ exercise.lastDone }}</td>
+                    <td v-on:click="showExercisePopup(exercise)">{{ exercise.frequency }}</td>
+                    <td v-on:click="showExercisePopup(exercise)">{{ exercise.dueIn }}</td>
                     <td>
                         <button
                             v-on:click="insertExerciseSet(exercise)"
