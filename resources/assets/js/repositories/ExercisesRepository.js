@@ -15,7 +15,8 @@ module.exports = {
             target: exercise.target,
             program_id: exercise.program.id,
             series_id: exercise.series.id,
-            stretch: HelpersRepository.convertBooleanToInteger(exercise.stretch)
+            stretch: HelpersRepository.convertBooleanToInteger(exercise.stretch),
+            frequency: exercise.frequency
         };
 
         if (exercise.defaultUnit.data) {

@@ -78,6 +78,18 @@
 
 				</div>
 
+				<div class="form-group">
+					<label for="selected-exercise-frequency">Frequency</label>
+					<input
+							v-model="selectedExercise.frequency"
+							type="text"
+							id="selected-exercise-frequency"
+							name="selected-exercise-frequency"
+							placeholder="frequency"
+							class="form-control"
+					>
+				</div>
+
 				<div class="flex">
 
 					<div>
