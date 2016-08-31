@@ -135,6 +135,21 @@
                     >
                 </div>
 
+                <div class="form-group">
+                    <div class="form-group">
+                        <label for="new-exercise-frequency">Frequency</label>
+                        <input
+                            v-model="newExercise.frequency"
+                            v-on:keyup.13="insertExercise($event.keyCode)"
+                            type="text"
+                            id="new-exercise-frequency"
+                            name="new-exercise-frequency"
+                            placeholder="frequency"
+                            class="form-control"
+                        >
+                    </div>
+                </div>
+
             </div>
         </div>
 
