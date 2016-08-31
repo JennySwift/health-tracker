@@ -261,6 +261,7 @@
                         return exercise.lastDone === null;
                     })
                     .flatten()
+                    .sortBy('dueIn')
                     .value();
 
                 //Filter
