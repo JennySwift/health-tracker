@@ -31,6 +31,7 @@ class ExercisesTest extends TestCase {
         $this->assertEquals('kneeling pushups', $content[0]['name']);
         $this->assertEquals(1, $content[0]['stepNumber']);
         $this->assertEquals(20, $content[0]['defaultQuantity']);
+        $this->assertEquals(7, $content[0]['frequency']);
 
         $this->assertEquals([
             'id' => 1,
@@ -85,7 +86,8 @@ class ExercisesTest extends TestCase {
             'default_quantity' => 2,
             'default_unit_id' => 2,
             'target' => '2 reps',
-            'stretch' => 1
+            'stretch' => 1,
+            'frequency' => 14
         ];
 
         $response = $this->call('POST', '/api/exercises', $exercise);
@@ -101,6 +103,7 @@ class ExercisesTest extends TestCase {
         $this->assertEquals('koala', $content['description']);
         $this->assertEquals(2, $content['priority']);
         $this->assertEquals(1, $content['stretch']);
+        $this->assertEquals(14, $content['frequency']);
         $this->assertEquals(2, $content['program']['id']);
         $this->assertEquals(2, $content['series']['id']);
         $this->assertEquals(2, $content['stepNumber']);
@@ -165,7 +168,8 @@ class ExercisesTest extends TestCase {
             'program_id' => 2,
             'target' => 'something else',
             'priority' => 9,
-            'stretch' => 1
+            'stretch' => 1,
+            'frequency' => 30
         ]);
 //        dd($response);
         $content = json_decode($response->getContent(), true)['data'];
@@ -182,6 +186,7 @@ class ExercisesTest extends TestCase {
         $this->assertEquals(6, $content['defaultQuantity']);
         $this->assertEquals('something else', $content['target']);
         $this->assertEquals(9, $content['priority']);
+        $this->assertEquals(30, $content['frequency']);
 
         $this->assertEquals([
             'id' => 2,

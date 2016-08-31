@@ -46,7 +46,8 @@ class ExerciseTransformer extends TransformerAbstract
             'priority' => $exercise->priority,
             'program' => $exercise->program,
             'lastDone' => $exercise->lastDone,
-            'stretch' => $exercise->stretch
+            'stretch' => $exercise->stretch,
+            'frequency' => $exercise->frequency
         ];
 
         if ($exercise->series) {

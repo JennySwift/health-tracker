@@ -26,7 +26,8 @@ class ExerciseSeeder extends Seeder {
                 'name' => 'kneeling pushups',
                 'defaultQuantity' => 20,
                 'description' => '',
-                'priority' => 2
+                'priority' => 2,
+                'frequency' => 7
             ],
             [
                 'name' => 'pushups',
@@ -47,7 +48,8 @@ class ExerciseSeeder extends Seeder {
                 'name' => 'assisted squats',
                 'defaultQuantity' => 50,
                 'description' => 'hold onto something',
-                'priority' => 3
+                'priority' => 3,
+                'frequency' => 3
             ],
             [
                 'name' => 'squats',
@@ -68,7 +70,8 @@ class ExerciseSeeder extends Seeder {
                 'name' => 'back lever',
                 'defaultQuantity' => 30,
                 'description' => '',
-                'priority' => 1
+                'priority' => 1,
+                'frequency' => 4
             ],
         ];
 
@@ -78,7 +81,8 @@ class ExerciseSeeder extends Seeder {
                 'defaultQuantity' => 20,
                 'description' => '',
                 'priority' => 2,
-                'stretch' => 1
+                'stretch' => 1,
+                'frequency' => 7
             ],
             [
                 'name' => 'calves',
@@ -142,7 +146,7 @@ class ExerciseSeeder extends Seeder {
         foreach ($exercises as $exercise) {
             $index++;
             $stretch = isset($exercise['stretch']) ? 1 : 0;
-            $exercise = new Exercise([
+            $temp = new Exercise([
                 'name' => $exercise['name'],
                 'description' => $exercise['description'],
                 'default_quantity' => $exercise['defaultQuantity'],
@@ -152,12 +156,14 @@ class ExerciseSeeder extends Seeder {
                 'stretch' => $stretch
             ]);
 
-            $exercise->user()->associate($this->user);
-            $exercise->defaultUnit()->associate($unit);
-            $exercise->program()->associate(ExerciseProgram::first());
+            if (isset($exercise['frequency'])) $temp['frequency'] = $exercise['frequency'];
 
-            $exercise->series()->associate($series);
-            $exercise->save();
+            $temp->user()->associate($this->user);
+            $temp->defaultUnit()->associate($unit);
+            $temp->program()->associate(ExerciseProgram::first());
+
+            $temp->series()->associate($series);
+            $temp->save();
 
         }
     }

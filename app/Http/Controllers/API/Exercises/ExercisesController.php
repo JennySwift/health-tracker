@@ -80,7 +80,8 @@ class ExercisesController extends Controller
             'default_quantity',
             'target',
             'priority',
-            'stretch'
+            'stretch',
+            'frequency'
         ));
         $exercise->user()->associate(Auth::user());
         $exercise->program()->associate(ExerciseProgram::find($request->get('program_id')));
@@ -108,7 +109,8 @@ class ExercisesController extends Controller
             'default_quantity',
             'description',
             'target',
-            'priority'
+            'priority',
+            'frequency'
         ]));
 
         $exercise->update($data);
