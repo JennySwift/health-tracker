@@ -11,7 +11,6 @@
             <caption>exercise entries</caption>
             <tr>
                 <th>Exercise</th>
-                <th>Description</th>
                 <th>Sets</th>
                 <th>Total</th>
                 <th>Add</th>
@@ -23,12 +22,6 @@
                         class="pointer"
                 >
                     @{{ entry.exercise.data.name }}
-                </td>
-                <td
-                        v-on:click="showEntriesForSpecificExerciseAndDateAndUnitPopup(entry)"
-                        class="pointer"
-                >
-                    @{{ entry.exercise.data.description }}
                 </td>
                 <td
                         v-on:click="showEntriesForSpecificExerciseAndDateAndUnitPopup(entry)"
