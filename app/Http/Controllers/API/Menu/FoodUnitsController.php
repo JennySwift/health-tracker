@@ -4,7 +4,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests;
 use App\Http\Transformers\UnitTransformer;
 use App\Models\Units\Unit;
-use App\Repositories\UnitsRepository;
 use Auth;
 use DB;
 use Illuminate\Http\Request;
@@ -17,19 +16,13 @@ use Illuminate\Http\Response;
 class FoodUnitsController extends Controller
 {
     /**
-     * @var UnitsRepository
-     */
-    private $unitsRepository;
-
-    /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct(UnitsRepository $unitsRepository)
+    public function __construct()
     {
         $this->middleware('auth');
-        $this->unitsRepository = $unitsRepository;
     }
 
     /**

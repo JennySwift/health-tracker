@@ -13,21 +13,6 @@ use Auth;
 class FoodsRepository
 {
     /**
-     * @var UnitsRepository
-     */
-    private $unitsRepository;
-
-    /**
-     * @param UnitsRepository $unitsRepository
-     */
-    public function __construct(UnitsRepository $unitsRepository)
-    {
-        $this->unitsRepository = $unitsRepository;
-    }
-
-
-
-    /**
      * Get all foods, along with their default unit, default calories,
      * and all their units.
      * Also, add the calories for each food's units. Todo?

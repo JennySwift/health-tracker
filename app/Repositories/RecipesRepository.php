@@ -21,19 +21,13 @@ class RecipesRepository {
      * @var FoodsRepository
      */
     private $foodsRepository;
-    /**
-     * @var UnitsRepository
-     */
-    private $unitsRepository;
 
     /**
      * @param FoodsRepository $foodsRepository
-     * @param UnitsRepository $unitsRepository
      */
-    public function __construct(FoodsRepository $foodsRepository, UnitsRepository $unitsRepository)
+    public function __construct(FoodsRepository $foodsRepository)
     {
         $this->foodsRepository = $foodsRepository;
-        $this->unitsRepository = $unitsRepository;
     }
     /**
      *

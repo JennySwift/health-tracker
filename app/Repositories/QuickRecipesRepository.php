@@ -11,10 +11,6 @@ use App\Models\Units\Unit;
  */
 class QuickRecipesRepository {
     /**
-     * @var UnitsRepository
-     */
-    private $unitsRepository;
-    /**
      * @var FoodsRepository
      */
     private $foodsRepository;
@@ -24,13 +20,11 @@ class QuickRecipesRepository {
     private $recipesRepository;
 
     /**
-     * @param UnitsRepository $unitsRepository
      * @param FoodsRepository $foodsRepository
      * @param RecipesRepository $recipesRepository
      */
-    public function __construct(UnitsRepository $unitsRepository, FoodsRepository $foodsRepository, RecipesRepository $recipesRepository)
+    public function __construct(FoodsRepository $foodsRepository, RecipesRepository $recipesRepository)
     {
-        $this->unitsRepository = $unitsRepository;
         $this->foodsRepository = $foodsRepository;
         $this->recipesRepository = $recipesRepository;
     }
