@@ -11,7 +11,6 @@ Route::get('/', 'PagesController@entries');
 
 // API
 Route::group(['namespace' => 'API', 'prefix' => 'api'], function () {
-    require app_path('Http/Routes/exercises.php');
     require app_path('Http/Routes/menu.php');
     require app_path('Http/Routes/timers.php');
 

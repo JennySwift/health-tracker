@@ -38,24 +38,9 @@ class RouteServiceProvider extends ServiceProvider {
 	{
 		parent::boot($router);
 
-        Route::bind('exercises', function($id)
-        {
-            return Exercise::forCurrentUser()->findOrFail($id);
-        });
-
-        Route::bind('exerciseEntries', function($id)
-        {
-            return ExerciseEntry::forCurrentUser()->findOrFail($id);
-        });
-
         Route::bind('menuEntries', function($id)
         {
             return MenuEntry::forCurrentUser()->findOrFail($id);
-        });
-
-        Route::bind('exerciseSeries', function($id)
-        {
-            return ExerciseSeries::forCurrentUser()->findOrFail($id);
         });
 
         Route::bind('foods', function($id)
@@ -68,13 +53,6 @@ class RouteServiceProvider extends ServiceProvider {
             return Recipe::forCurrentUser()->findOrFail($id);
         });
 
-        Route::bind('exerciseTags', function($id)
-        {
-            return Tag::forCurrentUser()
-                ->where('for', 'exercise')
-                ->findOrFail($id);
-        });
-
         Route::bind('recipeTags', function($id)
         {
             return Tag::forCurrentUser()
@@ -85,11 +63,6 @@ class RouteServiceProvider extends ServiceProvider {
         Route::bind('foodUnits', function($id)
         {
             return Unit::forCurrentUser()->where('for', 'food')->findOrFail($id);
-        });
-
-        Route::bind('exerciseUnits', function($id)
-        {
-            return Unit::forCurrentUser()->where('for', 'exercise')->findOrFail($id);
         });
 
         Route::bind('timers', function($id)
