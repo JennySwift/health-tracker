@@ -22,7 +22,6 @@ Route::group(['namespace' => 'API', 'prefix' => 'api'], function () {
 
     //Units
     Route::resource('foodUnits', 'Menu\FoodUnitsController', ['only' => ['index', 'store', 'update', 'destroy']]);
-    Route::resource('exerciseUnits', 'Exercises\ExerciseUnitsController', ['only' => ['index', 'store', 'update', 'destroy']]);
 
     //Journal
     Route::resource('journal', 'Journal\JournalController', ['only' => ['index', 'show', 'store', 'update']]);
