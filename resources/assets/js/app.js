@@ -43,14 +43,14 @@ Vue.component('new-menu-entry', require('./components/menu/NewMenuEntryComponent
 Vue.component('new-food-entry', require('./components/menu/NewFoodEntryComponent'));
 Vue.component('menu-entries', require('./components/menu/MenuEntriesComponent'));
 Vue.component('temporary-recipe-popup', require('./components/menu/TemporaryRecipePopupComponent'));
-Vue.component('new-exercise', require('./components/exercises/NewExerciseComponent'));
-Vue.component('new-exercise-entry', require('./components/exercises/NewExerciseEntryComponent'));
-Vue.component('exercise-entries', require('./components/exercises/ExerciseEntriesComponent'));
-Vue.component('entries-for-specific-exercise-and-date-and-unit-popup', require('./components/exercises/EntriesForSpecificExerciseAndDateAndUnitPopupComponent'));
-Vue.component('series-history-popup', require('./components/exercises/SeriesHistoryPopupComponent'));
-Vue.component('series-popup', require('./components/exercises/SeriesPopupComponent'));
-Vue.component('new-series', require('./components/exercises/NewSeriesComponent'));
-Vue.component('exercise-popup', require('./components/exercises/ExercisePopupComponent'));
+// Vue.component('new-exercise', require('./components/exercises/NewExerciseComponent'));
+// Vue.component('new-exercise-entry', require('./components/exercises/NewExerciseEntryComponent'));
+// Vue.component('exercise-entries', require('./components/exercises/ExerciseEntriesComponent'));
+// Vue.component('entries-for-specific-exercise-and-date-and-unit-popup', require('./components/exercises/EntriesForSpecificExerciseAndDateAndUnitPopupComponent'));
+// Vue.component('series-history-popup', require('./components/exercises/SeriesHistoryPopupComponent'));
+// Vue.component('series-popup', require('./components/exercises/SeriesPopupComponent'));
+// Vue.component('new-series', require('./components/exercises/NewSeriesComponent'));
+// Vue.component('exercise-popup', require('./components/exercises/ExercisePopupComponent'));
 
 Vue.component('timer-popup', require('./components/timers/TimerPopupComponent'));
 Vue.component('new-timer', require('./components/timers/NewTimerComponent'));
@@ -72,12 +72,12 @@ router.map({
     '/entries': {
         component: require('./components/EntriesPageComponent'),
     },
-    '/exercises': {
-        component: require('./components/exercises/ExercisesPageComponent.vue')
-    },
-    '/exercise-units': {
-        component: require('./components/exercises/ExerciseUnitsPageComponent')
-    },
+    // '/exercises': {
+    //     component: require('./components/exercises/ExercisesPageComponent.vue')
+    // },
+    // '/exercise-units': {
+    //     component: require('./components/exercises/ExerciseUnitsPageComponent')
+    // },
     '/foods': {
         component: require('./components/menu/FoodsPageComponent')
     },

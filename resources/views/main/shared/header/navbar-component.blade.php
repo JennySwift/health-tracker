@@ -39,16 +39,16 @@
                 </ul>
             </li>
 
-            <li id="menu-dropdown" class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                    <span class="fa fa-heart"></span>
-                    <span class="caret"></span>
-                </a>
-                <ul class="dropdown-menu" role="menu">
-                    <li><a v-link="{path: '/exercises'}" href="#">Exercises</a></li>
-                    <li><a v-link="{path: '/exercise-units'}" href="#">Units</a></li>
-                </ul>
-            </li>
+            {{--<li id="menu-dropdown" class="dropdown">--}}
+                {{--<a href="#" class="dropdown-toggle" data-toggle="dropdown">--}}
+                    {{--<span class="fa fa-heart"></span>--}}
+                    {{--<span class="caret"></span>--}}
+                {{--</a>--}}
+                {{--<ul class="dropdown-menu" role="menu">--}}
+                    {{--<li><a v-link="{path: '/exercises'}" href="#">Exercises</a></li>--}}
+                    {{--<li><a v-link="{path: '/exercise-units'}" href="#">Units</a></li>--}}
+                {{--</ul>--}}
+            {{--</li>--}}
 
             <li>
                 <a v-link="{path: '/journal'}" href="#" class="fa fa-pencil"></a>

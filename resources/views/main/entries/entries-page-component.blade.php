@@ -25,17 +25,17 @@
             </menu-entries>
         </div>
 
-        <div>
-            <new-exercise-entry
-                :date="date"
-            >
-            </new-exercise-entry>
+        {{--<div>--}}
+            {{--<new-exercise-entry--}}
+                {{--:date="date"--}}
+            {{-->--}}
+            {{--</new-exercise-entry>--}}
 
-            <exercise-entries
-                    :date="date"
-            >
-            </exercise-entries>
-        </div>
+            {{--<exercise-entries--}}
+                    {{--:date="date"--}}
+            {{-->--}}
+            {{--</exercise-entries>--}}
+        {{--</div>--}}
 
 </div>
 
