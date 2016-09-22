@@ -54,18 +54,18 @@
                 <a v-link="{path: '/journal'}" href="#" class="fa fa-pencil"></a>
             </li>
 
-            <li id="menu-dropdown" class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                    <span class="fa fa-clock-o"></span>
-                    <span class="caret"></span>
-                </a>
-                <ul class="dropdown-menu" role="menu">
-                    <li><a v-link="{path: '/timers'}" href="#">Timers</a></li>
-                    <li><a v-link="{path: '/activities'}" href="#">Activities</a></li>
-                    <li><a href="#" v-link="{path: '/timers/new-manual'}" v-on:click="showNewManualTimerPopup()">New Manual Timer</a></li>
+            {{--<li id="menu-dropdown" class="dropdown">--}}
+                {{--<a href="#" class="dropdown-toggle" data-toggle="dropdown">--}}
+                    {{--<span class="fa fa-clock-o"></span>--}}
+                    {{--<span class="caret"></span>--}}
+                {{--</a>--}}
+                {{--<ul class="dropdown-menu" role="menu">--}}
+                    {{--<li><a v-link="{path: '/timers'}" href="#">Timers</a></li>--}}
+                    {{--<li><a v-link="{path: '/activities'}" href="#">Activities</a></li>--}}
+                    {{--<li><a href="#" v-link="{path: '/timers/new-manual'}" v-on:click="showNewManualTimerPopup()">New Manual Timer</a></li>--}}
                     {{--<li><a v-link="{path: '/graphs'}" href="#">Graphs</a></li>--}}
-                </ul>
-            </li>
+                {{--</ul>--}}
+            {{--</li>--}}
 
             @include('main.shared.header.user')
 

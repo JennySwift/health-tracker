@@ -11,9 +11,9 @@ Route::get('/', 'PagesController@entries');
 
 // API
 Route::group(['namespace' => 'API', 'prefix' => 'api'], function () {
-    require app_path('Http/Routes/exercises.php');
+//    require app_path('Http/Routes/exercises.php');
     require app_path('Http/Routes/menu.php');
-    require app_path('Http/Routes/timers.php');
+//    require app_path('Http/Routes/timers.php');
 
     //Calories
     Route::resource('calories', 'Calories\CaloriesController', ['only' => 'show']);
@@ -23,7 +23,7 @@ Route::group(['namespace' => 'API', 'prefix' => 'api'], function () {
 
     //Units
     Route::resource('foodUnits', 'Menu\FoodUnitsController', ['only' => ['index', 'store', 'update', 'destroy']]);
-    Route::resource('exerciseUnits', 'Exercises\ExerciseUnitsController', ['only' => ['index', 'store', 'update', 'destroy']]);
+//    Route::resource('exerciseUnits', 'Exercises\ExerciseUnitsController', ['only' => ['index', 'store', 'update', 'destroy']]);
 
     //Journal
     Route::resource('journal', 'Journal\JournalController', ['only' => ['index', 'show', 'store', 'update']]);
